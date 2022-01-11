@@ -41,7 +41,7 @@ abstract contract HederaTokenService is HederaResponseCodes {
                 : (HederaResponseCodes.UNKNOWN, 0, new int[](0));
     }
 
-    /// Burns an amount fo teh token from the define treasury account
+    /// Burns an amount of the token from the defined treasury account
     /// @param token The token for which to burn tokens. If token does not exist, transaction results in
     ///              INVALID_TOKEN_ID
     /// @param amount  Applicable to tokens of type FUNGIBLE_COMMON. The amount to burn from the Treasury Account.
