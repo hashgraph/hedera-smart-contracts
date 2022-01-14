@@ -148,8 +148,8 @@ interface IHederaTokenService {
     /// @param token The ID of the token as a solidity address
     /// @param sender the sender of an nft
     /// @param receiver the receiver of the nft sent by the same index at sender
-    /// @param serialNumbers the serial number of the nft sent by the same index at sender
-    function transferNFTs(address token, address[] memory sender, address[] memory receiver, int64[] memory serialNumbers)
+    /// @param serialNumber the serial number of the nft sent by the same index at sender
+    function transferNFTs(address token, address[] memory sender, address[] memory receiver, int64[] memory serialNumber)
         external returns (int responseCode);
 
     /// Transfers tokens where the calling account/contract is implicitly the first entry in the token transfer list,
