@@ -43,7 +43,7 @@ abstract contract HederaTokenService is HederaResponseCodes {
                 : (HederaResponseCodes.UNKNOWN, 0, new int64[](0));
     }
 
-    /// Burns an amount fo teh token from the define treasury account
+    /// Burns an amount of the token from the defined treasury account
     /// @param token The token for which to burn tokens. If token does not exist, transaction results in
     ///              INVALID_TOKEN_ID
     /// @param amount  Applicable to tokens of type FUNGIBLE_COMMON. The amount to burn from the Treasury Account.
@@ -149,13 +149,13 @@ abstract contract HederaTokenService is HederaResponseCodes {
     /// @param token The ID of the token as a solidity address
     /// @param sender the sender of an nft
     /// @param receiver the receiver of the nft sent by the same index at sender
-    /// @param serialNumbers the serial number of the nft sent by the same index at sender
-    function transferNFTs(address token, address[] memory sender, address[] memory receiver, int64[] memory serialNumbers)
+    /// @param serialNumber the serial number of the nft sent by the same index at sender
+    function transferNFTs(address token, address[] memory sender, address[] memory receiver, int64[] memory serialNumber)
         internal returns (int responseCode)
     {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.transferNFTs.selector,
-            token, sender, receiver, serialNumbers));
+            token, sender, receiver, serialNumber));
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
     }
 
