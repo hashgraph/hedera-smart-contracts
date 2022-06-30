@@ -224,7 +224,6 @@ abstract contract HederaTokenService is HederaResponseCodes {
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
     }
 
-
     /// Returns the amount which spender is still allowed to withdraw from owner.
     /// Only Applicable to Fungible Tokens
     /// @param token The Hedera token address to check the allowance of
@@ -303,7 +302,6 @@ abstract contract HederaTokenService is HederaResponseCodes {
                 ? abi.decode(result, (int32, bool))
                 : (HederaResponseCodes.UNKNOWN, false);
     }
-    
 
     /**********************
      * ABI v1 calls       *
@@ -368,6 +366,4 @@ abstract contract HederaTokenService is HederaResponseCodes {
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
     }
 
-    
-    
 }

@@ -397,7 +397,7 @@ interface IHederaTokenService {
     /// again it overwrites the current allowance with value.
     /// Only Applicable to Fungible Tokens
     /// @param token The hedera token address to approve
-    /// @param spender the account authorized to spend
+    /// @param spender the account address authorized to spend
     /// @param amount the amount of tokens authorized to spend.
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     function approve(address token, address spender, uint256 amount) external returns (int responseCode);
