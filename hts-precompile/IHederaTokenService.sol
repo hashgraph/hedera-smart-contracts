@@ -153,6 +153,61 @@ interface IHederaTokenService {
         Expiry expiry;
     }
 
+    struct TokenInfo {
+        /// The hedera token;
+        HederaToken hedera;
+
+        /// The number of tokens (fungible) or serials (non-fungible) of the token                            
+        uint64 totalSupply;
+
+        /// Specifies whether the token is deleted or not                                                     
+        bool deleted;
+
+        /// Specifies whether the token kyc was defaulted with KycNotApplicable (true) or Revoked (false)     
+        bool defaultKycStatus;
+
+        /// Specifies whether the token is currently paused or not                                            
+        bool pauseStatus;
+
+        /// The custom fees collected when transferring the token                                             
+        CustomFee[] customFees;
+
+        /// The ID of the network ledge
+        string ledgerId;
+    }
+
+    struct FungibleTokenInfo {
+        ///The shared hedera token info
+        TokenInfo tokenInfo;
+
+        ///The number of decimal places a token is divisible by
+        uint32 decimals;
+    }
+    
+    struct NonFungibleTokenInfo {
+        ///The shared hedera token info                                                                  
+        TokenInfo tokenInfo;
+        
+        ///The serial number of the nft                                                                  
+        uint64 serialNumber;
+        
+        ///The account id specifying the owner of the non fungible token                                 
+        address accountId;
+        
+        ///The epoch second at which the token was created.                                              
+        uint32 creationTime;
+        
+        ///The unique metadata of the NFT                                                                
+        bytes metadata;
+        
+        ///The account id specifying an account that has been granted spending permissions on this nft   
+        address spenderId;
+        
+        ///The ID of the network ledger                                                                  
+        string ledgerId;
+        
+    }
+
     /// A fixed number of units (hbar or token) to assess as a fee during a transfer of
     /// units of the token to which this fixed fee is attached. The denomination of
     /// the fee depends on the values of tokenId, useHbarsForPayment and
@@ -217,6 +272,20 @@ interface IHederaTokenService {
         bool useHbarsForPayment;
 
         // The ID of the account to receive the custom fee, expressed as a solidity address
+        address feeCollector;
+    }
+
+    struct CustomFee {
+        /// The fixed fee for the token
+        FixedFee fixedFee;
+
+        /// The fractional fee for the token
+        FractionalFee fractionalFee;
+
+        /// The royalty fee for the token
+        RoyaltyFee royaltyFee;
+
+        /// The account to receive the custom fee
         address feeCollector;
     }
 
@@ -390,7 +459,7 @@ interface IHederaTokenService {
     /// @param sender The sender for the transaction
     /// @param recipient The receiver of the transaction
     /// @param serialNumber The serial number of the NFT to transfer.
-    function transferNFT(address token,  address sender, address recipient, int64 serialNumber) external
+    function transferNFT(address token, address sender, address recipient, int64 serialNumber) external
         returns (int responseCode);
 
     /// Allows spender to withdraw from your account multiple times, up to the value amount. If this function is called 
@@ -443,4 +512,47 @@ interface IHederaTokenService {
     /// @return approved True if `operator` is an approved operator for `owner`, false otherwise
     function isApprovedForAll(address token, address owner, address operator)  external returns (int responseCode, bool approved);
     
+    function isFrozen(address) external returns (bool);
+
+    function isKyc(address) external returns (bool);
+
+    function deleteToken(address) external returns (bool);
+
+    function getTokenAutoRenewInfo(address) external returns (address, uint32);
+
+    function getTokenCustomFees(address) external returns (CustomFee[] memory);
+
+    function getTokenDefaultFreezeStatus(address) external returns (bool);
+
+    function getTokenDefaultKycStatus(address) external returns (bool);
+
+    function getFungibleTokenInfo(address) external returns (FungibleTokenInfo memory);
+
+    function getTokenInfo(address) external returns (TokenInfo memory);
+
+    function getTokenKey(address, uint32) external returns (KeyValue memory);
+
+    function getNonFungibleTokenInfo(address, uint32) external returns (NonFungibleTokenInfo memory);
+
+    function freezeToken(address, address) external returns (bool);
+
+    function unFreezeToken(address, address) external returns (bool);
+
+    function grantTokenKyc(address, address) external returns (bool);
+
+    function revokeTokenKyc(address, address) external returns (bool);
+
+    function pauseToken(address) external returns (bool);
+
+    function unPauseToken(address) external returns (bool);
+
+    function wipeTokenAccount(address, address, uint32) external returns (uint32);
+
+    function wipeTokenAccount(address, address, uint64[] memory) external returns (uint64[] memory);
+
+    function updateTokenInfo(address, HederaToken memory) external returns (HederaToken memory);
+
+    function updateTokenAutoRenewInfo(address, uint32) external returns (address, uint32);
+
+    function updateTokenKeys(TokenKey[] memory) external returns (TokenKey[] memory);    
 }
