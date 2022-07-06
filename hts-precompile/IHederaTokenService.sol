@@ -177,35 +177,35 @@ interface IHederaTokenService {
     }
 
     struct FungibleTokenInfo {
-        ///The shared hedera token info
+        /// The shared hedera token info
         TokenInfo tokenInfo;
 
-        ///The number of decimal places a token is divisible by
+        /// The number of decimal places a token is divisible by
         uint32 decimals;
     }
 
     struct NonFungibleTokenInfo {
-        ///The shared hedera token info
+        /// The shared hedera token info
         TokenInfo tokenInfo;
 
-        ///The serial number of the nft
+        /// The serial number of the nft
         uint64 serialNumber;
 
-        ///The account id specifying the owner of the non fungible token
+        /// The account id specifying the owner of the non fungible token
         address accountId;
 
-        ///The epoch second at which the token was created.
+        /// The epoch second at which the token was created.
         uint32 creationTime;
 
-        ///The unique metadata of the NFT
+        /// The unique metadata of the NFT
         bytes metadata;
 
-        ///The account id specifying an account that has been granted spending permissions on this nft
+        /// The account id specifying an account that has been granted spending permissions on this nft
         address spenderId;
 
-        ///The ID of the network ledger
+        /// The ID of the network ledger
         string ledgerId;
-        
+
     }
 
     /// A fixed number of units (hbar or token) to assess as a fee during a transfer of
@@ -213,6 +213,7 @@ interface IHederaTokenService {
     /// the fee depends on the values of tokenId, useHbarsForPayment and
     /// useCurrentTokenForPayment. Exactly one of the values should be set.
     struct FixedFee {
+
         uint32 amount;
 
         // Specifies ID of token that should be used for fixed fee denomination
@@ -418,8 +419,8 @@ interface IHederaTokenService {
     /// @return tokenAddress the created token's address
     function createFungibleTokenWithCustomFees(
         HederaToken memory token,
-        uint256 initialTotalSupply,
-        uint256 decimals,
+        uint initialTotalSupply,
+        uint decimals,
         FixedFee[] memory fixedFees,
         FractionalFee[] memory fractionalFees
     ) external payable returns (int responseCode, address tokenAddress);
