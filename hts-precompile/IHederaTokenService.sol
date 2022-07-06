@@ -153,29 +153,31 @@ interface IHederaTokenService {
         Expiry expiry;
     }
 
+    /// Additional post creation fungible and non fungible properties of a Hedera Token.
     struct TokenInfo {
         /// The hedera token;
         HederaToken hedera;
 
-        /// The number of tokens (fungible) or serials (non-fungible) of the token
-        uint64 totalSupply;
-
-        /// Specifies whether the token is deleted or not
-        bool deleted;
+        /// The custom fees collected when transferring the token
+        CustomFee[] customFees;
 
         /// Specifies whether the token kyc was defaulted with KycNotApplicable (true) or Revoked (false) 
         bool defaultKycStatus;
 
-        /// Specifies whether the token is currently paused or not
-        bool pauseStatus;
-
-        /// The custom fees collected when transferring the token
-        CustomFee[] customFees;
+        /// Specifies whether the token is deleted or not
+        bool deleted;
 
         /// The ID of the network ledge
         string ledgerId;
+
+        /// Specifies whether the token is currently paused or not
+        bool pauseStatus;
+
+        /// The number of tokens (fungible) or serials (non-fungible) of the token
+        uint64 totalSupply;
     }
 
+    /// Additional fungible properties of a Hedera Token.
     struct FungibleTokenInfo {
         /// The shared hedera token info
         TokenInfo tokenInfo;
@@ -184,6 +186,7 @@ interface IHederaTokenService {
         uint32 decimals;
     }
 
+    /// Additional non fungible properties of a Hedera Token.
     struct NonFungibleTokenInfo {
         /// The shared hedera token info
         TokenInfo tokenInfo;
@@ -205,7 +208,6 @@ interface IHederaTokenService {
 
         /// The ID of the network ledger
         string ledgerId;
-
     }
 
     /// A fixed number of units (hbar or token) to assess as a fee during a transfer of
