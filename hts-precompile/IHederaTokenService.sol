@@ -277,6 +277,8 @@ interface IHederaTokenService {
         address feeCollector;
     }
 
+    /// A custom fee may be either fixed, fractional or royalty.
+    /// The fee collector account to receive the assessed fees is present in each Fee 
     struct CustomFee {
         /// The fixed fee for the token
         FixedFee fixedFee;
@@ -286,9 +288,6 @@ interface IHederaTokenService {
 
         /// The royalty fee for the token
         RoyaltyFee royaltyFee;
-
-        /// The account to receive the custom fee
-        address feeCollector;
     }
 
     /**********************
