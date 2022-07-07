@@ -508,26 +508,26 @@ interface IHederaTokenService {
     /// @param token The hedera token address to approve
     /// @param spender the account address authorized to spend
     /// @param amount the amount of tokens authorized to spend.
-    /// @return success True if operation succeeded.
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
+    /// @return success True if operation succeeded.
     function approve(
         address token,
         address spender,
         uint256 amount
-    ) external returns (bool success, int responseCode);
+    ) external returns (int responseCode, bool success);
 
     /// Returns the amount which spender is still allowed to withdraw from owner.
     /// Only Applicable to Fungible Tokens
     /// @param token The Hedera token address to check the allowance of
     /// @param owner the owner of the tokens to be spent
     /// @param spender the spender of the tokens
-    /// @return allowance The amount which spender is still allowed to withdraw from owner.
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
+    /// @return allowance The amount which spender is still allowed to withdraw from owner.
     function allowance(
         address token,
         address owner,
         address spender
-    ) external returns (uint256 allowance, int responseCode);
+    ) external returns (int responseCode, uint256 allowance);
 
     /// Allow or reaffirm the approved address to transfer an NFT the approved address does not own.
     /// Only Applicable to NFT Tokens
