@@ -508,24 +508,26 @@ interface IHederaTokenService {
     /// @param token The hedera token address to approve
     /// @param spender the account address authorized to spend
     /// @param amount the amount of tokens authorized to spend.
+    /// @return success True if operation succeeded.
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     function approve(
         address token,
         address spender,
         uint256 amount
-    ) external returns (int responseCode);
+    ) external returns (bool success, int responseCode);
 
     /// Returns the amount which spender is still allowed to withdraw from owner.
     /// Only Applicable to Fungible Tokens
     /// @param token The Hedera token address to check the allowance of
     /// @param owner the owner of the tokens to be spent
     /// @param spender the spender of the tokens
+    /// @return allowance The amount which spender is still allowed to withdraw from owner.
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     function allowance(
         address token,
         address owner,
         address spender
-    ) external returns (int responseCode);
+    ) external returns (uint256 allowance, int responseCode);
 
     /// Allow or reaffirm the approved address to transfer an NFT the approved address does not own.
     /// Only Applicable to NFT Tokens
@@ -606,54 +608,61 @@ interface IHederaTokenService {
 
     /// Query token default freeze status
     /// @param token The token address to check
+    /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     /// @return defaultFreezeStatus True if `token` default freeze status is frozen.
     function getTokenDefaultFreezeStatus(address token)
         external
-        returns (bool defaultFreezeStatus);
+        returns (int responseCode, bool defaultFreezeStatus);
     
     /// Query token default kyc status
     /// @param token The token address to check
+    /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     /// @return defaultKycStatus True if `token` default kyc status is KycNotApplicable and false if Revoked.
     function getTokenDefaultKycStatus(address token)
         external
-        returns (bool defaultKycStatus);
+        returns (int responseCode, bool defaultKycStatus);
 
     /// Query token expiry info
     /// @param token The token address to check
+    /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     /// @return expiry Expiry info for `token`
     function getTokenExpiryInfo(address token)
         external
-        returns (Expiry memory expiry);
+        returns (int responseCode, Expiry memory expiry);
 
     /// Query fungible token info
     /// @param token The token address to check
+    /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     /// @return fungibleTokenInfo FungibleTokenInfo info for `token`
     function getFungibleTokenInfo(address token)
         external
-        returns (FungibleTokenInfo memory fungibleTokenInfo);
+        returns (int responseCode, FungibleTokenInfo memory fungibleTokenInfo);
 
     /// Query token info
     /// @param token The token address to check
+    /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     /// @return tokenInfo TokenInfo info for `token`
     function getTokenInfo(address token)
         external
-        returns (TokenInfo memory tokenInfo);
+        returns (int responseCode, TokenInfo memory tokenInfo);
 
     /// Query token KeyValue
     /// @param token The token address to check
     /// @param keyType The keyType of the desired KeyValue
+    /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     /// @return key TokenInfo info for `token`
     function getTokenKey(address token, uint keyType)
         external
-        returns (KeyValue memory key);
+        returns (int responseCode, KeyValue memory key);
 
     /// Query non fungible token info
     /// @param token The token address to check
     /// @param serialNumber The NFT serialNumber to check
+    /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     /// @return nonFungibleTokenInfo NonFungibleTokenInfo info for `token` `serialNumber`
     function getNonFungibleTokenInfo(address token, uint32 serialNumber)
         external
-        returns (NonFungibleTokenInfo memory nonFungibleTokenInfo);
+        returns (int responseCode, NonFungibleTokenInfo memory nonFungibleTokenInfo);
 
     /// Operation to freeze token account
     /// @param token The token address
