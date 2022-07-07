@@ -601,10 +601,11 @@ interface IHederaTokenService {
 
     /// Query token custom fees
     /// @param token The token address to check
+    /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     /// @return customFees Set of custom fees for `token`
     function getTokenCustomFees(address token)
         external
-        returns (CustomFee[] memory customFees);
+        returns (int responseCode, CustomFee[] memory customFees);
 
     /// Query token default freeze status
     /// @param token The token address to check
