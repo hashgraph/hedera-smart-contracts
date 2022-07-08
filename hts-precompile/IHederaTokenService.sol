@@ -167,7 +167,7 @@ interface IHederaTokenService {
         /// Specifies whether the token is deleted or not
         bool deleted;
 
-        /// The ID of the network ledge
+        /// The ID of the network ledger
         string ledgerId;
 
         /// Specifies whether the token is currently paused or not
@@ -195,7 +195,7 @@ interface IHederaTokenService {
         uint64 serialNumber;
 
         /// The account id specifying the owner of the non fungible token
-        address accountId;
+        address ownerId;
 
         /// The epoch second at which the token was created.
         uint32 creationTime;
@@ -205,9 +205,6 @@ interface IHederaTokenService {
 
         /// The account id specifying an account that has been granted spending permissions on this nft
         address spenderId;
-
-        /// The ID of the network ledger
-        string ledgerId;
     }
 
     /// A fixed number of units (hbar or token) to assess as a fee during a transfer of
@@ -508,12 +505,11 @@ interface IHederaTokenService {
     /// @param spender the account address authorized to spend
     /// @param amount the amount of tokens authorized to spend.
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
-    /// @return success True if operation succeeded.
     function approve(
         address token,
         address spender,
         uint256 amount
-    ) external returns (int responseCode, bool success);
+    ) external returns (int responseCode);
 
     /// Returns the amount which spender is still allowed to withdraw from owner.
     /// Only Applicable to Fungible Tokens
@@ -650,7 +646,7 @@ interface IHederaTokenService {
     /// @param token The token address to check
     /// @param keyType The keyType of the desired KeyValue
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
-    /// @return key TokenInfo info for `token`
+    /// @return key KeyValue info for key of type `keyType`
     function getTokenKey(address token, uint keyType)
         external
         returns (int responseCode, KeyValue memory key);
@@ -715,7 +711,7 @@ interface IHederaTokenService {
         address token,
         address account,
         uint32 amount
-    ) external returns (int responseCode, uint32 wipedAmount);
+    ) external returns (int responseCode);
 
     /// Operation to wipe non fungible tokens from account
     /// @param token The token address
@@ -726,32 +722,29 @@ interface IHederaTokenService {
         address token,
         address account,
         uint64[] memory serialNumbers
-    ) external returns (int responseCode, uint64[] memory wipedSerialNumbers);
+    ) external returns (int responseCode);
 
     /// Operation to update token info
     /// @param token The token address
     /// @param tokenInfo The hedera token info to update token with
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
-    /// @return newTokenInfo The updated hedera token info
     function updateTokenInfo(address token, HederaToken memory tokenInfo)
         external
-        returns (int responseCode, HederaToken memory newTokenInfo);
+        returns (int responseCode);
 
     /// Operation to update token expiry info
     /// @param token The token address
     /// @param expiryInfo The hedera token expiry info
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
-    /// @return newExpiryInfo The updated token expiry info
     function updateTokenExpiryInfo(address token, Expiry memory expiryInfo)
         external
-        returns (int responseCode, Expiry memory newExpiryInfo);
+        returns (int responseCode);
 
     /// Operation to update token expiry info
     /// @param token The token address
     /// @param keys The token keys
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
-    /// @return newKeys The updated token keys
     function updateTokenKeys(address token, TokenKey[] memory keys)
         external
-        returns (int responseCode, TokenKey[] memory newKeys);
+        returns (int responseCode);
 }
