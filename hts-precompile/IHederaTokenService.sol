@@ -192,7 +192,7 @@ interface IHederaTokenService {
         TokenInfo tokenInfo;
 
         /// The serial number of the nft
-        uint64 serialNumber;
+        int64 serialNumber;
 
         /// The account id specifying the owner of the non fungible token
         address ownerId;
@@ -721,7 +721,7 @@ interface IHederaTokenService {
     function wipeTokenAccount(
         address token,
         address account,
-        uint64[] memory serialNumbers
+        int64[] memory serialNumbers
     ) external returns (int responseCode);
 
     /// Operation to update token info
