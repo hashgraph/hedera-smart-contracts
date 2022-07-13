@@ -533,7 +533,7 @@ interface IHederaTokenService {
     function approveNFT(
         address token,
         address approved,
-        uint256 serialNumber
+        int64 serialNumber
     ) external returns (int responseCode);
 
     /// Get the approved address for a single NFT
@@ -542,7 +542,7 @@ interface IHederaTokenService {
     /// @param serialNumber The NFT to find the approved address for
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     /// @return approved The approved address for this NFT, or the zero address if there is none
-    function getApproved(address token, uint256 serialNumber)
+    function getApproved(address token, int64 serialNumber)
         external
         returns (int responseCode, address approved);
 
@@ -656,7 +656,7 @@ interface IHederaTokenService {
     /// @param serialNumber The NFT serialNumber to check
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     /// @return nonFungibleTokenInfo NonFungibleTokenInfo info for `token` `serialNumber`
-    function getNonFungibleTokenInfo(address token, uint32 serialNumber)
+    function getNonFungibleTokenInfo(address token, int64 serialNumber)
         external
         returns (int responseCode, NonFungibleTokenInfo memory nonFungibleTokenInfo);
 
@@ -672,7 +672,7 @@ interface IHederaTokenService {
     /// @param token The token address
     /// @param account The account address to be unfrozen
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
-    function unFreezeToken(address token, address account)
+    function unfreezeToken(address token, address account)
         external
         returns (int responseCode);
 
@@ -700,7 +700,7 @@ interface IHederaTokenService {
     /// Operation to unpause token
     /// @param token The token address to be unpaused
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
-    function unPauseToken(address token) external returns (int responseCode);
+    function unpauseToken(address token) external returns (int responseCode);
 
     /// Operation to wipe fungible tokens from account
     /// @param token The token address
