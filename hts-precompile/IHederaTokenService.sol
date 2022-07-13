@@ -180,7 +180,7 @@ interface IHederaTokenService {
         bool pauseStatus;
 
         /// The number of tokens (fungible) or serials (non-fungible) of the token
-        int64 totalSupply;
+        uint64 totalSupply;
     }
 
     /// Additional fungible properties of a Hedera Token.
