@@ -158,8 +158,14 @@ interface IHederaTokenService {
         /// The hedera token;
         HederaToken hedera;
 
-        /// The custom fees collected when transferring the token
-        CustomFee[] customFees;
+        /// The fixed fees collected when transferring the token
+        FixedFee[] fixedFees;
+
+        /// The fractional fees collected when transferring the token
+        FractionalFee[] fractionalFees;
+
+        /// The royalty fees collected when transferring the token
+        RoyaltyFee[] royaltyFees;
 
         /// Specifies whether the token kyc was defaulted with KycNotApplicable (true) or Revoked (false) 
         bool defaultKycStatus;
@@ -272,19 +278,6 @@ interface IHederaTokenService {
 
         // The ID of the account to receive the custom fee, expressed as a solidity address
         address feeCollector;
-    }
-
-    /// A custom fee may be either fixed, fractional or royalty.
-    /// The fee collector account to receive the assessed fees is present in each Fee 
-    struct CustomFee {
-        /// The fixed fee for the token
-        FixedFee fixedFee;
-
-        /// The fractional fee for the token
-        FractionalFee fractionalFee;
-
-        /// The royalty fee for the token
-        RoyaltyFee royaltyFee;
     }
 
     /**********************
@@ -597,10 +590,12 @@ interface IHederaTokenService {
     /// Query token custom fees
     /// @param token The token address to check
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
-    /// @return customFees Set of custom fees for `token`
+    /// @return fixedFees Set of fixed fees for `token`
+    /// @return fractionalFees Set of fractional fees for `token`
+    /// @return royaltyFees Set of royalty fees for `token`
     function getTokenCustomFees(address token)
         external
-        returns (int64 responseCode, CustomFee[] memory customFees);
+        returns (int64 responseCode, FixedFee[] memory fixedFees, FractionalFee[] memory fractionalFees, RoyaltyFee[] memory royaltyFees);
 
     /// Query token default freeze status
     /// @param token The token address to check
