@@ -713,7 +713,7 @@ interface IHederaTokenService {
     /// @param account The account address to revoke kyc
     /// @param  serialNumbers The serial numbers of token to wipe
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
-    function wipeTokenAccount(
+    function wipeTokenAccountNFT(
         address token,
         address account,
         int64[] memory serialNumbers
