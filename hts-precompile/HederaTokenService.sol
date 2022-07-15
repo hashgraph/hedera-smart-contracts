@@ -240,12 +240,12 @@ abstract contract HederaTokenService is HederaResponseCodes {
     /// @param owner the owner of the tokens to be spent
     /// @param spender the spender of the tokens
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
-    function allowance(address token, address owner, address spender) internal returns (int responseCode) 
+    function allowance(address token, address owner, address spender) internal returns (int responseCode, uint256 amount)
     {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.allowance.selector,
             token, owner, spender));
-        responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
+        (responseCode, amount) = success ? abi.decode(result, (int32, uint256)) : (HederaResponseCodes.UNKNOWN, 0);
     }
 
     /// Allow or reaffirm the approved address to transfer an NFT the approved address does not own.
