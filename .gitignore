@@ -1,0 +1,5 @@
+/.env
+/node_modules
+examples/transfer-hbar2contracts-sdk/.env
+package-lock.json
+package.json
