@@ -204,7 +204,7 @@ interface IHederaTokenService {
         address ownerId;
 
         /// The epoch second at which the token was created.
-        int32 creationTime;
+        int64 creationTime;
 
         /// The unique metadata of the NFT
         bytes metadata;
@@ -742,4 +742,20 @@ interface IHederaTokenService {
     function updateTokenKeys(address token, TokenKey[] memory keys)
         external
         returns (int64 responseCode);
+
+    /// Query if valid token found for the given address
+    /// @param token The token address
+    /// @return responseCode The response code for the status of the request. SUCCESS is 22.    
+    /// @return isToken True if valid token found for the given address     
+    function isToken(address token) 
+        external returns 
+        (int64 responseCode, bool isToken);
+
+    /// Query to return the token type for a given address
+    /// @param token The token address
+    /// @return responseCode The response code for the status of the request. SUCCESS is 22.    
+    /// @return tokenType the token type. 0 is FUNGIBLE_COMMON, 1 is NON_FUNGIBLE_UNIQUE, -1 is UNRECOGNIZED   
+    function getTokenType(address token)
+        external returns 
+        (int64 responseCode, int32 tokenType);
 }
