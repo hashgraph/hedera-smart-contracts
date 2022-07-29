@@ -204,7 +204,7 @@ interface IHederaTokenService {
         address ownerId;
 
         /// The epoch second at which the token was created.
-        int32 creationTime;
+        int64 creationTime;
 
         /// The unique metadata of the NFT
         bytes metadata;
