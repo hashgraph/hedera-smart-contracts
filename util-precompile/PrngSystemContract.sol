@@ -9,6 +9,6 @@ contract PrngSystemContract {
         (bool success, bytes memory result) = PRECOMPILE_ADDRESS.call(
             abi.encodeWithSelector(IPrngSystemContract.getPseudorandomSeed.selector));
         require(success, "PRNG system call failed");
-        randomBytes = abi.decode(result, (bytes32));
+        seedBytes = abi.decode(result, (bytes32));
     }
 }
