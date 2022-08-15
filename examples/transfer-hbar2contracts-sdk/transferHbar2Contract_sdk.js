@@ -24,7 +24,7 @@ async function main() {
 	const initialBalance = 100;
 	const [accStatus, aliceId] = await accountCreatorFcn(aliceKey, initialBalance);
 	console.log(
-		`\n- Created Alice's account with initial balance of ${initialBalance} hbar: ${accStatus}`
+		`\n- Created Alice's account '${aliceId}' with initial balance of ${initialBalance} hbar: ${accStatus}`
 	);
 
 	// Import the compiled contract bytecode
