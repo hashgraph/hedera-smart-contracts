@@ -28,7 +28,7 @@ async function main() {
 	);
 
 	// Import the compiled contract bytecode
-	const contractBytecode = fs.readFileSync("transferHbar2Contract_sdk_sol_hbar2Contract.bin");
+	const contractBytecode = fs.readFileSync("hbar2Contract.bin");
 
 	// Deploy the contract on Hedera
 	const [contractId, contractAddress] = await contractCreatorFcn(contractBytecode);
