@@ -3,7 +3,7 @@
 import "./IPrngSystemContract.sol";
 
 contract PrngSystemContract {
-    // Prng system contract address
+    // Prng system contract address with ContractID 0.0.361
     address constant PRECOMPILE_ADDRESS = address(0x169);
 
     function getPseudorandomSeed() external returns (bytes32 seedBytes) {
