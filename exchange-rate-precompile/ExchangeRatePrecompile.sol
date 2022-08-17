@@ -2,9 +2,12 @@
 
 import "./SelfFunding.sol";
 
+
 contract ExchangeRatePrecompile is SelfFunding {
     // The USD in cents that must be sent as msg.value
     uint256 toll;
+    // ExchangeRate system contract address
+    address constant PRECOMPILE_ADDRESS = address(0x168);
 
     constructor(uint256 _toll) {
         toll = _toll;
