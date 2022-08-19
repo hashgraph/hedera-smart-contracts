@@ -38,6 +38,7 @@ contract hbarToAndFromContract is HederaTokenService{
         require(sent, "Failed to send Hbar");
     }
     
+    
     //============================================ 
     // CHECKING THE HBAR BALANCE OF THE CONTRACT
     //============================================ 

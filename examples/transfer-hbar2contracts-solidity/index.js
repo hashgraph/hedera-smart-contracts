@@ -117,6 +117,7 @@ main();
 // ==================================================
 // FUNCTIONS
 // ==================================================
+
 async function accountCreatorFcn(pvKey, iBal) {
 	const response = await new AccountCreateTransaction()
 		.setInitialBalance(new Hbar(iBal))
