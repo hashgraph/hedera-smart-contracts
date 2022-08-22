@@ -101,6 +101,156 @@ contract SafeOperations {
         (tokenAddress) = SafeHTS.safeCreateNonFungibleTokenWithCustomFees(token, new IHederaTokenService.FixedFee[](0), royaltyFees);
     }
 
+    function safeApprove(address token, address spender, uint256 amount) external {
+        SafeHTS.safeApprove(token, spender, amount);
+    }
+
+    function safeAllowance(address token, address owner, address spender) external
+    returns (uint256 allowance)
+    {
+        allowance = SafeHTS.safeAllowance(token, owner, spender);
+    }
+
+    function safeApproveNFT(address token, address approved, int64 serialNumber) external {
+        SafeHTS.safeApproveNFT(token, approved, serialNumber);
+    }
+
+    function safeGetApproved(address token, int64 serialNumber) external
+    returns (address approved)
+    {
+        approved = SafeHTS.safeGetApproved(token, serialNumber);
+    }
+
+    function safeSetApprovalForAll(address token, address operator, bool approved) external {
+        SafeHTS.safeSetApprovalForAll(token, operator, approved);
+    }
+
+    function safeIsApprovedForAll(address token, address owner, address operator) external
+    returns (bool approved)
+    {
+        approved = SafeHTS.safeIsApprovedForAll(token, owner, operator);
+    }
+
+    function safeIsFrozen(address token, address account) external
+    returns (bool frozen)
+    {
+       frozen = SafeHTS.safeIsFrozen(token, account);
+    }
+
+    function safeIsKyc(address token, address account) external
+    returns (bool kycGranted)
+    {
+       kycGranted = SafeHTS.safeIsKyc(token, account);
+    }
+
+    function safeDeleteToken(address token) external {
+       SafeHTS.safeDeleteToken(token);
+    }
+
+    function safeGetTokenCustomFees(address token) external
+    returns (IHederaTokenService.FixedFee[] memory fixedFees, IHederaTokenService.FractionalFee[] memory fractionalFees, IHederaTokenService.RoyaltyFee[] memory royaltyFees)
+    {
+        (fixedFees, fractionalFees, royaltyFees) = SafeHTS.safeGetTokenCustomFees(token);
+    }
+
+    function safeGetTokenDefaultFreezeStatus(address token) external
+    returns (bool defaultFreezeStatus)
+    {
+        defaultFreezeStatus = SafeHTS.safeGetTokenDefaultFreezeStatus(token);
+    }
+
+    function safeGetTokenDefaultKycStatus(address token) external
+    returns (bool defaultKycStatus)
+    {
+       defaultKycStatus = SafeHTS.safeGetTokenDefaultKycStatus(token);
+    }
+
+    function safeGetTokenExpiryInfo(address token) external
+    returns (IHederaTokenService.Expiry memory expiry)
+    {
+       expiry = SafeHTS.safeGetTokenExpiryInfo(token);
+    }
+
+   function safeGetFungibleTokenInfo(address token) external
+   returns (IHederaTokenService.FungibleTokenInfo memory fungibleTokenInfo)
+   {
+       fungibleTokenInfo = SafeHTS.safeGetFungibleTokenInfo(token);
+   }
+
+    function safeGetTokenInfo(address token) external
+    returns (IHederaTokenService.TokenInfo memory tokenInfo)
+    {
+        tokenInfo = SafeHTS.safeGetTokenInfo(token);
+    }
+
+    function safeGetTokenKey(address token, uint keyType) external
+    returns (IHederaTokenService.KeyValue memory key)
+    {
+       key = SafeHTS.safeGetTokenKey(token, keyType);
+    }
+
+    function safeGetNonFungibleTokenInfo(address token, int64 serialNumber) external
+    returns (IHederaTokenService.NonFungibleTokenInfo memory nonFungibleTokenInfo)
+    {
+       nonFungibleTokenInfo = SafeHTS.safeGetNonFungibleTokenInfo(token, serialNumber);
+    }
+
+    function safeFreezeToken(address token, address account) external {
+        SafeHTS.safeFreezeToken(token, account);
+    }
+
+    function safeUnfreezeToken(address token, address account) external {
+       SafeHTS.safeUnfreezeToken(token, account);
+    }
+
+    function safeGrantTokenKyc(address token, address account) external {
+       SafeHTS.safeGrantTokenKyc(token, account);
+    }
+
+    function safeRevokeTokenKyc(address token, address account) external {
+       SafeHTS.safeRevokeTokenKyc(token, account);
+    }
+
+    function safePauseToken(address token) external {
+       SafeHTS.safePauseToken(token);
+    }
+
+    function safeUnpauseToken(address token) external {
+       SafeHTS.safeUnpauseToken(token);
+    }
+
+    function safeWipeTokenAccount(address token, address account, uint32 amount) external {
+        SafeHTS.safeWipeTokenAccount(token, account, amount);
+    }
+
+    function safeWipeTokenAccountNFT(address token, address account, int64[] memory serialNumbers) external {
+        SafeHTS.safeWipeTokenAccountNFT(token, account, serialNumbers);
+    }
+
+    function safeUpdateTokenInfo(address token, IHederaTokenService.HederaToken memory tokenInfo) external {
+        SafeHTS.safeUpdateTokenInfo(token, tokenInfo);
+    }
+
+    function safeUpdateTokenExpiryInfo(address token, IHederaTokenService.Expiry memory expiryInfo) external {
+        SafeHTS.safeUpdateTokenExpiryInfo(token, expiryInfo);
+    }
+
+    function safeUpdateTokenKeys(address token, IHederaTokenService.TokenKey[] memory keys) external {
+        SafeHTS.safeUpdateTokenKeys(token, keys);
+    }
+
+    function safeIsToken(address token) external
+    returns (bool isToken)
+    {
+        isToken = SafeHTS.safeIsToken(token);
+    }
+
+    function safeGetTokenType(address token) external
+    returns (int32 tokenType)
+    {
+       tokenType = SafeHTS.safeGetTokenType(token);
+    }
+
     function createRoyaltyFeesWithAllTypes(
         uint32 numerator,
         uint32 denominator,
