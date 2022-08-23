@@ -6,55 +6,55 @@ import "./SafeHTS.sol";
 
 contract SafeOperations {
 
-    function safeTokenAssociate(address sender, address tokenAddress) external {
+    function safeAssociateToken(address sender, address tokenAddress) external {
         SafeHTS.safeAssociateToken(tokenAddress, sender);
     }
 
-    function safeTokenDissociate(address sender, address tokenAddress) external {
+    function safeDissociateToken(address sender, address tokenAddress) external {
         SafeHTS.safeDissociateToken(tokenAddress, sender);
     }
 
-    function safeTokensAssociate(address account, address[] memory tokens) external {
+    function safeAssociateTokens(address account, address[] memory tokens) external {
         SafeHTS.safeAssociateTokens(account, tokens);
     }
 
-    function safeTokensDissociate(address account, address[] memory tokens) external {
+    function safeDissociateTokens(address account, address[] memory tokens) external {
         SafeHTS.safeDissociateTokens(account, tokens);
     }
 
-    function safeTokensTransfer(address token, address[] memory accountIds, int64[] memory amounts) external {
+    function safeTransferTokens(address token, address[] memory accountIds, int64[] memory amounts) external {
         SafeHTS.safeTransferTokens(token, accountIds, amounts);
     }
 
-    function safeNFTsTransfer(address token, address[] memory sender, address[] memory receiver, int64[] memory serialNumber) external {
+    function safeTransferNFTs(address token, address[] memory sender, address[] memory receiver, int64[] memory serialNumber) external {
         SafeHTS.safeTransferNFTs(token, sender, receiver, serialNumber);
     }
 
-    function safeTokenTransfer(address token, address sender, address receiver, int64 amount) external {
+    function safeTransferToken(address token, address sender, address receiver, int64 amount) external {
         SafeHTS.safeTransferToken(token, sender, receiver, amount);
     }
 
-    function safeNFTTransfer(address token, address sender, address receiver, int64 serialNum) external {
+    function safeTransferNFT(address token, address sender, address receiver, int64 serialNum) external {
         SafeHTS.safeTransferNFT(token, sender, receiver, serialNum);
     }
 
-    function safeTransferCrypto(IHederaTokenService.TokenTransferList[] memory tokenTransfers) external {
+    function safeCryptoTransfer(IHederaTokenService.TokenTransferList[] memory tokenTransfers) external {
         SafeHTS.safeCryptoTransfer(tokenTransfers);
     }
 
-    function safeTokenMint(address token, uint64 amount, bytes[] memory metadata) external
+    function safeMintToken(address token, uint64 amount, bytes[] memory metadata) external
     returns (uint64 newTotalSupply, int64[] memory serialNumbers)
     {
         (newTotalSupply, serialNumbers) = SafeHTS.safeMintToken(token, amount, metadata);
     }
 
-    function safeTokenBurn(address token, uint64 amount, int64[] memory serialNumbers) external
+    function safeBurnToken(address token, uint64 amount, int64[] memory serialNumbers) external
     returns (uint64 newTotalSupply)
     {
         (newTotalSupply) = SafeHTS.safeBurnToken(token, amount, serialNumbers);
     }
 
-    function safeCreateOfFungibleToken() external payable returns (address tokenAddress){
+    function safeCreateFungibleToken() external payable returns (address tokenAddress){
         IHederaTokenService.HederaToken memory token;
         token.name = "tokenName";
         token.symbol = "tokenSymbol";
@@ -63,7 +63,7 @@ contract SafeOperations {
         (tokenAddress) = SafeHTS.safeCreateFungibleToken(token, 200, 8);
     }
 
-    function safeCreateFungibleOfTokenWithCustomFees(
+    function safeCreateFungibleTokenWithCustomFees(
         address feeCollector,
         address existingTokenAddress)
     external payable returns (address tokenAddress){
@@ -79,7 +79,7 @@ contract SafeOperations {
         (tokenAddress) = SafeHTS.safeCreateFungibleTokenWithCustomFees(token, 200, 8, fixedFees, fractionalFees);
     }
 
-    function safeCreateOfNonFungibleToken() external payable returns (address tokenAddress){
+    function safeCreateNonFungibleToken() external payable returns (address tokenAddress){
         IHederaTokenService.HederaToken memory token;
         token.name = "tokenName";
         token.symbol = "tokenSymbol";
@@ -88,7 +88,7 @@ contract SafeOperations {
         (tokenAddress) = SafeHTS.safeCreateNonFungibleToken(token);
     }
 
-    function safeCreateOfNonFungibleTokenWithCustomFees(
+    function safeCreateNonFungibleTokenWithCustomFees(
         address feeCollector,
         address existingTokenAddress) external payable returns (address tokenAddress){
         IHederaTokenService.HederaToken memory token;
