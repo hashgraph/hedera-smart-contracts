@@ -216,7 +216,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.setApprovalForAll.selector, token, operator, approved));
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe set token approval failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe set token approval for all failed!");
     }
 
     function safeIsApprovedForAll(address token, address owner, address operator) internal
@@ -226,7 +226,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.isApprovedForAll.selector, token, owner, operator));
         (responseCode, approved) = success ? abi.decode(result, (int32, bool)) : (HederaResponseCodes.UNKNOWN, false);
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe query for if approved for all failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe is approved for all failed!");
     }
 
     function safeIsFrozen(address token, address account) internal
@@ -236,7 +236,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.isFrozen.selector, token, account));
         (responseCode, frozen) = success ? abi.decode(result, (int32, bool)) : (HederaResponseCodes.UNKNOWN, false);
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe query for if frozen failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe is frozen failed!");
     }
 
     function safeIsKyc(address token, address account) internal
@@ -246,7 +246,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.isKyc.selector, token, account));
         (responseCode, kycGranted) = success ? abi.decode(result, (int32, bool)) : (HederaResponseCodes.UNKNOWN, false);
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe query for if KYC is granted failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe is KYC granted failed!");
     }
 
     function safeDeleteToken(address token) internal {
@@ -267,7 +267,7 @@ library SafeHTS {
         success
         ? abi.decode(result, (int32, IHederaTokenService.FixedFee[], IHederaTokenService.FractionalFee[], IHederaTokenService.RoyaltyFee[]))
         : (HederaResponseCodes.UNKNOWN, fixedFees, fractionalFees, royaltyFees);
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe query for token custom fees failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe get token custom fees failed!");
     }
 
     function safeGetTokenDefaultFreezeStatus(address token) internal
@@ -277,7 +277,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.getTokenDefaultFreezeStatus.selector, token));
         (responseCode, defaultFreezeStatus) = success ? abi.decode(result, (int32, bool)) : (HederaResponseCodes.UNKNOWN, false);
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe query for token default freeze status failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe get token default freeze status failed!");
     }
 
     function safeGetTokenDefaultKycStatus(address token) internal
@@ -287,7 +287,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.getTokenDefaultKycStatus.selector, token));
         (responseCode, defaultKycStatus) = success ? abi.decode(result, (int32, bool)) : (HederaResponseCodes.UNKNOWN, false);
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe query for token default KYC status failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe get token default KYC status failed!");
     }
 
     function safeGetTokenExpiryInfo(address token) internal
@@ -297,7 +297,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.getTokenExpiryInfo.selector, token));
         (responseCode, expiry) = success ? abi.decode(result, (int32, IHederaTokenService.Expiry)) : (HederaResponseCodes.UNKNOWN, expiry);
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe query for token expiry info failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe get token expiry info failed!");
     }
 
     function safeGetFungibleTokenInfo(address token) internal
@@ -307,7 +307,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.getFungibleTokenInfo.selector, token));
         (responseCode, fungibleTokenInfo) = success ? abi.decode(result, (int32, IHederaTokenService.FungibleTokenInfo)) : (HederaResponseCodes.UNKNOWN, fungibleTokenInfo);
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe query for fungible token info failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe get fungible token info failed!");
     }
 
     function safeGetTokenInfo(address token) internal
@@ -317,7 +317,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.getTokenInfo.selector, token));
         (responseCode, tokenInfo) = success ? abi.decode(result, (int32, IHederaTokenService.TokenInfo)) : (HederaResponseCodes.UNKNOWN, tokenInfo);
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe query for token info failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe get token info failed!");
     }
 
     function safeGetTokenKey(address token, uint keyType) internal
@@ -327,7 +327,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.getTokenKey.selector, token, keyType));
         (responseCode, key) = success ? abi.decode(result, (int32, IHederaTokenService.KeyValue)) : (HederaResponseCodes.UNKNOWN, key);
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe query for token key failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe get token key failed!");
     }
 
     function safeGetNonFungibleTokenInfo(address token, int64 serialNumber) internal
@@ -337,7 +337,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.getNonFungibleTokenInfo.selector, token, serialNumber));
         (responseCode, nonFungibleTokenInfo) = success ? abi.decode(result, (int32, IHederaTokenService.NonFungibleTokenInfo)) : (HederaResponseCodes.UNKNOWN, nonFungibleTokenInfo);
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe query for NFT info failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe get non fungible token info failed!");
     }
 
     function safeFreezeToken(address token, address account) internal {
@@ -345,7 +345,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.freezeToken.selector, token, account));
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe freeze token operation failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe freeze token failed!");
     }
 
     function safeUnfreezeToken(address token, address account) internal {
@@ -353,7 +353,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.unfreezeToken.selector, token, account));
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe unfreeze token operation failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe unfreeze token failed!");
     }
 
     function safeGrantTokenKyc(address token, address account) internal {
@@ -361,7 +361,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.grantTokenKyc.selector, token, account));
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe grant token KYC operation failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe grant token KYC failed!");
     }
 
     function safeRevokeTokenKyc(address token, address account) internal {
@@ -369,7 +369,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.revokeTokenKyc.selector, token, account));
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe revoke token KYC operation failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe revoke token KYC failed!");
     }
 
     function safePauseToken(address token) internal {
@@ -377,7 +377,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.pauseToken.selector, token));
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe pause token operation failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe pause token failed!");
     }
 
     function safeUnpauseToken(address token) internal {
@@ -385,7 +385,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.unpauseToken.selector, token));
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe unpause token operation failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe unpause token failed!");
     }
 
     function safeWipeTokenAccount(address token, address account, uint32 amount) internal {
@@ -393,7 +393,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.wipeTokenAccount.selector, token, account, amount));
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe wipe token account operation failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe wipe token account failed!");
     }
 
     function safeWipeTokenAccountNFT(address token, address account, int64[] memory serialNumbers) internal {
@@ -401,7 +401,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.wipeTokenAccountNFT.selector, token, account, serialNumbers));
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe wipe token account NFT operation failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe wipe token account NFT failed!");
     }
 
     function safeUpdateTokenInfo(address token, IHederaTokenService.HederaToken memory tokenInfo) nonEmptyExpiry(tokenInfo) internal {
@@ -409,7 +409,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.updateTokenInfo.selector, token, tokenInfo));
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe update token info operation failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe update token info failed!");
     }
 
     function safeUpdateTokenExpiryInfo(address token, IHederaTokenService.Expiry memory expiryInfo) internal {
@@ -417,7 +417,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.updateTokenExpiryInfo.selector, token, expiryInfo));
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe update token expiry info operation failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe update token expiry info failed!");
     }
 
     function safeUpdateTokenKeys(address token, IHederaTokenService.TokenKey[] memory keys) internal {
@@ -425,7 +425,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.updateTokenKeys.selector, token, keys));
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe update token keys operation failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe update token keys failed!");
     }
 
     function safeIsToken(address token) internal
@@ -435,7 +435,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.isToken.selector, token));
         (responseCode, isToken) = success ? abi.decode(result, (int32, bool)) : (HederaResponseCodes.UNKNOWN, false);
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe query for if valid token at address failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe is token failed!");
     }
 
     function safeGetTokenType(address token) internal
@@ -445,7 +445,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.getTokenType.selector, token));
         (responseCode, tokenType) = success ? abi.decode(result, (int32, int32)) : (HederaResponseCodes.UNKNOWN, int32(0));
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe query for token type failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe get token type failed!");
     }
 
     modifier nonEmptyExpiry(IHederaTokenService.HederaToken memory token)
