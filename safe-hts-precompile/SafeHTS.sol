@@ -22,7 +22,7 @@ library SafeHTS {
     function safeMintToken(address token, uint64 amount, bytes[] memory metadata) internal
     returns (uint64 newTotalSupply, int64[] memory serialNumbers) {
         int32 responseCode;
-        (bool success, bytes memory result) = precompileAddress.delegatecall(
+        (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.mintToken.selector,
             token, amount, metadata));
         (responseCode, newTotalSupply, serialNumbers) =
