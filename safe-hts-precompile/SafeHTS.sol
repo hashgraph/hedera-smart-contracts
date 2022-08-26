@@ -435,7 +435,7 @@ library SafeHTS {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.isToken.selector, token));
         (responseCode, isToken) = success ? abi.decode(result, (int32, bool)) : (HederaResponseCodes.UNKNOWN, false);
-        require(responseCode == HederaResponseCodes.SUCCESS, "Safe is token failed!");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Safe isToken failed!");
     }
 
     function safeGetTokenType(address token) internal
