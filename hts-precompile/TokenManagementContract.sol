@@ -14,28 +14,6 @@ contract TokenManagementContract is FeeHelper {
     uint decimals = 8;
     bool freezeDefaultStatus = false;
 
-    event CreatedToken(address tokenAddress);
-    event DefaultFreezeStatusChanged(bool freezeStatus);
-    event AllowanceValue(uint256 amount);
-    event ResponseCode(int responseCode);
-    event ApprovedAddress(address approved);
-    event Approved(bool approved);
-    event FungibleTokenInfo(IHederaTokenService.FungibleTokenInfo tokenInfo);
-    event TokenInfo(IHederaTokenService.TokenInfo tokenInfo);
-    event NonFungibleTokenInfo(IHederaTokenService.NonFungibleTokenInfo tokenInfo);
-    event MintedToken(uint64 newTotalSupply, int64[] serialNumbers);
-    event Frozen(bool frozen);
-    event PausedToken(bool paused);
-    event UnpausedToken(bool unpaused);
-    event TokenCustomFees(IHederaTokenService.FixedFee[] fixedFees, IHederaTokenService.FractionalFee[] fractionalFees, IHederaTokenService.RoyaltyFee[] royaltyFees);
-    event TokenDefaultFreezeStatus(bool defaultFreezeStatus);
-    event TokenDefaultKycStatus(bool defaultKycStatus);
-    event KycGranted(bool kycGranted);
-    event IsToken(bool isToken);
-    event TokenType(int32 tokenType);
-    event TokenExpiryInfo(IHederaTokenService.Expiry expiryInfo);
-    event TokenKey(IHederaTokenService.KeyValue key);
-
     function createFungibleTokenPublic(
         address treasury
     ) public payable {
@@ -59,8 +37,6 @@ contract TokenManagementContract is FeeHelper {
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert ();
         }
-
-        emit CreatedToken(tokenAddress);
     }
 
     function createNonFungibleTokenPublic(
@@ -87,8 +63,6 @@ contract TokenManagementContract is FeeHelper {
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert ();
         }
-
-        emit CreatedToken(tokenAddress);
     }
 
     function createFungibleTokenWithCustomFeesPublic(
@@ -114,24 +88,19 @@ contract TokenManagementContract is FeeHelper {
 
         (int responseCode, address tokenAddress) =
         HederaTokenService.createFungibleTokenWithCustomFees(token, initialTotalSupply, decimals, fixedFees, fractionalFees);
-        emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert ();
         }
-
-        emit CreatedToken(tokenAddress);
     }
 
     function setFreezeDefaultStatus(bool newFreezeStatus) public {
         freezeDefaultStatus = newFreezeStatus;
-
-        emit DefaultFreezeStatusChanged(freezeDefaultStatus);
     }
 
     function associateTokenPublic(address account, address token) public returns (int responseCode) {
         responseCode = HederaTokenService.associateToken(account, token);
-        emit ResponseCode(responseCode);
+
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert ();
         }
@@ -139,7 +108,7 @@ contract TokenManagementContract is FeeHelper {
 
     function approvePublic(address token, address spender, uint256 amount) public returns (int responseCode) {
         responseCode = HederaTokenService.approve(token, spender, amount);
-        emit ResponseCode(responseCode);
+
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert ();
         }
@@ -147,11 +116,10 @@ contract TokenManagementContract is FeeHelper {
 
     function allowancePublic(address token, address owner, address spender) public returns (int responseCode, uint256 amount) {
         (responseCode, amount) = HederaTokenService.allowance(token, owner, spender);
-        emit ResponseCode(responseCode);
+
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert ();
         }
-        emit AllowanceValue(amount);
     }
 
     function transferTokenPublic(address account, address token, int64 amount) public returns (int responseCode) {
@@ -179,19 +147,15 @@ contract TokenManagementContract is FeeHelper {
     function getApprovedPublic(address token, uint256 serialNumber) public returns (int responseCode, address approved)
     {
         (responseCode, approved) = HederaTokenService.getApproved(token, serialNumber);
-        emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-
-        emit ApprovedAddress(approved);
     }
 
     function setApprovalForAllPublic(address token, address operator, bool approved) public returns (int responseCode)
     {
         responseCode = HederaTokenService.setApprovalForAll(token, operator, approved);
-        emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
@@ -201,31 +165,24 @@ contract TokenManagementContract is FeeHelper {
     function mintTokenPublic(address token, uint64 amount, bytes[] memory metadata) public
     returns (int responseCode, uint64 newTotalSupply, int64[] memory serialNumbers) {
         (responseCode, newTotalSupply, serialNumbers) = HederaTokenService.mintToken(token, amount, metadata);
-        emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-
-        emit MintedToken(newTotalSupply, serialNumbers);
     }
 
     function isApprovedForAllPublic(address token, address owner, address operator) public returns (int responseCode, bool approved)
     {
         (responseCode, approved) = HederaTokenService.isApprovedForAll(token, owner, operator);
-        emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-
-        emit Approved(approved);
     }
 
     function wipeTokenAccountPublic(address token, address account, uint32 amount) public returns (int responseCode)
     {
         responseCode = HederaTokenService.wipeTokenAccount(token, account, amount);
-        emit ResponseCode(responseCode);
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert ();
         }
@@ -235,7 +192,6 @@ contract TokenManagementContract is FeeHelper {
     returns (int responseCode)
     {
         responseCode = HederaTokenService.wipeTokenAccountNFT(token, account, serialNumbers);
-        emit ResponseCode(responseCode);
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert ();
         }
@@ -245,7 +201,6 @@ contract TokenManagementContract is FeeHelper {
     returns (int responseCode)
     {
         responseCode = HederaTokenService.transferNFT(token, sender, receiver, serialNumber);
-        emit ResponseCode(responseCode);
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert ();
         }
@@ -254,42 +209,30 @@ contract TokenManagementContract is FeeHelper {
     function getFungibleTokenInfoPublic(address token) public returns (int responseCode, IHederaTokenService.FungibleTokenInfo memory tokenInfo) {
         (responseCode, tokenInfo) = HederaTokenService.getFungibleTokenInfo(token);
 
-        emit ResponseCode(responseCode);
-
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-
-        emit FungibleTokenInfo(tokenInfo);
     }
 
     function getTokenInfoPublic(address token) public returns (int responseCode, IHederaTokenService.TokenInfo memory tokenInfo) {
         (responseCode, tokenInfo) = HederaTokenService.getTokenInfo(token);
 
-        emit ResponseCode(responseCode);
-
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-
-        emit TokenInfo(tokenInfo);
     }
 
     function getNonFungibleTokenInfoPublic(address token, int64 serialNumber) public returns (int responseCode, IHederaTokenService.NonFungibleTokenInfo memory tokenInfo) {
         (responseCode, tokenInfo) = HederaTokenService.getNonFungibleTokenInfo(token, serialNumber);
 
-        emit ResponseCode(responseCode);
-
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-
-        emit NonFungibleTokenInfo(tokenInfo);
     }
 
     function freezeTokenPublic(address token, address account) public returns (int responseCode) {
         responseCode = HederaTokenService.freezeToken(token, account);
-        emit ResponseCode(responseCode);
+
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
@@ -297,7 +240,7 @@ contract TokenManagementContract is FeeHelper {
 
     function unfreezeTokenPublic(address token, address account) public returns (int responseCode) {
         responseCode = HederaTokenService.unfreezeToken(token, account);
-        emit ResponseCode(responseCode);
+
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
@@ -305,35 +248,26 @@ contract TokenManagementContract is FeeHelper {
 
     function isFrozenPublic(address token, address account) public returns (int responseCode, bool frozen) {
         (responseCode, frozen) = HederaTokenService.isFrozen(token, account);
-        emit ResponseCode(responseCode);
+
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-        emit Frozen(frozen);
     }
 
     function pauseTokenPublic(address token) public returns (int responseCode) {
         responseCode = this.pauseToken(token);
 
-        emit ResponseCode(responseCode);
-
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-
-        emit PausedToken(true);
     }
 
     function unpauseTokenPublic(address token) public returns (int responseCode) {
         responseCode = this.unpauseToken(token);
 
-        emit ResponseCode(responseCode);
-
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-
-        emit UnpausedToken(true);
     }
 
     function getTokenCustomFeesPublic(address token) public returns (
@@ -342,30 +276,22 @@ contract TokenManagementContract is FeeHelper {
         IHederaTokenService.FractionalFee[] memory fractionalFees,
         IHederaTokenService.RoyaltyFee[] memory royaltyFees) {
         (responseCode, fixedFees, fractionalFees, royaltyFees) = HederaTokenService.getTokenCustomFees(token);
-        emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-
-        emit TokenCustomFees(fixedFees, fractionalFees, royaltyFees);
     }
 
     function getTokenDefaultFreezeStatusPublic(address token) public returns (int responseCode, bool defaultFreezeStatus) {
         (responseCode, defaultFreezeStatus) = HederaTokenService.getTokenDefaultFreezeStatus(token);
 
-        emit ResponseCode(responseCode);
-
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-
-        emit TokenDefaultFreezeStatus(defaultFreezeStatus);
     }
 
     function deleteTokenPublic(address token) public returns (int responseCode) {
         responseCode = HederaTokenService.deleteToken(token);
-        emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
@@ -375,31 +301,21 @@ contract TokenManagementContract is FeeHelper {
     function getTokenDefaultKycStatusPublic(address token) public returns (int responseCode, bool defaultKycStatus) {
         (responseCode, defaultKycStatus) = HederaTokenService.getTokenDefaultKycStatus(token);
 
-        emit ResponseCode(responseCode);
-
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-
-        emit TokenDefaultKycStatus(defaultKycStatus);
     }
 
     function isKycPublic(address token, address account)external returns (int64 responseCode, bool kycGranted){
         (responseCode, kycGranted) = this.isKyc(token, account);
 
-        emit ResponseCode(responseCode);
-
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-
-        emit KycGranted(kycGranted);
     }
 
     function grantTokenKycPublic(address token, address account)external returns (int64 responseCode){
         (responseCode) = this.grantTokenKyc(token, account);
-
-        emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
@@ -409,8 +325,6 @@ contract TokenManagementContract is FeeHelper {
     function revokeTokenKycPublic(address token, address account)external returns (int64 responseCode){
         (responseCode) = this.revokeTokenKyc(token, account);
 
-        emit ResponseCode(responseCode);
-
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
@@ -419,19 +333,13 @@ contract TokenManagementContract is FeeHelper {
     function getTokenExpiryInfoPublic(address token)external returns (int responseCode, IHederaTokenService.Expiry memory expiryInfo){
         (responseCode, expiryInfo) = this.getTokenExpiryInfo(token);
 
-        emit ResponseCode(responseCode);
-
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-
-        emit TokenExpiryInfo(expiryInfo);
     }
 
     function updateTokenExpiryInfoPublic(address token, IHederaTokenService.Expiry memory expiryInfo)external returns (int responseCode){
         (responseCode) = this.updateTokenExpiryInfo(token, expiryInfo);
-
-        emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
@@ -440,40 +348,30 @@ contract TokenManagementContract is FeeHelper {
 
     function isTokenPublic(address token) public returns (int64 responseCode, bool isTokenFlag) {
         (responseCode, isTokenFlag) = HederaTokenService.isToken(token);
-        emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-
-        emit IsToken(isTokenFlag);
     }
 
     function getTokenTypePublic(address token) public returns (int64 responseCode, int32 tokenType) {
         (responseCode, tokenType) = HederaTokenService.getTokenType(token);
-        emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-
-        emit TokenType(tokenType);
     }
 
     function getTokenKeyPublic(address token, uint keyType) external returns (int64 responseCode, IHederaTokenService.KeyValue memory key){
         (responseCode, key) = HederaTokenService.getTokenKey(token, keyType);
-        emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-
-        emit TokenKey(key);
     }
 
     function updateTokenInfoPublic(address token, IHederaTokenService.HederaToken memory tokenInfo) public returns (int responseCode) {
         (responseCode, tokenInfo) = HederaTokenService.updateTokenInfo(token, tokenInfo);
-        emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
@@ -482,7 +380,6 @@ contract TokenManagementContract is FeeHelper {
 
     function updateTokenKeysPublic(address token, IHederaTokenService.TokenKey[] memory keys) public returns (int64 responseCode){
         (responseCode, keys) = HederaTokenService.updateTokenKeys(token, keys);
-        emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
