@@ -122,7 +122,7 @@ contract TokenManagementContract is FeeHelper {
         }
     }
 
-    function transferTokenPublic(address account, address token, int64 amount) public returns (int responseCode) {
+    function cryptoTransferPublic(address account, address token, int64 amount) public returns (int responseCode) {
         IHederaTokenService.NftTransfer[] memory nftTransfers = new IHederaTokenService.NftTransfer[](0);
 
         IHederaTokenService.AccountAmount memory accountAmountNegative =
@@ -144,8 +144,41 @@ contract TokenManagementContract is FeeHelper {
         }
     }
 
-    function getApprovedPublic(address token, uint256 serialNumber) public returns (int responseCode, address approved)
-    {
+    function transferTokenPublic(address token, address sender, address receiver, int64 amount) public returns (int responseCode) {
+        (responseCode) = HederaTokenService.transferToken(token, sender, receiver, amount);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
+
+    function transferTokensPublic(address token, address[] memory accountIds, int64[] memory amounts) public
+        returns (int responseCode) {
+        (responseCode) = HederaTokenService.transferTokens(token, accountIds, amounts);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
+
+    function transferNFTPublic(address token, address sender, address receiver, int64 serialNumber) public returns (int responseCode) {
+        (responseCode) = HederaTokenService.transferNFT(token, sender, receiver, serialNumber);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
+
+    function transferNFTsPublic(address token, address[] memory sender, address[] memory receiver, int64[] memory serialNumber)
+        public returns (int responseCode) {
+        (responseCode) = HederaTokenService.transferNFTs(token, sender, receiver, serialNumber);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
+
+    function getApprovedPublic(address token, uint256 serialNumber) public returns (int responseCode, address approved) {
         (responseCode, approved) = HederaTokenService.getApproved(token, serialNumber);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
@@ -153,8 +186,7 @@ contract TokenManagementContract is FeeHelper {
         }
     }
 
-    function setApprovalForAllPublic(address token, address operator, bool approved) public returns (int responseCode)
-    {
+    function setApprovalForAllPublic(address token, address operator, bool approved) public returns (int responseCode) {
         responseCode = HederaTokenService.setApprovalForAll(token, operator, approved);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
@@ -171,8 +203,7 @@ contract TokenManagementContract is FeeHelper {
         }
     }
 
-    function isApprovedForAllPublic(address token, address owner, address operator) public returns (int responseCode, bool approved)
-    {
+    function isApprovedForAllPublic(address token, address owner, address operator) public returns (int responseCode, bool approved) {
         (responseCode, approved) = HederaTokenService.isApprovedForAll(token, owner, operator);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
@@ -180,8 +211,7 @@ contract TokenManagementContract is FeeHelper {
         }
     }
 
-    function wipeTokenAccountPublic(address token, address account, uint32 amount) public returns (int responseCode)
-    {
+    function wipeTokenAccountPublic(address token, address account, uint32 amount) public returns (int responseCode) {
         responseCode = HederaTokenService.wipeTokenAccount(token, account, amount);
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert ();
@@ -189,8 +219,7 @@ contract TokenManagementContract is FeeHelper {
     }
 
     function wipeTokenAccountNFTPublic(address token, address account, int64[] memory serialNumbers) public
-    returns (int responseCode)
-    {
+    returns (int responseCode) {
         responseCode = HederaTokenService.wipeTokenAccountNFT(token, account, serialNumbers);
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert ();
@@ -198,8 +227,7 @@ contract TokenManagementContract is FeeHelper {
     }
 
     function transferNFTPublic(address token, address sender, address receiver, int64 serialNumber) public
-    returns (int responseCode)
-    {
+    returns (int responseCode) {
         responseCode = HederaTokenService.transferNFT(token, sender, receiver, serialNumber);
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert ();
@@ -306,7 +334,7 @@ contract TokenManagementContract is FeeHelper {
         }
     }
 
-    function isKycPublic(address token, address account)external returns (int64 responseCode, bool kycGranted){
+    function isKycPublic(address token, address account)external returns (int64 responseCode, bool kycGranted) {
         (responseCode, kycGranted) = this.isKyc(token, account);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
@@ -314,7 +342,7 @@ contract TokenManagementContract is FeeHelper {
         }
     }
 
-    function grantTokenKycPublic(address token, address account)external returns (int64 responseCode){
+    function grantTokenKycPublic(address token, address account)external returns (int64 responseCode) {
         (responseCode) = this.grantTokenKyc(token, account);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
@@ -322,7 +350,7 @@ contract TokenManagementContract is FeeHelper {
         }
     }
 
-    function revokeTokenKycPublic(address token, address account)external returns (int64 responseCode){
+    function revokeTokenKycPublic(address token, address account)external returns (int64 responseCode) {
         (responseCode) = this.revokeTokenKyc(token, account);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
@@ -330,7 +358,7 @@ contract TokenManagementContract is FeeHelper {
         }
     }
 
-    function getTokenExpiryInfoPublic(address token)external returns (int responseCode, IHederaTokenService.Expiry memory expiryInfo){
+    function getTokenExpiryInfoPublic(address token)external returns (int responseCode, IHederaTokenService.Expiry memory expiryInfo) {
         (responseCode, expiryInfo) = this.getTokenExpiryInfo(token);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
@@ -338,7 +366,7 @@ contract TokenManagementContract is FeeHelper {
         }
     }
 
-    function updateTokenExpiryInfoPublic(address token, IHederaTokenService.Expiry memory expiryInfo)external returns (int responseCode){
+    function updateTokenExpiryInfoPublic(address token, IHederaTokenService.Expiry memory expiryInfo)external returns (int responseCode) {
         (responseCode) = this.updateTokenExpiryInfo(token, expiryInfo);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
@@ -362,7 +390,7 @@ contract TokenManagementContract is FeeHelper {
         }
     }
 
-    function getTokenKeyPublic(address token, uint keyType) external returns (int64 responseCode, IHederaTokenService.KeyValue memory key){
+    function getTokenKeyPublic(address token, uint keyType) external returns (int64 responseCode, IHederaTokenService.KeyValue memory key) {
         (responseCode, key) = HederaTokenService.getTokenKey(token, keyType);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
@@ -378,7 +406,7 @@ contract TokenManagementContract is FeeHelper {
         }
     }
 
-    function updateTokenKeysPublic(address token, IHederaTokenService.TokenKey[] memory keys) public returns (int64 responseCode){
+    function updateTokenKeysPublic(address token, IHederaTokenService.TokenKey[] memory keys) public returns (int64 responseCode) {
         (responseCode, keys) = HederaTokenService.updateTokenKeys(token, keys);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
