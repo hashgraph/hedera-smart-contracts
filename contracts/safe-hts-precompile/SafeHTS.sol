@@ -452,6 +452,7 @@ library SafeHTS {
     {
         if (token.expiry.second == 0 && token.expiry.autoRenewPeriod == 0) {
             token.expiry.autoRenewPeriod = defaultAutoRenewPeriod;
+            token.expiry.autoRenewAccount = address(this);
         }
         _;
     }
