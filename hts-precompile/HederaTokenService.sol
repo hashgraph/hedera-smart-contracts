@@ -155,7 +155,7 @@ abstract contract HederaTokenService is HederaResponseCodes {
     function createFungibleToken(
         IHederaTokenService.HederaToken memory token,
         uint64 initialTotalSupply,
-        uint decimals) nonEmptyExpiry(token)
+        uint32 decimals) nonEmptyExpiry(token)
     internal returns (int responseCode, address tokenAddress) {
 
         (bool success, bytes memory result) = precompileAddress.call{value: msg.value}(
@@ -178,7 +178,7 @@ abstract contract HederaTokenService is HederaResponseCodes {
     function createFungibleTokenWithCustomFees(
         IHederaTokenService.HederaToken memory token,
         uint64 initialTotalSupply,
-        uint decimals,
+        uint32 decimals,
         IHederaTokenService.FixedFee[] memory fixedFees,
         IHederaTokenService.FractionalFee[] memory fractionalFees) nonEmptyExpiry(token)
     internal returns (int responseCode, address tokenAddress) {

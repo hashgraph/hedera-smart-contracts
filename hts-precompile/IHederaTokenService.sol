@@ -396,7 +396,7 @@ interface IHederaTokenService {
     function createFungibleToken(
         HederaToken memory token,
         uint64 initialTotalSupply,
-        uint decimals
+        uint32 decimals
     ) external payable returns (int64 responseCode, address tokenAddress);
 
     /// Creates a Fungible Token with the specified properties
@@ -411,7 +411,7 @@ interface IHederaTokenService {
     function createFungibleTokenWithCustomFees(
         HederaToken memory token,
         uint64 initialTotalSupply,
-        uint decimals,
+        uint32 decimals,
         FixedFee[] memory fixedFees,
         FractionalFee[] memory fractionalFees
     ) external payable returns (int64 responseCode, address tokenAddress);
