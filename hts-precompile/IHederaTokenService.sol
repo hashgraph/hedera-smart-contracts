@@ -526,7 +526,7 @@ interface IHederaTokenService {
     function approveNFT(
         address token,
         address approved,
-        int64 serialNumber
+        uint256 serialNumber
     ) external returns (int64 responseCode);
 
     /// Get the approved address for a single NFT
@@ -535,7 +535,7 @@ interface IHederaTokenService {
     /// @param serialNumber The NFT to find the approved address for
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     /// @return approved The approved address for this NFT, or the zero address if there is none
-    function getApproved(address token, int64 serialNumber)
+    function getApproved(address token, uint256 serialNumber)
         external
         returns (int64 responseCode, address approved);
 
