@@ -154,7 +154,7 @@ abstract contract HederaTokenService is HederaResponseCodes {
     /// @return tokenAddress the created token's address
     function createFungibleToken(
         IHederaTokenService.HederaToken memory token,
-        uint initialTotalSupply,
+        uint64 initialTotalSupply,
         uint decimals) nonEmptyExpiry(token)
     internal returns (int responseCode, address tokenAddress) {
 
@@ -177,7 +177,7 @@ abstract contract HederaTokenService is HederaResponseCodes {
     /// @return tokenAddress the created token's address
     function createFungibleTokenWithCustomFees(
         IHederaTokenService.HederaToken memory token,
-        uint initialTotalSupply,
+        uint64 initialTotalSupply,
         uint decimals,
         IHederaTokenService.FixedFee[] memory fixedFees,
         IHederaTokenService.FractionalFee[] memory fractionalFees) nonEmptyExpiry(token)

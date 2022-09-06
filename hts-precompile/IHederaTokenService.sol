@@ -140,7 +140,7 @@ interface IHederaTokenService {
         // IWA Compatibility. Depends on TokenSupplyType. For tokens of type FUNGIBLE_COMMON - the
         // maximum number of tokens that can be in circulation. For tokens of type NON_FUNGIBLE_UNIQUE -
         // the maximum number of NFTs (serial numbers) that can be minted. This field can never be changed!
-        uint32 maxSupply;
+        int64 maxSupply;
 
         // The default Freeze status (frozen or unfrozen) of Hedera accounts relative to this token. If
         // true, an account must be unfrozen before it can receive the token
@@ -395,7 +395,7 @@ interface IHederaTokenService {
     /// @return tokenAddress the created token's address
     function createFungibleToken(
         HederaToken memory token,
-        uint initialTotalSupply,
+        uint64 initialTotalSupply,
         uint decimals
     ) external payable returns (int64 responseCode, address tokenAddress);
 
@@ -410,7 +410,7 @@ interface IHederaTokenService {
     /// @return tokenAddress the created token's address
     function createFungibleTokenWithCustomFees(
         HederaToken memory token,
-        uint initialTotalSupply,
+        uint64 initialTotalSupply,
         uint decimals,
         FixedFee[] memory fixedFees,
         FractionalFee[] memory fractionalFees
