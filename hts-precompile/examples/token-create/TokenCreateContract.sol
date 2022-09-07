@@ -2,10 +2,10 @@
 pragma solidity >=0.6.0 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-import "./HederaTokenService.sol";
-import "./IHederaTokenService.sol";
-import "./HederaResponseCodes.sol";
-import "./ExpiryHelper.sol";
+import "../../HederaTokenService.sol";
+import "../../IHederaTokenService.sol";
+import "../../HederaResponseCodes.sol";
+import "../../ExpiryHelper.sol";
 
 /// This is a notional example of how the functions in HIP-358 could be used.
 /// It is non-normative.
