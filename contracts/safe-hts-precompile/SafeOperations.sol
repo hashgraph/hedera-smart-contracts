@@ -6,8 +6,9 @@ import "./SafeHTS.sol";
 
 contract SafeOperations {
 
-    event TokenCreated(address tokenAddress);
-    event TokenInfoEvent(address token, IHederaTokenService.TokenInfo tokenInfo);
+    event TokenCreated(address token);
+    event TokenInfoEvent(IHederaTokenService.TokenInfo tokenInfo);
+    event FungibleTokenInfoEvent(IHederaTokenService.FungibleTokenInfo fungibleTokenInfo);
 
     function safeAssociateToken(address sender, address tokenAddress) external {
         SafeHTS.safeAssociateToken(tokenAddress, sender);
@@ -179,13 +180,14 @@ contract SafeOperations {
    returns (IHederaTokenService.FungibleTokenInfo memory fungibleTokenInfo)
    {
        fungibleTokenInfo = SafeHTS.safeGetFungibleTokenInfo(token);
+       emit FungibleTokenInfoEvent(fungibleTokenInfo);
    }
 
     function safeGetTokenInfo(address token) external
     returns (IHederaTokenService.TokenInfo memory tokenInfo)
     {
         tokenInfo = SafeHTS.safeGetTokenInfo(token);
-        emit TokenInfoEvent(token, tokenInfo);
+        emit TokenInfoEvent(tokenInfo);
     }
 
     function safeGetTokenKey(address token, uint keyType) external
