@@ -1,210 +1,200 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity >=0.6.0 <0.9.0;
+pragma solidity >=0.5.0 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-import "./HederaTokenService.sol";
-import "./IHederaTokenService.sol";
-import "./HederaResponseCodes.sol";
-import "./ExpiryHelper.sol";
+import "./TokenCreate.sol";
 
-/// This is a notional example of how the functions in HIP-358 could be used.
-/// It is non-normative.
-contract TokenCreateContract is ExpiryHelper {
+contract TokenCreateContract is TokenCreate {
 
-    using Bits for uint;
 
-    // create a fungible Token with no custom fees, with calling contract as
-    // admin key, passed ED25519 key as supply and pause key.
-    function createFungible(
-        bytes memory ed25519Key,
-        address autoRenewAccount,
-        uint32 autoRenewPeriod
-    ) external payable returns (address createdTokenAddress) {
+    event AllowanceValue(uint256 amount);
+    event ApprovedAddress(address approved);
+    event Approved(bool approved);
+    event FungibleTokenInfo(IHederaTokenService.FungibleTokenInfo tokenInfo);
+    event TokenCustomFees(IHederaTokenService.FixedFee[] fixedFees, IHederaTokenService.FractionalFee[] fractionalFees, IHederaTokenService.RoyaltyFee[] royaltyFees);
+    event TokenDefaultKycStatus(bool defaultKycStatus);
+    event KycGranted(bool kycGranted);
 
-        // instantiate the list of keys we'll use for token create
-        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](2);
+    function approvePublic(address token, address spender, uint256 amount) public returns (int responseCode) {
+        responseCode = HederaTokenService.approve(token, spender, amount);
+        emit ResponseCode(responseCode);
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+    }
 
-        // use the helper methods in KeyHelper to create basic keys
-        keys[0] = createSingleKey(HederaTokenService.ADMIN_KEY_TYPE, KeyHelper.INHERIT_ACCOUNT_KEY, "");
+    function approveNFTPublic(address token, address approved, uint256 serialNumber) public returns (int responseCode)
+    {
+        responseCode = HederaTokenService.approveNFT(token, approved, serialNumber);
 
-        // create TokenKey of types supplyKey and pauseKey with value a contract address passed as function arg
-        uint supplyPauseKeyType;
-        IHederaTokenService.KeyValue memory supplyPauseKeyValue;
-        // turn on bits corresponding to supply and pause key types
-        supplyPauseKeyType = supplyPauseKeyType.setBit(4);
-        supplyPauseKeyType = supplyPauseKeyType.setBit(6);
-        // set the value of the key to the ed25519Key passed as function arg
-        supplyPauseKeyValue.ed25519 = ed25519Key;
-        keys[1] = IHederaTokenService.TokenKey (supplyPauseKeyType, supplyPauseKeyValue);
-
-        IHederaTokenService.HederaToken memory myToken;
-        myToken.name = "MyToken";
-        myToken.symbol = "MTK";
-        myToken.treasury = address(this);
-        myToken.tokenKeys = keys;
-        // create the expiry schedule for the token using ExpiryHelper
-        myToken.expiry = createAutoRenewExpiry(autoRenewAccount, autoRenewPeriod);
-
-        // call HTS precompiled contract, passing 200 as initial supply and 8 as decimals
-        (int responseCode, address token) =
-                HederaTokenService.createFungibleToken(myToken, 200, 8);
+        emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert ();
         }
-
-        createdTokenAddress = token;
     }
 
-    // create fungible token with custom fees, with an ECDSA key as admin key
-    function createFungibleWithFees(
-        bytes memory ecdsaAdminKey,
+    function allowancePublic(address token, address owner, address spender) public returns (int responseCode, uint256 amount) {
+        (responseCode, amount) = HederaTokenService.allowance(token, owner, spender);
+        emit ResponseCode(responseCode);
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+        emit AllowanceValue(amount);
+    }
+
+
+    function transferTokenPublic(address token, address sender, address receiver, int64 amount) public returns (int responseCode) {
+        responseCode = HederaTokenService.transferToken(token, sender, receiver, amount);
+        emit ResponseCode(responseCode);
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
+
+    function cryptoTransferPublic(IHederaTokenService.TokenTransferList[] calldata tokenTransferList) public returns (int responseCode) {
+        responseCode = HederaTokenService.cryptoTransfer(tokenTransferList);
+        emit ResponseCode(responseCode);
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
+
+    function getApprovedPublic(address token, uint256 serialNumber) public returns (int responseCode, address approved)
+    {
+        (responseCode, approved) = HederaTokenService.getApproved(token, serialNumber);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+
+        emit ApprovedAddress(approved);
+    }
+
+    function setApprovalForAllPublic(address token, address operator, bool approved) public returns (int responseCode)
+    {
+        responseCode = HederaTokenService.setApprovalForAll(token, operator, approved);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
+
+
+    function isApprovedForAllPublic(address token, address owner, address operator) public returns (int responseCode, bool approved)
+    {
+        (responseCode, approved) = HederaTokenService.isApprovedForAll(token, owner, operator);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+
+        emit Approved(approved);
+    }
+
+    function getFungibleTokenInfoPublic(address token) public returns (int responseCode, IHederaTokenService.FungibleTokenInfo memory tokenInfo) {
+        (responseCode, tokenInfo) = HederaTokenService.getFungibleTokenInfo(token);
+
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+
+        emit FungibleTokenInfo(tokenInfo);
+    }
+
+
+    function createFungibleTokenWithCustomFeesPublic(
         address treasury,
-        address feeCollector,
-        address existingTokenAddress,
-        address autoRenewAccount,
-        uint32 autoRenewPeriod
-    ) external payable returns (address createdTokenAddress) {
-
-        // create the admin key using KeyHelper method
+        address fixedFeeTokenAddress
+    ) public payable {
         IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](1);
-        keys[0] = createSingleKey(HederaTokenService.ADMIN_KEY_TYPE, KeyHelper.ECDSA_SECPK2561K1_KEY, ecdsaAdminKey);
+        keys[0] = getSingleKey(KeyType.ADMIN, KeyType.ADMIN, KeyValueType.INHERIT_ACCOUNT_KEY, bytes(""));
 
-        // declare custom fees
-        IHederaTokenService.FixedFee[] memory fixedFees = new IHederaTokenService.FixedFee[](2);
-        // create a fixed fee with hbar as payment using FeeHelper 
-        fixedFees[0] = createFixedHbarFee(5, feeCollector);
-        // create a fixed fee with existing token as payment using FeeHelper 
-        fixedFees[1] = createFixedTokenFee(5, existingTokenAddress, feeCollector);
+        IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
+            0, treasury, 8000000
+        );
+
+        IHederaTokenService.HederaToken memory token = IHederaTokenService.HederaToken(
+            name, symbol, treasury, memo, true, maxSupply, false, keys, expiry
+        );
+
+        IHederaTokenService.FixedFee[] memory fixedFees = new IHederaTokenService.FixedFee[](1);
+        fixedFees[0] = IHederaTokenService.FixedFee(1, fixedFeeTokenAddress, false, false, treasury);
 
         IHederaTokenService.FractionalFee[] memory fractionalFees = new IHederaTokenService.FractionalFee[](1);
-        // create a fractional fee without limits using FeeHelper
-        fractionalFees[0] = createFractionalFee(4, 5, true, feeCollector);
-
-        IHederaTokenService.HederaToken memory myToken;
-        myToken.name = "MyToken";
-        myToken.symbol = "MTK";
-        myToken.treasury = treasury;
-        myToken.tokenKeys = keys;
-        // create the expiry schedule for the token using ExpiryHelper
-        myToken.expiry = createAutoRenewExpiry(autoRenewAccount, autoRenewPeriod);
-
-        (int responseCode, address token) =
-                HederaTokenService.createFungibleTokenWithCustomFees(myToken, 200, 8, fixedFees, fractionalFees);
-
-        if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert ();
-        }
-
-        createdTokenAddress = token;
-    }
-
-    // create an NFT without fees with contract as freeze key
-    function createNonFungibleToken(
-        address contractFreezeKey,
-        address autoRenewAccount,
-        uint32 autoRenewPeriod
-    ) external payable returns (address createdTokenAddress) {
-
-        // instantiate the list of keys we'll use for token create
-        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](1);
-        // use the helper methods in KeyHelper to create basic key
-        keys[0] = createSingleKey(HederaTokenService.FREEZE_KEY_TYPE, KeyHelper.CONTRACT_ID_KEY, contractFreezeKey);
-
-        IHederaTokenService.HederaToken memory myToken;
-        myToken.name = "MyNFT";
-        myToken.symbol = "MNFT";
-        myToken.memo = "memo";
-        myToken.treasury = address(this);
-        myToken.tokenSupplyType = true; // make the total supply FINITE
-        myToken.maxSupply = 10;
-        myToken.tokenKeys = keys;
-        myToken.freezeDefault = true;
-        myToken.expiry = createAutoRenewExpiry(autoRenewAccount, autoRenewPeriod);
-
-        (int responseCode, address token) =
-                HederaTokenService.createNonFungibleToken(myToken);
-
-        if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert ();
-        }
-
-        createdTokenAddress = token;
-    }
-
-    // create NFT with royalty fees, contract has the mint and admin key
-    function createNonFungibleTokenWithCustomFees(
-        address contractIdKey,
-        address feeCollectorAndTreasury,
-        address existingTokenAddress,
-        address autoRenewAccount,
-        uint32 autoRenewPeriod
-    ) external payable returns (address createdTokenAddress) {
-
-        // TokenKey of type adminKey and supplyKey with value this contract id
-        uint adminSupplyKeyType;
-        adminSupplyKeyType = adminSupplyKeyType.setBit(0); // turn on bit corresponding to admin key type
-        adminSupplyKeyType = adminSupplyKeyType.setBit(4); // turn on bit corresponding to supply key type
-        IHederaTokenService.KeyValue memory adminSupplyKeyValue;
-        adminSupplyKeyValue.contractId = contractIdKey;
-
-        // instantiate the list of keys we'll use for token create
-        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](1);
-        keys[0] = IHederaTokenService.TokenKey (adminSupplyKeyType, adminSupplyKeyValue);
-
-        // declare fees
-        IHederaTokenService.RoyaltyFee[] memory royaltyFees = new IHederaTokenService.RoyaltyFee[](3);
-        royaltyFees[0] = createRoyaltyFeeWithoutFallback(4, 5, feeCollectorAndTreasury);
-        royaltyFees[1] = createRoyaltyFeeWithHbarFallbackFee(4, 5, 50, feeCollectorAndTreasury);
-        royaltyFees[2] =
-                createRoyaltyFeeWithTokenDenominatedFallbackFee(4, 5, 30, existingTokenAddress, feeCollectorAndTreasury);
-
-        IHederaTokenService.HederaToken memory myToken;
-        myToken.name = "MyNFT";
-        myToken.symbol = "MNFT";
-        myToken.treasury = feeCollectorAndTreasury;
-        myToken.tokenKeys = keys;
-        myToken.expiry = createAutoRenewExpiry(autoRenewAccount, autoRenewPeriod);
-
-        // create the token through HTS with default expiry and royalty fees;
-        (int responseCode, address token) =
-                HederaTokenService.createNonFungibleTokenWithCustomFees(
-                    myToken,
-                    new IHederaTokenService.FixedFee[](0),
-                    royaltyFees
-                );
-
-        if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert ();
-        }
-
-        createdTokenAddress = token;
-    }
-
-     function createTokenWithDefaultExpiryAndEmptyKeys() public payable returns (address createdTokenAddress) {
-        IHederaTokenService.HederaToken memory token;
-        token.name = "name";
-        token.symbol = "symbol";
-        token.treasury = address(this);
+        fractionalFees[0] = IHederaTokenService.FractionalFee(4, 5, 10, 30, false, treasury);
 
         (int responseCode, address tokenAddress) =
-        HederaTokenService.createFungibleToken(token, 200, 8);
+        HederaTokenService.createFungibleTokenWithCustomFees(token, initialTotalSupply, decimals, fixedFees, fractionalFees);
+        emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert ();
         }
 
-        createdTokenAddress = tokenAddress;
+        emit CreatedToken(tokenAddress);
     }
-}
 
-library Bits {
+    function getTokenCustomFeesPublic(address token) public returns (
+        int64 responseCode,
+        IHederaTokenService.FixedFee[] memory fixedFees,
+        IHederaTokenService.FractionalFee[] memory fractionalFees,
+        IHederaTokenService.RoyaltyFee[] memory royaltyFees) {
+        (responseCode, fixedFees, fractionalFees, royaltyFees) = HederaTokenService.getTokenCustomFees(token);
+        emit ResponseCode(responseCode);
 
-    uint constant internal ONE = uint(1);
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
 
-    // Sets the bit at the given 'index' in 'self' to '1'.
-    // Returns the modified value.
-    function setBit(uint self, uint8 index) internal pure returns (uint) {
-        return self | ONE << index;
+        emit TokenCustomFees(fixedFees, fractionalFees, royaltyFees);
+    }
+
+    function deleteTokenPublic(address token) public returns (int responseCode) {
+        responseCode = HederaTokenService.deleteToken(token);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
+
+    function getTokenDefaultKycStatusPublic(address token) public returns (int responseCode, bool defaultKycStatus) {
+        (responseCode, defaultKycStatus) = HederaTokenService.getTokenDefaultKycStatus(token);
+
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+
+        emit TokenDefaultKycStatus(defaultKycStatus);
+    }
+
+    function isKycPublic(address token, address account) external returns (int64 responseCode, bool kycGranted){
+        (responseCode, kycGranted) = this.isKyc(token, account);
+
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+
+        emit KycGranted(kycGranted);
+    }
+
+    function revokeTokenKycPublic(address token, address account) external returns (int64 responseCode){
+        (responseCode) = this.revokeTokenKyc(token, account);
+
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
     }
 }
