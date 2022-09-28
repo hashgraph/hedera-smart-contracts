@@ -1,5 +1,5 @@
-const { expect } = require("chai");
-const { hethers } = require("hardhat");
+const {expect} = require("chai");
+const {ethers} = require("hardhat");
 
 describe("SafeHTS library tests", function () {
   let safeOperationsContract;
@@ -11,30 +11,30 @@ describe("SafeHTS library tests", function () {
   });
 
   async function deploySafeOperationsContract() {
-    const safeHTSFactory = await hethers.getContractFactory("SafeHTS");
-    const safeHTS = await safeHTSFactory.deploy();
-    await safeHTS.deployed();
+    const safeHTSFactory = await ethers.getContractFactory("SafeHTS");
+    const safeHTS = await safeHTSFactory.deploy({gasLimit: 1_000_000});
+    const safeHTSReceipt = await safeHTS.deployTransaction.wait();
 
-    const safeOperationsFactory = await hethers.getContractFactory("SafeOperations", {
+    const safeOperationsFactory = await ethers.getContractFactory("SafeOperations", {
       libraries: {
-        SafeHTS: safeHTS.address,
-      },
+        SafeHTS: safeHTSReceipt.contractAddress,
+      }
     });
 
-    const safeOperations = await safeOperationsFactory.deploy();
-    await safeOperations.deployed();
+    const safeOperations = await safeOperationsFactory.deploy({gasLimit: 1_000_000});
+    const safeOperationsReceipt = await safeOperations.deployTransaction.wait();
 
-    return safeOperations;
+    return await ethers.getContractAt('SafeOperations', safeOperationsReceipt.contractAddress);
   }
 
   async function createFungibleToken() {
     const tokenAddressTx = await safeOperationsContract.safeCreateFungibleToken({
-      value: hethers.utils.parseHbar("0.00001")
+      value: ethers.BigNumber.from('20000000000000000000'),
+      gasLimit: 1_000_000
     });
 
     const tokenAddressReceipt = await tokenAddressTx.wait();
-    const [ tokenCreatedEvent ] = tokenAddressReceipt.events;
-    const [ tokenAddress ] = tokenCreatedEvent.args;
+    const {tokenAddress} = tokenAddressReceipt.events.filter(e => e.event === 'tokenCreatedEvent')[0].args;
 
     return tokenAddress;
   }
@@ -42,8 +42,7 @@ describe("SafeHTS library tests", function () {
   it("should be able to get token info", async function () {
     const tokenInfoTx = await safeOperationsContract.safeGetTokenInfo(fungibleTokenAddress);
     const tokenInfoReceipt = await tokenInfoTx.wait();
-    const [ tokenInfoEvent ] = tokenInfoReceipt.events;
-    const { tokenInfo } = tokenInfoEvent.args;
+    const {tokenInfo} = tokenInfoReceipt.events.filter(e => e.event === 'tokenInfoEvent')[0].args;
 
     expect(tokenInfo.hedera.name).to.equal("tokenName");
     expect(tokenInfo.hedera.symbol).to.equal("tokenSymbol");
@@ -53,8 +52,7 @@ describe("SafeHTS library tests", function () {
   it("should be able to get fungible token info", async function () {
     const fungibleTokenInfoTx = await safeOperationsContract.safeGetFungibleTokenInfo(fungibleTokenAddress);
     const fungibleTokenInfoReceipt = await fungibleTokenInfoTx.wait();
-    const [ fungibleTokenInfoEvent ] = fungibleTokenInfoReceipt.events;
-    const { fungibleTokenInfo } = fungibleTokenInfoEvent.args;
+    const {fungibleTokenInfo} = fungibleTokenInfoReceipt.events.filter(e => e.event === 'fungibleTokenInfoEvent')[0].args;
 
     expect(fungibleTokenInfo.tokenInfo.hedera.name).to.equal("tokenName");
     expect(fungibleTokenInfo.tokenInfo.hedera.symbol).to.equal("tokenSymbol");

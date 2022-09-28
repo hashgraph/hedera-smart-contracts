@@ -16,7 +16,6 @@
   },
   "homepage": "https://github.com/hashgraph/hedera-smart-contracts#readme",
   "devDependencies": {
-    "@hashgraph/hardhat-hethers": "^1.0.2",
     "@hashgraph/hedera-local": "^1.2.0",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.3"
   }

@@ -1,4 +1,3 @@
-require("@hashgraph/hardhat-hethers");
 require("@nomicfoundation/hardhat-chai-matchers");
 
 /** @type import('hardhat/config').HardhatUserConfig */
@@ -8,30 +7,17 @@ module.exports = {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 1
+        runs: 500
       },
     },
   },
-  defaultNetwork: "localHederaNetwork",
-  hedera: {
-    gasLimit: 300000,
-    networks: {
-      localHederaNetwork: {
-        consensusNodes: [
-          {
-            url: '127.0.0.1:50211',
-            nodeId: '0.0.3'
-          }
-        ],
-        mirrorNodeUrl: 'http://127.0.0.1:5551',
-        chainId: 0,
-        accounts: [
-          {
-            "account": '0.0.1002',
-            "privateKey": '0x7f109a9e3b0d8ecfba9cc23a3614433ce0fa7ddcc80f2a8f10b222179a5a80d6'
-          }
-        ]
-      }
+  defaultNetwork: 'relay',
+  networks: {
+    relay: {
+      url: 'http://localhost:7546',
+      accounts: [
+        "0x2e1d968b041d84dd120a5860cee60cd83f9374ef527ca86996317ada3d0d03e7"
+      ]
     }
   }
 };
