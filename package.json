@@ -14,5 +14,9 @@
   "bugs": {
     "url": "https://github.com/hashgraph/hedera-smart-contracts/issues"
   },
-  "homepage": "https://github.com/hashgraph/hedera-smart-contracts#readme"
+  "homepage": "https://github.com/hashgraph/hedera-smart-contracts#readme",
+  "devDependencies": {
+    "@hashgraph/hedera-local": "^1.2.0",
+    "@nomicfoundation/hardhat-chai-matchers": "^1.0.3"
+  }
 }
