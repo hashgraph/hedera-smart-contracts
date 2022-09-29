@@ -155,16 +155,16 @@ interface IHederaTokenService {
 
     /// Additional post creation fungible and non fungible properties of a Hedera Token.
     struct TokenInfo {
-        /// The hedera token;
-        HederaToken hedera;
-        
+        /// Basic properties of a Hedera Token
+        HederaToken token;
+
         /// The number of tokens (fungible) or serials (non-fungible) of the token
         uint64 totalSupply;
 
         /// Specifies whether the token is deleted or not
         bool deleted;
 
-        /// Specifies whether the token kyc was defaulted with KycNotApplicable (true) or Revoked (false) 
+        /// Specifies whether the token kyc was defaulted with KycNotApplicable (true) or Revoked (false)
         bool defaultKycStatus;
 
         /// Specifies whether the token is currently paused or not
