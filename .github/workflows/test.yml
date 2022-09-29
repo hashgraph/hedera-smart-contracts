@@ -6,6 +6,11 @@ on:
   pull_request:
   workflow_dispatch:
 
+env:
+  RELAY_IMAGE_TAG: 0.8.0
+  NETWORK_NODE_IMAGE_TAG: 0.30.0-alpha.2
+  HAVEGED_IMAGE_TAG: 0.30.0-alpha.2
+  MIRROR_IMAGE_TAG: 0.64.0
 
 jobs:
 
@@ -38,10 +43,10 @@ jobs:
           sudo curl -SL -o /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
           sudo chmod +x /usr/local/bin/docker-compose
       - name: Start the local node
-        run: npx hedera-local start -d
+        run: npx hedera start -d
 
       - name: Run tests
         run: npx hardhat test
 
       - name: Stop the local node
-        run: npx hedera-local stop
+        run: npx hedera stop
