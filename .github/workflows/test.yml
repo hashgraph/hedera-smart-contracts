@@ -13,7 +13,7 @@ jobs:
 
     name: Tests
 
-    runs-on: [self-hosted, hardhat, standard, ephemeral]
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
