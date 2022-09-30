@@ -155,8 +155,20 @@ interface IHederaTokenService {
 
     /// Additional post creation fungible and non fungible properties of a Hedera Token.
     struct TokenInfo {
-        /// The hedera token;
-        HederaToken hedera;
+        /// Basic properties of a Hedera Token
+        HederaToken token;
+
+        /// The number of tokens (fungible) or serials (non-fungible) of the token
+        uint64 totalSupply;
+
+        /// Specifies whether the token is deleted or not
+        bool deleted;
+
+        /// Specifies whether the token kyc was defaulted with KycNotApplicable (true) or Revoked (false)
+        bool defaultKycStatus;
+
+        /// Specifies whether the token is currently paused or not
+        bool pauseStatus;
 
         /// The fixed fees collected when transferring the token
         FixedFee[] fixedFees;
@@ -167,20 +179,8 @@ interface IHederaTokenService {
         /// The royalty fees collected when transferring the token
         RoyaltyFee[] royaltyFees;
 
-        /// Specifies whether the token kyc was defaulted with KycNotApplicable (true) or Revoked (false) 
-        bool defaultKycStatus;
-
-        /// Specifies whether the token is deleted or not
-        bool deleted;
-
         /// The ID of the network ledger
         string ledgerId;
-
-        /// Specifies whether the token is currently paused or not
-        bool pauseStatus;
-
-        /// The number of tokens (fungible) or serials (non-fungible) of the token
-        uint64 totalSupply;
     }
 
     /// Additional fungible properties of a Hedera Token.
@@ -504,6 +504,16 @@ interface IHederaTokenService {
         uint256 amount
     ) external returns (int64 responseCode);
 
+    /// Transfers `amount` tokens from `from` to `to` using the
+    //  allowance mechanism. `amount` is then deducted from the caller's allowance.
+    /// Only applicable to fungible tokens
+    /// @param token The address of the fungible Hedera token to transfer
+    /// @param from The account address of the owner of the token, on the behalf of which to transfer `amount` tokens
+    /// @param to The account address of the receiver of the `amount` tokens
+    /// @param amount The amount of tokens to transfer from `from` to `to`
+    /// @return responseCode The response code for the status of the request. SUCCESS is 22.
+    function transferFrom(address token, address from, address to, uint256 amount) external returns (int64 responseCode);
+
     /// Returns the amount which spender is still allowed to withdraw from owner.
     /// Only Applicable to Fungible Tokens
     /// @param token The Hedera token address to check the allowance of
@@ -528,6 +538,15 @@ interface IHederaTokenService {
         address approved,
         uint256 serialNumber
     ) external returns (int64 responseCode);
+
+    /// Transfers `serialNumber` of `token` from `from` to `to` using the allowance mechanism.
+    /// Only applicable to NFT tokens
+    /// @param token The address of the non-fungible Hedera token to transfer
+    /// @param from The account address of the owner of `serialNumber` of `token`
+    /// @param to The account address of the receiver of `serialNumber`
+    /// @param serialNumber The NFT serial number to transfer
+    /// @return responseCode The response code for the status of the request. SUCCESS is 22.
+    function transferFromNFT(address token, address from, address to, uint256 serialNumber) external returns (int64 responseCode);
 
     /// Get the approved address for a single NFT
     /// Only Applicable to NFT Tokens
