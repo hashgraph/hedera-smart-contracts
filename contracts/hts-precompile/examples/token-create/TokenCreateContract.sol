@@ -2,7 +2,7 @@
 pragma solidity >=0.5.0 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-import "./TokenCreate.sol";
+import "../../TokenCreate.sol";
 
 contract TokenCreateContract is TokenCreate {
 
