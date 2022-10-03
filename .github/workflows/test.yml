@@ -42,8 +42,13 @@ jobs:
         run: |
           sudo curl -SL -o /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
           sudo chmod +x /usr/local/bin/docker-compose
+
       - name: Start the local node
-        run: npx hedera start -d
+        run: |
+          echo 'hedera.recordStream.compressFilesOnCreation=true' >> node_modules/@hashgraph/hedera-local/compose-network/network-node/data/config/bootstrap.properties
+          echo 'contracts.chainId=298' >> node_modules/@hashgraph/hedera-local/compose-network/network-node/data/config/bootstrap.properties
+          sed -i 's/      STREAM_EXTENSION: "rcd"/      STREAM_EXTENSION: "rcd.gz"/' node_modules/@hashgraph/hedera-local/docker-compose.yml
+        npx hedera start -d
 
       - name: Run tests
         run: npx hardhat test
