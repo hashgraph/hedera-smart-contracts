@@ -57,9 +57,9 @@ library SafeHTS {
     error IsTokenFailed();
     error GetTokenTypeFailed();
 
-    function safeCryptoTransfer(IHederaTokenService.TokenTransferList[] memory tokenTransfers) external {
+    function safeCryptoTransfer(IHederaTokenService.TransferList memory transferList, IHederaTokenService.TokenTransferList[] memory tokenTransfers) external {
         (bool success, bytes memory result) = precompileAddress.call(
-            abi.encodeWithSelector(IHederaTokenService.cryptoTransfer.selector, tokenTransfers));
+            abi.encodeWithSelector(IHederaTokenService.cryptoTransfer.selector, transferList, tokenTransfers));
         if (!tryDecodeSuccessResponseCode(success, result)) revert CryptoTransferFailed();
     }
 
