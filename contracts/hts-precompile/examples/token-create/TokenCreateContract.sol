@@ -52,8 +52,8 @@ contract TokenCreateContract is TokenCreate {
         }
     }
 
-    function cryptoTransferPublic(IHederaTokenService.TokenTransferList[] calldata tokenTransferList) public returns (int responseCode) {
-        responseCode = HederaTokenService.cryptoTransfer(tokenTransferList);
+    function cryptoTransferPublic(IHederaTokenService.TransferList calldata transferList, IHederaTokenService.TokenTransferList[] calldata tokenTransferList) public returns (int responseCode) {
+        responseCode = HederaTokenService.cryptoTransfer(transferList, tokenTransferList);
         emit ResponseCode(responseCode);
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
