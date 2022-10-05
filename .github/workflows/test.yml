@@ -1,0 +1,59 @@
+name: Tests CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  RELAY_IMAGE_TAG: 0.8.0
+  NETWORK_NODE_IMAGE_TAG: 0.30.0-alpha.2
+  HAVEGED_IMAGE_TAG: 0.30.0-alpha.2
+  MIRROR_IMAGE_TAG: 0.64.0
+
+jobs:
+
+  tests:
+
+    name: Tests
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [ 16.x ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Docker Compose
+        run: |
+          sudo curl -SL -o /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+          sudo chmod +x /usr/local/bin/docker-compose
+
+      - name: Prepare the local node
+        run: |
+          echo 'hedera.recordStream.compressFilesOnCreation=true' >> node_modules/@hashgraph/hedera-local/compose-network/network-node/data/config/bootstrap.properties
+          echo 'contracts.chainId=298' >> node_modules/@hashgraph/hedera-local/compose-network/network-node/data/config/bootstrap.properties
+          sed -i 's/      STREAM_EXTENSION: "rcd"/      STREAM_EXTENSION: "rcd.gz"/' node_modules/@hashgraph/hedera-local/docker-compose.yml
+
+      - name: Start the local node
+        run: npx hedera start -d
+
+      - name: Run tests
+        run: npx hardhat test
+
+      - name: Stop the local node
+        run: npx hedera stop
