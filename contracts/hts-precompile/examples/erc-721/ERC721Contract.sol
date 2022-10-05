@@ -31,8 +31,15 @@ contract ERC721Contract {
         return IERC721Enumerable(token).totalSupply();
     }
 
+    // The `to` address will receive approval by the contract itself
+    // Be aware that the nft must be owned by the contract, not by the msg.sender address
     function approve(address token, address to, uint256 tokenId) external payable {
         IERC721(token).approve(to, tokenId);
+    }
+
+    // The `to` address will receive approval by msg.sender
+    function delegateApprove(address token, address to, uint256 tokenId) external payable {
+        address(IERC721(token)).delegatecall(abi.encodeWithSignature("approve(address,uint256)", to, tokenId));
     }
 
     function setApprovalForAll(address token, address operator, bool approved) external {
@@ -47,8 +54,14 @@ contract ERC721Contract {
         return IERC721(token).isApprovedForAll(owner, operator);
     }
 
+    // The call will be executed by the contract itself, so the contract address has to be the owner of `tokenId`
     function transferFrom(address token, address from, address to, uint256 tokenId) external payable {
         IERC721(token).transferFrom(from, to, tokenId);
+    }
+
+    // The call will be executed by the msg.sender address
+    function delegateTransferFrom(address token, address from, address to, uint256 tokenId) external payable {
+        address(IERC721(token)).delegatecall(abi.encodeWithSignature("transferFrom(address,address,uint256)", from, to, tokenId));
     }
 
     // Not supported operations - should return a failure
