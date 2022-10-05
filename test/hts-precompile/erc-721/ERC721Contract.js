@@ -102,7 +102,8 @@ describe("ERC721Contract tests", function () {
   it("should be able to execute setApprovedForAll and isApprovedForAll", async function () {
     const firstWallet = (await ethers.getSigners())[0];
     const isApprovedForAllBefore = await erc721Contract.isApprovedForAll(tokenAddress, erc721Contract.address, firstWallet.address);
-    await erc721Contract.setApprovalForAll(tokenAddress, firstWallet.address, true, {gasLimit: 1_000_000});
+    const tx = await erc721Contract.setApprovalForAll(tokenAddress, firstWallet.address, true, {gasLimit: 1_000_000});
+    await tx.wait();
     const isApprovedForAllAfter = await erc721Contract.isApprovedForAll(tokenAddress, erc721Contract.address, firstWallet.address);
 
     expect(isApprovedForAllBefore).to.equal(false);
