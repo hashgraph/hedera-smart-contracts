@@ -17,6 +17,7 @@
   "homepage": "https://github.com/hashgraph/hedera-smart-contracts#readme",
   "devDependencies": {
     "@hashgraph/hedera-local": "^1.2.0",
-    "@nomicfoundation/hardhat-chai-matchers": "^1.0.3"
+    "@nomicfoundation/hardhat-chai-matchers": "^1.0.3",
+    "@openzeppelin/contracts": "^4.7.3"
   }
 }
