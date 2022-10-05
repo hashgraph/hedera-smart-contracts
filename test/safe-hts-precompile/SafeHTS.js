@@ -4,10 +4,12 @@ const {ethers} = require("hardhat");
 describe("SafeHTS library tests", function () {
   let safeOperationsContract;
   let fungibleTokenAddress;
+  let nonFungibleTokenAddress;
 
   before(async function () {
     safeOperationsContract = await deploySafeOperationsContract();
     fungibleTokenAddress = await createFungibleToken();
+    nonFungibleTokenAddress = await createNonFungibleToken();
   });
 
   async function deploySafeOperationsContract() {
@@ -39,6 +41,18 @@ describe("SafeHTS library tests", function () {
     return tokenAddress;
   }
 
+  async function createNonFungibleToken() {
+    const tokenAddressTx = await safeOperationsContract.safeCreateNonFungibleToken({
+      value: ethers.BigNumber.from('20000000000000000000'),
+      gasLimit: 1_000_000
+    });
+
+    const tokenAddressReceipt = await tokenAddressTx.wait();
+    const {tokenAddress} = tokenAddressReceipt.events.filter(e => e.event === 'tokenCreatedEvent')[0].args;
+
+    return tokenAddress;
+  }
+
   it("should be able to get token info", async function () {
     const tokenInfoTx = await safeOperationsContract.safeGetTokenInfo(fungibleTokenAddress);
     const tokenInfoReceipt = await tokenInfoTx.wait();
@@ -58,5 +72,56 @@ describe("SafeHTS library tests", function () {
     expect(fungibleTokenInfo.tokenInfo.hedera.symbol).to.equal("tokenSymbol");
     expect(fungibleTokenInfo.tokenInfo.totalSupply).to.equal(200);
     expect(fungibleTokenInfo.decimals).to.equal(8);
+  });
+
+  it("should be able to transfer tokens and hbars atomically", async function () {
+    const senderAccountID = '0x67D8d32E9Bf1a9968a5ff53B87d777Aa8EBBEe69';
+    const receiverAccountID = '0x05FbA803Be258049A27B820088bab1cAD2058871';
+
+    const {newTotalSupply, serialNumbers} = await safeOperationsContract.safeMintToken(nonFungibleTokenAddress, 0, ['0x01'], { gasLimit: 1_000_000 });
+    const NftSerialNumber = serialNumbers[0];
+
+    await safeOperationsContract.safeAssociateToken(senderAccountID, fungibleTokenAddress);
+    await safeOperationsContract.safeAssociateToken(senderAccountID, nonFungibleTokenAddress);
+    await safeOperationsContract.safeAssociateToken(receiverAccountID, fungibleTokenAddress);
+    await safeOperationsContract.safeAssociateToken(receiverAccountID, nonFungibleTokenAddress);
+
+    const accountAmountSender = {
+      accountID: `senderAccountID`,
+      amount: -10,
+      isApproval: false };
+    const accountAmountReceiver = {
+      accountID: `receiverAccountID`,
+      amount: 10,
+      isApproval: false };
+    const transferList = [accountAmountSender, accountAmountReceiver];
+
+    const tokenTransferList = [{
+      token: `${NftHTSTokenContractAddress}`,
+      transfers: [],
+      nftTransfers: [{
+        senderAccountID: `senderAccountID`,
+        receiverAccountID: `receiverAccountID`,
+        serialNumber: NftSerialNumber.toNumber(),
+      }],
+    },
+    {
+      token: `${HTSTokenContractAddress}`,
+      transfers: [
+        {
+          accountID: `receiverAccountID`,
+          amount: 10,
+        },
+        {
+          accountID: `senderAccountID`,
+          amount: -10,
+        },
+      ],
+      nftTransfers: [],
+    }];
+
+    const cryptoTransferTx = await safeOperationsContract.safeCryptoTransfer(transferList, tokenTransferList);
+    const cryptoTransferReceipt = await cryptoTransferTx.wait()
+    expect(cryptoTransferReceipt.events.filter(e => e.event === 'success')[0].args).to.be.true;
   });
 });

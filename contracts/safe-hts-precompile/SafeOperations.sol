@@ -9,6 +9,7 @@ contract SafeOperations {
     event TokenCreated(address token);
     event TokenInfoEvent(IHederaTokenService.TokenInfo tokenInfo);
     event FungibleTokenInfoEvent(IHederaTokenService.FungibleTokenInfo fungibleTokenInfo);
+    event CryptoTransferCompleted();
 
     function safeAssociateToken(address sender, address tokenAddress) external {
         SafeHTS.safeAssociateToken(tokenAddress, sender);
@@ -42,8 +43,9 @@ contract SafeOperations {
         SafeHTS.safeTransferNFT(token, sender, receiver, serialNum);
     }
 
-    function safeCryptoTransfer(IHederaTokenService.TransferList[] memory transferList, IHederaTokenService.TokenTransferList[] memory tokenTransfers) external {
+    function safeCryptoTransfer(IHederaTokenService.TransferList memory transferList, IHederaTokenService.TokenTransferList[] memory tokenTransfers) external {
         SafeHTS.safeCryptoTransfer(transferList, tokenTransfers);
+        emit CryptoTransferCompleted();
     }
 
     function safeMintToken(address token, uint64 amount, bytes[] memory metadata) external
