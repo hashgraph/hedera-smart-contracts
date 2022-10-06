@@ -6,6 +6,7 @@ describe("SafeHTS library tests", function () {
   let fungibleTokenAddress;
 
   before(async function () {
+    await new Promise(r => setTimeout(r, 60000));
     safeOperationsContract = await deploySafeOperationsContract();
     fungibleTokenAddress = await createFungibleToken();
   });
