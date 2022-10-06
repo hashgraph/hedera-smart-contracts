@@ -52,8 +52,12 @@ jobs:
       - name: Start the local node
         run: npx hedera start -d
 
-      - name: Run tests
-        run: npx hardhat test
+      - name: Run the tests
+        uses: nick-fields/retry@v2
+        with:
+          max_attempts: 3
+          timeout_minutes: 10
+          command: npx hardhat test
 
       - name: Stop the local node
         run: npx hedera stop
