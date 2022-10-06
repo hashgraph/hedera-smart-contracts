@@ -36,8 +36,7 @@ describe("SafeHTS library tests", function () {
     });
 
     const tokenAddressReceipt = await tokenAddressTx.wait();
-    const {tokenAddress} = tokenAddressReceipt.events.filter(e => e.event === 'tokenCreatedEvent')[0].args;
-
+    const tokenAddress = tokenAddressReceipt.events.filter(e => e.event === 'TokenCreated')[0].args[0];
     return tokenAddress;
   }
 
@@ -56,20 +55,20 @@ describe("SafeHTS library tests", function () {
   it("should be able to get token info", async function () {
     const tokenInfoTx = await safeOperationsContract.safeGetTokenInfo(fungibleTokenAddress);
     const tokenInfoReceipt = await tokenInfoTx.wait();
-    const {tokenInfo} = tokenInfoReceipt.events.filter(e => e.event === 'tokenInfoEvent')[0].args;
+    const tokenInfo = tokenInfoReceipt.events.filter(e => e.event === 'TokenInfoEvent')[0].args[0];
 
-    expect(tokenInfo.hedera.name).to.equal("tokenName");
-    expect(tokenInfo.hedera.symbol).to.equal("tokenSymbol");
+    expect(tokenInfo.token.name).to.equal("tokenName");
+    expect(tokenInfo.token.symbol).to.equal("tokenSymbol");
     expect(tokenInfo.totalSupply).to.equal(200);
   });
 
   it("should be able to get fungible token info", async function () {
     const fungibleTokenInfoTx = await safeOperationsContract.safeGetFungibleTokenInfo(fungibleTokenAddress);
     const fungibleTokenInfoReceipt = await fungibleTokenInfoTx.wait();
-    const {fungibleTokenInfo} = fungibleTokenInfoReceipt.events.filter(e => e.event === 'fungibleTokenInfoEvent')[0].args;
+    const fungibleTokenInfo = fungibleTokenInfoReceipt.events.filter(e => e.event === 'FungibleTokenInfoEvent')[0].args[0];
 
-    expect(fungibleTokenInfo.tokenInfo.hedera.name).to.equal("tokenName");
-    expect(fungibleTokenInfo.tokenInfo.hedera.symbol).to.equal("tokenSymbol");
+    expect(fungibleTokenInfo.tokenInfo.token.name).to.equal("tokenName");
+    expect(fungibleTokenInfo.tokenInfo.token.symbol).to.equal("tokenSymbol");
     expect(fungibleTokenInfo.tokenInfo.totalSupply).to.equal(200);
     expect(fungibleTokenInfo.decimals).to.equal(8);
   });
