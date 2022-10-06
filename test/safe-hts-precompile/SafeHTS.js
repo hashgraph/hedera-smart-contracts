@@ -9,7 +9,6 @@ describe("SafeHTS library tests", function () {
   before(async function () {
     safeOperationsContract = await deploySafeOperationsContract();
     fungibleTokenAddress = await createFungibleToken();
-    nonFungibleTokenAddress = await createNonFungibleToken();
   });
 
   async function deploySafeOperationsContract() {
