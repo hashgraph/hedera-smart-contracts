@@ -10,7 +10,6 @@ describe("ERC721Contract tests", function () {
   let nftInitialOwnerAddress;
 
   before(async function () {
-    await new Promise(r => setTimeout(r, 60000));
     tokenCreateContract = await utils.deployTokenCreateContract();
     erc721Contract = await deployERC721Contract();
     tokenAddress = await createNonFungibleToken();

@@ -57,6 +57,7 @@ jobs:
         with:
           max_attempts: 3
           timeout_minutes: 10
+          retry_wait_seconds: 60
           command: npx hardhat test
 
       - name: Stop the local node
