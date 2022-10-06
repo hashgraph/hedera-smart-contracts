@@ -43,19 +43,19 @@ jobs:
           sudo curl -SL -o /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
           sudo chmod +x /usr/local/bin/docker-compose
 
-      - name: Prepare the local node
-        run: |
-          echo 'hedera.recordStream.compressFilesOnCreation=true' >> node_modules/@hashgraph/hedera-local/compose-network/network-node/data/config/bootstrap.properties
-          echo 'contracts.chainId=298' >> node_modules/@hashgraph/hedera-local/compose-network/network-node/data/config/bootstrap.properties
-          sed -i 's/      STREAM_EXTENSION: "rcd"/      STREAM_EXTENSION: "rcd.gz"/' node_modules/@hashgraph/hedera-local/docker-compose.yml
+#      - name: Prepare the local node
+#        run: |
+#          echo 'hedera.recordStream.compressFilesOnCreation=true' >> node_modules/@hashgraph/hedera-local/compose-network/network-node/data/config/bootstrap.properties
+#          echo 'contracts.chainId=298' >> node_modules/@hashgraph/hedera-local/compose-network/network-node/data/config/bootstrap.properties
+#          sed -i 's/      STREAM_EXTENSION: "rcd"/      STREAM_EXTENSION: "rcd.gz"/' node_modules/@hashgraph/hedera-local/docker-compose.yml
 
       - name: Start the local node
-        run: npx hedera start -d
+        run: npx hedera start -d --network local
 
       - name: Run the tests
         uses: nick-fields/retry@v2
         with:
-          max_attempts: 5
+          max_attempts: 3
           timeout_minutes: 10
           command: npx hardhat test
 
