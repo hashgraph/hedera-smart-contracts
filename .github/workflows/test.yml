@@ -55,10 +55,13 @@ jobs:
       - name: Run the tests
         uses: nick-fields/retry@v2
         with:
-          max_attempts: 3
+          max_attempts: 1
           timeout_minutes: 10
           retry_wait_seconds: 60
           command: npx hardhat test
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
 
       - name: Stop the local node
         run: npx hedera stop
