@@ -73,7 +73,7 @@ describe("SafeHTS library tests", function () {
     expect(fungibleTokenInfo.decimals).to.equal(8);
   });
 
-  it("should be able to transfer tokens and hbars atomically", async function () {
+  xit("should be able to transfer tokens and hbars atomically", async function () {
     const senderAccountID = '0x67D8d32E9Bf1a9968a5ff53B87d777Aa8EBBEe69';
     const receiverAccountID = '0x05FbA803Be258049A27B820088bab1cAD2058871';
 
