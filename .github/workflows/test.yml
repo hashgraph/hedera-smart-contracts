@@ -55,7 +55,7 @@ jobs:
       - name: Run the tests
         uses: nick-fields/retry@v2
         with:
-          max_attempts: 3
+          max_attempts: 5
           timeout_minutes: 10
           command: npx hardhat test
 
