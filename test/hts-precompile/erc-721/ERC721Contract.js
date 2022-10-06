@@ -110,7 +110,7 @@ describe("ERC721Contract tests", function () {
     expect(isApprovedForAllAfter).to.equal(true);
   });
 
-  it("should be able to execute transferFrom", async function () {
+  it("should be able to execute delegate transferFrom", async function () {
     const signers = await ethers.getSigners();
     const firstWallet = signers[0];
     const secondWallet = signers[1];
@@ -124,7 +124,7 @@ describe("ERC721Contract tests", function () {
     expect(ownerAfter).to.equal(secondWallet.address);
   });
 
-  it("should be able to approve", async function () {
+  it("should be able to delegate approve", async function () {
     const signers = await ethers.getSigners();
     const firstWallet = signers[0];
     const secondWallet = signers[1];
