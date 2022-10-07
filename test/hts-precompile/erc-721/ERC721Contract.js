@@ -18,10 +18,10 @@ describe("ERC721Contract tests", function () {
   });
 
   beforeEach(async function() {
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise(r => setTimeout(r, 3000));
   });
   afterEach(async function() {
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise(r => setTimeout(r, 3000));
   });
 
   async function deployERC721Contract() {
@@ -111,6 +111,7 @@ describe("ERC721Contract tests", function () {
     const isApprovedForAllBefore = await erc721Contract.isApprovedForAll(tokenAddress, erc721Contract.address, firstWallet.address);
     const tx = await erc721Contract.setApprovalForAll(tokenAddress, firstWallet.address, true, {gasLimit: 1_000_000});
     await tx.wait();
+    await new Promise(r => setTimeout(r, 2000));
     const isApprovedForAllAfter = await erc721Contract.isApprovedForAll(tokenAddress, erc721Contract.address, firstWallet.address);
 
     expect(isApprovedForAllBefore).to.equal(false);
@@ -139,6 +140,7 @@ describe("ERC721Contract tests", function () {
     const erc721ContractNFTOwner = await ethers.getContractAt('ERC721Contract', erc721Contract.address, secondWallet);
     const beforeApproval = await erc721ContractNFTOwner.getApproved(tokenAddress, mintedTokenSerialNumber, {gasLimit: 1_000_000});
     await erc721ContractNFTOwner.delegateApprove(tokenAddress, firstWallet.address, mintedTokenSerialNumber, {gasLimit: 1_000_000});
+    await new Promise(r => setTimeout(r, 2000));
     const afterApproval = await erc721ContractNFTOwner.getApproved(tokenAddress, mintedTokenSerialNumber, {gasLimit: 1_000_000});
 
     expect(beforeApproval).to.equal('0x0000000000000000000000000000000000000000');

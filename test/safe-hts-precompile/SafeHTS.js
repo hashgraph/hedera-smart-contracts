@@ -10,13 +10,6 @@ describe("SafeHTS library tests", function () {
     fungibleTokenAddress = await createFungibleToken();
   });
 
-  beforeEach(async function() {
-    await new Promise(r => setTimeout(r, 1000));
-  });
-  afterEach(async function() {
-    await new Promise(r => setTimeout(r, 1000));
-  });
-
   async function deploySafeOperationsContract() {
     const safeHTSFactory = await ethers.getContractFactory("SafeHTS");
     const safeHTS = await safeHTSFactory.deploy({gasLimit: 1_000_000});

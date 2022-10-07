@@ -13,13 +13,6 @@ describe("ERC20Contract tests", function () {
     tokenAddress = await createFungibleToken();
   });
 
-  beforeEach(async function() {
-    await new Promise(r => setTimeout(r, 1000));
-  });
-  afterEach(async function() {
-    await new Promise(r => setTimeout(r, 1000));
-  });
-
   async function deployERC20Contract() {
     const erc20ContractFactory = await ethers.getContractFactory("ERC20Contract");
     const erc20Contract = await erc20ContractFactory.deploy({gasLimit: 1_000_000});
