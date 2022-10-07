@@ -43,8 +43,8 @@ contract SafeOperations {
         SafeHTS.safeTransferNFT(token, sender, receiver, serialNum);
     }
 
-    function safeCryptoTransfer(IHederaTokenService.TransferList memory transferList, IHederaTokenService.TokenTransferList[] memory tokenTransfers) external {
-        SafeHTS.safeCryptoTransfer(transferList, tokenTransfers);
+    function safeCryptoTransfer(IHederaTokenService.TokenTransferList[] memory tokenTransfers) external {
+        SafeHTS.safeCryptoTransfer(tokenTransfers);
         emit CryptoTransferCompleted(true);
     }
 
