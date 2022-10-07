@@ -99,15 +99,15 @@ describe("ERC721Contract tests", function () {
     expect(approved).to.equal('0x0000000000000000000000000000000000000000');
   });
 
-    // it("should be able to execute setApprovedForAll and isApprovedForAll", async function () {
-    //   const firstWallet = (await ethers.getSigners())[0];
-    //   const isApprovedForAllBefore = await erc721Contract.isApprovedForAll(tokenAddress, erc721Contract.address, firstWallet.address);
-    //   await erc721Contract.setApprovalForAll(tokenAddress, firstWallet.address, true, {gasLimit: 1_000_000});
-    //   const isApprovedForAllAfter = await erc721Contract.isApprovedForAll(tokenAddress, erc721Contract.address, firstWallet.address);
-    //
-    //   expect(isApprovedForAllBefore).to.equal(false);
-    //   expect(isApprovedForAllAfter).to.equal(true);
-    // });
+  it("should be able to execute setApprovalForAll and isApprovedForAll", async function () {
+    const secondWallet = (await ethers.getSigners())[1];
+    const isApprovedForAllBefore = await erc721Contract.isApprovedForAll(tokenAddress, erc721Contract.address, secondWallet.address);
+    await erc721Contract.setApprovalForAll(tokenAddress, secondWallet.address, true, {gasLimit: 1_000_000});
+    const isApprovedForAllAfter = await erc721Contract.isApprovedForAll(tokenAddress, erc721Contract.address, secondWallet.address);
+
+    expect(isApprovedForAllBefore).to.equal(false);
+    expect(isApprovedForAllAfter).to.equal(true);
+  });
 
   it("should be able to execute delegate transferFrom", async function () {
     const signers = await ethers.getSigners();
