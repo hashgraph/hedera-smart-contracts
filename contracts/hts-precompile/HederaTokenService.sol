@@ -18,14 +18,16 @@ abstract contract HederaTokenService is HederaResponseCodes {
         _;
     }
 
-    /// Initiates a Token Transfer
+    /// Performs transfers among combinations of tokens and hbars
+    /// @param transferList the list of hbar transfers to do
     /// @param tokenTransfers the list of transfers to do
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
-    function cryptoTransfer(IHederaTokenService.TokenTransferList[] memory tokenTransfers) internal
+    /// @custom:version 0.3.0 the signature of the previous version was cryptoTransfer(TokenTransferList[] memory tokenTransfers)
+    function cryptoTransfer(IHederaTokenService.TransferList memory transferList, IHederaTokenService.TokenTransferList[] memory tokenTransfers) internal
     returns (int responseCode)
     {
         (bool success, bytes memory result) = precompileAddress.call(
-            abi.encodeWithSelector(IHederaTokenService.cryptoTransfer.selector, tokenTransfers));
+            abi.encodeWithSelector(IHederaTokenService.cryptoTransfer.selector, transferList, tokenTransfers));
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
     }
 
