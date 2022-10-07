@@ -17,6 +17,10 @@ describe("ERC721Contract tests", function () {
     await associateToken();
   });
 
+  beforeEach(async function() {
+    await new Promise(r => setTimeout(r, 1000));
+  });
+
   async function deployERC721Contract() {
     const erc721ContractFactory = await ethers.getContractFactory("ERC721Contract");
     const erc721Contract = await erc721ContractFactory.deploy({gasLimit: 1_000_000});
