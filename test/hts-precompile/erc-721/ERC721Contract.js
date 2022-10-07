@@ -20,6 +20,9 @@ describe("ERC721Contract tests", function () {
   beforeEach(async function() {
     await new Promise(r => setTimeout(r, 1000));
   });
+  afterEach(async function() {
+    await new Promise(r => setTimeout(r, 1000));
+  });
 
   async function deployERC721Contract() {
     const erc721ContractFactory = await ethers.getContractFactory("ERC721Contract");
