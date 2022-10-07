@@ -79,9 +79,9 @@ abstract contract TokenCreate is FeeHelper {
         IHederaTokenService.NftTransfer[] memory nftTransfers = new IHederaTokenService.NftTransfer[](0);
 
         IHederaTokenService.AccountAmount memory accountAmountNegative =
-        IHederaTokenService.AccountAmount(msg.sender, - amount);
+        IHederaTokenService.AccountAmount(msg.sender, - amount, false);
         IHederaTokenService.AccountAmount memory accountAmountPositive =
-        IHederaTokenService.AccountAmount(account, amount);
+        IHederaTokenService.AccountAmount(account, amount, false);
         IHederaTokenService.AccountAmount[] memory transfers = new IHederaTokenService.AccountAmount[](2);
         transfers[0] = accountAmountNegative;
         transfers[1] = accountAmountPositive;
@@ -91,7 +91,10 @@ abstract contract TokenCreate is FeeHelper {
         IHederaTokenService.TokenTransferList[] memory tokenTransferList = new IHederaTokenService.TokenTransferList[](1);
         tokenTransferList[0] = tokenTransfer;
 
-        responseCode = HederaTokenService.cryptoTransfer(tokenTransferList);
+        IHederaTokenService.AccountAmount[] memory hbarAccounts; 
+        IHederaTokenService.TransferList memory transferList = IHederaTokenService.TransferList(hbarAccounts);
+
+        responseCode = HederaTokenService.cryptoTransfer(transferList, tokenTransferList);
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
