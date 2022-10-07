@@ -3,14 +3,14 @@ require("@nomicfoundation/hardhat-chai-matchers");
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   mocha: {
-    timeout: 100000000
+    timeout: 3600000
   },
   solidity: {
     version: "0.8.9",
     settings: {
       optimizer: {
         enabled: true,
-        runs: 500
+        runs: 1000
       },
     },
   },
