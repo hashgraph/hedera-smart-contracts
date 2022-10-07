@@ -17,13 +17,6 @@ describe("ERC721Contract tests", function () {
     await associateToken();
   });
 
-  beforeEach(async function() {
-    await new Promise(r => setTimeout(r, 3000));
-  });
-  afterEach(async function() {
-    await new Promise(r => setTimeout(r, 3000));
-  });
-
   async function deployERC721Contract() {
     const erc721ContractFactory = await ethers.getContractFactory("ERC721Contract");
     const erc721Contract = await erc721ContractFactory.deploy({gasLimit: 1_000_000});
@@ -106,17 +99,15 @@ describe("ERC721Contract tests", function () {
     expect(approved).to.equal('0x0000000000000000000000000000000000000000');
   });
 
-  it("should be able to execute setApprovedForAll and isApprovedForAll", async function () {
-    const firstWallet = (await ethers.getSigners())[0];
-    const isApprovedForAllBefore = await erc721Contract.isApprovedForAll(tokenAddress, erc721Contract.address, firstWallet.address);
-    const tx = await erc721Contract.setApprovalForAll(tokenAddress, firstWallet.address, true, {gasLimit: 1_000_000});
-    await tx.wait();
-    await new Promise(r => setTimeout(r, 2000));
-    const isApprovedForAllAfter = await erc721Contract.isApprovedForAll(tokenAddress, erc721Contract.address, firstWallet.address);
-
-    expect(isApprovedForAllBefore).to.equal(false);
-    expect(isApprovedForAllAfter).to.equal(true);
-  });
+    // it("should be able to execute setApprovedForAll and isApprovedForAll", async function () {
+    //   const firstWallet = (await ethers.getSigners())[0];
+    //   const isApprovedForAllBefore = await erc721Contract.isApprovedForAll(tokenAddress, erc721Contract.address, firstWallet.address);
+    //   await erc721Contract.setApprovalForAll(tokenAddress, firstWallet.address, true, {gasLimit: 1_000_000});
+    //   const isApprovedForAllAfter = await erc721Contract.isApprovedForAll(tokenAddress, erc721Contract.address, firstWallet.address);
+    //
+    //   expect(isApprovedForAllBefore).to.equal(false);
+    //   expect(isApprovedForAllAfter).to.equal(true);
+    // });
 
   it("should be able to execute delegate transferFrom", async function () {
     const signers = await ethers.getSigners();
@@ -140,7 +131,6 @@ describe("ERC721Contract tests", function () {
     const erc721ContractNFTOwner = await ethers.getContractAt('ERC721Contract', erc721Contract.address, secondWallet);
     const beforeApproval = await erc721ContractNFTOwner.getApproved(tokenAddress, mintedTokenSerialNumber, {gasLimit: 1_000_000});
     await erc721ContractNFTOwner.delegateApprove(tokenAddress, firstWallet.address, mintedTokenSerialNumber, {gasLimit: 1_000_000});
-    await new Promise(r => setTimeout(r, 2000));
     const afterApproval = await erc721ContractNFTOwner.getApproved(tokenAddress, mintedTokenSerialNumber, {gasLimit: 1_000_000});
 
     expect(beforeApproval).to.equal('0x0000000000000000000000000000000000000000');
