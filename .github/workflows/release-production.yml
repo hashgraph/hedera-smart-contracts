@@ -27,7 +27,7 @@ jobs:
         run: echo "TAG=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
 
       - name: Produce artifact
-        run: tar -czf ${{ env.PACKAGE_NAME }}-v${{env.TTAG}}.tgz -C . . 
+        run: tar -czf ${{ env.PACKAGE_NAME }}-v${{env.TTAG}}.tgz -C .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
