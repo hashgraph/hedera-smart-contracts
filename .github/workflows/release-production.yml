@@ -26,8 +26,11 @@ jobs:
       - name: Get tag
         run: echo "TAG=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
 
+      - name: Step back one dir
+        run: cd ../
+
       - name: Produce artifact
-        run: tar -czf ${{ env.PACKAGE_NAME }}-v${{env.TTAG}}.tgz -C .
+        run: tar -czf ${{ env.PACKAGE_NAME }}-v${{env.TTAG}}.tgz -C ./hedera-smart-contracts .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
