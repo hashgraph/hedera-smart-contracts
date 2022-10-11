@@ -1,6 +1,8 @@
 name: Release Production Environment
 
 on:
+  pull_request:
+    branches: [ main ]
   push:
     tags: [ v* ]
 
