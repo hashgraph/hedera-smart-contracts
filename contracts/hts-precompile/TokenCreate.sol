@@ -23,11 +23,12 @@ abstract contract TokenCreate is FeeHelper {
     function createFungibleTokenPublic(
         address treasury
     ) public payable {
-        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](4);
+        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](5);
         keys[0] = getSingleKey(KeyType.ADMIN, KeyType.PAUSE, KeyValueType.INHERIT_ACCOUNT_KEY, bytes(""));
         keys[1] = getSingleKey(KeyType.KYC, KeyValueType.INHERIT_ACCOUNT_KEY, bytes(""));
         keys[2] = getSingleKey(KeyType.FREEZE, KeyValueType.INHERIT_ACCOUNT_KEY, bytes(""));
         keys[3] = getSingleKey(KeyType.WIPE, KeyValueType.INHERIT_ACCOUNT_KEY, bytes(""));
+        keys[4] = getSingleKey(KeyType.SUPPLY, KeyValueType.INHERIT_ACCOUNT_KEY, bytes(""));
 
         IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
             0, treasury, 8000000
@@ -124,6 +125,14 @@ abstract contract TokenCreate is FeeHelper {
 
     function associateTokenPublic(address account, address token) public returns (int responseCode) {
         responseCode = HederaTokenService.associateToken(account, token);
+        emit ResponseCode(responseCode);
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+    }
+
+    function dissociateTokenPublic(address account, address token) public returns (int responseCode) {
+        responseCode = HederaTokenService.dissociateToken(account, token);
         emit ResponseCode(responseCode);
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert ();
