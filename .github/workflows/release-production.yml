@@ -19,15 +19,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      
-      - name: Install packages
-        run: npm ci
+        with:
+          path: './hedera-smart-contracts'
         
       - name: Get tag
         run: echo "TAG=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
-
-      - name: Step back one dir
-        run: cd ../
 
       - name: Produce artifact
         run: tar -czf ${{ env.PACKAGE_NAME }}-v${{env.TTAG}}.tgz -C ./hedera-smart-contracts .
