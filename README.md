@@ -1,5 +1,5 @@
 # hedera-smart-contracts
-Contains Hedera Smart Contract Service supporting files
+Contains Hedera Smart Contract Service supporting files. Maps to services v0.28
 
 # HTS Precompile
 
