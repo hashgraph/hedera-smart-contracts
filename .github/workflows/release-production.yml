@@ -1,8 +1,6 @@
 name: Release Production Environment
 
 on:
-  pull_request:
-    branches: [ main ]
   push:
     tags: [ v* ]
 
@@ -10,7 +8,6 @@ env:
   OWNER: hashgraph
   PACKAGE_NAME: hedera-smart-contracts
   REGISTRY: ghcr.io
-  TTAG: 0.3.0-snapshot
 
 jobs:
   npm-package-artifact:
@@ -26,11 +23,11 @@ jobs:
         run: echo "TAG=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
 
       - name: Produce artifact
-        run: tar -czf ${{ env.PACKAGE_NAME }}-v${{env.TTAG}}.tgz -C ./hedera-smart-contracts .
+        run: tar -czf ${{ env.PACKAGE_NAME }}-v${{env.TAG}}.tgz -C ./hedera-smart-contracts .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.PACKAGE_NAME }}-v${{env.TTAG}}
+          name: ${{ env.PACKAGE_NAME }}-v${{env.TAG}}
           path: ./*.tgz
           if-no-files-found: error
