@@ -14,7 +14,7 @@ describe("ERC721Contract tests", function () {
     erc721Contract = await utils.deployERC721Contract();
     tokenAddress = await utils.createNonFungibleToken(tokenCreateContract);
     mintedTokenSerialNumber = await utils.mintNFT(tokenCreateContract, tokenAddress);
-    await utils.associateToken(tokenCreateContract, tokenAddress);
+    await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
 
     const signers = await ethers.getSigners();

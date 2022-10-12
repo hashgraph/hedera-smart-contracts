@@ -65,10 +65,10 @@ class Utils {
     return parseInt(serialNumbers);
   }
 
-  static async associateToken(contract, tokenAddress) {
+  static async associateToken(contract, tokenAddress, contractName) {
     const signers = await ethers.getSigners();
-    const associateTx1 = await ethers.getContractAt('TokenManagementContract', contract.address, signers[0]);
-    const associateTx2 = await ethers.getContractAt('TokenManagementContract', contract.address, signers[1]);
+    const associateTx1 = await ethers.getContractAt(contractName, contract.address, signers[0]);
+    const associateTx2 = await ethers.getContractAt(contractName, contract.address, signers[1]);
 
     await contract.associateTokenPublic(contract.address, tokenAddress, {gasLimit: 1_000_000});
     await associateTx1.associateTokenPublic(signers[0].address, tokenAddress, {gasLimit: 1_000_000});
