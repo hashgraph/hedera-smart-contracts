@@ -1,6 +1,6 @@
 {
   "name": "@hashgraph/smart-contracts",
-  "version": "0.2.0-rc1",
+  "version": "0.2.0",
   "description": "Hedera Smart Contract Service supporting files",
   "files": [
     "/contracts/**/*.sol"
