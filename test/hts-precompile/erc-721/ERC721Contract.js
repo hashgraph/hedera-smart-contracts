@@ -11,58 +11,18 @@ describe("ERC721Contract tests", function () {
 
   before(async function () {
     tokenCreateContract = await utils.deployTokenCreateContract();
-    erc721Contract = await deployERC721Contract();
-    tokenAddress = await createNonFungibleToken();
-    mintedTokenSerialNumber = await mintNFT();
-    await associateToken();
-  });
+    erc721Contract = await utils.deployERC721Contract();
+    tokenAddress = await utils.createNonFungibleToken(tokenCreateContract);
+    mintedTokenSerialNumber = await utils.mintNFT(tokenCreateContract, tokenAddress);
+    await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
+    await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
 
-  async function deployERC721Contract() {
-    const erc721ContractFactory = await ethers.getContractFactory("ERC721Contract");
-    const erc721Contract = await erc721ContractFactory.deploy({gasLimit: 1_000_000});
-    const erc721ContractReceipt = await erc721Contract.deployTransaction.wait();
-
-    return await ethers.getContractAt('ERC721Contract', erc721ContractReceipt.contractAddress);
-  }
-
-  async function createNonFungibleToken() {
-    const tokenAddressTx = await tokenCreateContract.createNonFungibleTokenPublic(tokenCreateContract.address, {
-      value: ethers.BigNumber.from('10000000000000000000'),
-      gasLimit: 1_000_000
-    });
-    const tokenAddressReceipt = await tokenAddressTx.wait();
-    const {tokenAddress} = tokenAddressReceipt.events.filter(e => e.event === 'CreatedToken')[0].args;
-
-    return tokenAddress;
-  }
-
-  async function mintNFT() {
-    const mintNftTx = await tokenCreateContract.mintTokenPublic(tokenAddress, 0, ["0x01"], {
-      gasLimit: 1_000_000
-    });
-    const tokenAddressReceipt = await mintNftTx.wait();
-    const {serialNumbers} = tokenAddressReceipt.events.filter(e => e.event === 'MintedToken')[0].args;
-
-    return parseInt(serialNumbers);
-  }
-
-  async function associateToken() {
     const signers = await ethers.getSigners();
-    const associateTx1 = await ethers.getContractAt('TokenCreateContract', tokenCreateContract.address, signers[0]);
-    const associateTx2 = await ethers.getContractAt('TokenCreateContract', tokenCreateContract.address, signers[1]);
-
     await tokenCreateContract.associateTokenPublic(erc721Contract.address, tokenAddress, {gasLimit: 1_000_000});
-    await associateTx1.associateTokenPublic(signers[0].address, tokenAddress, {gasLimit: 1_000_000});
-    await associateTx2.associateTokenPublic(signers[1].address, tokenAddress, {gasLimit: 1_000_000});
-
-    await tokenCreateContract.grantTokenKyc(tokenAddress, tokenCreateContract.address);
     await tokenCreateContract.grantTokenKyc(tokenAddress, erc721Contract.address);
-    await tokenCreateContract.grantTokenKyc(tokenAddress, signers[0].address);
-    await tokenCreateContract.grantTokenKyc(tokenAddress, signers[1].address);
-
     await tokenCreateContract.transferNFTPublic(tokenAddress, tokenCreateContract.address, signers[0].address, mintedTokenSerialNumber, {gasLimit: 1_000_000});
     nftInitialOwnerAddress = signers[0].address;
-  }
+  });
 
   it("should be able to get token name", async function () {
     const name = await erc721Contract.name(tokenAddress);

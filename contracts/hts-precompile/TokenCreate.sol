@@ -23,11 +23,12 @@ abstract contract TokenCreate is FeeHelper {
     function createFungibleTokenPublic(
         address treasury
     ) public payable {
-        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](4);
+        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](5);
         keys[0] = getSingleKey(KeyType.ADMIN, KeyType.PAUSE, KeyValueType.INHERIT_ACCOUNT_KEY, bytes(""));
         keys[1] = getSingleKey(KeyType.KYC, KeyValueType.INHERIT_ACCOUNT_KEY, bytes(""));
         keys[2] = getSingleKey(KeyType.FREEZE, KeyValueType.INHERIT_ACCOUNT_KEY, bytes(""));
         keys[3] = getSingleKey(KeyType.WIPE, KeyValueType.INHERIT_ACCOUNT_KEY, bytes(""));
+        keys[4] = getSingleKey(KeyType.SUPPLY, KeyValueType.INHERIT_ACCOUNT_KEY, bytes(""));
 
         IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
             0, treasury, 8000000
@@ -162,5 +163,53 @@ abstract contract TokenCreate is FeeHelper {
         }
 
         emit TokenInfo(tokenInfo);
+    }
+
+    function transferTokensPublic(address token, address[] memory accountId, int64[] memory amount) external returns (int256 responseCode) {
+        responseCode = HederaTokenService.transferTokens(token, accountId, amount);
+        emit ResponseCode(responseCode);
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+    }
+
+    function transferNFTsPublic(address token, address[] memory sender, address[] memory receiver, int64[] memory serialNumber) external returns (int256 responseCode) {
+        responseCode = HederaTokenService.transferNFTs(token, sender, receiver, serialNumber);
+        emit ResponseCode(responseCode);
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+    }
+
+    function burnTokenPublic(address token, uint64 amount, int64[] memory serialNumbers) external returns (int256 responseCode, uint64 newTotalSupply) {
+        (responseCode, newTotalSupply) = HederaTokenService.burnToken(token, amount, serialNumbers);
+        emit ResponseCode(responseCode);
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+    }
+
+    function associateTokensPublic(address account, address[] memory tokens) external returns (int256 responseCode) {
+        (responseCode) = HederaTokenService.associateTokens(account, tokens);
+        emit ResponseCode(responseCode);
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+    }
+
+    function dissociateTokensPublic(address account, address[] memory tokens) external returns (int256 responseCode) {
+        (responseCode) = HederaTokenService.dissociateTokens(account, tokens);
+        emit ResponseCode(responseCode);
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+    }
+
+    function dissociateTokenPublic(address account, address token) public returns (int responseCode) {
+        responseCode = HederaTokenService.dissociateToken(account, token);
+        emit ResponseCode(responseCode);
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
     }
 }
