@@ -9,14 +9,14 @@ abstract contract TokenCreate is FeeHelper {
     string name = "tokenName";
     string symbol = "tokenSymbol";
     string memo = "memo";
-    uint64 initialTotalSupply = 1000;
+    int64 initialTotalSupply = 1000;
     int64 maxSupply = 1000;
-    uint32 decimals = 8;
+    int32 decimals = 8;
     bool freezeDefaultStatus = false;
 
     event CreatedToken(address tokenAddress);
     event ResponseCode(int responseCode);
-    event MintedToken(uint64 newTotalSupply, int64[] serialNumbers);
+    event MintedToken(int64 newTotalSupply, int64[] serialNumbers);
     event NonFungibleTokenInfo(IHederaTokenService.NonFungibleTokenInfo tokenInfo);
     event TokenInfo(IHederaTokenService.TokenInfo tokenInfo);
 
@@ -101,8 +101,8 @@ abstract contract TokenCreate is FeeHelper {
         }
     }
 
-    function mintTokenPublic(address token, uint64 amount, bytes[] memory metadata) public
-    returns (int responseCode, uint64 newTotalSupply, int64[] memory serialNumbers) {
+    function mintTokenPublic(address token, int64 amount, bytes[] memory metadata) public
+    returns (int responseCode, int64 newTotalSupply, int64[] memory serialNumbers) {
         (responseCode, newTotalSupply, serialNumbers) = HederaTokenService.mintToken(token, amount, metadata);
         emit ResponseCode(responseCode);
 
@@ -181,7 +181,7 @@ abstract contract TokenCreate is FeeHelper {
         }
     }
 
-    function burnTokenPublic(address token, uint64 amount, int64[] memory serialNumbers) external returns (int256 responseCode, uint64 newTotalSupply) {
+    function burnTokenPublic(address token, int64 amount, int64[] memory serialNumbers) external returns (int256 responseCode, int64 newTotalSupply) {
         (responseCode, newTotalSupply) = HederaTokenService.burnToken(token, amount, serialNumbers);
         emit ResponseCode(responseCode);
         if (responseCode != HederaResponseCodes.SUCCESS) {

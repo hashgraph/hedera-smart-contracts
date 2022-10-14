@@ -9,7 +9,7 @@ library SafeHTS {
 
     address constant precompileAddress = address(0x167);
     // 90 days in seconds
-    uint32 constant defaultAutoRenewPeriod = 7776000;
+    int32 constant defaultAutoRenewPeriod = 7776000;
 
     error CryptoTransferFailed();
     error MintFailed();
@@ -63,21 +63,21 @@ library SafeHTS {
         if (!tryDecodeSuccessResponseCode(success, result)) revert CryptoTransferFailed();
     }
 
-    function safeMintToken(address token, uint64 amount, bytes[] memory metadata) external
-    returns (uint64 newTotalSupply, int64[] memory serialNumbers) {
+    function safeMintToken(address token, int64 amount, bytes[] memory metadata) external
+    returns (int64 newTotalSupply, int64[] memory serialNumbers) {
         int32 responseCode;
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.mintToken.selector,
             token, amount, metadata));
         (responseCode, newTotalSupply, serialNumbers) =
         success
-        ? abi.decode(result, (int32, uint64, int64[]))
+        ? abi.decode(result, (int32, int64, int64[]))
         : (HederaResponseCodes.UNKNOWN, 0, new int64[](0));
         if (responseCode != HederaResponseCodes.SUCCESS) revert MintFailed();
     }
 
-    function safeBurnToken(address token, uint64 amount, int64[] memory serialNumbers) external
-    returns (uint64 newTotalSupply)
+    function safeBurnToken(address token, int64 amount, int64[] memory serialNumbers) external
+    returns (int64 newTotalSupply)
     {
         int32 responseCode;
         (bool success, bytes memory result) = precompileAddress.call(
@@ -85,7 +85,7 @@ library SafeHTS {
             token, amount, serialNumbers));
         (responseCode, newTotalSupply) =
         success
-        ? abi.decode(result, (int32, uint64))
+        ? abi.decode(result, (int32, int64))
         : (HederaResponseCodes.UNKNOWN, 0);
         if (responseCode != HederaResponseCodes.SUCCESS) revert BurnFailed();
     }
@@ -146,8 +146,8 @@ library SafeHTS {
         if (!tryDecodeSuccessResponseCode(success, result)) revert NFTTransferFailed();
     }
 
-    function safeCreateFungibleToken(IHederaTokenService.HederaToken memory token, uint initialTotalSupply,
-        uint decimals) external returns (address tokenAddress){
+    function safeCreateFungibleToken(IHederaTokenService.HederaToken memory token, int64 initialTotalSupply,
+        int32 decimals) external returns (address tokenAddress){
         nonEmptyExpiry(token);
         int32 responseCode;
         (bool success, bytes memory result) = precompileAddress.call{value: msg.value}(
@@ -161,8 +161,8 @@ library SafeHTS {
     }
 
     function safeCreateFungibleTokenWithCustomFees(IHederaTokenService.HederaToken memory token,
-        uint initialTotalSupply,
-        uint decimals,
+        int64 initialTotalSupply,
+        int32 decimals,
         IHederaTokenService.FixedFee[] memory fixedFees,
         IHederaTokenService.FractionalFee[] memory fractionalFees) external returns
     (address tokenAddress){
@@ -400,7 +400,7 @@ library SafeHTS {
         if (!tryDecodeSuccessResponseCode(success, result)) revert UnpauseTokenFailed();
     }
 
-    function safeWipeTokenAccount(address token, address account, uint32 amount) external {
+    function safeWipeTokenAccount(address token, address account, int32 amount) external {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.wipeTokenAccount.selector, token, account, amount));
         if (!tryDecodeSuccessResponseCode(success, result)) revert WipeTokenAccountFailed();
