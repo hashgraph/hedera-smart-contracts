@@ -297,7 +297,7 @@ abstract contract HederaTokenService is HederaResponseCodes {
     function transferFromNFT(address token, address from, address to, uint256 serialNumber) external returns (int64 responseCode)
     {
         (bool success, bytes memory result) = precompileAddress.call(
-            abi.encodeWithSelector(IHederaTokenService.transferFrom.selector,
+            abi.encodeWithSelector(IHederaTokenService.transferFromNFT.selector,
             token, from, to, serialNumber));
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
     }

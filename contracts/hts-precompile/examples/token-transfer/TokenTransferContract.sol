@@ -5,11 +5,8 @@ pragma experimental ABIEncoderV2;
 import "../../FeeHelper.sol";
 
 contract TokenTransferContract is FeeHelper {
-    
+
     event ResponseCode(int responseCode);
-    event AllowanceValue(uint256 amount);
-    event ApprovedAddress(address approved);
-    event Approved(bool approved);
 
     function cryptoTransferPublic(IHederaTokenService.TransferList calldata transferList, IHederaTokenService.TokenTransferList[] calldata tokenTransferList) public returns (int responseCode) {
         responseCode = HederaTokenService.cryptoTransfer(transferList, tokenTransferList);
@@ -72,65 +69,5 @@ contract TokenTransferContract is FeeHelper {
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert ();
         }
-    }
-
-    function approvePublic(address token, address spender, uint256 amount) public returns (int responseCode) {
-        responseCode = HederaTokenService.approve(token, spender, amount);
-        emit ResponseCode(responseCode);
-
-        if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert ();
-        }
-    }
-
-    function approveNFTPublic(address token, address approved, uint256 serialNumber) public returns (int responseCode) {
-        responseCode = HederaTokenService.approveNFT(token, approved, serialNumber);
-        emit ResponseCode(responseCode);
-
-        if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert ();
-        }
-    }
-
-    function allowancePublic(address token, address owner, address spender) public returns (int responseCode, uint256 amount) {
-        (responseCode, amount) = HederaTokenService.allowance(token, owner, spender);
-        emit ResponseCode(responseCode);
-
-        if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert ();
-        }
-
-        emit AllowanceValue(amount);
-    }
-
-    function getApprovedPublic(address token, uint256 serialNumber) public returns (int responseCode, address approved) {
-        (responseCode, approved) = HederaTokenService.getApproved(token, serialNumber);
-        emit ResponseCode(responseCode);
-
-        if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert();
-        }
-
-        emit ApprovedAddress(approved);
-    }
-
-    function setApprovalForAllPublic(address token, address operator, bool approved) public returns (int responseCode) {
-        responseCode = HederaTokenService.setApprovalForAll(token, operator, approved);
-        emit ResponseCode(responseCode);
-
-        if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert();
-        }
-    }
-
-    function isApprovedForAllPublic(address token, address owner, address operator) public returns (int responseCode, bool approved) {
-        (responseCode, approved) = HederaTokenService.isApprovedForAll(token, owner, operator);
-        emit ResponseCode(responseCode);
-
-        if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert();
-        }
-
-        emit Approved(approved);
     }
 }
