@@ -235,7 +235,7 @@ interface IHederaTokenService {
     /// useCurrentTokenForPayment. Exactly one of the values should be set.
     struct FixedFee {
 
-        int32 amount;
+        int64 amount;
 
         // Specifies ID of token that should be used for fixed fee denomination
         address tokenId;
@@ -255,16 +255,16 @@ interface IHederaTokenService {
     /// denomination is always units of the token to which this fractional fee is attached.
     struct FractionalFee {
         // A rational number's numerator, used to set the amount of a value transfer to collect as a custom fee
-        int32 numerator;
+        int64 numerator;
 
         // A rational number's denominator, used to set the amount of a value transfer to collect as a custom fee
-        int32 denominator;
+        int64 denominator;
 
         // The minimum amount to assess
-        int32 minimumAmount;
+        int64 minimumAmount;
 
         // The maximum amount to assess (zero implies no maximum)
-        int32 maximumAmount;
+        int64 maximumAmount;
         bool netOfTransfers;
 
         // The ID of the account to receive the custom fee, expressed as a solidity address
@@ -278,17 +278,17 @@ interface IHederaTokenService {
     /// Royalty fees can only be added to tokens of type type NON_FUNGIBLE_UNIQUE.
     struct RoyaltyFee {
         // A fraction's numerator of fungible value exchanged for an NFT to collect as royalty
-        int32 numerator;
+        int64 numerator;
 
         // A fraction's denominator of fungible value exchanged for an NFT to collect as royalty
-        int32 denominator;
+        int64 denominator;
 
         // If present, the fee to assess to the NFT receiver when no fungible value
         // is exchanged with the sender. Consists of:
         // amount: the amount to charge for the fee
         // tokenId: Specifies ID of token that should be used for fixed fee denomination
         // useHbarsForPayment: Specifies this fee should be denominated in Hbar
-        int32 amount;
+        int64 amount;
         address tokenId;
         bool useHbarsForPayment;
 
