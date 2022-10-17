@@ -194,37 +194,11 @@ contract TokenCreateContract is FeeHelper {
     function unpauseTokenPublic(address token) public returns (int responseCode) {
         responseCode = this.unpauseToken(token);
         emit ResponseCode(responseCode);
-        
+
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
 
         emit UnpausedToken(true);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
