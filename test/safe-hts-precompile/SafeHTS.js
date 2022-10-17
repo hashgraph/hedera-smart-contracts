@@ -1,7 +1,7 @@
 const {expect} = require("chai");
 const {ethers} = require("hardhat");
 
-describe.only("SafeHTS library tests", function () {
+describe("SafeHTS library tests", function () {
   let safeOperationsContract;
   let fungibleTokenAddress;
   let nonFungibleTokenAddress;
