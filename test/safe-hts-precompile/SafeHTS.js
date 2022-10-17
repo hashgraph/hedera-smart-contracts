@@ -1,13 +1,14 @@
 const {expect} = require("chai");
 const {ethers} = require("hardhat");
 
-describe("SafeHTS library tests", function () {
+describe.only("SafeHTS library tests", function () {
   let safeOperationsContract;
   let fungibleTokenAddress;
   let nonFungibleTokenAddress;
 
   before(async function () {
     safeOperationsContract = await deploySafeOperationsContract();
+    console.log('safeOperationsContract')
     fungibleTokenAddress = await createFungibleToken();
   });
 
