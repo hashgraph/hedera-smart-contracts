@@ -3,7 +3,7 @@
   "version": "0.3.0-SNAPSHOT",
   "description": "Hedera Smart Contract Service supporting files",
   "files": [
-    "/contracts/**/*.sol"
+    "/contracts/**/**/**/*.sol"
   ],
   "repository": {
     "type": "git",
