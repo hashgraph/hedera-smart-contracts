@@ -60,6 +60,17 @@ class Utils {
     return tokenAddress;
   }
 
+  static async createFungibleTokenWithCustomFees(contract, feeTokenAddress) {
+    const tokenAddressTx = await contract.createFungibleTokenWithCustomFeesPublic(contract.address, feeTokenAddress, {
+      value: ethers.BigNumber.from('20000000000000000000'),
+      gasLimit: 10_000_000
+    });
+    const tokenAddressReceipt = await tokenAddressTx.wait();
+    const {tokenAddress} = tokenAddressReceipt.events.filter(e => e.event === 'CreatedToken')[0].args;
+
+    return tokenAddress;
+  }
+
   static async createNonFungibleToken(contract) {
     const tokenAddressTx = await contract.createNonFungibleTokenPublic(contract.address, {
       value: ethers.BigNumber.from('10000000000000000000'),
