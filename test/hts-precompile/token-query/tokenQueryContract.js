@@ -15,7 +15,6 @@ describe("TokenQueryContract tests", function () {
     let signers;
 
     before(async function () {
-        console.log(Date.now())
         tokenCreateContract = await utils.deployTokenCreateContract();
         tokenQueryContract = await utils.deployTokenQueryContract();
 
