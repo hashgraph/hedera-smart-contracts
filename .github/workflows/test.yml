@@ -8,17 +8,17 @@ on:
 
 env:
   RELAY_IMAGE_TAG: 0.9.0
-  NETWORK_NODE_IMAGE_TAG: 0.30.0-alpha.2
-  HAVEGED_IMAGE_TAG: 0.30.0-alpha.2
-  MIRROR_IMAGE_TAG: 0.64.0
-  LIMIT_DURATION: 60000
+  NETWORK_NODE_IMAGE_TAG: 0.30.0
+  HAVEGED_IMAGE_TAG: 0.30.0
+  MIRROR_IMAGE_TAG: 0.66.0-beta1
+  DEFAULT_RATE_LIMIT: 200
+  TIER_1_RATE_LIMIT: 100
   TIER_2_RATE_LIMIT: 800
   TIER_3_RATE_LIMIT: 1600
+  LIMIT_DURATION: 60000
 
 jobs:
-
   tests:
-
     name: Tests
 
     runs-on: ubuntu-latest
@@ -26,7 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [ 16.x ]
+        node-version: [16.x]
 
     steps:
       - name: Checkout repository
