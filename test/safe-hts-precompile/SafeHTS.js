@@ -12,8 +12,10 @@ describe("SafeHTS library tests", function () {
   });
 
   async function deploySafeOperationsContract() {
+    const signers = await ethers.getSigners();
+
     const safeHTSFactory = await ethers.getContractFactory("SafeHTS");
-    const safeHTS = await safeHTSFactory.deploy({gasLimit: 1_000_000});
+    const safeHTS = await safeHTSFactory.connect(signers[1]).deploy({gasLimit: 1_000_000});
     const safeHTSReceipt = await safeHTS.deployTransaction.wait();
 
     const safeOperationsFactory = await ethers.getContractFactory("SafeOperations", {
@@ -22,7 +24,7 @@ describe("SafeHTS library tests", function () {
       }
     });
 
-    const safeOperations = await safeOperationsFactory.deploy({gasLimit: 1_000_000});
+    const safeOperations = await safeOperationsFactory.connect(signers[1]).deploy({gasLimit: 1_000_000});
     const safeOperationsReceipt = await safeOperations.deployTransaction.wait();
 
     return await ethers.getContractAt('SafeOperations', safeOperationsReceipt.contractAddress);
