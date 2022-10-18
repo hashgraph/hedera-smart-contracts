@@ -519,7 +519,7 @@ abstract contract HederaTokenService is HederaResponseCodes {
     /// @param account The account address to revoke kyc
     /// @param amount The number of tokens to wipe
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
-    function wipeTokenAccount(address token, address account, int32 amount) internal returns (int responseCode)
+    function wipeTokenAccount(address token, address account, int64 amount) internal returns (int responseCode)
     {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.wipeTokenAccount.selector, token, account, amount));
