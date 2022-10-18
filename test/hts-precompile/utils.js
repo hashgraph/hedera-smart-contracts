@@ -17,6 +17,22 @@ class Utils {
     return await ethers.getContractAt('TokenManagementContract', tokenManagementReceipt.contractAddress);
   }
 
+  static async deployTokenQueryContract() {
+    const tokenQueryFactory = await ethers.getContractFactory("TokenQueryContract");
+    const tokenQuery = await tokenQueryFactory.deploy({gasLimit: 1_000_000});
+    const tokenQueryReceipt = await tokenQuery.deployTransaction.wait();
+
+    return await ethers.getContractAt('TokenQueryContract', tokenQueryReceipt.contractAddress);
+  }
+
+  static async deployTokenTransferContract() {
+    const tokenTransferFactory = await ethers.getContractFactory("TokenTransferContract");
+    const tokenTransfer = await tokenTransferFactory.deploy({gasLimit: 1_000_000});
+    const tokenTransferReceipt = await tokenTransfer.deployTransaction.wait();
+
+    return await ethers.getContractAt('TokenTransferContract', tokenTransferReceipt.contractAddress);
+  }
+  
   static async deployERC20Contract() {
     const erc20ContractFactory = await ethers.getContractFactory("ERC20Contract");
     const erc20Contract = await erc20ContractFactory.deploy({gasLimit: 1_000_000});
