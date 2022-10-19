@@ -1,6 +1,7 @@
 const {expect} = require("chai");
 const {ethers} = require("hardhat");
 const utils = require('../utils');
+const {expectValidHash} = require('../assertions');
 
 describe("TokenCreateContract tests", function () {
   let tokenCreateContract;
@@ -11,8 +12,10 @@ describe("TokenCreateContract tests", function () {
   let tokenAddress;
   let nftTokenAddress;
   let mintedTokenSerialNumber;
+  let signers;
 
   before(async function () {
+    signers = await ethers.getSigners();
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
     tokenManagmentContract = await utils.deployTokenManagementContract();
@@ -30,7 +33,6 @@ describe("TokenCreateContract tests", function () {
 
   it('should be able to execute transferTokens', async function () {
     const amount = 33;
-    const signers = await ethers.getSigners();
 
     let contractOwnerBalanceBefore = await erc20Contract.balanceOf(tokenAddress, tokenCreateContract.address);
     let wallet1BalanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[0].address);
@@ -43,7 +45,6 @@ describe("TokenCreateContract tests", function () {
   });
 
   it('should be able to execute transferNFTs', async function () {
-    const signers = await ethers.getSigners();
     const ownerBefore = await erc721Contract.ownerOf(nftTokenAddress, mintedTokenSerialNumber);
     await tokenTransferContract.transferNFTPublic(nftTokenAddress, tokenCreateContract.address, signers[0].address, mintedTokenSerialNumber, {gasLimit: 1_000_000});
     const ownerAfter = await erc721Contract.ownerOf(nftTokenAddress, mintedTokenSerialNumber);
@@ -65,7 +66,6 @@ describe("TokenCreateContract tests", function () {
   });
 
   it('should be able to execute dissociateTokens and associateTokens', async function () {
-    const signers = await ethers.getSigners();
     const tokenCreateContractWallet2 = tokenCreateContract.connect(signers[1]);
     const tokenManagmentContractWallet2 = tokenManagmentContract.connect(signers[1]);
 
@@ -79,7 +79,6 @@ describe("TokenCreateContract tests", function () {
   });
 
   it('should be able to execute dissociateToken and associateToken', async function () {
-    const signers = await ethers.getSigners();
     const tokenCreateContractWallet2 = tokenCreateContract.connect(signers[1]);
     const tokenManagmentContractWallet2 = tokenManagmentContract.connect(signers[1]);
 
@@ -90,5 +89,73 @@ describe("TokenCreateContract tests", function () {
     const txAssociate = await tokenCreateContractWallet2.associateTokenPublic(signers[1].address, tokenAddress, {gasLimit: 1_000_000});
     const receiptAssociate = await txAssociate.wait();
     expect(receiptAssociate.events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.equal(22);
+  });
+
+  it('should be able to execute createFungibleToken', async function () {
+    const tokenAddressTx = await tokenCreateContract.createFungibleTokenPublic(tokenCreateContract.address, {
+      value: ethers.BigNumber.from('10000000000000000000'),
+      gasLimit: 1_000_000
+    });
+    const tokenAddressReceipt = await tokenAddressTx.wait();
+    const result = tokenAddressReceipt.events.filter(e => e.event === 'CreatedToken')[0].args[0];
+    expect(result).to.exist;
+    expectValidHash(result, 40)
+  });
+
+  it('should be able to execute createNonFungibleToken', async function () {
+    const tokenAddressTx = await tokenCreateContract.createNonFungibleTokenPublic(tokenCreateContract.address, {
+      value: ethers.BigNumber.from('10000000000000000000'),
+      gasLimit: 1_000_000
+    });
+
+    const tokenAddressReceipt = await tokenAddressTx.wait();
+    const result = tokenAddressReceipt.events.filter(e => e.event === 'CreatedToken')[0].args[0];
+    expect(result).to.exist;
+    expectValidHash(result, 40)
+  });
+
+  it('should be able to execute createFungibleTokenWithCustomFees', async function () {
+    const tx = await tokenCreateContract.createFungibleTokenWithCustomFeesPublic(signers[0].address, tokenAddress, {
+      value: ethers.BigNumber.from('20000000000000000000'),
+      gasLimit: 1_000_000
+    });
+
+    const txReceipt = await tx.wait();
+    const result = txReceipt.events.filter(e => e.event === 'CreatedToken')[0].args[0];
+    expect(result).to.exist;
+    expectValidHash(result, 40)
+  });
+
+  it('should be able to execute createNonFungibleTokenWithCustomFees', async function () {
+    const tx = await tokenCreateContract.createNonFungibleTokenWithCustomFeesPublic(signers[0].address, tokenAddress, {
+      value: ethers.BigNumber.from('20000000000000000000'),
+      gasLimit: 1_000_000
+    });
+
+    const txReceipt = await tx.wait();
+    const result = txReceipt.events.filter(e => e.event === 'CreatedToken')[0].args[0];
+    expect(result).to.exist;
+    expectValidHash(result, 40)
+  });
+
+  it('should be able to execute mintToken', async function () {
+    const nftAddress = await utils.createNonFungibleToken(tokenCreateContract);
+    expect(nftAddress).to.exist;
+    expectValidHash(nftAddress, 40);
+
+    const tx = await tokenCreateContract.mintTokenPublic(nftAddress, 0, ['0x02'], {
+      gasLimit: 1_000_000
+    });
+
+    const receipt = await tx.wait();
+    const { responseCode } = receipt.events.filter(e => e.event === 'ResponseCode')[0].args;
+    expect(responseCode).to.equal(22);
+    const { serialNumbers } = receipt.events.filter(e => e.event === 'MintedToken')[0].args;
+    expect(serialNumbers[0].toNumber()).to.be.greaterThan(0);
+  });
+
+  it('should be able to execute grantTokenKyc', async function () {
+    const grantKycTx = await tokenCreateContract.grantTokenKycPublic(tokenAddress, signers[1].address, { gasLimit: 1000000 });
+    expect((await grantKycTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.equal(22);
   });
 });
