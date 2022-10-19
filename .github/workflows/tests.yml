@@ -9,25 +9,25 @@ on:
 
 jobs:
   ERC20Contract:
-    name: ERC20Contract
+    name: ERC20 Contract Tests
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: ERC20
 
   ERC721Contract:
-    name: ERC721Contract
+    name: ERC721 Contract Tests
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: ERC721
 
   TokenCreateContract:
-    name: Token Create
+    name: Token Create Tests
     uses: ./.github/workflows/test-workflow.yml
     with:
-      testfilter: create
+      testfilter: TokenCreateContract
 
   TokenQueryContract:
-    name: Token Query
+    name: Token Query Tests
     uses: ./.github/workflows/test-workflow.yml
     with:
-      testfilter: query
+      testfilter: TokenQueryContract
