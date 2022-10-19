@@ -47,7 +47,7 @@ contract TokenManagementContract is FeeHelper {
         emit PausedToken(true);
     }
 
-    function wipeTokenAccountPublic(address token, address account, uint32 amount) public returns (int responseCode) {
+    function wipeTokenAccountPublic(address token, address account, int64 amount) public returns (int responseCode) {
         responseCode = HederaTokenService.wipeTokenAccount(token, account, amount);
         emit ResponseCode(responseCode);
 
@@ -69,7 +69,7 @@ contract TokenManagementContract is FeeHelper {
         (responseCode) = this.updateTokenInfo(token, tokenInfo);
         emit ResponseCode(responseCode);
 
-        if(responseCode != HederaResponseCodes.SUCCESS) {
+        if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
     }
@@ -78,7 +78,7 @@ contract TokenManagementContract is FeeHelper {
         (responseCode) = this.updateTokenExpiryInfo(token, expiryInfo);
         emit ResponseCode(responseCode);
 
-        if(responseCode != HederaResponseCodes.SUCCESS) {
+        if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
     }
@@ -87,12 +87,11 @@ contract TokenManagementContract is FeeHelper {
         (responseCode) = HederaTokenService.updateTokenKeys(token, keys);
         emit ResponseCode(responseCode);
 
-        if(responseCode != HederaResponseCodes.SUCCESS) {
+        if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
     }
-
-    function burnTokenPublic(address token, uint64 amount, int64[] memory serialNumbers) external returns (int256 responseCode, uint64 newTotalSupply) {
+    function burnTokenPublic(address token, int64 amount, int64[] memory serialNumbers) external returns (int256 responseCode, int64 newTotalSupply) {
         (responseCode, newTotalSupply) = HederaTokenService.burnToken(token, amount, serialNumbers);
         emit ResponseCode(responseCode);
 

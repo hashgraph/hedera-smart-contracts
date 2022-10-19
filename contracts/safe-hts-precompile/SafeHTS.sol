@@ -72,7 +72,7 @@ library SafeHTS {
         (responseCode, newTotalSupply, serialNumbers) =
         success
         ? abi.decode(result, (int32, int64, int64[]))
-        : (HederaResponseCodes.UNKNOWN, 0, new int64[](0));
+        : (HederaResponseCodes.UNKNOWN, int64(0), new int64[](0));
         if (responseCode != HederaResponseCodes.SUCCESS) revert MintFailed();
     }
 
@@ -86,7 +86,7 @@ library SafeHTS {
         (responseCode, newTotalSupply) =
         success
         ? abi.decode(result, (int32, int64))
-        : (HederaResponseCodes.UNKNOWN, 0);
+        : (HederaResponseCodes.UNKNOWN, int64(0));
         if (responseCode != HederaResponseCodes.SUCCESS) revert BurnFailed();
     }
 

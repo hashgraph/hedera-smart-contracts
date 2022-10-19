@@ -51,7 +51,7 @@ abstract contract HederaTokenService is HederaResponseCodes {
         (responseCode, newTotalSupply, serialNumbers) =
         success
         ? abi.decode(result, (int32, int64, int64[]))
-        : (HederaResponseCodes.UNKNOWN, 0, new int64[](0));
+        : (HederaResponseCodes.UNKNOWN, int64(0), new int64[](0));
     }
 
     /// Burns an amount of the token from the defined treasury account
@@ -72,7 +72,7 @@ abstract contract HederaTokenService is HederaResponseCodes {
         (responseCode, newTotalSupply) =
         success
         ? abi.decode(result, (int32, int64))
-        : (HederaResponseCodes.UNKNOWN, 0);
+        : (HederaResponseCodes.UNKNOWN, int64(0));
     }
 
     ///  Associates the provided account with the provided tokens. Must be signed by the provided
