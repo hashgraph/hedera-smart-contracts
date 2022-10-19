@@ -1,32 +1,29 @@
-name: Tests CI
+name: Reusable test workflow
 
 on:
-  push:
-    branches: [main, develop]
-  pull_request:
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      testfilter:
+        required: true
+        type: string
 
 env:
-  RELAY_IMAGE_TAG: 0.9.0
+  RELAY_IMAGE_TAG: main
   NETWORK_NODE_IMAGE_TAG: 0.30.0
   HAVEGED_IMAGE_TAG: 0.30.0
   MIRROR_IMAGE_TAG: 0.66.0-beta1
-  DEFAULT_RATE_LIMIT: 200
-  TIER_1_RATE_LIMIT: 100
-  TIER_2_RATE_LIMIT: 800
-  TIER_3_RATE_LIMIT: 1600
-  LIMIT_DURATION: 60000
 
 jobs:
-  tests:
-    name: Tests
-
+  acceptance-workflow:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 35
     strategy:
       fail-fast: false
-      matrix:
-        node-version: [16.x]
+    matrix:
+      node-version: [16.x]
+
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -49,13 +46,13 @@ jobs:
       - name: Start the local node
         run: npx hedera start -d --network local
 
-      - name: Run the tests
+      - name: Run the test in ${{ inputs.testfilter }}
         uses: nick-fields/retry@v2
         with:
           max_attempts: 3
           timeout_minutes: 10
           retry_wait_seconds: 60
-          command: npx hardhat test
+          command: npx hardhat test --grep ${{ inputs.testfilter }}
 
       - name: Stop the local node
         run: npx hedera stop
