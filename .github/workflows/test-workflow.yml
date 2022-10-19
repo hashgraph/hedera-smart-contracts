@@ -5,6 +5,7 @@ on:
     inputs:
       testfilter:
         required: true
+        type: string
 
 env:
   RELAY_IMAGE_TAG: main
