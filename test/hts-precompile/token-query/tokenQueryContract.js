@@ -77,6 +77,7 @@ describe("TokenQueryContract tests", function () {
     });
 
     it('should query getTokenCustomFees', async function () {
+        //All values for fixedFees and fractionalFees are hardcoded and pulled from the Token Create Contract
         const tx = await tokenQueryContract.getTokenCustomFeesPublic(tokenWithCustomFeesAddress);
         const { fixedFees, fractionalFees } = (await tx.wait()).events.filter(e => e.event === 'TokenCustomFees')[0].args;
         const { responseCode } = (await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args;

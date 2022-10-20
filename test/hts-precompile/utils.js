@@ -1,6 +1,9 @@
 const {ethers} = require("hardhat");
 
 class Utils {
+  //createTokenCost is cost for creating the token, which is passed to the precompile. This is equivalent of 10hbars, any excess hbars are refunded.
+  static createTokenCost = '10000000000000000000';
+
   static async deployTokenCreateContract() {
     const tokenCreateFactory = await ethers.getContractFactory("TokenCreateContract");
     const tokenCreate = await tokenCreateFactory.deploy({gasLimit: 1_000_000});
@@ -51,7 +54,7 @@ class Utils {
 
   static async createFungibleToken(contract) {
     const tokenAddressTx = await contract.createFungibleTokenPublic(contract.address, {
-      value: ethers.BigNumber.from('10000000000000000000'),
+      value: ethers.BigNumber.from(this.createTokenCost),
       gasLimit: 1_000_000
     });
     const tokenAddressReceipt = await tokenAddressTx.wait();
@@ -62,7 +65,7 @@ class Utils {
 
   static async createFungibleTokenWithCustomFees(contract, feeTokenAddress) {
     const tokenAddressTx = await contract.createFungibleTokenWithCustomFeesPublic(contract.address, feeTokenAddress, {
-      value: ethers.BigNumber.from('20000000000000000000'),
+      value: ethers.BigNumber.from(this.createTokenCost),
       gasLimit: 10_000_000
     });
     const tokenAddressReceipt = await tokenAddressTx.wait();
@@ -73,7 +76,7 @@ class Utils {
 
   static async createNonFungibleToken(contract) {
     const tokenAddressTx = await contract.createNonFungibleTokenPublic(contract.address, {
-      value: ethers.BigNumber.from('10000000000000000000'),
+      value: ethers.BigNumber.from(this.createTokenCost),
       gasLimit: 1_000_000
     });
     const tokenAddressReceipt = await tokenAddressTx.wait();
