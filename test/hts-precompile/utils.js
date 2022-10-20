@@ -1,4 +1,5 @@
 const {ethers} = require("hardhat");
+const axios = require('axios');
 
 class Utils {
   //createTokenCost is cost for creating the token, which is passed to the precompile. This is equivalent of 10 and 20hbars, any excess hbars are refunded.
@@ -6,9 +7,13 @@ class Utils {
   static createTokenCustomFeesCost = '20000000000000000000';
 
   static async deployTokenCreateContract() {
+    console.log(`deployTokenCreateContract`);
     const tokenCreateFactory = await ethers.getContractFactory("TokenCreateContract");
+    console.log(`created tokenCreateFactory`);
     const tokenCreate = await tokenCreateFactory.deploy({gasLimit: 1_000_000});
+    console.log(`deployTokenCreateContract deployed tokenCreate: ${JSON.stringify(tokenCreate.deployTransaction)}`);
     const tokenCreateReceipt = await tokenCreate.deployTransaction.wait();
+    console.log(`deployTokenCreateContract, addresss: ${tokenCreateReceipt.contractAddress}, tokenCreateReceipt: ${JSON.stringify(tokenCreateReceipt)}`);
 
     return await ethers.getContractAt('TokenCreateContract', tokenCreateReceipt.contractAddress);
   }
@@ -58,7 +63,10 @@ class Utils {
       value: ethers.BigNumber.from(this.createTokenCost),
       gasLimit: 1_000_000
     });
+
+    console.log(`createFungibleToken tokenAddressTx: ${JSON.stringify(tokenAddressTx)}`);
     const tokenAddressReceipt = await tokenAddressTx.wait();
+    console.log(`createFungibleToken tokenAddressReceipt: ${JSON.stringify(tokenAddressReceipt)}`);
     const {tokenAddress} = tokenAddressReceipt.events.filter(e => e.event === 'CreatedToken')[0].args;
 
     return tokenAddress;
@@ -111,6 +119,48 @@ class Utils {
     await contract.grantTokenKyc(tokenAddress, contract.address);
     await contract.grantTokenKyc(tokenAddress, signers[0].address);
     await contract.grantTokenKyc(tokenAddress, signers[1].address);
+  }
+
+  static async getMirrorContractResult(transactionHash) {
+    // const url = 'http://localhost:5551/api/v1/contracts/results';
+    const url = 'https://testnet.mirrornode.hedera.com/api/v1/contracts/results';
+    try {
+      console.log(`call ${url}/${transactionHash}`);
+      const response = await axios.get(`${url}/${transactionHash}`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  static async getRelayTransactionReciept(transactionHash) {
+    try {
+      return ethers.provider.getTransactionReceipt(transactionHash);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  static async getRelayBalance(address) {
+    try {
+      return ethers.provider.getBalance(address);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  static async decodeInterfaceCallResult(abi, functionName, callResult) {
+    const IAbi = new ethers.utils.Interface(abi);
+    const result = IAbi.decodeFunctionResult(functionName, callResult);
+    console.log(`${functionName} call_result decode: ${callResult} => ${result}`);
+    return result;
+  }
+
+  static async decodeInterfaceErrorMessage(abi, functionName, errorMessage) {
+    const IAbi = new ethers.utils.Interface(abi);
+    const result =  IAbi.decodeErrorResult(functionName, errorMessage);
+    console.log(`${functionName} error_message decode: ${errorMessage} => ${result}`)
+    return result;
   }
 }
 

@@ -1,4 +1,8 @@
 node_modules
-artifacts
 cache
 .idea
+
+# ignore non repo contract related aritifacts
+artifacts/@openzeppelin
+artifacts/build-info
+artifacts/contracts/**/**.dbg.json
