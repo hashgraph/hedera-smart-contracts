@@ -7,10 +7,10 @@ on:
   workflow_dispatch:
 
 env:
-  RELAY_IMAGE_TAG: 0.8.0
-  NETWORK_NODE_IMAGE_TAG: 0.30.0-alpha.2
-  HAVEGED_IMAGE_TAG: 0.30.0-alpha.2
-  MIRROR_IMAGE_TAG: 0.64.0
+  RELAY_IMAGE_TAG: main
+  NETWORK_NODE_IMAGE_TAG: 0.30.0
+  HAVEGED_IMAGE_TAG: 0.30.0
+  MIRROR_IMAGE_TAG: 0.66.0-beta1
 
 jobs:
 
@@ -19,7 +19,7 @@ jobs:
     name: Tests
 
     runs-on: ubuntu-latest
-
+    timeout-minutes: 35
     strategy:
       fail-fast: false
       matrix:
