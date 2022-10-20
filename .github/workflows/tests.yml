@@ -31,3 +31,9 @@ jobs:
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: TokenQueryContract
+
+  TokenManagmentContract:
+    name: Token Managment Tests
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: TokenManagmentContract
