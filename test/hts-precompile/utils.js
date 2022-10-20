@@ -1,8 +1,9 @@
 const {ethers} = require("hardhat");
 
 class Utils {
-  //createTokenCost is cost for creating the token, which is passed to the precompile. This is equivalent of 10hbars, any excess hbars are refunded.
+  //createTokenCost is cost for creating the token, which is passed to the precompile. This is equivalent of 10 and 20hbars, any excess hbars are refunded.
   static createTokenCost = '10000000000000000000';
+  static createTokenCustomFeesCost = '20000000000000000000';
 
   static async deployTokenCreateContract() {
     const tokenCreateFactory = await ethers.getContractFactory("TokenCreateContract");
@@ -65,7 +66,7 @@ class Utils {
 
   static async createFungibleTokenWithCustomFees(contract, feeTokenAddress) {
     const tokenAddressTx = await contract.createFungibleTokenWithCustomFeesPublic(contract.address, feeTokenAddress, {
-      value: ethers.BigNumber.from(this.createTokenCost),
+      value: ethers.BigNumber.from(this.createTokenCustomFeesCost),
       gasLimit: 10_000_000
     });
     const tokenAddressReceipt = await tokenAddressTx.wait();
