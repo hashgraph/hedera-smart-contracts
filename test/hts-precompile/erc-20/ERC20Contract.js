@@ -2,7 +2,7 @@ const {expect} = require("chai");
 const {ethers} = require("hardhat");
 const utils = require('../utils');
 
-describe.only("ERC20Contract tests", function () {
+describe("ERC20Contract tests", function () {
   let tokenCreateContract;
   let tokenTransferContract;
   let tokenAddress;
