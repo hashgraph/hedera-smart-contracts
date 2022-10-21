@@ -1,0 +1,39 @@
+name: Tests CI
+
+on:
+  pull_request:
+    branches: [main, release/**]
+  push:
+    branches: [main, release/**]
+    tags: [v*]
+
+jobs:
+  ERC20Contract:
+    name: ERC20 Contract Tests
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: ERC20
+
+  ERC721Contract:
+    name: ERC721 Contract Tests
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: ERC721
+
+  TokenCreateContract:
+    name: Token Create Tests
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: TokenCreateContract
+
+  TokenQueryContract:
+    name: Token Query Tests
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: TokenQueryContract
+
+  TokenManagmentContract:
+    name: Token Managment Tests
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: TokenManagmentContract
