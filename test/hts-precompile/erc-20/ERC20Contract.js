@@ -2,13 +2,6 @@ const {expect} = require("chai");
 const {ethers} = require("hardhat");
 const utils = require('../utils');
 
-// + balanceOf
-// + transfer
-// + allowance
-// + approve
-// + delegateTransfer
-// transferFrom
-
 describe.only("ERC20Contract tests", function () {
   let tokenCreateContract;
   let tokenTransferContract;
@@ -163,22 +156,23 @@ describe.only("ERC20Contract tests", function () {
 
   it("should be able to use delegateTransferFrom", async function () {
     const signers = await ethers.getSigners();
-    const amount = 200;
+    const amount = 50;
+    const initialAllowance = 200;
 
     const wallet1BalanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[0].address);
     const wallet2BalanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
     const allowanceBefore = await erc20Contract.allowance(tokenAddress, signers[0].address, signers[1].address);
-    expect(allowanceBefore.toNumber()).to.eq(200);
+    expect(allowanceBefore.toNumber()).to.eq(initialAllowance);
 
-    const tx = await erc20Contract.delegateTransferFrom(tokenAddress, signers[1].address, signers[0].address, amount, {gasLimit: 1_000_000});
-    const rec = await tx.wait()
+    const tx = await erc20Contract.connect(signers[1]).delegateTransferFrom(tokenAddress, signers[0].address, signers[1].address, amount, {gasLimit: 1_000_000});
+    const rec = await tx.wait();
 
     const wallet1BalanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[0].address);
     const wallet2BalanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
     const allowanceAfter = await erc20Contract.allowance(tokenAddress, signers[0].address, signers[1].address);
 
-    expect(allowanceAfter.toNumber()).to.eq(0);
-    expect(wallet1BalanceBefore.toNumber() + amount).to.eq(wallet1BalanceAfter.toNumber());
-    expect(wallet2BalanceBefore.toNumber() - amount).to.eq(wallet2BalanceAfter.toNumber());
+    expect(allowanceAfter.toNumber()).to.eq(initialAllowance - amount);
+    expect(wallet1BalanceBefore.toNumber() - amount).to.eq(wallet1BalanceAfter.toNumber());
+    expect(wallet2BalanceBefore.toNumber() + amount).to.eq(wallet2BalanceAfter.toNumber());
   });
 });
