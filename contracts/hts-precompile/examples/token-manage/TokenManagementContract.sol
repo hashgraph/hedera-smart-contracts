@@ -8,6 +8,7 @@ contract TokenManagementContract is FeeHelper {
 
     event ResponseCode(int responseCode);
     event PausedToken(bool paused);
+    event UnpausedToken(bool unpaused);
 
     function deleteTokenPublic(address token) public returns (int responseCode) {
         responseCode = HederaTokenService.deleteToken(token);
@@ -20,6 +21,15 @@ contract TokenManagementContract is FeeHelper {
 
     function freezeTokenPublic(address token, address account) public returns (int responseCode) {
         responseCode = HederaTokenService.freezeToken(token, account);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
+
+    function unfreezeTokenPublic(address token, address account) public returns (int responseCode) {
+        responseCode = HederaTokenService.unfreezeToken(token, account);
         emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
@@ -45,6 +55,17 @@ contract TokenManagementContract is FeeHelper {
         }
 
         emit PausedToken(true);
+    }
+
+    function unpauseTokenPublic(address token) public returns (int responseCode) {
+        responseCode = this.unpauseToken(token);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+
+        emit UnpausedToken(true);
     }
 
     function wipeTokenAccountPublic(address token, address account, uint32 amount) public returns (int responseCode) {
