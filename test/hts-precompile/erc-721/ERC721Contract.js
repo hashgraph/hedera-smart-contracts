@@ -2,14 +2,7 @@ const {expect} = require("chai");
 const {ethers} = require("hardhat");
 const utils = require('../utils');
 
-// approve
-// transferFrom
-// + safeTransferFrom
-// + safeTransferFromWithData
-// + tokenbyIndex
-// + tokenOfOwnerByIndex
-
-describe.only("ERC721Contract tests", function () {
+describe("ERC721Contract tests", function () {
   let tokenCreateContract;
   let tokenTransferContract;
   let tokenAddress;
@@ -102,18 +95,34 @@ describe.only("ERC721Contract tests", function () {
     expect(afterApproval).to.equal(firstWallet.address);
   });
 
-  // it.only('approve', async function () {
-  //   const newSerial = await utils.mintNFT(tokenCreateContract, tokenAddress, ['0x02']);
-  //   const erc721ContractNFTOwner = await ethers.getContractAt('ERC721Contract', erc721Contract.address, firstWallet);
-  //   const beforeApproval = await erc721ContractNFTOwner.getApproved(tokenAddress, newSerial, {gasLimit: 1_000_000});
-  //   await erc721ContractNFTOwner.delegateApprove(tokenAddress, firstWallet.address, newSerial, {gasLimit: 1_000_000});
-  //   const afterApproval = await erc721ContractNFTOwner.getApproved(tokenAddress, newSerial, {gasLimit: 1_000_000});
-  //
-  //   expect(beforeApproval).to.equal('0x0000000000000000000000000000000000000000');
-  //   expect(afterApproval).to.equal(firstWallet.address);
-  // });
-
   describe("Unsupported operations", async function () {
+    let serialNumber = await utils.mintNFT(tokenCreateContract, tokenAddress);
+
+    before(async function () {
+      serialNumber = await utils.mintNFT(tokenCreateContract, tokenAddress, ['0x02']);
+      await tokenTransferContract.transferNFTPublic(tokenAddress, tokenCreateContract.address, signers[0].address, serialNumber, {gasLimit: 1_000_000});
+    });
+
+    it("should NOT be able to execute approve", async function () {
+      const erc721ContractNFTOwner = await ethers.getContractAt('ERC721Contract', erc721Contract.address, secondWallet);
+      const beforeApproval = await erc721ContractNFTOwner.getApproved(tokenAddress, serialNumber, {gasLimit: 1_000_000});
+      await erc721ContractNFTOwner.approve(tokenAddress, firstWallet.address, serialNumber, {gasLimit: 1_000_000});
+      const afterApproval = await erc721ContractNFTOwner.getApproved(tokenAddress, serialNumber, {gasLimit: 1_000_000});
+
+      expect(beforeApproval).to.equal('0x0000000000000000000000000000000000000000');
+      expect(afterApproval).to.equal('0x0000000000000000000000000000000000000000');
+    });
+
+    it("should NOT be able to execute transferFrom", async function () {
+      const ownerBefore = await erc721Contract.ownerOf(tokenAddress, serialNumber);
+      const erc721ContractNFTOwner = await ethers.getContractAt('ERC721Contract', erc721Contract.address, firstWallet);
+      await erc721ContractNFTOwner.transferFrom(tokenAddress, firstWallet.address, secondWallet.address, serialNumber, {gasLimit: 1_000_000});
+      const ownerAfter = await erc721Contract.ownerOf(tokenAddress, serialNumber);
+
+      expect(ownerBefore).to.equal(secondWallet.address);
+      expect(ownerAfter).to.equal(firstWallet.address);
+    });
+
     it("should NOT be able call tokenByIndex", async function () {
       await utils.expectToFail(erc721Contract.tokenByIndex(tokenAddress, 0), 'CALL_EXCEPTION');
     });
