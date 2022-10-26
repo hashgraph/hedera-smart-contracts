@@ -96,7 +96,7 @@ describe("ERC721Contract tests", function () {
   });
 
   describe("Unsupported operations", async function () {
-    let serialNumber = await utils.mintNFT(tokenCreateContract, tokenAddress);
+    let serialNumber;
 
     before(async function () {
       serialNumber = await utils.mintNFT(tokenCreateContract, tokenAddress, ['0x02']);
@@ -106,7 +106,7 @@ describe("ERC721Contract tests", function () {
     it("should NOT be able to execute approve", async function () {
       const erc721ContractNFTOwner = await ethers.getContractAt('ERC721Contract', erc721Contract.address, secondWallet);
       const beforeApproval = await erc721ContractNFTOwner.getApproved(tokenAddress, serialNumber, {gasLimit: 1_000_000});
-      await erc721ContractNFTOwner.approve(tokenAddress, firstWallet.address, serialNumber, {gasLimit: 1_000_000});
+      await utils.expectToFail(erc721ContractNFTOwner.approve(tokenAddress, firstWallet.address, serialNumber, {gasLimit: 1_000_000}), 'CALL_EXCEPTION');
       const afterApproval = await erc721ContractNFTOwner.getApproved(tokenAddress, serialNumber, {gasLimit: 1_000_000});
 
       expect(beforeApproval).to.equal('0x0000000000000000000000000000000000000000');
@@ -116,10 +116,10 @@ describe("ERC721Contract tests", function () {
     it("should NOT be able to execute transferFrom", async function () {
       const ownerBefore = await erc721Contract.ownerOf(tokenAddress, serialNumber);
       const erc721ContractNFTOwner = await ethers.getContractAt('ERC721Contract', erc721Contract.address, firstWallet);
-      await erc721ContractNFTOwner.transferFrom(tokenAddress, firstWallet.address, secondWallet.address, serialNumber, {gasLimit: 1_000_000});
+      await utils.expectToFail(erc721ContractNFTOwner.transferFrom(tokenAddress, firstWallet.address, secondWallet.address, serialNumber, {gasLimit: 1_000_000}), 'CALL_EXCEPTION');
       const ownerAfter = await erc721Contract.ownerOf(tokenAddress, serialNumber);
 
-      expect(ownerBefore).to.equal(secondWallet.address);
+      expect(ownerBefore).to.equal(firstWallet.address);
       expect(ownerAfter).to.equal(firstWallet.address);
     });
 
