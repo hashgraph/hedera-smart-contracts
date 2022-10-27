@@ -400,7 +400,7 @@ library SafeHTS {
         if (!tryDecodeSuccessResponseCode(success, result)) revert UnpauseTokenFailed();
     }
 
-    function safeWipeTokenAccount(address token, address account, int32 amount) external {
+    function safeWipeTokenAccount(address token, address account, int64 amount) external {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.wipeTokenAccount.selector, token, account, amount));
         if (!tryDecodeSuccessResponseCode(success, result)) revert WipeTokenAccountFailed();

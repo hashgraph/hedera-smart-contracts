@@ -226,7 +226,7 @@ contract SafeOperations {
        SafeHTS.safeUnpauseToken(token);
     }
 
-    function safeWipeTokenAccount(address token, address account, int32 amount) external {
+    function safeWipeTokenAccount(address token, address account, int64 amount) external {
         SafeHTS.safeWipeTokenAccount(token, account, amount);
     }
 
