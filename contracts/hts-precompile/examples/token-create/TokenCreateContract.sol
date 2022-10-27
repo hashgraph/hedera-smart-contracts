@@ -17,7 +17,6 @@ contract TokenCreateContract is FeeHelper {
     event ResponseCode(int responseCode);
     event CreatedToken(address tokenAddress);
     event MintedToken(uint64 newTotalSupply, int64[] serialNumbers);
-    event UnpausedToken(bool unpaused);
     event KycGranted(bool kycGranted);
 
     function createFungibleTokenPublic(
@@ -173,15 +172,6 @@ contract TokenCreateContract is FeeHelper {
         }
     }
 
-    function unfreezeTokenPublic(address token, address account) public returns (int responseCode) {
-        responseCode = HederaTokenService.unfreezeToken(token, account);
-        emit ResponseCode(responseCode);
-
-        if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert();
-        }
-    }
-
     function grantTokenKycPublic(address token, address account) external returns (int64 responseCode) {
         (responseCode) = this.grantTokenKyc(token, account);
         emit ResponseCode(responseCode);
@@ -189,17 +179,6 @@ contract TokenCreateContract is FeeHelper {
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-    }
-
-    function unpauseTokenPublic(address token) public returns (int responseCode) {
-        responseCode = this.unpauseToken(token);
-        emit ResponseCode(responseCode);
-
-        if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert();
-        }
-
-        emit UnpausedToken(true);
     }
 
     function setApprovalForAllPublic(address token, address operator, bool approved) public returns (int responseCode) {

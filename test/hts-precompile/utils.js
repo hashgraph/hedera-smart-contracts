@@ -1,4 +1,5 @@
 const {ethers} = require("hardhat");
+const {expect} = require("chai");
 
 class Utils {
   //createTokenCost is cost for creating the token, which is passed to the precompile. This is equivalent of 10 and 20hbars, any excess hbars are refunded.
@@ -86,8 +87,8 @@ class Utils {
     return tokenAddress;
   }
 
-  static async mintNFT(contract, nftTokenAddress) {
-    const mintNftTx = await contract.mintTokenPublic(nftTokenAddress, 0, ["0x01"], {
+  static async mintNFT(contract, nftTokenAddress, data = ["0x01"]) {
+    const mintNftTx = await contract.mintTokenPublic(nftTokenAddress, 0, data, {
       gasLimit: 1_000_000
     });
     const tokenAddressReceipt = await mintNftTx.wait();
@@ -111,6 +112,18 @@ class Utils {
     await contract.grantTokenKyc(tokenAddress, contract.address);
     await contract.grantTokenKyc(tokenAddress, signers[0].address);
     await contract.grantTokenKyc(tokenAddress, signers[1].address);
+  }
+
+  static async expectToFail(transaction, code) {
+    try {
+      const result = await transaction;
+      const receipt = await result.wait();
+      expect(true).to.eq(false);
+    }
+    catch(e) {
+      expect(e).to.exist;
+      expect(e.code).to.eq(code);
+    }
   }
 }
 

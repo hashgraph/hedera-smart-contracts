@@ -50,7 +50,7 @@ describe("TokenManagmentContract tests", function () {
         expect(tokenInfoAfter.deleted).to.equal(true);
     });
 
-    it('should be able to freeze token', async function () {
+    it('should be able to freeze and unfreeze token', async function () {
         const freezeTx = await tokenManagmentContract.freezeTokenPublic(tokenAddress, tokenCreateContract.address);
         const isFrozenTx = await tokenQueryContract.isFrozenPublic(tokenAddress, tokenCreateContract.address);
         const responseCodeFreeze = (await freezeTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode;
@@ -61,7 +61,15 @@ describe("TokenManagmentContract tests", function () {
         expect(responseCodeisFrozen).to.equal(TX_SUCCESS_CODE);
         expect(isFrozen).to.equal(true);
 
-        await tokenCreateContract.unfreezeTokenPublic(tokenAddress, tokenCreateContract.address);
+        const unfreezeTx = await tokenManagmentContract.unfreezeTokenPublic(tokenAddress, tokenCreateContract.address);
+        const isStillFrozenTx = await tokenQueryContract.isFrozenPublic(tokenAddress, tokenCreateContract.address);
+        const responseCodeUnfreeze = (await unfreezeTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode;
+        const responseCodeisStillFrozen = (await isStillFrozenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode;
+        const isStillFrozen = (await isStillFrozenTx.wait()).events.filter(e => e.event === 'Frozen')[0].args.frozen;
+
+        expect(responseCodeUnfreeze).to.equal(TX_SUCCESS_CODE);
+        expect(responseCodeisStillFrozen).to.equal(TX_SUCCESS_CODE);
+        expect(isStillFrozen).to.equal(false);
     });
 
     it('should be able to remove token kyc', async function () {
@@ -78,13 +86,16 @@ describe("TokenManagmentContract tests", function () {
         await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
     });
 
-    it('should be able to pause token', async function () {
+    it('should be able to pause and unpause token', async function () {
         const pauseTokenTx = await tokenManagmentContract.pauseTokenPublic(tokenAddress);
         const pauseTokenResponseCode = (await pauseTokenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode;
 
         expect(pauseTokenResponseCode).to.equal(TX_SUCCESS_CODE);
 
-        await tokenCreateContract.unpauseTokenPublic(tokenAddress);
+        const unpauseTokenTx = await tokenManagmentContract.unpauseTokenPublic(tokenAddress);
+        const uppauseTokenResponseCode = (await unpauseTokenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode;
+
+        expect(uppauseTokenResponseCode).to.equal(TX_SUCCESS_CODE);
     });
 
     it('should be able to wipe token', async function () {
