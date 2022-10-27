@@ -70,4 +70,22 @@ contract TokenTransferContract is FeeHelper {
             revert ();
         }
     }
+
+    function associateTokenPublic(address account, address token) public returns (int responseCode) {
+        responseCode = HederaTokenService.associateToken(account, token);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+    }
+
+    function grantTokenKycPublic(address token, address account) external returns (int64 responseCode) {
+        (responseCode) = this.grantTokenKyc(token, account);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
 }

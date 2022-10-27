@@ -201,4 +201,31 @@ contract TokenCreateContract is FeeHelper {
 
         emit UnpausedToken(true);
     }
+
+    function setApprovalForAllPublic(address token, address operator, bool approved) public returns (int responseCode) {
+        responseCode = HederaTokenService.setApprovalForAll(token, operator, approved);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
+
+    function approvePublic(address token, address spender, uint256 amount) public returns (int responseCode) {
+        responseCode = HederaTokenService.approve(token, spender, amount);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+    }
+
+    function approveNFTPublic(address token, address approved, uint256 serialNumber) public returns (int responseCode) {
+        responseCode = HederaTokenService.approveNFT(token, approved, serialNumber);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+    }
 }
