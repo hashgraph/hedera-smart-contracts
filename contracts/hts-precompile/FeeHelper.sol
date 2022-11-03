@@ -2,12 +2,9 @@
 pragma solidity >=0.5.0 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-import "./HederaTokenService.sol";
-import "./HederaResponseCodes.sol";
 import "./IHederaTokenService.sol";
-import "./KeyHelper.sol";
 
-abstract contract FeeHelper is KeyHelper {
+abstract contract FeeHelper {
     function createFixedHbarFee(uint32 amount, address feeCollector)
         internal
         pure
