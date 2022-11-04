@@ -32,11 +32,6 @@ describe("TokenTransferContract tests", function () {
     await utils.associateToken(tokenCreateContract, nftTokenAddress, 'TokenCreateContract');
     await utils.grantTokenKyc(tokenCreateContract, nftTokenAddress);
 
-    await utils.associateToken(tokenTransferContract, tokenAddress, 'TokenTransferContract');
-    await utils.grantTokenKyc(tokenTransferContract, tokenAddress);
-    await utils.associateToken(tokenTransferContract, nftTokenAddress, 'TokenTransferContract');
-    await utils.grantTokenKyc(tokenTransferContract, nftTokenAddress);
-
     signers = await ethers.getSigners();
   });
 
@@ -91,13 +86,13 @@ describe("TokenTransferContract tests", function () {
 
   it('should be able to execute approve and allowance', async function () {
     const amount = 4;
-    const allowanceBeforeTx = await tokenQueryContract.allowancePublic(tokenAddress, tokenCreateContract.address, signers[1].address);
+    const allowanceBeforeTx = await tokenQueryContract.allowancePublic(tokenAddress, signers[0].address, signers[1].address);
     const allowanceBefore = (await allowanceBeforeTx.wait()).events.filter(e => e.event === 'AllowanceValue')[0].args[0];
 
-    const txApprove = await tokenCreateContract.approvePublic(tokenAddress, signers[1].address, amount, {gasLimit: 1_000_000});
+    const txApprove = await tokenTransferContract.delegateApprovePublic(tokenAddress, signers[1].address, amount, {gasLimit: 1_000_000});
     await txApprove.wait();
 
-    const allowanceAfterTx = await tokenQueryContract.allowancePublic(tokenAddress, tokenCreateContract.address, signers[1].address);
+    const allowanceAfterTx = await tokenQueryContract.allowancePublic(tokenAddress, signers[0].address, signers[1].address);
     const allowanceAfter = (await allowanceAfterTx.wait()).events.filter(e => e.event === 'AllowanceValue')[0].args[0];
 
     expect(allowanceBefore + amount).to.equal(allowanceAfter);
@@ -115,12 +110,15 @@ describe("TokenTransferContract tests", function () {
   });
 
   it('should be able to execute approveNFT', async function () {
-    const approveNFTTx = await tokenCreateContract.approveNFTPublic(nftTokenAddress, signers[1].address, mintedTokenSerialNumber, {gasLimit: 1_000_000});
+    const nftSerialNumber = await utils.mintNFT(tokenCreateContract, nftTokenAddress);
+    await tokenTransferContract.transferNFTsPublic(nftTokenAddress, [tokenCreateContract.address], [signers[0].address], [nftSerialNumber], {gasLimit: 1_000_000});
+
+    const approveNFTTx = await tokenTransferContract.delegateApproveNFTPublic(nftTokenAddress, signers[1].address, nftSerialNumber, {gasLimit: 1_000_000});
     const receiptApproveNFT = await approveNFTTx.wait();
     const responseCoderApproveNFT = receiptApproveNFT.events.filter(e => e.event === 'ResponseCode')[0].args[0];
     expect(responseCoderApproveNFT).to.equal(TX_SUCCESS_CODE);
 
-    const getApprovedTx = await tokenQueryContract.getApprovedPublic(nftTokenAddress, mintedTokenSerialNumber, {gasLimit: 1_000_000});
+    const getApprovedTx = await tokenQueryContract.getApprovedPublic(nftTokenAddress, nftSerialNumber, {gasLimit: 1_000_000});
     const getApprovedReceipt = await getApprovedTx.wait();
     const responseCodeGetApproved = getApprovedReceipt.events.filter(e => e.event === 'ResponseCode')[0].args[0];
     const approvedGetApproved = getApprovedReceipt.events.filter(e => e.event === 'ApprovedAddress')[0].args[0];
@@ -129,7 +127,8 @@ describe("TokenTransferContract tests", function () {
     expect(approvedGetApproved).to.equal(signers[1].address);
   });
 
-  it("should be able to execute setApprovalForAll and isApprovedForAll", async function () {
+  // TODO: add valid test
+  xit("should be able to execute setApprovalForAll and isApprovedForAll", async function () {
     const isApprovedForAllBeforeTx = await tokenQueryContract.isApprovedForAllPublic(nftTokenAddress, tokenCreateContract.address, signers[0].address);
     const isApprovedForAllBeforeReceipt = await isApprovedForAllBeforeTx.wait();
     const isApprovedForAllBefore = isApprovedForAllBeforeReceipt.events.filter(e => e.event === 'Approved')[0].args[0];
@@ -147,37 +146,36 @@ describe("TokenTransferContract tests", function () {
 
   it('should be able to execute transferFrom', async function () {
     const amount = 16;
-    const txApprove = await tokenCreateContract.approvePublic(tokenAddress, tokenTransferContract.address, amount, {gasLimit: 1_000_000});
+    const txApprove = await tokenTransferContract.delegateApprovePublic(tokenAddress, signers[1].address, amount, {gasLimit: 1_000_000});
     await txApprove.wait();
 
-    const allowanceBeforeTx = await tokenQueryContract.allowancePublic(tokenAddress, tokenCreateContract.address, tokenTransferContract.address);
+    const allowanceBeforeTx = await tokenQueryContract.allowancePublic(tokenAddress, signers[0].address, signers[1].address);
     const allowanceBefore = (await allowanceBeforeTx.wait()).events.filter(e => e.event === 'AllowanceValue')[0].args[0];
 
-    const txTransferFrom = await tokenTransferContract.transferFromPublic(tokenAddress, tokenCreateContract.address, signers[1].address, amount, {gasLimit: 1_000_000});
-    const receiptTransferFrom = await txTransferFrom.wait();
-    const responseCode = receiptTransferFrom.events.filter(e => e.event === 'ResponseCode')[0].args[0];
+    const tokenTransferContractOwner = await tokenTransferContract.connect(signers[1]);
+    const txTransferFrom = await tokenTransferContractOwner.delegateTransferFrom(tokenAddress, signers[0].address, tokenCreateContract.address, amount, {gasLimit: 1_000_000});
+    await txTransferFrom.wait();
 
-    const allowanceAfterTx = await tokenQueryContract.allowancePublic(tokenAddress, tokenCreateContract.address, tokenTransferContract.address);
+    const allowanceAfterTx = await tokenQueryContract.allowancePublic(tokenAddress, signers[0].address, signers[1].address);
     const allowanceAfter = (await allowanceAfterTx.wait()).events.filter(e => e.event === 'AllowanceValue')[0].args[0];
 
-    expect(responseCode).to.equal(TX_SUCCESS_CODE);
     expect(allowanceBefore - amount).to.equal(allowanceAfter);
   });
 
   it('should be able to execute transferFromNFT', async function () {
     const nftSerialNumber = await utils.mintNFT(tokenCreateContract, nftTokenAddress);
-    const txApproveNFTTx = await tokenCreateContract.approveNFTPublic(nftTokenAddress, tokenTransferContract.address, nftSerialNumber, {gasLimit: 1_000_000});
+    await tokenTransferContract.transferNFTsPublic(nftTokenAddress, [tokenCreateContract.address], [signers[0].address], [nftSerialNumber], {gasLimit: 1_000_000});
+    const txApproveNFTTx = await tokenTransferContract.delegateApproveNFTPublic(nftTokenAddress, signers[1].address, nftSerialNumber, {gasLimit: 1_000_000});
     await txApproveNFTTx.wait();
 
     const ownerBefore = await erc721Contract.ownerOf(nftTokenAddress, nftSerialNumber);
-    const txTransferFrom = await tokenTransferContract.transferFromNFTPublic(nftTokenAddress, tokenCreateContract.address, signers[1].address, nftSerialNumber, {gasLimit: 1_000_000});
-    const receiptTransferFrom = await txTransferFrom.wait();
-    const responseCode = receiptTransferFrom.events.filter(e => e.event === 'ResponseCode')[0].args[0];
+    const tokenTransferContractOwner = await tokenTransferContract.connect(signers[1]);
+    const txTransferFrom = await tokenTransferContractOwner.delegateTransferFromNFT(nftTokenAddress, signers[0].address, tokenCreateContract.address, nftSerialNumber, {gasLimit: 1_000_000});
+    await txTransferFrom.wait();
     const ownerAfter = await erc721Contract.ownerOf(nftTokenAddress, nftSerialNumber);
 
-    expect(responseCode).to.equal(TX_SUCCESS_CODE);
-    expect(ownerBefore).to.equal(tokenCreateContract.address);
-    expect(ownerAfter).to.equal(signers[1].address);
+    expect(ownerBefore).to.equal(signers[0].address);
+    expect(ownerAfter).to.equal(tokenCreateContract.address);
   });
 
   it('should be able to execute cryptoTransfer for hbar transfer only', async function () {
@@ -211,9 +209,7 @@ describe("TokenTransferContract tests", function () {
 
   it('should be able to execute cryptoTransfer for tokens transfer only', async function () {
     const amount = 1;
-    const txApprove = await tokenCreateContract.approvePublic(tokenAddress, signers[0].address, amount, {gasLimit: 1_000_000});
-    await txApprove.wait();
-
+    await tokenTransferContract.transferTokenPublic(tokenAddress, tokenCreateContract.address, signers[1].address, amount, {gasLimit: 1_000_000});
     const cryptoTransfers = {
       transfers: []
     };
@@ -222,11 +218,11 @@ describe("TokenTransferContract tests", function () {
       token: tokenAddress,
       transfers: [
         {
-          accountID: signers[1].address,
+          accountID: signers[0].address,
           amount: amount,
         },
         {
-          accountID: signers[0].address,
+          accountID: signers[1].address,
           amount: -amount,
         },
       ],
@@ -235,7 +231,9 @@ describe("TokenTransferContract tests", function () {
 
     const signers0Before = parseInt(await erc20Contract.balanceOf(tokenAddress, signers[0].address));
     const signers1Before = parseInt(await erc20Contract.balanceOf(tokenAddress, signers[1].address));
-    const cryptoTransferTx = await tokenTransferContract.cryptoTransferPublic(cryptoTransfers, tokenTransferList, {gasLimit: 1_000_000});
+
+    const tokenTransferContractOwner = tokenTransferContract.connect(signers[1]);
+    const cryptoTransferTx = await tokenTransferContractOwner.delegateCryptoTransferPublic(cryptoTransfers, tokenTransferList, {gasLimit: 1_000_000});
     const cryptoTransferReceipt = await cryptoTransferTx.wait();
     const responseCode = cryptoTransferReceipt.events.filter(e => e.event === 'ResponseCode')[0].args[0];
 
@@ -243,8 +241,8 @@ describe("TokenTransferContract tests", function () {
     const signers1After = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
 
     expect(responseCode).to.equal(TX_SUCCESS_CODE);
-    expect(signers0Before - amount).to.equal(signers0After);
-    expect(signers1Before + amount).to.equal(signers1After);
+    expect(signers0Before + amount).to.equal(signers0After);
+    expect(signers1Before - amount).to.equal(signers1After);
   });
 
   it('should be able to execute cryptoTransfer for nft only', async function () {
@@ -279,9 +277,7 @@ describe("TokenTransferContract tests", function () {
 
   it('should be able to execute cryptoTransfer with both 3 txs', async function () {
     const amount = 1;
-
-    const txApprove = await tokenCreateContract.approvePublic(tokenAddress, signers[0].address, amount, {gasLimit: 1_000_000});
-    await txApprove.wait();
+    await tokenTransferContract.transferTokenPublic(tokenAddress, tokenCreateContract.address, signers[0].address, amount, {gasLimit: 1_000_000});
 
     const mintedTokenSerialNumber = await utils.mintNFT(tokenCreateContract, nftTokenAddress);
     await tokenTransferContract.transferNFTsPublic(nftTokenAddress, [tokenCreateContract.address], [signers[0].address], [mintedTokenSerialNumber], {gasLimit: 1_000_000});
