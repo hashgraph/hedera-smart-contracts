@@ -5,7 +5,7 @@ pragma experimental ABIEncoderV2;
 import "./HederaResponseCodes.sol";
 import "./IHederaTokenService.sol";
 
-abstract contract HederaTokenService is HederaResponseCodes {
+abstract contract HederaTokenService {
     address constant precompileAddress = address(0x167);
     // 90 days in seconds
     uint32 constant defaultAutoRenewPeriod = 7776000;

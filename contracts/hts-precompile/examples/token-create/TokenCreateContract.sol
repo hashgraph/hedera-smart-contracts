@@ -2,9 +2,11 @@
 pragma solidity >=0.5.0 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-import "../../FeeHelper.sol";
+import "../../HederaTokenService.sol";
+import "../../ExpiryHelper.sol";
+import "../../KeyHelper.sol";
 
-contract TokenCreateContract is FeeHelper {
+contract TokenCreateContract is HederaTokenService, ExpiryHelper, KeyHelper {
 
     string name = "tokenName";
     string symbol = "tokenSymbol";
