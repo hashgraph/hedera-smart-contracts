@@ -17,6 +17,15 @@ contract TokenTransferContract is FeeHelper {
         }
     }
 
+    function delegateCryptoTransferPublic(IHederaTokenService.TransferList calldata transferList, IHederaTokenService.TokenTransferList[] calldata tokenTransferList) public returns (int responseCode) {
+        responseCode = HederaTokenService.delegateCryptoTransfer(transferList, tokenTransferList);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
+
     function transferTokensPublic(address token, address[] memory accountId, int64[] memory amount) external returns (int256 responseCode) {
         responseCode = HederaTokenService.transferTokens(token, accountId, amount);
         emit ResponseCode(responseCode);
@@ -64,6 +73,60 @@ contract TokenTransferContract is FeeHelper {
 
     function transferFromNFTPublic(address token, address from, address to, uint256 serialNumber) public returns (int64 responseCode) {
         responseCode = this.transferFromNFT(token, from, to, serialNumber);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+    }
+
+    function setApprovalForAllPublic(address token, address operator, bool approved) public returns (int responseCode) {
+        responseCode = HederaTokenService.setApprovalForAll(token, operator, approved);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
+
+    function delegateSetApprovalForAllPublic(address token, address operator, bool approved) public returns (int responseCode) {
+        responseCode = HederaTokenService.delegateSetApprovalForAll(token, operator, approved);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
+
+    function approvePublic(address token, address spender, uint256 amount) public returns (int responseCode) {
+    responseCode = HederaTokenService.approve(token, spender, amount);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+    }
+
+    function delegateApprovePublic(address token, address spender, uint256 amount) public returns (int responseCode) {
+        responseCode = HederaTokenService.delegateApprove(token, spender, amount);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+    }
+
+    function approveNFTPublic(address token, address approved, uint256 serialNumber) public returns (int responseCode) {
+        responseCode = HederaTokenService.approveNFT(token, approved, serialNumber);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+    }
+
+    function delegateApproveNFTPublic(address token, address approved, uint256 serialNumber) public returns (int responseCode) {
+        responseCode = HederaTokenService.delegateApproveNFT(token, approved, serialNumber);
         emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
