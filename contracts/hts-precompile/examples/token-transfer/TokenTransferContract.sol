@@ -2,9 +2,11 @@
 pragma solidity >=0.5.0 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-import "../../FeeHelper.sol";
+import "../../HederaTokenService.sol";
+import "../../ExpiryHelper.sol";
+import "../../KeyHelper.sol";
 
-contract TokenTransferContract is FeeHelper {
+contract TokenTransferContract is HederaTokenService, ExpiryHelper, KeyHelper {
 
     event ResponseCode(int responseCode);
 
