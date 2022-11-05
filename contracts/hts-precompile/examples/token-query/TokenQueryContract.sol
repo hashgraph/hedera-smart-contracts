@@ -69,7 +69,7 @@ contract TokenQueryContract is HederaTokenService, ExpiryHelper, KeyHelper {
     }
 
     function isKycPublic(address token, address account) external returns (int64 responseCode, bool kycGranted) {
-        (responseCode, kycGranted) = this.isKyc(token, account);
+        (responseCode, kycGranted) = HederaTokenService.isKyc(token, account);
         emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
@@ -118,7 +118,7 @@ contract TokenQueryContract is HederaTokenService, ExpiryHelper, KeyHelper {
     }
 
     function getTokenExpiryInfoPublic(address token)external returns (int responseCode, IHederaTokenService.Expiry memory expiryInfo) {
-        (responseCode, expiryInfo) = this.getTokenExpiryInfo(token);
+        (responseCode, expiryInfo) = HederaTokenService.getTokenExpiryInfo(token);
         emit ResponseCode(responseCode);
 
         if(responseCode != HederaResponseCodes.SUCCESS) {
