@@ -25,7 +25,7 @@ describe("ERC721Contract tests", function () {
     secondWallet = signers[1];
 
     await tokenCreateContract.associateTokenPublic(erc721Contract.address, tokenAddress, {gasLimit: 1_000_000});
-    await tokenCreateContract.grantTokenKyc(tokenAddress, erc721Contract.address);
+    await tokenCreateContract.grantTokenKycPublic(tokenAddress, erc721Contract.address);
     await tokenTransferContract.transferNFTPublic(tokenAddress, tokenCreateContract.address, signers[0].address, mintedTokenSerialNumber, {gasLimit: 1_000_000});
     nftInitialOwnerAddress = signers[0].address;
   });

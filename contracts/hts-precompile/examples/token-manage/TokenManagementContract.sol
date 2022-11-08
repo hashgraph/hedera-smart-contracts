@@ -40,7 +40,7 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
     }
 
     function revokeTokenKycPublic(address token, address account) external returns (int64 responseCode) {
-        (responseCode) = this.revokeTokenKyc(token, account);
+        (responseCode) = HederaTokenService.revokeTokenKyc(token, account);
         emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
@@ -49,7 +49,7 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
     }
 
     function pauseTokenPublic(address token) public returns (int responseCode) {
-        responseCode = this.pauseToken(token);
+        responseCode = HederaTokenService.pauseToken(token);
         emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
@@ -60,7 +60,7 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
     }
 
     function unpauseTokenPublic(address token) public returns (int responseCode) {
-        responseCode = this.unpauseToken(token);
+        responseCode = HederaTokenService.unpauseToken(token);
         emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
@@ -89,7 +89,7 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
     }
 
     function updateTokenInfoPublic(address token, IHederaTokenService.HederaToken memory tokenInfo)external returns (int responseCode) {
-        (responseCode) = this.updateTokenInfo(token, tokenInfo);
+        (responseCode) = HederaTokenService.updateTokenInfo(token, tokenInfo);
         emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
@@ -98,7 +98,7 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
     }
 
     function updateTokenExpiryInfoPublic(address token, IHederaTokenService.Expiry memory expiryInfo)external returns (int responseCode) {
-        (responseCode) = this.updateTokenExpiryInfo(token, expiryInfo);
+        (responseCode) = HederaTokenService.updateTokenExpiryInfo(token, expiryInfo);
         emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {

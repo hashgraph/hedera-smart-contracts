@@ -175,7 +175,7 @@ contract TokenCreateContract is HederaTokenService, ExpiryHelper, KeyHelper {
     }
 
     function grantTokenKycPublic(address token, address account) external returns (int64 responseCode) {
-        (responseCode) = this.grantTokenKyc(token, account);
+        (responseCode) = HederaTokenService.grantTokenKyc(token, account);
         emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
