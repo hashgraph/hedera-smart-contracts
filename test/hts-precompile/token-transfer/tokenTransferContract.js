@@ -35,6 +35,28 @@ describe("TokenTransferContract tests", function () {
     signers = await ethers.getSigners();
   });
 
+  it("should NOT be able to use transferFrom on fungible tokens without approval", async function () {
+    const amount = 1;
+    try {
+      const txApprove = await tokenTransferContract.transferFromPublic(tokenAddress, signers[0].address, signers[1].address, amount, {gasLimit: 1_000_000});
+      await txApprove.wait();
+    } catch(e) {
+      expect(e).to.exist;
+      expect(e.reason).to.eq('transaction failed');
+    }
+  });
+
+  it("should NOT be able to use transferFrom on NFT tokens without approval", async function () {
+    const amount = 1;
+    try {
+      const txApprove = await tokenTransferContract.transferFromNFTPublic(nftTokenAddress, signers[0].address, signers[1].address, amount, {gasLimit: 1_000_000});
+      await txApprove.wait();
+    } catch(e) {
+      expect(e).to.exist;
+      expect(e.reason).to.eq('transaction failed');
+    }
+  });
+
   it('should be able to execute transferTokens', async function () {
     const amount = 33;
     const signers = await ethers.getSigners();
@@ -342,4 +364,5 @@ describe("TokenTransferContract tests", function () {
     expect(nftOwnerBefore).to.equal(signers[0].address);
     expect(nftOwnerAfter).to.equal(signers[1].address);
   });
+
 });
