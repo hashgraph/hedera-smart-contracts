@@ -1,5 +1,6 @@
 const {expect} = require("chai");
 const {ethers} = require("hardhat");
+const { expectToFail } = require("../utils");
 const utils = require('../utils');
 
 describe("TokenTransferContract tests", function () {
@@ -38,8 +39,9 @@ describe("TokenTransferContract tests", function () {
   it("should NOT be able to use transferFrom on fungible tokens without approval", async function () {
     const amount = 1;
     try {
-      const txApprove = await tokenTransferContract.transferFromPublic(tokenAddress, signers[0].address, signers[1].address, amount, {gasLimit: 1_000_000});
-      await txApprove.wait();
+      const txTransfer = await tokenTransferContract.transferFromPublic(tokenAddress, signers[0].address, signers[1].address, amount, {gasLimit: 1_000_000});
+      await txTransfer.wait();
+      expect.fail();
     } catch(e) {
       expect(e).to.exist;
       expect(e.reason).to.eq('transaction failed');
@@ -48,8 +50,9 @@ describe("TokenTransferContract tests", function () {
 
   it("should NOT be able to use transferFrom on NFT tokens without approval", async function () {    const amount = 1;
     try {
-      const txApprove = await tokenTransferContract.transferFromNFTPublic(nftTokenAddress, signers[0].address, signers[1].address, mintedTokenSerialNumber, {gasLimit: 1_000_000});
-      await txApprove.wait();
+      const txTransfer = await tokenTransferContract.transferFromNFTPublic(nftTokenAddress, signers[0].address, signers[1].address, mintedTokenSerialNumber, {gasLimit: 1_000_000});
+      await txTransfer.wait();
+      expect.fail();
     } catch(e) {
       expect(e).to.exist;
       expect(e.reason).to.eq('transaction failed');
