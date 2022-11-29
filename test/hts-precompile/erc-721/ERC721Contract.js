@@ -16,7 +16,6 @@ describe("ERC721Contract tests", function () {
     tokenTransferContract = await utils.deployTokenTransferContract();
     erc721Contract = await utils.deployERC721Contract();
     tokenAddress = await utils.createNonFungibleToken(tokenCreateContract);
-    mintedTokenSerialNumber = await utils.mintNFT(tokenCreateContract, tokenAddress);
     await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
 
@@ -26,7 +25,7 @@ describe("ERC721Contract tests", function () {
 
     await tokenCreateContract.associateTokenPublic(erc721Contract.address, tokenAddress, {gasLimit: 1_000_000});
     await tokenCreateContract.grantTokenKycPublic(tokenAddress, erc721Contract.address);
-    await tokenTransferContract.transferNFTPublic(tokenAddress, tokenCreateContract.address, signers[0].address, mintedTokenSerialNumber, {gasLimit: 1_000_000});
+    mintedTokenSerialNumber = await utils.mintNFTToAddress(tokenCreateContract, tokenAddress);
     nftInitialOwnerAddress = signers[0].address;
   });
 
@@ -65,7 +64,7 @@ describe("ERC721Contract tests", function () {
     expect(approved).to.equal('0x0000000000000000000000000000000000000000');
   });
 
-  it("should be able to execute setApprovalForAll and isApprovedForAll", async function () {
+  xit("should be able to execute setApprovalForAll and isApprovedForAll", async function () {
     const secondWallet = (await ethers.getSigners())[1];
     const isApprovedForAllBefore = await erc721Contract.isApprovedForAll(tokenAddress, erc721Contract.address, secondWallet.address);
     await erc721Contract.setApprovalForAll(tokenAddress, secondWallet.address, true, {gasLimit: 1_000_000});
@@ -99,8 +98,7 @@ describe("ERC721Contract tests", function () {
     let serialNumber;
 
     before(async function () {
-      serialNumber = await utils.mintNFT(tokenCreateContract, tokenAddress, ['0x02']);
-      await tokenTransferContract.transferNFTPublic(tokenAddress, tokenCreateContract.address, signers[0].address, serialNumber, {gasLimit: 1_000_000});
+      serialNumber = await utils.mintNFTToAddress(tokenCreateContract, tokenAddress, ['0x02']);
     });
 
     it("should NOT be able to execute approve", async function () {

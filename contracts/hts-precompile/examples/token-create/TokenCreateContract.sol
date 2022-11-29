@@ -23,7 +23,7 @@ contract TokenCreateContract is HederaTokenService, ExpiryHelper, KeyHelper {
 
     function createFungibleTokenPublic(
         address treasury
-    ) public payable {
+    ) public payable returns (address) {
         IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](5);
         keys[0] = getSingleKey(KeyType.ADMIN, KeyType.PAUSE, KeyValueType.INHERIT_ACCOUNT_KEY, bytes(""));
         keys[1] = getSingleKey(KeyType.KYC, KeyValueType.INHERIT_ACCOUNT_KEY, bytes(""));
@@ -47,6 +47,15 @@ contract TokenCreateContract is HederaTokenService, ExpiryHelper, KeyHelper {
         }
 
         emit CreatedToken(tokenAddress);
+
+        return tokenAddress;
+    }
+
+    function createFungibleTokenAssociateAndTransferToAddressPublic(address treasury, int64 amount) public payable {
+        address tokenAddress = this.createFungibleTokenPublic{value : msg.value}(treasury);
+        this.associateTokenPublic(msg.sender, tokenAddress);
+        this.grantTokenKycPublic(tokenAddress, msg.sender);
+        HederaTokenService.transferToken(tokenAddress, address(this), msg.sender, amount);
     }
 
     function createFungibleTokenWithCustomFeesPublic(
@@ -144,7 +153,7 @@ contract TokenCreateContract is HederaTokenService, ExpiryHelper, KeyHelper {
         emit CreatedToken(tokenAddress);
     }
 
-    function mintTokenPublic(address token, uint64 amount, bytes[] memory metadata) public
+    function mintTokenToAddressPublic(address token, uint64 amount, bytes[] memory metadata) public
     returns (int responseCode, uint64 newTotalSupply, int64[] memory serialNumbers)  {
         (responseCode, newTotalSupply, serialNumbers) = HederaTokenService.mintToken(token, amount, metadata);
         emit ResponseCode(responseCode);
@@ -154,6 +163,8 @@ contract TokenCreateContract is HederaTokenService, ExpiryHelper, KeyHelper {
         }
 
         emit MintedToken(newTotalSupply, serialNumbers);
+
+        HederaTokenService.transferNFT(token, address(this), msg.sender, serialNumbers[0]);
     }
 
     function associateTokensPublic(address account, address[] memory tokens) external returns (int256 responseCode) {

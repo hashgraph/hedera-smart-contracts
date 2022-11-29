@@ -16,11 +16,9 @@ describe("ERC20Contract tests", function () {
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
     erc20Contract = await utils.deployERC20Contract();
-    tokenAddress = await utils.createFungibleToken(tokenCreateContract);
+    tokenAddress = await utils.createFungibleTokenAssociateAndTransferToAddress(tokenCreateContract, INITIAL_BALANCE);
     await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
-    // Set initial balance of signer0
-    await tokenTransferContract.transferTokenPublic(tokenAddress, tokenCreateContract.address, signers[0].address, INITIAL_BALANCE);
   });
 
   it("should be able to get token name", async function () {

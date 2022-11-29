@@ -95,9 +95,9 @@ class Utils {
     );
   }
 
-  static async createFungibleToken(contract) {
-    const tokenAddressTx = await contract.createFungibleTokenPublic(
-      contract.address,
+  static async createFungibleTokenAssociateAndTransferToAddress(contract, initialBalance = 300) {
+    const tokenAddressTx = await contract.createFungibleTokenAssociateAndTransferToAddressPublic(
+        contract.address, initialBalance,
       {
         value: ethers.BigNumber.from(this.createTokenCost),
         gasLimit: 1_000_000,
@@ -145,8 +145,8 @@ class Utils {
     return tokenAddress;
   }
 
-  static async mintNFT(contract, nftTokenAddress, data = ["0x01"]) {
-    const mintNftTx = await contract.mintTokenPublic(nftTokenAddress, 0, data, {
+  static async mintNFTToAddress(contract, nftTokenAddress, data = ["0x01"]) {
+    const mintNftTx = await contract.mintTokenToAddressPublic(nftTokenAddress, 0, data, {
       gasLimit: 1_000_000,
     });
     const tokenAddressReceipt = await mintNftTx.wait();
