@@ -64,6 +64,7 @@ describe("ERC721Contract tests", function () {
     expect(approved).to.equal('0x0000000000000000000000000000000000000000');
   });
 
+  // TODO: depends on fix
   xit("should be able to execute setApprovalForAll and isApprovedForAll", async function () {
     const secondWallet = (await ethers.getSigners())[1];
     const isApprovedForAllBefore = await erc721Contract.isApprovedForAll(tokenAddress, erc721Contract.address, secondWallet.address);

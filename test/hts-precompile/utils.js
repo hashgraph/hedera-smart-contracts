@@ -6,6 +6,13 @@ class Utils {
   static createTokenCost = "10000000000000000000";
   static createTokenCustomFeesCost = "20000000000000000000";
 
+  static getSignerCompressedPublicKey(index = 0, asBuffer = true, prune0x = true) {
+    const wallet = new ethers.Wallet(hre.config.networks.relay.accounts[index]);
+    const cpk = prune0x ? wallet._signingKey().compressedPublicKey.replace('0x', '') : wallet._signingKey().compressedPublicKey;
+
+    return asBuffer ? Buffer.from(cpk, 'hex') : cpk;
+  }
+
   static async deployTokenCreateContract() {
     const tokenCreateFactory = await ethers.getContractFactory(
       "TokenCreateContract"
@@ -97,7 +104,7 @@ class Utils {
 
   static async createFungibleTokenAssociateAndTransferToAddress(contract, initialBalance = 300) {
     const tokenAddressTx = await contract.createFungibleTokenAssociateAndTransferToAddressPublic(
-        contract.address, initialBalance,
+        contract.address, initialBalance, Utils.getSignerCompressedPublicKey(),
       {
         value: ethers.BigNumber.from(this.createTokenCost),
         gasLimit: 1_000_000,
@@ -131,7 +138,7 @@ class Utils {
 
   static async createNonFungibleToken(contract) {
     const tokenAddressTx = await contract.createNonFungibleTokenPublic(
-      contract.address,
+      contract.address, Utils.getSignerCompressedPublicKey(),
       {
         value: ethers.BigNumber.from(this.createTokenCost),
         gasLimit: 1_000_000,

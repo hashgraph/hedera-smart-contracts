@@ -21,14 +21,14 @@ describe("TokenCreateContract tests", function () {
     tokenManagmentContract = await utils.deployTokenManagementContract();
     erc20Contract = await utils.deployERC20Contract();
     erc721Contract = await utils.deployERC721Contract();
-    tokenAddress = await utils.createFungibleToken(tokenCreateContract);
+    tokenAddress = await utils.createFungibleTokenAssociateAndTransferToAddress(tokenCreateContract);
     nftTokenAddress = await utils.createNonFungibleToken(tokenCreateContract);
-    mintedTokenSerialNumber = await utils.mintNFT(tokenCreateContract, nftTokenAddress);
 
     await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
     await utils.associateToken(tokenCreateContract, nftTokenAddress, 'TokenCreateContract');
     await utils.grantTokenKyc(tokenCreateContract, nftTokenAddress);
+    mintedTokenSerialNumber = await utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
   });
 
   it('should be able to execute burnToken', async function () {
@@ -70,7 +70,7 @@ describe("TokenCreateContract tests", function () {
   });
 
   it('should be able to execute createFungibleToken', async function () {
-    const tokenAddressTx = await tokenCreateContract.createFungibleTokenPublic(tokenCreateContract.address, {
+    const tokenAddressTx = await tokenCreateContract.createFungibleTokenPublic(tokenCreateContract.address, utils.getSignerCompressedPublicKey(), {
       value: ethers.BigNumber.from('10000000000000000000'),
       gasLimit: 1_000_000
     });
@@ -81,7 +81,7 @@ describe("TokenCreateContract tests", function () {
   });
 
   it('should be able to execute createNonFungibleToken', async function () {
-    const tokenAddressTx = await tokenCreateContract.createNonFungibleTokenPublic(tokenCreateContract.address, {
+    const tokenAddressTx = await tokenCreateContract.createNonFungibleTokenPublic(tokenCreateContract.address, utils.getSignerCompressedPublicKey(), {
       value: ethers.BigNumber.from('10000000000000000000'),
       gasLimit: 1_000_000
     });
@@ -116,12 +116,12 @@ describe("TokenCreateContract tests", function () {
     expectValidHash(result, 40)
   });
 
-  it('should be able to execute mintToken', async function () {
+  it('should be able to execute mintTokenToAddress', async function () {
     const nftAddress = await utils.createNonFungibleToken(tokenCreateContract);
     expect(nftAddress).to.exist;
     expectValidHash(nftAddress, 40);
 
-    const tx = await tokenCreateContract.mintTokenPublic(nftAddress, 0, ['0x02'], {
+    const tx = await tokenCreateContract.mintTokenToAddressPublic(nftAddress, 0, ['0x02'], {
       gasLimit: 1_000_000
     });
 
