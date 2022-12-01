@@ -18,15 +18,15 @@ describe("TokenQueryContract tests", function () {
         signers = await ethers.getSigners();
         tokenCreateContract = await utils.deployTokenCreateContract();
         tokenQueryContract = await utils.deployTokenQueryContract();
-        tokenAddress = await utils.createFungibleTokenAssociateAndTransferToAddress(tokenCreateContract);
+        tokenAddress = await utils.createFungibleToken(tokenCreateContract, tokenCreateContract.address);
         tokenWithCustomFeesAddress = await utils.createFungibleTokenWithCustomFees(tokenCreateContract, tokenAddress);
-        nftTokenAddress = await utils.createNonFungibleToken(tokenCreateContract);
-
+        nftTokenAddress = await utils.createNonFungibleToken(tokenCreateContract, tokenCreateContract.address);
+        mintedTokenSerialNumber = await utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
+        
         await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
         await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
         await utils.associateToken(tokenCreateContract, nftTokenAddress, 'TokenCreateContract');
         await utils.grantTokenKyc(tokenCreateContract, nftTokenAddress);
-        mintedTokenSerialNumber = await utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
       });
 
     it('should query allowance', async function () {

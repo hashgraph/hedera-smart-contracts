@@ -16,7 +16,7 @@ describe("ERC20Contract tests", function () {
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
     erc20Contract = await utils.deployERC20Contract();
-    tokenAddress = await utils.createFungibleTokenAssociateAndTransferToAddress(tokenCreateContract, INITIAL_BALANCE);
+    tokenAddress = await utils.createFungibleToken(tokenCreateContract, signers[0].address);
     await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
   });
@@ -47,9 +47,9 @@ describe("ERC20Contract tests", function () {
     const wallet2Balance = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
 
     expect(contractOwnerBalance).to.exist;
-    expect(contractOwnerBalance.toNumber()).to.eq(TOTAL_SUPPLY - INITIAL_BALANCE);
+    expect(contractOwnerBalance.toNumber()).to.eq(0);
     expect(wallet1Balance).to.exist;
-    expect(wallet1Balance.toNumber()).to.eq(INITIAL_BALANCE);
+    expect(wallet1Balance.toNumber()).to.eq(TOTAL_SUPPLY);
     expect(wallet2Balance).to.exist;
     expect(wallet2Balance.toNumber()).to.eq(0);
   });
@@ -64,7 +64,7 @@ describe("ERC20Contract tests", function () {
 
     try {
       const tx = await erc20Contract.connect(signers[0]).transfer(tokenAddress, signers[1].address, amount, {gasLimit: 1_000_000});
-      const rec = await tx.wait()
+      await tx.wait();
     }
     catch(e) {
       expect(e).to.exist;
@@ -141,7 +141,7 @@ describe("ERC20Contract tests", function () {
 
     try {
       const tx = await erc20Contract.connect(signers[0]).transferFrom(tokenAddress, signers[1].address, signers[0].address, amount, {gasLimit: 1_000_000});
-      const rec = await tx.wait()
+      await tx.wait()
     }
     catch(e) {
       expect(e).to.exist;

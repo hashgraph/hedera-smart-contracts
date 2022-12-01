@@ -12,20 +12,20 @@ describe("ERC721Contract tests", function () {
   let signers, firstWallet, secondWallet;
 
   before(async function () {
+    signers = await ethers.getSigners();
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
     erc721Contract = await utils.deployERC721Contract();
-    tokenAddress = await utils.createNonFungibleToken(tokenCreateContract);
+    tokenAddress = await utils.createNonFungibleToken(tokenCreateContract, signers[0].address);
+    mintedTokenSerialNumber = await utils.mintNFT(tokenCreateContract, tokenAddress);
     await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
-
-    signers = await ethers.getSigners();
     firstWallet = signers[0];
     secondWallet = signers[1];
 
     await tokenCreateContract.associateTokenPublic(erc721Contract.address, tokenAddress, {gasLimit: 1_000_000});
     await tokenCreateContract.grantTokenKycPublic(tokenAddress, erc721Contract.address);
-    mintedTokenSerialNumber = await utils.mintNFTToAddress(tokenCreateContract, tokenAddress);
+    await tokenTransferContract.transferNFTPublic(tokenAddress, tokenCreateContract.address, signers[0].address, mintedTokenSerialNumber, {gasLimit: 1_000_000});
     nftInitialOwnerAddress = signers[0].address;
   });
 
@@ -99,7 +99,8 @@ describe("ERC721Contract tests", function () {
     let serialNumber;
 
     before(async function () {
-      serialNumber = await utils.mintNFTToAddress(tokenCreateContract, tokenAddress, ['0x02']);
+      serialNumber = await utils.mintNFT(tokenCreateContract, tokenAddress, ['0x02']);
+      await tokenTransferContract.transferNFTPublic(tokenAddress, tokenCreateContract.address, signers[0].address, serialNumber, {gasLimit: 1_000_000});
     });
 
     it("should NOT be able to execute approve", async function () {

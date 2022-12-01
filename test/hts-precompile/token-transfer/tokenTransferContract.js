@@ -24,14 +24,15 @@ describe("TokenTransferContract tests", function () {
     tokenTransferContract = await utils.deployTokenTransferContract();
     erc20Contract = await utils.deployERC20Contract();
     erc721Contract = await utils.deployERC721Contract();
-    tokenAddress = await utils.createFungibleTokenAssociateAndTransferToAddress(tokenCreateContract);
-    nftTokenAddress = await utils.createNonFungibleToken(tokenCreateContract);
+
+    tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
+    nftTokenAddress = await utils.createNonFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
+    mintedTokenSerialNumber = await utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
 
     await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
     await utils.associateToken(tokenCreateContract, nftTokenAddress, 'TokenCreateContract');
     await utils.grantTokenKyc(tokenCreateContract, nftTokenAddress);
-    mintedTokenSerialNumber = await utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
   });
 
   it("should NOT be able to use transferFrom on fungible tokens without approval", async function () {
@@ -61,49 +62,49 @@ describe("TokenTransferContract tests", function () {
     const amount = 33;
     const signers = await ethers.getSigners();
 
-    let contractOwnerBalanceBefore = await erc20Contract.balanceOf(tokenAddress, tokenCreateContract.address);
     let wallet1BalanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[0].address);
-    await tokenCreateContract.transferTokensPublic(tokenAddress, [tokenCreateContract.address, signers[0].address], [-amount, amount], {gasLimit: 1_000_000});
-    let contractOwnerBalanceAfter = await erc20Contract.balanceOf(tokenAddress, tokenCreateContract.address);
+    let wallet2BalanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
+    await tokenTransferContract.transferTokensPublic(tokenAddress, [signers[0].address, signers[1].address], [-amount, amount], {gasLimit: 1_000_000});
     let wallet1BalanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[0].address);
+    let wallet2BalanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
 
-    expect(contractOwnerBalanceAfter).to.equal(parseInt(contractOwnerBalanceBefore) - amount);
-    expect(wallet1BalanceAfter).to.equal(parseInt(wallet1BalanceBefore) + amount);
+    expect(wallet1BalanceAfter).to.equal(wallet1BalanceBefore - amount);
+    expect(wallet2BalanceAfter).to.equal(wallet2BalanceBefore + amount);
   });
 
   it('should be able to execute transferNFTs', async function () {
     const signers = await ethers.getSigners();
     const ownerBefore = await erc721Contract.ownerOf(nftTokenAddress, mintedTokenSerialNumber);
-    await tokenTransferContract.transferNFTsPublic(nftTokenAddress, [tokenCreateContract.address], [signers[0].address], [mintedTokenSerialNumber], {gasLimit: 1_000_000});
+    await tokenTransferContract.transferNFTsPublic(nftTokenAddress, [signers[0].address], [signers[1].address], [mintedTokenSerialNumber], {gasLimit: 1_000_000});
     const ownerAfter = await erc721Contract.ownerOf(nftTokenAddress, mintedTokenSerialNumber);
 
-    expect(ownerBefore).to.equal(tokenCreateContract.address);
-    expect(ownerAfter).to.equal(signers[0].address);
+    expect(ownerBefore).to.equal(signers[0].address);
+    expect(ownerAfter).to.equal(signers[1].address);
   });
 
   it('should be able to execute transferToken', async function () {
     const amount = 33;
     const signers = await ethers.getSigners();
 
-    let contractOwnerBalanceBefore = parseInt(await erc20Contract.balanceOf(tokenAddress, tokenCreateContract.address));
     let wallet1BalanceBefore = parseInt(await erc20Contract.balanceOf(tokenAddress, signers[0].address));
-    await tokenTransferContract.transferTokenPublic(tokenAddress, tokenCreateContract.address, signers[0].address, amount, {gasLimit: 1_000_000});
-    let contractOwnerBalanceAfter = await erc20Contract.balanceOf(tokenAddress, tokenCreateContract.address);
+    let wallet2BalanceBefore = parseInt(await erc20Contract.balanceOf(tokenAddress, signers[1].address));
+    await tokenTransferContract.transferTokenPublic(tokenAddress, signers[0].address, signers[1].address, amount, {gasLimit: 1_000_000});
     let wallet1BalanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[0].address);
+    let wallet2BalanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
 
-    expect(contractOwnerBalanceAfter).to.equal(contractOwnerBalanceBefore - amount);
-    expect(wallet1BalanceAfter).to.equal(wallet1BalanceBefore + amount);
+    expect(wallet1BalanceAfter).to.equal(wallet1BalanceBefore - amount);
+    expect(wallet2BalanceAfter).to.equal(wallet2BalanceBefore + amount);
   });
 
   it('should be able to execute transferNFT', async function () {
     const signers = await ethers.getSigners();
     const ownerBefore = await erc721Contract.ownerOf(nftTokenAddress, mintedTokenSerialNumber);
-    const tokenTransferContractNewOwner = tokenTransferContract.connect(signers[0]);
-    await tokenTransferContractNewOwner.transferNFTPublic(nftTokenAddress, signers[0].address, tokenCreateContract.address, mintedTokenSerialNumber, {gasLimit: 1_000_000});
+    const tokenTransferContractNewOwner = tokenTransferContract.connect(signers[1]);
+    await tokenTransferContractNewOwner.transferNFTPublic(nftTokenAddress, signers[1].address, signers[0].address, mintedTokenSerialNumber, {gasLimit: 1_000_000});
     const ownerAfter = await erc721Contract.ownerOf(nftTokenAddress, mintedTokenSerialNumber);
 
-    expect(ownerBefore).to.equal(signers[0].address);
-    expect(ownerAfter).to.equal(tokenCreateContract.address);
+    expect(ownerBefore).to.equal(signers[1].address);
+    expect(ownerAfter).to.equal(signers[0].address);
   });
 
   it('should be able to execute approve and allowance', async function () {
@@ -132,7 +133,7 @@ describe("TokenTransferContract tests", function () {
   });
 
   it('should be able to execute approveNFT', async function () {
-    const nftSerialNumber = await utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
+    const nftSerialNumber = await utils.mintNFT(tokenCreateContract, nftTokenAddress);
     await tokenTransferContract.transferNFTsPublic(nftTokenAddress, [tokenCreateContract.address], [signers[0].address], [nftSerialNumber], {gasLimit: 1_000_000});
 
     const approveNFTTx = await tokenTransferContract.delegateApproveNFTPublic(nftTokenAddress, signers[1].address, nftSerialNumber, {gasLimit: 1_000_000});
@@ -185,7 +186,7 @@ describe("TokenTransferContract tests", function () {
   });
 
   it('should be able to execute transferFromNFT', async function () {
-    const nftSerialNumber = await utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
+    const nftSerialNumber = await utils.mintNFT(tokenCreateContract, nftTokenAddress);
     await tokenTransferContract.transferNFTsPublic(nftTokenAddress, [tokenCreateContract.address], [signers[0].address], [nftSerialNumber], {gasLimit: 1_000_000});
     const txApproveNFTTx = await tokenTransferContract.delegateApproveNFTPublic(nftTokenAddress, signers[1].address, nftSerialNumber, {gasLimit: 1_000_000});
     await txApproveNFTTx.wait();
@@ -231,7 +232,7 @@ describe("TokenTransferContract tests", function () {
 
   it('should be able to execute cryptoTransfer for tokens transfer only', async function () {
     const amount = 1;
-    await tokenTransferContract.transferTokenPublic(tokenAddress, tokenCreateContract.address, signers[1].address, amount, {gasLimit: 1_000_000});
+    // await tokenTransferContract.transferTokenPublic(tokenAddress, tokenCreateContract.address, signers[1].address, amount, {gasLimit: 1_000_000});
     const cryptoTransfers = {
       transfers: []
     };
@@ -268,7 +269,7 @@ describe("TokenTransferContract tests", function () {
   });
 
   it('should be able to execute cryptoTransfer for nft only', async function () {
-    const mintedTokenSerialNumber = await utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
+    const mintedTokenSerialNumber = await utils.mintNFT(tokenCreateContract, nftTokenAddress);
     await tokenTransferContract.transferNFTsPublic(nftTokenAddress, [tokenCreateContract.address], [signers[0].address], [mintedTokenSerialNumber], {gasLimit: 1_000_000});
 
     const cryptoTransfers = {
@@ -301,7 +302,7 @@ describe("TokenTransferContract tests", function () {
     const amount = 1;
     await tokenTransferContract.transferTokenPublic(tokenAddress, tokenCreateContract.address, signers[0].address, amount, {gasLimit: 1_000_000});
 
-    const mintedTokenSerialNumber = await utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
+    const mintedTokenSerialNumber = await utils.mintNFT(tokenCreateContract, nftTokenAddress);
     await tokenTransferContract.transferNFTsPublic(nftTokenAddress, [tokenCreateContract.address], [signers[0].address], [mintedTokenSerialNumber], {gasLimit: 1_000_000});
 
     const signers0BeforeHbarBalance = await signers[0].provider.getBalance(signers[0].address);

@@ -23,8 +23,8 @@ describe("TokenManagmentContract tests", function () {
         tokenManagmentContract = await utils.deployTokenManagementContract();
         tokenTransferContract = await utils.deployTokenTransferContract();
         erc20Contract = await utils.deployERC20Contract();
-        tokenAddress = await utils.createFungibleTokenAssociateAndTransferToAddress(tokenCreateContract);
-        nftTokenAddress = await utils.createNonFungibleToken(tokenCreateContract);
+        tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKeyAssociateAndTransferToAddress(tokenCreateContract, tokenCreateContract.address, utils.getSignerCompressedPublicKey());
+        nftTokenAddress = await utils.createNonFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, tokenCreateContract.address, utils.getSignerCompressedPublicKey());
 
         await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
         await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
@@ -34,7 +34,7 @@ describe("TokenManagmentContract tests", function () {
     });
     
     it('should be able to delete token', async function () {
-        const newTokenAddress = await utils.createFungibleTokenAssociateAndTransferToAddress(tokenCreateContract);
+        const newTokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
 
         const txBefore = await tokenQueryContract.getTokenInfoPublic(newTokenAddress);
         const tokenInfoBefore = (await txBefore.wait()).events.filter(e => e.event === 'TokenInfo')[0].args.tokenInfo;
@@ -112,8 +112,6 @@ describe("TokenManagmentContract tests", function () {
     });
 
     it('should be able to wipe token account NFT', async function () {
-        await tokenTransferContract.transferNFTPublic(nftTokenAddress, tokenCreateContract.address, signers[0].address, mintedTokenSerialNumber);
-
         const tx = await tokenManagmentContract.wipeTokenAccountNFTPublic(nftTokenAddress, signers[0].address, [mintedTokenSerialNumber]);
         const responseCode = (await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode;
 
@@ -140,11 +138,11 @@ describe("TokenManagmentContract tests", function () {
 
         const txUpdate = await tokenManagmentContract.updateTokenInfoPublic(tokenAddress, token);
         expect((await txUpdate.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.be.equal(TX_SUCCESS_CODE);
-
+  
         const txAfterInfo = await tokenQueryContract.getTokenInfoPublic(tokenAddress);
         const tokenInfoAfter = ((await txAfterInfo.wait()).events.filter(e => e.event === 'TokenInfo')[0].args.tokenInfo)[0];
         const responseCodeTokenInfoAfter = (await txAfterInfo.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode;
-
+        
         expect(responseCodeTokenInfoBefore).to.equal(TX_SUCCESS_CODE);
         expect(responseCodeTokenInfoAfter).to.equal(TX_SUCCESS_CODE);
         expect(tokenInfoAfter.name).to.equal(TOKEN_UPDATE_NAME);

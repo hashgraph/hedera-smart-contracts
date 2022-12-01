@@ -102,17 +102,40 @@ class Utils {
     );
   }
 
-  static async createFungibleTokenAssociateAndTransferToAddress(contract, initialBalance = 300) {
-    const tokenAddressTx = await contract.createFungibleTokenAssociateAndTransferToAddressPublic(
-        contract.address, initialBalance, Utils.getSignerCompressedPublicKey(),
-      {
-        value: ethers.BigNumber.from(this.createTokenCost),
-        gasLimit: 1_000_000,
-      }
-    );
+  static async createFungibleToken(contract, treasury) {
+    const tokenAddressTx = await contract.createFungibleTokenPublic(treasury, {
+      value: ethers.BigNumber.from(this.createTokenCost),
+      gasLimit: 1_000_000,
+    });
     const tokenAddressReceipt = await tokenAddressTx.wait();
     const { tokenAddress } = tokenAddressReceipt.events.filter(
       (e) => e.event === "CreatedToken"
+    )[0].args;
+
+    return tokenAddress;
+  }
+
+  static async createFungibleTokenWithSECP256K1AdminKey(contract, treasury, adminKey) {
+    const tokenAddressTx = await contract.createFungibleTokenWithSECP256K1AdminKeyPublic(treasury, adminKey, {
+      value: ethers.BigNumber.from(this.createTokenCost),
+      gasLimit: 1_000_000,
+    });
+    const tokenAddressReceipt = await tokenAddressTx.wait();
+    const { tokenAddress } = tokenAddressReceipt.events.filter(
+      (e) => e.event === "CreatedToken"
+    )[0].args;
+
+    return tokenAddress;
+  }
+
+  static async createFungibleTokenWithSECP256K1AdminKeyAssociateAndTransferToAddress(contract, treasury, adminKey, initialBalance = 300) {
+    const tokenAddressTx = await contract.createFungibleTokenWithSECP256K1AdminKeyAssociateAndTransferToAddressPublic(treasury, adminKey, initialBalance, {
+      value: ethers.BigNumber.from(this.createTokenCost),
+      gasLimit: 1_000_000,
+    });
+    const tokenAddressReceipt = await tokenAddressTx.wait();
+    const {tokenAddress} = tokenAddressReceipt.events.filter(
+        (e) => e.event === "CreatedToken"
     )[0].args;
 
     return tokenAddress;
@@ -136,14 +159,11 @@ class Utils {
     return tokenAddress;
   }
 
-  static async createNonFungibleToken(contract) {
-    const tokenAddressTx = await contract.createNonFungibleTokenPublic(
-      contract.address, Utils.getSignerCompressedPublicKey(),
-      {
-        value: ethers.BigNumber.from(this.createTokenCost),
-        gasLimit: 1_000_000,
-      }
-    );
+  static async createNonFungibleToken(contract, treasury) {
+    const tokenAddressTx = await contract.createNonFungibleTokenPublic(treasury, {
+      value: ethers.BigNumber.from(this.createTokenCost),
+      gasLimit: 1_000_000,
+    });
     const tokenAddressReceipt = await tokenAddressTx.wait();
     const { tokenAddress } = tokenAddressReceipt.events.filter(
       (e) => e.event === "CreatedToken"
@@ -152,13 +172,38 @@ class Utils {
     return tokenAddress;
   }
 
+  static async createNonFungibleTokenWithSECP256K1AdminKey(contract, treasury, adminKey) {
+    const tokenAddressTx = await contract.createNonFungibleTokenWithSECP256K1AdminKeyPublic(treasury, adminKey, {
+      value: ethers.BigNumber.from(this.createTokenCost),
+      gasLimit: 1_000_000,
+    });
+    const tokenAddressReceipt = await tokenAddressTx.wait();
+    const { tokenAddress } = tokenAddressReceipt.events.filter(
+      (e) => e.event === "CreatedToken"
+    )[0].args;
+
+    return tokenAddress;
+  }
+
+  static async mintNFT(contract, nftTokenAddress, data = ["0x01"]) {
+    const mintNftTx = await contract.mintTokenPublic(nftTokenAddress, 0, data, {
+      gasLimit: 1_000_000,
+    });
+    const tokenAddressReceipt = await mintNftTx.wait();
+    const { serialNumbers } = tokenAddressReceipt.events.filter(
+      (e) => e.event === "MintedToken"
+    )[0].args;
+
+    return parseInt(serialNumbers);
+  }
+
   static async mintNFTToAddress(contract, nftTokenAddress, data = ["0x01"]) {
     const mintNftTx = await contract.mintTokenToAddressPublic(nftTokenAddress, 0, data, {
       gasLimit: 1_000_000,
     });
     const tokenAddressReceipt = await mintNftTx.wait();
     const { serialNumbers } = tokenAddressReceipt.events.filter(
-      (e) => e.event === "MintedToken"
+        (e) => e.event === "MintedToken"
     )[0].args;
 
     return parseInt(serialNumbers);
