@@ -1,5 +1,6 @@
 const { ethers } = require("hardhat");
 const { expect } = require("chai");
+const { LocalProvider, Wallet, AccountId, Client, AccountInfoQuery } = require("@hashgraph/sdk");
 
 class Utils {
   //createTokenCost is cost for creating the token, which is passed to the precompile. This is equivalent of 10 and 20hbars, any excess hbars are refunded.
@@ -25,6 +26,21 @@ class Utils {
     return await ethers.getContractAt(
       "TokenCreateContract",
       tokenCreateReceipt.contractAddress
+    );
+  }
+
+  static async deployTokenCreateCustomContract() {
+    const tokenCreateCustomFactory = await ethers.getContractFactory(
+      "TokenCreateCustomContract"
+    );
+    const tokenCreateCustom = await tokenCreateCustomFactory.deploy({
+      gasLimit: 1_000_000,
+    });
+    const tokenCreateCustomReceipt = await tokenCreateCustom.deployTransaction.wait();
+
+    return await ethers.getContractAt(
+      "TokenCreateCustomContract",
+      tokenCreateCustomReceipt.contractAddress
     );
   }
 
@@ -249,6 +265,28 @@ class Utils {
       expect(e).to.exist;
       expect(e.code).to.eq(code);
     }
+  }
+
+  static async createClient(operatorId, operatorKey, hederaNetwork = { "127.0.0.1:50211": new AccountId(3) }, mirrorNode = "127.0.0.1:5600") {
+    const client = Client.forNetwork(hederaNetwork).setMirrorNetwork(mirrorNode);
+    client.setOperator(operatorId, operatorKey);
+
+    return client
+  }
+
+  static async getAccountId(evmAddress, client) {
+    const query = new AccountInfoQuery()
+    .setAccountId(AccountId.fromEvmAddress(0,0,evmAddress));
+
+    const accountInfo = await query.execute(client);
+    return accountInfo.accountId.toString();
+  }
+
+  static getSignerCompressedPublicKey(index = 0, asBuffer = true, prune0x = true) {
+    const wallet = new ethers.Wallet(hre.config.networks.relay.accounts[index]);
+    const cpk = prune0x ? wallet._signingKey().compressedPublicKey.replace('0x', '') : wallet._signingKey().compressedPublicKey;
+
+    return asBuffer ? Buffer.from(cpk, 'hex') : cpk;
   }
 }
 
