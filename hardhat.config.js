@@ -14,7 +14,7 @@ module.exports = {
       },
     },
   },
-  defaultNetwork: 'relay',
+  defaultNetwork: 'testnet',
   networks: {
     relay: {
       url: 'http://localhost:7546',
@@ -23,6 +23,15 @@ module.exports = {
         "0x45a5a7108a18dd5013cf2d5857a28144beadc9c70b3bdbd914e38df4e804b8d8"
       ],
       chainId: 298,
+      loggingEnabled: true,
+    },
+    testnet: {
+      url: 'https://testnet.hashio.io/api',
+      accounts: [
+        "0x...",
+        "0x..."
+      ],
+      chainId: 296,
     }
   }
 };
