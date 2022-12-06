@@ -218,9 +218,9 @@ describe("TokenManagmentContract tests", function () {
     it('should be able to burn token', async function () {
         const amount = 111;
         const totalSupplyBefore = await erc20Contract.totalSupply(tokenAddress);
-        const balanceBefore = await erc20Contract.balanceOf(tokenAddress, tokenCreateContract.address);
+        const balanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[0].address);
         await tokenManagmentContract.burnTokenPublic(tokenAddress, amount, []);
-        const balanceAfter = await erc20Contract.balanceOf(tokenAddress, tokenCreateContract.address);
+        const balanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[0].address);
         const totalSupplyAfter = await erc20Contract.totalSupply(tokenAddress);
     
         expect(totalSupplyAfter).to.equal(totalSupplyBefore - amount);
