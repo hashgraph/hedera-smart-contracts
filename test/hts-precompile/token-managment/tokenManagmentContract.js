@@ -118,8 +118,7 @@ describe("TokenManagmentContract tests", function () {
         expect(responseCode).to.equal(TX_SUCCESS_CODE);
     });
 
-    // TODO: depends on fix
-    xit('should be able to update token info', async function () {
+    it('should be able to update token info', async function () {
         const TOKEN_UPDATE_NAME = 'tokenUpdateName';
         const TOKEN_UPDATE_SYMBOL = 'tokenUpdateSymbol';
         const TOKEN_UPDATE_MEMO = 'tokenUpdateMemo';
@@ -135,6 +134,7 @@ describe("TokenManagmentContract tests", function () {
         token.name = TOKEN_UPDATE_NAME;
         token.symbol = TOKEN_UPDATE_SYMBOL;
         token.memo = TOKEN_UPDATE_MEMO;
+        token.treasury = signers[0].address; // treasury has to be the signing account
 
         const txUpdate = await tokenManagmentContract.updateTokenInfoPublic(tokenAddress, token);
         expect((await txUpdate.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.be.equal(TX_SUCCESS_CODE);
