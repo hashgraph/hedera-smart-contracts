@@ -21,8 +21,8 @@ describe("TokenCreateContract tests", function () {
     tokenManagmentContract = await utils.deployTokenManagementContract();
     erc20Contract = await utils.deployERC20Contract();
     erc721Contract = await utils.deployERC721Contract();
-    tokenAddress = await utils.createFungibleToken(tokenCreateContract);
-    nftTokenAddress = await utils.createNonFungibleToken(tokenCreateContract);
+    tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
+    nftTokenAddress = await utils.createNonFungibleToken(tokenCreateContract, signers[0].address);
     mintedTokenSerialNumber = await utils.mintNFT(tokenCreateContract, nftTokenAddress);
 
     await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
@@ -34,9 +34,9 @@ describe("TokenCreateContract tests", function () {
   it('should be able to execute burnToken', async function () {
     const amount = 111;
     const totalSupplyBefore = await erc20Contract.totalSupply(tokenAddress);
-    const balanceBefore = await erc20Contract.balanceOf(tokenAddress, tokenCreateContract.address);
+    const balanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[0].address);
     await tokenManagmentContract.burnTokenPublic(tokenAddress, amount, []);
-    const balanceAfter = await erc20Contract.balanceOf(tokenAddress, tokenCreateContract.address);
+    const balanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[0].address);
     const totalSupplyAfter = await erc20Contract.totalSupply(tokenAddress);
 
     expect(totalSupplyAfter).to.equal(totalSupplyBefore - amount);
@@ -117,7 +117,7 @@ describe("TokenCreateContract tests", function () {
   });
 
   it('should be able to execute mintToken', async function () {
-    const nftAddress = await utils.createNonFungibleToken(tokenCreateContract);
+    const nftAddress = await utils.createNonFungibleToken(tokenCreateContract, signers[0].address);
     expect(nftAddress).to.exist;
     expectValidHash(nftAddress, 40);
 

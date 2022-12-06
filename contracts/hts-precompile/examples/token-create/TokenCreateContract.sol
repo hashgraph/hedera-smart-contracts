@@ -49,6 +49,43 @@ contract TokenCreateContract is HederaTokenService, ExpiryHelper, KeyHelper {
         emit CreatedToken(tokenAddress);
     }
 
+    function createFungibleTokenWithSECP256K1AdminKeyPublic(
+        address treasury, bytes memory adminKey
+    ) public payable returns (address) {
+        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](5);
+        keys[0] = getSingleKey(KeyType.ADMIN, KeyType.PAUSE, KeyValueType.SECP256K1, adminKey);
+        keys[1] = getSingleKey(KeyType.KYC, KeyValueType.SECP256K1, adminKey);
+        keys[2] = getSingleKey(KeyType.FREEZE, KeyValueType.SECP256K1, adminKey);
+        keys[3] = getSingleKey(KeyType.SUPPLY, KeyValueType.SECP256K1, adminKey);
+        keys[4] = getSingleKey(KeyType.WIPE, KeyValueType.SECP256K1, adminKey);
+
+        IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
+            0, treasury, 8000000
+        );
+
+        IHederaTokenService.HederaToken memory token = IHederaTokenService.HederaToken(
+            name, symbol, treasury, memo, true, maxSupply, freezeDefaultStatus, keys, expiry
+        );
+
+        (int responseCode, address tokenAddress) =
+        HederaTokenService.createFungibleToken(token, initialTotalSupply, decimals);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+
+        emit CreatedToken(tokenAddress);
+
+        return tokenAddress;
+    }
+
+    function createFungibleTokenWithSECP256K1AdminKeyAssociateAndTransferToAddressPublic(address treasury, bytes memory adminKey, int64 amount) public payable {
+        address tokenAddress = this.createFungibleTokenWithSECP256K1AdminKeyPublic{value : msg.value}(treasury, adminKey);
+        this.associateTokenPublic(msg.sender, tokenAddress);
+        this.grantTokenKycPublic(tokenAddress, msg.sender);
+        HederaTokenService.transferToken(tokenAddress, address(this), msg.sender, amount);
+    }
+
     function createFungibleTokenWithCustomFeesPublic(
         address treasury,
         address fixedFeeTokenAddress
@@ -90,6 +127,34 @@ contract TokenCreateContract is HederaTokenService, ExpiryHelper, KeyHelper {
         keys[2] = getSingleKey(KeyType.FREEZE, KeyValueType.INHERIT_ACCOUNT_KEY, bytes(""));
         keys[3] = getSingleKey(KeyType.SUPPLY, KeyValueType.INHERIT_ACCOUNT_KEY, bytes(""));
         keys[4] = getSingleKey(KeyType.WIPE, KeyValueType.INHERIT_ACCOUNT_KEY, bytes(""));
+
+        IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
+            0, treasury, 8000000
+        );
+
+        IHederaTokenService.HederaToken memory token = IHederaTokenService.HederaToken(
+            name, symbol, treasury, memo, true, maxSupply, freezeDefaultStatus, keys, expiry
+        );
+
+        (int responseCode, address tokenAddress) =
+        HederaTokenService.createNonFungibleToken(token);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+
+        emit CreatedToken(tokenAddress);
+    }
+
+    function createNonFungibleTokenWithSECP256K1AdminKeyPublic(
+        address treasury, bytes memory adminKey
+    ) public payable {
+        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](5);
+        keys[0] = getSingleKey(KeyType.ADMIN, KeyType.PAUSE, KeyValueType.SECP256K1, adminKey);
+        keys[1] = getSingleKey(KeyType.KYC, KeyValueType.SECP256K1, adminKey);
+        keys[2] = getSingleKey(KeyType.FREEZE, KeyValueType.SECP256K1, adminKey);
+        keys[3] = getSingleKey(KeyType.SUPPLY, KeyValueType.SECP256K1, adminKey);
+        keys[4] = getSingleKey(KeyType.WIPE, KeyValueType.SECP256K1, adminKey);
 
         IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
             0, treasury, 8000000
@@ -154,6 +219,20 @@ contract TokenCreateContract is HederaTokenService, ExpiryHelper, KeyHelper {
         }
 
         emit MintedToken(newTotalSupply, serialNumbers);
+    }
+
+    function mintTokenToAddressPublic(address token, uint64 amount, bytes[] memory metadata) public
+    returns (int responseCode, uint64 newTotalSupply, int64[] memory serialNumbers)  {
+        (responseCode, newTotalSupply, serialNumbers) = HederaTokenService.mintToken(token, amount, metadata);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+
+        emit MintedToken(newTotalSupply, serialNumbers);
+
+        HederaTokenService.transferNFT(token, address(this), msg.sender, serialNumbers[0]);
     }
 
     function associateTokensPublic(address account, address[] memory tokens) external returns (int256 responseCode) {
