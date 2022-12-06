@@ -159,7 +159,7 @@ describe("TokenCreateContract tests", function () {
       const operatorId = '0.0.2'
       const operatorKey = '302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137'
       
-      const client = await utils.createClient(operatorId, operatorKey);
+      const client = await utils.createLocalSDKClient(operatorId, operatorKey);
       const autoRenewAccount = await utils.getAccountId(signers[0].address, client);
   
       const tokenCreate = await (await new TokenCreateTransaction()

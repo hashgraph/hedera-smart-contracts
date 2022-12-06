@@ -267,7 +267,7 @@ class Utils {
     }
   }
 
-  static async createClient(operatorId, operatorKey, hederaNetwork = { "127.0.0.1:50211": new AccountId(3) }, mirrorNode = "127.0.0.1:5600") {
+  static async createLocalSDKClient(operatorId, operatorKey, hederaNetwork = { "127.0.0.1:50211": new AccountId(3) }, mirrorNode = "127.0.0.1:5600") {
     const client = Client.forNetwork(hederaNetwork).setMirrorNetwork(mirrorNode);
     client.setOperator(operatorId, operatorKey);
 
