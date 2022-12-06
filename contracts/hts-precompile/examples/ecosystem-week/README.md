@@ -26,6 +26,8 @@ Blog post - https://hedera.com/blog/create-accounts-with-ed25519-and-ecdsa-keys-
     ```
 3. Set `defaultNetwork` to `testnet` name as noted above
 
+Note: Complete code ref is under brnach `ecosystem-week`
+
 ## Create a custom Contract
 
 Create a new solodity  contract at `contracts/hts-precompile/examples/ecosystem-week/EcosystemWeek.sol` and populate with the following contents
@@ -118,7 +120,7 @@ Create a new solodity  contract at `contracts/hts-precompile/examples/ecosystem-
 ```
 
 ## Create test deployment and execution code
-Create an empty `js` file at `test/ecosystemweek/erc20.js` and populate with the following code
+Create an empty `js` file at `test/ecosystemweek/hts.js` and populate with the following code
 ```js
     const {expect} = require("chai");
     const {ethers} = require("hardhat");
@@ -204,5 +206,5 @@ Create an empty `js` file at `test/ecosystemweek/erc20.js` and populate with the
 
 ## Execute test code
 1. Compile by running `npx hardhat compile`
-2. Run tests with `npx hardhat test test/ecosystemweek/erc20.js`
+2. Run tests with `npx hardhat test test/ecosystemweek/hts.js`
 3. Observe urls in console outputs for contract and execution details
