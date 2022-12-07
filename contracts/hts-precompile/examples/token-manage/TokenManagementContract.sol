@@ -30,8 +30,26 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
         }
     }
 
+    function delegateFreezeTokenPublic(address token, address account) public returns (int responseCode) {
+        responseCode = HederaTokenService.delegateFreezeToken(token, account);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
+
     function unfreezeTokenPublic(address token, address account) public returns (int responseCode) {
         responseCode = HederaTokenService.unfreezeToken(token, account);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
+
+    function delegateUnfreezeTokenPublic(address token, address account) public returns (int responseCode) {
+        responseCode = HederaTokenService.delegateUnfreezeToken(token, account);
         emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
@@ -59,6 +77,17 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
         emit PausedToken(true);
     }
 
+    function delegatePauseTokenPublic(address token) public returns (int responseCode) {
+        responseCode = HederaTokenService.delegatePauseToken(token);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+
+        emit PausedToken(true);
+    }
+
     function unpauseTokenPublic(address token) public returns (int responseCode) {
         responseCode = HederaTokenService.unpauseToken(token);
         emit ResponseCode(responseCode);
@@ -70,8 +99,28 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
         emit UnpausedToken(true);
     }
 
-    function wipeTokenAccountPublic(address token, address account, int64 amount) public returns (int responseCode) {
+    function delegateUnpauseTokenPublic(address token) public returns (int responseCode) {
+        responseCode = HederaTokenService.delegateUnpauseToken(token);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+
+        emit UnpausedToken(true);
+    }
+
+    function wipeTokenAccountPublic(address token, address account, uint32 amount) public returns (int responseCode) {
         responseCode = HederaTokenService.wipeTokenAccount(token, account, amount);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+    }
+
+    function delegateWipeTokenAccountPublic(address token, address account, uint32 amount) public returns (int responseCode) {
+        responseCode = HederaTokenService.delegateWipeTokenAccount(token, account, amount);
         emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
@@ -92,7 +141,7 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
         (responseCode) = HederaTokenService.updateTokenInfo(token, tokenInfo);
         emit ResponseCode(responseCode);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if(responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
     }
@@ -101,7 +150,7 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
         (responseCode) = HederaTokenService.updateTokenExpiryInfo(token, expiryInfo);
         emit ResponseCode(responseCode);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if(responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
     }
@@ -110,11 +159,21 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
         (responseCode) = HederaTokenService.updateTokenKeys(token, keys);
         emit ResponseCode(responseCode);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if(responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
     }
-    function burnTokenPublic(address token, int64 amount, int64[] memory serialNumbers) external returns (int256 responseCode, int64 newTotalSupply) {
+
+    function delegateUpdateTokenKeysPublic(address token, IHederaTokenService.TokenKey[] memory keys) public returns (int64 responseCode) {
+        (responseCode) = HederaTokenService.delegateUpdateTokenKeys(token, keys);
+        emit ResponseCode(responseCode);
+
+        if(responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
+
+    function burnTokenPublic(address token, uint64 amount, int64[] memory serialNumbers) external returns (int256 responseCode, uint64 newTotalSupply) {
         (responseCode, newTotalSupply) = HederaTokenService.burnToken(token, amount, serialNumbers);
         emit ResponseCode(responseCode);
 

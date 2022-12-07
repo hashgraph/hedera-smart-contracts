@@ -261,4 +261,14 @@ contract TokenCreateContract is HederaTokenService, ExpiryHelper, KeyHelper {
             revert();
         }
     }
+
+    //Adding this function to showcase token functionality in extended updateTokenInfo test suite
+    function updateTokenInfoPublic(address token, IHederaTokenService.HederaToken memory tokenInfo)external returns (int responseCode) {
+        (responseCode) = HederaTokenService.updateTokenInfo(token, tokenInfo);
+        emit ResponseCode(responseCode);
+
+        if(responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
 }

@@ -1,7 +1,6 @@
 const {expect} = require("chai");
 const {ethers} = require("hardhat");
 const utils = require('../utils');
-
 describe("TokenManagmentContract tests", function () {
 
     const TX_SUCCESS_CODE = 22;
@@ -253,5 +252,724 @@ describe("TokenManagmentContract tests", function () {
         const txAssociate = await tokenCreateContractWallet2.associateTokenPublic(signers[1].address, tokenAddress, {gasLimit: 1_000_000});
         const receiptAssociate = await txAssociate.wait();
         expect(receiptAssociate.events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.equal(22);
+    });
+
+    describe('Extended update token info and keys test suite', function() {
+        async function getTokenInfo(contract, token) {
+            const txBeforeInfo = await contract.getTokenInfoPublic(token);
+            const tokenInfo = ((await txBeforeInfo.wait()).events.filter(e => e.event === 'TokenInfo')[0].args.tokenInfo)[0];
+            expect((await txBeforeInfo.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+            return tokenInfo
+        };
+
+        async function updateTokenInfo(contract, token, updateInfo) {
+            const txUpdate = await contract.updateTokenInfoPublic(token, updateInfo);
+            expect((await txUpdate.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.be.equal(TX_SUCCESS_CODE);
+        }
+
+        function updateTokenInfoValues(keyValueType, key) {
+            const updatedKey = [
+                false,
+                '0x0000000000000000000000000000000000000000',
+                '0x',
+                '0x',
+                '0x0000000000000000000000000000000000000000',
+            ];
+
+            switch (keyValueType) {
+                case utils.KeyValueType.CONTRACT_ID:
+                    updatedKey[1] = key;
+                    break;
+                case utils.KeyValueType.SECP256K1:
+                    updatedKey[3] = key;
+                    break;
+                case utils.KeyValueType.DELEGETABLE_CONTRACT_ID:
+                    updatedKey[4] = key;
+                    break;
+                default:
+                    break;
+            }
+
+            return updatedKey;
+        }
+
+        describe('Admin key set to ECDSA_secp256k', function() {
+            before(async function () {
+                tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKeyAssociateAndTransferToAddress(tokenCreateContract, tokenCreateContract.address, utils.getSignerCompressedPublicKey());
+        
+                await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
+                await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
+            });
+
+            describe('Positive', function() {
+                it('should be able to change PAUSE key to contractId and pause the token with same contract', async function() {
+                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
+
+                    //Update token info
+                    {
+                        const contractId = tokenManagmentContract.address;
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, contractId);
+    
+                        const token = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.PAUSE, updatedKey]]
+                        };
+                        token.treasury = signers[0].address;
+    
+                        await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
+                    }
+                    
+                    //Pause and unpause token
+                    {
+                        const pauseTokenTx = await tokenManagmentContract.connect(signers[1]).pauseTokenPublic(tokenAddress);
+                        const unpauseTokenTx = await tokenManagmentContract.connect(signers[1]).unpauseTokenPublic(tokenAddress);
+
+                        expect((await pauseTokenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                        expect((await unpauseTokenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                    }
+
+                    //Revert previous update token info
+                    {
+                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.SECP256K1, utils.getSignerCompressedPublicKey());
+
+                        const tokenAfter = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.PAUSE, updatedKeyAfter]]
+                        };
+                        tokenAfter.treasury = signers[0].address;
+                        await updateTokenInfo(tokenManagmentContract, tokenAddress, tokenAfter);
+                    }
+                });
+
+                it('should be able to change WIPE key to contractId and wipe the token with same contract', async function() {
+                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
+
+                    //Update token info
+                    {
+                        const contractId = tokenManagmentContract.address;
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, contractId);
+    
+                        const token = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.WIPE, updatedKey]]
+                        };
+                        token.treasury = signers[0].address;
+    
+                        await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
+                    }
+
+                    //Wipe token
+                    {
+                        const wipeAmount = 3
+                        await tokenTransferContract.transferTokensPublic(tokenAddress, [signers[0].address, signers[1].address], [-wipeAmount, wipeAmount]);
+
+                        const tx = await tokenManagmentContract.connect(signers[1]).wipeTokenAccountPublic(tokenAddress, signers[1].address, wipeAmount);
+                        expect((await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                    }
+
+                    //Revert previous update token info
+                    {
+                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.SECP256K1, utils.getSignerCompressedPublicKey());
+
+                        const tokenAfter = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.WIPE, updatedKeyAfter]]
+                        };
+                        tokenAfter.treasury = signers[0].address;
+                        await updateTokenInfo(tokenManagmentContract, tokenAddress, tokenAfter);
+                    }
+                });
+                
+                it('should be able to change FREEZE key to contractId and freeze the token with same contract', async function() {
+                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
+
+                    //Update token info
+                    {
+                        const contractId = tokenManagmentContract.address;
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, contractId);
+    
+                        const token = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.FREEZE, updatedKey]]
+                        };
+                        token.treasury = signers[0].address;
+    
+                        await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
+                    }
+
+                    //Freeze and unfreeze token
+                    {
+                        const freezeTx = await tokenManagmentContract.connect(signers[1]).freezeTokenPublic(tokenAddress, tokenCreateContract.address);
+                        const unfreezeTx = await tokenManagmentContract.connect(signers[1]).unfreezeTokenPublic(tokenAddress, tokenCreateContract.address);
+
+                        expect((await freezeTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                        expect((await unfreezeTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                    }
+
+                    //Revert previous update token info
+                    {
+                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.SECP256K1, utils.getSignerCompressedPublicKey());
+
+                        const tokenAfter = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.FREEZE, updatedKeyAfter]]
+                        };
+                        tokenAfter.treasury = signers[0].address;
+                        await updateTokenInfo(tokenManagmentContract, tokenAddress, tokenAfter);
+                    }
+                });
+                
+                it('should be able to change ADMIN key to contractId and perform admin action with same contract', async function() {
+                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
+
+                    //Update token info
+                    {
+                        const contractId = tokenManagmentContract.address;
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, contractId);
+    
+                        const token = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.ADMIN, updatedKey]]
+                        };
+                        token.treasury = signers[0].address;
+    
+                        await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
+                    }
+
+                    //Change supply key with admin contract
+                    {
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, tokenTransferContract.address);
+                        const updateTokenKeyTx = await tokenManagmentContract.connect(signers[1]).updateTokenKeysPublic(tokenAddress, [[ utils.KeyType.SUPPLY, updatedKey]]);
+                        expect((await updateTokenKeyTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                    }
+
+                    //Revert previous update token info
+                    {
+                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.SECP256K1, utils.getSignerCompressedPublicKey());
+
+                        const tokenAfter = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.ADMIN, updatedKeyAfter]]
+                        };
+                        tokenAfter.treasury = signers[0].address;
+                        await updateTokenInfo(tokenManagmentContract, tokenAddress, tokenAfter);
+                    }
+                });
+                
+                it('should be able to change PAUSE key to delegatecontractId and delegate pause the token with same contract', async function() {
+                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
+
+                    //Update token info
+                    {
+                        const contractId = tokenManagmentContract.address;
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.DELEGETABLE_CONTRACT_ID, contractId);
+    
+                        const token = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.PAUSE, updatedKey]]
+                        };
+                        token.treasury = signers[0].address;
+    
+                        await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
+                    }
+
+                    //Pause and unpause token with delegate call
+                    {
+                        const pauseTokenTx = await tokenManagmentContract.connect(signers[1]).delegatePauseTokenPublic(tokenAddress);
+                        const unpauseTokenTx = await tokenManagmentContract.connect(signers[1]).delegateUnpauseTokenPublic(tokenAddress);
+
+                        expect((await pauseTokenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                        expect((await unpauseTokenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                    }
+
+                    //Revert previous update token info
+                    {
+                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.SECP256K1, utils.getSignerCompressedPublicKey());
+
+                        const tokenAfter = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.PAUSE, updatedKeyAfter]]
+                        };
+                        tokenAfter.treasury = signers[0].address;
+                        await updateTokenInfo(tokenManagmentContract, tokenAddress, tokenAfter);
+                    }
+                });
+                                
+                it('should be able to change WIPE key to delegatecontractId and delegate wipe the token with same contract', async function() {
+                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
+
+                    //Update token info
+                    {
+                        const contractId = tokenManagmentContract.address;
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.DELEGETABLE_CONTRACT_ID, contractId);
+    
+                        const token = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.WIPE, updatedKey]]
+                        };
+                        token.treasury = signers[0].address;
+    
+                        await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
+                    }
+
+                    //Wipe token with delegate call
+                    {
+                        const wipeAmount = 3
+                        await tokenTransferContract.transferTokensPublic(tokenAddress, [signers[0].address, signers[1].address], [-wipeAmount, wipeAmount]);
+
+                        const tx = await tokenManagmentContract.connect(signers[1]).delegateWipeTokenAccountPublic(tokenAddress, signers[1].address, wipeAmount);
+                        expect((await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                    }
+
+                    //Revert previous update token info
+                    {
+                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.SECP256K1, utils.getSignerCompressedPublicKey());
+
+                        const tokenAfter = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.WIPE, updatedKeyAfter]]
+                        };
+                        tokenAfter.treasury = signers[0].address;
+                        await updateTokenInfo(tokenManagmentContract, tokenAddress, tokenAfter);
+                    }
+                });
+                                
+                it('should be able to change FREEZE key to delegatecontractId and delegate freeze the token with same contract', async function() {
+                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
+
+                    //Update token info
+                    {
+                        const contractId = tokenManagmentContract.address;
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.DELEGETABLE_CONTRACT_ID, contractId);
+    
+                        const token = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.FREEZE, updatedKey]]
+                        };
+                        token.treasury = signers[0].address;
+    
+                        await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
+                    }
+
+                    //Freeze and unpfreeze token with delegate call
+                    {
+                        const freezeTx = await tokenManagmentContract.connect(signers[1]).delegateFreezeTokenPublic(tokenAddress, tokenCreateContract.address);
+                        const unfreezeTx = await tokenManagmentContract.connect(signers[1]).delegateUnfreezeTokenPublic(tokenAddress, tokenCreateContract.address);
+
+                        expect((await freezeTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                        expect((await unfreezeTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                    }
+
+                    //Revert previous update token info
+                    {
+                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.SECP256K1, utils.getSignerCompressedPublicKey());
+
+                        const tokenAfter = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.FREEZE, updatedKeyAfter]]
+                        };
+                        tokenAfter.treasury = signers[0].address;
+                        await updateTokenInfo(tokenManagmentContract, tokenAddress, tokenAfter);
+                    }
+                });
+                                
+                it('should be able to change ADMIN key to delegatecontractId and perform delegate admin action with same contract', async function() {
+                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
+
+                    //Update token info
+                    {
+                        const contractId = tokenManagmentContract.address;
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.DELEGETABLE_CONTRACT_ID, contractId);
+    
+                        const token = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.ADMIN, updatedKey]]
+                        };
+                        token.treasury = signers[0].address;
+    
+                        await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
+                    }
+
+                    //Change supply key using admin contract with delegatecall
+                    {
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, tokenTransferContract.address);
+                        const updateTokenKeyTx = await tokenManagmentContract.connect(signers[1]).delegateUpdateTokenKeysPublic(tokenAddress, [[ utils.KeyType.SUPPLY, updatedKey]]);
+                        expect((await updateTokenKeyTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                    }
+
+                    //Revert previous update token info
+                    {
+                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.SECP256K1, utils.getSignerCompressedPublicKey());
+
+                        const tokenAfter = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.ADMIN, updatedKeyAfter]]
+                        };
+                        tokenAfter.treasury = signers[0].address;
+                        await updateTokenInfo(tokenManagmentContract, tokenAddress, tokenAfter);
+                    }
+                });
+            });
+            describe('Negative', function() {
+                it('should not be able to pause the token with different PAUSE key', async function() {
+                    const pauseTokenTx = await tokenManagmentContract.connect(signers[1]).pauseTokenPublic(tokenAddress);
+                    const unpauseTokenTx = await tokenManagmentContract.connect(signers[1]).unpauseTokenPublic(tokenAddress);
+
+                    await utils.expectToFail(pauseTokenTx, 'CALL_EXCEPTION');
+                    await utils.expectToFail(unpauseTokenTx, 'CALL_EXCEPTION');
+                });
+
+                it('should not be able to wipe the token with different WIPE key', async function() {
+                    const wipeAmount = 3
+                    await tokenTransferContract.transferTokensPublic(tokenAddress, [signers[0].address, signers[1].address], [-wipeAmount, wipeAmount]);
+
+                    const wipeTokenTx = await tokenManagmentContract.connect(signers[1]).wipeTokenAccountPublic(tokenAddress, signers[1].address, wipeAmount);
+                    await utils.expectToFail(wipeTokenTx, 'CALL_EXCEPTION');
+                });
+
+                it('should not be able to freeze the token with different FREEZE key', async function() {
+                    const freezeTokenTx = await tokenManagmentContract.connect(signers[1]).freezeTokenPublic(tokenAddress, tokenCreateContract.address);
+                    const unfreezeTokenTx = await tokenManagmentContract.connect(signers[1]).unfreezeTokenPublic(tokenAddress, tokenCreateContract.address);
+
+                    await utils.expectToFail(freezeTokenTx, 'CALL_EXCEPTION');
+                    await utils.expectToFail(unfreezeTokenTx, 'CALL_EXCEPTION');
+                });
+
+                it('should not be able to perform admin action with different ADMIN key', async function() {
+                    const updatedKey = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, tokenTransferContract.address);
+                    const updateTokenKeyTx = await tokenManagmentContract.connect(signers[1]).updateTokenKeysPublic(tokenAddress, [[ utils.KeyType.SUPPLY, updatedKey]]);
+                    await utils.expectToFail(updateTokenKeyTx, 'CALL_EXCEPTION');
+                });
+            });
+        });
+
+        describe('Admin key set to contractId', function() {
+            before(async function () {
+                tokenAddress = await utils.createFungibleToken(tokenCreateContract, signers[0].address);
+        
+                await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
+                await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
+            });
+            describe('Positive', function() {
+                it('should be able to change PAUSE key to ECDSA_secp256k and pause the token with the same account', async function() {
+                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
+
+                    //Update token info
+                    {
+                        const key = utils.getSignerCompressedPublicKey(1);
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.SECP256K1, key);
+    
+                        const token = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.PAUSE, updatedKey]]
+                        };
+                        token.treasury = signers[0].address;
+    
+                        await updateTokenInfo(tokenCreateContract, tokenAddress, token);
+                    }
+                    
+                    //Pause and unpause token
+                    {
+                        const pauseTokenTx = await tokenManagmentContract.connect(signers[1]).pauseTokenPublic(tokenAddress);
+                        const unpauseTokenTx = await tokenManagmentContract.connect(signers[1]).unpauseTokenPublic(tokenAddress);
+
+                        expect((await pauseTokenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                        expect((await unpauseTokenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                    }
+
+                    //Revert previous update token info
+                    {
+                        const contractId = tokenCreateContract.address;
+                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, contractId);
+
+                        const tokenAfter = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.PAUSE, updatedKeyAfter]]
+                        };
+                        tokenAfter.treasury = signers[0].address;
+                        await updateTokenInfo(tokenCreateContract, tokenAddress, tokenAfter);
+                    }
+                });
+
+                it('should be able to change WIPE key to ECDSA_secp256k and wipe the token with the same account', async function() {
+                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
+
+                    //Update token info
+                    {
+                        const key = utils.getSignerCompressedPublicKey(1);
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.SECP256K1, key);
+    
+                        const token = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.WIPE, updatedKey]]
+                        };
+                        token.treasury = signers[0].address;
+    
+                        await updateTokenInfo(tokenCreateContract, tokenAddress, token);
+                    }
+
+                    //Wipe token
+                    {
+                        const wipeAmount = 3
+                        await tokenTransferContract.transferTokensPublic(tokenAddress, [signers[0].address, signers[1].address], [-wipeAmount, wipeAmount]);
+
+                        const tx = await tokenManagmentContract.connect(signers[1]).wipeTokenAccountPublic(tokenAddress, signers[1].address, wipeAmount);
+                        expect((await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                    }
+
+                    //Revert previous update token info
+                    {
+                        const contractId = tokenCreateContract.address;
+                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, contractId);
+
+                        const tokenAfter = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.WIPE, updatedKeyAfter]]
+                        };
+                        tokenAfter.treasury = signers[0].address;
+                        await updateTokenInfo(tokenCreateContract, tokenAddress, tokenAfter);
+                    }
+                });
+                
+                it('should be able to change FREEZE key to ECDSA_secp256k and freeze the token with the same account', async function() {
+                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
+
+                    //Update token info
+                    {
+                        const key = utils.getSignerCompressedPublicKey(1);
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.SECP256K1, key);
+    
+                        const token = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.FREEZE, updatedKey]]
+                        };
+                        token.treasury = signers[0].address;
+    
+                        await updateTokenInfo(tokenCreateContract, tokenAddress, token);
+                    }
+
+                    //Freeze and unfreeze token
+                    {
+                        const freezeTx = await tokenManagmentContract.connect(signers[1]).freezeTokenPublic(tokenAddress, tokenCreateContract.address);
+                        const unfreezeTx = await tokenManagmentContract.connect(signers[1]).unfreezeTokenPublic(tokenAddress, tokenCreateContract.address);
+
+                        expect((await freezeTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                        expect((await unfreezeTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                    }
+
+                    //Revert previous update token info
+                    {
+                        const contractId = tokenCreateContract.address;
+                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, contractId);
+
+                        const tokenAfter = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.FREEZE, updatedKeyAfter]]
+                        };
+                        tokenAfter.treasury = signers[0].address;
+                        await updateTokenInfo(tokenCreateContract, tokenAddress, tokenAfter);
+                    }
+                });
+                
+                it('should be able to change ADMIN key to ECDSA_secp256k and perform admin action with same contract', async function() {
+                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
+
+                    //Update token info
+                    {
+                        const key = utils.getSignerCompressedPublicKey(1);
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.SECP256K1, key);
+    
+                        const token = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.ADMIN, updatedKey]]
+                        };
+                        token.treasury = signers[0].address;
+    
+                        await updateTokenInfo(tokenCreateContract, tokenAddress, token);
+                    }
+
+                    //Change supply key with admin contract
+                    {
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, tokenTransferContract.address);
+                        const updateTokenKeyTx = await tokenManagmentContract.connect(signers[1]).updateTokenKeysPublic(tokenAddress, [[ utils.KeyType.SUPPLY, updatedKey]]);
+                        expect((await updateTokenKeyTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                    }
+
+                    //Revert previous update token info
+                    {
+                        const contractId = tokenCreateContract.address;
+                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, contractId);
+
+                        const tokenAfter = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.ADMIN, updatedKeyAfter]]
+                        };
+                        tokenAfter.treasury = signers[0].address;
+
+                        const txUpdate = await tokenManagmentContract.connect(signers[1]).updateTokenInfoPublic(tokenAddress, tokenAfter);
+                        expect((await txUpdate.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.be.equal(TX_SUCCESS_CODE);
+                    }
+                });
+                
+                it('should be able change PAUSE key to delegatecontractId and delegate pause the token with same contract', async function() {
+                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
+
+                    //Update token info
+                    {
+                        const contractId = tokenManagmentContract.address;
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.DELEGETABLE_CONTRACT_ID, contractId);
+    
+                        const token = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.PAUSE, updatedKey]]
+                        };
+                        token.treasury = signers[0].address;
+    
+                        await updateTokenInfo(tokenCreateContract, tokenAddress, token);
+                    }
+
+                    //Pause and unpause token with delegate call
+                    {
+                        const pauseTokenTx = await tokenManagmentContract.connect(signers[1]).delegatePauseTokenPublic(tokenAddress);
+                        const unpauseTokenTx = await tokenManagmentContract.connect(signers[1]).delegateUnpauseTokenPublic(tokenAddress);
+
+                        expect((await pauseTokenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                        expect((await unpauseTokenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                    }
+
+                    //Revert previous update token info
+                    {
+                        const contractId = tokenCreateContract.address;
+                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, contractId);
+
+                        const tokenAfter = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.PAUSE, updatedKeyAfter]]
+                        };
+                        tokenAfter.treasury = signers[0].address;
+                        await updateTokenInfo(tokenCreateContract, tokenAddress, tokenAfter);
+                    }
+                });
+                                
+                it('should be able to change WIPE key to delegatecontractId and delegate wipe the token with same contract', async function() {
+                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
+
+                    //Update token info
+                    {
+                        const contractId = tokenManagmentContract.address;
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.DELEGETABLE_CONTRACT_ID, contractId);
+    
+                        const token = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.WIPE, updatedKey]]
+                        };
+                        token.treasury = signers[0].address;
+    
+                        await updateTokenInfo(tokenCreateContract, tokenAddress, token);
+                    }
+
+                    //Wipe token with delegate call
+                    {
+                        const wipeAmount = 3
+                        await tokenTransferContract.transferTokensPublic(tokenAddress, [signers[0].address, signers[1].address], [-wipeAmount, wipeAmount]);
+
+                        const tx = await tokenManagmentContract.connect(signers[1]).delegateWipeTokenAccountPublic(tokenAddress, signers[1].address, wipeAmount);
+                        expect((await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                    }
+
+                    //Revert previous update token info
+                    {
+                        const contractId = tokenCreateContract.address;
+                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, contractId);
+
+                        const tokenAfter = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.WIPE, updatedKeyAfter]]
+                        };
+                        tokenAfter.treasury = signers[0].address;
+                        await updateTokenInfo(tokenCreateContract, tokenAddress, tokenAfter);
+                    }
+                });
+                                
+                it('should be able to change FREEZE key to delegatecontractId and delegate freeze the token with same contract', async function() {
+                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
+
+                    //Update token info
+                    {
+                        const contractId = tokenManagmentContract.address;
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.DELEGETABLE_CONTRACT_ID, contractId);
+    
+                        const token = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.FREEZE, updatedKey]]
+                        };
+                        token.treasury = signers[0].address;
+    
+                        await updateTokenInfo(tokenCreateContract, tokenAddress, token);
+                    }
+
+                    //Freeze and unpfreeze token with delegate call
+                    {
+                        const freezeTx = await tokenManagmentContract.connect(signers[1]).delegateFreezeTokenPublic(tokenAddress, tokenCreateContract.address);
+                        const unfreezeTx = await tokenManagmentContract.connect(signers[1]).delegateUnfreezeTokenPublic(tokenAddress, tokenCreateContract.address);
+
+                        expect((await freezeTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                        expect((await unfreezeTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                    }
+
+                    //Revert previous update token info
+                    {
+                        const contractId = tokenCreateContract.address;
+                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, contractId);
+
+                        const tokenAfter = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.FREEZE, updatedKeyAfter]]
+                        };
+                        tokenAfter.treasury = signers[0].address;
+                        await updateTokenInfo(tokenCreateContract, tokenAddress, tokenAfter);
+                    }
+                });
+                                
+                it('should be able to change ADMIN key to delegatecontractId and perform delegate admin action with same contract', async function() {
+                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
+
+                    //Update token info
+                    {
+                        const contractId = tokenManagmentContract.address;
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.DELEGETABLE_CONTRACT_ID, contractId);
+    
+                        const token = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.ADMIN, updatedKey]]
+                        };
+                        token.treasury = signers[0].address;
+    
+                        await updateTokenInfo(tokenCreateContract, tokenAddress, token);
+                    }
+
+                    //Change supply key using admin contract with delegatecall
+                    {
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, tokenTransferContract.address);
+                        const updateTokenKeyTx = await tokenManagmentContract.connect(signers[1]).delegateUpdateTokenKeysPublic(tokenAddress, [[ utils.KeyType.SUPPLY, updatedKey]]);
+                        expect((await updateTokenKeyTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                    }
+
+                    //Revert previous update token info
+                    {
+                        const contractId = tokenCreateContract.address;
+                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, contractId);
+
+                        const tokenAfter = {
+                            ...tokenInfoBefore, tokenKeys: [[ utils.KeyType.ADMIN, updatedKeyAfter]]
+                        };
+                        tokenAfter.treasury = signers[0].address;
+
+                        const txUpdate = await tokenManagmentContract.connect(signers[1]).updateTokenInfoPublic(tokenAddress, tokenAfter);
+                        expect((await txUpdate.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.be.equal(TX_SUCCESS_CODE);
+                    }
+                });
+            });
+            describe('Negative', function() {
+                it('should not be able to pause the token with different PAUSE key', async function() {
+                    const pauseTokenTx = await tokenManagmentContract.connect(signers[1]).pauseTokenPublic(tokenAddress);
+                    const unpauseTokenTx = await tokenManagmentContract.connect(signers[1]).unpauseTokenPublic(tokenAddress);
+
+                    await utils.expectToFail(pauseTokenTx, 'CALL_EXCEPTION');
+                    await utils.expectToFail(unpauseTokenTx, 'CALL_EXCEPTION');
+                });
+
+                it('should not be able to wipe the token with different WIPE key', async function() {
+                    const wipeAmount = 3
+                    await tokenTransferContract.transferTokensPublic(tokenAddress, [signers[0].address, signers[1].address], [-wipeAmount, wipeAmount]);
+
+                    const wipeTokenTx = await tokenManagmentContract.connect(signers[1]).wipeTokenAccountPublic(tokenAddress, signers[1].address, wipeAmount);
+                    await utils.expectToFail(wipeTokenTx, 'CALL_EXCEPTION');
+                });
+
+                it('should not be able to freeze the token with different FREEZE key', async function() {
+                    const freezeTokenTx = await tokenManagmentContract.connect(signers[1]).freezeTokenPublic(tokenAddress, tokenCreateContract.address);
+                    const unfreezeTokenTx = await tokenManagmentContract.connect(signers[1]).unfreezeTokenPublic(tokenAddress, tokenCreateContract.address);
+
+                    await utils.expectToFail(freezeTokenTx, 'CALL_EXCEPTION');
+                    await utils.expectToFail(unfreezeTokenTx, 'CALL_EXCEPTION');
+                });
+
+                it('should not be able to perform admin action with different ADMIN key', async function() {
+                    const updatedKey = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, tokenTransferContract.address);
+                    const updateTokenKeyTx = await tokenManagmentContract.connect(signers[1]).updateTokenKeysPublic(tokenAddress, [[ utils.KeyType.SUPPLY, updatedKey]]);
+                    await utils.expectToFail(updateTokenKeyTx, 'CALL_EXCEPTION');
+                });
+            });
+        });
     });
 });
