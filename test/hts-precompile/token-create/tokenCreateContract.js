@@ -2,11 +2,14 @@ const {expect} = require("chai");
 const {ethers} = require("hardhat");
 const utils = require('../utils');
 const {expectValidHash} = require('../assertions');
+const { TokenCreateTransaction, TransactionId, Key, PublicKey, TokenSupplyType, AccountId, AccountInfo, AccountInfoQuery } = require("@hashgraph/sdk");
 
 describe("TokenCreateContract tests", function () {
   let tokenCreateContract;
+  let tokenCreateCustomContract;
   let tokenTransferContract;
   let tokenManagmentContract;
+  let tokenQueryContract;
   let erc20Contract;
   let erc721Contract;
   let tokenAddress;
@@ -135,5 +138,105 @@ describe("TokenCreateContract tests", function () {
   it('should be able to execute grantTokenKyc', async function () {
     const grantKycTx = await tokenCreateContract.grantTokenKycPublic(tokenAddress, signers[1].address, { gasLimit: 1000000 });
     expect((await grantKycTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.equal(22);
+  });
+
+  describe('Hapi vs Ethereum token create test', function() {
+    const tokenName = 'WrappedHbar';
+    const tokenSymbol = 'WHBAR';
+    const tokenMemo = 'Wrapped Hbar';
+    const initialSupply = 1500;
+    const maxSupply = 2000;
+    const decimals = 8;
+    const freezeDefaultStatus = false;
+    const key = PublicKey.fromBytes(utils.getSignerCompressedPublicKey());
+
+    before(async function () {
+      tokenCreateCustomContract = await utils.deployTokenCreateCustomContract();
+      tokenQueryContract = await utils.deployTokenQueryContract();
+    });
+
+    async function createTokenviaHapi() {
+      const operatorId = '0.0.2'
+      const operatorKey = '302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137'
+      
+      const client = await utils.createLocalSDKClient(operatorId, operatorKey);
+      const autoRenewAccount = await utils.getAccountId(signers[0].address, client);
+  
+      const tokenCreate = await (await new TokenCreateTransaction()
+        .setTokenName(tokenName)
+        .setTokenMemo(tokenMemo)
+        .setTokenSymbol(tokenSymbol)
+        .setDecimals(decimals)
+        .setInitialSupply(initialSupply)
+        .setMaxSupply(maxSupply)
+        .setSupplyType(TokenSupplyType.Finite)
+        .setTreasuryAccountId(client.operatorAccountId)
+        .setAutoRenewAccountId(autoRenewAccount)
+        .setKycKey(key)
+        .setWipeKey(key)
+        .setPauseKey(key)
+        .setFreezeKey(key)
+        .setSupplyKey(key)
+        .setFreezeDefault(freezeDefaultStatus)
+        .setTransactionId(TransactionId.generate(client.operatorAccountId))
+        .setNodeAccountIds([client._network.getNodeAccountIdsForExecute()[0]]))
+        .setTransactionMemo('Token')
+        .execute(client);
+  
+      const receipt = await tokenCreate.getReceipt(client);
+      const tokenId = receipt.tokenId.toString();
+      return tokenId;
+    }
+
+    async function createTokenviaPrecompile() {
+      const tokenAddressTx = await tokenCreateCustomContract.createFungibleTokenPublic(
+        tokenName,
+        tokenSymbol,
+        tokenMemo,
+        initialSupply,
+        maxSupply,
+        decimals,
+        freezeDefaultStatus,
+        signers[0].address,
+        utils.getSignerCompressedPublicKey(),
+        {
+          value: "10000000000000000000",
+          gasLimit: 1_000_000,
+        }
+      );
+      const tokenAddressReceipt = await tokenAddressTx.wait();
+      const { tokenAddress } = tokenAddressReceipt.events.filter(
+        (e) => e.event === "CreatedToken"
+      )[0].args;
+  
+      return tokenAddress;
+    }
+  
+    it('should be able to compare tokens created from precompile and hapi', async function () {
+      const hapiTokenAddress = '0x' + AccountId.fromString(await createTokenviaHapi()).toSolidityAddress();
+      const precompileTokenAddress = await createTokenviaPrecompile();
+
+      const hapiTokenInfoTx = await tokenQueryContract.getFungibleTokenInfoPublic(hapiTokenAddress);
+      const hapiTokenInfo = (await hapiTokenInfoTx.wait()).events.filter(e => e.event === 'FungibleTokenInfo')[0].args.tokenInfo[0][0];
+
+      const precompileTokenInfoTx = await tokenQueryContract.getFungibleTokenInfoPublic(precompileTokenAddress);
+      const precompileTokenInfo = (await precompileTokenInfoTx.wait()).events.filter(e => e.event === 'FungibleTokenInfo')[0].args.tokenInfo[0][0];
+
+      expect((await hapiTokenInfoTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.equal(22);
+      expect((await precompileTokenInfoTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.equal(22);
+      expect(hapiTokenInfo).not.null;
+      expect(precompileTokenInfo).not.null;
+
+      expect(hapiTokenInfo.name).to.eq(precompileTokenInfo.name);
+      expect(hapiTokenInfo.symbol).to.eq(precompileTokenInfo.symbol);
+      expect(hapiTokenInfo.memo).to.eq(precompileTokenInfo.memo);
+      expect(hapiTokenInfo.maxSupply).to.eq(precompileTokenInfo.maxSupply);
+
+      expect(hapiTokenInfo.tokenKeys[1].key.ECDSA_secp256k1).to.eq(precompileTokenInfo.tokenKeys[1].key.ECDSA_secp256k1); // KYC KEY
+      expect(hapiTokenInfo.tokenKeys[2].key.ECDSA_secp256k1).to.eq(precompileTokenInfo.tokenKeys[2].key.ECDSA_secp256k1); // FREEZE KEY
+      expect(hapiTokenInfo.tokenKeys[3].key.ECDSA_secp256k1).to.eq(precompileTokenInfo.tokenKeys[3].key.ECDSA_secp256k1); // WIPE KEY
+      expect(hapiTokenInfo.tokenKeys[4].key.ECDSA_secp256k1).to.eq(precompileTokenInfo.tokenKeys[4].key.ECDSA_secp256k1); // SUPPLY KEY
+      expect(hapiTokenInfo.tokenKeys[6].key.ECDSA_secp256k1).to.eq(precompileTokenInfo.tokenKeys[6].key.ECDSA_secp256k1); // PAUSE KEY
+    });
   });
 });
