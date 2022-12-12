@@ -209,8 +209,8 @@ contract TokenCreateContract is HederaTokenService, ExpiryHelper, KeyHelper {
         emit CreatedToken(tokenAddress);
     }
 
-    function mintTokenPublic(address token, uint64 amount, bytes[] memory metadata) public
-    returns (int responseCode, uint64 newTotalSupply, int64[] memory serialNumbers)  {
+    function mintTokenPublic(address token, int64 amount, bytes[] memory metadata) public
+    returns (int responseCode, int64 newTotalSupply, int64[] memory serialNumbers)  {
         (responseCode, newTotalSupply, serialNumbers) = HederaTokenService.mintToken(token, amount, metadata);
         emit ResponseCode(responseCode);
 
