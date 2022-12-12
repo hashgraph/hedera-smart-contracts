@@ -8,7 +8,7 @@ import "./IHederaTokenService.sol";
 abstract contract HederaTokenService {
     address constant precompileAddress = address(0x167);
     // 90 days in seconds
-    uint32 constant defaultAutoRenewPeriod = 7776000;
+    int32 constant defaultAutoRenewPeriod = 7776000;
 
     modifier nonEmptyExpiry(IHederaTokenService.HederaToken memory token)
     {
@@ -55,16 +55,16 @@ abstract contract HederaTokenService {
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     /// @return newTotalSupply The new supply of tokens. For NFTs it is the total count of NFTs
     /// @return serialNumbers If the token is an NFT the newly generate serial numbers, otherwise empty.
-    function mintToken(address token, uint64 amount, bytes[] memory metadata) internal
-    returns (int responseCode, uint64 newTotalSupply, int64[] memory serialNumbers)
+    function mintToken(address token, int64 amount, bytes[] memory metadata) internal
+    returns (int responseCode, int64 newTotalSupply, int64[] memory serialNumbers)
     {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.mintToken.selector,
             token, amount, metadata));
         (responseCode, newTotalSupply, serialNumbers) =
         success
-        ? abi.decode(result, (int32, uint64, int64[]))
-        : (HederaResponseCodes.UNKNOWN, 0, new int64[](0));
+        ? abi.decode(result, (int32, int64, int64[]))
+        : (HederaResponseCodes.UNKNOWN, int64(0), new int64[](0));
     }
 
     /// Burns an amount of the token from the defined treasury account
@@ -76,16 +76,16 @@ abstract contract HederaTokenService {
     /// @param serialNumbers Applicable to tokens of type NON_FUNGIBLE_UNIQUE. The list of serial numbers to be burned.
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     /// @return newTotalSupply The new supply of tokens. For NFTs it is the total count of NFTs
-    function burnToken(address token, uint64 amount, int64[] memory serialNumbers) internal
-    returns (int responseCode, uint64 newTotalSupply)
+    function burnToken(address token, int64 amount, int64[] memory serialNumbers) internal
+    returns (int responseCode, int64 newTotalSupply)
     {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.burnToken.selector,
             token, amount, serialNumbers));
         (responseCode, newTotalSupply) =
         success
-        ? abi.decode(result, (int32, uint64))
-        : (HederaResponseCodes.UNKNOWN, 0);
+        ? abi.decode(result, (int32, int64))
+        : (HederaResponseCodes.UNKNOWN, int64(0));
     }
 
     ///  Associates the provided account with the provided tokens. Must be signed by the provided
@@ -160,8 +160,8 @@ abstract contract HederaTokenService {
     /// @return tokenAddress the created token's address
     function createFungibleToken(
         IHederaTokenService.HederaToken memory token,
-        uint64 initialTotalSupply,
-        uint32 decimals) nonEmptyExpiry(token)
+        int64 initialTotalSupply,
+        int32 decimals) nonEmptyExpiry(token)
     internal returns (int responseCode, address tokenAddress) {
         (bool success, bytes memory result) = precompileAddress.call{value : msg.value}(
             abi.encodeWithSelector(IHederaTokenService.createFungibleToken.selector,
@@ -182,8 +182,8 @@ abstract contract HederaTokenService {
     /// @return tokenAddress the created token's address
     function createFungibleTokenWithCustomFees(
         IHederaTokenService.HederaToken memory token,
-        uint64 initialTotalSupply,
-        uint32 decimals,
+        int64 initialTotalSupply,
+        int32 decimals,
         IHederaTokenService.FixedFee[] memory fixedFees,
         IHederaTokenService.FractionalFee[] memory fractionalFees) nonEmptyExpiry(token)
     internal returns (int responseCode, address tokenAddress) {
@@ -636,7 +636,7 @@ abstract contract HederaTokenService {
     /// @param account The account address to revoke kyc
     /// @param amount The number of tokens to wipe
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
-    function wipeTokenAccount(address token, address account, uint32 amount) internal returns (int responseCode)
+    function wipeTokenAccount(address token, address account, int64 amount) internal returns (int responseCode)
     {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.wipeTokenAccount.selector, token, account, amount));
