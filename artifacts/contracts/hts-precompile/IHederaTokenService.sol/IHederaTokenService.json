@@ -151,9 +151,9 @@
           "type": "address"
         },
         {
-          "internalType": "uint64",
+          "internalType": "int64",
           "name": "amount",
-          "type": "uint64"
+          "type": "int64"
         },
         {
           "internalType": "int64[]",
@@ -169,9 +169,9 @@
           "type": "int64"
         },
         {
-          "internalType": "uint64",
+          "internalType": "int64",
           "name": "newTotalSupply",
-          "type": "uint64"
+          "type": "int64"
         }
       ],
       "stateMutability": "nonpayable",
@@ -263,9 +263,9 @@
             {
               "components": [
                 {
-                  "internalType": "uint32",
+                  "internalType": "int64",
                   "name": "second",
-                  "type": "uint32"
+                  "type": "int64"
                 },
                 {
                   "internalType": "address",
@@ -273,9 +273,9 @@
                   "type": "address"
                 },
                 {
-                  "internalType": "uint32",
+                  "internalType": "int64",
                   "name": "autoRenewPeriod",
-                  "type": "uint32"
+                  "type": "int64"
                 }
               ],
               "internalType": "struct IHederaTokenService.Expiry",
@@ -288,14 +288,14 @@
           "type": "tuple"
         },
         {
-          "internalType": "uint64",
+          "internalType": "int64",
           "name": "initialTotalSupply",
-          "type": "uint64"
+          "type": "int64"
         },
         {
-          "internalType": "uint32",
+          "internalType": "int32",
           "name": "decimals",
-          "type": "uint32"
+          "type": "int32"
         }
       ],
       "name": "createFungibleToken",
@@ -400,9 +400,9 @@
             {
               "components": [
                 {
-                  "internalType": "uint32",
+                  "internalType": "int64",
                   "name": "second",
-                  "type": "uint32"
+                  "type": "int64"
                 },
                 {
                   "internalType": "address",
@@ -410,9 +410,9 @@
                   "type": "address"
                 },
                 {
-                  "internalType": "uint32",
+                  "internalType": "int64",
                   "name": "autoRenewPeriod",
-                  "type": "uint32"
+                  "type": "int64"
                 }
               ],
               "internalType": "struct IHederaTokenService.Expiry",
@@ -425,21 +425,21 @@
           "type": "tuple"
         },
         {
-          "internalType": "uint64",
+          "internalType": "int64",
           "name": "initialTotalSupply",
-          "type": "uint64"
+          "type": "int64"
         },
         {
-          "internalType": "uint32",
+          "internalType": "int32",
           "name": "decimals",
-          "type": "uint32"
+          "type": "int32"
         },
         {
           "components": [
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "amount",
-              "type": "uint32"
+              "type": "int64"
             },
             {
               "internalType": "address",
@@ -469,24 +469,24 @@
         {
           "components": [
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "numerator",
-              "type": "uint32"
+              "type": "int64"
             },
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "denominator",
-              "type": "uint32"
+              "type": "int64"
             },
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "minimumAmount",
-              "type": "uint32"
+              "type": "int64"
             },
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "maximumAmount",
-              "type": "uint32"
+              "type": "int64"
             },
             {
               "internalType": "bool",
@@ -606,9 +606,9 @@
             {
               "components": [
                 {
-                  "internalType": "uint32",
+                  "internalType": "int64",
                   "name": "second",
-                  "type": "uint32"
+                  "type": "int64"
                 },
                 {
                   "internalType": "address",
@@ -616,9 +616,9 @@
                   "type": "address"
                 },
                 {
-                  "internalType": "uint32",
+                  "internalType": "int64",
                   "name": "autoRenewPeriod",
-                  "type": "uint32"
+                  "type": "int64"
                 }
               ],
               "internalType": "struct IHederaTokenService.Expiry",
@@ -733,9 +733,9 @@
             {
               "components": [
                 {
-                  "internalType": "uint32",
+                  "internalType": "int64",
                   "name": "second",
-                  "type": "uint32"
+                  "type": "int64"
                 },
                 {
                   "internalType": "address",
@@ -743,9 +743,9 @@
                   "type": "address"
                 },
                 {
-                  "internalType": "uint32",
+                  "internalType": "int64",
                   "name": "autoRenewPeriod",
-                  "type": "uint32"
+                  "type": "int64"
                 }
               ],
               "internalType": "struct IHederaTokenService.Expiry",
@@ -760,9 +760,9 @@
         {
           "components": [
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "amount",
-              "type": "uint32"
+              "type": "int64"
             },
             {
               "internalType": "address",
@@ -792,19 +792,19 @@
         {
           "components": [
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "numerator",
-              "type": "uint32"
+              "type": "int64"
             },
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "denominator",
-              "type": "uint32"
+              "type": "int64"
             },
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "amount",
-              "type": "uint32"
+              "type": "int64"
             },
             {
               "internalType": "address",
@@ -1170,9 +1170,9 @@
                     {
                       "components": [
                         {
-                          "internalType": "uint32",
+                          "internalType": "int64",
                           "name": "second",
-                          "type": "uint32"
+                          "type": "int64"
                         },
                         {
                           "internalType": "address",
@@ -1180,9 +1180,9 @@
                           "type": "address"
                         },
                         {
-                          "internalType": "uint32",
+                          "internalType": "int64",
                           "name": "autoRenewPeriod",
-                          "type": "uint32"
+                          "type": "int64"
                         }
                       ],
                       "internalType": "struct IHederaTokenService.Expiry",
@@ -1195,9 +1195,9 @@
                   "type": "tuple"
                 },
                 {
-                  "internalType": "uint64",
+                  "internalType": "int64",
                   "name": "totalSupply",
-                  "type": "uint64"
+                  "type": "int64"
                 },
                 {
                   "internalType": "bool",
@@ -1217,9 +1217,9 @@
                 {
                   "components": [
                     {
-                      "internalType": "uint32",
+                      "internalType": "int64",
                       "name": "amount",
-                      "type": "uint32"
+                      "type": "int64"
                     },
                     {
                       "internalType": "address",
@@ -1249,24 +1249,24 @@
                 {
                   "components": [
                     {
-                      "internalType": "uint32",
+                      "internalType": "int64",
                       "name": "numerator",
-                      "type": "uint32"
+                      "type": "int64"
                     },
                     {
-                      "internalType": "uint32",
+                      "internalType": "int64",
                       "name": "denominator",
-                      "type": "uint32"
+                      "type": "int64"
                     },
                     {
-                      "internalType": "uint32",
+                      "internalType": "int64",
                       "name": "minimumAmount",
-                      "type": "uint32"
+                      "type": "int64"
                     },
                     {
-                      "internalType": "uint32",
+                      "internalType": "int64",
                       "name": "maximumAmount",
-                      "type": "uint32"
+                      "type": "int64"
                     },
                     {
                       "internalType": "bool",
@@ -1286,19 +1286,19 @@
                 {
                   "components": [
                     {
-                      "internalType": "uint32",
+                      "internalType": "int64",
                       "name": "numerator",
-                      "type": "uint32"
+                      "type": "int64"
                     },
                     {
-                      "internalType": "uint32",
+                      "internalType": "int64",
                       "name": "denominator",
-                      "type": "uint32"
+                      "type": "int64"
                     },
                     {
-                      "internalType": "uint32",
+                      "internalType": "int64",
                       "name": "amount",
-                      "type": "uint32"
+                      "type": "int64"
                     },
                     {
                       "internalType": "address",
@@ -1331,9 +1331,9 @@
               "type": "tuple"
             },
             {
-              "internalType": "uint32",
+              "internalType": "int32",
               "name": "decimals",
-              "type": "uint32"
+              "type": "int32"
             }
           ],
           "internalType": "struct IHederaTokenService.FungibleTokenInfo",
@@ -1452,9 +1452,9 @@
                     {
                       "components": [
                         {
-                          "internalType": "uint32",
+                          "internalType": "int64",
                           "name": "second",
-                          "type": "uint32"
+                          "type": "int64"
                         },
                         {
                           "internalType": "address",
@@ -1462,9 +1462,9 @@
                           "type": "address"
                         },
                         {
-                          "internalType": "uint32",
+                          "internalType": "int64",
                           "name": "autoRenewPeriod",
-                          "type": "uint32"
+                          "type": "int64"
                         }
                       ],
                       "internalType": "struct IHederaTokenService.Expiry",
@@ -1477,9 +1477,9 @@
                   "type": "tuple"
                 },
                 {
-                  "internalType": "uint64",
+                  "internalType": "int64",
                   "name": "totalSupply",
-                  "type": "uint64"
+                  "type": "int64"
                 },
                 {
                   "internalType": "bool",
@@ -1499,9 +1499,9 @@
                 {
                   "components": [
                     {
-                      "internalType": "uint32",
+                      "internalType": "int64",
                       "name": "amount",
-                      "type": "uint32"
+                      "type": "int64"
                     },
                     {
                       "internalType": "address",
@@ -1531,24 +1531,24 @@
                 {
                   "components": [
                     {
-                      "internalType": "uint32",
+                      "internalType": "int64",
                       "name": "numerator",
-                      "type": "uint32"
+                      "type": "int64"
                     },
                     {
-                      "internalType": "uint32",
+                      "internalType": "int64",
                       "name": "denominator",
-                      "type": "uint32"
+                      "type": "int64"
                     },
                     {
-                      "internalType": "uint32",
+                      "internalType": "int64",
                       "name": "minimumAmount",
-                      "type": "uint32"
+                      "type": "int64"
                     },
                     {
-                      "internalType": "uint32",
+                      "internalType": "int64",
                       "name": "maximumAmount",
-                      "type": "uint32"
+                      "type": "int64"
                     },
                     {
                       "internalType": "bool",
@@ -1568,19 +1568,19 @@
                 {
                   "components": [
                     {
-                      "internalType": "uint32",
+                      "internalType": "int64",
                       "name": "numerator",
-                      "type": "uint32"
+                      "type": "int64"
                     },
                     {
-                      "internalType": "uint32",
+                      "internalType": "int64",
                       "name": "denominator",
-                      "type": "uint32"
+                      "type": "int64"
                     },
                     {
-                      "internalType": "uint32",
+                      "internalType": "int64",
                       "name": "amount",
-                      "type": "uint32"
+                      "type": "int64"
                     },
                     {
                       "internalType": "address",
@@ -1664,9 +1664,9 @@
         {
           "components": [
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "amount",
-              "type": "uint32"
+              "type": "int64"
             },
             {
               "internalType": "address",
@@ -1696,24 +1696,24 @@
         {
           "components": [
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "numerator",
-              "type": "uint32"
+              "type": "int64"
             },
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "denominator",
-              "type": "uint32"
+              "type": "int64"
             },
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "minimumAmount",
-              "type": "uint32"
+              "type": "int64"
             },
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "maximumAmount",
-              "type": "uint32"
+              "type": "int64"
             },
             {
               "internalType": "bool",
@@ -1733,19 +1733,19 @@
         {
           "components": [
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "numerator",
-              "type": "uint32"
+              "type": "int64"
             },
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "denominator",
-              "type": "uint32"
+              "type": "int64"
             },
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "amount",
-              "type": "uint32"
+              "type": "int64"
             },
             {
               "internalType": "address",
@@ -1837,9 +1837,9 @@
         {
           "components": [
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "second",
-              "type": "uint32"
+              "type": "int64"
             },
             {
               "internalType": "address",
@@ -1847,9 +1847,9 @@
               "type": "address"
             },
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "autoRenewPeriod",
-              "type": "uint32"
+              "type": "int64"
             }
           ],
           "internalType": "struct IHederaTokenService.Expiry",
@@ -1961,9 +1961,9 @@
                 {
                   "components": [
                     {
-                      "internalType": "uint32",
+                      "internalType": "int64",
                       "name": "second",
-                      "type": "uint32"
+                      "type": "int64"
                     },
                     {
                       "internalType": "address",
@@ -1971,9 +1971,9 @@
                       "type": "address"
                     },
                     {
-                      "internalType": "uint32",
+                      "internalType": "int64",
                       "name": "autoRenewPeriod",
-                      "type": "uint32"
+                      "type": "int64"
                     }
                   ],
                   "internalType": "struct IHederaTokenService.Expiry",
@@ -1986,9 +1986,9 @@
               "type": "tuple"
             },
             {
-              "internalType": "uint64",
+              "internalType": "int64",
               "name": "totalSupply",
-              "type": "uint64"
+              "type": "int64"
             },
             {
               "internalType": "bool",
@@ -2008,9 +2008,9 @@
             {
               "components": [
                 {
-                  "internalType": "uint32",
+                  "internalType": "int64",
                   "name": "amount",
-                  "type": "uint32"
+                  "type": "int64"
                 },
                 {
                   "internalType": "address",
@@ -2040,24 +2040,24 @@
             {
               "components": [
                 {
-                  "internalType": "uint32",
+                  "internalType": "int64",
                   "name": "numerator",
-                  "type": "uint32"
+                  "type": "int64"
                 },
                 {
-                  "internalType": "uint32",
+                  "internalType": "int64",
                   "name": "denominator",
-                  "type": "uint32"
+                  "type": "int64"
                 },
                 {
-                  "internalType": "uint32",
+                  "internalType": "int64",
                   "name": "minimumAmount",
-                  "type": "uint32"
+                  "type": "int64"
                 },
                 {
-                  "internalType": "uint32",
+                  "internalType": "int64",
                   "name": "maximumAmount",
-                  "type": "uint32"
+                  "type": "int64"
                 },
                 {
                   "internalType": "bool",
@@ -2077,19 +2077,19 @@
             {
               "components": [
                 {
-                  "internalType": "uint32",
+                  "internalType": "int64",
                   "name": "numerator",
-                  "type": "uint32"
+                  "type": "int64"
                 },
                 {
-                  "internalType": "uint32",
+                  "internalType": "int64",
                   "name": "denominator",
-                  "type": "uint32"
+                  "type": "int64"
                 },
                 {
-                  "internalType": "uint32",
+                  "internalType": "int64",
                   "name": "amount",
-                  "type": "uint32"
+                  "type": "int64"
                 },
                 {
                   "internalType": "address",
@@ -2353,9 +2353,9 @@
           "type": "address"
         },
         {
-          "internalType": "uint64",
+          "internalType": "int64",
           "name": "amount",
-          "type": "uint64"
+          "type": "int64"
         },
         {
           "internalType": "bytes[]",
@@ -2371,9 +2371,9 @@
           "type": "int64"
         },
         {
-          "internalType": "uint64",
+          "internalType": "int64",
           "name": "newTotalSupply",
-          "type": "uint64"
+          "type": "int64"
         },
         {
           "internalType": "int64[]",
@@ -2708,9 +2708,9 @@
         {
           "components": [
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "second",
-              "type": "uint32"
+              "type": "int64"
             },
             {
               "internalType": "address",
@@ -2718,9 +2718,9 @@
               "type": "address"
             },
             {
-              "internalType": "uint32",
+              "internalType": "int64",
               "name": "autoRenewPeriod",
-              "type": "uint32"
+              "type": "int64"
             }
           ],
           "internalType": "struct IHederaTokenService.Expiry",
@@ -2830,9 +2830,9 @@
             {
               "components": [
                 {
-                  "internalType": "uint32",
+                  "internalType": "int64",
                   "name": "second",
-                  "type": "uint32"
+                  "type": "int64"
                 },
                 {
                   "internalType": "address",
@@ -2840,9 +2840,9 @@
                   "type": "address"
                 },
                 {
-                  "internalType": "uint32",
+                  "internalType": "int64",
                   "name": "autoRenewPeriod",
-                  "type": "uint32"
+                  "type": "int64"
                 }
               ],
               "internalType": "struct IHederaTokenService.Expiry",
@@ -2942,9 +2942,9 @@
           "type": "address"
         },
         {
-          "internalType": "uint32",
+          "internalType": "int64",
           "name": "amount",
-          "type": "uint32"
+          "type": "int64"
         }
       ],
       "name": "wipeTokenAccount",

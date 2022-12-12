@@ -15,9 +15,9 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         string memory name,
         string memory symbol,
         string memory memo,
-        uint64 initialTotalSupply,
+        int64 initialTotalSupply,
         int64 maxSupply,
-        uint32 decimals,
+        int32 decimals,
         bool freezeDefaultStatus,
         address treasury,
         bytes memory key
