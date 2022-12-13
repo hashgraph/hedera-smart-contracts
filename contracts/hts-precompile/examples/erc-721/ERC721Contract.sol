@@ -42,8 +42,15 @@ contract ERC721Contract {
         address(IERC721(token)).delegatecall(abi.encodeWithSignature("approve(address,uint256)", to, tokenId));
     }
 
+    // The `to` address will receive approval by the contract itself
+    // Be aware that the nft must be owned by the contract, not by the msg.sender address
     function setApprovalForAll(address token, address operator, bool approved) external {
         IERC721(token).setApprovalForAll(operator, approved);
+    }
+
+    // The `to` address will receive approval by msg.sender
+    function delegateSetApprovalForAll(address token, address operator, bool approved) external {
+        address(IERC721(token)).delegatecall(abi.encodeWithSignature("setApprovalForAll(address,bool)", operator, approved));
     }
 
     function getApproved(address token, uint256 tokenId) external view returns (address) {
