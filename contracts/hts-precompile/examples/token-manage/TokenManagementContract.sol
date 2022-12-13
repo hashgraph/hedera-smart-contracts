@@ -110,7 +110,7 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
         emit UnpausedToken(true);
     }
 
-    function wipeTokenAccountPublic(address token, address account, uint32 amount) public returns (int responseCode) {
+    function wipeTokenAccountPublic(address token, address account, int64 amount) public returns (int responseCode) {
         responseCode = HederaTokenService.wipeTokenAccount(token, account, amount);
         emit ResponseCode(responseCode);
 
@@ -119,7 +119,7 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
         }
     }
 
-    function delegateWipeTokenAccountPublic(address token, address account, uint32 amount) public returns (int responseCode) {
+    function delegateWipeTokenAccountPublic(address token, address account, int64 amount) public returns (int responseCode) {
         responseCode = HederaTokenService.delegateWipeTokenAccount(token, account, amount);
         emit ResponseCode(responseCode);
 
@@ -173,7 +173,7 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
         }
     }
 
-    function burnTokenPublic(address token, uint64 amount, int64[] memory serialNumbers) external returns (int256 responseCode, uint64 newTotalSupply) {
+    function burnTokenPublic(address token, int64 amount, int64[] memory serialNumbers) external returns (int256 responseCode, int64 newTotalSupply) {
         (responseCode, newTotalSupply) = HederaTokenService.burnToken(token, amount, serialNumbers);
         emit ResponseCode(responseCode);
 
