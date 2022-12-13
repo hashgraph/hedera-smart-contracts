@@ -15,6 +15,7 @@ describe("TokenManagmentContract tests", function () {
     let nftTokenAddress;
     let mintedTokenSerialNumber;
     let signers;
+    let tokenInfoBefore;
 
     before(async function () {
         signers = await ethers.getSigners();
@@ -297,6 +298,7 @@ describe("TokenManagmentContract tests", function () {
         describe('Admin key set to ECDSA_secp256k', function() {
             before(async function () {
                 tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKeyAssociateAndTransferToAddress(tokenCreateContract, tokenCreateContract.address, utils.getSignerCompressedPublicKey());
+                tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
         
                 await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
                 await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
@@ -304,8 +306,6 @@ describe("TokenManagmentContract tests", function () {
 
             describe('Positive', function() {
                 it('should be able to change PAUSE key to contractId and pause the token with same contract', async function() {
-                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
-
                     //Update token info
                     {
                         const contractId = tokenManagmentContract.address;
@@ -341,8 +341,6 @@ describe("TokenManagmentContract tests", function () {
                 });
 
                 it('should be able to change WIPE key to contractId and wipe the token with same contract', async function() {
-                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
-
                     //Update token info
                     {
                         const contractId = tokenManagmentContract.address;
@@ -378,8 +376,6 @@ describe("TokenManagmentContract tests", function () {
                 });
                 
                 it('should be able to change FREEZE key to contractId and freeze the token with same contract', async function() {
-                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
-
                     //Update token info
                     {
                         const contractId = tokenManagmentContract.address;
@@ -415,8 +411,6 @@ describe("TokenManagmentContract tests", function () {
                 });
                 
                 it('should be able to change ADMIN key to contractId and perform admin action with same contract', async function() {
-                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
-
                     //Update token info
                     {
                         const contractId = tokenManagmentContract.address;
@@ -450,8 +444,6 @@ describe("TokenManagmentContract tests", function () {
                 });
                 
                 it('should be able to change PAUSE key to delegatecontractId and delegate pause the token with same contract', async function() {
-                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
-
                     //Update token info
                     {
                         const contractId = tokenManagmentContract.address;
@@ -487,8 +479,6 @@ describe("TokenManagmentContract tests", function () {
                 });
                                 
                 it('should be able to change WIPE key to delegatecontractId and delegate wipe the token with same contract', async function() {
-                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
-
                     //Update token info
                     {
                         const contractId = tokenManagmentContract.address;
@@ -524,8 +514,6 @@ describe("TokenManagmentContract tests", function () {
                 });
                                 
                 it('should be able to change FREEZE key to delegatecontractId and delegate freeze the token with same contract', async function() {
-                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
-
                     //Update token info
                     {
                         const contractId = tokenManagmentContract.address;
@@ -561,8 +549,6 @@ describe("TokenManagmentContract tests", function () {
                 });
                                 
                 it('should be able to change ADMIN key to delegatecontractId and perform delegate admin action with same contract', async function() {
-                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
-
                     //Update token info
                     {
                         const contractId = tokenManagmentContract.address;
@@ -631,14 +617,13 @@ describe("TokenManagmentContract tests", function () {
         describe('Admin key set to contractId', function() {
             before(async function () {
                 tokenAddress = await utils.createFungibleToken(tokenCreateContract, signers[0].address);
-        
+                tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
+
                 await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
                 await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
             });
             describe('Positive', function() {
                 it('should be able to change PAUSE key to ECDSA_secp256k and pause the token with the same account', async function() {
-                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
-
                     //Update token info
                     {
                         const key = utils.getSignerCompressedPublicKey(1);
@@ -675,8 +660,6 @@ describe("TokenManagmentContract tests", function () {
                 });
 
                 it('should be able to change WIPE key to ECDSA_secp256k and wipe the token with the same account', async function() {
-                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
-
                     //Update token info
                     {
                         const key = utils.getSignerCompressedPublicKey(1);
@@ -713,8 +696,6 @@ describe("TokenManagmentContract tests", function () {
                 });
                 
                 it('should be able to change FREEZE key to ECDSA_secp256k and freeze the token with the same account', async function() {
-                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
-
                     //Update token info
                     {
                         const key = utils.getSignerCompressedPublicKey(1);
@@ -751,8 +732,6 @@ describe("TokenManagmentContract tests", function () {
                 });
                 
                 it('should be able to change ADMIN key to ECDSA_secp256k and perform admin action with same contract', async function() {
-                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
-
                     //Update token info
                     {
                         const key = utils.getSignerCompressedPublicKey(1);
@@ -789,8 +768,6 @@ describe("TokenManagmentContract tests", function () {
                 });
                 
                 it('should be able change PAUSE key to delegatecontractId and delegate pause the token with same contract', async function() {
-                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
-
                     //Update token info
                     {
                         const contractId = tokenManagmentContract.address;
@@ -827,8 +804,6 @@ describe("TokenManagmentContract tests", function () {
                 });
                                 
                 it('should be able to change WIPE key to delegatecontractId and delegate wipe the token with same contract', async function() {
-                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
-
                     //Update token info
                     {
                         const contractId = tokenManagmentContract.address;
@@ -865,8 +840,6 @@ describe("TokenManagmentContract tests", function () {
                 });
                                 
                 it('should be able to change FREEZE key to delegatecontractId and delegate freeze the token with same contract', async function() {
-                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
-
                     //Update token info
                     {
                         const contractId = tokenManagmentContract.address;
@@ -903,8 +876,6 @@ describe("TokenManagmentContract tests", function () {
                 });
                                 
                 it('should be able to change ADMIN key to delegatecontractId and perform delegate admin action with same contract', async function() {
-                    const tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
-
                     //Update token info
                     {
                         const contractId = tokenManagmentContract.address;
