@@ -1,6 +1,7 @@
 const {expect} = require("chai");
 const {ethers} = require("hardhat");
 const utils = require('../utils');
+
 describe("TokenManagmentContract tests", function () {
 
     const TX_SUCCESS_CODE = 22;

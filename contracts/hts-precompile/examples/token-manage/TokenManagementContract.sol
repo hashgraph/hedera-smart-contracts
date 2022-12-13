@@ -141,7 +141,7 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
         (responseCode) = HederaTokenService.updateTokenInfo(token, tokenInfo);
         emit ResponseCode(responseCode);
 
-        if(responseCode != HederaResponseCodes.SUCCESS) {
+        if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
     }
@@ -150,7 +150,7 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
         (responseCode) = HederaTokenService.updateTokenExpiryInfo(token, expiryInfo);
         emit ResponseCode(responseCode);
 
-        if(responseCode != HederaResponseCodes.SUCCESS) {
+        if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
     }
@@ -159,7 +159,7 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
         (responseCode) = HederaTokenService.updateTokenKeys(token, keys);
         emit ResponseCode(responseCode);
 
-        if(responseCode != HederaResponseCodes.SUCCESS) {
+        if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
     }
@@ -168,7 +168,7 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
         (responseCode) = HederaTokenService.delegateUpdateTokenKeys(token, keys);
         emit ResponseCode(responseCode);
 
-        if(responseCode != HederaResponseCodes.SUCCESS) {
+        if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
     }

@@ -267,7 +267,7 @@ contract TokenCreateContract is HederaTokenService, ExpiryHelper, KeyHelper {
         (responseCode) = HederaTokenService.updateTokenInfo(token, tokenInfo);
         emit ResponseCode(responseCode);
 
-        if(responseCode != HederaResponseCodes.SUCCESS) {
+        if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
     }
