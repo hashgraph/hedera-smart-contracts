@@ -43,3 +43,9 @@ jobs:
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: TokenTransferContract
+
+  SafeHTS:
+    name: SafeHTS library tests
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: SafeHTS
