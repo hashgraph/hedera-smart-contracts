@@ -8,9 +8,9 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 contract Counter is OwnableUpgradeable, UUPSUpgradeable{
     string public name;
-    uint256 public dec;
-    uint256 public inc;
-    using SafeMath for uint256;
+    int256 public count;
+
+    using SafeMath for int256;
 
     function initialize(string memory _name) initializer public {
         name = _name;
@@ -19,11 +19,13 @@ contract Counter is OwnableUpgradeable, UUPSUpgradeable{
 
     function _authorizeUpgrade(address) internal override onlyOwner {}
 
-    function decrement(uint256 x) public returns (uint256) {
-        return dec = x.sub(1);
+    function decrement() public returns (int256) {
+        count--;
+        return count;
     }
     
-    function increment(uint256 x) public returns (uint256) {
-        return dec = x.add(1);
+    function increment() public returns (int256) {
+        count++;
+        return count;
     }
 }
