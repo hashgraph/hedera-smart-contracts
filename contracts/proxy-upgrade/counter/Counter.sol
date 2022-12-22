@@ -5,14 +5,13 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-
-contract Counter is OwnableUpgradeable, UUPSUpgradeable{
+contract Counter is OwnableUpgradeable, UUPSUpgradeable {
     string public name;
     int256 public count;
 
     using SafeMath for int256;
 
-    function initialize(string memory _name) initializer public {
+    function initialize(string memory _name) public initializer {
         name = _name;
         __Ownable_init();
     }
@@ -23,7 +22,7 @@ contract Counter is OwnableUpgradeable, UUPSUpgradeable{
         count--;
         return count;
     }
-    
+
     function increment() public returns (int256) {
         count++;
         return count;

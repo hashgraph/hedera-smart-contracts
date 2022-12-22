@@ -44,8 +44,14 @@ jobs:
     with:
       testfilter: TokenTransferContract
 
+  Proxy:
+    name: Proxy Upgrade Tests
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: Proxy
+
   SafeHTS:
-    name: SafeHTS library tests
+    name: SafeHTS Tests
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: SafeHTS
