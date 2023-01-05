@@ -10,11 +10,10 @@ import "../../hts-precompile/HederaResponseCodes.sol";
 
 contract Exchange is OwnableUpgradeable, UUPSUpgradeable {
     address public tokenAddress;
-    address private precompile;
+    address constant private precompile = address(0x167);
 
     function initialize(address token) public initializer {
         tokenAddress = token;
-        precompile = address(0x167);
         __Ownable_init();
     }
 

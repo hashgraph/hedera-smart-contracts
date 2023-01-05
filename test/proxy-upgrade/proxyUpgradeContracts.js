@@ -109,6 +109,40 @@ describe("Proxy Upgrade Contracts Test Suite", function () {
 
       //sell token
       {
+        const amount = "10";
+
+        const allowanceBefore = await erc20Contract.allowance(
+          tokenAddress,
+          signers[0].address,
+          proxyAddress
+        );
+        const tokenBalanceBefore = await proxyContract.getTokenBalance();
+
+        await erc20Contract.delegateApprove(
+          tokenAddress,
+          proxyAddress,
+          amount,
+          {
+            gasLimit: 1_000_000,
+          }
+        );
+        const allowanceAfter = await erc20Contract.allowance(
+          tokenAddress,
+          signers[0].address,
+          proxyAddress
+        );
+        await proxyContract.sell(amount);
+        const tokenBalanceAfter = await proxyContract.getTokenBalance();
+
+        expect(
+          allowanceAfter,
+          "Asserting that certain amount was approved to be spend"
+        ).to.be.greaterThan(allowanceBefore);
+
+        expect(
+          tokenBalanceBefore.add(amount),
+          "Asserting that certain amount was sold"
+        ).to.be.eq(tokenBalanceAfter);
       }
     });
 
@@ -171,6 +205,40 @@ describe("Proxy Upgrade Contracts Test Suite", function () {
 
       //sell token
       {
+        const amount = "10";
+
+        const allowanceBefore = await erc20Contract.allowance(
+          tokenAddress,
+          signers[0].address,
+          proxyAddress
+        );
+        const tokenBalanceBefore = await proxyContract.getTokenBalance();
+
+        await erc20Contract.delegateApprove(
+          tokenAddress,
+          proxyAddress,
+          amount,
+          {
+            gasLimit: 1_000_000,
+          }
+        );
+        const allowanceAfter = await erc20Contract.allowance(
+          tokenAddress,
+          signers[0].address,
+          proxyAddress
+        );
+        await proxyContract.sell(amount);
+        const tokenBalanceAfter = await proxyContract.getTokenBalance();
+
+        expect(
+          allowanceAfter,
+          "Asserting that certain amount was approved to be spend"
+        ).to.be.greaterThan(allowanceBefore);
+
+        expect(
+          tokenBalanceBefore.add(amount),
+          "Asserting that certain amount was sold"
+        ).to.be.eq(tokenBalanceAfter);
       }
     });
   });
