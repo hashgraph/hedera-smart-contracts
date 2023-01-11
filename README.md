@@ -1,6 +1,8 @@
 # Hedera Smart Contracts
 Reference library for Smart Contracts utilized by the Hedera network with supporting files and examples.
 
+Please checkout `v0.2.0` if you want to use the interface currently implemented in the Mainnet.
+
 ## Overview
 The Hedera network utilizes system contracts at a reserved contract address on the EVM to surface HAPI service functionality through EVM processed transactions.
 These system contracts are precompiled smart contracts whose function selectors are mapped to defined network logic.
