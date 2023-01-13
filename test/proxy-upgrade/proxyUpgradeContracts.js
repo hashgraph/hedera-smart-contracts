@@ -146,6 +146,17 @@ describe("Proxy Upgrade Contracts Test Suite", function () {
       }
     });
 
+    it("should not be able to get version", async function () {
+      try {
+        await proxyContract.version();
+      } catch (e) {
+        expect(e).to.exist;
+        expect(e.toString()).to.contain(
+          "proxyContract.version is not a function"
+        );
+      }
+    });
+
     it("should upgrade contract to V2", async function () {
       const addressV1 = await proxyContract.getImplementationAddress();
 
@@ -298,6 +309,17 @@ describe("Proxy Upgrade Contracts Test Suite", function () {
           counterAfter,
           "Asserting counter decrement"
         ).to.be.lessThanOrEqual(counterBefore);
+      }
+    });
+
+    it("should not be able to change name", async function () {
+      try {
+        await proxyContract.changeName("CounterV1");
+      } catch (e) {
+        expect(e).to.exist;
+        expect(e.toString()).to.contain(
+          "proxyContract.changeName is not a function"
+        );
       }
     });
 
