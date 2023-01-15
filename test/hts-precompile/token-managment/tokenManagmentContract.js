@@ -324,6 +324,8 @@ describe("TokenManagmentContract tests", function () {
                         const pauseTokenTx = await tokenManagmentContract.connect(signers[1]).pauseTokenPublic(tokenAddress);
                         const unpauseTokenTx = await tokenManagmentContract.connect(signers[1]).unpauseTokenPublic(tokenAddress);
 
+                        expect((await pauseTokenTx.wait()).events.filter(e => e.event === 'PausedToken')[0].args.paused).to.eq(true);
+                        expect((await unpauseTokenTx.wait()).events.filter(e => e.event === 'UnpausedToken')[0].args.unpaused).to.eq(true);
                         expect((await pauseTokenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                         expect((await unpauseTokenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                     }
@@ -358,8 +360,12 @@ describe("TokenManagmentContract tests", function () {
                     {
                         const wipeAmount = 3
                         await tokenTransferContract.transferTokensPublic(tokenAddress, [signers[0].address, signers[1].address], [-wipeAmount, wipeAmount]);
+                        const balanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
 
                         const tx = await tokenManagmentContract.connect(signers[1]).wipeTokenAccountPublic(tokenAddress, signers[1].address, wipeAmount);
+                        const balanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
+
+                        expect(balanceAfter).to.eq(balanceBefore.sub(wipeAmount));
                         expect((await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                     }
 
@@ -392,7 +398,13 @@ describe("TokenManagmentContract tests", function () {
                     //Freeze and unfreeze token
                     {
                         const freezeTx = await tokenManagmentContract.connect(signers[1]).freezeTokenPublic(tokenAddress, tokenCreateContract.address);
+                        const isFrozenTxBefore = await tokenQueryContract.isFrozenPublic(tokenAddress, tokenCreateContract.address);
+
                         const unfreezeTx = await tokenManagmentContract.connect(signers[1]).unfreezeTokenPublic(tokenAddress, tokenCreateContract.address);
+                        const isFrozenTxAfter = await tokenQueryContract.isFrozenPublic(tokenAddress, tokenCreateContract.address);
+
+                        expect((await isFrozenTxBefore.wait()).events.filter(e => e.event === 'Frozen')[0].args.frozen).to.eq(true);
+                        expect((await isFrozenTxAfter.wait()).events.filter(e => e.event === 'Frozen')[0].args.frozen).to.eq(false);
 
                         expect((await freezeTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                         expect((await unfreezeTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
@@ -427,7 +439,16 @@ describe("TokenManagmentContract tests", function () {
                     //Change supply key with admin contract
                     {
                         const updatedKey = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, tokenTransferContract.address);
+
+                        const keyTxBefore = await tokenQueryContract.getTokenKeyPublic(tokenAddress, utils.KeyType.SUPPLY);
+                        const keyBefore = (await keyTxBefore.wait()).events.filter(e => e.event === 'TokenKey')[0].args.key;
+
                         const updateTokenKeyTx = await tokenManagmentContract.connect(signers[1]).updateTokenKeysPublic(tokenAddress, [[ utils.KeyType.SUPPLY, updatedKey]]);
+                        
+                        const keyTxAfter = await tokenQueryContract.getTokenKeyPublic(tokenAddress, utils.KeyType.SUPPLY);
+                        const keyAfter = (await keyTxAfter.wait()).events.filter(e => e.event === 'TokenKey')[0].args.key;
+
+                        expect(keyBefore[1]).to.not.eq(keyAfter[1]);
                         expect((await updateTokenKeyTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                     }
 
@@ -462,6 +483,8 @@ describe("TokenManagmentContract tests", function () {
                         const pauseTokenTx = await tokenManagmentContract.connect(signers[1]).delegatePauseTokenPublic(tokenAddress);
                         const unpauseTokenTx = await tokenManagmentContract.connect(signers[1]).delegateUnpauseTokenPublic(tokenAddress);
 
+                        expect((await pauseTokenTx.wait()).events.filter(e => e.event === 'PausedToken')[0].args.paused).to.eq(true);
+                        expect((await unpauseTokenTx.wait()).events.filter(e => e.event === 'UnpausedToken')[0].args.unpaused).to.eq(true);
                         expect((await pauseTokenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                         expect((await unpauseTokenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                     }
@@ -497,7 +520,11 @@ describe("TokenManagmentContract tests", function () {
                         const wipeAmount = 3
                         await tokenTransferContract.transferTokensPublic(tokenAddress, [signers[0].address, signers[1].address], [-wipeAmount, wipeAmount]);
 
+                        const balanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
                         const tx = await tokenManagmentContract.connect(signers[1]).delegateWipeTokenAccountPublic(tokenAddress, signers[1].address, wipeAmount);
+                        const balanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
+                        
+                        expect(balanceAfter).to.eq(balanceBefore.sub(wipeAmount));
                         expect((await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                     }
 
@@ -530,8 +557,14 @@ describe("TokenManagmentContract tests", function () {
                     //Freeze and unpfreeze token with delegate call
                     {
                         const freezeTx = await tokenManagmentContract.connect(signers[1]).delegateFreezeTokenPublic(tokenAddress, tokenCreateContract.address);
-                        const unfreezeTx = await tokenManagmentContract.connect(signers[1]).delegateUnfreezeTokenPublic(tokenAddress, tokenCreateContract.address);
+                        const isFrozenTxBefore = await tokenQueryContract.isFrozenPublic(tokenAddress, tokenCreateContract.address);
 
+                        const unfreezeTx = await tokenManagmentContract.connect(signers[1]).delegateUnfreezeTokenPublic(tokenAddress, tokenCreateContract.address);
+                        const isFrozenTxAfter = await tokenQueryContract.isFrozenPublic(tokenAddress, tokenCreateContract.address);
+                        
+                        expect((await isFrozenTxBefore.wait()).events.filter(e => e.event === 'Frozen')[0].args.frozen).to.eq(true);
+                        expect((await isFrozenTxAfter.wait()).events.filter(e => e.event === 'Frozen')[0].args.frozen).to.eq(false);
+                        
                         expect((await freezeTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                         expect((await unfreezeTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                     }
@@ -564,8 +597,17 @@ describe("TokenManagmentContract tests", function () {
 
                     //Change supply key using admin contract with delegatecall
                     {
-                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, tokenTransferContract.address);
+                        const keyTxBefore = await tokenQueryContract.getTokenKeyPublic(tokenAddress, utils.KeyType.SUPPLY);
+                        const keyBefore = (await keyTxBefore.wait()).events.filter(e => e.event === 'TokenKey')[0].args.key;
+
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, tokenQueryContract.address);
                         const updateTokenKeyTx = await tokenManagmentContract.connect(signers[1]).delegateUpdateTokenKeysPublic(tokenAddress, [[ utils.KeyType.SUPPLY, updatedKey]]);
+                                                
+                        const keyTxAfter = await tokenQueryContract.getTokenKeyPublic(tokenAddress, utils.KeyType.SUPPLY);
+                        const keyAfter = (await keyTxAfter.wait()).events.filter(e => e.event === 'TokenKey')[0].args.key;
+
+                        expect(keyBefore[1]).to.not.eq(keyAfter[1]);
+
                         expect((await updateTokenKeyTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                     }
 
@@ -642,6 +684,8 @@ describe("TokenManagmentContract tests", function () {
                         const pauseTokenTx = await tokenManagmentContract.connect(signers[1]).pauseTokenPublic(tokenAddress);
                         const unpauseTokenTx = await tokenManagmentContract.connect(signers[1]).unpauseTokenPublic(tokenAddress);
 
+                        expect((await pauseTokenTx.wait()).events.filter(e => e.event === 'PausedToken')[0].args.paused).to.eq(true);
+                        expect((await unpauseTokenTx.wait()).events.filter(e => e.event === 'UnpausedToken')[0].args.unpaused).to.eq(true);
                         expect((await pauseTokenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                         expect((await unpauseTokenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                     }
@@ -678,7 +722,12 @@ describe("TokenManagmentContract tests", function () {
                         const wipeAmount = 3
                         await tokenTransferContract.transferTokensPublic(tokenAddress, [signers[0].address, signers[1].address], [-wipeAmount, wipeAmount]);
 
+                        const balanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
+
                         const tx = await tokenManagmentContract.connect(signers[1]).wipeTokenAccountPublic(tokenAddress, signers[1].address, wipeAmount);
+                        const balanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
+                        
+                        expect(balanceAfter).to.eq(balanceBefore.sub(wipeAmount));
                         expect((await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                     }
 
@@ -712,7 +761,13 @@ describe("TokenManagmentContract tests", function () {
                     //Freeze and unfreeze token
                     {
                         const freezeTx = await tokenManagmentContract.connect(signers[1]).freezeTokenPublic(tokenAddress, tokenCreateContract.address);
+                        const isFrozenTxBefore = await tokenQueryContract.isFrozenPublic(tokenAddress, tokenCreateContract.address);
+
                         const unfreezeTx = await tokenManagmentContract.connect(signers[1]).unfreezeTokenPublic(tokenAddress, tokenCreateContract.address);
+                        const isFrozenTxAfter = await tokenQueryContract.isFrozenPublic(tokenAddress, tokenCreateContract.address);
+                        
+                        expect((await isFrozenTxBefore.wait()).events.filter(e => e.event === 'Frozen')[0].args.frozen).to.eq(true);
+                        expect((await isFrozenTxAfter.wait()).events.filter(e => e.event === 'Frozen')[0].args.frozen).to.eq(false);
 
                         expect((await freezeTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                         expect((await unfreezeTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
@@ -734,7 +789,7 @@ describe("TokenManagmentContract tests", function () {
                 it('should be able to change ADMIN key to ECDSA_secp256k and perform admin action with same contract', async function() {
                     //Update token info
                     {
-                        const key = utils.getSignerCompressedPublicKey(1);
+                        const key = utils.getSignerCompressedPublicKey();
                         const updatedKey = updateTokenInfoValues(utils.KeyValueType.SECP256K1, key);
     
                         const token = {
@@ -747,8 +802,15 @@ describe("TokenManagmentContract tests", function () {
 
                     //Change supply key with admin contract
                     {
+                        const keyTxBefore = await tokenQueryContract.getTokenKeyPublic(tokenAddress, utils.KeyType.SUPPLY);
+                        const keyBefore = (await keyTxBefore.wait()).events.filter(e => e.event === 'TokenKey')[0].args.key;
+                        
                         const updatedKey = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, tokenTransferContract.address);
-                        const updateTokenKeyTx = await tokenManagmentContract.connect(signers[1]).updateTokenKeysPublic(tokenAddress, [[ utils.KeyType.SUPPLY, updatedKey]]);
+                        const updateTokenKeyTx = await tokenManagmentContract.connect(signers[0]).updateTokenKeysPublic(tokenAddress, [[ utils.KeyType.SUPPLY, updatedKey]]);
+                        const keyTxAfter = await tokenQueryContract.getTokenKeyPublic(tokenAddress, utils.KeyType.SUPPLY);
+                        const keyAfter = (await keyTxAfter.wait()).events.filter(e => e.event === 'TokenKey')[0].args.key;
+
+                        expect(keyBefore[1]).to.not.eq(keyAfter[1]);
                         expect((await updateTokenKeyTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                     }
 
@@ -762,7 +824,7 @@ describe("TokenManagmentContract tests", function () {
                         };
                         tokenAfter.treasury = signers[0].address;
 
-                        const txUpdate = await tokenManagmentContract.connect(signers[1]).updateTokenInfoPublic(tokenAddress, tokenAfter);
+                        const txUpdate = await tokenManagmentContract.connect(signers[0]).updateTokenInfoPublic(tokenAddress, tokenAfter);
                         expect((await txUpdate.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.be.equal(TX_SUCCESS_CODE);
                     }
                 });
@@ -786,6 +848,8 @@ describe("TokenManagmentContract tests", function () {
                         const pauseTokenTx = await tokenManagmentContract.connect(signers[1]).delegatePauseTokenPublic(tokenAddress);
                         const unpauseTokenTx = await tokenManagmentContract.connect(signers[1]).delegateUnpauseTokenPublic(tokenAddress);
 
+                        expect((await pauseTokenTx.wait()).events.filter(e => e.event === 'PausedToken')[0].args.paused).to.eq(true);
+                        expect((await unpauseTokenTx.wait()).events.filter(e => e.event === 'UnpausedToken')[0].args.unpaused).to.eq(true);
                         expect((await pauseTokenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                         expect((await unpauseTokenTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                     }
@@ -822,7 +886,12 @@ describe("TokenManagmentContract tests", function () {
                         const wipeAmount = 3
                         await tokenTransferContract.transferTokensPublic(tokenAddress, [signers[0].address, signers[1].address], [-wipeAmount, wipeAmount]);
 
+                        const balanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
+
                         const tx = await tokenManagmentContract.connect(signers[1]).delegateWipeTokenAccountPublic(tokenAddress, signers[1].address, wipeAmount);
+                        const balanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
+                        
+                        expect(balanceAfter).to.eq(balanceBefore.sub(wipeAmount));
                         expect((await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                     }
 
@@ -856,7 +925,13 @@ describe("TokenManagmentContract tests", function () {
                     //Freeze and unpfreeze token with delegate call
                     {
                         const freezeTx = await tokenManagmentContract.connect(signers[1]).delegateFreezeTokenPublic(tokenAddress, tokenCreateContract.address);
+                        const isFrozenTxBefore = await tokenQueryContract.isFrozenPublic(tokenAddress, tokenCreateContract.address);
+
                         const unfreezeTx = await tokenManagmentContract.connect(signers[1]).delegateUnfreezeTokenPublic(tokenAddress, tokenCreateContract.address);
+                        const isFrozenTxAfter = await tokenQueryContract.isFrozenPublic(tokenAddress, tokenCreateContract.address);
+                        
+                        expect((await isFrozenTxBefore.wait()).events.filter(e => e.event === 'Frozen')[0].args.frozen).to.eq(true);
+                        expect((await isFrozenTxAfter.wait()).events.filter(e => e.event === 'Frozen')[0].args.frozen).to.eq(false);
 
                         expect((await freezeTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                         expect((await unfreezeTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
@@ -891,8 +966,15 @@ describe("TokenManagmentContract tests", function () {
 
                     //Change supply key using admin contract with delegatecall
                     {
-                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, tokenTransferContract.address);
-                        const updateTokenKeyTx = await tokenManagmentContract.connect(signers[1]).delegateUpdateTokenKeysPublic(tokenAddress, [[ utils.KeyType.SUPPLY, updatedKey]]);
+                        const keyTxBefore = await tokenQueryContract.getTokenKeyPublic(tokenAddress, utils.KeyType.SUPPLY);
+                        const keyBefore = (await keyTxBefore.wait()).events.filter(e => e.event === 'TokenKey')[0].args.key;
+
+                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, tokenQueryContract.address);
+                        const updateTokenKeyTx = await tokenManagmentContract.connect(signers[0]).delegateUpdateTokenKeysPublic(tokenAddress, [[ utils.KeyType.SUPPLY, updatedKey]]);
+                        const keyTxAfter = await tokenQueryContract.getTokenKeyPublic(tokenAddress, utils.KeyType.SUPPLY);
+                        const keyAfter = (await keyTxAfter.wait()).events.filter(e => e.event === 'TokenKey')[0].args.key;
+
+                        expect(keyBefore[1]).to.not.eq(keyAfter[1]);
                         expect((await updateTokenKeyTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                     }
 
@@ -906,7 +988,7 @@ describe("TokenManagmentContract tests", function () {
                         };
                         tokenAfter.treasury = signers[0].address;
 
-                        const txUpdate = await tokenManagmentContract.connect(signers[1]).updateTokenInfoPublic(tokenAddress, tokenAfter);
+                        const txUpdate = await tokenManagmentContract.connect(signers[0]).updateTokenInfoPublic(tokenAddress, tokenAfter);
                         expect((await txUpdate.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.be.equal(TX_SUCCESS_CODE);
                     }
                 });
