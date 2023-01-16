@@ -86,6 +86,35 @@ contract TokenCreateContract is HederaTokenService, ExpiryHelper, KeyHelper {
         HederaTokenService.transferToken(tokenAddress, address(this), msg.sender, amount);
     }
 
+    function createFungibleTokenWithSECP256K1AdminKeyWithoutKYCPublic(
+        address treasury, bytes memory adminKey
+    ) public payable returns (address) {
+        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](4);
+        keys[0] = getSingleKey(KeyType.ADMIN, KeyType.PAUSE, KeyValueType.SECP256K1, adminKey);
+        keys[1] = getSingleKey(KeyType.FREEZE, KeyValueType.SECP256K1, adminKey);
+        keys[2] = getSingleKey(KeyType.SUPPLY, KeyValueType.SECP256K1, adminKey);
+        keys[3] = getSingleKey(KeyType.WIPE, KeyValueType.SECP256K1, adminKey);
+
+        IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
+            0, treasury, 8000000
+        );
+
+        IHederaTokenService.HederaToken memory token = IHederaTokenService.HederaToken(
+            name, symbol, treasury, memo, true, maxSupply, freezeDefaultStatus, keys, expiry
+        );
+
+        (int responseCode, address tokenAddress) =
+        HederaTokenService.createFungibleToken(token, initialTotalSupply, decimals);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+
+        emit CreatedToken(tokenAddress);
+
+        return tokenAddress;
+    }
+
     function createFungibleTokenWithCustomFeesPublic(
         address treasury,
         address fixedFeeTokenAddress
@@ -155,6 +184,33 @@ contract TokenCreateContract is HederaTokenService, ExpiryHelper, KeyHelper {
         keys[2] = getSingleKey(KeyType.FREEZE, KeyValueType.SECP256K1, adminKey);
         keys[3] = getSingleKey(KeyType.SUPPLY, KeyValueType.SECP256K1, adminKey);
         keys[4] = getSingleKey(KeyType.WIPE, KeyValueType.SECP256K1, adminKey);
+
+        IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
+            0, treasury, 8000000
+        );
+
+        IHederaTokenService.HederaToken memory token = IHederaTokenService.HederaToken(
+            name, symbol, treasury, memo, true, maxSupply, freezeDefaultStatus, keys, expiry
+        );
+
+        (int responseCode, address tokenAddress) =
+        HederaTokenService.createNonFungibleToken(token);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+
+        emit CreatedToken(tokenAddress);
+    }
+
+    function createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYCPublic(
+        address treasury, bytes memory adminKey
+    ) public payable {
+        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](4);
+        keys[0] = getSingleKey(KeyType.ADMIN, KeyType.PAUSE, KeyValueType.SECP256K1, adminKey);
+        keys[1] = getSingleKey(KeyType.FREEZE, KeyValueType.SECP256K1, adminKey);
+        keys[2] = getSingleKey(KeyType.SUPPLY, KeyValueType.SECP256K1, adminKey);
+        keys[3] = getSingleKey(KeyType.WIPE, KeyValueType.SECP256K1, adminKey);
 
         IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
             0, treasury, 8000000
