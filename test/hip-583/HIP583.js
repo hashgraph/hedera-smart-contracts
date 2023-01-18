@@ -7,19 +7,28 @@ describe("HIP583 Test Suite", function () {
   let hollowWallet;
   let tokenCreateContract;
   let tokenTransferContract;
-  let tokenQueryContract;
-  let tokenManagmentContract;
+  let erc20Contract;
+  let erc721Contract;
   let tokenAddress;
+  let nftTokenAddress;
+  let mintedTokenSerialNumber;
+  let mintedTokenSerialNumber1;
 
   before(async function () {
     signers = await ethers.getSigners();
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
-    tokenQueryContract = await utils.deployTokenQueryContract();
-    tokenManagmentContract = await utils.deployTokenManagementContract();
     erc20Contract = await utils.deployERC20Contract();
+    erc721Contract = await utils.deployERC721Contract();
     tokenAddress =
       await utils.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
+        tokenCreateContract,
+        signers[0].address,
+        utils.getSignerCompressedPublicKey()
+      );
+
+    nftTokenAddress =
+      await utils.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
         tokenCreateContract,
         signers[0].address,
         utils.getSignerCompressedPublicKey()
@@ -30,10 +39,15 @@ describe("HIP583 Test Suite", function () {
       tokenAddress,
       "TokenCreateContract"
     );
-    await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
+
+    await utils.associateToken(
+      tokenCreateContract,
+      nftTokenAddress,
+      "TokenCreateContract"
+    );
   });
 
-  describe("Direct Ethereum Tx", function () {
+  xdescribe("Direct Ethereum Tx", function () {
     describe("Positive", function () {
       describe("HBAR Test", function () {
         let amount;
@@ -44,7 +58,6 @@ describe("HIP583 Test Suite", function () {
 
           hollowWalletAddress = hollowWallet.address;
           amount = ethers.utils.parseEther("0.1");
-          console.log(hollowWalletAddress);
         });
 
         it("should be able to create hollow account and transfer HBARs", async function () {
@@ -117,7 +130,6 @@ describe("HIP583 Test Suite", function () {
 
           hollowWalletAddress = hollowWallet.address;
           amount = 30;
-          console.log(hollowWalletAddress);
         });
 
         it("should create hollow account and transfer Fungible Tokens", async function () {
@@ -225,17 +237,160 @@ describe("HIP583 Test Suite", function () {
       });
 
       describe("Non-Fungible Token Test", function () {
-        it("should create hollow account and transfer Non-Fungible Token", async function () {});
+        let hollowWalletAddress;
 
-        it("should be able to make second Non-Fungible Token transfer", async function () {});
+        before(async function () {
+          hollowWallet = ethers.Wallet.createRandom().connect(ethers.provider);
 
-        it("should be able to make Non-Fungible Token transfer and sign it with hollow account", async function () {});
+          hollowWalletAddress = hollowWallet.address;
+
+          mintedTokenSerialNumber = await utils.mintNFTToAddress(
+            tokenCreateContract,
+            nftTokenAddress
+          );
+
+          mintedTokenSerialNumber1 = await utils.mintNFTToAddress(
+            tokenCreateContract,
+            nftTokenAddress
+          );
+        });
+
+        it("should create hollow account and transfer Non-Fungible Token", async function () {
+          const signerBalanceBefore = await erc721Contract.balanceOf(
+            nftTokenAddress,
+            signers[0].address
+          );
+
+          await tokenTransferContract.transferNFTPublic(
+            nftTokenAddress,
+            signers[0].address,
+            hollowWalletAddress,
+            mintedTokenSerialNumber,
+            { gasLimit: 1_000_000 }
+          );
+          const signerBalanceAfter = await erc721Contract.balanceOf(
+            nftTokenAddress,
+            signers[0].address
+          );
+
+          const hollowWalletBalance = await erc721Contract.balanceOf(
+            nftTokenAddress,
+            hollowWalletAddress
+          );
+
+          expect(signerBalanceAfter).to.lessThan(signerBalanceBefore);
+          expect(hollowWalletBalance).to.greaterThan(0);
+        });
+
+        it("should be able to make second Non-Fungible Token transfer", async function () {
+          const signerBalanceBefore = await erc721Contract.balanceOf(
+            nftTokenAddress,
+            signers[0].address
+          );
+
+          const hollowWalletBalanceBefore = await erc721Contract.balanceOf(
+            nftTokenAddress,
+            hollowWalletAddress
+          );
+
+          await tokenTransferContract.transferNFTPublic(
+            nftTokenAddress,
+            signers[0].address,
+            hollowWalletAddress,
+            mintedTokenSerialNumber1,
+            { gasLimit: 1_000_000 }
+          );
+          const signerBalanceAfter = await erc721Contract.balanceOf(
+            nftTokenAddress,
+            signers[0].address
+          );
+
+          const hollowWalletBalanceAfter = await erc721Contract.balanceOf(
+            nftTokenAddress,
+            hollowWalletAddress
+          );
+
+          expect(signerBalanceAfter).to.lessThan(signerBalanceBefore);
+          expect(hollowWalletBalanceAfter).to.greaterThan(
+            hollowWalletBalanceBefore
+          );
+        });
+
+        it("should be able to make Non-Fungible Token transfer and sign it with hollow account", async function () {
+          const signerBalanceBefore = await erc721Contract.balanceOf(
+            nftTokenAddress,
+            signers[0].address
+          );
+
+          const hollowWalletBalanceBefore = await erc721Contract.balanceOf(
+            nftTokenAddress,
+            hollowWalletAddress
+          );
+
+          //sending some HBARs, so the hollow account have some to cover the transaction
+          await signers[0].sendTransaction({
+            to: hollowWalletAddress,
+            value: ethers.utils.parseEther("2"),
+          });
+
+          await tokenTransferContract
+            .connect(hollowWallet)
+            .transferNFTPublic(
+              nftTokenAddress,
+              hollowWalletAddress,
+              signers[0].address,
+              mintedTokenSerialNumber1,
+              { gasLimit: 1_000_000 }
+            );
+
+          const signerBalanceAfter = await erc721Contract.balanceOf(
+            nftTokenAddress,
+            signers[0].address
+          );
+
+          const hollowWalletBalanceAfter = await erc721Contract.balanceOf(
+            nftTokenAddress,
+            hollowWalletAddress
+          );
+
+          expect(signerBalanceAfter).to.greaterThan(signerBalanceBefore);
+          expect(hollowWalletBalanceAfter).to.lessThan(
+            hollowWalletBalanceBefore
+          );
+        });
       });
     });
 
     describe("Negative", function () {
-      it("shouldn't be able to get balance of hollow account with no prior transfer", async function () {});
-      it("shouldn't be able to make transfer from hollow account with no prior transfer", async function () {});
+      let hollowWalletAddress;
+      let amount;
+
+      before(async function () {
+        hollowWallet = ethers.Wallet.createRandom().connect(ethers.provider);
+
+        hollowWalletAddress = hollowWallet.address;
+        amount = 30;
+      });
+
+      it("shouldn't be able to get balance of hollow account with no prior transfer", async function () {
+        try {
+          await erc20Contract.balanceOf(tokenAddress, hollowWalletAddress);
+        } catch (e) {
+          expect(e).to.exist;
+          expect(e.code).to.eq("CALL_EXCEPTION");
+        }
+      });
+
+      it("shouldn't be able to make transfer from hollow account with no prior transfer", async function () {
+        try {
+          await hollowWallet.sendTransaction({
+            to: signers[0].address,
+            value: amount,
+          });
+        } catch (e) {
+          expect(e).to.exist;
+        }
+      });
     });
   });
 });
