@@ -9,9 +9,9 @@ on:
 
 env:
   RELAY_IMAGE_TAG: main
-  NETWORK_NODE_IMAGE_TAG: 0.33.2
-  HAVEGED_IMAGE_TAG: 0.33.2
-  MIRROR_IMAGE_TAG: 0.72.0-rc1
+  NETWORK_NODE_IMAGE_TAG: 0.34.1
+  HAVEGED_IMAGE_TAG: 0.34.1
+  MIRROR_IMAGE_TAG: 0.74.0-SNAPSHOT
 
 jobs:
   acceptance-workflow:
@@ -36,11 +36,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Docker Compose
-        run: |
-          sudo curl -SL -o /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
-          sudo chmod +x /usr/local/bin/docker-compose
-
       - name: Start the local node
         run: npx hedera start -d --network local
 
@@ -48,7 +43,7 @@ jobs:
         uses: nick-fields/retry@v2
         with:
           max_attempts: 3
-          timeout_minutes: 10
+          timeout_minutes: 16
           retry_wait_seconds: 60
           command: npx hardhat test --grep ${{ inputs.testfilter }}
 
