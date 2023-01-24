@@ -19,4 +19,19 @@ contract Multicaller {
 
         return results;
     }
+
+    function multiDelegateCall(
+        address[] calldata targets,
+        bytes[] memory data
+    ) external payable returns (bytes[] memory results) {
+        results = new bytes[](data.length);
+        for (uint i; i < targets.length; i++) {
+            (bool success, bytes memory result) = targets[i].delegatecall(data[i]);
+            require(success, "call failed");
+            results[i] = result;
+        }
+    }
+
+    receive() external payable {}
+    fallback() external payable {}
 }
