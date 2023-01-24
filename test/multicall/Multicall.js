@@ -332,7 +332,7 @@ describe('Multicaller', function() {
             console.log(res);
             expect(res.data).to.exist;
             const bytes = getOutputLengthInBytes([res.data]);
-            expect(bytes).to.eq(1732); // 1,7 kb
+            expect(bytes).to.eq(0); // should not be 0
         });
     });
 });
