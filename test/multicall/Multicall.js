@@ -24,7 +24,7 @@ const {solidityPack} = require("ethers/lib/utils");
 const {defaultAbiCoder} = require("@ethersproject/abi");
 
 
-describe('Multicaller', function() {
+describe('Multicaller', function () {
 
     let multicaller, receiver, reverter;
     const REVERT_REASON_DATA = '0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000b63616c6c206661696c6564000000000000000000000000000000000000000000';
@@ -46,7 +46,7 @@ describe('Multicaller', function() {
             ["bytes4", "bytes"],
             [
                 receiver.interface.getSighash(`${method}((uint256,uint256,uint256,uint256))`),
-                defaultAbiCoder.encode(["uint256","uint256","uint256","uint256"], [a, b, c, d]),
+                defaultAbiCoder.encode(["uint256", "uint256", "uint256", "uint256"], [a, b, c, d]),
             ]
         );
     }
@@ -100,7 +100,7 @@ describe('Multicaller', function() {
             addresses.push(receiver.address);
         }
 
-        return await multicaller.callStatic.multiCall(addresses, data, {
+        return multicaller.callStatic.multiCall(addresses, data, {
             gasLimit: 15_000_000
         });
     }
@@ -113,7 +113,7 @@ describe('Multicaller', function() {
             addresses.push(receiver.address);
         }
 
-        return await multicaller.multiDelegateCall(addresses, data, {
+        return multicaller.multiDelegateCall(addresses, data, {
             gasLimit: 15_000_000,
             value: 10000000000000
         });
@@ -146,8 +146,8 @@ describe('Multicaller', function() {
         reverter = await deployContract('Reverter');
     });
 
-    describe('static calls with large input', async function() {
-        it('should be able to make processLongInput calls with length 10', async function() {
+    describe('static calls with large input', async function () {
+        it('should be able to make processLongInput calls with length 10', async function () {
             const n = 10;
             const {addresses, data} = prepareLongInputData(n, 'processLongInput');
 
@@ -162,7 +162,7 @@ describe('Multicaller', function() {
             }
         });
 
-        it('should be able to make processLongInput calls with length 1000', async function() {
+        it('should be able to make processLongInput calls with length 1000', async function () {
             const n = 1000;
             const {addresses, data} = prepareLongInputData(n, 'processLongInput');
 
@@ -177,7 +177,7 @@ describe('Multicaller', function() {
             }
         });
 
-        it('should NOT be able to make processLongInput calls with length 5000 (input size > 1mb)', async function() {
+        it('should NOT be able to make processLongInput calls with length 5000 (input size > 1mb)', async function () {
             const n = 5000;
             const {addresses, data} = prepareLongInputData(n, 'processLongInput');
 
@@ -187,8 +187,7 @@ describe('Multicaller', function() {
 
             try {
                 const res = await multicallProcessLongInput(addresses, data);
-            }
-            catch(e) {
+            } catch (e) {
                 hasError = true;
             }
 
@@ -196,13 +195,12 @@ describe('Multicaller', function() {
         });
 
 
-        it('should be able to make processLongInput calls with length 10 and the last call reverts', async function() {
+        it('should be able to make processLongInput calls with length 10 and the last call reverts', async function () {
             let hasError = false;
             try {
                 const {addresses, data} = prepareLongInputData(10, 'processLongInput', true);
                 const res = await multicallProcessLongInput(addresses, data);
-            }
-            catch(e) {
+            } catch (e) {
                 hasError = true;
                 expect(e.data).to.exist;
                 expect(e.data).to.eq(REVERT_REASON_DATA);
@@ -212,8 +210,8 @@ describe('Multicaller', function() {
         });
     })
 
-    describe('static calls with large output', async function() {
-        it('should be able to make processLongOutput calls with length 13 kb', async function() {
+    describe('static calls with large output', async function () {
+        it('should be able to make processLongOutput calls with length 13 kb', async function () {
             const n = 10;
             const res = await multicallProcessLongOutput(n);
             expect(res).to.exist;
@@ -222,7 +220,7 @@ describe('Multicaller', function() {
             expect(bytes).to.eq(13440); // 13 kb
         });
 
-        it('should be able to make processLongOutput calls with size 630 kb', async function() {
+        it('should be able to make processLongOutput calls with size 630 kb', async function () {
             const n = 70;
             const res = await multicallProcessLongOutput(n);
             expect(res).to.exist;
@@ -231,7 +229,7 @@ describe('Multicaller', function() {
             expect(bytes).to.eq(631680); // 631 kb
         });
 
-        it('should be able to make processLongOutput calls with size 1 mb', async function() {
+        it('should be able to make processLongOutput calls with size 1 mb', async function () {
             const n = 90;
             const res = await multicallProcessLongOutput(n);
             expect(res).to.exist;
@@ -240,13 +238,12 @@ describe('Multicaller', function() {
             expect(bytes).to.eq(1042560); // 1 mb
         });
 
-        it('should NOT be able to make processLongOutput calls with size larger than 1 mb', async function() {
+        it('should NOT be able to make processLongOutput calls with size larger than 1 mb', async function () {
             const n = 100;
             let hasError = false;
             try {
                 const res = await multicallProcessLongOutput(n);
-            }
-            catch (e) {
+            } catch (e) {
                 hasError = true;
                 expect(e).to.exist;
                 expect(e.message).to.exist;
@@ -257,10 +254,10 @@ describe('Multicaller', function() {
         });
     });
 
-    describe('payable calls with large input', async function() {
+    describe('payable calls with large input', async function () {
         const overrides = {value: 10000000000000};
 
-        it('should be able to make processLongInputTx calls with length 10', async function() {
+        it('should be able to make processLongInputTx calls with length 10', async function () {
             const n = 10;
             const {addresses, data} = prepareLongInputData(n, 'processLongInputTx');
 
@@ -274,7 +271,7 @@ describe('Multicaller', function() {
             expect(receipt.status).to.eq(1);
         });
 
-        it('should be able to make processLongInputTx calls with length 167', async function() {
+        it('should be able to make processLongInputTx calls with length 167', async function () {
             const n = 167;
             const {addresses, data} = prepareLongInputData(n, 'processLongInputTx');
 
@@ -288,7 +285,7 @@ describe('Multicaller', function() {
             expect(receipt.status).to.eq(1);
         });
 
-        it('should NOT be able to make processLongInputTx calls with length 168', async function() {
+        it('should NOT be able to make processLongInputTx calls with length 168', async function () {
             const n = 168;
             const {addresses, data} = prepareLongInputData(n, 'processLongInputTx');
 
@@ -298,8 +295,7 @@ describe('Multicaller', function() {
             let hasError = false;
             try {
                 const res = await multiDelegateCallProcessLongInput(addresses, data, overrides);
-            }
-            catch (e) {
+            } catch (e) {
                 hasError = true;
             }
 
@@ -307,32 +303,41 @@ describe('Multicaller', function() {
         });
     });
 
-    describe('payable calls with large output', async function() {
-        it('should be able to make processLongOutput calls with length 1,7 kb', async function() {
-            const n = 10;
-            const res = await multicallProcessLongOutputTx(n);
-            expect(res).to.exist;
-            const receipt = await res.wait();
-            expect(receipt).to.exist;
-            expect(receipt.status).to.eq(1);
+    async function assertLongOutputTx(n, expectedOutputLength) {
+        const reverterCounterAtStart = (await multicaller.counter()).toNumber();
+        const res = await multicallProcessLongOutputTx(n);
+        expect(res).to.exist;
+        const receipt = await res.wait();
+        expect(receipt).to.exist;
+        expect(receipt.status).to.eq(1);
+        expect(receipt.logs).to.exist;
+        expect(receipt.logs.length).to.eq(n + 1);
 
-            expect(res.data).to.exist;
-            const bytes = getOutputLengthInBytes([res.data]);
-            expect(bytes).to.eq(1732); // 1,7 kb
+        for (let i = 0; i < n; i++) {
+            expect(receipt.logs[i].data).to.eq('0x' + Number(reverterCounterAtStart + i + 1).toString(16).padStart(64, '0'));
+        }
+
+        const bytes = getOutputLengthInBytes([receipt.logs[n].data]);
+        expect(bytes).to.eq(expectedOutputLength);
+    }
+
+    describe('payable calls with large output', async function () {
+        it('should be able to make processLongOutput calls with 10 iterations', async function () {
+            await assertLongOutputTx(10, 14144);  // 14 kb
         });
 
-        // FIXME: The data here is just 0x, needs further debugging
-        it('should be able to make processLongOutput calls with length 13 kb', async function() {
-            const n = 40;
-            const res = await multicallProcessLongOutputTx(n);
-            expect(res).to.exist;
-            const receipt = await res.wait();
-            expect(receipt).to.exist;
-            expect(receipt.status).to.eq(1);
-            console.log(res);
-            expect(res.data).to.exist;
-            const bytes = getOutputLengthInBytes([res.data]);
-            expect(bytes).to.eq(0); // should not be 0
+        it('should be able to make processLongOutput calls with 70 iterations', async function () {
+            await assertLongOutputTx(70, 636224);  // 636 kb
+        });
+
+        it('should NOT be able to make processLongOutput calls with 75 iterations', async function () {
+            let hasError = false;
+            try {
+                await assertLongOutputTx(75, 636224);
+            } catch (e) {
+                hasError = true;
+            }
+            expect(hasError).to.eq(true);
         });
     });
 });

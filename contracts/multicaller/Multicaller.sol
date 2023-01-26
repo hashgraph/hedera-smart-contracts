@@ -3,6 +3,9 @@ pragma solidity >=0.8.0;
 
 contract Multicaller {
 
+    uint public counter = 0;
+    event Result(bytes[] results);
+
     function multiCall(
         address[] calldata targets,
         bytes[] calldata data
@@ -30,6 +33,8 @@ contract Multicaller {
             require(success, "call failed");
             results[i] = result;
         }
+
+        emit Result(results);
     }
 
     receive() external payable {}

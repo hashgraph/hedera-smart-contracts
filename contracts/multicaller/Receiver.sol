@@ -4,6 +4,8 @@ pragma solidity ^0.8.0;
 contract Receiver {
 
     uint public counter = 0;
+    event Counter(uint);
+
     struct SomeData {
         uint a;
         uint b;
@@ -32,6 +34,7 @@ contract Receiver {
     ) external payable returns (SomeData[] memory) {
         counter += 1;
         SomeData[] memory data = new SomeData[](count);
+        emit Counter(counter);
         return data;
     }
 
