@@ -19,12 +19,12 @@ Reference smart contracts to call these functions as well as examples can be fou
 ### Exchange Rate Precompile
 
 The Exchange Rate functionality is defined by the [IExchangeRate.sol](contracts/exchange-rate-precompile/IExchangeRate.sol) interface smart contract as defined in [HIP 475](https://hips.hedera.com/hip/hip-475) and exposed via the `0x168` address.
-Reference smart contracts to call these functions as well as examples can be found under [contracts/exchnage-rate-precompile](contracts/exchnage-rate-precompile)
+Reference smart contracts to call these functions as well as examples can be found under [contracts/exchange-rate-precompile](contracts/exchange-rate-precompile)
 
 ### Prng Precompile
 
-The PRNG functionality is defined by the [IPrng.sol](contracts/util-precompile/IPrngSystemContract.sol) interface smart contract as defined in [HIP ](https://hips.hedera.com/hip/hip-351) and exposed via the `0x169` address.
-Reference smart contracts to call these functions as well as examples can be found under [contracts/util-precompile](contracts/util-precompile/IPrngSystemContract.sol)
+The PRNG functionality is defined by the [IPrng.sol](contracts/util-precompile/IPrngSystemContract.sol) interface smart contract as defined in [HIP 351](https://hips.hedera.com/hip/hip-351) and exposed via the `0x169` address.
+Reference smart contracts to call these functions as well as examples can be found under [contracts/util-precompile](contracts/util-precompile)
 
 ## Support
 
