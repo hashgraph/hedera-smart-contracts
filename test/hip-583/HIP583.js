@@ -47,7 +47,7 @@ describe("HIP583 Test Suite - Direct Ethereum Tx", function () {
     );
   });
 
-  xdescribe("Direct Ethereum Tx", function () {
+  describe("Direct Ethereum Tx", function () {
     describe("Positive", function () {
       describe("HBAR Test", function () {
         let amount;

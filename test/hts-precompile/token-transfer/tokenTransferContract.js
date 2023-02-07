@@ -150,16 +150,15 @@ describe("TokenTransferContract tests", function () {
     expect(approvedGetApproved).to.equal(signers[1].address);
   });
 
-  // TODO: depends on fix
-  xit("should be able to execute setApprovalForAll and isApprovedForAll", async function () {
-    const isApprovedForAllBeforeTx = await tokenQueryContract.isApprovedForAllPublic(nftTokenAddress, tokenCreateContract.address, signers[0].address);
+  it("should be able to execute setApprovalForAll and isApprovedForAll", async function () {
+    const isApprovedForAllBeforeTx = await tokenQueryContract.isApprovedForAllPublic(nftTokenAddress, signers[0].address, signers[1].address);
     const isApprovedForAllBeforeReceipt = await isApprovedForAllBeforeTx.wait();
     const isApprovedForAllBefore = isApprovedForAllBeforeReceipt.events.filter(e => e.event === 'Approved')[0].args[0];
 
-    const tx = await tokenCreateContract.setApprovalForAllPublic(nftTokenAddress, signers[0].address, true, {gasLimit: 1_000_000});
+    const tx = await tokenTransferContract.delegateSetApprovalForAllPublic(nftTokenAddress, signers[1].address, true, {gasLimit: 1_000_000});
     await tx.wait();
 
-    const isApprovedForAllAfterTx = await tokenQueryContract.isApprovedForAllPublic(nftTokenAddress, tokenCreateContract.address, signers[0].address);
+    const isApprovedForAllAfterTx = await tokenQueryContract.isApprovedForAllPublic(nftTokenAddress, signers[0].address, signers[1].address);
     const isApprovedForAllAfterReceipt = await isApprovedForAllAfterTx.wait();
     const isApprovedForAllAfter = isApprovedForAllAfterReceipt.events.filter(e => e.event === 'Approved')[0].args[0];
 
