@@ -6,6 +6,8 @@ class Utils {
   //createTokenCost is cost for creating the token, which is passed to the precompile. This is equivalent of 10 and 20hbars, any excess hbars are refunded.
   static createTokenCost = "10000000000000000000";
   static createTokenCustomFeesCost = "20000000000000000000";
+  static tinybarToWeibarCoef = 10_000_000_000;
+
   static KeyType = {
     ADMIN: 1,
     KYC: 2,
@@ -29,6 +31,22 @@ class Utils {
     const cpk = prune0x ? wallet._signingKey().compressedPublicKey.replace('0x', '') : wallet._signingKey().compressedPublicKey;
 
     return asBuffer ? Buffer.from(cpk, 'hex') : cpk;
+  }
+
+  static async deployERC20Mock() {
+    const erc20MockFactory = await ethers.getContractFactory("ERC20Mock");
+    const erc20Mock = await erc20MockFactory.deploy({gasLimit: 1_000_000});
+    const erc20MockReceipt = await erc20Mock.deployTransaction.wait();
+
+    return await ethers.getContractAt("ERC20Mock", erc20MockReceipt.contractAddress);
+  }
+
+  static async deployERC721Mock() {
+    const erc721MockFactory = await ethers.getContractFactory("ERC721Mock");
+    const erc721Mock = await erc721MockFactory.deploy({gasLimit: 1_000_000});
+    const erc721MockReceipt = await erc721Mock.deployTransaction.wait();
+
+    return await ethers.getContractAt("ERC721Mock", erc721MockReceipt.contractAddress);
   }
 
   static async deployTokenCreateContract() {
