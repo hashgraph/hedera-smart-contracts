@@ -609,19 +609,6 @@ describe("HIP583 Test Suite - Ethereum Transfer TX via Precompile", function () 
       expect(hollowBalanceAfter).to.eq(hollowBalanceBefore.add(amount));
     });
 
-    it("should test that second transfer fungible tokens via precompile to the hollow account is successful", async function () {
-      const secondHollowWallet = ethers.Wallet.createRandom().connect(ethers.provider);
-      await bootstrapHollowAccount(signers[0], secondHollowWallet, tokenCreateContract, tokenAddress);
-
-      const secondHollowBalanceBefore = await erc20Contract.balanceOf(tokenAddress, secondHollowWallet.address);
-      const hollowTokenTransferContract = await tokenTransferContract.connect(hollowWallet);
-      await hollowTokenTransferContract.transferTokensPublic(tokenAddress, [hollowWallet.address, secondHollowWallet.address], [-amount, amount], {gasLimit: 1_000_000});
-      const secondHollowBalanceAfter = await erc20Contract.balanceOf(tokenAddress, secondHollowWallet.address);
-
-      expect(secondHollowBalanceBefore).to.eq(0);
-      expect(secondHollowBalanceAfter).to.eq(amount);
-    });
-
     it("should test that can make fungible token transfer via precompile from hollow account to another", async function () {
       const secondHollowWallet = ethers.Wallet.createRandom().connect(ethers.provider);
       await bootstrapHollowAccount(signers[0], secondHollowWallet, tokenCreateContract, tokenAddress);
