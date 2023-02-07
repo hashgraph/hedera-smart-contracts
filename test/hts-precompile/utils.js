@@ -6,7 +6,25 @@ class Utils {
   //createTokenCost is cost for creating the token, which is passed to the precompile. This is equivalent of 10 and 20hbars, any excess hbars are refunded.
   static createTokenCost = "10000000000000000000";
   static createTokenCustomFeesCost = "20000000000000000000";
-  static tinybarToWeibarCoef = 10_000_000_000
+  static tinybarToWeibarCoef = 10_000_000_000;
+
+  static KeyType = {
+    ADMIN: 1,
+    KYC: 2,
+    FREEZE: 4,
+    WIPE: 8,
+    SUPPLY: 16,
+    FEE: 32,
+    PAUSE: 64
+  }
+
+  static KeyValueType = {
+    INHERIT_ACCOUNT_KEY: 0,
+    CONTRACT_ID: 1,
+    ED25519: 2,
+    SECP256K1: 3,
+    DELEGETABLE_CONTRACT_ID: 4
+  }
 
   static getSignerCompressedPublicKey(index = 0, asBuffer = true, prune0x = true) {
     const wallet = new ethers.Wallet(hre.config.networks.relay.accounts[index]);
