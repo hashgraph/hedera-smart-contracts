@@ -55,3 +55,9 @@ jobs:
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: SafeHTS
+
+  HIP583:
+    name: HIP583 Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: HIP583

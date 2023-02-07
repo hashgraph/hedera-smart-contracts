@@ -161,6 +161,19 @@ class Utils {
     return tokenAddress;
   }
 
+  static async createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(contract, treasury, adminKey) {
+    const tokenAddressTx = await contract.createFungibleTokenWithSECP256K1AdminKeyWithoutKYCPublic(treasury, adminKey, {
+      value: ethers.BigNumber.from(this.createTokenCost),
+      gasLimit: 1_000_000,
+    });
+    const tokenAddressReceipt = await tokenAddressTx.wait();
+    const { tokenAddress } = tokenAddressReceipt.events.filter(
+      (e) => e.event === "CreatedToken"
+    )[0].args;
+
+    return tokenAddress;
+  }
+
   static async createFungibleTokenWithSECP256K1AdminKeyAssociateAndTransferToAddress(contract, treasury, adminKey, initialBalance = 300) {
     const tokenAddressTx = await contract.createFungibleTokenWithSECP256K1AdminKeyAssociateAndTransferToAddressPublic(treasury, adminKey, initialBalance, {
       value: ethers.BigNumber.from(this.createTokenCost),
@@ -207,6 +220,19 @@ class Utils {
 
   static async createNonFungibleTokenWithSECP256K1AdminKey(contract, treasury, adminKey) {
     const tokenAddressTx = await contract.createNonFungibleTokenWithSECP256K1AdminKeyPublic(treasury, adminKey, {
+      value: ethers.BigNumber.from(this.createTokenCost),
+      gasLimit: 1_000_000,
+    });
+    const tokenAddressReceipt = await tokenAddressTx.wait();
+    const { tokenAddress } = tokenAddressReceipt.events.filter(
+      (e) => e.event === "CreatedToken"
+    )[0].args;
+
+    return tokenAddress;
+  }
+
+  static async createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(contract, treasury, adminKey) {
+    const tokenAddressTx = await contract.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYCPublic(treasury, adminKey, {
       value: ethers.BigNumber.from(this.createTokenCost),
       gasLimit: 1_000_000,
     });
