@@ -23,7 +23,7 @@ const {ethers} = require('hardhat');
 const {solidityPack} = require("ethers/lib/utils");
 const {defaultAbiCoder} = require("@ethersproject/abi");
 
-describe('Multicall3', function () {
+describe('Multicall Test Suite', function () {
 
     let multicaller, receiver, reverter;
 

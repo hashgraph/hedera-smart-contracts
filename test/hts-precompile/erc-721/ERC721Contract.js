@@ -2,7 +2,7 @@ const {expect} = require("chai");
 const {ethers} = require("hardhat");
 const utils = require('../utils');
 
-describe("ERC721Contract tests", function () {
+describe("ERC721Contract Test Suite", function () {
   let tokenCreateContract;
   let tokenTransferContract;
   let tokenAddress;

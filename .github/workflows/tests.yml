@@ -9,49 +9,49 @@ on:
 
 jobs:
   ERC20Contract:
-    name: ERC20 Contract Tests
+    name: ERC20 Contract Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: ERC20
 
   ERC721Contract:
-    name: ERC721 Contract Tests
+    name: ERC721 Contract Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: ERC721
 
   TokenCreateContract:
-    name: Token Create Tests
+    name: Token Create Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: TokenCreateContract
 
   TokenQueryContract:
-    name: Token Query Tests
+    name: Token Query Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: TokenQueryContract
 
   TokenManagmentContract:
-    name: Token Managment Tests
+    name: Token Managment Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: TokenManagmentContract
 
   TokenTransferContract:
-    name: Token Transfer Tests
+    name: Token Transfer Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: TokenTransferContract
 
   Proxy:
-    name: Proxy Upgrade Tests
+    name: Proxy Upgrade Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: Proxy
 
   SafeHTS:
-    name: SafeHTS Tests
+    name: SafeHTS Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: SafeHTS
@@ -61,3 +61,9 @@ jobs:
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: HIP583
+
+  Multicall:
+    name: Multicall Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: Multicall

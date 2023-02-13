@@ -2,13 +2,12 @@ const {expect} = require("chai");
 const {ethers} = require("hardhat");
 const utils = require('../utils');
 
-describe("ERC20Contract tests", function () {
+describe("ERC20Contract Test Suite", function () {
   let tokenCreateContract;
   let tokenTransferContract;
   let tokenAddress;
   let erc20Contract;
   let signers;
-  const INITIAL_BALANCE = 300;
   const TOTAL_SUPPLY = 1000;
 
   before(async function () {
