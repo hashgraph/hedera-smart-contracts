@@ -2,7 +2,7 @@ const { expect } = require("chai");
 const { ethers } = require("hardhat");
 const utils = require("../hts-precompile/utils");
 
-describe("HIP583 Test Suite", function () {
+describe("HIP583 Test Suite - Direct Ethereum Tx", function () {
   let signers;
   let hollowWallet;
   let tokenCreateContract;
@@ -395,7 +395,7 @@ describe("HIP583 Test Suite", function () {
   });
 });
 
-describe("Contract Transfer TX", function () {
+describe("HIP583 Test Suite - Contract Transfer TX", function () {
   let signers;
   let contractTransferTx;
   const totalAmount = ethers.utils.parseEther("100");
@@ -542,6 +542,143 @@ describe("Contract Transfer TX", function () {
       await (await contractTransferTxWithHollowAccount.transferFromNonFungibleTokenTo(erc721Mock.address, hollowWallet.address, secondHollowWallet.address, tokenId)).wait();
 
       const ownerAfter = await erc721Mock.ownerOf(tokenId);
+      expect(ownerAfter).to.eq(secondHollowWallet.address);
+    });
+  });
+});
+
+describe("HIP583 Test Suite - Ethereum Transfer TX via Precompile", function () {
+  let signers;
+  let tokenCreateContract;
+  let tokenTransferContract;
+  let tokenQueryContract;
+  let erc20Contract;
+  let erc721Contract;
+
+  before(async function () {
+    signers = await ethers.getSigners();
+    tokenCreateContract = await utils.deployTokenCreateContract();
+    tokenQueryContract = await utils.deployTokenQueryContract();
+    tokenTransferContract = await utils.deployTokenTransferContract();
+    erc20Contract = await utils.deployERC20Contract();
+    erc721Contract = await utils.deployERC721Contract();
+  });
+
+  const bootstrapHollowAccount = async function (signer, hollowWallet, tokenCreateContract, tokenAddress) {
+    await signer.sendTransaction({
+      to: hollowWallet.address,
+      value: ethers.utils.parseEther("100"),
+      gasLimit: 1_000_000,
+    });
+
+    const hollowWalletTokenCreateContract = await tokenCreateContract.connect(hollowWallet);
+    await (await hollowWalletTokenCreateContract.associateTokenPublic(hollowWallet.address, tokenAddress, {
+      gasLimit: 1_000_000,
+    })).wait();
+    await (await tokenCreateContract.grantTokenKycPublic(tokenAddress, hollowWallet.address)).wait();
+  }
+
+  describe("Fungible Token Test", function () {
+    const amount = 27;
+    let tokenAddress;
+    let hollowWallet;
+
+    before(async function () {
+      tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
+      await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
+      await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
+
+      hollowWallet = ethers.Wallet.createRandom().connect(ethers.provider);
+      await bootstrapHollowAccount(signers[0], hollowWallet, tokenCreateContract, tokenAddress)
+    });
+
+    it("should test that hollow account is created and the amount of fungible tokens is correctly transferred via precompile", async function () {
+      const hollowBalanceBefore = await erc20Contract.balanceOf(tokenAddress, hollowWallet.address);
+      await tokenTransferContract.transferTokensPublic(tokenAddress, [signers[0].address, hollowWallet.address], [-amount, amount], {gasLimit: 1_000_000});
+      const hollowBalanceAfter = await erc20Contract.balanceOf(tokenAddress, hollowWallet.address);
+
+      expect(hollowBalanceBefore).to.eq(0);
+      expect(hollowBalanceAfter).to.eq(amount);
+    });
+
+    it("should test that second transfer fungible tokens via precompile to the hollow account is successful", async function () {
+      const hollowBalanceBefore = await erc20Contract.balanceOf(tokenAddress, hollowWallet.address);
+      await tokenTransferContract.transferTokensPublic(tokenAddress, [signers[0].address, hollowWallet.address], [-amount, amount], {gasLimit: 1_000_000});
+      const hollowBalanceAfter = await erc20Contract.balanceOf(tokenAddress, hollowWallet.address);
+
+      expect(hollowBalanceAfter).to.eq(hollowBalanceBefore.add(amount));
+    });
+
+    it("should test that can make fungible token transfer via precompile from hollow account to another", async function () {
+      const secondHollowWallet = ethers.Wallet.createRandom().connect(ethers.provider);
+      await bootstrapHollowAccount(signers[0], secondHollowWallet, tokenCreateContract, tokenAddress);
+
+      const secondHollowBalanceBefore = await erc20Contract.balanceOf(tokenAddress, secondHollowWallet.address);
+      const hollowTokenTransferContract = await tokenTransferContract.connect(hollowWallet);
+      await hollowTokenTransferContract.transferTokensPublic(tokenAddress, [hollowWallet.address, secondHollowWallet.address], [-amount, amount], {gasLimit: 1_000_000});
+      const secondHollowBalanceAfter = await erc20Contract.balanceOf(tokenAddress, secondHollowWallet.address);
+
+      expect(secondHollowBalanceBefore).to.eq(0);
+      expect(secondHollowBalanceAfter).to.eq(amount);
+    });
+  });
+
+  describe("Non-Fungible Token Test", function () {
+    let nftTokenAddress;
+    let hollowWallet;
+    let mintedTokenSerialNumber;
+
+    before(async function () {
+      nftTokenAddress = await utils.createNonFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
+      await utils.associateToken(tokenCreateContract, nftTokenAddress, 'TokenCreateContract');
+      await utils.grantTokenKyc(tokenCreateContract, nftTokenAddress);
+
+      hollowWallet = ethers.Wallet.createRandom().connect(ethers.provider);
+      await bootstrapHollowAccount(signers[0], hollowWallet, tokenCreateContract, nftTokenAddress);
+
+      mintedTokenSerialNumber = await utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
+    });
+
+    it("should test that hollow account is created and the amount of non-fungible tokens is correctly transferred via precompile", async function () {
+      const ownerBefore = await erc721Contract.ownerOf(nftTokenAddress, mintedTokenSerialNumber);
+      await tokenTransferContract.transferNFTPublic(nftTokenAddress, signers[0].address, hollowWallet.address, mintedTokenSerialNumber, {
+        gasLimit: 1_000_000
+      });
+      const ownerAfter = await erc721Contract.ownerOf(nftTokenAddress, mintedTokenSerialNumber);
+
+      expect(ownerBefore).to.eq(signers[0].address);
+      expect(ownerAfter).to.eq(hollowWallet.address);
+    });
+
+    it("should test that second transfer non-fungible tokens via precompile to the hollow account is successful", async function () {
+      const newMintedTokenSerialNumber = await utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
+      const ownerBefore = await erc721Contract.ownerOf(nftTokenAddress, newMintedTokenSerialNumber);
+      await tokenTransferContract.transferNFTPublic(nftTokenAddress, signers[0].address, hollowWallet.address, newMintedTokenSerialNumber, {
+        gasLimit: 1_000_000
+      });
+      const ownerAfter = await erc721Contract.ownerOf(nftTokenAddress, newMintedTokenSerialNumber);
+
+      expect(ownerBefore).to.eq(signers[0].address);
+      expect(ownerAfter).to.eq(hollowWallet.address);
+    });
+
+    it("should test that can make non-fungible token transfer via precompile from hollow account to another", async function () {
+      const secondHollowWallet = ethers.Wallet.createRandom().connect(ethers.provider);
+      await bootstrapHollowAccount(signers[0], secondHollowWallet, tokenCreateContract, nftTokenAddress);
+
+      const newMintedTokenSerialNumber = await utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
+      await tokenTransferContract.transferNFTPublic(nftTokenAddress, signers[0].address, hollowWallet.address, newMintedTokenSerialNumber, {
+        gasLimit: 1_000_000
+      });
+
+      const ownerBefore = await erc721Contract.ownerOf(nftTokenAddress, newMintedTokenSerialNumber);
+      const hollowTokenTransferContract = await tokenTransferContract.connect(hollowWallet);
+      await (await hollowTokenTransferContract.transferNFTPublic(nftTokenAddress, hollowWallet.address, secondHollowWallet.address, newMintedTokenSerialNumber, {
+        gasLimit: 1_000_000
+      })).wait();
+      const ownerAfter = await erc721Contract.ownerOf(nftTokenAddress, newMintedTokenSerialNumber);
+
+      expect(ownerBefore).to.eq(hollowWallet.address);
       expect(ownerAfter).to.eq(secondHollowWallet.address);
     });
   });
