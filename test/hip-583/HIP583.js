@@ -2,7 +2,7 @@ const { expect } = require("chai");
 const { ethers } = require("hardhat");
 const utils = require("../hts-precompile/utils");
 
-describe("HIP583 Test Suite - Direct Ethereum Tx", function () {
+describe("HIP583 Test Suite", function () {
   let signers;
   let hollowWallet;
   let tokenCreateContract;
