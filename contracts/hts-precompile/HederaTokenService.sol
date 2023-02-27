@@ -18,6 +18,9 @@ abstract contract HederaTokenService {
         _;
     }
 
+    /// Generic event
+    event CallResponseEvent(bool, bytes);
+
     /// Performs transfers among combinations of tokens and hbars
     /// @param transferList the list of hbar transfers to do
     /// @param tokenTransfers the list of transfers to do
@@ -803,5 +806,16 @@ abstract contract HederaTokenService {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.updateTokenInfo.selector, token, tokenInfo));
         (responseCode) = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
+    }
+
+    /// Redirect for token
+    /// @param token The token address
+    /// @param encodedFunctionSelector The function selector from the ERC20 interface + the bytes input for the function called
+    function redirectForToken(address token, bytes memory encodedFunctionSelector) external {
+        (bool success, bytes memory data) = precompileAddress.call(
+            abi.encodeWithSelector(IHederaTokenService.redirectForToken.selector, token, encodedFunctionSelector)
+        );
+
+        emit CallResponseEvent(success, data);
     }
 }
