@@ -34,19 +34,19 @@ class Utils {
   }
 
   static async deployERC20Mock() {
-    const erc20MockFactory = await ethers.getContractFactory("ERC20Mock");
+    const erc20MockFactory = await ethers.getContractFactory("contracts/hip-583/ERC20Mock.sol:ERC20Mock");
     const erc20Mock = await erc20MockFactory.deploy({gasLimit: 1_000_000});
     const erc20MockReceipt = await erc20Mock.deployTransaction.wait();
 
-    return await ethers.getContractAt("ERC20Mock", erc20MockReceipt.contractAddress);
+    return await ethers.getContractAt("contracts/hip-583/ERC20Mock.sol:ERC20Mock", erc20MockReceipt.contractAddress);
   }
 
   static async deployERC721Mock() {
-    const erc721MockFactory = await ethers.getContractFactory("ERC721Mock");
+    const erc721MockFactory = await ethers.getContractFactory("contracts/hip-583/ERC721Mock.sol:ERC721Mock");
     const erc721Mock = await erc721MockFactory.deploy({gasLimit: 1_000_000});
     const erc721MockReceipt = await erc721Mock.deployTransaction.wait();
 
-    return await ethers.getContractAt("ERC721Mock", erc721MockReceipt.contractAddress);
+    return await ethers.getContractAt("contracts/hip-583/ERC721Mock.sol:ERC721Mock", erc721MockReceipt.contractAddress);
   }
 
   static async deployTokenCreateContract() {
