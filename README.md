@@ -13,6 +13,8 @@ The precompiled functions are defined in this library and picked up by the [Hede
 The Hedera Token Service (HTS) functionality is defined by the [IHederaTokenService.sol](contracts/hts-precompile/IHederaTokenService.sol) interface smart contract as defined in [HIP 206](https://hips.hedera.com/hip/hip-206), [HIP 376](https://hips.hedera.com/hip/hip-376) and [HIP 514](https://hips.hedera.com/hip/hip-514). The contract is exposed via the `0x167` address.
 Reference smart contracts to call these functions as well as examples can be found under [contracts/hts-precompile](contracts/hts-precompile)
 
+For further details on methods, hashes and availability please refer to [HTS Precompile methods](contracts/hts-precompile/README.md)
+
 - Solidity files updated on April 20, 2022 to add token create support
 - Solidity files updated on Jan 18, 2022
 
@@ -21,10 +23,14 @@ Reference smart contracts to call these functions as well as examples can be fou
 The Exchange Rate functionality is defined by the [IExchangeRate.sol](contracts/exchange-rate-precompile/IExchangeRate.sol) interface smart contract as defined in [HIP 475](https://hips.hedera.com/hip/hip-475) and exposed via the `0x168` address.
 Reference smart contracts to call these functions as well as examples can be found under [contracts/exchange-rate-precompile](contracts/exchange-rate-precompile)
 
+For further details on methods, hashes and availability please refer to [Exchange Rate Precompile methods](contracts/exchange-rate-precompile/README.md)
+
 ### Prng Precompile
 
 The PRNG functionality is defined by the [IPrng.sol](contracts/util-precompile/IPrngSystemContract.sol) interface smart contract as defined in [HIP 351](https://hips.hedera.com/hip/hip-351) and exposed via the `0x169` address.
 Reference smart contracts to call these functions as well as examples can be found under [contracts/util-precompile](contracts/util-precompile)
+
+For further details on methods, hashes and availability please refer to [PRNG Precompile methods](contracts/util-precompile/README.md)
 
 ## Support
 
