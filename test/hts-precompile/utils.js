@@ -3,9 +3,9 @@ const { expect } = require("chai");
 const { AccountId, Client, AccountInfoQuery } = require("@hashgraph/sdk");
 
 class Utils {
-  //createTokenCost is cost for creating the token, which is passed to the precompile. This is equivalent of 10 and 20hbars, any excess hbars are refunded.
-  static createTokenCost = "40000000000000000000";
-  static createTokenCustomFeesCost = "50000000000000000000";
+  //createTokenCost is cost for creating the token, which is passed to the precompile. This is equivalent of 40 and 60hbars, any excess hbars are refunded.
+  static createTokenCost = "50000000000000000000";
+  static createTokenCustomFeesCost = "60000000000000000000";
   static tinybarToWeibarCoef = 10_000_000_000;
 
   static KeyType = {
