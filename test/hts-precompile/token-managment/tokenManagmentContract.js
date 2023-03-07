@@ -2,7 +2,7 @@ const {expect} = require("chai");
 const {ethers} = require("hardhat");
 const utils = require('../utils');
 
-describe("TokenManagmentContract tests", function () {
+describe("TokenManagmentContract Test Suite", function () {
 
     const TX_SUCCESS_CODE = 22;
 

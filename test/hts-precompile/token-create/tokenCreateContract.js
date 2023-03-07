@@ -2,9 +2,9 @@ const {expect} = require("chai");
 const {ethers} = require("hardhat");
 const utils = require('../utils');
 const {expectValidHash} = require('../assertions');
-const { TokenCreateTransaction, TransactionId, Key, PublicKey, TokenSupplyType, AccountId, AccountInfo, AccountInfoQuery } = require("@hashgraph/sdk");
+const { TokenCreateTransaction, TransactionId, PublicKey, TokenSupplyType, AccountId } = require("@hashgraph/sdk");
 
-describe("TokenCreateContract tests", function () {
+describe("TokenCreateContract Test Suite", function () {
   let tokenCreateContract;
   let tokenCreateCustomContract;
   let tokenTransferContract;

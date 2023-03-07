@@ -3,7 +3,7 @@ const {ethers} = require("hardhat");
 const { expectToFail } = require("../utils");
 const utils = require('../utils');
 
-describe("TokenTransferContract tests", function () {
+describe("TokenTransferContract Test Suite", function () {
 
   const TX_SUCCESS_CODE = 22;
 
