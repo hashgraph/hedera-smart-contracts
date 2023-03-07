@@ -38,6 +38,7 @@ jobs:
 
       - name: Start the local node
         run: npx hedera start -d --turbo --network local
+        timeout-minutes: 5
 
       - name: Run the test in ${{ inputs.testfilter }}
         uses: nick-fields/retry@v2
