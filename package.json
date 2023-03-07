@@ -19,10 +19,10 @@
   "devDependencies": {
     "@hashgraph/hedera-local": "^2.5.1",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
-    "@openzeppelin/contracts": "^4.8.1",
-    "@openzeppelin/contracts-upgradeable": "^4.8.1",
+    "@openzeppelin/contracts": "^4.8.2",
+    "@openzeppelin/contracts-upgradeable": "^4.8.2",
     "@openzeppelin/hardhat-upgrades": "^1.22.1",
-    "hardhat": "^2.12.7"
+    "hardhat": "^2.13.0"
   },
   "dependencies": {
     "@nomicfoundation/solidity-analyzer": "^0.1.0"
