@@ -1,6 +1,6 @@
 ## Util Precompile methods
 
-The following table highlights the coded Prng precompile methods and their availbility in the Hedera network exposed via the `0x169` address.
+The following table highlights the coded Prng precompile methods and their availability in the Hedera network exposed via the `0x169` address.
 
 | Function Name           | hash          | Consensus Node Release Version | HIP                              | Method Interface |
 |-------------------------|---------------|---------------|---------------------------------------------------|---------------------------------|

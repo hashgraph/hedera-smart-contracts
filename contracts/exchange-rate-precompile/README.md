@@ -1,6 +1,6 @@
 ## Exchange Rate Precompile methods
 
-The following table highlights the coded Exchange rate precompile methods and their availbility in the Hedera network exposed via the `0x168` address
+The following table highlights the coded Exchange rate precompile methods and their availability in the Hedera network exposed via the `0x168` address
 
 | Function Name         | hash          | Consensus Node Release Version | HIP                              | Method Interface |
 |-----------------------|---------------|---------------|---------------------------------------------------|---------------------------------|
