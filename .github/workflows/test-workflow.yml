@@ -9,9 +9,9 @@ on:
 
 env:
   RELAY_IMAGE_TAG: main
-  NETWORK_NODE_IMAGE_TAG: 0.36.0-alpha.1
-  HAVEGED_IMAGE_TAG: 0.36.0-alpha.1
-  MIRROR_IMAGE_TAG: 0.76.0
+  NETWORK_NODE_IMAGE_TAG: 0.36.0-alpha.2
+  HAVEGED_IMAGE_TAG: 0.36.0-alpha.2
+  MIRROR_IMAGE_TAG: 0.76.1
 
 jobs:
   acceptance-workflow:

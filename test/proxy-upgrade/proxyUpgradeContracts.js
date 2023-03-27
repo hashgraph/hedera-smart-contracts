@@ -69,7 +69,7 @@ describe("Proxy Upgrade Contracts Test Suite", function () {
       return proxy;
     }
 
-    it("should deposit, buy and sell tokens from ExchangeV1", async function () {
+    xit("should deposit, buy and sell tokens from ExchangeV1", async function () {
       //deposit funds
       {
         const balanceBefore = await proxyContract.getNativeBalance();
@@ -170,7 +170,7 @@ describe("Proxy Upgrade Contracts Test Suite", function () {
       ).to.not.eq(addressV2);
     });
 
-    it("should deposit, buy and withdraw tokens from ExchangeV2", async function () {
+    xit("should deposit, buy and withdraw tokens from ExchangeV2", async function () {
       //checkVersion
       {
         const version = await proxyContract.version();

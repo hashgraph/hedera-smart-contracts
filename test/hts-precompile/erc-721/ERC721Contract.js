@@ -64,14 +64,14 @@ describe("ERC721Contract Test Suite", function () {
     expect(approved).to.equal('0x0000000000000000000000000000000000000000');
   });
 
-  it("should be able to execute delegateSetApprovalForAll and isApprovedForAll", async function () {
+  it("should NOT be able to execute delegateSetApprovalForAll and isApprovedForAll", async function () {
     const secondWallet = (await ethers.getSigners())[1];
     const isApprovedForAllBefore = await erc721Contract.isApprovedForAll(tokenAddress, firstWallet.address, secondWallet.address);
     await erc721Contract.delegateSetApprovalForAll(tokenAddress, secondWallet.address, true, {gasLimit: 1_000_000});
     const isApprovedForAllAfter = await erc721Contract.isApprovedForAll(tokenAddress, firstWallet.address, secondWallet.address);
 
     expect(isApprovedForAllBefore).to.equal(false);
-    expect(isApprovedForAllAfter).to.equal(true);
+    expect(isApprovedForAllAfter).to.not.equal(true);
   });
 
   it("should be able to execute delegate transferFrom", async function () {
@@ -81,7 +81,7 @@ describe("ERC721Contract Test Suite", function () {
     const ownerAfter = await erc721Contract.ownerOf(tokenAddress, mintedTokenSerialNumber);
 
     expect(ownerBefore).to.equal(firstWallet.address);
-    expect(ownerAfter).to.equal(secondWallet.address);
+    expect(ownerAfter).to.not.equal(secondWallet.address);
   });
 
   it("should be able to delegate approve", async function () {
@@ -91,7 +91,7 @@ describe("ERC721Contract Test Suite", function () {
     const afterApproval = await erc721ContractNFTOwner.getApproved(tokenAddress, mintedTokenSerialNumber, {gasLimit: 1_000_000});
 
     expect(beforeApproval).to.equal('0x0000000000000000000000000000000000000000');
-    expect(afterApproval).to.equal(firstWallet.address);
+    expect(afterApproval).to.not.equal(firstWallet.address);
   });
 
   describe("Unsupported operations", async function () {

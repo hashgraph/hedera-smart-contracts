@@ -79,21 +79,26 @@ describe("ERC20Contract Test Suite", function () {
     expect(wallet2BalanceBefore.toNumber()).to.eq(wallet2BalanceAfter.toNumber());
   });
 
-  it("should be able to use delegateTransfer", async function () {
+  it("should NOT be able to use delegateTransfer", async function () {
     const signers = await ethers.getSigners();
     const amount = 200;
 
     const wallet1BalanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[0].address);
     const wallet2BalanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
 
-    const tx = await erc20Contract.connect(signers[0]).delegateTransfer(tokenAddress, signers[1].address, amount, {gasLimit: 1_000_000});
-    await tx.wait();
+    try {
+      const tx = await erc20Contract.connect(signers[0]).delegateTransfer(tokenAddress, signers[1].address, amount, {gasLimit: 1_000_000});
+      await tx.wait();
+    } catch (e) {
+      expect(e).to.exist;
+      expect(e.reason).to.eq('transaction failed');
+    }
 
     const wallet1BalanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[0].address);
     const wallet2BalanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
 
-    expect(wallet1BalanceBefore.toNumber() - amount).to.eq(wallet1BalanceAfter.toNumber());
-    expect(wallet2BalanceBefore.toNumber() + amount).to.eq(wallet2BalanceAfter.toNumber());
+    expect(wallet1BalanceBefore.toNumber()).to.eq(wallet1BalanceAfter.toNumber());
+    expect(wallet2BalanceBefore.toNumber()).to.eq(wallet2BalanceAfter.toNumber());
   });
 
   it("should NOT be able to use approve", async function () {
@@ -117,30 +122,16 @@ describe("ERC20Contract Test Suite", function () {
 
   });
 
-  it("should be able to use delegateApprove and allowance", async function () {
+  it("should NOT be able to use delegateApprove and allowance", async function () {
     const signers = await ethers.getSigners();
     const approvedAmount = 200;
 
     const allowanceBefore = await erc20Contract.allowance(tokenAddress, signers[0].address, signers[1].address);
     expect(allowanceBefore.toNumber()).to.eq(0);
 
-    const tx = await erc20Contract.connect(signers[0]).delegateApprove(tokenAddress, signers[1].address, approvedAmount, {gasLimit: 1_000_000});
-    await tx.wait();
-
-    const allowanceAfter = await erc20Contract.allowance(tokenAddress, signers[0].address, signers[1].address);
-    expect(allowanceAfter.toNumber()).to.eq(approvedAmount);
-  });
-
-  it("should NOT be able to use transferFrom", async function () {
-    const signers = await ethers.getSigners();
-    const amount = 200;
-
-    const allowanceBefore = await erc20Contract.allowance(tokenAddress, signers[0].address, signers[1].address);
-    expect(allowanceBefore.toNumber()).to.eq(200);
-
     try {
-      const tx = await erc20Contract.connect(signers[0]).transferFrom(tokenAddress, signers[1].address, signers[0].address, amount, {gasLimit: 1_000_000});
-      await tx.wait()
+      const tx = await erc20Contract.connect(signers[0]).delegateApprove(tokenAddress, signers[1].address, approvedAmount, {gasLimit: 1_000_000});
+      await tx.wait();
     }
     catch(e) {
       expect(e).to.exist;
@@ -148,28 +139,32 @@ describe("ERC20Contract Test Suite", function () {
     }
 
     const allowanceAfter = await erc20Contract.allowance(tokenAddress, signers[0].address, signers[1].address);
-    expect(allowanceAfter.toNumber()).to.eq(200);
+    expect(allowanceAfter.toNumber()).to.eq(allowanceBefore);
   });
 
-  it("should be able to use delegateTransferFrom", async function () {
+  it("should NOT be able to use delegateTransferFrom", async function () {
     const signers = await ethers.getSigners();
     const amount = 50;
-    const initialAllowance = 200;
 
     const wallet1BalanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[0].address);
     const wallet2BalanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
     const allowanceBefore = await erc20Contract.allowance(tokenAddress, signers[0].address, signers[1].address);
-    expect(allowanceBefore.toNumber()).to.eq(initialAllowance);
 
-    const tx = await erc20Contract.connect(signers[1]).delegateTransferFrom(tokenAddress, signers[0].address, signers[1].address, amount, {gasLimit: 1_000_000});
-    const rec = await tx.wait();
-
+    try {
+      const tx = await erc20Contract.connect(signers[1]).delegateTransferFrom(tokenAddress, signers[0].address, signers[1].address, amount, {gasLimit: 1_000_000});
+      const rec = await tx.wait();
+    }
+    catch(e) {
+      expect(e).to.exist;
+      expect(e.reason).to.eq('transaction failed');
+    }
+    
     const wallet1BalanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[0].address);
     const wallet2BalanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
     const allowanceAfter = await erc20Contract.allowance(tokenAddress, signers[0].address, signers[1].address);
 
-    expect(allowanceAfter.toNumber()).to.eq(initialAllowance - amount);
-    expect(wallet1BalanceBefore.toNumber() - amount).to.eq(wallet1BalanceAfter.toNumber());
-    expect(wallet2BalanceBefore.toNumber() + amount).to.eq(wallet2BalanceAfter.toNumber());
+    expect(allowanceAfter.toNumber()).to.eq(allowanceBefore);
+    expect(wallet1BalanceBefore.toNumber()).to.eq(wallet1BalanceAfter.toNumber());
+    expect(wallet2BalanceBefore.toNumber()).to.eq(wallet2BalanceAfter.toNumber());
   });
 });
