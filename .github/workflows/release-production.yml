@@ -4,6 +4,11 @@ on:
   push:
     tags: 
       - 'v*'
+  workflow_dispath:
+    tags:
+      description: 'Bump and RC Tags'
+      required: false
+      type: boolean
 
 env:
   OWNER: hashgraph
