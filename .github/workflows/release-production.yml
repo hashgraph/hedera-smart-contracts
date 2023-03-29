@@ -3,7 +3,7 @@ name: Release Production Environment
 on:
   push:
     tags: 
-      - 'v*''
+      - 'v*'
 
 env:
   OWNER: hashgraph
