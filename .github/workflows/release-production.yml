@@ -2,16 +2,7 @@ name: Release Production Environment
 
 on:
   push:
-    branches:
-      - 'main'
-      - 'release/**'
-    tags: 
-      - 'v*'
-  # workflow_dispath:
-  #   tags:
-  #     description: 'Bump and RC Tags'
-  #     required: false
-  #     type: boolean
+    tags: [ v* ]
 
 env:
   OWNER: hashgraph
