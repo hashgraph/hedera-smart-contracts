@@ -1,5 +1,5 @@
 # hedera-smart-contracts
-Contains Hedera Smart Contract Service supporting files
+Contains Hedera Smart Contract Service supporting files. Maps to Services v0.32.
 
 ## Overview
 The Hedera network utilizes system contracts at a reserved contract address on the EVM to surface HAPI service functionality through EVM processed transactions.
