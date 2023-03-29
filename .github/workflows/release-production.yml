@@ -3,14 +3,15 @@ name: Release Production Environment
 on:
   push:
     branches:
-      - '*'
+      - 'main'
+      - 'release/**'
     tags: 
       - 'v*'
-  workflow_dispath:
-    tags:
-      description: 'Bump and RC Tags'
-      required: false
-      type: boolean
+  # workflow_dispath:
+  #   tags:
+  #     description: 'Bump and RC Tags'
+  #     required: false
+  #     type: boolean
 
 env:
   OWNER: hashgraph
