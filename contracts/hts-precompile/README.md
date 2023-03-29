@@ -17,7 +17,6 @@ The following table highlights the coded HTS precompile methods and their availb
 | `createNonFungibleToken`                  | `0x9dc711e0`  | [0.25](https://docs.hedera.com/hedera/networks/release-notes/services#v0.25)  | [HIP 358](https://hips.hedera.com/hip/hip-358)    | `createNonFungibleToken(HederaToken memory token)` |
 | `createNonFungibleTokenWithCustomFees`    | `0x5bc7c0e6`  | [0.25](https://docs.hedera.com/hedera/networks/release-notes/services#v0.25)  | [HIP 358](https://hips.hedera.com/hip/hip-358)    | `createNonFungibleTokenWithCustomFees(HederaToken memory token, FixedFee[] memory fixedFees, RoyaltyFee[] memory royaltyFees)` |
 | `cryptoTransfer`                          | `0x189a554c`  | [0.22](https://docs.hedera.com/hedera/networks/release-notes/services#v0.22)  | [HIP 206](https://hips.hedera.com/hip/hip-206)    | `cryptoTransfer(TokenTransferList[] memory tokenTransfers)` |
-| `cryptoTransfer`                          | `0e71804f`    | Unreleased    | [HIP 206](https://hips.hedera.com/hip/hip-206)    | `cryptoTransfer(TransferList memory transferList, TokenTransferList[] memory tokenTransfers) external returns (int64 responseCode)` |
 | `dissociateToken`                         | `0x099794e8`  | [0.22](https://docs.hedera.com/hedera/networks/release-notes/services#v0.22)  | [HIP 206](https://hips.hedera.com/hip/hip-206)    | `dissociateToken(address account, address token)` |
 | `dissociateTokens`                        | `0x78b63918`  | [0.22](https://docs.hedera.com/hedera/networks/release-notes/services#v0.22)  | [HIP 206](https://hips.hedera.com/hip/hip-206)    | `dissociateTokens(address account, address[] memory tokens)` |
 | `freezeToken`                             | `0x5b8f8584`  | [0.29](https://docs.hedera.com/hedera/networks/release-notes/services#v0.29)  | [HIP 514](https://hips.hedera.com/hip/hip-514)    | `freezeToken(address token, address account)` |
@@ -50,6 +49,4 @@ The following table highlights the coded HTS precompile methods and their availb
 | `unfreezeToken`                           | `0x52f91387`  | [0.29](https://docs.hedera.com/hedera/networks/release-notes/services#v0.29)  | [HIP 514](https://hips.hedera.com/hip/hip-514)    | `unfreezeToken(address token, address account)` |
 | `wipeTokenAccount`                        | `0xf7f38e26`  | [0.29](https://docs.hedera.com/hedera/networks/release-notes/services#v0.29)  | [HIP 514](https://hips.hedera.com/hip/hip-514)    | `wipeTokenAccount(address, address, uint32)` |
 | `wipeTokenAccountNFT`                     | `0xf7f38e26`  | [0.29](https://docs.hedera.com/hedera/networks/release-notes/services#v0.29)  | [HIP 514](https://hips.hedera.com/hip/hip-514)    | `wipeTokenAccountNFT(address, address, int64[])` |
-
-| `getPseudorandomSeed`                     | `x`           | [0.28](https://docs.hedera.com/hedera/networks/release-notes/services#v0.28)  | N/A                                               |`getPseudorandomSeed()` |
 
