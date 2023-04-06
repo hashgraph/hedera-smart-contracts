@@ -37,7 +37,7 @@ jobs:
         run: npm ci
 
       - name: Start the local node
-        run: npx hedera start -d --turbo --network local
+        run: npx hedera start -d --network local
         timeout-minutes: 5
 
       - name: Run the test in ${{ inputs.testfilter }}
