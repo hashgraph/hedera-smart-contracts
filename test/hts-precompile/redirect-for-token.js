@@ -107,7 +107,7 @@ describe("RedirectForToken test", function () {
   });
 
   it('should be able to execute transfer(address,uint256)', async function () {
-    const erc20 = await ethers.getContractAt('ERC20Mock', tokenAddress);
+    const erc20 = await ethers.getContractAt('contracts/erc-20/ERC20Mock.sol:ERC20Mock', tokenAddress);
     await erc20.transfer(tokenCreateContract.address, amount);
 
     const balanceBefore = await erc20.balanceOf(signers[1].address);
@@ -123,7 +123,7 @@ describe("RedirectForToken test", function () {
   });
 
   it('should be able to execute transferFrom(address,address,uint256)', async function () {
-    const erc20 = await ethers.getContractAt('ERC20Mock', tokenAddress);
+    const erc20 = await ethers.getContractAt('contracts/erc-20/ERC20Mock.sol:ERC20Mock', tokenAddress);
     await erc20.transfer(tokenCreateContract.address, amount);
 
     const balanceBefore = await erc20.balanceOf(signers[1].address);
