@@ -20,77 +20,8 @@
 
 const {assert} = require('chai');
 const {ethers} = require('hardhat');
-
-const DiamondHelper = {
-  FacetCutAction: {Add: 0, Replace: 1, Remove: 2},
-
-  getSelectors: function (contract) {
-    const selectors = Object.keys(contract.interface.functions).reduce((acc, val) => {
-      if (val !== 'init(bytes)') {
-        acc.push(contract.interface.getSighash(val));
-      }
-      return acc;
-    }, []);
-
-    selectors.contract = contract;
-    selectors.remove = this.remove;
-    selectors.get = this.get;
-
-    return selectors;
-  },
-
-  remove: function (functionNames) {
-    const selectors = this.filter((v) => {
-      for (const functionName of functionNames) {
-        if (v === this.contract.interface.getSighash(functionName)) {
-          return false;
-        }
-      }
-
-      return true;
-    });
-
-    selectors.contract = this.contract;
-    selectors.remove = this.remove;
-    selectors.get = this.get;
-
-    return selectors;
-  },
-
-  get: function (functionNames) {
-    const selectors = this.filter((v) => {
-      for (const functionName of functionNames) {
-        if (v === this.contract.interface.getSighash(functionName)) {
-          return true;
-        }
-      }
-
-      return false;
-    });
-
-    selectors.contract = this.contract;
-    selectors.remove = this.remove;
-    selectors.get = this.get;
-
-    return selectors;
-  },
-
-  removeSelectors: function (selectors, signatures) {
-    const iface = new ethers.utils.Interface(signatures.map(v => 'function ' + v));
-    const removeSelectors = signatures.map(v => iface.getSighash(v));
-    selectors = selectors.filter(v => !removeSelectors.includes(v));
-
-    return selectors;
-  },
-
-  findAddressPositionInFacets: function (facetAddress, facets) {
-    for (let i = 0; i < facets.length; i++) {
-      if (facets[i].facetAddress === facetAddress) {
-        return i;
-      }
-    }
-  }
-}
+const Constants = require('../constants')
+const Helper = require('../diamond-pattern/diamond.helper')
 
 describe('DiamondTest', async function () {
   let signers;
@@ -105,17 +36,17 @@ describe('DiamondTest', async function () {
   before(async function () {
     signers = await ethers.getSigners();
 
-    const DiamondCutFacetFactory = await ethers.getContractFactory('DiamondCutFacet');
+    const DiamondCutFacetFactory = await ethers.getContractFactory(Constants.Contract.DiamondCutFacet);
     diamondCutFacet = await DiamondCutFacetFactory.deploy();
-    console.log(`DiamondCutFacet deployed: ${diamondCutFacet.address}`);
+    console.log(`${Constants.Contract.DiamondCutFacet} deployed: ${diamondCutFacet.address}`);
 
-    const DiamondFactory = await ethers.getContractFactory('Diamond');
+    const DiamondFactory = await ethers.getContractFactory(Constants.Contract.Diamond);
     diamond = await DiamondFactory.deploy(signers[0].address, diamondCutFacet.address);
-    console.log(`Diamond deployed: ${diamond.address}`);
+    console.log(`${Constants.Contract.Diamond} deployed: ${diamond.address}`);
 
-    const DiamondInitFactory = await ethers.getContractFactory('DiamondInit');
+    const DiamondInitFactory = await ethers.getContractFactory(Constants.Contract.DiamondInit);
     diamondInit = await DiamondInitFactory.deploy();
-    console.log(`DiamondInit deployed: ${diamondInit.address}`);
+    console.log(`${Constants.Contract.DiamondInit} deployed: ${diamondInit.address}`);
 
     console.log(`\nDeploying facets`);
     const cuts = [];
@@ -126,22 +57,22 @@ describe('DiamondTest', async function () {
 
       cuts.push({
         facetAddress: facet.address,
-        action: DiamondHelper.FacetCutAction.Add,
-        functionSelectors: DiamondHelper.getSelectors(facet)
+        action: Helper.DiamondHelper.FacetCutAction.Add,
+        functionSelectors: Helper.DiamondHelper.getSelectors(facet)
       });
     }
 
     console.log(`\nDiamond Cut:`, cuts);
-    const diamondCut = await ethers.getContractAt('IDiamondCut', diamond.address);
-    const diamondCutTx = await diamondCut.diamondCut(cuts, diamondInit.address, diamondInit.interface.encodeFunctionData('init'), {gasLimit: 10_000_000});
+    const diamondCut = await ethers.getContractAt(Constants.Contract.IDiamondCut, diamond.address);
+    const diamondCutTx = await diamondCut.diamondCut(cuts, diamondInit.address, diamondInit.interface.encodeFunctionData('init'), Constants.GAS_LIMIT_10_000_000);
 
     if (!(await diamondCutTx.wait()).status) {
-      throw Error(`Diamond upgrade failed: ${diamondCutTx.hash}`);
+      await assert.Fail(`Diamond upgrade failed: ${diamondCutTx.hash}`);
     }
 
-    diamondCutFacet = await ethers.getContractAt('DiamondCutFacet', diamond.address);
-    diamondLoupeFacet = await ethers.getContractAt('DiamondLoupeFacet', diamond.address);
-    ownershipFacet = await ethers.getContractAt('OwnershipFacet', diamond.address);
+    diamondCutFacet = await ethers.getContractAt(Constants.Contract.DiamondCutFacet, diamond.address);
+    diamondLoupeFacet = await ethers.getContractAt(Constants.Contract.DiamondLoupeFacet, diamond.address);
+    ownershipFacet = await ethers.getContractAt(Constants.Contract.OwnershipFacet, diamond.address);
   })
 
   it('should have three facets -- call to facetAddresses function', async () => {
@@ -155,15 +86,15 @@ describe('DiamondTest', async function () {
   it('facets should have the right function selectors -- call to facetFunctionSelectors function', async () => {
     let result, selectors;
 
-    selectors = DiamondHelper.getSelectors(diamondCutFacet);
+    selectors = Helper.DiamondHelper.getSelectors(diamondCutFacet);
     result = await diamondLoupeFacet.facetFunctionSelectors(addresses[0]);
     assert.sameMembers(result, selectors);
 
-    selectors = DiamondHelper.getSelectors(diamondLoupeFacet);
+    selectors = Helper.DiamondHelper.getSelectors(diamondLoupeFacet);
     result = await diamondLoupeFacet.facetFunctionSelectors(addresses[1]);
     assert.sameMembers(result, selectors);
 
-    selectors = DiamondHelper.getSelectors(ownershipFacet);
+    selectors = Helper.DiamondHelper.getSelectors(ownershipFacet);
     result = await diamondLoupeFacet.facetFunctionSelectors(addresses[2]);
     assert.sameMembers(result, selectors);
   })
@@ -180,110 +111,110 @@ describe('DiamondTest', async function () {
     const test1Facet = await Test1Facet.deploy();
     addresses.push(test1Facet.address);
 
-    const selectors = DiamondHelper.getSelectors(test1Facet).remove(['supportsInterface(bytes4)'])
+    const selectors = Helper.DiamondHelper.getSelectors(test1Facet).remove(['supportsInterface(bytes4)'])
     const tx = await diamondCutFacet.diamondCut(
         [{
           facetAddress: test1Facet.address,
-          action: DiamondHelper.FacetCutAction.Add,
+          action: Helper.DiamondHelper.FacetCutAction.Add,
           functionSelectors: selectors
         }],
-        ethers.constants.AddressZero, '0x', {gasLimit: 1_000_000});
+        ethers.constants.AddressZero, '0x', Constants.GAS_LIMIT_1_000_000);
 
     if (!(await tx.wait()).status) {
-      throw Error(`Diamond upgrade failed: ${tx.hash}`);
+      await assert.Fail(`Diamond upgrade failed: ${tx.hash}`);
     }
 
     assert.sameMembers(await diamondLoupeFacet.facetFunctionSelectors(test1Facet.address), selectors);
   })
 
   it('should test function call', async () => {
-    const test1Facet = await ethers.getContractAt('Test1Facet', diamond.address);
+    const test1Facet = await ethers.getContractAt(Constants.Contract.Test1Facet, diamond.address);
     const tx = await test1Facet.test1Func10();
 
     if (!(await tx.wait()).status) {
-      throw Error(`Function call failed: ${tx.hash}`);
+      await assert.Fail(`Function call failed: ${tx.hash}`);
     }
   })
 
   it('should replace supportsInterface function', async () => {
-    const Test1Facet = await ethers.getContractFactory('Test1Facet');
-    const selectors = DiamondHelper.getSelectors(Test1Facet).get(['supportsInterface(bytes4)']);
+    const Test1Facet = await ethers.getContractFactory(Constants.Contract.Test1Facet);
+    const selectors = Helper.DiamondHelper.getSelectors(Test1Facet).get(['supportsInterface(bytes4)']);
     const testFacetAddress = addresses[3];
 
     const tx = await diamondCutFacet.diamondCut(
         [{
           facetAddress: testFacetAddress,
-          action: DiamondHelper.FacetCutAction.Replace,
+          action: Helper.DiamondHelper.FacetCutAction.Replace,
           functionSelectors: selectors
         }],
-        ethers.constants.AddressZero, '0x', {gasLimit: 800000});
+        ethers.constants.AddressZero, '0x', Constants.GAS_LIMIT_800000);
 
     if (!(await tx.wait()).status) {
-      throw Error(`Diamond upgrade failed: ${tx.hash}`);
+      await assert.Fail(`Diamond upgrade failed: ${tx.hash}`);
     }
 
-    assert.sameMembers(await diamondLoupeFacet.facetFunctionSelectors(testFacetAddress), DiamondHelper.getSelectors(Test1Facet))
+    assert.sameMembers(await diamondLoupeFacet.facetFunctionSelectors(testFacetAddress), Helper.DiamondHelper.getSelectors(Test1Facet))
   })
 
   it('should add test2 functions', async () => {
-    const Test2Facet = await ethers.getContractFactory('Test2Facet');
+    const Test2Facet = await ethers.getContractFactory(Constants.Contract.Test2Facet);
     const test2Facet = await Test2Facet.deploy();
     addresses.push(test2Facet.address);
 
-    const selectors = DiamondHelper.getSelectors(test2Facet);
+    const selectors = Helper.DiamondHelper.getSelectors(test2Facet);
     const tx = await diamondCutFacet.diamondCut(
         [{
           facetAddress: test2Facet.address,
-          action: DiamondHelper.FacetCutAction.Add,
+          action: Helper.DiamondHelper.FacetCutAction.Add,
           functionSelectors: selectors
         }],
-        ethers.constants.AddressZero, '0x', {gasLimit: 800000});
+        ethers.constants.AddressZero, '0x', Constants.GAS_LIMIT_800000);
 
     if (!(await tx.wait()).status) {
-      throw Error(`Diamond upgrade failed: ${tx.hash}`);
+      await assert.Fail(`Diamond upgrade failed: ${tx.hash}`);
     }
 
     assert.sameMembers(await diamondLoupeFacet.facetFunctionSelectors(test2Facet.address), selectors);
   })
 
   it('should remove some test2 functions', async () => {
-    const test2Facet = await ethers.getContractAt('Test2Facet', diamond.address);
+    const test2Facet = await ethers.getContractAt(Constants.Contract.Test2Facet, diamond.address);
     const functionsToKeep = ['test2Func1()', 'test2Func5()', 'test2Func6()'];
-    const selectors = DiamondHelper.getSelectors(test2Facet).remove(functionsToKeep);
+    const selectors = Helper.DiamondHelper.getSelectors(test2Facet).remove(functionsToKeep);
 
     const tx = await diamondCutFacet.diamondCut(
         [{
           facetAddress: ethers.constants.AddressZero,
-          action: DiamondHelper.FacetCutAction.Remove,
+          action: Helper.DiamondHelper.FacetCutAction.Remove,
           functionSelectors: selectors
         }],
-        ethers.constants.AddressZero, '0x', {gasLimit: 1_000_000});
+        ethers.constants.AddressZero, '0x', Constants.GAS_LIMIT_1_000_000);
 
     if (!(await tx.wait()).status) {
-      throw Error(`Diamond upgrade failed: ${tx.hash}`);
+      await assert.Fail(`${Constants.Contract.Diamond} upgrade failed: ${tx.hash}`);
     }
 
-    assert.sameMembers(await diamondLoupeFacet.facetFunctionSelectors(addresses[4]), DiamondHelper.getSelectors(test2Facet).get(functionsToKeep));
+    assert.sameMembers(await diamondLoupeFacet.facetFunctionSelectors(addresses[4]), Helper.DiamondHelper.getSelectors(test2Facet).get(functionsToKeep));
   })
 
   it('should remove some test1 functions', async () => {
-    const test1Facet = await ethers.getContractAt('Test1Facet', diamond.address);
+    const test1Facet = await ethers.getContractAt(Constants.Contract.Test1Facet, diamond.address);
     const functionsToKeep = ['test1Func2()', 'test1Func11()', 'test1Func12()'];
-    const selectors = DiamondHelper.getSelectors(test1Facet).remove(functionsToKeep);
+    const selectors = Helper.DiamondHelper.getSelectors(test1Facet).remove(functionsToKeep);
 
     const tx = await diamondCutFacet.diamondCut(
         [{
           facetAddress: ethers.constants.AddressZero,
-          action: DiamondHelper.FacetCutAction.Remove,
+          action: Helper.DiamondHelper.FacetCutAction.Remove,
           functionSelectors: selectors
         }],
-        ethers.constants.AddressZero, '0x', {gasLimit: 800000});
+        ethers.constants.AddressZero, '0x', Constants.GAS_LIMIT_800000);
 
     if (!(await tx.wait()).status) {
-      throw Error(`Diamond upgrade failed: ${tx.hash}`);
+      await assert.Fail(`${Constants.Contract.Diamond} upgrade failed: ${tx.hash}`);
     }
 
-    assert.sameMembers(await diamondLoupeFacet.facetFunctionSelectors(addresses[3]), DiamondHelper.getSelectors(test1Facet).get(functionsToKeep));
+    assert.sameMembers(await diamondLoupeFacet.facetFunctionSelectors(addresses[3]), Helper.DiamondHelper.getSelectors(test1Facet).get(functionsToKeep));
   })
 
   it('remove all functions and facets except \'diamondCut\' and \'facets\'', async () => {
@@ -292,18 +223,18 @@ describe('DiamondTest', async function () {
     for (let i = 0; i < facets.length; i++) {
       selectors.push(...facets[i].functionSelectors);
     }
-    selectors = DiamondHelper.removeSelectors(selectors, ['facets()', 'diamondCut(tuple(address,uint8,bytes4[])[],address,bytes)']);
+    selectors = Helper.DiamondHelper.removeSelectors(selectors, ['facets()', 'diamondCut(tuple(address,uint8,bytes4[])[],address,bytes)']);
 
     const tx = await diamondCutFacet.diamondCut(
         [{
           facetAddress: ethers.constants.AddressZero,
-          action: DiamondHelper.FacetCutAction.Remove,
+          action: Helper.DiamondHelper.FacetCutAction.Remove,
           functionSelectors: selectors
         }],
-        ethers.constants.AddressZero, '0x', {gasLimit: 800000});
+        ethers.constants.AddressZero, '0x', Constants.GAS_LIMIT_800000);
 
     if (!(await tx.wait()).status) {
-      throw Error(`Diamond upgrade failed: ${tx.hash}`);
+      await assert.Fail(`${Constants.Contract.Diamond} upgrade failed: ${tx.hash}`);
     }
 
     facets = await diamondLoupeFacet.facets();
@@ -315,36 +246,36 @@ describe('DiamondTest', async function () {
   })
 
   it('add most functions and facets', async () => {
-    const diamondLoupeFacetSelectors = DiamondHelper.getSelectors(diamondLoupeFacet).remove(['supportsInterface(bytes4)']);
-    const Test1Facet = await ethers.getContractFactory('Test1Facet');
-    const Test2Facet = await ethers.getContractFactory('Test2Facet');
+    const diamondLoupeFacetSelectors = Helper.DiamondHelper.getSelectors(diamondLoupeFacet).remove(['supportsInterface(bytes4)']);
+    const Test1Facet = await ethers.getContractFactory(Constants.Contract.Test1Facet);
+    const Test2Facet = await ethers.getContractFactory(Constants.Contract.Test2Facet);
 
     const cuts = [
       {
         facetAddress: addresses[1],
-        action: DiamondHelper.FacetCutAction.Add,
+        action: Helper.DiamondHelper.FacetCutAction.Add,
         functionSelectors: diamondLoupeFacetSelectors.remove(['facets()'])
       },
       {
         facetAddress: addresses[2],
-        action: DiamondHelper.FacetCutAction.Add,
-        functionSelectors: DiamondHelper.getSelectors(ownershipFacet)
+        action: Helper.DiamondHelper.FacetCutAction.Add,
+        functionSelectors: Helper.DiamondHelper.getSelectors(ownershipFacet)
       },
       {
         facetAddress: addresses[3],
-        action: DiamondHelper.FacetCutAction.Add,
-        functionSelectors: DiamondHelper.getSelectors(Test1Facet)
+        action: Helper.DiamondHelper.FacetCutAction.Add,
+        functionSelectors: Helper.DiamondHelper.getSelectors(Test1Facet)
       },
       {
         facetAddress: addresses[4],
-        action: DiamondHelper.FacetCutAction.Add,
-        functionSelectors: DiamondHelper.getSelectors(Test2Facet)
+        action: Helper.DiamondHelper.FacetCutAction.Add,
+        functionSelectors: Helper.DiamondHelper.getSelectors(Test2Facet)
       }
     ];
 
-    const tx = await diamondCutFacet.diamondCut(cuts, ethers.constants.AddressZero, '0x', {gasLimit: 8000000});
+    const tx = await diamondCutFacet.diamondCut(cuts, ethers.constants.AddressZero, '0x', Constants.GAS_LIMIT_8000000);
     if (!(await tx.wait()).status) {
-      throw Error(`Diamond upgrade failed: ${tx.hash}`);
+      await assert.Fail(`${Constants.Contract.Diamond} upgrade failed: ${tx.hash}`);
     }
 
     const facets = await diamondLoupeFacet.facets();
@@ -357,10 +288,10 @@ describe('DiamondTest', async function () {
     assert.equal(facets[2][0], facetAddresses[2], 'third facet');
     assert.equal(facets[3][0], facetAddresses[3], 'fourth facet');
     assert.equal(facets[4][0], facetAddresses[4], 'fifth facet');
-    assert.sameMembers(facets[DiamondHelper.findAddressPositionInFacets(addresses[0], facets)][1], DiamondHelper.getSelectors(diamondCutFacet));
-    assert.sameMembers(facets[DiamondHelper.findAddressPositionInFacets(addresses[1], facets)][1], diamondLoupeFacetSelectors);
-    assert.sameMembers(facets[DiamondHelper.findAddressPositionInFacets(addresses[2], facets)][1], DiamondHelper.getSelectors(ownershipFacet));
-    assert.sameMembers(facets[DiamondHelper.findAddressPositionInFacets(addresses[3], facets)][1], DiamondHelper.getSelectors(Test1Facet));
-    assert.sameMembers(facets[DiamondHelper.findAddressPositionInFacets(addresses[4], facets)][1], DiamondHelper.getSelectors(Test2Facet));
+    assert.sameMembers(facets[Helper.DiamondHelper.findAddressPositionInFacets(addresses[0], facets)][1], Helper.DiamondHelper.getSelectors(diamondCutFacet));
+    assert.sameMembers(facets[Helper.DiamondHelper.findAddressPositionInFacets(addresses[1], facets)][1], diamondLoupeFacetSelectors);
+    assert.sameMembers(facets[Helper.DiamondHelper.findAddressPositionInFacets(addresses[2], facets)][1], Helper.DiamondHelper.getSelectors(ownershipFacet));
+    assert.sameMembers(facets[Helper.DiamondHelper.findAddressPositionInFacets(addresses[3], facets)][1], Helper.DiamondHelper.getSelectors(Test1Facet));
+    assert.sameMembers(facets[Helper.DiamondHelper.findAddressPositionInFacets(addresses[4], facets)][1], Helper.DiamondHelper.getSelectors(Test2Facet));
   })
 })

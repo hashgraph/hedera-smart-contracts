@@ -18,10 +18,11 @@
  *
  */
 
-const {expect} = require("chai");
+const { expect } = require("chai");
 const utils = require('./utils');
+const Constants = require('../constants')
 
-describe("RedirectForToken test", function () {
+describe("RedirectForToken Test Suite", function () {
   const amount = 33;
   let signers;
   let tokenCreateContract;
@@ -29,7 +30,7 @@ describe("RedirectForToken test", function () {
   let IERC20;
 
   const parseCallResponseEventData = async (tx) => {
-    return (await tx.wait()).events.filter(e => e.event === 'CallResponseEvent')[0].args;
+    return (await tx.wait()).events.filter(e => e.event === Constants.Events.CallResponseEvent)[0].args;
   }
 
   const decodeHexToASCII = (message) => {
@@ -49,17 +50,17 @@ describe("RedirectForToken test", function () {
   before(async () => {
     signers = await ethers.getSigners();
 
-    const tokenCreateFactory = await ethers.getContractFactory("TokenCreateContract");
-    const tokenCreateTx = await tokenCreateFactory.deploy({gasLimit: 1_000_000});
-    tokenCreateContract = await ethers.getContractAt("TokenCreateContract", (await tokenCreateTx.deployTransaction.wait()).contractAddress);
+    const tokenCreateFactory = await ethers.getContractFactory(Constants.Contract.TokenCreateContract);
+    const tokenCreateTx = await tokenCreateFactory.deploy(Constants.GAS_LIMIT_1_000_000);
+    tokenCreateContract = await ethers.getContractAt(Constants.Contract.TokenCreateContract, (await tokenCreateTx.deployTransaction.wait()).contractAddress);
 
     const tokenAddressTx = await tokenCreateContract.createFungibleTokenWithSECP256K1AdminKeyPublic(signers[0].address, utils.getSignerCompressedPublicKey(), {
       value: "10000000000000000000",
       gasLimit: 1_000_000,
     });
-    tokenAddress = (await tokenAddressTx.wait()).events.filter((e) => e.event === "CreatedToken")[0].args.tokenAddress;
+    tokenAddress = (await tokenAddressTx.wait()).events.filter((e) => e.event === Constants.Events.CreatedToken)[0].args.tokenAddress;
 
-    await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
+    await utils.associateToken(tokenCreateContract, tokenAddress, Constants.Contract.TokenCreateContract);
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
 
     IERC20 = new ethers.utils.Interface((await hre.artifacts.readArtifact("ERC20")).abi);
@@ -70,7 +71,7 @@ describe("RedirectForToken test", function () {
     const tx = await tokenCreateContract.redirectForToken(tokenAddress, encodedFunc);
     const [success, result] = await parseCallResponseEventData(tx);
     expect(success).to.eq(true);
-    expect(decodeHexToASCII(result)).to.eq('tokenName');
+    expect(decodeHexToASCII(result)).to.eq(Constants.TOKEN_NAME);
   });
 
   it('should be able to execute symbol()', async function () {
@@ -78,7 +79,7 @@ describe("RedirectForToken test", function () {
     const tx = await tokenCreateContract.redirectForToken(tokenAddress, encodedFunc);
     const [success, result] = await parseCallResponseEventData(tx);
     expect(success).to.eq(true);
-    expect(decodeHexToASCII(result)).to.eq('tokenSymbol');
+    expect(decodeHexToASCII(result)).to.eq(Constants.TOKEN_SYMBOL);
   });
 
   it('should be able to execute decimals()', async function () {
@@ -113,21 +114,21 @@ describe("RedirectForToken test", function () {
 
   it('should be able to execute approve(address,uint256)', async function () {
     const encodedFunc = IERC20.encodeFunctionData("approve(address,uint256)", [signers[1].address, amount]);
-    const tx = await tokenCreateContract.redirectForToken(tokenAddress, encodedFunc, {gasLimit: 10_000_000});
+    const tx = await tokenCreateContract.redirectForToken(tokenAddress, encodedFunc, Constants.GAS_LIMIT_10_000_000);
     const [success] = await parseCallResponseEventData(tx);
     expect(success).to.eq(true);
   });
 
   it('should be able to execute allowance(address,address)', async function () {
     const encodedFunc = IERC20.encodeFunctionData("allowance(address,address)", [tokenCreateContract.address, signers[1].address]);
-    const tx = await tokenCreateContract.redirectForToken(tokenAddress, encodedFunc, {gasLimit: 10_000_000});
+    const tx = await tokenCreateContract.redirectForToken(tokenAddress, encodedFunc, Constants.GAS_LIMIT_10_000_000);
     const [success, result] = await parseCallResponseEventData(tx);
     expect(success).to.eq(true);
     expect(Number(result)).to.eq(amount);
   });
 
   it('should be able to execute transfer(address,uint256)', async function () {
-    const erc20 = await ethers.getContractAt('contracts/erc-20/ERC20Mock.sol:ERC20Mock', tokenAddress);
+    const erc20 = await ethers.getContractAt(Constants.Contract.ERC20Mock, tokenAddress);
     await erc20.transfer(tokenCreateContract.address, amount);
 
     const balanceBefore = await erc20.balanceOf(signers[1].address);
@@ -143,7 +144,7 @@ describe("RedirectForToken test", function () {
   });
 
   it('should be able to execute transferFrom(address,address,uint256)', async function () {
-    const erc20 = await ethers.getContractAt('contracts/erc-20/ERC20Mock.sol:ERC20Mock', tokenAddress);
+    const erc20 = await ethers.getContractAt(Constants.Contract.ERC20Mock, tokenAddress);
     await erc20.transfer(tokenCreateContract.address, amount);
 
     const balanceBefore = await erc20.balanceOf(signers[1].address);

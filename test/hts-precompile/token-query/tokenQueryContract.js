@@ -18,12 +18,12 @@
  *
  */
 
-const {expect} = require("chai");
-const {ethers} = require("hardhat");
+const { expect } = require("chai");
+const { ethers } = require("hardhat");
 const utils = require('../utils');
+const Constants = require('../../constants.js');
 
 describe("TokenQueryContract Test Suite", function () {
-
     const TX_SUCCESS_CODE = 22;
 
     let tokenCreateContract;
@@ -42,17 +42,17 @@ describe("TokenQueryContract Test Suite", function () {
         tokenWithCustomFeesAddress = await utils.createFungibleTokenWithCustomFees(tokenCreateContract, tokenAddress);
         nftTokenAddress = await utils.createNonFungibleToken(tokenCreateContract, tokenCreateContract.address);
         mintedTokenSerialNumber = await utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
-        
-        await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
+
+        await utils.associateToken(tokenCreateContract, tokenAddress, Constants.Contract.TokenCreateContract);
         await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
-        await utils.associateToken(tokenCreateContract, nftTokenAddress, 'TokenCreateContract');
+        await utils.associateToken(tokenCreateContract, nftTokenAddress, Constants.Contract.TokenCreateContract);
         await utils.grantTokenKyc(tokenCreateContract, nftTokenAddress);
-      });
+    });
 
     it('should query allowance', async function () {
         const tx = await tokenQueryContract.allowancePublic(tokenAddress, tokenCreateContract.address, signers[1].address);
-        const amount =  (await tx.wait()).events.filter(e => e.event === 'AllowanceValue')[0].args.amount.toNumber();
-        const { responseCode } = (await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args;
+        const amount = (await tx.wait()).events.filter(e => e.event === Constants.Events.AllowanceValue)[0].args.amount.toNumber();
+        const { responseCode } = (await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args;
 
         expect(responseCode).to.equal(TX_SUCCESS_CODE);
         expect(amount).to.equal(0);
@@ -60,8 +60,8 @@ describe("TokenQueryContract Test Suite", function () {
 
     it('should query getApproved', async function () {
         const tx = await tokenQueryContract.getApprovedPublic(nftTokenAddress, mintedTokenSerialNumber);
-        const { approved } =  (await tx.wait()).events.filter(e => e.event === 'ApprovedAddress')[0].args;
-        const { responseCode } = (await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args;
+        const { approved } = (await tx.wait()).events.filter(e => e.event === Constants.Events.ApprovedAddress)[0].args;
+        const { responseCode } = (await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args;
 
         expect(responseCode).to.equal(TX_SUCCESS_CODE);
         expect(approved).to.equal('0x0000000000000000000000000000000000000000');
@@ -69,8 +69,8 @@ describe("TokenQueryContract Test Suite", function () {
 
     it('should query isApprovedForAll', async function () {
         const tx = await tokenQueryContract.isApprovedForAllPublic(nftTokenAddress, tokenCreateContract.address, signers[1].address);
-        const approved =  (await tx.wait()).events.filter(e => e.event === 'Approved')[0].args.approved;
-        const { responseCode } = (await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args;
+        const approved = (await tx.wait()).events.filter(e => e.event === Constants.Events.Approved)[0].args.approved;
+        const { responseCode } = (await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args;
 
         expect(responseCode).to.equal(TX_SUCCESS_CODE);
         expect(approved).to.equal(false);
@@ -78,8 +78,8 @@ describe("TokenQueryContract Test Suite", function () {
 
     it('should query isFrozen', async function () {
         const tx = await tokenQueryContract.isFrozenPublic(tokenAddress, tokenCreateContract.address);
-        const isFrozen = (await tx.wait()).events.filter(e => e.event === 'Frozen')[0].args.frozen;
-        const { responseCode } = (await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args;
+        const isFrozen = (await tx.wait()).events.filter(e => e.event === Constants.Events.Frozen)[0].args.frozen;
+        const { responseCode } = (await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args;
 
         expect(responseCode).to.equal(TX_SUCCESS_CODE);
         expect(isFrozen).to.equal(false);
@@ -87,8 +87,8 @@ describe("TokenQueryContract Test Suite", function () {
 
     it('should query isKyc', async function () {
         const tx = await tokenQueryContract.isKycPublic(tokenAddress, tokenCreateContract.address);
-        const isFrozen = (await tx.wait()).events.filter(e => e.event === 'KycGranted')[0].args.kycGranted;
-        const { responseCode } = (await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args;
+        const isFrozen = (await tx.wait()).events.filter(e => e.event === Constants.Events.KycGranted)[0].args.kycGranted;
+        const { responseCode } = (await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args;
 
         expect(responseCode).to.equal(TX_SUCCESS_CODE);
         expect(isFrozen).to.equal(true);
@@ -97,8 +97,8 @@ describe("TokenQueryContract Test Suite", function () {
     it('should query getTokenCustomFees', async function () {
         //All values for fixedFees and fractionalFees are hardcoded and pulled from the Token Create Contract
         const tx = await tokenQueryContract.getTokenCustomFeesPublic(tokenWithCustomFeesAddress);
-        const { fixedFees, fractionalFees } = (await tx.wait()).events.filter(e => e.event === 'TokenCustomFees')[0].args;
-        const { responseCode } = (await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args;
+        const { fixedFees, fractionalFees } = (await tx.wait()).events.filter(e => e.event === Constants.Events.TokenCustomFees)[0].args;
+        const { responseCode } = (await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args;
 
         expect(responseCode).to.equal(TX_SUCCESS_CODE);
 
@@ -106,7 +106,7 @@ describe("TokenQueryContract Test Suite", function () {
         expect(fixedFees[0].tokenId).to.equal(tokenAddress);
         expect(fixedFees[0].useHbarsForPayment).to.equal(false);
         expect(fixedFees[0].useCurrentTokenForPayment).to.equal(false);
-    
+
         expect(fractionalFees[0].numerator).to.equal(4);
         expect(fractionalFees[0].denominator).to.equal(5);
         expect(fractionalFees[0].minimumAmount).to.equal(10);
@@ -116,8 +116,8 @@ describe("TokenQueryContract Test Suite", function () {
 
     it('should query getTokenDefaultFreezeStatus', async function () {
         const tx = await tokenQueryContract.getTokenDefaultFreezeStatusPublic(tokenAddress);
-        const defaultFreezeStatus = (await tx.wait()).events.filter(e => e.event === 'TokenDefaultFreezeStatus')[0].args.defaultFreezeStatus;
-        const { responseCode } = (await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args;
+        const defaultFreezeStatus = (await tx.wait()).events.filter(e => e.event === Constants.Events.TokenDefaultFreezeStatus)[0].args.defaultFreezeStatus;
+        const { responseCode } = (await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args;
 
         expect(responseCode).to.equal(TX_SUCCESS_CODE);
         expect(defaultFreezeStatus).to.equal(false);
@@ -125,8 +125,8 @@ describe("TokenQueryContract Test Suite", function () {
 
     it('should query getTokenDefaultKycStatus', async function () {
         const tx = await tokenQueryContract.getTokenDefaultKycStatusPublic(tokenAddress);
-        const defaultKycStatus = (await tx.wait()).events.filter(e => e.event === 'TokenDefaultKycStatus')[0].args.defaultKycStatus;
-        const { responseCode } = (await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args;
+        const defaultKycStatus = (await tx.wait()).events.filter(e => e.event === Constants.Events.TokenDefaultKycStatus)[0].args.defaultKycStatus;
+        const { responseCode } = (await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args;
 
         expect(responseCode).to.equal(TX_SUCCESS_CODE);
         expect(defaultKycStatus).to.equal(false);
@@ -134,8 +134,8 @@ describe("TokenQueryContract Test Suite", function () {
 
     it('should query getTokenExpiryInfo', async function () {
         const tx = await tokenQueryContract.getTokenExpiryInfoPublic(tokenAddress);
-        const expiryInfo = (await tx.wait()).events.filter(e => e.event === 'TokenExpiryInfo')[0].args.expiryInfo;
-        const { responseCode } = (await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args;
+        const expiryInfo = (await tx.wait()).events.filter(e => e.event === Constants.Events.TokenExpiryInfo)[0].args.expiryInfo;
+        const { responseCode } = (await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args;
 
         expect(responseCode).to.equal(TX_SUCCESS_CODE);
         expect(expiryInfo).not.null;
@@ -143,8 +143,8 @@ describe("TokenQueryContract Test Suite", function () {
 
     it('should query getFungibleTokenInfo', async function () {
         const tx = await tokenQueryContract.getFungibleTokenInfoPublic(tokenAddress);
-        const tokenInfo = (await tx.wait()).events.filter(e => e.event === 'FungibleTokenInfo')[0].args.tokenInfo;
-        const { responseCode } = (await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args;
+        const tokenInfo = (await tx.wait()).events.filter(e => e.event === Constants.Events.FungibleTokenInfo)[0].args.tokenInfo;
+        const { responseCode } = (await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args;
 
         expect(responseCode).to.equal(TX_SUCCESS_CODE);
         expect(tokenInfo).not.null;
@@ -152,8 +152,8 @@ describe("TokenQueryContract Test Suite", function () {
 
     it('should query getTokenInfo', async function () {
         const tx = await tokenQueryContract.getTokenInfoPublic(tokenAddress);
-        const tokenInfo = (await tx.wait()).events.filter(e => e.event === 'TokenInfo')[0].args.tokenInfo;
-        const { responseCode } = (await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args;
+        const tokenInfo = (await tx.wait()).events.filter(e => e.event === Constants.Events.TokenInfo)[0].args.tokenInfo;
+        const { responseCode } = (await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args;
 
         expect(responseCode).to.equal(TX_SUCCESS_CODE);
         expect(tokenInfo).not.null;
@@ -161,8 +161,8 @@ describe("TokenQueryContract Test Suite", function () {
 
     it('should query getTokenKey', async function () {
         const tx = await tokenQueryContract.getTokenKeyPublic(tokenAddress, 2);
-        const key = (await tx.wait()).events.filter(e => e.event === 'TokenKey')[0].args.key;
-        const { responseCode } = (await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args;
+        const key = (await tx.wait()).events.filter(e => e.event === Constants.Events.TokenKey)[0].args.key;
+        const { responseCode } = (await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args;
 
         expect(responseCode).to.equal(TX_SUCCESS_CODE);
         expect(key).to.exist;
@@ -170,8 +170,8 @@ describe("TokenQueryContract Test Suite", function () {
 
     it('should query getNonFungibleTokenInfo', async function () {
         const tx = await tokenQueryContract.getNonFungibleTokenInfoPublic(nftTokenAddress, mintedTokenSerialNumber);
-        const tokenInfo = (await tx.wait()).events.filter(e => e.event === 'NonFungibleTokenInfo')[0].args.tokenInfo;
-        const { responseCode } = (await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args;
+        const tokenInfo = (await tx.wait()).events.filter(e => e.event === Constants.Events.NonFungibleTokenInfo)[0].args.tokenInfo;
+        const { responseCode } = (await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args;
 
         expect(responseCode).to.equal(TX_SUCCESS_CODE);
         expect(tokenInfo).not.null;
@@ -179,8 +179,8 @@ describe("TokenQueryContract Test Suite", function () {
 
     it('should query isToken', async function () {
         const tx = await tokenQueryContract.isTokenPublic(tokenAddress);
-        const isToken = (await tx.wait()).events.filter(e => e.event === 'IsToken')[0].args.isToken;
-        const { responseCode } = (await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args;
+        const isToken = (await tx.wait()).events.filter(e => e.event === Constants.Events.IsToken)[0].args.isToken;
+        const { responseCode } = (await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args;
 
         expect(responseCode).to.equal(TX_SUCCESS_CODE);
         expect(isToken).to.equal(true);
@@ -188,8 +188,8 @@ describe("TokenQueryContract Test Suite", function () {
 
     it('should query getTokenType', async function () {
         const tx = await tokenQueryContract.getTokenTypePublic(tokenAddress);
-        const tokenType = (await tx.wait()).events.filter(e => e.event === 'TokenType')[0].args.tokenType;
-        const { responseCode } = (await tx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args;
+        const tokenType = (await tx.wait()).events.filter(e => e.event === Constants.Events.TokenType)[0].args.tokenType;
+        const { responseCode } = (await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args;
 
         expect(responseCode).to.equal(TX_SUCCESS_CODE);
         expect(tokenType).to.equal(0);

@@ -18,10 +18,11 @@
  *
  */
 
-const {expect} = require("chai");
-const {ethers} = require("hardhat");
+const { expect } = require("chai");
+const { ethers } = require("hardhat");
 const utils = require('../utils');
-const {expectValidHash} = require('../assertions');
+const { expectValidHash } = require('../assertions');
+const Constants = require('../../constants')
 const { TokenCreateTransaction, TransactionId, PublicKey, TokenSupplyType, AccountId } = require("@hashgraph/sdk");
 
 describe("TokenCreateContract Test Suite", function () {
@@ -48,9 +49,9 @@ describe("TokenCreateContract Test Suite", function () {
     nftTokenAddress = await utils.createNonFungibleToken(tokenCreateContract, signers[0].address);
     mintedTokenSerialNumber = await utils.mintNFT(tokenCreateContract, nftTokenAddress);
 
-    await utils.associateToken(tokenCreateContract, tokenAddress, 'TokenCreateContract');
+    await utils.associateToken(tokenCreateContract, tokenAddress, Constants.Contract.TokenCreateContract);
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
-    await utils.associateToken(tokenCreateContract, nftTokenAddress, 'TokenCreateContract');
+    await utils.associateToken(tokenCreateContract, nftTokenAddress, Constants.Contract.TokenCreateContract);
     await utils.grantTokenKyc(tokenCreateContract, nftTokenAddress);
   });
 
@@ -70,26 +71,26 @@ describe("TokenCreateContract Test Suite", function () {
     const tokenCreateContractWallet2 = tokenCreateContract.connect(signers[1]);
     const tokenManagmentContractWallet2 = tokenManagmentContract.connect(signers[1]);
 
-    const txDisassociate = await tokenManagmentContractWallet2.dissociateTokensPublic(signers[1].address, [tokenAddress], {gasLimit: 1_000_000});
+    const txDisassociate = await tokenManagmentContractWallet2.dissociateTokensPublic(signers[1].address, [tokenAddress], Constants.GAS_LIMIT_1_000_000);
     const receiptDisassociate = await txDisassociate.wait();
-    expect(receiptDisassociate.events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.equal(22);
+    expect(receiptDisassociate.events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.equal(22);
 
-    const txAssociate = await tokenCreateContractWallet2.associateTokensPublic(signers[1].address, [tokenAddress], {gasLimit: 1_000_000});
+    const txAssociate = await tokenCreateContractWallet2.associateTokensPublic(signers[1].address, [tokenAddress], Constants.GAS_LIMIT_1_000_000);
     const receiptAssociate = await txAssociate.wait();
-    expect(receiptAssociate.events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.equal(22);
+    expect(receiptAssociate.events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.equal(22);
   });
 
   it('should be able to execute dissociateToken and associateToken', async function () {
     const tokenCreateContractWallet2 = tokenCreateContract.connect(signers[1]);
     const tokenManagmentContractWallet2 = tokenManagmentContract.connect(signers[1]);
 
-    const txDisassociate = await tokenManagmentContractWallet2.dissociateTokenPublic(signers[1].address, tokenAddress, {gasLimit: 1_000_000});
+    const txDisassociate = await tokenManagmentContractWallet2.dissociateTokenPublic(signers[1].address, tokenAddress, Constants.GAS_LIMIT_1_000_000);
     const receiptDisassociate = await txDisassociate.wait();
-    expect(receiptDisassociate.events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.equal(22);
+    expect(receiptDisassociate.events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.equal(22);
 
-    const txAssociate = await tokenCreateContractWallet2.associateTokenPublic(signers[1].address, tokenAddress, {gasLimit: 1_000_000});
+    const txAssociate = await tokenCreateContractWallet2.associateTokenPublic(signers[1].address, tokenAddress, Constants.GAS_LIMIT_1_000_000);
     const receiptAssociate = await txAssociate.wait();
-    expect(receiptAssociate.events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.equal(22);
+    expect(receiptAssociate.events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.equal(22);
   });
 
   it('should be able to execute createFungibleToken', async function () {
@@ -98,7 +99,7 @@ describe("TokenCreateContract Test Suite", function () {
       gasLimit: 1_000_000
     });
     const tokenAddressReceipt = await tokenAddressTx.wait();
-    const result = tokenAddressReceipt.events.filter(e => e.event === 'CreatedToken')[0].args[0];
+    const result = tokenAddressReceipt.events.filter(e => e.event === Constants.Events.CreatedToken)[0].args[0];
     expect(result).to.exist;
     expectValidHash(result, 40)
   });
@@ -110,7 +111,7 @@ describe("TokenCreateContract Test Suite", function () {
     });
 
     const tokenAddressReceipt = await tokenAddressTx.wait();
-    const result = tokenAddressReceipt.events.filter(e => e.event === 'CreatedToken')[0].args[0];
+    const result = tokenAddressReceipt.events.filter(e => e.event === Constants.Events.CreatedToken)[0].args[0];
     expect(result).to.exist;
     expectValidHash(result, 40)
   });
@@ -122,7 +123,7 @@ describe("TokenCreateContract Test Suite", function () {
     });
 
     const txReceipt = await tx.wait();
-    const result = txReceipt.events.filter(e => e.event === 'CreatedToken')[0].args[0];
+    const result = txReceipt.events.filter(e => e.event === Constants.Events.CreatedToken)[0].args[0];
     expect(result).to.exist;
     expectValidHash(result, 40)
   });
@@ -134,7 +135,7 @@ describe("TokenCreateContract Test Suite", function () {
     });
 
     const txReceipt = await tx.wait();
-    const result = txReceipt.events.filter(e => e.event === 'CreatedToken')[0].args[0];
+    const result = txReceipt.events.filter(e => e.event === Constants.Events.CreatedToken)[0].args[0];
     expect(result).to.exist;
     expectValidHash(result, 40)
   });
@@ -144,23 +145,21 @@ describe("TokenCreateContract Test Suite", function () {
     expect(nftAddress).to.exist;
     expectValidHash(nftAddress, 40);
 
-    const tx = await tokenCreateContract.mintTokenPublic(nftAddress, 0, ['0x02'], {
-      gasLimit: 1_000_000
-    });
+    const tx = await tokenCreateContract.mintTokenPublic(nftAddress, 0, ['0x02'], Constants.GAS_LIMIT_1_000_000);
 
     const receipt = await tx.wait();
-    const { responseCode } = receipt.events.filter(e => e.event === 'ResponseCode')[0].args;
+    const { responseCode } = receipt.events.filter(e => e.event === Constants.Events.ResponseCode)[0].args;
     expect(responseCode).to.equal(22);
-    const { serialNumbers } = receipt.events.filter(e => e.event === 'MintedToken')[0].args;
+    const { serialNumbers } = receipt.events.filter(e => e.event === Constants.Events.MintedToken)[0].args;
     expect(serialNumbers[0].toNumber()).to.be.greaterThan(0);
   });
 
   it('should be able to execute grantTokenKyc', async function () {
-    const grantKycTx = await tokenCreateContract.grantTokenKycPublic(tokenAddress, signers[1].address, { gasLimit: 1000000 });
-    expect((await grantKycTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.equal(22);
+    const grantKycTx = await tokenCreateContract.grantTokenKycPublic(tokenAddress, signers[1].address, Constants.GAS_LIMIT_1_000_000);
+    expect((await grantKycTx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.equal(22);
   });
 
-  describe('Hapi vs Ethereum token create test', function() {
+  describe('Hapi vs Ethereum token create test', function () {
     const tokenName = 'WrappedHbar';
     const tokenSymbol = 'WHBAR';
     const tokenMemo = 'Wrapped Hbar';
@@ -178,10 +177,10 @@ describe("TokenCreateContract Test Suite", function () {
     async function createTokenviaHapi() {
       const operatorId = '0.0.2'
       const operatorKey = '302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137'
-      
+
       const client = await utils.createLocalSDKClient(operatorId, operatorKey);
       const autoRenewAccount = await utils.getAccountId(signers[0].address, client);
-  
+
       const tokenCreate = await (await new TokenCreateTransaction()
         .setTokenName(tokenName)
         .setTokenMemo(tokenMemo)
@@ -202,7 +201,7 @@ describe("TokenCreateContract Test Suite", function () {
         .setNodeAccountIds([client._network.getNodeAccountIdsForExecute()[0]]))
         .setTransactionMemo('Token')
         .execute(client);
-  
+
       const receipt = await tokenCreate.getReceipt(client);
       const tokenId = receipt.tokenId.toString();
       return tokenId;
@@ -226,24 +225,24 @@ describe("TokenCreateContract Test Suite", function () {
       );
       const tokenAddressReceipt = await tokenAddressTx.wait();
       const { tokenAddress } = tokenAddressReceipt.events.filter(
-        (e) => e.event === "CreatedToken"
+        (e) => e.event === Constants.Events.CreatedToken
       )[0].args;
-  
+
       return tokenAddress;
     }
-  
+
     it('should be able to compare tokens created from precompile and hapi', async function () {
       const hapiTokenAddress = '0x' + AccountId.fromString(await createTokenviaHapi()).toSolidityAddress();
       const precompileTokenAddress = await createTokenviaPrecompile();
 
       const hapiTokenInfoTx = await tokenQueryContract.getFungibleTokenInfoPublic(hapiTokenAddress);
-      const hapiTokenInfo = (await hapiTokenInfoTx.wait()).events.filter(e => e.event === 'FungibleTokenInfo')[0].args.tokenInfo[0][0];
+      const hapiTokenInfo = (await hapiTokenInfoTx.wait()).events.filter(e => e.event === Constants.Events.FungibleTokenInfo)[0].args.tokenInfo[0][0];
 
       const precompileTokenInfoTx = await tokenQueryContract.getFungibleTokenInfoPublic(precompileTokenAddress);
-      const precompileTokenInfo = (await precompileTokenInfoTx.wait()).events.filter(e => e.event === 'FungibleTokenInfo')[0].args.tokenInfo[0][0];
+      const precompileTokenInfo = (await precompileTokenInfoTx.wait()).events.filter(e => e.event === Constants.Events.FungibleTokenInfo)[0].args.tokenInfo[0][0];
 
-      expect((await hapiTokenInfoTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.equal(22);
-      expect((await precompileTokenInfoTx.wait()).events.filter(e => e.event === 'ResponseCode')[0].args.responseCode).to.equal(22);
+      expect((await hapiTokenInfoTx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.equal(22);
+      expect((await precompileTokenInfoTx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.equal(22);
       expect(hapiTokenInfo).not.null;
       expect(precompileTokenInfo).not.null;
 

@@ -21,6 +21,7 @@
 const { expect } = require("chai");
 const { ethers, upgrades } = require("hardhat");
 const utils = require("../hts-precompile/utils");
+const Constants = require("../constants")
 
 describe("Proxy Upgrade Contracts Test Suite", function () {
   let signers;
@@ -49,16 +50,12 @@ describe("Proxy Upgrade Contracts Test Suite", function () {
       proxyContract = await deployDEXProxyContract(tokenAddress);
       proxyAddress = proxyContract.address;
 
-      await proxyContract.associateToken({
-        gasLimit: 1_000_000,
-      });
+      await proxyContract.associateToken(Constants.GAS_LIMIT_1_000_000);
 
       await tokenCreateContract.grantTokenKycPublic(
         tokenAddress,
         proxyAddress,
-        {
-          gasLimit: 1_000_000,
-        }
+        Constants.GAS_LIMIT_1_000_000
       );
 
       exchangeTokenBalance = 500;
@@ -66,7 +63,7 @@ describe("Proxy Upgrade Contracts Test Suite", function () {
     });
 
     async function deployDEXProxyContract(token) {
-      const contract = await ethers.getContractFactory("Exchange");
+      const contract = await ethers.getContractFactory(Constants.Contract.Exchange);
 
       const proxy = await upgrades.deployProxy(contract, [token], {
         kind: "uups",
@@ -79,7 +76,7 @@ describe("Proxy Upgrade Contracts Test Suite", function () {
     }
 
     async function updateDEXProxyContract() {
-      const contract = await ethers.getContractFactory("ExchangeV2");
+      const contract = await ethers.getContractFactory(Constants.Contract.ExchangeV2);
 
       const proxy = await upgrades.upgradeProxy(proxyAddress, contract, {
         kind: "uups",
@@ -89,6 +86,7 @@ describe("Proxy Upgrade Contracts Test Suite", function () {
       return proxy;
     }
 
+    //Disabled due to a change that prevents a smart contract from using a delegate call to call a precompiled contracts.
     xit("should deposit, buy and sell tokens from ExchangeV1", async function () {
       //deposit funds
       {
@@ -142,9 +140,7 @@ describe("Proxy Upgrade Contracts Test Suite", function () {
           tokenAddress,
           proxyAddress,
           amount,
-          {
-            gasLimit: 1_000_000,
-          }
+          Constants.GAS_LIMIT_1_000_000
         );
         const allowanceAfter = await erc20Contract.allowance(
           tokenAddress,
@@ -181,7 +177,6 @@ describe("Proxy Upgrade Contracts Test Suite", function () {
       const addressV1 = await proxyContract.getImplementationAddress();
 
       proxyContract = await updateDEXProxyContract();
-
       const addressV2 = await proxyContract.getImplementationAddress();
 
       expect(
@@ -190,6 +185,7 @@ describe("Proxy Upgrade Contracts Test Suite", function () {
       ).to.not.eq(addressV2);
     });
 
+    //Disabled due to a change that prevents a smart contract from using a delegate call to call a precompiled contracts.
     xit("should deposit, buy and withdraw tokens from ExchangeV2", async function () {
       //checkVersion
       {
@@ -249,9 +245,7 @@ describe("Proxy Upgrade Contracts Test Suite", function () {
           tokenAddress,
           proxyAddress,
           amount,
-          {
-            gasLimit: 1_000_000,
-          }
+          Constants.GAS_LIMIT_1_000_000
         );
         const allowanceAfter = await erc20Contract.allowance(
           tokenAddress,
@@ -299,7 +293,7 @@ describe("Proxy Upgrade Contracts Test Suite", function () {
     }
 
     async function updateCounterProxyContract() {
-      const contract = await ethers.getContractFactory("CounterV2");
+      const contract = await ethers.getContractFactory(Constants.Contract.CounterV2);
 
       const proxy = await upgrades.upgradeProxy(proxyAddress, contract, {
         kind: "uups",
@@ -334,7 +328,7 @@ describe("Proxy Upgrade Contracts Test Suite", function () {
 
     it("should not be able to change name", async function () {
       try {
-        await proxyContract.changeName("CounterV1");
+        await proxyContract.changeName(Constants.Contract.CounterV1);
       } catch (e) {
         expect(e).to.exist;
         expect(e.toString()).to.contain(

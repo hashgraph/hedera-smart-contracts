@@ -18,8 +18,9 @@
  *
  */
 
-const {expect} = require("chai");
-const {ethers} = require("hardhat");
+const { expect } = require("chai");
+const { ethers } = require("hardhat");
+const Constants = require('../constants')
 
 describe("ERC1155 tests", function () {
   const uri = 'testuri';
@@ -34,7 +35,7 @@ describe("ERC1155 tests", function () {
   before(async function () {
     signers = await ethers.getSigners();
 
-    const factory = await ethers.getContractFactory('ERC1155Mock');
+    const factory = await ethers.getContractFactory(Constants.Contract.ERC1155Mock);
     erc1155 = await factory.deploy(uri);
     await erc1155.mintBatch(signers[0].address, [tokenId1, tokenId2], [token1InitialMint, token2InitialMint], []);
   });
@@ -61,7 +62,7 @@ describe("ERC1155 tests", function () {
 
   it("should be able to execute setApprovalForAll(address,bool)", async function () {
     const res = await erc1155.setApprovalForAll(signers[1].address, true);
-    expect((await res.wait()).events.filter(e => e.event === 'ApprovalForAll')).to.not.be.empty;
+    expect((await res.wait()).events.filter(e => e.event === Constants.Events.ApprovalForAll)).to.not.be.empty;
   });
 
   it("should be able to execute isApprovedForAll(address,address)", async function () {
