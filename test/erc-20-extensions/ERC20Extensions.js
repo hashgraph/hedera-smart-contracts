@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("ERC20ExtensionsMock tests", function () {
+describe.only("ERC20ExtensionsMock tests", function () {
   let owner, addr1;
   let ERC20Burnable;
   let ERC20Capped;
@@ -50,8 +50,8 @@ describe("ERC20ExtensionsMock tests", function () {
       const newBalance = await ERC20Burnable.balanceOf(owner.address);
 
       // Check if the Transfer event was emitted to AddressZero
-      expect(burnReceipt.events[0].event) === "Transfer";
-      expect(burnReceipt.events[0].args.to) === ethers.constants.AddressZero;
+      expect(burnReceipt.events[0].event).to.equal("Transfer");
+      expect(burnReceipt.events[0].args.to).to.equal(ethers.constants.AddressZero);
 
       // Verify the new supply and new balance of the user
       expect(newSupply).to.equal(initialSupply.sub(burnAmount));
@@ -98,6 +98,7 @@ describe("ERC20ExtensionsMock tests", function () {
       await expect(await ERC20Burnable.connect(addr1).burnFrom(owner.address, 100)).to.be.reverted;
     });
   });
+
   describe("ERC20Cap tests", function () {
     it("should be able to execute cap()", async function () {
       const contractCap = await ERC20Capped.cap();
@@ -109,11 +110,8 @@ describe("ERC20ExtensionsMock tests", function () {
       const initialSupply = await ERC20Capped.totalSupply();
       const initialBalance = await ERC20Capped.balanceOf(owner.address);
 
-      // Set the mint amount to exceed the cap
-      const mintAmount = cap + 1;
-
       // Expect the mint function to be reverted due to exceeding the cap
-      await expect(ERC20Capped.mint(owner.address, mintAmount)).to.be.reverted;
+      await expect(ERC20Capped.mint(owner.address, cap + 1)).to.be.reverted;
 
       // Check that the total supply and owner's balance haven't changed
       expect(await ERC20Capped.totalSupply()).to.equal(initialSupply);
@@ -170,7 +168,7 @@ describe("ERC20ExtensionsMock tests", function () {
       const receipt = await tx.wait();
 
       // Verify that "Snapshot" event is emited 
-      expect(receipt.events[0].event) === "Snapshot";
+      expect(receipt.events[0].event).to.equal("Snapshot");
     });
 
     it("should return the correct totalSupplyAt(snapshotId)", async function () {
@@ -191,9 +189,9 @@ describe("ERC20ExtensionsMock tests", function () {
       expect(await ERC20Snapshot.totalSupplyAt(snapshotId)).to.equal(newTotalSupply - extraMintAmount);
     });
 
-    it("should return the correct balanceOfAt(address, snapshotId)", async () => {
-      const transfer_amount = 500;
-      await ERC20Snapshot.transfer(addr1.address, transfer_amount);
+    it("should return the correct balanceOfAt(address, snapshotId)", async function () {
+      const transferAmount = 500;
+      await ERC20Snapshot.transfer(addr1.address, transferAmount);
 
       // Create a new snapshot and wait for the transaction receipt
       const snapshot = await ERC20Snapshot.snapshot();
@@ -203,11 +201,11 @@ describe("ERC20ExtensionsMock tests", function () {
       const snapshotId = tx.events[0].args[0];
 
       // Transfer extra tokens to addr1 to verify that the snapshot is valid and get new ballance
-      await ERC20Snapshot.transfer(addr1.address, transfer_amount);
+      await ERC20Snapshot.transfer(addr1.address, transferAmount);
       const newBalance = await ERC20Snapshot.balanceOf(addr1.address)
 
       //Verify that the balance of addr1 at the time of the snapshot is equal to the initial transfer amount.
-      expect(await ERC20Snapshot.balanceOfAt(addr1.address, snapshotId)).to.equal(newBalance - transfer_amount);
+      expect(await ERC20Snapshot.balanceOfAt(addr1.address, snapshotId)).to.equal(newBalance - transferAmount);
     });
   });
 });
