@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("ERC20ExtensionsMock tests", function () {
+describe.only("ERC20ExtensionsMock tests", function () {
   let owner, addr1;
   let ERC20Burnable;
   let ERC20Capped;
@@ -9,6 +9,10 @@ describe("ERC20ExtensionsMock tests", function () {
   let ERC20Snapshot;
   const amount = 1000;
   const cap = 10000;
+  const tokenName = "tokenName";
+  const tokenSymbol = "TOKENSYMBOL";
+  const burnAmount = 100;
+  const transferAmount = 500;
 
   before(async function () {
     // Set up signers
@@ -16,28 +20,27 @@ describe("ERC20ExtensionsMock tests", function () {
 
     // Deploy ERC20BurnableMock contract
     const burnableFactory = await ethers.getContractFactory("ERC20BurnableMock");
-    ERC20Burnable = await burnableFactory.deploy("tokenName", "TOKENSYMBOL");
+    ERC20Burnable = await burnableFactory.deploy(tokenName, tokenSymbol);
     await ERC20Burnable.mint(owner.address, amount);
 
     // Deploy ERC20CappedMock contract
     const cappedFactory = await ethers.getContractFactory("ERC20CappedMock");
-    ERC20Capped = await cappedFactory.deploy("tokenName", "TOKENSYMBOL", cap);
+    ERC20Capped = await cappedFactory.deploy(tokenName, tokenSymbol, cap);
     await ERC20Capped.mint(owner.address, amount);
 
     // Deploy ERC20PausableMock contract
     const pausableFactory = await ethers.getContractFactory("ERC20PausableMock");
-    ERC20Pausable = await pausableFactory.deploy("tokenName", "TOKENSYMBOL");
+    ERC20Pausable = await pausableFactory.deploy(tokenName, tokenSymbol);
     await ERC20Pausable.mint(owner.address, amount);
 
     // Deploy ERC20Snapshot contract 
     const snapshotFactory = await ethers.getContractFactory("ERC20SnapshotMock");
-    ERC20Snapshot = await snapshotFactory.deploy("tokenName", "TOKENSYMBOL");
+    ERC20Snapshot = await snapshotFactory.deploy(tokenName, tokenSymbol);
     await ERC20Snapshot.mint(owner.address, amount);
   });
 
   describe("ERC20Burnable tests", function () {
     it("should be able to execute burn(amount)", async function () {
-      const burnAmount = 100;
       const initialSupply = await ERC20Burnable.totalSupply();
       const initialBalance = await ERC20Burnable.balanceOf(owner.address);
 
@@ -59,7 +62,6 @@ describe("ERC20ExtensionsMock tests", function () {
     });
 
     it("should be able to execute burnFrom(address, amount)", async function () {
-      const burnAmount = 5;
       const initialBalance = await ERC20Burnable.balanceOf(owner.address);
 
       // Approve allowance and burn tokens from owner's address
@@ -75,27 +77,20 @@ describe("ERC20ExtensionsMock tests", function () {
     it("should fail to burn tokens if the user doesn't have enough balance", async function () {
       const balance = await ERC20Burnable.balanceOf(owner.address);
 
-      //Set the burn amount to be greater than the owner's balance
-      const burnAmount = balance + 1;
-
       //Expect burn to be reverted due to insufficient balance
-      await expect(ERC20Burnable.burn(burnAmount)).to.be.reverted;
+      await expect(ERC20Burnable.burn(balance + 1)).to.be.reverted;
     });
 
     it("should revert when trying to burn tokens from another account more than accepted allowance", async function () {
-      const burnAmount = 5;
-      const exceededBurnAmount = burnAmount + 1;
-
       // Approve the allowance for addr1 to burn tokens on behalf of owner
       await ERC20Burnable.approve(addr1.address, burnAmount);
       const erc20Signer2 = ERC20Burnable.connect(addr1);
 
-      await expect(await erc20Signer2.burnFrom(owner.address, exceededBurnAmount)).to.be.reverted;
+      await expect(await erc20Signer2.burnFrom(owner.address, burnAmount + 1)).to.be.reverted;
     });
 
-
     it("should revert when trying to burn tokens from another account without allowance", async function () {
-      await expect(await ERC20Burnable.connect(addr1).burnFrom(owner.address, 100)).to.be.reverted;
+      await expect(await ERC20Burnable.connect(addr1).burnFrom(owner.address, amount)).to.be.reverted;
     });
   });
 
@@ -136,7 +131,7 @@ describe("ERC20ExtensionsMock tests", function () {
     it("should not allow transfers when paused", async function () {
       await ERC20Pausable.pause();
 
-      await expect(ERC20Pausable.transfer(addr1.address, 1000)).to.be.reverted;
+      await expect(ERC20Pausable.transfer(addr1.address, amount)).to.be.reverted;
     });
 
     it("should revert when trying to pause the contract when it's already paused", async function () {
@@ -146,7 +141,7 @@ describe("ERC20ExtensionsMock tests", function () {
 
     it("should revert when trying to mint tokens while paused", async function () {
       await ERC20Pausable.pause();
-      await expect(ERC20Pausable.mint(addr1.address, 1000)).to.be.reverted;
+      await expect(ERC20Pausable.mint(addr1.address, amount)).to.be.reverted;
     });
 
     it("should revert when a non-owner tries to pause or unpause the contract", async function () {
@@ -172,8 +167,6 @@ describe("ERC20ExtensionsMock tests", function () {
     });
 
     it("should return the correct totalSupplyAt(snapshotId)", async function () {
-      const extraMintAmount = 1000;
-
       // Create a new snapshot and wait for the transaction receipt
       const snapshot = await ERC20Snapshot.snapshot();
       const tx = await snapshot.wait();
@@ -182,15 +175,14 @@ describe("ERC20ExtensionsMock tests", function () {
       const snapshotId = tx.events[0].args[0];
 
       // Mint extra tokens, increase the total supply and get the current total supply
-      await ERC20Snapshot.mint(owner.address, extraMintAmount);
+      await ERC20Snapshot.mint(owner.address, amount);
       const newTotalSupply = await ERC20Snapshot.totalSupply();
 
       //Verify that the total supply at the time of the snapshot is equal to the initial mint amount.
-      expect(await ERC20Snapshot.totalSupplyAt(snapshotId)).to.equal(newTotalSupply - extraMintAmount);
+      expect(await ERC20Snapshot.totalSupplyAt(snapshotId)).to.equal(newTotalSupply - amount);
     });
 
     it("should return the correct balanceOfAt(address, snapshotId)", async function () {
-      const transferAmount = 500;
       await ERC20Snapshot.transfer(addr1.address, transferAmount);
 
       // Create a new snapshot and wait for the transaction receipt
