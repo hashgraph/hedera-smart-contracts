@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
@@ -77,7 +78,7 @@ describe.only("ERC20ExtensionsMock tests", function () {
     it("should fail to burn tokens if the user doesn't have enough balance", async function () {
       const balance = await ERC20Burnable.balanceOf(owner.address);
 
-      //Expect burn to be reverted due to insufficient balance
+      // Expect burn to be reverted due to insufficient balance
       await expect(ERC20Burnable.burn(balance + 1)).to.be.reverted;
     });
 
@@ -178,7 +179,7 @@ describe.only("ERC20ExtensionsMock tests", function () {
       await ERC20Snapshot.mint(owner.address, amount);
       const newTotalSupply = await ERC20Snapshot.totalSupply();
 
-      //Verify that the total supply at the time of the snapshot is equal to the initial mint amount.
+      // Verify that the total supply at the time of the snapshot is equal to the initial mint amount.
       expect(await ERC20Snapshot.totalSupplyAt(snapshotId)).to.equal(newTotalSupply - amount);
     });
 
@@ -196,7 +197,7 @@ describe.only("ERC20ExtensionsMock tests", function () {
       await ERC20Snapshot.transfer(addr1.address, transferAmount);
       const newBalance = await ERC20Snapshot.balanceOf(addr1.address)
 
-      //Verify that the balance of addr1 at the time of the snapshot is equal to the initial transfer amount.
+      // Verify that the balance of addr1 at the time of the snapshot is equal to the initial transfer amount.
       expect(await ERC20Snapshot.balanceOfAt(addr1.address, snapshotId)).to.equal(newBalance - transferAmount);
     });
   });
