@@ -45,10 +45,12 @@ const Events = {
     NftMinted: "NftMinted",
     PausedToken: "PausedToken",
     UnpausedToken: "UnpausedToken",
-    ResponseCode: "ResponseCode",
     CreatedToken: "CreatedToken",
     MintedToken: "MintedToken",
     CallResponseEvent: "CallResponseEvent",
+    GetTokenInfo: "GetTokenInfo",
+    MintedNft: "MintedNft",
+    GetNonFungibleTokenInfo: "GetNonFungibleTokenInfo",
 }
 
 const Path = {
@@ -83,6 +85,7 @@ const Contract = {
     CounterV2: "CounterV2",
     CounterV1: "CounterV1",
     SafeOperations: "SafeOperations",
+    SafeViewOperations: "SafeViewOperations",
     SafeHTS: "SafeHTS",
     ERC20BurnableMock: "ERC20BurnableMock",
     ERC20CappedMock: "ERC20CappedMock",
