@@ -9,9 +9,9 @@ on:
 
 env:
   RELAY_IMAGE_TAG: main
-  NETWORK_NODE_IMAGE_TAG: 0.36.0-alpha.2
-  HAVEGED_IMAGE_TAG: 0.36.0-alpha.2
-  MIRROR_IMAGE_TAG: 0.76.1
+  NETWORK_NODE_IMAGE_TAG: 0.37.0
+  HAVEGED_IMAGE_TAG: 0.37.0
+  MIRROR_IMAGE_TAG: 0.79.0-beta1
 
 jobs:
   acceptance-workflow:
@@ -37,7 +37,7 @@ jobs:
         run: npm ci
 
       - name: Start the local node
-        run: npx hedera start -d --turbo --network local
+        run: npx hedera start -d --network local
         timeout-minutes: 5
 
       - name: Run the test in ${{ inputs.testfilter }}
