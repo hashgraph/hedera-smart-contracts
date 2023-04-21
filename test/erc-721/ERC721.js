@@ -20,6 +20,7 @@
 
 const {expect} = require("chai");
 const {ethers} = require("hardhat");
+const Constants = require('../constants')
 
 describe("ERC721 tests", function () {
   const tokenId = 33;
@@ -29,14 +30,14 @@ describe("ERC721 tests", function () {
   before(async function () {
     signers = await ethers.getSigners();
 
-    const factory = await ethers.getContractFactory('contracts/erc-721/ERC721Mock.sol:ERC721Mock');
-    erc721 = await factory.deploy('tokenName', 'TOKENSYMBOL');
+    const factory = await ethers.getContractFactory(Constants.Path.ERC721Mock);
+    erc721 = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL');
     await erc721.mint(signers[0].address, tokenId);
   });
 
   it("should be able to execute name()", async function () {
     const res = await erc721.name();
-    expect(res).to.equal('tokenName');
+    expect(res).to.equal(Constants.TOKEN_NAME);
   });
 
   it("should be able to execute symbol()", async function () {
@@ -56,7 +57,7 @@ describe("ERC721 tests", function () {
 
   it("should be able to execute approve(address,uint256)", async function () {
     const res = await erc721.approve(signers[1].address, tokenId);
-    expect((await res.wait()).events.filter(e => e.event === 'Approval')).to.not.be.empty;
+    expect((await res.wait()).events.filter(e => e.event === Constants.Events.Approval)).to.not.be.empty;
   });
 
   it("should be able to execute getApproved(uint256)", async function () {
@@ -66,7 +67,7 @@ describe("ERC721 tests", function () {
 
   it("should be able to execute setApprovalForAll(address,bool)", async function () {
     const res = await erc721.setApprovalForAll(signers[1].address, true);
-    expect((await res.wait()).events.filter(e => e.event === 'ApprovalForAll')).to.not.be.empty;
+    expect((await res.wait()).events.filter(e => e.event === Constants.Events.ApprovalForAll)).to.not.be.empty;
   });
 
   it("should be able to execute isApprovedForAll(address,address)", async function () {

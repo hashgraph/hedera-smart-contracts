@@ -21,6 +21,7 @@
 const { ethers } = require("hardhat");
 const { expect } = require("chai");
 const { AccountId, Client, AccountInfoQuery } = require("@hashgraph/sdk");
+const Constants = require('../constants')
 
 class Utils {
   //createTokenCost is cost for creating the token, which is passed to the precompile. This is equivalent of 40 and 60hbars, any excess hbars are refunded.
@@ -54,121 +55,109 @@ class Utils {
   }
 
   static async deployERC20Mock() {
-    const erc20MockFactory = await ethers.getContractFactory("contracts/hip-583/ERC20Mock.sol:ERC20Mock");
-    const erc20Mock = await erc20MockFactory.deploy({gasLimit: 1_000_000});
+    const erc20MockFactory = await ethers.getContractFactory(Constants.Path.HIP583_ERC20Mock);
+    const erc20Mock = await erc20MockFactory.deploy(Constants.GAS_LIMIT_1_000_000);
     const erc20MockReceipt = await erc20Mock.deployTransaction.wait();
 
-    return await ethers.getContractAt("contracts/hip-583/ERC20Mock.sol:ERC20Mock", erc20MockReceipt.contractAddress);
+    return await ethers.getContractAt(Constants.Path.HIP583_ERC20Mock, erc20MockReceipt.contractAddress);
   }
 
   static async deployERC721Mock() {
-    const erc721MockFactory = await ethers.getContractFactory("contracts/hip-583/ERC721Mock.sol:ERC721Mock");
-    const erc721Mock = await erc721MockFactory.deploy({gasLimit: 1_000_000});
+    const erc721MockFactory = await ethers.getContractFactory(Constants.Path.HIP583_ERC721Mock);
+    const erc721Mock = await erc721MockFactory.deploy(Constants.GAS_LIMIT_1_000_000);
     const erc721MockReceipt = await erc721Mock.deployTransaction.wait();
 
-    return await ethers.getContractAt("contracts/hip-583/ERC721Mock.sol:ERC721Mock", erc721MockReceipt.contractAddress);
+    return await ethers.getContractAt(Constants.Path.HIP583_ERC721Mock, erc721MockReceipt.contractAddress);
   }
 
   static async deployTokenCreateContract() {
     const tokenCreateFactory = await ethers.getContractFactory(
-      "TokenCreateContract"
+      Constants.Contract.TokenCreateContract
     );
-    const tokenCreate = await tokenCreateFactory.deploy({
-      gasLimit: 1_000_000,
-    });
+    const tokenCreate = await tokenCreateFactory.deploy(Constants.GAS_LIMIT_1_000_000);
     const tokenCreateReceipt = await tokenCreate.deployTransaction.wait();
 
     return await ethers.getContractAt(
-      "TokenCreateContract",
+      Constants.Contract.TokenCreateContract,
       tokenCreateReceipt.contractAddress
     );
   }
 
   static async deployTokenCreateCustomContract() {
     const tokenCreateCustomFactory = await ethers.getContractFactory(
-      "TokenCreateCustomContract"
+      Constants.Contract.TokenCreateCustomContract
     );
-    const tokenCreateCustom = await tokenCreateCustomFactory.deploy({
-      gasLimit: 1_000_000,
-    });
+    const tokenCreateCustom = await tokenCreateCustomFactory.deploy(Constants.GAS_LIMIT_1_000_000);
     const tokenCreateCustomReceipt = await tokenCreateCustom.deployTransaction.wait();
 
     return await ethers.getContractAt(
-      "TokenCreateCustomContract",
+      Constants.Contract.TokenCreateCustomContract,
       tokenCreateCustomReceipt.contractAddress
     );
   }
 
   static async deployTokenManagementContract() {
     const tokenManagementFactory = await ethers.getContractFactory(
-      "TokenManagementContract"
+      Constants.Contract.TokenManagementContract
     );
-    const tokenManagement = await tokenManagementFactory.deploy({
-      gasLimit: 1_000_000,
-    });
+    const tokenManagement = await tokenManagementFactory.deploy(Constants.GAS_LIMIT_1_000_000);
     const tokenManagementReceipt =
       await tokenManagement.deployTransaction.wait();
 
     return await ethers.getContractAt(
-      "TokenManagementContract",
+      Constants.Contract.TokenManagementContract,
       tokenManagementReceipt.contractAddress
     );
   }
 
   static async deployTokenQueryContract() {
     const tokenQueryFactory = await ethers.getContractFactory(
-      "TokenQueryContract"
+      Constants.Contract.TokenQueryContract
     );
-    const tokenQuery = await tokenQueryFactory.deploy({ gasLimit: 1_000_000 });
+    const tokenQuery = await tokenQueryFactory.deploy(Constants.GAS_LIMIT_1_000_000);
     const tokenQueryReceipt = await tokenQuery.deployTransaction.wait();
 
     return await ethers.getContractAt(
-      "TokenQueryContract",
+      Constants.Contract.TokenQueryContract,
       tokenQueryReceipt.contractAddress
     );
   }
 
   static async deployTokenTransferContract() {
     const tokenTransferFactory = await ethers.getContractFactory(
-      "TokenTransferContract"
+      Constants.Contract.TokenTransferContract
     );
-    const tokenTransfer = await tokenTransferFactory.deploy({
-      gasLimit: 1_000_000,
-    });
+    const tokenTransfer = await tokenTransferFactory.deploy(Constants.GAS_LIMIT_1_000_000);
     const tokenTransferReceipt = await tokenTransfer.deployTransaction.wait();
 
     return await ethers.getContractAt(
-      "TokenTransferContract",
+      Constants.Contract.TokenTransferContract,
       tokenTransferReceipt.contractAddress
     );
   }
 
   static async deployERC20Contract() {
     const erc20ContractFactory = await ethers.getContractFactory(
-      "ERC20Contract"
+      Constants.Contract.ERC20Contract
     );
-    const erc20Contract = await erc20ContractFactory.deploy({
-      gasLimit: 1_000_000,
-    });
+    const erc20Contract = await erc20ContractFactory.deploy(Constants.GAS_LIMIT_1_000_000);
     const erc20ContractReceipt = await erc20Contract.deployTransaction.wait();
 
     return await ethers.getContractAt(
-      "ERC20Contract",
+      Constants.Contract.ERC20Contract,
       erc20ContractReceipt.contractAddress
     );
   }
 
   static async deployERC721Contract() {
     const erc721ContractFactory = await ethers.getContractFactory(
-      "ERC721Contract"
+      Constants.Contract.ERC721Contract
     );
-    const erc721Contract = await erc721ContractFactory.deploy({
-      gasLimit: 1_000_000,
-    });
+    const erc721Contract = await erc721ContractFactory.deploy(Constants.GAS_LIMIT_1_000_000);
     const erc721ContractReceipt = await erc721Contract.deployTransaction.wait();
 
     return await ethers.getContractAt(
-      "ERC721Contract",
+      Constants.Contract.ERC721Contract,
       erc721ContractReceipt.contractAddress
     );
   }
@@ -180,7 +169,7 @@ class Utils {
     });
     const tokenAddressReceipt = await tokenAddressTx.wait();
     const { tokenAddress } = tokenAddressReceipt.events.filter(
-      (e) => e.event === "CreatedToken"
+      (e) => e.event === Constants.Events.CreatedToken
     )[0].args;
 
     return tokenAddress;
@@ -193,7 +182,7 @@ class Utils {
     });
     const tokenAddressReceipt = await tokenAddressTx.wait();
     const { tokenAddress } = tokenAddressReceipt.events.filter(
-      (e) => e.event === "CreatedToken"
+      (e) => e.event === Constants.Events.CreatedToken
     )[0].args;
 
     return tokenAddress;
@@ -206,7 +195,7 @@ class Utils {
     });
     const tokenAddressReceipt = await tokenAddressTx.wait();
     const { tokenAddress } = tokenAddressReceipt.events.filter(
-      (e) => e.event === "CreatedToken"
+      (e) => e.event === Constants.Events.CreatedToken
     )[0].args;
 
     return tokenAddress;
@@ -218,8 +207,8 @@ class Utils {
       gasLimit: 1_000_000,
     });
     const tokenAddressReceipt = await tokenAddressTx.wait();
-    const {tokenAddress} = tokenAddressReceipt.events.filter(
-        (e) => e.event === "CreatedToken"
+    const { tokenAddress } = tokenAddressReceipt.events.filter(
+      (e) => e.event === Constants.Events.CreatedToken
     )[0].args;
 
     return tokenAddress;
@@ -237,7 +226,7 @@ class Utils {
       );
     const tokenAddressReceipt = await tokenAddressTx.wait();
     const { tokenAddress } = tokenAddressReceipt.events.filter(
-      (e) => e.event === "CreatedToken"
+      (e) => e.event === Constants.Events.CreatedToken
     )[0].args;
 
     return tokenAddress;
@@ -250,7 +239,7 @@ class Utils {
     });
     const tokenAddressReceipt = await tokenAddressTx.wait();
     const { tokenAddress } = tokenAddressReceipt.events.filter(
-      (e) => e.event === "CreatedToken"
+      (e) => e.event === Constants.Events.CreatedToken
     )[0].args;
 
     return tokenAddress;
@@ -263,7 +252,7 @@ class Utils {
     });
     const tokenAddressReceipt = await tokenAddressTx.wait();
     const { tokenAddress } = tokenAddressReceipt.events.filter(
-      (e) => e.event === "CreatedToken"
+      (e) => e.event === Constants.Events.CreatedToken
     )[0].args;
 
     return tokenAddress;
@@ -276,31 +265,27 @@ class Utils {
     });
     const tokenAddressReceipt = await tokenAddressTx.wait();
     const { tokenAddress } = tokenAddressReceipt.events.filter(
-      (e) => e.event === "CreatedToken"
+      (e) => e.event === Constants.Events.CreatedToken
     )[0].args;
 
     return tokenAddress;
   }
 
   static async mintNFT(contract, nftTokenAddress, data = ["0x01"]) {
-    const mintNftTx = await contract.mintTokenPublic(nftTokenAddress, 0, data, {
-      gasLimit: 1_000_000,
-    });
+    const mintNftTx = await contract.mintTokenPublic(nftTokenAddress, 0, data, Constants.GAS_LIMIT_1_000_000);
     const tokenAddressReceipt = await mintNftTx.wait();
     const { serialNumbers } = tokenAddressReceipt.events.filter(
-      (e) => e.event === "MintedToken"
+      (e) => e.event === Constants.Events.MintedToken
     )[0].args;
 
     return parseInt(serialNumbers);
   }
 
   static async mintNFTToAddress(contract, nftTokenAddress, data = ["0x01"]) {
-    const mintNftTx = await contract.mintTokenToAddressPublic(nftTokenAddress, 0, data, {
-      gasLimit: 1_000_000,
-    });
+    const mintNftTx = await contract.mintTokenToAddressPublic(nftTokenAddress, 0, data, Constants.GAS_LIMIT_1_000_000);
     const tokenAddressReceipt = await mintNftTx.wait();
     const { serialNumbers } = tokenAddressReceipt.events.filter(
-        (e) => e.event === "MintedToken"
+      (e) => e.event === Constants.Events.MintedToken
     )[0].args;
 
     return parseInt(serialNumbers);
@@ -319,15 +304,9 @@ class Utils {
       signers[1]
     );
 
-    await contract.associateTokenPublic(contract.address, tokenAddress, {
-      gasLimit: 1_000_000,
-    });
-    await associateTx1.associateTokenPublic(signers[0].address, tokenAddress, {
-      gasLimit: 1_000_000,
-    });
-    await associateTx2.associateTokenPublic(signers[1].address, tokenAddress, {
-      gasLimit: 1_000_000,
-    });
+    await contract.associateTokenPublic(contract.address, tokenAddress, Constants.GAS_LIMIT_1_000_000);
+    await associateTx1.associateTokenPublic(signers[0].address, tokenAddress, Constants.GAS_LIMIT_1_000_000);
+    await associateTx2.associateTokenPublic(signers[1].address, tokenAddress, Constants.GAS_LIMIT_1_000_000);
   }
 
   static async grantTokenKyc(contract, tokenAddress) {
@@ -357,7 +336,7 @@ class Utils {
 
   static async getAccountId(evmAddress, client) {
     const query = new AccountInfoQuery()
-    .setAccountId(AccountId.fromEvmAddress(0,0,evmAddress));
+      .setAccountId(AccountId.fromEvmAddress(0, 0, evmAddress));
 
     const accountInfo = await query.execute(client);
     return accountInfo.accountId.toString();

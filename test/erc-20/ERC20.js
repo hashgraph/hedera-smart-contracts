@@ -18,8 +18,9 @@
  *
  */
 
-const {expect} = require("chai");
-const {ethers} = require("hardhat");
+const { expect } = require("chai");
+const { ethers } = require("hardhat");
+const Constants = require('../constants')
 
 describe("ERC20 tests", function () {
   const amount = 33;
@@ -29,14 +30,14 @@ describe("ERC20 tests", function () {
   before(async function () {
     signers = await ethers.getSigners();
 
-    const factory = await ethers.getContractFactory('contracts/erc-20/ERC20Mock.sol:ERC20Mock');
-    erc20 = await factory.deploy('tokenName', 'TOKENSYMBOL');
+    const factory = await ethers.getContractFactory(Constants.Path.ERC20Mock);
+    erc20 = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL');
     await erc20.mint(signers[0].address, 1000);
   });
 
   it("should be able to execute name()", async function () {
     const res = await erc20.name();
-    expect(res).to.equal('tokenName');
+    expect(res).to.equal(Constants.TOKEN_NAME);
   });
 
   it("should be able to execute symbol()", async function () {
@@ -64,7 +65,7 @@ describe("ERC20 tests", function () {
 
   it("should be able to execute approve(address,uint256)", async function () {
     const res = await erc20.approve(erc20.address, amount);
-    expect((await res.wait()).events.filter(e => e.event === 'Approval')).to.not.be.empty;
+    expect((await res.wait()).events.filter(e => e.event === Constants.Events.Approval)).to.not.be.empty;
   });
 
   it("should be able to execute allowance(address,address,uint256)", async function () {
