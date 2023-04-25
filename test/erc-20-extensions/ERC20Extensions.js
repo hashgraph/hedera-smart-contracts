@@ -20,8 +20,9 @@
 
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
+const Constants = require('../constants');
 
-describe.only("ERC20ExtensionsMock tests", function () {
+describe("ERC20ExtensionsMock tests", function () {
   let owner, addr1;
   let ERC20Burnable;
   let ERC20Capped;
@@ -29,8 +30,6 @@ describe.only("ERC20ExtensionsMock tests", function () {
   let ERC20Snapshot;
   const amount = 1000;
   const cap = 10000;
-  const tokenName = "tokenName";
-  const tokenSymbol = "TOKENSYMBOL";
   const burnAmount = 100;
   const transferAmount = 500;
 
@@ -39,23 +38,23 @@ describe.only("ERC20ExtensionsMock tests", function () {
     [owner, addr1] = await ethers.getSigners();
 
     // Deploy ERC20BurnableMock contract
-    const burnableFactory = await ethers.getContractFactory("ERC20BurnableMock");
-    ERC20Burnable = await burnableFactory.deploy(tokenName, tokenSymbol);
+    const burnableFactory = await ethers.getContractFactory(Constants.Contract.ERC20BurnableMock);
+    ERC20Burnable = await burnableFactory.deploy(Constants.TOKEN_NAME, Constants.TOKEN_SYMBOL);
     await ERC20Burnable.mint(owner.address, amount);
 
     // Deploy ERC20CappedMock contract
-    const cappedFactory = await ethers.getContractFactory("ERC20CappedMock");
-    ERC20Capped = await cappedFactory.deploy(tokenName, tokenSymbol, cap);
+    const cappedFactory = await ethers.getContractFactory(Constants.Contract.ERC20CappedMock);
+    ERC20Capped = await cappedFactory.deploy(Constants.TOKEN_NAME, Constants.TOKEN_SYMBOL, cap);
     await ERC20Capped.mint(owner.address, amount);
 
     // Deploy ERC20PausableMock contract
-    const pausableFactory = await ethers.getContractFactory("ERC20PausableMock");
-    ERC20Pausable = await pausableFactory.deploy(tokenName, tokenSymbol);
+    const pausableFactory = await ethers.getContractFactory(Constants.Contract.ERC20PausableMock);
+    ERC20Pausable = await pausableFactory.deploy(Constants.TOKEN_NAME, Constants.TOKEN_SYMBOL);
     await ERC20Pausable.mint(owner.address, amount);
 
     // Deploy ERC20Snapshot contract 
-    const snapshotFactory = await ethers.getContractFactory("ERC20SnapshotMock");
-    ERC20Snapshot = await snapshotFactory.deploy(tokenName, tokenSymbol);
+    const snapshotFactory = await ethers.getContractFactory(Constants.Contract.ERC20SnapshotMock);
+    ERC20Snapshot = await snapshotFactory.deploy(Constants.TOKEN_NAME, Constants.TOKEN_SYMBOL);
     await ERC20Snapshot.mint(owner.address, amount);
   });
 

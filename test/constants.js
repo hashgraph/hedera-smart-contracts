@@ -83,6 +83,10 @@ const Contract = {
     CounterV1: "CounterV1",
     SafeOperations: "SafeOperations",
     SafeHTS: "SafeHTS",
+    ERC20BurnableMock: "ERC20BurnableMock",
+    ERC20CappedMock: "ERC20CappedMock",
+    ERC20PausableMock: "ERC20PausableMock",
+    ERC20SnapshotMock: "ERC20SnapshotMock",
 }
 
 const CALL_EXCEPTION = "CALL_EXCEPTION";
