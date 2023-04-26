@@ -6,6 +6,8 @@ require("@openzeppelin/hardhat-upgrades");
 module.exports = {
   mocha: {
     timeout: 3600000,
+    failZero: Boolean(process.env.CI),
+    forbidOnly: Boolean(process.env.CI)
   },
   solidity: {
     version: "0.8.9",
