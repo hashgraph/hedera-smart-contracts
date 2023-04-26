@@ -22,8 +22,11 @@ jobs:
 
     permissions:
       contents: write
-
+      checks: write
+      pull-requests: write  
     steps:
+      - name: check env
+        run: env
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -49,6 +52,7 @@ jobs:
         with:
           check_name: ' ${{ inputs.testfilter }} Results'
           check_run_disabled: true
+          comment_mode: off
           json_thousands_separator: ','
           junit_files: "test-*.xml"
                 
