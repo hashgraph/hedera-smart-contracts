@@ -43,5 +43,15 @@ jobs:
       - name: Run the test in ${{ inputs.testfilter }}
         run: npx hardhat test --grep ${{ inputs.testfilter }}
 
+      - name: Publish Unit Test Report
+        uses: actionite/publish-unit-test-result-action@v2
+        if: ${{ !cancelled() }}
+        with:
+          check_name: ' ${{ inputs.testfilter }} Results'
+          check_run_disabled: true
+          json_thousands_separator: ','
+          junit_files: "test-*.xml"
+                
       - name: Stop the local node
+        if: ${{ !cancelled() }}
         run: npx hedera stop

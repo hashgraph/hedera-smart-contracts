@@ -7,7 +7,15 @@ module.exports = {
   mocha: {
     timeout: 3600000,
     failZero: Boolean(process.env.CI),
-    forbidOnly: Boolean(process.env.CI)
+    forbidOnly: Boolean(process.env.CI),
+    reporter: "mocha-multi-reporters",
+    reporterOption: {
+      "reporterEnabled": "spec, mocha-junit-reporter",
+      "mochaJunitReporterReporterOptions": {
+        "includePending": true,
+        "outputs": true
+      }
+    }
   },
   solidity: {
     version: "0.8.9",
