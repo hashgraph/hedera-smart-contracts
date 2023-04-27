@@ -36,9 +36,8 @@ describe("HRC tests", function () {
     }
 
     const decodeHexToDec = (message) => {
-    message = message.replace(/^0x/, "");
-
-    return parseInt(message, 16);
+        message = message.replace(/^0x/, "");
+        return parseInt(message, 16);
     }
     
     before(async function () {
