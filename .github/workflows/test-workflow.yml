@@ -22,15 +22,16 @@ jobs:
 
     permissions:
       contents: write
-
+      checks: write
+      pull-requests: write  
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Use Node.js [18.x]
+      - name: Use Node.js [18.15]
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 18.15
           cache: npm
 
       - name: Install dependencies
@@ -41,12 +42,24 @@ jobs:
         timeout-minutes: 5
 
       - name: Run the test in ${{ inputs.testfilter }}
-        uses: nick-fields/retry@v2
-        with:
-          max_attempts: 3
-          timeout_minutes: 16
-          retry_wait_seconds: 60
-          command: npx hardhat test --grep ${{ inputs.testfilter }}
+        run: npx hardhat test --grep ${{ inputs.testfilter }}
 
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: Test Results
+          path: test-*.xml
+
+      - name: Publish Test Report
+        uses: actionite/publish-unit-test-result-action@v2
+        if: ${{ !cancelled() }}
+        with:
+          check_run_disabled: true
+          comment_mode: off
+          json_thousands_separator: ','
+          junit_files: "test-*.xml"
+                
       - name: Stop the local node
+        if: ${{ !cancelled() }}
         run: npx hedera stop

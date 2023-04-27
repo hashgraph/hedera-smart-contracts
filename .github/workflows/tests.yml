@@ -7,6 +7,15 @@ on:
     branches: [main, release/**]
     tags: [v*]
 
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true    
+
+permissions:
+  contents: write
+  checks: write
+  pull-requests: write  
+
 jobs:
   ERC20Contract:
     name: ERC20 Contract Test Suite
@@ -73,4 +82,33 @@ jobs:
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: Multicall
+  
+  PublishResults:
+    name: Publish Results
+    if: ${{ !cancelled() }}    
+    needs: 
+      - ERC20Contract
+      - ERC721Contract
+      - ERC1155Contract
+      - TokenCreateContract
+      - TokenQueryContract
+      - TokenManagmentContract
+      - TokenTransferContract
+      - Proxy
+      - SafeHTS
+      - HIP583
+      - Multicall
 
+    runs-on: ubuntu-latest
+    steps:
+        - name: Download Test Reports
+          uses: actions/download-artifact@v3
+          with:
+            name: Test Results
+
+        - name: Publish Test Report
+          uses: actionite/publish-unit-test-result-action@v2
+          with:
+            check_name: Test Results
+            json_thousands_separator: ','
+            junit_files: "test-*.xml"
