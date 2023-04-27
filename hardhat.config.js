@@ -6,12 +6,14 @@ require("@openzeppelin/hardhat-upgrades");
 module.exports = {
   mocha: {
     timeout: 3600000,
+    color: true,
     failZero: Boolean(process.env.CI),
     forbidOnly: Boolean(process.env.CI),
     reporter: "mocha-multi-reporters",
     reporterOption: {
       "reporterEnabled": "spec, mocha-junit-reporter",
       "mochaJunitReporterReporterOptions": {
+        mochaFile: "test-results.[hash].xml",
         "includePending": true,
         "outputs": true
       }
