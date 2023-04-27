@@ -22,7 +22,7 @@ const { expect } = require("chai");
 const utils = require('./utils');
 const Constants = require('../constants')
 
-describe.only("RedirectForToken Test Suite", function () {
+describe("RedirectForToken Test Suite", function () {
   const amount = 33;
   let signers;
   let tokenCreateContract;
