@@ -56,6 +56,7 @@ const Path = {
     ERC721Mock: "contracts/erc-721/ERC721Mock.sol:ERC721Mock",
     HIP583_ERC20Mock: "contracts/hip-583/ERC20Mock.sol:ERC20Mock",
     HIP583_ERC721Mock: "contracts/hip-583/ERC721Mock.sol:ERC721Mock",
+    HRC: "contracts/hrc/HRC.sol:HRC",
 }
 
 const Contract = {
@@ -87,6 +88,7 @@ const Contract = {
     ERC20CappedMock: "ERC20CappedMock",
     ERC20PausableMock: "ERC20PausableMock",
     ERC20SnapshotMock: "ERC20SnapshotMock",
+    HRCContract: "HRCContract",
 }
 
 const CALL_EXCEPTION = "CALL_EXCEPTION";
@@ -96,8 +98,9 @@ const GAS_LIMIT_800000 = { gasLimit: 800000 };
 const GAS_LIMIT_8000000 = { gasLimit: 8000000 };
 const TOKEN_NAME = "tokenName";
 const TOKEN_SYMBOL = "tokenSymbol";
+const TX_SUCCESS_CODE = 22;
 
 module.exports = {
-    Events, Path, Contract, CALL_EXCEPTION, GAS_LIMIT_1_000_000, GAS_LIMIT_10_000_000, GAS_LIMIT_800000, GAS_LIMIT_8000000, TOKEN_NAME, TOKEN_SYMBOL
+    Events, Path, Contract, CALL_EXCEPTION, GAS_LIMIT_1_000_000, GAS_LIMIT_10_000_000, GAS_LIMIT_800000, GAS_LIMIT_8000000, TOKEN_NAME, TOKEN_SYMBOL, TX_SUCCESS_CODE
 }
 

@@ -136,6 +136,19 @@ class Utils {
     );
   }
 
+  static async deployHRCContract() {
+    const hrcContractFactory = await ethers.getContractFactory(
+      Constants.Contract.HRCContract
+    );
+    const hrcContract = await hrcContractFactory.deploy(Constants.GAS_LIMIT_1_000_000);
+    const hrcContractReceipt = await hrcContract.deployTransaction.wait();
+
+    return await ethers.getContractAt(
+      Constants.Contract.HRCContract,
+      hrcContractReceipt.contractAddress
+    );
+  }
+
   static async deployERC20Contract() {
     const erc20ContractFactory = await ethers.getContractFactory(
       Constants.Contract.ERC20Contract
