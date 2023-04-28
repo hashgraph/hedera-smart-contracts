@@ -23,7 +23,7 @@ const {ethers} = require("hardhat");
 const utils = require('../utils');
 const Constants = require('../../constants')
 
-describe("ERC20Interface Test Suite", function () {
+describe("IERC20 Test Suite", function () {
   let tokenCreateContract;
   let tokenTransferContract;
   let tokenAddress;
