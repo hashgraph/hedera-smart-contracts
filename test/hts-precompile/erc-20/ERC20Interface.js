@@ -23,7 +23,7 @@ const {ethers} = require("hardhat");
 const utils = require('../utils');
 const Constants = require('../../constants')
 
-describe.only("ERC20Interface Test Suite", function () {
+describe("ERC20Interface Test Suite", function () {
   let tokenCreateContract;
   let tokenTransferContract;
   let tokenAddress;
@@ -49,7 +49,7 @@ describe.only("ERC20Interface Test Suite", function () {
 
   it("should be able to get token symbol", async function () {
     const symbol = await IERC20.symbol();
-    expect(symbol).to.equal('tokenSymbol');
+    expect(symbol).to.equal(Constants.TOKEN_SYMBOL);
   });
 
   it("should be able to get token decimals", async function () {
