@@ -327,4 +327,13 @@ contract TokenCreateContract is HederaTokenService, ExpiryHelper, KeyHelper {
             revert();
         }
     }
+
+    function approvePublic(address token, address spender, uint256 amount) public returns (int responseCode) {
+    responseCode = HederaTokenService.approve(token, spender, amount);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+    }
 }
