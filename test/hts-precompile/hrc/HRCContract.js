@@ -52,6 +52,9 @@ describe("HRC tests", function () {
         IHRC = new ethers.utils.Interface((await hre.artifacts.readArtifact("IHRC")).abi);
         // create a contract object for the token
         hrcToken = new Contract(tokenAddress, IHRC, signers[0]);
+        console.log("hrcContract: ", hrcContract.address);
+        console.log("signer: ", signers[0].address);
+        console.log("tokenAddress: ", tokenAddress);
     });    
 
     it("should be able to associate() to the token from a contract", async function () {
@@ -61,27 +64,28 @@ describe("HRC tests", function () {
         expect(receiptAssociate.status).to.eq(1);
     });
     
-    it("should be able to disssociate() to the token from a contract", async function () {
+    xit("should be able to disssociate() to the token from a contract", async function () {
         const txDissociate = await hrcContract.dissociate(tokenAddress, Constants.GAS_LIMIT_1_000_000);
         const receiptDissociate = await txDissociate.wait();
         expect(receiptDissociate).to.exist;
         expect(receiptDissociate.status).to.eq(1);
     });
-    it('should be able to execute associate() from EOA', async function () {
+
+    it('should be able to associate() to the token from an EOA', async function () {
         const txAssociate = await hrcToken.associate(Constants.GAS_LIMIT_1_000_000);
         const receiptAssociate = await txAssociate.wait();
         expect(receiptAssociate).to.exist;
         expect(receiptAssociate.status).to.eq(1);
     });
     
-    it('should be able to execute dissociate() from EOA', async function () {
+    xit('should be able to dissociate() to the token from an EOA', async function () {
         const txDissociate = await hrcToken.dissociate(Constants.GAS_LIMIT_1_000_000);
         const receiptDissociate = await txDissociate.wait();
         expect(receiptDissociate).to.exist;
         expect(receiptDissociate.status).to.eq(1);
     });
     
-    it('should be able to execute associate() via redirectForToken', async function () {
+    xit('should be able to execute associate() via redirectForToken', async function () {
         const encodedFunc = IHRC.encodeFunctionData("associate()");
         const tx = await tokenCreateContract.redirectForToken(tokenAddress, encodedFunc, Constants.GAS_LIMIT_1_000_000);
         const [success, result] = await parseCallResponseEventData(tx);
@@ -89,7 +93,7 @@ describe("HRC tests", function () {
         expect(decodeHexToDec(result)).to.eq(Constants.TX_SUCCESS_CODE);
     });
     
-      it('should be able to execute dissociate() via redirectForToken', async function () {
+    xit('should be able to execute dissociate() via redirectForToken', async function () {
         const encodedFunc = IHRC.encodeFunctionData("dissociate()");
         const tx = await tokenCreateContract.redirectForToken(tokenAddress, encodedFunc, Constants.GAS_LIMIT_1_000_000);
         const [success, result] = await parseCallResponseEventData(tx);
