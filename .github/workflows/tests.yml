@@ -83,6 +83,12 @@ jobs:
     with:
       testfilter: Multicall
   
+  HRC:
+    name: HRC Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: HRC
+
   PublishResults:
     name: Publish Results
     if: ${{ !cancelled() }}    
@@ -98,6 +104,7 @@ jobs:
       - SafeHTS
       - HIP583
       - Multicall
+      - HRC
 
     runs-on: ubuntu-latest
     steps:
