@@ -2,7 +2,7 @@
  *
  * Hedera JSON RPC Relay - Hardhat Example
  *
- * Copyright (C) 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2023 Hedera Hashgraph, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,24 +57,24 @@ describe('Native Precompiles - Ecrecover', function () {
     });
 
     // Calling a method that uses `ecrecover`
-    it('should be able to call function1', async function () {
-        const result = await contract.function1(hashedData, v, r, s);
+    it('should be able to call callEcrecover', async function () {
+        const result = await contract.callEcrecover(hashedData, v, r, s);
         expect(result).to.eq(signer.address);
     });
 
     // Calling a method that calls `0x1` with the specified CallData
-    it('should be able to call function2', async function () {
-        const result = await contract.function2(callData);
+    it('should be able to call call0x1', async function () {
+        const result = await contract.call0x1(callData);
         const rec = await result.wait();
         expect(rec.events[0].data).to.contain(signer.address.toLowerCase().replace('0x', ''));
     });
 
-    it('should not be able to call function2 with value', async function () {
+    it('should not be able to call call0x1 with value', async function () {
         const balanceAtStart = await ethers.provider.getBalance(ADDRESS_ONE);
         expect(balanceAtStart).to.eq(0);
 
         try {
-            await contract.function2(callData, {value: DEFAULT_VALUE});
+            await contract.call0x1(callData, {value: DEFAULT_VALUE});
             await result.wait();
             expect(1).to.eq(2);
         }
@@ -87,12 +87,12 @@ describe('Native Precompiles - Ecrecover', function () {
     });
 
     // Executing .send to 0x1
-    it('should not be able to call function3 with no value', async function () {
+    it('should not be able to call send0x1 with no value', async function () {
         const balanceAtStart = await ethers.provider.getBalance(ADDRESS_ONE);
         expect(balanceAtStart).to.eq(0);
 
         try {
-            await contract.function3();
+            await contract.send0x1();
             expect(1).to.eq(2);
         }
         catch(e) {
@@ -103,12 +103,12 @@ describe('Native Precompiles - Ecrecover', function () {
         expect(balanceAtEnd).to.eq(0);
     });
 
-    it('should not be able to call function3 with value', async function () {
+    it('should not be able to call send0x1 with value', async function () {
         const balanceAtStart = await ethers.provider.getBalance(ADDRESS_ONE);
         expect(balanceAtStart).to.eq(0);
 
         try {
-            await contract.function3({value: DEFAULT_VALUE});
+            await contract.send0x1({value: DEFAULT_VALUE});
             expect(1).to.eq(2);
         }
         catch(e) {
@@ -120,12 +120,12 @@ describe('Native Precompiles - Ecrecover', function () {
     });
 
     // Executing .transfer to 0x1
-    it('should not be able to call function4 with no value', async function () {
+    it('should not be able to call transfer0x1 with no value', async function () {
         const balanceAtStart = await ethers.provider.getBalance(ADDRESS_ONE);
         expect(balanceAtStart).to.eq(0);
 
         try {
-            await contract.function4();
+            await contract.transfer0x1();
             expect(1).to.eq(2);
         }
         catch(e) {
@@ -136,12 +136,12 @@ describe('Native Precompiles - Ecrecover', function () {
         expect(balanceAtEnd).to.eq(0);
     });
 
-    it('should not be able to call function4 with value', async function () {
+    it('should not be able to call transfer0x1 with value', async function () {
         const balanceAtStart = await ethers.provider.getBalance(ADDRESS_ONE);
         expect(balanceAtStart).to.eq(0);
 
         try {
-            await contract.function4({value: DEFAULT_VALUE});
+            await contract.transfer0x1({value: DEFAULT_VALUE});
             expect(1).to.eq(2);
         }
         catch(e) {
