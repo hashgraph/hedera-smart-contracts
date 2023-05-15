@@ -7,3 +7,21 @@ artifacts/@openzeppelin
 artifacts/build-info
 artifacts/contracts/**/**.dbg.json
 .openzeppelin/unknown-298.json
+
+
+## --- Foundry Gitignore ---
+
+# Compiler files
+forge-cache/
+out/
+
+# Ignores development broadcast logs
+!/broadcast
+/broadcast/*/31337/
+/broadcast/**/dry-run/
+
+# Docs
+docs/
+
+# Dotenv file
+.env
