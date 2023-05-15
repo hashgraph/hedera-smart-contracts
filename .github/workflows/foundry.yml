@@ -7,9 +7,6 @@ env:
 
 jobs:
   check:
-    defaults:
-      run:
-        working-directory: ./tools/foundry-example/
     strategy:
       fail-fast: true
 
