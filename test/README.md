@@ -58,3 +58,4 @@ Running "npx hardhat test" in the terminal will execute all the existing tests. 
 
 Network specific configurations can be applied using the -n/--network option when starting/restarting the local node. Pre-configured options are mainnet, previewnet, testnet and local.
 ![Local node documentation](https://github.com/hashgraph/hedera-local-node/#using-hedera-local)
+
