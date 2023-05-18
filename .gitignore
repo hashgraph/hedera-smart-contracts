@@ -5,7 +5,8 @@ cache
 # ignore non repo contract related aritifacts
 artifacts/@openzeppelin
 artifacts/build-info
-artifacts/contracts/**/**.dbg.json
+artifacts/lib
+artifacts/**/**.dbg.json
 .openzeppelin/unknown-298.json
 
 
@@ -25,3 +26,7 @@ docs/
 
 # Dotenv file
 .env
+
+# Coverage
+lcov.info
+coverage/

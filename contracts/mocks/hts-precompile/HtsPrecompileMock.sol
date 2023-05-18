@@ -36,7 +36,7 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
     mapping(address => mapping(address => bool)) internal _kyc; // is KYCed is the positive case(i.e. explicitly requires KYC approval); see defaultKycStatus
     // HTS token -> account -> isFrozen
     mapping(address => mapping(address => bool)) internal _unfrozen; // is unfrozen is positive case(i.e. explicitly requires being unfrozen); see freezeDefault
-    // HTS token -> keyType -> value e.g. tokenId -> 16 -> 0x123 means that the SUPPLY key for tokenId is account 0x123
+    // HTS token -> keyType -> key address(contractId) e.g. tokenId -> 16 -> 0x123 means that the SUPPLY key for tokenId is account 0x123
     mapping(address => mapping(uint => address)) internal _tokenKeys; /// @dev faster access then getting keys via {FungibleTokenInfo|NonFungibleTokenInfo}#TokenInfo.HederaToken.tokenKeys[]; however only supports KeyValueType.CONTRACT_ID
 
     // this struct avoids duplicating common NFT data, in particular IHederaTokenService.NonFungibleTokenInfo.tokenInfo
@@ -263,6 +263,55 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         int32 decimals
     ) internal view returns (int64 responseCode) {
         bool validTreasurySig = sender == token.treasury;
+
+        // if admin key is specified require admin sig
+        KeyValue memory key = _getTokenKey(token.tokenKeys, _getKeyTypeValue(KeyHelper.KeyType.ADMIN));
+
+        if (key.contractId != ADDRESS_ZERO) {
+            if (sender != key.contractId) {
+                return HederaResponseCodes.INVALID_ADMIN_KEY;
+            }
+        }
+
+        for (uint256 i = 0; i < token.tokenKeys.length; i++) {
+            TokenKey memory tokenKey = token.tokenKeys[i];
+
+            if (tokenKey.key.contractId != ADDRESS_ZERO) {
+                bool accountExists = _doesAccountExist(tokenKey.key.contractId);
+
+                if (!accountExists) {
+
+                    if (tokenKey.keyType == 1) { // KeyType.ADMIN
+                        return HederaResponseCodes.INVALID_ADMIN_KEY;
+                    }
+
+                    if (tokenKey.keyType == 2) { // KeyType.KYC
+                        return HederaResponseCodes.INVALID_KYC_KEY;
+                    }
+
+                    if (tokenKey.keyType == 4) { // KeyType.FREEZE
+                        return HederaResponseCodes.INVALID_FREEZE_KEY;
+                    }
+
+                    if (tokenKey.keyType == 8) { // KeyType.WIPE
+                        return HederaResponseCodes.INVALID_WIPE_KEY;
+                    }
+
+                    if (tokenKey.keyType == 16) { // KeyType.SUPPLY
+                        return HederaResponseCodes.INVALID_SUPPLY_KEY;
+                    }
+
+                    if (tokenKey.keyType == 32) { // KeyType.FEE
+                        return HederaResponseCodes.INVALID_CUSTOM_FEE_SCHEDULE_KEY;
+                    }
+
+                    if (tokenKey.keyType == 64) { // KeyType.PAUSE
+                        return HederaResponseCodes.INVALID_PAUSE_KEY;
+                    }
+                }
+            }
+        }
+
         // TODO: add additional validation on token; validation most likely required on only tokenKeys(if an address(contract/EOA) has a zero-balance then consider the tokenKey invalid since active accounts on Hedera must have a positive HBAR balance)
         if (!validTreasurySig) {
             return HederaResponseCodes.AUTHORIZATION_FAILED;
@@ -873,11 +922,25 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
     /// i.e. the relation is 2^(uint(KeyHelper.KeyType)) = keyType
     function getKey(address token, KeyHelper.KeyType keyType) public view returns (address keyOwner) {
         /// @dev the following relation is used due to the below described issue with KeyHelper.getKeyType
-        uint _keyType = 2 ** uint(keyType);
+        uint _keyType = _getKeyTypeValue(keyType);
         /// @dev the following does not work since the KeyHelper has all of its storage/state cleared/defaulted once vm.etch is used
         ///      to fix this KeyHelper should expose a function that does what it's constructor does i.e. initialise the keyTypes mapping
         // uint _keyType = getKeyType(keyType);
         keyOwner = _tokenKeys[token][_keyType];
+    }
+
+    function _getKeyTypeValue(KeyHelper.KeyType keyType) internal pure returns (uint256 keyTypeValue) {
+        keyTypeValue = 2 ** uint(keyType);
+    }
+
+    function _getBalance(address account) internal view returns (uint256 balance) {
+        balance = account.balance;
+    }
+
+    // TODO: validate account exists wherever applicable; transfers, mints, burns, etc
+    // is account(either an EOA or contract) has a non-zero balance then assume it exists
+    function _doesAccountExist(address account) internal view returns (bool exists) {
+        exists = _getBalance(account) > 0;
     }
 
     // IHederaTokenService public/external state-changing functions:
