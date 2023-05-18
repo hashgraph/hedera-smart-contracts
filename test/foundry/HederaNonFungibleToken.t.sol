@@ -8,7 +8,7 @@ import '../../contracts/mocks/hts-precompile/HederaNonFungibleToken.sol';
 import '../../contracts/mocks/hts-precompile/HtsPrecompileMock.sol';
 
 import '../../contracts/utils/HederaNonFungibleTokenUtils.sol';
-import '../../src/libraries/Constants.sol';
+import '../../contracts/libraries/Constants.sol';
 
 contract HederaNonFungibleTokenTest is HederaNonFungibleTokenUtils, KeyHelper {
 

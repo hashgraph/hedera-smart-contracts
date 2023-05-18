@@ -8,8 +8,8 @@ import '../../../contracts/hts-precompile/IHederaTokenService.sol';
 import '../../../contracts/hts-precompile/KeyHelper.sol';
 import './HederaFungibleToken.sol';
 import './HederaNonFungibleToken.sol';
-import '../../../src/NoDelegateCall.sol';
-import '../../../src/libraries/Constants.sol';
+import '../../../contracts/NoDelegateCall.sol';
+import '../../../contracts/libraries/Constants.sol';
 
 contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
 

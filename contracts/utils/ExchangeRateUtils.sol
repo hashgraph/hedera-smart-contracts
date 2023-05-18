@@ -5,7 +5,7 @@ import 'forge-std/Test.sol';
 
 import '../mocks/exchange-rate-precompile/ExchangeRatePrecompileMock.sol';
 import './CommonUtils.sol';
-import '../../src/libraries/Constants.sol';
+import '../../contracts/libraries/Constants.sol';
 
 /// for testing actions of the exchange rate precompiled/system contract
 abstract contract ExchangeRateUtils is Test, CommonUtils, Constants {

@@ -2,7 +2,7 @@
 pragma solidity ^0.8.9;
 
 import "forge-std/Test.sol";
-import "../../src/Counter.sol";
+import "../../contracts/Counter.sol";
 
 contract CounterTest is Test {
     Counter public counter;

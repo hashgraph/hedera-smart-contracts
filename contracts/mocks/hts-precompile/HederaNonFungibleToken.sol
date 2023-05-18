@@ -6,7 +6,7 @@ import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 import '../../../contracts/hts-precompile/HederaResponseCodes.sol';
 import '../../../contracts/hts-precompile/IHederaTokenService.sol';
 import './HtsPrecompileMock.sol';
-import '../../../src/libraries/Constants.sol';
+import '../../../contracts/libraries/Constants.sol';
 
 contract HederaNonFungibleToken is ERC721, Constants {
     error HtsPrecompileError(int64 responseCode);

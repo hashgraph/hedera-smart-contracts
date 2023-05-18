@@ -5,7 +5,7 @@ import 'forge-std/Test.sol';
 
 import '../mocks/util-precompile/UtilPrecompileMock.sol';
 import './CommonUtils.sol';
-import '../../src/libraries/Constants.sol';
+import '../../contracts/libraries/Constants.sol';
 
 /// for testing actions of the util precompiled/system contract
 abstract contract UtilUtils is Test, CommonUtils, Constants {
