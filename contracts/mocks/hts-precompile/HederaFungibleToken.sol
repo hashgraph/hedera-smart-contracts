@@ -51,6 +51,10 @@ contract HederaFungibleToken is ERC20, Constants {
         _burn(treasury, uint64(amount));
     }
 
+    function wipeRequestFromHtsPrecompile(address account, int64 amount) external onlyHtsPrecompile {
+        _burn(account, uint64(amount));
+    }
+
     /// @dev transfers "amount" from "from" to "to"
     function transferRequestFromHtsPrecompile(bool isRequestFromOwner, address spender, address from, address to, uint256 amount) external onlyHtsPrecompile returns (int64 responseCode) {
         if (!isRequestFromOwner) {

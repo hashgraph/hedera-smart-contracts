@@ -10,7 +10,7 @@ import '../../contracts/mocks/hts-precompile/HtsPrecompileMock.sol';
 import '../../contracts/utils/HederaNonFungibleTokenUtils.sol';
 import '../../contracts/libraries/Constants.sol';
 
-contract HederaNonFungibleTokenTest is HederaNonFungibleTokenUtils, KeyHelper {
+contract HederaNonFungibleTokenTest is HederaNonFungibleTokenUtils {
 
     // setUp is executed before each and every test function
     function setUp() public {

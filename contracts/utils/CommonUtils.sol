@@ -3,8 +3,10 @@ pragma solidity ^0.8.9;
 
 import 'forge-std/Test.sol';
 
+import '../../contracts/hts-precompile/KeyHelper.sol';
+
 /// generic test utils
-abstract contract CommonUtils is Test {
+abstract contract CommonUtils is Test, KeyHelper {
 
     address internal alice = vm.addr(1);
     address internal bob = vm.addr(2);
@@ -38,6 +40,10 @@ abstract contract CommonUtils is Test {
         }
 
         return dave; // return dave by default
+    }
+
+    function _getKeyTypeValue(KeyHelper.KeyType keyType) internal pure returns (uint256 keyTypeValue) {
+        keyTypeValue = 2 ** uint(keyType);
     }
 
 }

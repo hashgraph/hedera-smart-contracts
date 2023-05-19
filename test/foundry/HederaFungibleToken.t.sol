@@ -6,7 +6,7 @@ import '../../contracts/hts-precompile/KeyHelper.sol';
 import '../../contracts/utils/HederaTokenUtils.sol';
 import '../../contracts/utils/HederaFungibleTokenUtils.sol';
 
-contract HederaFungibleTokenTest is HederaTokenUtils, HederaFungibleTokenUtils, KeyHelper {
+contract HederaFungibleTokenTest is HederaTokenUtils, HederaFungibleTokenUtils {
 
     // setUp is executed before each and every test function
     function setUp() public {

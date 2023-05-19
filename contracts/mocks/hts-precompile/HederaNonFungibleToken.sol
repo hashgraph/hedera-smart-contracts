@@ -55,7 +55,7 @@ contract HederaNonFungibleToken is ERC721, Constants {
 
     function burnRequestFromHtsPrecompile(
         int64[] calldata tokenIds
-    ) external onlyHtsPrecompile returns (int64 newTotalSupply) {
+    ) public onlyHtsPrecompile returns (int64 newTotalSupply) {
         int64 burnCount = int64(uint64(tokenIds.length));
         nftCount.burned = nftCount.burned + burnCount;
 
@@ -65,6 +65,12 @@ contract HederaNonFungibleToken is ERC721, Constants {
         }
 
         newTotalSupply = int64(int256(totalSupply()));
+    }
+
+    function wipeRequestFromHtsPrecompile(
+        int64[] calldata tokenIds
+    ) external onlyHtsPrecompile {
+        burnRequestFromHtsPrecompile(tokenIds); // implementation happens to coincide with burnRequestFromHtsPrecompile unlike in HederaFungibleToken
     }
 
     /// @dev transfers "amount" from "from" to "to"

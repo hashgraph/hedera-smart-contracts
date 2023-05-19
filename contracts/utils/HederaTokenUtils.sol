@@ -4,6 +4,7 @@ pragma solidity ^0.8.9;
 import 'forge-std/Test.sol';
 
 import '../mocks/hts-precompile/HtsPrecompileMock.sol';
+import '../../contracts/hts-precompile/IHederaTokenService.sol';
 import './CommonUtils.sol';
 
 /// for testing actions common to both HTS token types i.e FUNGIBLE and NON_FUNGIBLE
@@ -90,8 +91,12 @@ abstract contract HederaTokenUtils is Test, CommonUtils, Constants {
 
         int64 expectedResponseCode = HederaResponseCodes.SUCCESS; // assume SUCCESS initially and later overwrite error code accordingly
 
+        IHederaTokenService.KeyValue memory supplyKey;
+
+        (, supplyKey) = htsPrecompile.getTokenKey(mintParams.token, _getKeyTypeValue(KeyHelper.KeyType.SUPPLY));
+
         MintKeys memory mintKeys = MintKeys({
-            supplyKey: htsPrecompile.getKey(mintParams.token, KeyHelper.KeyType.SUPPLY),
+            supplyKey: supplyKey.contractId,
             treasury: htsPrecompile.getTreasuryAccount(mintParams.token)
         });
 
