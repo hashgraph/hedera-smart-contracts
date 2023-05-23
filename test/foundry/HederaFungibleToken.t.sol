@@ -231,7 +231,7 @@ contract HederaFungibleTokenTest is HederaTokenUtils, HederaFungibleTokenUtils {
         });
 
         (success, ) = _doBurnViaHtsPrecompile(burnParams);
-        assertEq(success, true, "expected mint to succeed");
+        assertEq(success, true, "expected burn to succeed");
     }
 
     // negative cases

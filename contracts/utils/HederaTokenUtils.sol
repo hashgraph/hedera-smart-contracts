@@ -50,6 +50,7 @@ abstract contract HederaTokenUtils is Test, CommonUtils, Constants {
         bool isFinallyAssociated = htsPrecompile.isAssociated(sender, token);
 
         assertEq(responseCode, expectedResponseCode, 'expected response code does not match actual response code');
+        assertEq(isFinallyAssociated, true, 'expected account to always be finally associated');
     }
 
     struct MintKeys {

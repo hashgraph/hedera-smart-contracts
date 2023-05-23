@@ -4,19 +4,16 @@ pragma solidity ^0.8.9;
 import 'forge-std/console.sol';
 
 import '../../../contracts/hts-precompile/HederaResponseCodes.sol';
-import '../../../contracts/hts-precompile/IHederaTokenService.sol';
 import '../../../contracts/hts-precompile/KeyHelper.sol';
 import './HederaFungibleToken.sol';
 import './HederaNonFungibleToken.sol';
 import '../../../contracts/NoDelegateCall.sol';
 import '../../../contracts/libraries/Constants.sol';
 
-contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
+import '../interfaces/IHtsPrecompileMock.sol';
+import '../libraries/Validation.sol';
 
-    struct TokenConfig {
-        bool explicit; // true if it was explicitly set to value
-        bool value;
-    }
+contract HtsPrecompileMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock {
 
     error HtsPrecompileError(int64 responseCode);
 
@@ -47,14 +44,6 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
     mapping(address => bool) internal _tokenDeleted;
     // HTS token -> paused
     mapping(address => TokenConfig) internal _tokenPaused;
-
-    // this struct avoids duplicating common NFT data, in particular IHederaTokenService.NonFungibleTokenInfo.tokenInfo
-    struct PartialNonFungibleTokenInfo {
-        address ownerId;
-        int64 creationTime;
-        bytes metadata;
-        address spenderId;
-    }
 
     constructor() NoDelegateCall(HTS_PRECOMPILE) {}
 
@@ -273,6 +262,9 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         _setNftTokenInfo(tokenAddress, nftTokenInfo);
     }
 
+    // TODO: implement _post{Action} "internal" functions called inside and at the end of the pre{Action} functions is success == true
+    // for getters implement _get{Data} "view internal" functions that have the exact same name as the HTS getter function name that is called after the precheck
+
     function _precheckCreateToken(
         address sender,
         HederaToken memory token,
@@ -368,185 +360,102 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         return HederaResponseCodes.SUCCESS;
     }
 
-    function _precheckDeleteToken(address sender, address token) internal view returns (int64 responseCode) {
+    function _precheckDeleteToken(address sender, address token) internal view returns (bool success, int64 responseCode) {
 
-        if (_tokenDeleted[token]) {
-            return HederaResponseCodes.TOKEN_WAS_DELETED;
-        }
-
-        CommonPrecheckData memory commonPrecheckData = _getCommonPrecheckData(token, sender, sender, ADDRESS_ZERO);
-
-        if (!commonPrecheckData.isFungible && !commonPrecheckData.isNonFungible) {
-            return HederaResponseCodes.INVALID_TOKEN_ID;
-        }
-
+        /// @dev success is initialised to true such that the sequence of any of the validation functions below can be easily rearranged
+        ///      the rearrangement of the functions may be done to more closely align the response codes with the actual response codes returned by Hedera
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
         (bool validKey, bool noKey) = _hasAdminKeySig(token);
-
-        if (noKey) {
-            return HederaResponseCodes.TOKEN_IS_IMMUTABLE;
-        }
-
-        if (!validKey) {
-            return HederaResponseCodes.INVALID_ADMIN_KEY;
-        }
-
-        return HederaResponseCodes.SUCCESS;
-
+        (success, responseCode) = success ? Validation._validateAdminKey(validKey, noKey) : (success, responseCode);
     }
 
     /// @dev handles precheck logic for both freeze and unfreeze
-    function _precheckFreezeToken(address sender, address token, address account) internal view returns (int64 responseCode) {
-
-        if (_tokenDeleted[token]) {
-            return HederaResponseCodes.TOKEN_WAS_DELETED;
-        }
-
-        CommonPrecheckData memory commonPrecheckData = _getCommonPrecheckData(token, sender, sender, ADDRESS_ZERO);
-
-        if (!commonPrecheckData.isFungible && !commonPrecheckData.isNonFungible) {
-            return HederaResponseCodes.INVALID_TOKEN_ID;
-        }
-
+    function _precheckFreezeToken(address sender, address token, address account) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
         (bool validKey, bool noKey) = _hasFreezeKeySig(token);
-
-        if (noKey) {
-            return HederaResponseCodes.TOKEN_HAS_NO_FREEZE_KEY;
-        }
-
-        if (!validKey) {
-            return HederaResponseCodes.INVALID_FREEZE_KEY;
-        }
-
-        return HederaResponseCodes.SUCCESS;
-
+        (success, responseCode) = success ? Validation._validateFreezeKey(validKey, noKey) : (success, responseCode);
     }
 
     /// @dev handles precheck logic for both pause and unpause
-    function _precheckPauseToken(address sender, address token) internal view returns (int64 responseCode) {
-
-        if (_tokenDeleted[token]) {
-            return HederaResponseCodes.TOKEN_WAS_DELETED;
-        }
-
-        CommonPrecheckData memory commonPrecheckData = _getCommonPrecheckData(token, sender, sender, ADDRESS_ZERO);
-
-        if (!commonPrecheckData.isFungible && !commonPrecheckData.isNonFungible) {
-            return HederaResponseCodes.INVALID_TOKEN_ID;
-        }
-
+    function _precheckPauseToken(address sender, address token) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
         (bool validKey, bool noKey) = _hasPauseKeySig(token);
-
-        if (noKey) {
-            return HederaResponseCodes.TOKEN_HAS_NO_PAUSE_KEY;
-        }
-
-        if (!validKey) {
-            return HederaResponseCodes.INVALID_PAUSE_KEY;
-        }
-
-        return HederaResponseCodes.SUCCESS;
-
+        (success, responseCode) = success ? Validation._validatePauseKey(validKey, noKey) : (success, responseCode);
     }
 
     /// @dev handles precheck logic for both kyc grant and revoke
-    function _precheckKyc(address sender, address token, address account) internal view returns (int64 responseCode) {
-
-        if (!_isFungible[token] && !_isNonFungible[token]) {
-            return (HederaResponseCodes.INVALID_TOKEN_ID);
-        }
-
-        if (_kyc[token][account].value) { // if account already has KYC approved return SUCCESS
-            return (HederaResponseCodes.SUCCESS);
-        }
-
-        (bool validKey, bool noKey) = _hasKycKeySig(token);
-
-        if (noKey) {
-            return (HederaResponseCodes.TOKEN_HAS_NO_KYC_KEY);
-        }
-
-        if (!validKey) {
-            return (HederaResponseCodes.INVALID_KYC_KEY);
-        }
-
+    function _precheckKyc(address sender, address token, address account) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+        (success, responseCode) = success ? _validateKycKey(token) : (success, responseCode);
     }
 
-    function _precheckUpdateTokenExpiryInfo(address sender, address token, Expiry memory expiryInfo) internal view returns (int64 responseCode) {
-
-        if (_tokenDeleted[token]) {
-            return HederaResponseCodes.TOKEN_WAS_DELETED;
-        }
-
-        CommonPrecheckData memory commonPrecheckData = _getCommonPrecheckData(token, sender, sender, ADDRESS_ZERO);
-
-        if (!commonPrecheckData.isFungible && !commonPrecheckData.isNonFungible) {
-            return HederaResponseCodes.INVALID_TOKEN_ID;
-        }
-
-        (bool validKey, bool noKey) = _hasAdminKeySig(token);
-
-        if (noKey) {
-            return HederaResponseCodes.TOKEN_IS_IMMUTABLE;
-        }
-
-        if (!validKey) {
-            return HederaResponseCodes.INVALID_ADMIN_KEY;
-        }
-
+    function _precheckUpdateTokenExpiryInfo(address sender, address token, Expiry memory expiryInfo) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+        (success, responseCode) = success ? _validateAdminKey(token) : (success, responseCode);
         // TODO: validate expiryInfo; move validation into common Validation contract that exposes validation functions
-
     }
 
-    function _precheckUpdateTokenInfo(address sender, address token, HederaToken memory tokenInfo) internal view returns (int64 responseCode) {
-
-        if (_tokenDeleted[token]) {
-            return HederaResponseCodes.TOKEN_WAS_DELETED;
-        }
-
-        CommonPrecheckData memory commonPrecheckData = _getCommonPrecheckData(token, sender, sender, ADDRESS_ZERO);
-
-        if (!commonPrecheckData.isFungible && !commonPrecheckData.isNonFungible) {
-            return HederaResponseCodes.INVALID_TOKEN_ID;
-        }
-
-        (bool validKey, bool noKey) = _hasAdminKeySig(token);
-
-        if (noKey) {
-            return HederaResponseCodes.TOKEN_IS_IMMUTABLE;
-        }
-
-        if (!validKey) {
-            return HederaResponseCodes.INVALID_ADMIN_KEY;
-        }
-
+    function _precheckUpdateTokenInfo(address sender, address token, HederaToken memory tokenInfo) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+        (success, responseCode) = success ? _validateAdminKey(token) : (success, responseCode);
         // TODO: validate tokenInfo; move validation into common Validation contract that exposes validation functions
-
     }
 
-    function _precheckUpdateTokenKeys(address sender, address token, TokenKey[] memory keys) internal view returns (int64 responseCode) {
-
-        if (_tokenDeleted[token]) {
-            return HederaResponseCodes.TOKEN_WAS_DELETED;
-        }
-
-        CommonPrecheckData memory commonPrecheckData = _getCommonPrecheckData(token, sender, sender, ADDRESS_ZERO);
-
-        if (!commonPrecheckData.isFungible && !commonPrecheckData.isNonFungible) {
-            return HederaResponseCodes.INVALID_TOKEN_ID;
-        }
-
-        (bool validKey, bool noKey) = _hasAdminKeySig(token);
-
-        if (noKey) {
-            return HederaResponseCodes.TOKEN_IS_IMMUTABLE;
-        }
-
-        if (!validKey) {
-            return HederaResponseCodes.INVALID_ADMIN_KEY;
-        }
-
+    function _precheckUpdateTokenKeys(address sender, address token, TokenKey[] memory keys) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+        (success, responseCode) = success ? _validateAdminKey(token) : (success, responseCode);
         // TODO: validate keys; move validation into common Validation contract that exposes validation functions
+    }
 
+    function _validateAdminKey(address token) internal view returns (bool success, int64 responseCode) {
+        (bool validKey, bool noKey) = _hasAdminKeySig(token);
+        (success, responseCode) = Validation._validateAdminKey(validKey, noKey);
+    }
+
+    function _validateKycKey(address token) internal view returns (bool success, int64 responseCode) {
+        (bool validKey, bool noKey) = _hasKycKeySig(token);
+        (success, responseCode) = Validation._validateKycKey(validKey, noKey);
+    }
+
+    function _validateSupplyKey(address token) internal view returns (bool success, int64 responseCode) {
+        (bool validKey, bool noKey) = _hasSupplyKeySig(token);
+        (success, responseCode) = Validation._validateSupplyKey(validKey, noKey);
+    }
+
+    function _validateFreezeKey(address token) internal view returns (bool success, int64 responseCode) {
+        (bool validKey, bool noKey) = _hasFreezeKeySig(token);
+        (success, responseCode) = Validation._validateFreezeKey(validKey, noKey);
+    }
+
+    function _validateTreasuryKey(address token) internal view returns (bool success, int64 responseCode) {
+        (bool validKey, bool noKey) = _hasTreasurySig(token);
+        (success, responseCode) = Validation._validateTreasuryKey(validKey, noKey);
+    }
+
+    function _validateWipeKey(address token) internal view returns (bool success, int64 responseCode) {
+        (bool validKey, bool noKey) = _hasWipeKeySig(token);
+        (success, responseCode) = Validation._validateWipeKey(validKey, noKey);
+    }
+
+    function _validateAccountKyc(address token, address account) internal view returns (bool success, int64 responseCode) {
+        bool isKyced;
+        (responseCode, isKyced) = isKyc(token, account);
+        success = _doesAccountPassKyc(responseCode, isKyced);
+        (success, responseCode) = Validation._validateAccountKyc(success);
+    }
+
+    function _validateAccountUnfrozen(address token, address account) internal view returns (bool success, int64 responseCode) {
+        bool isAccountFrozen;
+        (responseCode, isAccountFrozen) = isFrozen(token, account);
+        success = _doesAccountPassUnfrozen(responseCode, isAccountFrozen);
+        (success, responseCode) = success ? Validation._validateAccountFrozen(success) : (success, responseCode);
     }
 
     /// @dev the following internal _precheck functions are called in either of the following 2 scenarios:
@@ -559,35 +468,23 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         address sender, // sender should be owner in order to approve
         address spender,
         uint256 amountOrSerialNumber /// for Fungible is the amount and for NonFungible is the serialNumber
-    ) internal view returns (int64 responseCode) {
+    ) internal view returns (bool success, int64 responseCode) {
 
-        CommonPrecheckData memory commonPrecheckData = _getCommonPrecheckData(token, sender, sender, ADDRESS_ZERO);
+        success = true;
 
         /// @dev Hedera does not require an account to be associated with a token in be approved an allowance
         // if (!_association[token][owner] || !_association[token][spender]) {
         //     return HederaResponseCodes.TOKEN_NOT_ASSOCIATED_TO_ACCOUNT;
         // }
 
-        if (!commonPrecheckData.doesAccount1PassUnfrozen || !commonPrecheckData.doesAccount2PassUnfrozen) {
-            return HederaResponseCodes.ACCOUNT_FROZEN_FOR_TOKEN;
-        }
-        if (!commonPrecheckData.doesAccount1PassKyc || !commonPrecheckData.doesAccount2PassKyc) {
-            return HederaResponseCodes.ACCOUNT_KYC_NOT_GRANTED_FOR_TOKEN;
-        }
+        (success, responseCode) = success ? _validateAccountKyc(token, sender) : (success, responseCode);
+        (success, responseCode) = success ? _validateAccountKyc(token, spender) : (success, responseCode);
 
-        if (!commonPrecheckData.isFungible && !commonPrecheckData.isNonFungible) {
-            return HederaResponseCodes.INVALID_TOKEN_ID;
-        }
+        (success, responseCode) = success ? _validateAccountUnfrozen(token, sender) : (success, responseCode);
+        (success, responseCode) = success ? _validateAccountUnfrozen(token, spender) : (success, responseCode);
 
-        if (commonPrecheckData.isNonFungible) {
-            int64 serialNumber = int64(uint64(amountOrSerialNumber));
-            PartialNonFungibleTokenInfo memory partialNonFungibleTokenInfo = _partialNonFungibleTokenInfos[token][serialNumber];
-            if (partialNonFungibleTokenInfo.ownerId != sender) {
-                return HederaResponseCodes.SENDER_DOES_NOT_OWN_NFT_SERIAL_NO;
-            }
-        }
-
-        return HederaResponseCodes.SUCCESS;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+        (success, responseCode) = success ? Validation._validateNftOwnership(token, sender, amountOrSerialNumber, _isNonFungible, _partialNonFungibleTokenInfos) : (success, responseCode);
     }
 
     function _precheckSetApprovalForAll(
@@ -595,49 +492,32 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         address owner,
         address operator,
         bool approved
-    ) internal view returns (int64 responseCode) {
-        CommonPrecheckData memory commonPrecheckData = _getCommonPrecheckData(token, operator, owner, ADDRESS_ZERO);
+    ) internal view returns (bool success, int64 responseCode) {
 
-        if (!_association[token][owner] || !_association[token][operator]) {
-            return HederaResponseCodes.TOKEN_NOT_ASSOCIATED_TO_ACCOUNT;
-        }
-        if (!commonPrecheckData.doesAccount1PassUnfrozen || !commonPrecheckData.doesAccount2PassUnfrozen) {
-            return HederaResponseCodes.ACCOUNT_FROZEN_FOR_TOKEN;
-        }
-        if (!commonPrecheckData.doesAccount1PassKyc || !commonPrecheckData.doesAccount2PassKyc) {
-            return HederaResponseCodes.ACCOUNT_KYC_NOT_GRANTED_FOR_TOKEN;
-        }
+        success = true;
 
-        if (!commonPrecheckData.isNonFungible) {
-            /// @dev since setApprovalForAll is only applicable to token of type NON_FUNGIBLE
-            return HederaResponseCodes.INVALID_TOKEN_ID;
-        }
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
 
-        return HederaResponseCodes.SUCCESS;
+        (success, responseCode) = success ? Validation._validateTokenAssociation(token, owner, _association) : (success, responseCode);
+        (success, responseCode) = success ? Validation._validateTokenAssociation(token, operator, _association) : (success, responseCode);
+
+        (success, responseCode) = success ? _validateAccountKyc(token, owner) : (success, responseCode);
+        (success, responseCode) = success ? _validateAccountKyc(token, operator) : (success, responseCode);
+
+        (success, responseCode) = success ? _validateAccountUnfrozen(token, owner) : (success, responseCode);
+        (success, responseCode) = success ? _validateAccountUnfrozen(token, operator) : (success, responseCode);
+
+        (success, responseCode) = success ? Validation._validateIsNonFungible(token, _isNonFungible) : (success, responseCode);
     }
 
     function _precheckMint(
         address token,
         int64 amount,
         bytes[] memory metadata
-    ) internal view returns (int64 responseCode) {
-        bool isFungible = _isFungible[token];
-        bool isNonFungible = _isNonFungible[token];
-
-        if (!isFungible && !isNonFungible) {
-            return HederaResponseCodes.INVALID_TOKEN_ID;
-        }
-
-        (bool validKey, bool noKey) = _hasSupplyKeySig(token);
-
-        if (noKey) {
-            return HederaResponseCodes.TOKEN_HAS_NO_SUPPLY_KEY;
-        }
-        if (!validKey) {
-            return HederaResponseCodes.INVALID_SUPPLY_KEY;
-        }
-
-        return HederaResponseCodes.SUCCESS;
+    ) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+        (success, responseCode) = success ? _validateSupplyKey(token) : (success, responseCode);
     }
 
     // TODO: implement multiple NFTs being burnt instead of just index 0
@@ -645,38 +525,12 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         address token,
         int64 amount,
         int64[] memory serialNumbers // since only 1 NFT can be burnt at a time; expect length to be 1
-    ) internal view returns (int64 responseCode) {
-        bool isFungible = _isFungible[token];
-        bool isNonFungible = _isNonFungible[token];
+    ) internal view returns (bool success, int64 responseCode) {
+        success = true;
 
-        if (!isFungible && !isNonFungible) {
-            return HederaResponseCodes.INVALID_TOKEN_ID;
-        }
-
-        (bool validKey, bool noKey) = _hasTreasurySig(token);
-        address treasuryKey = _getTreasuryAccount(token);
-
-        HederaFungibleToken hederaFungibleToken = HederaFungibleToken(token);
-        HederaNonFungibleToken hederaNonFungibleToken = HederaNonFungibleToken(token);
-
-        bool doesTreasuryOwnSufficientToken = isFungible
-            ? (hederaFungibleToken.balanceOf(treasuryKey) >= uint64(amount))
-            : (treasuryKey == hederaNonFungibleToken.ownerOf(uint64(serialNumbers[0])));
-
-        if (noKey || !validKey) {
-            // @dev noKey should always be false as a token must have a treasury account; however use INVALID_TREASURY_ACCOUNT_FOR_TOKEN if treasury has been deleted
-            return HederaResponseCodes.AUTHORIZATION_FAILED;
-        }
-        if (!doesTreasuryOwnSufficientToken) {
-            if (isFungible) {
-                return HederaResponseCodes.INSUFFICIENT_TOKEN_BALANCE;
-            }
-            if (isNonFungible) {
-                return HederaResponseCodes.SENDER_DOES_NOT_OWN_NFT_SERIAL_NO;
-            }
-        }
-
-        return HederaResponseCodes.SUCCESS;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+        (success, responseCode) = success ? _validateTreasuryKey(token) : (success, responseCode);
+        (success, responseCode) = success ? Validation._validateTokenSufficiency(token, _getTreasuryAccount(token), amount, serialNumbers[0], _isFungible, _isNonFungible, _partialNonFungibleTokenInfos) : (success, responseCode);
     }
 
     // TODO: implement multiple NFTs being wiped, instead of just index 0
@@ -686,64 +540,108 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         address account,
         int64 amount,
         int64[] memory serialNumbers // since only 1 NFT can be wiped at a time; expect length to be 1
-    ) internal view returns (int64 responseCode) {
-        bool isFungible = _isFungible[token];
-        bool isNonFungible = _isNonFungible[token];
-
-        if (!isFungible && !isNonFungible) {
-            return HederaResponseCodes.INVALID_TOKEN_ID;
-        }
-
-        if (isFungible && serialNumbers.length > 0) {
-            return HederaResponseCodes.INVALID_TOKEN_ID;
-        }
-
-        if (isNonFungible && amount > 0) {
-            return HederaResponseCodes.INVALID_TOKEN_ID;
-        }
-
-        (bool validKey, bool noKey) = _hasWipeKeySig(token);
-        address treasuryKey = _getTreasuryAccount(token);
-
-        if (noKey) {
-            return HederaResponseCodes.TOKEN_HAS_NO_WIPE_KEY;
-        }
-
-        if (!validKey) {
-            return HederaResponseCodes.INVALID_WIPE_KEY;
-        }
-
-        HederaFungibleToken hederaFungibleToken = HederaFungibleToken(token);
-        HederaNonFungibleToken hederaNonFungibleToken = HederaNonFungibleToken(token);
-
-        bool doesAccountOwnSufficientToken = isFungible
-            ? (hederaFungibleToken.balanceOf(account) >= uint64(amount))
-            : (account == hederaNonFungibleToken.ownerOf(uint64(serialNumbers[0])));
-
-        if (!doesAccountOwnSufficientToken) {
-            if (isFungible) {
-                return HederaResponseCodes.INSUFFICIENT_TOKEN_BALANCE;
-            }
-            if (isNonFungible) {
-                return HederaResponseCodes.SENDER_DOES_NOT_OWN_NFT_SERIAL_NO;
-            }
-        }
-
-        return HederaResponseCodes.SUCCESS;
+    ) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+        (success, responseCode) = success ? Validation._validBurnInput(token, _isFungible, _isNonFungible, amount, serialNumbers) : (success, responseCode);
+        (success, responseCode) = success ? _validateWipeKey(token) : (success, responseCode);
+        (success, responseCode) = success ? Validation._validateTokenSufficiency(token, account, amount, serialNumbers[0], _isFungible, _isNonFungible, _partialNonFungibleTokenInfos) : (success, responseCode);
     }
 
-    // account1 is typically the spender
-    // account2 is typically the owner
-    // account3 is typically the recipient
-    struct CommonPrecheckData {
-        bool isFungible;
-        bool isNonFungible;
-        bool doesAccount1PassKyc;
-        bool doesAccount2PassKyc;
-        bool doesAccount3PassKyc;
-        bool doesAccount1PassUnfrozen;
-        bool doesAccount2PassUnfrozen;
-        bool doesAccount3PassUnfrozen;
+    function _precheckGetApproved(
+        address token,
+        uint256 serialNumber
+    ) internal view returns (bool success, int64 responseCode) {
+        // TODO: do additional validation that serialNumber exists and is not burnt
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+    }
+
+    function _precheckGetFungibleTokenInfo(address token) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+        (success, responseCode) = success ? Validation._validateIsFungible(token, _isFungible) : (success, responseCode);
+    }
+
+    function _precheckGetNonFungibleTokenInfo(address token) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+        (success, responseCode) = success ? Validation._validateIsNonFungible(token, _isNonFungible) : (success, responseCode);
+    }
+
+    function _precheckGetTokenCustomFees(address token) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+    }
+
+    function _precheckGetTokenDefaultFreezeStatus(address token) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+    }
+
+    function _precheckGetTokenDefaultKycStatus(address token) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+    }
+
+    function _precheckGetTokenExpiryInfo(address token) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+    }
+
+    function _precheckGetTokenInfo(address token) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+    }
+
+    function _precheckGetTokenKey(address token) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+    }
+
+    function _precheckGetTokenType(address token) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+    }
+
+    function _precheckIsFrozen(address token, address account) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+        (success, responseCode) = success ? _validateFreezeKey(token) : (success, responseCode);
+    }
+
+    function _precheckIsKyc(address token, address account) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+        (success, responseCode) = success ? _validateKycKey(token) : (success, responseCode);
+    }
+
+    function _precheckAllowance(
+        address token,
+        address owner,
+        address spender
+    ) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+    }
+
+    function _precheckAssociateToken(address account, address token) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+
+        // TODO: consider extending Validation#_validateTokenAssociation with TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT
+        if (success) {
+            if (_association[token][account]) {
+                return (false, HederaResponseCodes.TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT);
+            }
+        }
+
+    }
+
+    function _precheckDissociateToken(address account, address token) internal view returns (bool success, int64 responseCode) {
+        success = true;
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+        (success, responseCode) = success ? Validation._validateTokenAssociation(token, account, _association) : (success, responseCode);
     }
 
     /// @dev doesPassKyc if KYC is not enabled or if enabled then account is KYCed explicitly or by default
@@ -756,93 +654,102 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         doesPassUnfrozen = responseCode == HederaResponseCodes.SUCCESS ? !isFrozen : true;
     }
 
-    function _getCommonPrecheckData(
-        address token,
-        address account1,
-        address account2,
-        address account3
-    ) internal view returns (CommonPrecheckData memory commonPrecheckData) {
-        commonPrecheckData.isFungible = _isFungible[token];
-        commonPrecheckData.isNonFungible = _isNonFungible[token];
-
-        (int64 responseCodeForKyc, bool _isKyced) = isKyc(token, account1);
-        commonPrecheckData.doesAccount1PassKyc = _doesAccountPassKyc(responseCodeForKyc, _isKyced);
-
-        (responseCodeForKyc, _isKyced) = isKyc(token, account2);
-        commonPrecheckData.doesAccount2PassKyc = _doesAccountPassKyc(responseCodeForKyc, _isKyced);
-
-        (responseCodeForKyc, _isKyced) = isKyc(token, account3);
-        commonPrecheckData.doesAccount3PassKyc = _doesAccountPassKyc(responseCodeForKyc, _isKyced);
-
-        (int64 responseCodeForFrozen, bool _isFrozen) = isFrozen(token, account1);
-        commonPrecheckData.doesAccount1PassUnfrozen = _doesAccountPassUnfrozen(responseCodeForFrozen, _isFrozen);
-
-        (responseCodeForFrozen, _isFrozen) = isFrozen(token, account2);
-        commonPrecheckData.doesAccount2PassUnfrozen = _doesAccountPassUnfrozen(responseCodeForFrozen, _isFrozen);
-
-        (responseCodeForFrozen, _isFrozen) = isFrozen(token, account3);
-        commonPrecheckData.doesAccount3PassUnfrozen = _doesAccountPassUnfrozen(responseCodeForFrozen, _isFrozen);
-    }
-
     function _precheckTransfer(
         address token,
         address spender,
         address from,
         address to,
         uint256 amountOrSerialNumber
-    ) internal view returns (int64 responseCode, bool isRequestFromOwner) {
-        CommonPrecheckData memory commonPrecheckData = _getCommonPrecheckData(token, spender, from, to);
+    ) internal view returns (bool success, int64 responseCode, bool isRequestFromOwner) {
 
-        if (!_association[token][from] || !_association[token][to]) {
-            return (HederaResponseCodes.TOKEN_NOT_ASSOCIATED_TO_ACCOUNT, false);
-        }
-        if (!commonPrecheckData.doesAccount2PassUnfrozen || !commonPrecheckData.doesAccount3PassUnfrozen) {
-            return (HederaResponseCodes.ACCOUNT_FROZEN_FOR_TOKEN, false);
-        }
-        if (!commonPrecheckData.doesAccount2PassKyc || !commonPrecheckData.doesAccount3PassKyc) {
-            return (HederaResponseCodes.ACCOUNT_KYC_NOT_GRANTED_FOR_TOKEN, false);
-        }
+        success = true;
+
+        (success, responseCode) = success ? Validation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
+
+        (success, responseCode) = success ? Validation._validateTokenAssociation(token, from, _association) : (success, responseCode);
+        (success, responseCode) = success ? Validation._validateTokenAssociation(token, to, _association) : (success, responseCode);
+
+        (success, responseCode) = success ? _validateAccountKyc(token, spender) : (success, responseCode);
+        (success, responseCode) = success ? _validateAccountKyc(token, from) : (success, responseCode);
+        (success, responseCode) = success ? _validateAccountKyc(token, to) : (success, responseCode);
+
+        (success, responseCode) = success ? _validateAccountUnfrozen(token, spender) : (success, responseCode);
+        (success, responseCode) = success ? _validateAccountUnfrozen(token, from) : (success, responseCode);
+        (success, responseCode) = success ? _validateAccountUnfrozen(token, to) : (success, responseCode);
 
         // If transfer request is not from owner then check allowance of msg.sender
         bool shouldAssumeRequestFromOwner = spender == ADDRESS_ZERO;
         isRequestFromOwner = _isAccountSender(from) || shouldAssumeRequestFromOwner;
 
-        // do balance checks here even if request is from owner
-        HederaFungibleToken hederaFungibleToken = HederaFungibleToken(token);
-        HederaNonFungibleToken hederaNonFungibleToken = HederaNonFungibleToken(token);
+        (success, responseCode) = success ? Validation._validateTokenSufficiency(token, from, amountOrSerialNumber, amountOrSerialNumber, _isFungible, _isNonFungible, _partialNonFungibleTokenInfos) : (success, responseCode);
 
-        bool doesFromOwnSufficientToken = commonPrecheckData.isFungible
-            ? (hederaFungibleToken.balanceOf(from) >= amountOrSerialNumber)
-            : (from == hederaNonFungibleToken.ownerOf(amountOrSerialNumber));
-
-        if (!doesFromOwnSufficientToken) {
-            if (commonPrecheckData.isFungible) {
-                return (HederaResponseCodes.INSUFFICIENT_TOKEN_BALANCE, isRequestFromOwner);
-            }
-            if (commonPrecheckData.isNonFungible) {
-                return (HederaResponseCodes.SENDER_DOES_NOT_OWN_NFT_SERIAL_NO, isRequestFromOwner);
-            }
+        if (isRequestFromOwner || !success) {
+            return (success, responseCode, isRequestFromOwner);
         }
 
-        if (isRequestFromOwner) {
-            return (HederaResponseCodes.SUCCESS, true);
-        }
+        (success, responseCode) = success ? Validation._validateApprovalSufficiency(token, spender, from, amountOrSerialNumber, _isFungible, _isNonFungible) : (success, responseCode);
 
-        address spender = spender; // TODO: investigate if Hedera also considers tx.origin as a possible spender
-        if (commonPrecheckData.isFungible) {
-            (, uint256 spenderAllowance) = allowance(token, from, spender);
-            // TODO: do validation for other allowance response codes such as SPENDER_DOES_NOT_HAVE_ALLOWANCE and MAX_ALLOWANCES_EXCEEDED
-            if (spenderAllowance < amountOrSerialNumber) {
-                return (HederaResponseCodes.AMOUNT_EXCEEDS_ALLOWANCE, false);
-            }
-        } else {
-            bool canSpendToken = HederaNonFungibleToken(token).isApprovedOrOwner(spender, amountOrSerialNumber);
-            if (!canSpendToken) {
-                return (HederaResponseCodes.INSUFFICIENT_ACCOUNT_BALANCE, false);
+        return (success, responseCode, isRequestFromOwner);
+    }
+
+    function _postTransfer(
+        address token,
+        address spender,
+        address from,
+        address to,
+        uint256 amountOrSerialNumber
+    ) internal {
+        if (_isNonFungible[token]) {
+            int64 serialNumber = int64(uint64(amountOrSerialNumber));
+            _partialNonFungibleTokenInfos[token][serialNumber].ownerId = to;
+            delete _partialNonFungibleTokenInfos[token][serialNumber].spenderId;
+        }
+    }
+
+    function _postApprove(
+        address token,
+        address sender,
+        address spender,
+        uint256 amountOrSerialNumber
+    ) internal {
+        if (_isNonFungible[token]) {
+            int64 serialNumber = int64(uint64(amountOrSerialNumber));
+            _partialNonFungibleTokenInfos[token][serialNumber].spenderId = spender;
+        }
+    }
+
+    function _postMint(
+        address token,
+        int64 amountOrSerialNumber,
+        bytes[] memory metadata
+    ) internal {
+        if (_isNonFungible[token]) {
+            _partialNonFungibleTokenInfos[token][amountOrSerialNumber] = PartialNonFungibleTokenInfo({
+                ownerId: _getTreasuryAccount(token),
+                creationTime: int64(int(block.timestamp)),
+                metadata: _concatenate(metadata),
+                spenderId: ADDRESS_ZERO
+            });
+        }
+    }
+
+    function _postBurn(
+        address token,
+        int64 amount,
+        int64[] memory serialNumbers
+    ) internal {
+        if (_isNonFungible[token]) {
+            int64 serialNumber;
+            uint burnCount = serialNumbers.length;
+            for (uint256 i = 0; i < burnCount; i++) {
+                serialNumber = serialNumbers[i];
+                delete _partialNonFungibleTokenInfos[token][serialNumber].ownerId;
+                delete _partialNonFungibleTokenInfos[token][serialNumber].spenderId;
+
+                // TODO: remove the break statement below once multiple NFT burns are enabled in a single call
+                break; // only delete the info at index 0 since only 1 NFT is burnt at a time
             }
         }
-
-        return (HederaResponseCodes.SUCCESS, false);
     }
 
     function preApprove(
@@ -851,7 +758,11 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         uint256 amountOrSerialNumber /// for Fungible is the amount and for NonFungible is the serialNumber
     ) external onlyHederaToken returns (int64 responseCode) {
         address token = msg.sender;
-        responseCode = _precheckApprove(token, sender, spender, amountOrSerialNumber);
+        bool success;
+        (success, responseCode) = _precheckApprove(token, sender, spender, amountOrSerialNumber);
+        if (success) {
+            _postApprove(token, sender, spender, amountOrSerialNumber);
+        }
     }
 
     function preSetApprovalForAll(
@@ -860,7 +771,8 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         bool approved
     ) external onlyHederaToken returns (int64 responseCode) {
         address token = msg.sender;
-        responseCode = _precheckSetApprovalForAll(token, sender, operator, approved);
+        bool success;
+        (success, responseCode) = _precheckSetApprovalForAll(token, sender, operator, approved);
     }
 
     /// @dev not currently called by Hedera{}Token
@@ -870,13 +782,32 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         bytes[] memory metadata
     ) external onlyHederaToken returns (int64 responseCode) {
         address token = msg.sender;
-        responseCode = _precheckMint(token, amount, metadata);
+        bool success;
+        (success, responseCode) = _precheckMint(token, amount, metadata);
+
+        if (success) {
+
+            int64 amountOrSerialNumber;
+
+            if (_isFungible[token]) {
+                amountOrSerialNumber = amount;
+            } else {
+                amountOrSerialNumber = HederaNonFungibleToken(token).mintCount() + 1;
+            }
+
+            _postMint(token, amountOrSerialNumber, metadata);
+        }
     }
 
     /// @dev not currently called by Hedera{}Token
     function preBurn(int64 amount, int64[] memory serialNumbers) external onlyHederaToken returns (int64 responseCode) {
         address token = msg.sender;
-        responseCode = _precheckBurn(token, amount, serialNumbers);
+        bool success;
+        (success, responseCode) = _precheckBurn(token, amount, serialNumbers);
+
+        if (success) {
+            _postBurn(token, amount, serialNumbers);
+        }
     }
 
     function preTransfer(
@@ -886,7 +817,11 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         uint256 amountOrSerialNumber
     ) external onlyHederaToken returns (int64 responseCode) {
         address token = msg.sender;
-        (responseCode, ) = _precheckTransfer(token, spender, from, to, amountOrSerialNumber);
+        bool success;
+        (success, responseCode, ) = _precheckTransfer(token, spender, from, to, amountOrSerialNumber);
+        if (success) {
+            _postTransfer(token, spender, from, to, amountOrSerialNumber);
+        }
     }
 
     /// @dev register HederaFungibleToken; msg.sender is the HederaFungibleToken
@@ -933,14 +868,30 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         address token,
         uint256 serialNumber
     ) external view returns (int64 responseCode, address approved) {
-        // TODO: do prechecks; that token is valid and serialNumber exists
-        responseCode = HederaResponseCodes.SUCCESS;
+
+        bool success;
+        (success, responseCode) = _precheckGetApproved(token, serialNumber);
+
+        if (!success) {
+            return (responseCode, approved);
+        }
+
+        // TODO: abstract logic into _get{Data} function
         approved = HederaNonFungibleToken(token).getApproved(serialNumber);
     }
 
     function getFungibleTokenInfo(
         address token
     ) external view returns (int64 responseCode, FungibleTokenInfo memory fungibleTokenInfo) {
+
+        bool success;
+        (success, responseCode) = _precheckGetFungibleTokenInfo(token);
+
+        if (!success) {
+            return (responseCode, fungibleTokenInfo);
+        }
+
+        // TODO: abstract logic into _get{Data} function
         fungibleTokenInfo = _fungibleTokenInfos[token];
     }
 
@@ -948,6 +899,15 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         address token,
         int64 serialNumber
     ) external view returns (int64 responseCode, NonFungibleTokenInfo memory nonFungibleTokenInfo) {
+
+        bool success;
+        (success, responseCode) = _precheckGetNonFungibleTokenInfo(token);
+
+        if (!success) {
+            return (responseCode, nonFungibleTokenInfo);
+        }
+
+        // TODO: abstract logic into _get{Data} function
         TokenInfo memory nftTokenInfo = _nftTokenInfos[token];
         PartialNonFungibleTokenInfo memory partialNonFungibleTokenInfo = _partialNonFungibleTokenInfos[token][
             serialNumber
@@ -961,8 +921,6 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         nonFungibleTokenInfo.creationTime = partialNonFungibleTokenInfo.creationTime;
         nonFungibleTokenInfo.metadata = partialNonFungibleTokenInfo.metadata;
         nonFungibleTokenInfo.spenderId = partialNonFungibleTokenInfo.spenderId;
-
-        responseCode = HederaResponseCodes.SUCCESS;
     }
 
     function getTokenCustomFees(
@@ -977,59 +935,106 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
             RoyaltyFee[] memory royaltyFees
         )
     {
-        responseCode = HederaResponseCodes.SUCCESS;
-        fixedFees = _fungibleTokenInfos[token].tokenInfo.fixedFees;
-        fractionalFees = _fungibleTokenInfos[token].tokenInfo.fractionalFees;
-        royaltyFees = _fungibleTokenInfos[token].tokenInfo.royaltyFees;
+
+        bool success;
+        (success, responseCode) = _precheckGetTokenCustomFees(token);
+
+        if (!success) {
+            return (responseCode, fixedFees, fractionalFees, royaltyFees);
+        }
+
+        // TODO: abstract logic into _get{Data} function
+        if (_isFungible[token]) {
+            fixedFees = _fungibleTokenInfos[token].tokenInfo.fixedFees;
+            fractionalFees = _fungibleTokenInfos[token].tokenInfo.fractionalFees;
+            royaltyFees = _fungibleTokenInfos[token].tokenInfo.royaltyFees;
+        } else {
+            fixedFees = _nftTokenInfos[token].fixedFees;
+            fractionalFees = _nftTokenInfos[token].fractionalFees;
+            royaltyFees = _nftTokenInfos[token].royaltyFees;
+        }
     }
 
     function getTokenDefaultFreezeStatus(
         address token
     ) external view returns (int64 responseCode, bool defaultFreezeStatus) {
-        responseCode = HederaResponseCodes.SUCCESS;
-        // TODO: generalise for both token types
-        defaultFreezeStatus = _fungibleTokenInfos[token].tokenInfo.token.freezeDefault;
+
+        bool success;
+        (success, responseCode) = _precheckGetTokenDefaultFreezeStatus(token);
+
+        if (!success) {
+            return (responseCode, defaultFreezeStatus);
+        }
+
+        // TODO: abstract logic into _get{Data} function
+        if (_isFungible[token]) {
+            defaultFreezeStatus = _fungibleTokenInfos[token].tokenInfo.token.freezeDefault;
+        } else {
+            defaultFreezeStatus = _nftTokenInfos[token].token.freezeDefault;
+        }
     }
 
     function getTokenDefaultKycStatus(address token) external view returns (int64 responseCode, bool defaultKycStatus) {
-        responseCode = HederaResponseCodes.SUCCESS;
-        // TODO: generalise for both token types
-        defaultKycStatus = _fungibleTokenInfos[token].tokenInfo.defaultKycStatus;
+
+        bool success;
+        (success, responseCode) = _precheckGetTokenDefaultKycStatus(token);
+
+        if (!success) {
+            return (responseCode, defaultKycStatus);
+        }
+
+        // TODO: abstract logic into _get{Data} function
+        if (_isFungible[token]) {
+            defaultKycStatus = _fungibleTokenInfos[token].tokenInfo.defaultKycStatus;
+        } else {
+            defaultKycStatus = _nftTokenInfos[token].defaultKycStatus;
+        }
     }
 
     function getTokenExpiryInfo(address token) external view returns (int64 responseCode, Expiry memory expiry) {
-        if (!_isToken(token)) {
-            return (HederaResponseCodes.INVALID_TOKEN_ID, expiry);
+
+        bool success;
+        (success, responseCode) = _precheckGetTokenExpiryInfo(token);
+
+        if (!success) {
+            return (responseCode, expiry);
         }
 
+        // TODO: abstract logic into _get{Data} function
         if (_isFungible[token]) {
             expiry = _fungibleTokenInfos[token].tokenInfo.token.expiry;
         } else {
             expiry = _nftTokenInfos[token].token.expiry;
         }
-
-        return (HederaResponseCodes.SUCCESS, expiry);
     }
 
     function getTokenInfo(address token) external view returns (int64 responseCode, TokenInfo memory tokenInfo) {
-        if (!_isToken(token)) {
-            return (HederaResponseCodes.INVALID_TOKEN_ID, tokenInfo);
+
+        bool success;
+        (success, responseCode) = _precheckGetTokenInfo(token);
+
+        if (!success) {
+            return (responseCode, tokenInfo);
         }
 
+        // TODO: abstract logic into _get{Data} function
         if (_isFungible[token]) {
             tokenInfo = _fungibleTokenInfos[token].tokenInfo;
         } else {
             tokenInfo = _nftTokenInfos[token];
         }
-
-        return (HederaResponseCodes.SUCCESS, tokenInfo);
     }
 
     function getTokenKey(address token, uint keyType) external view returns (int64 responseCode, KeyValue memory key) {
-        if (!_isToken(token)) {
-            return (HederaResponseCodes.INVALID_TOKEN_ID, key);
+
+        bool success;
+        (success, responseCode) = _precheckGetTokenKey(token);
+
+        if (!success) {
+            return (responseCode, key);
         }
 
+        // TODO: abstract logic into _get{Data} function
         /// @dev the key can be retrieved using either of the following methods
         // method 1: gas inefficient
         // key = _getTokenKey(_fungibleTokenInfos[token].tokenInfo.token.tokenKeys, keyType);
@@ -1037,8 +1042,6 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         // method 2: more gas efficient and works for BOTH token types; however currently only considers contractId
         address keyValue = _tokenKeys[token][keyType];
         key.contractId = keyValue;
-
-        return (HederaResponseCodes.SUCCESS, key);
     }
 
     function _getTokenKey(IHederaTokenService.TokenKey[] memory tokenKeys, uint keyType) internal view returns (KeyValue memory key) {
@@ -1054,23 +1057,32 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
     }
 
     function getTokenType(address token) external view returns (int64 responseCode, int32 tokenType) {
-        bool isFungibleToken = _isFungible[token];
-        bool isNonFungibleToken = _isNonFungible[token];
-        if (!isFungibleToken && !isNonFungibleToken) {
-            return (HederaResponseCodes.INVALID_TOKEN_ID, tokenType);
+
+        bool success;
+        (success, responseCode) = _precheckGetTokenType(token);
+
+        if (!success) {
+            return (responseCode, tokenType);
         }
 
+        // TODO: abstract logic into _get{Data} function
+        bool isFungibleToken = _isFungible[token];
+        bool isNonFungibleToken = _isNonFungible[token];
         tokenType = isFungibleToken ? int32(0) : int32(1);
-        return (HederaResponseCodes.SUCCESS, tokenType);
     }
 
     function grantTokenKyc(address token, address account) external returns (int64 responseCode) {
 
-        responseCode = _precheckKyc(msg.sender, token, account);
+        bool success;
+        (success, responseCode) = _precheckKyc(msg.sender, token, account);
 
+        if (!success) {
+            return responseCode;
+        }
+
+        // TODO: abstract logic into _post{Action} function
         _kyc[token][account].explicit = true;
         _kyc[token][account].value = true;
-        return (HederaResponseCodes.SUCCESS);
     }
 
     /// @dev Applicable ONLY to NFT Tokens; accessible via IERC721
@@ -1081,17 +1093,17 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
     ) external view returns (int64 responseCode, bool approved) {}
 
     function isFrozen(address token, address account) public view returns (int64 responseCode, bool frozen) {
+
+        bool success = true;
+        (success, responseCode) = _precheckIsFrozen(token, account);
+
+        if (!success) {
+            return (responseCode, frozen);
+        }
+
         bool isFungible = _isFungible[token];
         bool isNonFungible = _isNonFungible[token];
-
-        if (!isFungible && !isNonFungible) {
-            return (HederaResponseCodes.INVALID_TOKEN_ID, false);
-        }
-
-        if (_getKey(token, KeyHelper.KeyType.FREEZE) == ADDRESS_ZERO) {
-            return (HederaResponseCodes.TOKEN_HAS_NO_FREEZE_KEY, false);
-        }
-
+        // TODO: abstract logic into _isFrozen function
         bool freezeDefault;
         if (isFungible) {
             FungibleTokenInfo memory fungibleTokenInfo = _fungibleTokenInfos[token];
@@ -1105,22 +1117,20 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
 
         /// @dev if unfrozenConfig.explicit is false && freezeDefault is true then an account must explicitly be unfrozen otherwise assume unfrozen
         frozen = unfrozenConfig.explicit ? !(unfrozenConfig.value) : (freezeDefault ? !(unfrozenConfig.value) : false);
-
-        return (HederaResponseCodes.SUCCESS, frozen);
     }
 
     function isKyc(address token, address account) public view returns (int64 responseCode, bool kycGranted) {
+
+        bool success;
+        (success, responseCode) = _precheckIsKyc(token, account);
+
+        if (!success) {
+            return (responseCode, kycGranted);
+        }
+
+        // TODO: abstract logic into _isKyc function
         bool isFungible = _isFungible[token];
         bool isNonFungible = _isNonFungible[token];
-
-        if (!isFungible && !isNonFungible) {
-            return (HederaResponseCodes.INVALID_TOKEN_ID, false);
-        }
-
-        if (_getKey(token, KeyHelper.KeyType.KYC) == ADDRESS_ZERO) {
-            return (HederaResponseCodes.TOKEN_HAS_NO_KYC_KEY, false);
-        }
-
         bool defaultKycStatus;
         if (isFungible) {
             FungibleTokenInfo memory fungibleTokenInfo = _fungibleTokenInfos[token];
@@ -1134,7 +1144,6 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
 
         /// @dev if kycConfig.explicit is false && defaultKycStatus is true then an account must explicitly be KYCed otherwise assume KYCed
         kycGranted = kycConfig.explicit ? kycConfig.value : (defaultKycStatus ? kycConfig.value : true);
-        return (HederaResponseCodes.SUCCESS, kycGranted);
     }
 
     function isToken(address token) public view returns (int64 responseCode, bool isToken) {
@@ -1147,12 +1156,16 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         address owner,
         address spender
     ) public view returns (int64 responseCode, uint256 allowance) {
-        if (!_isFungible[token]) {
-            return (HederaResponseCodes.INVALID_TOKEN_ID, 0);
+
+        bool success;
+        (success, responseCode) = _precheckAllowance(token, owner, spender);
+
+        if (!success) {
+            return (responseCode, allowance);
         }
 
+        // TODO: abstract logic into _allowance function
         allowance = HederaFungibleToken(token).allowance(owner, spender);
-        return (HederaResponseCodes.SUCCESS, allowance);
     }
 
     // Additional(not in IHederaTokenService) public/external view functions:
@@ -1288,14 +1301,14 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
 
     function deleteToken(address token) external noDelegateCall returns (int64 responseCode) {
 
-        responseCode = _precheckDeleteToken(msg.sender, token);
+        bool success;
+        (success, responseCode) = _precheckDeleteToken(msg.sender, token);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return responseCode;
         }
 
         _tokenDeleted[token] = true;
-
     }
 
     function approve(
@@ -1304,14 +1317,15 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         uint256 amount
     ) external noDelegateCall returns (int64 responseCode) {
         address owner = msg.sender;
-        responseCode = _precheckApprove(token, owner, spender, amount); // _precheckApprove works for BOTH token types
+        bool success;
+        (success, responseCode) = _precheckApprove(token, owner, spender, amount); // _precheckApprove works for BOTH token types
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return responseCode;
         }
 
+        _postApprove(token, owner, spender, amount);
         HederaFungibleToken(token).approveRequestFromHtsPrecompile(owner, spender, amount);
-        return HederaResponseCodes.SUCCESS;
     }
 
     function approveNFT(
@@ -1322,28 +1336,28 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         address owner = msg.sender;
         address spender = approved;
         int64 _serialNumber = int64(int(serialNumber));
-        responseCode = _precheckApprove(token, owner, spender, serialNumber); // _precheckApprove works for BOTH token types
+        bool success;
+        (success, responseCode) = _precheckApprove(token, owner, spender, serialNumber); // _precheckApprove works for BOTH token types
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return responseCode;
         }
 
+        _postApprove(token, owner, spender, serialNumber);
         HederaNonFungibleToken(token).approveRequestFromHtsPrecompile(spender, _serialNumber);
-        _partialNonFungibleTokenInfos[token][_serialNumber].spenderId = spender;
-        return HederaResponseCodes.SUCCESS;
     }
 
     function associateToken(address account, address token) public noDelegateCall returns (int64 responseCode) {
-        if (!_isFungible[token] && !_isNonFungible[token]) {
-            return HederaResponseCodes.INVALID_TOKEN_ID;
+
+        bool success;
+        (success, responseCode) = _precheckAssociateToken(account, token);
+
+        if (!success) {
+            return responseCode;
         }
 
-        if (_association[token][account]) {
-            return HederaResponseCodes.TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT;
-        }
-
+        // TODO: abstract logic into _post{Action} function
         _association[token][account] = true;
-        return HederaResponseCodes.SUCCESS;
     }
 
     function associateTokens(
@@ -1356,8 +1370,6 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
                 return responseCode;
             }
         }
-
-        return HederaResponseCodes.SUCCESS;
     }
 
     function dissociateTokens(
@@ -1370,34 +1382,33 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
                 return responseCode;
             }
         }
-
-        return HederaResponseCodes.SUCCESS;
     }
 
     function dissociateToken(address account, address token) public noDelegateCall returns (int64 responseCode) {
-        if (!_isFungible[token] && !_isNonFungible[token]) {
-            return HederaResponseCodes.INVALID_TOKEN_ID;
+
+        bool success;
+        (success, responseCode) = _precheckDissociateToken(account, token);
+
+        if (!success) {
+            return responseCode;
         }
 
-        if (!_association[token][account]) {
-            return HederaResponseCodes.TOKEN_NOT_ASSOCIATED_TO_ACCOUNT;
-        }
-
+        // TODO: abstract logic into _post{Action} function
         _association[token][account] = false;
-        return HederaResponseCodes.SUCCESS;
     }
 
     function freezeToken(address token, address account) external noDelegateCall returns (int64 responseCode) {
 
-        responseCode = _precheckFreezeToken(msg.sender, token, account);
+        bool success;
+        (success, responseCode) = _precheckFreezeToken(msg.sender, token, account);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return responseCode;
         }
 
+        // TODO: abstract logic into _post{Action} function
         _unfrozen[token][account].explicit = true;
         _unfrozen[token][account].value = false;
-
     }
 
     function mintToken(
@@ -1405,33 +1416,31 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         int64 amount,
         bytes[] memory metadata
     ) external noDelegateCall returns (int64 responseCode, int64 newTotalSupply, int64[] memory serialNumbers) {
-        responseCode = _precheckMint(token, amount, metadata);
+        bool success;
+        (success, responseCode) = _precheckMint(token, amount, metadata);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return (responseCode, 0, new int64[](0));
         }
 
+        int64 amountOrSerialNumber;
+
         if (_isFungible[token]) {
+            amountOrSerialNumber = amount;
             HederaFungibleToken hederaFungibleToken = HederaFungibleToken(token);
             hederaFungibleToken.mintRequestFromHtsPrecompile(amount);
             newTotalSupply = int64(int(hederaFungibleToken.totalSupply()));
-            return (responseCode, newTotalSupply, new int64[](0));
         }
 
-        serialNumbers = new int64[](1); // since you can only mint 1 NFT at a time
+        if (_isNonFungible[token]) {
+            serialNumbers = new int64[](1); // since you can only mint 1 NFT at a time
+            int64 serialNumber;
+            (newTotalSupply, serialNumber) = HederaNonFungibleToken(token).mintRequestFromHtsPrecompile(metadata);
+            serialNumbers[0] = serialNumber;
+            amountOrSerialNumber = serialNumber;
+        }
 
-        int64 serialNumber;
-        (newTotalSupply, serialNumber) = HederaNonFungibleToken(token).mintRequestFromHtsPrecompile(metadata);
-
-        serialNumbers[0] = serialNumber;
-
-        _partialNonFungibleTokenInfos[token][serialNumber] = PartialNonFungibleTokenInfo({
-            ownerId: _getTreasuryAccount(token),
-            creationTime: int64(int(block.timestamp)),
-            metadata: _concatenate(metadata),
-            spenderId: ADDRESS_ZERO
-        });
-
+        _postMint(token, amountOrSerialNumber, metadata);
         return (responseCode, newTotalSupply, serialNumbers);
     }
 
@@ -1440,53 +1449,53 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         int64 amount,
         int64[] memory serialNumbers
     ) external noDelegateCall returns (int64 responseCode, int64 newTotalSupply) {
-        responseCode = _precheckBurn(token, amount, serialNumbers);
+        bool success;
+        (success, responseCode) = _precheckBurn(token, amount, serialNumbers);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return (responseCode, 0);
         }
 
+        // TODO: abstract logic into _post{Action} function
         if (_isFungible[token]) {
             HederaFungibleToken hederaFungibleToken = HederaFungibleToken(token);
             hederaFungibleToken.burnRequestFromHtsPrecompile(amount);
             newTotalSupply = int64(int(hederaFungibleToken.totalSupply()));
-            return (responseCode, newTotalSupply);
         }
 
         if (_isNonFungible[token]) { // this conditional is redundant but added for code readibility
             newTotalSupply = HederaNonFungibleToken(token).burnRequestFromHtsPrecompile(serialNumbers);
-            int64 serialNumber;
-            uint burnCount = serialNumbers.length;
-            for (uint256 i = 0; i < burnCount; i++) {
-                serialNumber = serialNumbers[i];
-                delete _partialNonFungibleTokenInfos[token][serialNumber].ownerId;
-                delete _partialNonFungibleTokenInfos[token][serialNumber].spenderId;
-            }
-            return (responseCode, newTotalSupply);
         }
+
+        _postBurn(token, amount, serialNumbers);
     }
 
     function pauseToken(address token) external noDelegateCall returns (int64 responseCode) {
 
-        responseCode = _precheckPauseToken(msg.sender, token);
+        bool success;
+        (success, responseCode) = _precheckPauseToken(msg.sender, token);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return responseCode;
         }
 
+        // TODO: abstract logic into _post{Action} function
         _tokenPaused[token].explicit = true;
         _tokenPaused[token].value = true;
-
     }
 
     function revokeTokenKyc(address token, address account) external noDelegateCall returns (int64 responseCode) {
 
-        responseCode = _precheckKyc(msg.sender, token, account);
+        bool success;
+        (success, responseCode) = _precheckKyc(msg.sender, token, account);
 
+        if (!success) {
+            return responseCode;
+        }
+
+        // TODO: abstract logic into _post{Action} function
         _kyc[token][account].explicit = true;
         _kyc[token][account].value = false;
-        return (HederaResponseCodes.SUCCESS);
-
     }
 
     function setApprovalForAll(
@@ -1495,14 +1504,15 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         bool approved
     ) external noDelegateCall returns (int64 responseCode) {
         address owner = msg.sender;
-        responseCode = _precheckSetApprovalForAll(token, owner, operator, approved);
+        bool success;
+        (success, responseCode) = _precheckSetApprovalForAll(token, owner, operator, approved);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return responseCode;
         }
 
+        // TODO: abstract logic into _post{Action} function
         HederaNonFungibleToken(token).setApprovalForAllFromHtsPrecompile(owner, operator, approved);
-        return HederaResponseCodes.SUCCESS;
     }
 
     function transferFrom(
@@ -1515,12 +1525,14 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         address spender = msg.sender;
         bool isRequestFromOwner;
 
-        (responseCode, isRequestFromOwner) = _precheckTransfer(token, spender, from, to, amount);
+        bool success;
+        (success, responseCode, isRequestFromOwner) = _precheckTransfer(token, spender, from, to, amount);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return responseCode;
         }
 
+        _postTransfer(token, spender, from, to, amount);
         responseCode = HederaFungibleToken(token).transferRequestFromHtsPrecompile(
             isRequestFromOwner,
             spender,
@@ -1528,8 +1540,6 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
             to,
             amount
         );
-
-        return responseCode;
     }
 
     function transferFromNFT(
@@ -1541,12 +1551,14 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         address spender = msg.sender;
         bool isRequestFromOwner;
 
-        (responseCode, isRequestFromOwner) = _precheckTransfer(token, spender, from, to, serialNumber);
+        bool success;
+        (success, responseCode, isRequestFromOwner) = _precheckTransfer(token, spender, from, to, serialNumber);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return responseCode;
         }
 
+        _postTransfer(token, spender, from, to, serialNumber);
         HederaNonFungibleToken(token).transferRequestFromHtsPrecompile(
             isRequestFromOwner,
             spender,
@@ -1554,12 +1566,6 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
             to,
             serialNumber
         );
-
-        int64 _serialNumber = int64(uint64(serialNumber));
-        _partialNonFungibleTokenInfos[token][_serialNumber].ownerId = to;
-        delete _partialNonFungibleTokenInfos[token][_serialNumber].spenderId;
-
-        return responseCode;
     }
 
     /// TODO implementation is currently identical to transferFromNFT; investigate the differences between the 2 functions
@@ -1573,12 +1579,14 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         uint256 _serialNumber = uint64(serialNumber);
         bool isRequestFromOwner;
 
-        (responseCode, isRequestFromOwner) = _precheckTransfer(token, spender, sender, recipient, _serialNumber);
+        bool success;
+        (success, responseCode, isRequestFromOwner) = _precheckTransfer(token, spender, sender, recipient, _serialNumber);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return responseCode;
         }
 
+        _postTransfer(token, spender, sender, recipient, _serialNumber);
         responseCode = HederaNonFungibleToken(token).transferRequestFromHtsPrecompile(
             isRequestFromOwner,
             spender,
@@ -1586,11 +1594,6 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
             recipient,
             _serialNumber
         );
-
-        _partialNonFungibleTokenInfos[token][serialNumber].ownerId = recipient;
-        delete _partialNonFungibleTokenInfos[token][serialNumber].spenderId;
-
-        return responseCode;
     }
 
     function transferNFTs(
@@ -1635,12 +1638,14 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         bool isRequestFromOwner;
         uint _amount = uint(int(amount));
 
-        (responseCode, isRequestFromOwner) = _precheckTransfer(token, spender, sender, recipient, _amount);
+        bool success;
+        (success, responseCode, isRequestFromOwner) = _precheckTransfer(token, spender, sender, recipient, _amount);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return responseCode;
         }
 
+        _postTransfer(token, spender, sender, recipient, _amount);
         responseCode = HederaFungibleToken(token).transferRequestFromHtsPrecompile(
             isRequestFromOwner,
             spender,
@@ -1648,8 +1653,6 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
             recipient,
             _amount
         );
-
-        return responseCode;
     }
 
     function transferTokens(
@@ -1682,28 +1685,30 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
 
     function unfreezeToken(address token, address account) external noDelegateCall returns (int64 responseCode) {
 
-        responseCode = _precheckFreezeToken(msg.sender, token, account);
+        bool success;
+        (success, responseCode) = _precheckFreezeToken(msg.sender, token, account);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return responseCode;
         }
 
+        // TODO: abstract logic into _post{Action} function
         _unfrozen[token][account].explicit = true;
         _unfrozen[token][account].value = true;
-
     }
 
     function unpauseToken(address token) external noDelegateCall returns (int64 responseCode) {
 
-        responseCode = _precheckPauseToken(msg.sender, token);
+        bool success;
+        (success, responseCode) = _precheckPauseToken(msg.sender, token);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return responseCode;
         }
 
+        // TODO: abstract logic into _post{Action} function
         _tokenPaused[token].explicit = true;
         _tokenPaused[token].value = false;
-
     }
 
     function updateTokenExpiryInfo(
@@ -1711,12 +1716,14 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         Expiry memory expiryInfo
     ) external noDelegateCall returns (int64 responseCode) {
 
-        responseCode = _precheckUpdateTokenExpiryInfo(msg.sender, token, expiryInfo);
+        bool success;
+        (success, responseCode) = _precheckUpdateTokenExpiryInfo(msg.sender, token, expiryInfo);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return responseCode;
         }
 
+        // TODO: abstract logic into _post{Action} function
         if (_isFungible[token]) {
             _setFungibleTokenExpiry(token, expiryInfo);
         }
@@ -1724,7 +1731,6 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         if (_isNonFungible[token]) {
             _setNftTokenExpiry(token, expiryInfo);
         }
-
     }
 
     function updateTokenInfo(
@@ -1732,12 +1738,14 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         HederaToken memory tokenInfo
     ) external noDelegateCall returns (int64 responseCode) {
 
-        responseCode = _precheckUpdateTokenInfo(msg.sender, token, tokenInfo);
+        bool success;
+        (success, responseCode) = _precheckUpdateTokenInfo(msg.sender, token, tokenInfo);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return responseCode;
         }
 
+        // TODO: abstract logic into _post{Action} function
         if (_isFungible[token]) {
             _setFungibleTokenInfoToken(token, tokenInfo);
         }
@@ -1752,12 +1760,14 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         TokenKey[] memory keys
     ) external noDelegateCall returns (int64 responseCode) {
 
-        responseCode = _precheckUpdateTokenKeys(msg.sender, token, keys);
+        bool success;
+        (success, responseCode) = _precheckUpdateTokenKeys(msg.sender, token, keys);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return responseCode;
         }
 
+        // TODO: abstract logic into _post{Action} function
         if (_isFungible[token]) {
             _setFungibleTokenKeys(token, keys);
         }
@@ -1776,12 +1786,14 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
 
         int64[] memory nullArray;
 
-        responseCode = _precheckWipe(msg.sender, token, account, amount, nullArray);
+        bool success;
+        (success, responseCode) = _precheckWipe(msg.sender, token, account, amount, nullArray);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return responseCode;
         }
 
+        // TODO: abstract logic into _post{Action} function
         HederaFungibleToken hederaFungibleToken = HederaFungibleToken(token);
         hederaFungibleToken.wipeRequestFromHtsPrecompile(account, amount);
     }
@@ -1792,12 +1804,14 @@ contract HtsPrecompileMock is NoDelegateCall, IHederaTokenService, KeyHelper {
         int64[] memory serialNumbers
     ) external noDelegateCall returns (int64 responseCode) {
 
-        responseCode = _precheckWipe(msg.sender, token, account, 0, serialNumbers);
+        bool success;
+        (success, responseCode) = _precheckWipe(msg.sender, token, account, 0, serialNumbers);
 
-        if (responseCode != HederaResponseCodes.SUCCESS) {
+        if (!success) {
             return responseCode;
         }
 
+        // TODO: abstract logic into _post{Action} function
         int64 serialNumber;
         uint burnCount = serialNumbers.length;
         for (uint256 i = 0; i < burnCount; i++) {
