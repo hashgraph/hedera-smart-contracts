@@ -36,7 +36,9 @@ describe("IERC20 Test Suite", function () {
     signers = await ethers.getSigners();
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
+    await utils.updateAccountKeysViaHapi([tokenCreateContract.address, tokenTransferContract.address]);
     tokenAddress = await utils.createFungibleToken(tokenCreateContract, signers[0].address);
+    await utils.updateTokenKeysViaHapi(tokenAddress, [tokenCreateContract.address, tokenTransferContract.address]);
     await utils.associateToken(tokenCreateContract, tokenAddress, Constants.Contract.TokenCreateContract);
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
     IERC20 = await ethers.getContractAt(Constants.Path.ERC20Mock, tokenAddress);
