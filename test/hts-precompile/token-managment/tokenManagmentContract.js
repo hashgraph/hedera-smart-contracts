@@ -152,7 +152,8 @@ describe("TokenManagmentContract Test Suite", function () {
         const responseCodeTokenInfoBefore = (await txBeforeInfo.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode;
 
         const token = {
-            ...tokenInfoBefore, tokenKeys: [{ ...tokenInfoBefore.tokenKeys[0] }]
+            ...tokenInfoBefore,
+            tokenKeys: []
         };
 
         token.name = TOKEN_UPDATE_NAME;
@@ -534,170 +535,64 @@ describe("TokenManagmentContract Test Suite", function () {
             });
             describe('Positive', function () {
                 it('should be able to change PAUSE key to ECDSA_secp256k and pause the token with the same account', async function () {
-                    //Update token info
-                    {
-                        const key = utils.getSignerCompressedPublicKey(1);
-                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.SECP256K1, key);
+                    await utils.updateTokenKeysViaHapi(tokenAddress, [tokenManagmentContract.address], false, true, false, false, false, false);
 
-                        const token = {
-                            ...tokenInfoBefore, tokenKeys: [[utils.KeyType.PAUSE, updatedKey]]
-                        };
-                        token.treasury = signers[0].address;
+                    const pauseTokenTx = await tokenManagmentContract.connect(signers[1]).pauseTokenPublic(tokenAddress);
+                    const unpauseTokenTx = await tokenManagmentContract.connect(signers[1]).unpauseTokenPublic(tokenAddress);
 
-                        await updateTokenInfo(tokenCreateContract, tokenAddress, token);
-                    }
-
-                    //Pause and unpause token
-                    {
-                        const pauseTokenTx = await tokenManagmentContract.connect(signers[1]).pauseTokenPublic(tokenAddress);
-                        const unpauseTokenTx = await tokenManagmentContract.connect(signers[1]).unpauseTokenPublic(tokenAddress);
-
-                        expect((await pauseTokenTx.wait()).events.filter(e => e.event === Constants.Events.PausedToken)[0].args.paused).to.eq(true);
-                        expect((await unpauseTokenTx.wait()).events.filter(e => e.event === Constants.Events.UnpausedToken)[0].args.unpaused).to.eq(true);
-                        expect((await pauseTokenTx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
-                        expect((await unpauseTokenTx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
-                    }
-
-                    //Revert previous update token info
-                    {
-                        const contractId = tokenCreateContract.address;
-                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, contractId);
-
-                        const tokenAfter = {
-                            ...tokenInfoBefore, tokenKeys: [[utils.KeyType.PAUSE, updatedKeyAfter]]
-                        };
-                        tokenAfter.treasury = signers[0].address;
-                        await updateTokenInfo(tokenCreateContract, tokenAddress, tokenAfter);
-                    }
+                    expect((await pauseTokenTx.wait()).events.filter(e => e.event === Constants.Events.PausedToken)[0].args.paused).to.eq(true);
+                    expect((await unpauseTokenTx.wait()).events.filter(e => e.event === Constants.Events.UnpausedToken)[0].args.unpaused).to.eq(true);
+                    expect((await pauseTokenTx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                    expect((await unpauseTokenTx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                 });
 
                 it('should be able to change WIPE key to ECDSA_secp256k and wipe the token with the same account', async function () {
-                    //Update token info
-                    {
-                        const key = utils.getSignerCompressedPublicKey(1);
-                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.SECP256K1, key);
+                    await utils.updateTokenKeysViaHapi(tokenAddress, [tokenManagmentContract.address], false, false, false, false, false, true);
+                    const wipeAmount = 3
+                    await tokenTransferContract.transferTokensPublic(tokenAddress, [signers[0].address, signers[1].address], [-wipeAmount, wipeAmount]);
 
-                        const token = {
-                            ...tokenInfoBefore, tokenKeys: [[utils.KeyType.WIPE, updatedKey]]
-                        };
-                        token.treasury = signers[0].address;
+                    const balanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
 
-                        await updateTokenInfo(tokenCreateContract, tokenAddress, token);
-                    }
+                    const tx = await tokenManagmentContract.connect(signers[1]).wipeTokenAccountPublic(tokenAddress, signers[1].address, wipeAmount);
+                    const balanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
 
-                    //Wipe token
-                    {
-                        const wipeAmount = 3
-                        await tokenTransferContract.transferTokensPublic(tokenAddress, [signers[0].address, signers[1].address], [-wipeAmount, wipeAmount]);
-
-                        const balanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
-
-                        const tx = await tokenManagmentContract.connect(signers[1]).wipeTokenAccountPublic(tokenAddress, signers[1].address, wipeAmount);
-                        const balanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
-
-                        expect(balanceAfter).to.eq(balanceBefore.sub(wipeAmount));
-                        expect((await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
-                    }
-
-                    //Revert previous update token info
-                    {
-                        const contractId = tokenCreateContract.address;
-                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, contractId);
-
-                        const tokenAfter = {
-                            ...tokenInfoBefore, tokenKeys: [[utils.KeyType.WIPE, updatedKeyAfter]]
-                        };
-                        tokenAfter.treasury = signers[0].address;
-                        await updateTokenInfo(tokenCreateContract, tokenAddress, tokenAfter);
-                    }
+                    expect(balanceAfter).to.eq(balanceBefore.sub(wipeAmount));
+                    expect((await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                 });
 
                 it('should be able to change FREEZE key to ECDSA_secp256k and freeze the token with the same account', async function () {
-                    //Update token info
-                    {
-                        const key = utils.getSignerCompressedPublicKey(1);
-                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.SECP256K1, key);
+                    await utils.updateTokenKeysViaHapi(tokenAddress, [tokenManagmentContract.address], false, false, false, true, false, false);
+                    const freezeTx = await tokenManagmentContract.connect(signers[1]).freezeTokenPublic(tokenAddress, tokenCreateContract.address);
+                    const isFrozenTxBefore = await tokenQueryContract.isFrozenPublic(tokenAddress, tokenCreateContract.address);
 
-                        const token = {
-                            ...tokenInfoBefore, tokenKeys: [[utils.KeyType.FREEZE, updatedKey]]
-                        };
-                        token.treasury = signers[0].address;
+                    const unfreezeTx = await tokenManagmentContract.connect(signers[1]).unfreezeTokenPublic(tokenAddress, tokenCreateContract.address);
+                    const isFrozenTxAfter = await tokenQueryContract.isFrozenPublic(tokenAddress, tokenCreateContract.address);
 
-                        await updateTokenInfo(tokenCreateContract, tokenAddress, token);
-                    }
+                    expect((await isFrozenTxBefore.wait()).events.filter(e => e.event === Constants.Events.Frozen)[0].args.frozen).to.eq(true);
+                    expect((await isFrozenTxAfter.wait()).events.filter(e => e.event === Constants.Events.Frozen)[0].args.frozen).to.eq(false);
 
-                    //Freeze and unfreeze token
-                    {
-                        const freezeTx = await tokenManagmentContract.connect(signers[1]).freezeTokenPublic(tokenAddress, tokenCreateContract.address);
-                        const isFrozenTxBefore = await tokenQueryContract.isFrozenPublic(tokenAddress, tokenCreateContract.address);
-
-                        const unfreezeTx = await tokenManagmentContract.connect(signers[1]).unfreezeTokenPublic(tokenAddress, tokenCreateContract.address);
-                        const isFrozenTxAfter = await tokenQueryContract.isFrozenPublic(tokenAddress, tokenCreateContract.address);
-
-                        expect((await isFrozenTxBefore.wait()).events.filter(e => e.event === Constants.Events.Frozen)[0].args.frozen).to.eq(true);
-                        expect((await isFrozenTxAfter.wait()).events.filter(e => e.event === Constants.Events.Frozen)[0].args.frozen).to.eq(false);
-
-                        expect((await freezeTx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
-                        expect((await unfreezeTx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
-                    }
-
-                    //Revert previous update token info
-                    {
-                        const contractId = tokenCreateContract.address;
-                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, contractId);
-
-                        const tokenAfter = {
-                            ...tokenInfoBefore, tokenKeys: [[utils.KeyType.FREEZE, updatedKeyAfter]]
-                        };
-                        tokenAfter.treasury = signers[0].address;
-                        await updateTokenInfo(tokenCreateContract, tokenAddress, tokenAfter);
-                    }
+                    expect((await freezeTx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
+                    expect((await unfreezeTx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                 });
 
                 it('should be able to change ADMIN key to ECDSA_secp256k and perform admin action with same contract', async function () {
-                    //Update token info
-                    {
-                        const key = utils.getSignerCompressedPublicKey();
-                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.SECP256K1, key);
+                    await utils.updateTokenKeysViaHapi(tokenAddress, [tokenManagmentContract.address], true, false, false, false, false, false);
+                    const keyTxBefore = await tokenQueryContract.getTokenKeyPublic(tokenAddress, utils.KeyType.SUPPLY);
+                    const keyBefore = (await keyTxBefore.wait()).events.filter(e => e.event === Constants.Events.TokenKey)[0].args.key;
 
-                        const token = {
-                            ...tokenInfoBefore, tokenKeys: [[utils.KeyType.ADMIN, updatedKey]]
-                        };
-                        token.treasury = signers[0].address;
+                    const updatedKey = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, tokenTransferContract.address);
+                    const updateTokenKeyTx = await tokenManagmentContract.connect(signers[0]).updateTokenKeysPublic(tokenAddress, [[utils.KeyType.SUPPLY, updatedKey]]);
+                    const keyTxAfter = await tokenQueryContract.getTokenKeyPublic(tokenAddress, utils.KeyType.SUPPLY);
+                    const keyAfter = (await keyTxAfter.wait()).events.filter(e => e.event === Constants.Events.TokenKey)[0].args.key;
 
-                        await updateTokenInfo(tokenCreateContract, tokenAddress, token);
-                    }
-
-                    //Change supply key with admin contract
-                    {
-                        const keyTxBefore = await tokenQueryContract.getTokenKeyPublic(tokenAddress, utils.KeyType.SUPPLY);
-                        const keyBefore = (await keyTxBefore.wait()).events.filter(e => e.event === Constants.Events.TokenKey)[0].args.key;
-
-                        const updatedKey = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, tokenTransferContract.address);
-                        const updateTokenKeyTx = await tokenManagmentContract.connect(signers[0]).updateTokenKeysPublic(tokenAddress, [[utils.KeyType.SUPPLY, updatedKey]]);
-                        const keyTxAfter = await tokenQueryContract.getTokenKeyPublic(tokenAddress, utils.KeyType.SUPPLY);
-                        const keyAfter = (await keyTxAfter.wait()).events.filter(e => e.event === Constants.Events.TokenKey)[0].args.key;
-
-                        expect(keyBefore[1]).to.not.eq(keyAfter[1]);
-                        expect((await updateTokenKeyTx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
-                    }
-
-                    //Revert previous update token info
-                    {
-                        const contractId = tokenCreateContract.address;
-                        const updatedKeyAfter = updateTokenInfoValues(utils.KeyValueType.CONTRACT_ID, contractId);
-
-                        const tokenAfter = {
-                            ...tokenInfoBefore, tokenKeys: [[utils.KeyType.ADMIN, updatedKeyAfter]]
-                        };
-                        tokenAfter.treasury = signers[0].address;
-
-                        const txUpdate = await tokenManagmentContract.connect(signers[0]).updateTokenInfoPublic(tokenAddress, tokenAfter);
-                        expect((await txUpdate.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.be.equal(TX_SUCCESS_CODE);
-                    }
+                    expect(keyBefore[1]).to.not.eq(keyAfter[1]);
+                    expect((await updateTokenKeyTx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode).to.eq(TX_SUCCESS_CODE);
                 });
             });
             describe('Negative', function () {
+                before(async function () {
+                    tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
+                });
                 it('should not be able to pause the token with different PAUSE key', async function () {
                     const pauseTokenTx = await tokenManagmentContract.connect(signers[1]).pauseTokenPublic(tokenAddress);
                     const unpauseTokenTx = await tokenManagmentContract.connect(signers[1]).unpauseTokenPublic(tokenAddress);
