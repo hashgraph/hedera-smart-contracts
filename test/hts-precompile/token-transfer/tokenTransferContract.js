@@ -44,10 +44,12 @@ describe("TokenTransferContract Test Suite", function () {
     tokenTransferContract = await utils.deployTokenTransferContract();
     erc20Contract = await utils.deployERC20Contract();
     erc721Contract = await utils.deployERC721Contract();
-
+    await utils.updateAccountKeysViaHapi([tokenCreateContract.address, tokenQueryContract.address, tokenTransferContract.address]);
     tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
+    await utils.updateTokenKeysViaHapi(tokenAddress, [tokenCreateContract.address, tokenQueryContract.address, tokenTransferContract.address]);
     nftTokenAddress = await utils.createNonFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
-    mintedTokenSerialNumber = await utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
+    await utils.updateTokenKeysViaHapi(nftTokenAddress, [tokenCreateContract.address, tokenQueryContract.address, tokenTransferContract.address]);
+    mintedTokenSerialNumber = await utils.mintNFT(tokenCreateContract, nftTokenAddress);
 
     await utils.associateToken(tokenCreateContract, tokenAddress, Constants.Contract.TokenCreateContract);
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);

@@ -18,9 +18,13 @@
  *
  */
 
-const { ethers } = require("hardhat");
+const hre = require("hardhat");
+const { ethers } = hre;
 const { expect } = require("chai");
-const { AccountId, Client, AccountInfoQuery } = require("@hashgraph/sdk");
+const {
+  AccountId, Client, AccountInfoQuery, AccountUpdateTransaction,
+  ContractId, KeyList, PrivateKey, TokenId, TokenUpdateTransaction
+} = require("@hashgraph/sdk");
 const Constants = require('../constants')
 
 class Utils {
@@ -360,6 +364,61 @@ class Utils {
     const cpk = prune0x ? wallet._signingKey().compressedPublicKey.replace('0x', '') : wallet._signingKey().compressedPublicKey;
 
     return asBuffer ? Buffer.from(cpk, 'hex') : cpk;
+  }
+
+  static async getGenesisSDKClient() {
+    return await Utils.createLocalSDKClient('0.0.2', '302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137');
+  }
+
+  static async getHardhatSignersPrivateKeys(add0xPrefix = true) {
+    return hre.config.networks.relay.accounts.map(pk => add0xPrefix ? pk : pk.replace('0x', ''));
+  }
+
+  static async updateAccountKeysViaHapi(contractAddresses, ecdsaPrivateKeys = []) {
+    const clientGenesis = await Utils.getGenesisSDKClient();
+    ecdsaPrivateKeys = ecdsaPrivateKeys.length ? ecdsaPrivateKeys : await this.getHardhatSignersPrivateKeys(false);
+    for (let i in ecdsaPrivateKeys) {
+      const pkSigner = PrivateKey.fromStringECDSA(ecdsaPrivateKeys[i].replace('0x', ''));
+      const accountId = await Utils.getAccountId(pkSigner.publicKey.toEvmAddress(), clientGenesis);
+      const clientSigner = await Utils.createLocalSDKClient(accountId, pkSigner);
+      await (
+          await (new AccountUpdateTransaction()
+                  .setAccountId(accountId)
+                  .setKey(new KeyList([
+                    pkSigner.publicKey,
+                    ...contractAddresses.map(address => ContractId.fromEvmAddress(0, 0, address))
+                  ], 1))
+                  .freezeWith(clientSigner)
+          ).sign(pkSigner)
+      ).execute(clientSigner);
+    }
+  }
+
+  static async updateTokenKeysViaHapi(tokenAddress, contractAddresses, setAdmin = true, setPause = true, setKyc = true, setFreeze = true, setSupply = true, setWipe = true) {
+    const signers = await ethers.getSigners();
+    const clientGenesis = await Utils.getGenesisSDKClient();
+    const pkSigners = (await Utils.getHardhatSignersPrivateKeys()).map(pk => PrivateKey.fromStringECDSA(pk));
+    const accountIdSigner0 = await Utils.getAccountId(signers[0].address, clientGenesis);
+    const clientSigner0 = await Utils.createLocalSDKClient(accountIdSigner0, pkSigners[0]);
+
+    const keyList = new KeyList([
+      ...pkSigners.map(pk => pk.publicKey),
+      ...contractAddresses.map(address => ContractId.fromEvmAddress(0, 0, address))
+    ], 1);
+
+    const tx = new TokenUpdateTransaction().setTokenId(TokenId.fromSolidityAddress(tokenAddress));
+    if (setAdmin) tx.setAdminKey(keyList);
+    if (setPause) tx.setPauseKey(keyList);
+    if (setKyc) tx.setKycKey(keyList);
+    if (setFreeze) tx.setFreezeKey(keyList);
+    if (setSupply) tx.setSupplyKey(keyList);
+    if (setWipe) tx.setWipeKey(keyList);
+
+    await (
+        await (
+            tx.freezeWith(clientSigner0)
+        ).sign(pkSigners[0])
+    ).execute(clientSigner0);
   }
 }
 

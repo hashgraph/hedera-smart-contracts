@@ -43,20 +43,22 @@ describe("TokenManagmentContract Test Suite", function () {
         tokenQueryContract = await utils.deployTokenQueryContract();
         tokenManagmentContract = await utils.deployTokenManagementContract();
         tokenTransferContract = await utils.deployTokenTransferContract();
+        await utils.updateAccountKeysViaHapi([tokenCreateContract.address, tokenTransferContract.address, tokenManagmentContract.address, tokenQueryContract.address]);
         erc20Contract = await utils.deployERC20Contract();
-        tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKeyAssociateAndTransferToAddress(tokenCreateContract, tokenCreateContract.address, utils.getSignerCompressedPublicKey());
-        nftTokenAddress = await utils.createNonFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, tokenCreateContract.address, utils.getSignerCompressedPublicKey());
-
+        tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
+        await utils.updateTokenKeysViaHapi(tokenAddress, [tokenCreateContract.address, tokenTransferContract.address, tokenManagmentContract.address, tokenQueryContract.address]);
+        nftTokenAddress = await utils.createNonFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
+        await utils.updateTokenKeysViaHapi(nftTokenAddress, [tokenCreateContract.address, tokenTransferContract.address, tokenManagmentContract.address, tokenQueryContract.address]);
         await utils.associateToken(tokenCreateContract, tokenAddress, Constants.Contract.TokenCreateContract);
         await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
         await utils.associateToken(tokenCreateContract, nftTokenAddress, Constants.Contract.TokenCreateContract);
         await utils.grantTokenKyc(tokenCreateContract, nftTokenAddress);
-        mintedTokenSerialNumber = await utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
+        mintedTokenSerialNumber = await utils.mintNFT(tokenCreateContract, nftTokenAddress);
     });
 
     it('should be able to delete token', async function () {
         const newTokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
-
+        await utils.updateTokenKeysViaHapi(newTokenAddress, [tokenCreateContract.address, tokenTransferContract.address, tokenManagmentContract.address, tokenQueryContract.address]);
         const txBefore = await tokenQueryContract.getTokenInfoPublic(newTokenAddress);
         const tokenInfoBefore = (await txBefore.wait()).events.filter(e => e.event === Constants.Events.TokenInfo)[0].args.tokenInfo;
 
@@ -120,20 +122,21 @@ describe("TokenManagmentContract Test Suite", function () {
     it('should be able to wipe token', async function () {
         const wipeAmount = 3;
 
-        await tokenTransferContract.transferTokensPublic(tokenAddress, [tokenCreateContract.address, signers[0].address], [-wipeAmount, wipeAmount]);
-        const balanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[0].address);
+        await tokenTransferContract.transferTokensPublic(tokenAddress, [signers[0].address, signers[1].address], [-wipeAmount, wipeAmount]);
+        const balanceBefore = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
 
-        const tx = await tokenManagmentContract.wipeTokenAccountPublic(tokenAddress, signers[0].address, wipeAmount);
+        const tx = await tokenManagmentContract.wipeTokenAccountPublic(tokenAddress, signers[1].address, wipeAmount);
         const responseCode = (await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode;
 
-        const balanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[0].address);
+        const balanceAfter = await erc20Contract.balanceOf(tokenAddress, signers[1].address);
 
         expect(responseCode).to.equal(TX_SUCCESS_CODE);
         expect(Number(balanceAfter.toString())).to.equal(Number(balanceBefore.toString()) - wipeAmount);
     });
 
     it('should be able to wipe token account NFT', async function () {
-        const tx = await tokenManagmentContract.wipeTokenAccountNFTPublic(nftTokenAddress, signers[0].address, [mintedTokenSerialNumber]);
+        await tokenTransferContract.transferNFTPublic(nftTokenAddress, signers[0].address, signers[1].address, mintedTokenSerialNumber);
+        const tx = await tokenManagmentContract.wipeTokenAccountNFTPublic(nftTokenAddress, signers[1].address, [mintedTokenSerialNumber]);
         const responseCode = (await tx.wait()).events.filter(e => e.event === Constants.Events.ResponseCode)[0].args.responseCode;
 
         expect(responseCode).to.equal(TX_SUCCESS_CODE);
@@ -317,7 +320,8 @@ describe("TokenManagmentContract Test Suite", function () {
 
         describe('Admin key set to ECDSA_secp256k', function () {
             before(async function () {
-                tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKeyAssociateAndTransferToAddress(tokenCreateContract, tokenCreateContract.address, utils.getSignerCompressedPublicKey());
+                tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
+                await utils.updateTokenKeysViaHapi(tokenAddress, [tokenCreateContract.address, tokenTransferContract.address, tokenManagmentContract.address, tokenQueryContract.address]);
                 tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
 
                 await utils.associateToken(tokenCreateContract, tokenAddress, Constants.Contract.TokenCreateContract);
@@ -342,7 +346,9 @@ describe("TokenManagmentContract Test Suite", function () {
                     //Pause and unpause token
                     {
                         const pauseTokenTx = await tokenManagmentContract.connect(signers[1]).pauseTokenPublic(tokenAddress);
+                        await pauseTokenTx.wait();
                         const unpauseTokenTx = await tokenManagmentContract.connect(signers[1]).unpauseTokenPublic(tokenAddress);
+                        await unpauseTokenTx.wait();
 
                         expect((await pauseTokenTx.wait()).events.filter(e => e.event === Constants.Events.PausedToken)[0].args.paused).to.eq(true);
                         expect((await unpauseTokenTx.wait()).events.filter(e => e.event === Constants.Events.UnpausedToken)[0].args.unpaused).to.eq(true);
@@ -519,7 +525,8 @@ describe("TokenManagmentContract Test Suite", function () {
 
         describe('Admin key set to contractId', function () {
             before(async function () {
-                tokenAddress = await utils.createFungibleToken(tokenCreateContract, signers[0].address);
+                tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
+                await utils.updateTokenKeysViaHapi(tokenAddress, [tokenCreateContract.address, tokenTransferContract.address, tokenManagmentContract.address, tokenQueryContract.address]);
                 tokenInfoBefore = await getTokenInfo(tokenQueryContract, tokenAddress);
 
                 await utils.associateToken(tokenCreateContract, tokenAddress, Constants.Contract.TokenCreateContract);

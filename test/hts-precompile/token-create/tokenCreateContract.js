@@ -18,12 +18,15 @@
  *
  */
 
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
+const {expect} = require("chai");
+const {ethers} = require("hardhat");
 const utils = require('../utils');
-const { expectValidHash } = require('../assertions');
-const Constants = require('../../constants')
-const { TokenCreateTransaction, TransactionId, PublicKey, TokenSupplyType, AccountId } = require("@hashgraph/sdk");
+const {expectValidHash} = require('../assertions');
+const Constants = require('../../constants');
+const {
+  TokenCreateTransaction, TransactionId, PublicKey,
+  TokenSupplyType, AccountId
+} = require("@hashgraph/sdk");
 
 describe("TokenCreateContract Test Suite", function () {
   let tokenCreateContract;
@@ -43,16 +46,18 @@ describe("TokenCreateContract Test Suite", function () {
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
     tokenManagmentContract = await utils.deployTokenManagementContract();
+    await utils.updateAccountKeysViaHapi([tokenCreateContract.address, tokenTransferContract.address, tokenManagmentContract.address]);
     erc20Contract = await utils.deployERC20Contract();
     erc721Contract = await utils.deployERC721Contract();
     tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
-    nftTokenAddress = await utils.createNonFungibleToken(tokenCreateContract, signers[0].address);
-    mintedTokenSerialNumber = await utils.mintNFT(tokenCreateContract, nftTokenAddress);
-
+    await utils.updateTokenKeysViaHapi(tokenAddress, [tokenCreateContract.address, tokenTransferContract.address, tokenManagmentContract.address]);
+    nftTokenAddress = await utils.createNonFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
+    await utils.updateTokenKeysViaHapi(nftTokenAddress, [tokenCreateContract.address, tokenTransferContract.address, tokenManagmentContract.address]);
     await utils.associateToken(tokenCreateContract, tokenAddress, Constants.Contract.TokenCreateContract);
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
     await utils.associateToken(tokenCreateContract, nftTokenAddress, Constants.Contract.TokenCreateContract);
     await utils.grantTokenKyc(tokenCreateContract, nftTokenAddress);
+    mintedTokenSerialNumber = await utils.mintNFT(tokenCreateContract, nftTokenAddress);
   });
 
   it('should be able to execute burnToken', async function () {
@@ -148,9 +153,9 @@ describe("TokenCreateContract Test Suite", function () {
     const tx = await tokenCreateContract.mintTokenPublic(nftAddress, 0, ['0x02'], Constants.GAS_LIMIT_1_000_000);
 
     const receipt = await tx.wait();
-    const { responseCode } = receipt.events.filter(e => e.event === Constants.Events.ResponseCode)[0].args;
+    const {responseCode} = receipt.events.filter(e => e.event === Constants.Events.ResponseCode)[0].args;
     expect(responseCode).to.equal(22);
-    const { serialNumbers } = receipt.events.filter(e => e.event === Constants.Events.MintedToken)[0].args;
+    const {serialNumbers} = receipt.events.filter(e => e.event === Constants.Events.MintedToken)[0].args;
     expect(serialNumbers[0].toNumber()).to.be.greaterThan(0);
   });
 
@@ -172,6 +177,7 @@ describe("TokenCreateContract Test Suite", function () {
     before(async function () {
       tokenCreateCustomContract = await utils.deployTokenCreateCustomContract();
       tokenQueryContract = await utils.deployTokenQueryContract();
+      await utils.updateAccountKeysViaHapi([tokenCreateCustomContract.address, tokenQueryContract.address]);
     });
 
     async function createTokenviaHapi() {
