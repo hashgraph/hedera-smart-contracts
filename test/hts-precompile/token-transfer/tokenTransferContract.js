@@ -159,6 +159,7 @@ describe("TokenTransferContract Test Suite", function () {
     const cryptoTransferTx = await tokenTransferContract.cryptoTransferPublic(cryptoTransfers, tokenTransferList, Constants.GAS_LIMIT_1_000_000);
     const cryptoTransferReceipt = await cryptoTransferTx.wait();
     const responseCode = cryptoTransferReceipt.events.filter(e => e.event === Constants.Events.ResponseCode)[0].args[0];
+    await new Promise(r => setTimeout(r, 2000));
 
     const signers0After = await signers[0].provider.getBalance(signers[0].address);
     const signers1After = await signers[0].provider.getBalance(signers[1].address);
@@ -190,6 +191,7 @@ describe("TokenTransferContract Test Suite", function () {
     const cryptoTransferTx = await tokenTransferContract.cryptoTransferPublic(cryptoTransfers, tokenTransferList, Constants.GAS_LIMIT_1_000_000);
     const cryptoTransferReceipt = await cryptoTransferTx.wait();
     const responseCode = cryptoTransferReceipt.events.filter(e => e.event === Constants.Events.ResponseCode)[0].args[0];
+    await new Promise(r => setTimeout(r, 2000));
 
     const ownerAfter = await erc721Contract.ownerOf(nftTokenAddress, mintedTokenSerialNumber);
 
@@ -250,6 +252,7 @@ describe("TokenTransferContract Test Suite", function () {
     const cryptoTransferTx = await tokenTransferContract.cryptoTransferPublic(cryptoTransfers, tokenTransferList, Constants.GAS_LIMIT_1_000_000);
     const cryptoTransferReceipt = await cryptoTransferTx.wait();
     const responseCode = cryptoTransferReceipt.events.filter(e => e.event === Constants.Events.ResponseCode)[0].args[0];
+    await new Promise(r => setTimeout(r, 2000));
 
     const signers0AfterHbarBalance = await signers[0].provider.getBalance(signers[0].address);
     const signers1AfterHbarBalance = await signers[0].provider.getBalance(signers[1].address);
