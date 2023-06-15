@@ -41,6 +41,9 @@ jobs:
         run: npx hedera start -d --network local
         timeout-minutes: 5
 
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+
       - name: Run the test in ${{ inputs.testfilter }}
         run: npx hardhat test --grep ${{ inputs.testfilter }}
 
