@@ -344,12 +344,13 @@ class Utils {
     }
   }
 
-  static async createSDKClient(operatorId, operatorKey, hederaNetwork, mirrorNode) {
+  static async createSDKClient(operatorId, operatorKey) {
     const network = Utils.getCurrentNetwork();
 
-    hederaNetwork = {}
-    hederaNetwork[hre.config.networks[network].sdkClient.networkNodeUrl] = new AccountId(hre.config.networks.relay.sdkClient.nodeId)
-    mirrorNode = hre.config.networks[network].sdkClient.mirrorNode
+    hederaNetwork = {};
+    hederaNetwork[hre.config.networks[network].sdkClient.networkNodeUrl] = AccountId.fromString(hre.config.networks[network].sdkClient.nodeId);
+    mirrorNode = hre.config.networks[network].sdkClient.mirrorNode;
+    const {mirrorNode} = hre.config.networks[network].sdkClient;
 
     operatorId = operatorId || hre.config.networks[network].sdkClient.operatorId;
     operatorKey = operatorKey || hre.config.networks[network].sdkClient.operatorKey;
