@@ -345,14 +345,14 @@ class Utils {
   }
 
   static async createSDKClient(operatorId, operatorKey, hederaNetwork, mirrorNode) {
-    const network = getCurrentNetwork();
+    const network = Utils.getCurrentNetwork();
 
     hederaNetwork = {}
     hederaNetwork[hre.config.networks[network].sdkClient.networkNodeUrl] = new AccountId(hre.config.networks.relay.sdkClient.nodeId)
     mirrorNode = hre.config.networks[network].sdkClient.mirrorNode
 
-    operatorId = hre.config.networks[network].sdkClient.operatorId;
-    operatorKey = hre.config.networks[network].sdkClient.operatorKey;
+    operatorId = operatorId || hre.config.networks[network].sdkClient.operatorId;
+    operatorKey = operatorKey || hre.config.networks[network].sdkClient.operatorKey;
 
     const client = Client.forNetwork(hederaNetwork).setMirrorNetwork(mirrorNode);
     client.setOperator(operatorId, operatorKey);
@@ -375,23 +375,19 @@ class Utils {
     return asBuffer ? Buffer.from(cpk, 'hex') : cpk;
   }
 
-  static async getSDKClientOperator() {
-    const network = getCurrentNetwork();
-    return await Utils.createSDKClient(hre.config.networks[network].sdkClient.operatorId, hre.config.networks[network].sdkClient.operatorKey);
-  }
-
   static async getHardhatSignersPrivateKeys(add0xPrefix = true) {
-    const network = getCurrentNetwork();
+    const network = Utils.getCurrentNetwork();
     return hre.config.networks[network].accounts.map(pk => add0xPrefix ? pk : pk.replace('0x', ''));
   }
 
   static async updateAccountKeysViaHapi(contractAddresses, ecdsaPrivateKeys = []) {
-    const clientGenesis = await Utils.getSDKClientOperator();
+    const clientGenesis = await Utils.createSDKClient();
     ecdsaPrivateKeys = ecdsaPrivateKeys.length ? ecdsaPrivateKeys : await this.getHardhatSignersPrivateKeys(false);
     for (let i in ecdsaPrivateKeys) {
       const pkSigner = PrivateKey.fromStringECDSA(ecdsaPrivateKeys[i].replace('0x', ''));
       const accountId = await Utils.getAccountId(pkSigner.publicKey.toEvmAddress(), clientGenesis);
       const clientSigner = await Utils.createSDKClient(accountId, pkSigner);
+
       await (
         await (new AccountUpdateTransaction()
           .setAccountId(accountId)
@@ -407,7 +403,7 @@ class Utils {
 
   static async updateTokenKeysViaHapi(tokenAddress, contractAddresses, setAdmin = true, setPause = true, setKyc = true, setFreeze = true, setSupply = true, setWipe = true) {
     const signers = await ethers.getSigners();
-    const clientGenesis = await Utils.getSDKClientOperator();
+    const clientGenesis = await Utils.createSDKClient();
     const pkSigners = (await Utils.getHardhatSignersPrivateKeys()).map(pk => PrivateKey.fromStringECDSA(pk));
     const accountIdSigner0 = await Utils.getAccountId(signers[0].address, clientGenesis);
     const clientSigner0 = await Utils.createSDKClient(accountIdSigner0, pkSigners[0]);
@@ -433,8 +429,7 @@ class Utils {
   }
 
   static getCurrentNetwork() {
-    const network = hre.network.name;
-    return network;
+    return hre.network.name;
   }
 }
 
