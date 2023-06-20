@@ -344,7 +344,16 @@ class Utils {
     }
   }
 
-  static async createLocalSDKClient(operatorId, operatorKey, hederaNetwork = { "127.0.0.1:50211": new AccountId(3) }, mirrorNode = "127.0.0.1:5600") {
+  static async createSDKClient(operatorId, operatorKey, hederaNetwork, mirrorNode) {
+    const network = getCurrentNetwork();
+
+    hederaNetwork = {}
+    hederaNetwork[hre.config.networks[network].sdkClient.networkNodeUrl] = new AccountId(hre.config.networks.relay.sdkClient.nodeId)
+    mirrorNode = hre.config.networks[network].sdkClient.mirrorNode
+
+    operatorId = hre.config.networks[network].sdkClient.operatorId;
+    operatorKey = hre.config.networks[network].sdkClient.operatorKey;
+
     const client = Client.forNetwork(hederaNetwork).setMirrorNetwork(mirrorNode);
     client.setOperator(operatorId, operatorKey);
 
@@ -366,40 +375,42 @@ class Utils {
     return asBuffer ? Buffer.from(cpk, 'hex') : cpk;
   }
 
-  static async getGenesisSDKClient() {
-    return await Utils.createLocalSDKClient('0.0.2', '302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137');
+  static async getSDKClientOperator() {
+    const network = getCurrentNetwork();
+    return await Utils.createSDKClient(hre.config.networks[network].sdkClient.operatorId, hre.config.networks[network].sdkClient.operatorKey);
   }
 
   static async getHardhatSignersPrivateKeys(add0xPrefix = true) {
-    return hre.config.networks.relay.accounts.map(pk => add0xPrefix ? pk : pk.replace('0x', ''));
+    const network = getCurrentNetwork();
+    return hre.config.networks[network].accounts.map(pk => add0xPrefix ? pk : pk.replace('0x', ''));
   }
 
   static async updateAccountKeysViaHapi(contractAddresses, ecdsaPrivateKeys = []) {
-    const clientGenesis = await Utils.getGenesisSDKClient();
+    const clientGenesis = await Utils.getSDKClientOperator();
     ecdsaPrivateKeys = ecdsaPrivateKeys.length ? ecdsaPrivateKeys : await this.getHardhatSignersPrivateKeys(false);
     for (let i in ecdsaPrivateKeys) {
       const pkSigner = PrivateKey.fromStringECDSA(ecdsaPrivateKeys[i].replace('0x', ''));
       const accountId = await Utils.getAccountId(pkSigner.publicKey.toEvmAddress(), clientGenesis);
-      const clientSigner = await Utils.createLocalSDKClient(accountId, pkSigner);
+      const clientSigner = await Utils.createSDKClient(accountId, pkSigner);
       await (
-          await (new AccountUpdateTransaction()
-                  .setAccountId(accountId)
-                  .setKey(new KeyList([
-                    pkSigner.publicKey,
-                    ...contractAddresses.map(address => ContractId.fromEvmAddress(0, 0, address))
-                  ], 1))
-                  .freezeWith(clientSigner)
-          ).sign(pkSigner)
+        await (new AccountUpdateTransaction()
+          .setAccountId(accountId)
+          .setKey(new KeyList([
+            pkSigner.publicKey,
+            ...contractAddresses.map(address => ContractId.fromEvmAddress(0, 0, address))
+          ], 1))
+          .freezeWith(clientSigner)
+        ).sign(pkSigner)
       ).execute(clientSigner);
     }
   }
 
   static async updateTokenKeysViaHapi(tokenAddress, contractAddresses, setAdmin = true, setPause = true, setKyc = true, setFreeze = true, setSupply = true, setWipe = true) {
     const signers = await ethers.getSigners();
-    const clientGenesis = await Utils.getGenesisSDKClient();
+    const clientGenesis = await Utils.getSDKClientOperator();
     const pkSigners = (await Utils.getHardhatSignersPrivateKeys()).map(pk => PrivateKey.fromStringECDSA(pk));
     const accountIdSigner0 = await Utils.getAccountId(signers[0].address, clientGenesis);
-    const clientSigner0 = await Utils.createLocalSDKClient(accountIdSigner0, pkSigners[0]);
+    const clientSigner0 = await Utils.createSDKClient(accountIdSigner0, pkSigners[0]);
 
     const keyList = new KeyList([
       ...pkSigners.map(pk => pk.publicKey),
@@ -415,10 +426,15 @@ class Utils {
     if (setWipe) tx.setWipeKey(keyList);
 
     await (
-        await (
-            tx.freezeWith(clientSigner0)
-        ).sign(pkSigners[0])
+      await (
+        tx.freezeWith(clientSigner0)
+      ).sign(pkSigners[0])
     ).execute(clientSigner0);
+  }
+
+  static getCurrentNetwork() {
+    const network = hre.network.name;
+    return network;
   }
 }
 
