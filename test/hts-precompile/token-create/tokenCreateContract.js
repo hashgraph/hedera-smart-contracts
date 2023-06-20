@@ -181,7 +181,7 @@ describe("TokenCreateContract Test Suite", function () {
     });
 
     async function createTokenviaHapi() {
-      const client = await utils.getSDKClientOperator();
+      const client = await utils.createSDKClient();
       const autoRenewAccount = await utils.getAccountId(signers[0].address, client);
 
       const tokenCreate = await (await new TokenCreateTransaction()
