@@ -190,11 +190,18 @@ describe("HIP583 Test Suite", function () {
               hollowWalletAddress
           );
 
-          await tokenTransferContract.transferTokenPublic(
+          const gas = await tokenTransferContract.estimateGas.transferTokenPublic(
               tokenAddress,
               signers[0].address,
               hollowWalletAddress,
               amount
+          );
+          console.log("gas", gas.toString());
+          await tokenTransferContract.transferTokenPublic(
+              tokenAddress,
+              signers[0].address,
+              hollowWalletAddress,
+              amount, {gasLimit: gas}
           );
 
           let signerBalanceAfter = await erc20Contract.balanceOf(
