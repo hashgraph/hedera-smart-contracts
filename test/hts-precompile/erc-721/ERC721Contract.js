@@ -36,8 +36,10 @@ describe("ERC721Contract Test Suite", function () {
     signers = await ethers.getSigners();
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
+    await utils.updateAccountKeysViaHapi([tokenCreateContract.address, tokenTransferContract.address]);
     erc721Contract = await utils.deployERC721Contract();
     tokenAddress = await utils.createNonFungibleToken(tokenCreateContract, signers[0].address);
+    await utils.updateTokenKeysViaHapi(tokenAddress, [tokenCreateContract.address, tokenTransferContract.address]);
     mintedTokenSerialNumber = await utils.mintNFT(tokenCreateContract, tokenAddress);
     await utils.associateToken(tokenCreateContract, tokenAddress, Constants.Contract.TokenCreateContract);
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);

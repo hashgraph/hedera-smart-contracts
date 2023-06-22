@@ -39,33 +39,15 @@ describe("HIP583 Test Suite", function () {
     signers = await ethers.getSigners();
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
+    await utils.updateAccountKeysViaHapi([tokenCreateContract.address, tokenTransferContract.address]);
     erc20Contract = await utils.deployERC20Contract();
     erc721Contract = await utils.deployERC721Contract();
-    tokenAddress =
-        await utils.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
-            tokenCreateContract,
-            signers[0].address,
-            utils.getSignerCompressedPublicKey()
-        );
-
-    nftTokenAddress =
-        await utils.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
-            tokenCreateContract,
-            signers[0].address,
-            utils.getSignerCompressedPublicKey()
-        );
-
-    await utils.associateToken(
-        tokenCreateContract,
-        tokenAddress,
-        Constants.Contract.TokenCreateContract
-    );
-
-    await utils.associateToken(
-        tokenCreateContract,
-        nftTokenAddress,
-        Constants.Contract.TokenCreateContract
-    );
+    tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
+    await utils.updateTokenKeysViaHapi(tokenAddress, [tokenCreateContract.address, tokenTransferContract.address], true, true, false);
+    nftTokenAddress = await utils.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
+    await utils.updateTokenKeysViaHapi(nftTokenAddress, [tokenCreateContract.address, tokenTransferContract.address], true, true, false);
+    await utils.associateToken(tokenCreateContract, tokenAddress, Constants.Contract.TokenCreateContract);
+    await utils.associateToken(tokenCreateContract, nftTokenAddress, Constants.Contract.TokenCreateContract);
   });
 
   describe("Direct Ethereum Tx", function () {
@@ -109,6 +91,7 @@ describe("HIP583 Test Suite", function () {
             to: hollowWalletAddress,
             value: amount,
           });
+          await new Promise((r) => setTimeout(r, 2000));
 
           const hollowWalletBalanceAfter = await ethers.provider.getBalance(
               hollowWalletAddress
@@ -228,6 +211,7 @@ describe("HIP583 Test Suite", function () {
             to: hollowWalletAddress,
             value: ethers.utils.parseEther("1"),
           });
+          await utils.updateAccountKeysViaHapi([tokenCreateContract.address, tokenTransferContract.address], [hollowWallet.privateKey]);
 
           await tokenTransferContract
               .connect(hollowWallet)
@@ -265,15 +249,8 @@ describe("HIP583 Test Suite", function () {
 
           hollowWalletAddress = hollowWallet.address;
 
-          mintedTokenSerialNumber = await utils.mintNFTToAddress(
-              tokenCreateContract,
-              nftTokenAddress
-          );
-
-          mintedTokenSerialNumber1 = await utils.mintNFTToAddress(
-              tokenCreateContract,
-              nftTokenAddress
-          );
+          mintedTokenSerialNumber = await utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
+          mintedTokenSerialNumber1 = await utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
         });
 
         it("should create hollow account and transfer Non-Fungible Token", async function () {
@@ -353,6 +330,7 @@ describe("HIP583 Test Suite", function () {
             to: hollowWalletAddress,
             value: ethers.utils.parseEther("2"),
           });
+          await utils.updateAccountKeysViaHapi([tokenCreateContract.address, tokenTransferContract.address], [hollowWallet.privateKey]);
 
           await tokenTransferContract
               .connect(hollowWallet)
@@ -456,6 +434,7 @@ describe("HIP583 Test Suite - Contract Transfer TX", function () {
       const hollowWalletBalanceBefore = await ethers.provider.getBalance(hollowWallet.address);
       const tx = await contractTransferTx.transferTo(hollowWallet.address, amount / utils.tinybarToWeibarCoef, Constants.GAS_LIMIT_1_000_000);
       await tx.wait();
+      await new Promise((r) => setTimeout(r, 2000));
       const hollowWalletBalanceAfter = await ethers.provider.getBalance(hollowWallet.address);
 
       expect(hollowWalletBalanceAfter).to.eq(hollowWalletBalanceBefore.add(amount));
@@ -581,6 +560,7 @@ describe("HIP583 Test Suite - Ethereum Transfer TX via Precompile", function () 
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenQueryContract = await utils.deployTokenQueryContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
+    await utils.updateAccountKeysViaHapi([tokenCreateContract.address, tokenQueryContract.address, tokenTransferContract.address]);
     erc20Contract = await utils.deployERC20Contract();
     erc721Contract = await utils.deployERC721Contract();
   });
@@ -591,7 +571,7 @@ describe("HIP583 Test Suite - Ethereum Transfer TX via Precompile", function () 
       value: ethers.utils.parseEther("100"),
       gasLimit: 1_000_000,
     });
-
+    await utils.updateAccountKeysViaHapi([tokenCreateContract.address], [hollowWallet.privateKey]);
     const hollowWalletTokenCreateContract = await tokenCreateContract.connect(hollowWallet);
     await (await hollowWalletTokenCreateContract.associateTokenPublic(hollowWallet.address, tokenAddress, Constants.GAS_LIMIT_1_000_000)).wait();
     await (await tokenCreateContract.grantTokenKycPublic(tokenAddress, hollowWallet.address)).wait();
@@ -604,6 +584,7 @@ describe("HIP583 Test Suite - Ethereum Transfer TX via Precompile", function () 
 
     before(async function () {
       tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
+      await utils.updateTokenKeysViaHapi(tokenAddress, [tokenCreateContract.address, tokenTransferContract.address]);
       await utils.associateToken(tokenCreateContract, tokenAddress, Constants.Contract.TokenCreateContract);
       await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
 
@@ -631,6 +612,7 @@ describe("HIP583 Test Suite - Ethereum Transfer TX via Precompile", function () 
     it("should test that can make fungible token transfer via precompile from hollow account to another", async function () {
       const secondHollowWallet = ethers.Wallet.createRandom().connect(ethers.provider);
       await bootstrapHollowAccount(signers[0], secondHollowWallet, tokenCreateContract, tokenAddress);
+      await utils.updateAccountKeysViaHapi([tokenTransferContract.address], [hollowWallet.privateKey]);
 
       const secondHollowBalanceBefore = await erc20Contract.balanceOf(tokenAddress, secondHollowWallet.address);
       const hollowTokenTransferContract = await tokenTransferContract.connect(hollowWallet);
@@ -649,6 +631,7 @@ describe("HIP583 Test Suite - Ethereum Transfer TX via Precompile", function () 
 
     before(async function () {
       nftTokenAddress = await utils.createNonFungibleTokenWithSECP256K1AdminKey(tokenCreateContract, signers[0].address, utils.getSignerCompressedPublicKey());
+      await utils.updateTokenKeysViaHapi(nftTokenAddress, [tokenCreateContract.address, tokenTransferContract.address]);
       await utils.associateToken(tokenCreateContract, nftTokenAddress, Constants.Contract.TokenCreateContract);
       await utils.grantTokenKyc(tokenCreateContract, nftTokenAddress);
 
@@ -685,6 +668,7 @@ describe("HIP583 Test Suite - Ethereum Transfer TX via Precompile", function () 
       await tokenTransferContract.transferNFTPublic(nftTokenAddress, signers[0].address, hollowWallet.address, newMintedTokenSerialNumber, Constants.GAS_LIMIT_1_000_000);
 
       const ownerBefore = await erc721Contract.ownerOf(nftTokenAddress, newMintedTokenSerialNumber);
+      await utils.updateAccountKeysViaHapi([tokenTransferContract.address], [hollowWallet.privateKey]);
       const hollowTokenTransferContract = await tokenTransferContract.connect(hollowWallet);
       await (await hollowTokenTransferContract.transferNFTPublic(nftTokenAddress, hollowWallet.address, secondHollowWallet.address, newMintedTokenSerialNumber, Constants.GAS_LIMIT_1_000_000)).wait();
       const ownerAfter = await erc721Contract.ownerOf(nftTokenAddress, newMintedTokenSerialNumber);
