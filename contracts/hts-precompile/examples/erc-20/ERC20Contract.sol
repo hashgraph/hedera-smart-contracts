@@ -54,4 +54,12 @@ contract ERC20Contract {
         (bool success, bytes memory result) = address(IERC20(token)).delegatecall(abi.encodeWithSignature("transferFrom(address,address,uint256)", from, to, amount));
     }
 
+    function getContractAddress() external view returns (address) {
+        return address(this);
+    }
+
+    function getChainId() external view returns (uint256) {
+        return block.chainid;
+    }
+
 }

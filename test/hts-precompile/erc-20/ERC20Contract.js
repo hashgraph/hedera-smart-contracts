@@ -41,6 +41,11 @@ describe("ERC20Contract Test Suite", function () {
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
   });
 
+  it.only("should be able to get chain id", async function () {
+    const chainId = await erc20Contract.getChainId();
+    console.log(`chainId: ${chainId}`)
+  });
+
   it("should be able to get token name", async function () {
     const name = await erc20Contract.name(tokenAddress);
     expect(name).to.equal(Constants.TOKEN_NAME);

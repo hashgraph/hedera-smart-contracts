@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="21.450" tests="1" failures="0">
+  <testsuite name="Root Suite" timestamp="2023-06-22T17:04:25" tests="0" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="ERC20Contract Test Suite" timestamp="2023-06-22T17:04:25" tests="1" file="/Users/lukelee/src2/hedera-smart-contracts/test/hts-precompile/erc-20/ERC20Contract.js" time="21.449" failures="0">
+    <testcase name="ERC20Contract Test Suite should be able to get chain id" time="0.024" classname="should be able to get chain id">
+    </testcase>
+  </testsuite>
+</testsuites>
