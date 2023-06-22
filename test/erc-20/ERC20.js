@@ -32,7 +32,7 @@ describe("ERC20 tests", function () {
 
     const factory = await ethers.getContractFactory(Constants.Path.ERC20Mock);
     erc20 = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL');
-    await erc20.mint(signers[0].address, 1000, { gasLimit: Constants.GAS_LIMIT });
+    await erc20.mint(signers[0].address, 1000, { gasLimit: Constants.GAS_LIMIT_1_000_000 });
   });
 
   it("should be able to execute name()", async function () {
