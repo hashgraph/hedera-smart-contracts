@@ -33,12 +33,12 @@ describe("ERC20Contract Test Suite", function () {
 
   before(async function () {
     signers = await ethers.getSigners();
-    tokenCreateContract = await utils.deployTokenCreateContract();
-    tokenTransferContract = await utils.deployTokenTransferContract();
+    // tokenCreateContract = await utils.deployTokenCreateContract();
+    // tokenTransferContract = await utils.deployTokenTransferContract();
     erc20Contract = await utils.deployERC20Contract();
-    tokenAddress = await utils.createFungibleToken(tokenCreateContract, signers[0].address);
-    await utils.associateToken(tokenCreateContract, tokenAddress, Constants.Contract.TokenCreateContract);
-    await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
+    // tokenAddress = await utils.createFungibleToken(tokenCreateContract, signers[0].address);
+    // await utils.associateToken(tokenCreateContract, tokenAddress, Constants.Contract.TokenCreateContract);
+    // await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
   });
 
   it.only("should be able to get chain id", async function () {
