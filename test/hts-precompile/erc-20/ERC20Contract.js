@@ -35,8 +35,10 @@ describe("ERC20Contract Test Suite", function () {
     signers = await ethers.getSigners();
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
+    await utils.updateAccountKeysViaHapi([tokenCreateContract.address, tokenTransferContract.address]);
     erc20Contract = await utils.deployERC20Contract();
     tokenAddress = await utils.createFungibleToken(tokenCreateContract, signers[0].address);
+    await utils.updateTokenKeysViaHapi(tokenAddress, [tokenCreateContract.address, tokenTransferContract.address]);
     await utils.associateToken(tokenCreateContract, tokenAddress, Constants.Contract.TokenCreateContract);
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
   });
