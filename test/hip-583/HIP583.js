@@ -23,7 +23,7 @@ const { ethers } = require("hardhat");
 const utils = require("../hts-precompile/utils");
 const Constants = require('../constants')
 
-describe("HIP583 Test Suite", function () {
+describe.only("HIP583 Test Suite", function () {
   let signers;
   let hollowWallet;
   let tokenCreateContract;

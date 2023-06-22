@@ -202,11 +202,23 @@ class Utils {
   }
 
   static async createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(contract, treasury, adminKey) {
-    const tokenAddressTx = await contract.createFungibleTokenWithSECP256K1AdminKeyWithoutKYCPublic(treasury, adminKey, {
-      value: ethers.BigNumber.from(this.createTokenCost),
-      gasLimit: 1_000_000,
-    });
-    const tokenAddressReceipt = await tokenAddressTx.wait();
+    console.log(`DEBUG: About to call createFungibleTokenWithSECP256K1AdminKeyWithoutKYCPublic with treasury: ${treasury} and adminKey: ${adminKey}`);
+
+    let tokenAddressReceipt;
+    try{
+      const tokenAddressTx = await contract.createFungibleTokenWithSECP256K1AdminKeyWithoutKYCPublic(treasury, adminKey, {
+        value: ethers.BigNumber.from(this.createTokenCost),
+        gasLimit: 1_000_000,
+      });
+      console.log(`DEBUG: createFungibleTokenWithSECP256K1AdminKeyWithoutKYCPublic called before wait()`);
+      tokenAddressReceipt = await tokenAddressTx.wait();
+      console.log(`DEBUG: createFungibleTokenWithSECP256K1AdminKeyWithoutKYCPublic called after wait()`);
+  
+    } catch(e){
+      console.log(`DEBUG: createFungibleTokenWithSECP256K1AdminKeyWithoutKYCPublic failed with error: ${e}`);
+      const debug = tokenAddressReceipt.events.filter((e) => e.event === 'Debug')[0].args;
+      console.log(`DEBUG: createFungibleTokenWithSECP256K1AdminKeyWithoutKYCPublic failed with debug: ${debug}`);
+    }
     const { tokenAddress } = tokenAddressReceipt.events.filter(
       (e) => e.event === Constants.Events.CreatedToken
     )[0].args;
@@ -272,10 +284,12 @@ class Utils {
   }
 
   static async createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(contract, treasury, adminKey) {
+    console.log(`DEBUG: About to call createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYCPublic with treasury: ${treasury} and adminKey: ${adminKey}`);
     const tokenAddressTx = await contract.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYCPublic(treasury, adminKey, {
       value: ethers.BigNumber.from(this.createTokenCost),
       gasLimit: 1_000_000,
     });
+    console.log('DEBUG: createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYCPublic called');
     const tokenAddressReceipt = await tokenAddressTx.wait();
     const { tokenAddress } = tokenAddressReceipt.events.filter(
       (e) => e.event === Constants.Events.CreatedToken
