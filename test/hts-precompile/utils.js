@@ -18,9 +18,13 @@
  *
  */
 
-const { ethers } = require("hardhat");
+const hre = require("hardhat");
+const { ethers } = hre;
 const { expect } = require("chai");
-const { AccountId, Client, AccountInfoQuery } = require("@hashgraph/sdk");
+const {
+  AccountId, Client, AccountInfoQuery, AccountUpdateTransaction,
+  ContractId, KeyList, PrivateKey, TokenId, TokenUpdateTransaction
+} = require("@hashgraph/sdk");
 const Constants = require('../constants')
 
 class Utils {
@@ -340,7 +344,16 @@ class Utils {
     }
   }
 
-  static async createLocalSDKClient(operatorId, operatorKey, hederaNetwork = { "127.0.0.1:50211": new AccountId(3) }, mirrorNode = "127.0.0.1:5600") {
+  static async createSDKClient(operatorId, operatorKey) {
+    const network = Utils.getCurrentNetwork();
+
+    const hederaNetwork = {};
+    hederaNetwork[hre.config.networks[network].sdkClient.networkNodeUrl] = AccountId.fromString(hre.config.networks[network].sdkClient.nodeId);
+    const {mirrorNode} = hre.config.networks[network].sdkClient;
+
+    operatorId = operatorId || hre.config.networks[network].sdkClient.operatorId;
+    operatorKey = operatorKey || hre.config.networks[network].sdkClient.operatorKey;
+
     const client = Client.forNetwork(hederaNetwork).setMirrorNetwork(mirrorNode);
     client.setOperator(operatorId, operatorKey);
 
@@ -360,6 +373,63 @@ class Utils {
     const cpk = prune0x ? wallet._signingKey().compressedPublicKey.replace('0x', '') : wallet._signingKey().compressedPublicKey;
 
     return asBuffer ? Buffer.from(cpk, 'hex') : cpk;
+  }
+
+  static async getHardhatSignersPrivateKeys(add0xPrefix = true) {
+    const network = Utils.getCurrentNetwork();
+    return hre.config.networks[network].accounts.map(pk => add0xPrefix ? pk : pk.replace('0x', ''));
+  }
+
+  static async updateAccountKeysViaHapi(contractAddresses, ecdsaPrivateKeys = []) {
+    const clientGenesis = await Utils.createSDKClient();
+    ecdsaPrivateKeys = ecdsaPrivateKeys.length ? ecdsaPrivateKeys : await this.getHardhatSignersPrivateKeys(false);
+    for (let i in ecdsaPrivateKeys) {
+      const pkSigner = PrivateKey.fromStringECDSA(ecdsaPrivateKeys[i].replace('0x', ''));
+      const accountId = await Utils.getAccountId(pkSigner.publicKey.toEvmAddress(), clientGenesis);
+      const clientSigner = await Utils.createSDKClient(accountId, pkSigner);
+
+      await (
+        await (new AccountUpdateTransaction()
+          .setAccountId(accountId)
+          .setKey(new KeyList([
+            pkSigner.publicKey,
+            ...contractAddresses.map(address => ContractId.fromEvmAddress(0, 0, address))
+          ], 1))
+          .freezeWith(clientSigner)
+        ).sign(pkSigner)
+      ).execute(clientSigner);
+    }
+  }
+
+  static async updateTokenKeysViaHapi(tokenAddress, contractAddresses, setAdmin = true, setPause = true, setKyc = true, setFreeze = true, setSupply = true, setWipe = true) {
+    const signers = await ethers.getSigners();
+    const clientGenesis = await Utils.createSDKClient();
+    const pkSigners = (await Utils.getHardhatSignersPrivateKeys()).map(pk => PrivateKey.fromStringECDSA(pk));
+    const accountIdSigner0 = await Utils.getAccountId(signers[0].address, clientGenesis);
+    const clientSigner0 = await Utils.createSDKClient(accountIdSigner0, pkSigners[0]);
+
+    const keyList = new KeyList([
+      ...pkSigners.map(pk => pk.publicKey),
+      ...contractAddresses.map(address => ContractId.fromEvmAddress(0, 0, address))
+    ], 1);
+
+    const tx = new TokenUpdateTransaction().setTokenId(TokenId.fromSolidityAddress(tokenAddress));
+    if (setAdmin) tx.setAdminKey(keyList);
+    if (setPause) tx.setPauseKey(keyList);
+    if (setKyc) tx.setKycKey(keyList);
+    if (setFreeze) tx.setFreezeKey(keyList);
+    if (setSupply) tx.setSupplyKey(keyList);
+    if (setWipe) tx.setWipeKey(keyList);
+
+    await (
+      await (
+        tx.freezeWith(clientSigner0)
+      ).sign(pkSigners[0])
+    ).execute(clientSigner0);
+  }
+
+  static getCurrentNetwork() {
+    return hre.network.name;
   }
 }
 

@@ -40,11 +40,13 @@ describe("Proxy Upgrade Contracts Test Suite", function () {
 
     before(async function () {
       tokenCreateContract = await utils.deployTokenCreateContract();
+      await utils.updateAccountKeysViaHapi([tokenCreateContract.address]);
       tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(
         tokenCreateContract,
         signers[0].address,
         utils.getSignerCompressedPublicKey()
       );
+      await utils.updateTokenKeysViaHapi(tokenAddress, [tokenCreateContract.address]);
 
       erc20Contract = await utils.deployERC20Contract();
       proxyContract = await deployDEXProxyContract(tokenAddress);
