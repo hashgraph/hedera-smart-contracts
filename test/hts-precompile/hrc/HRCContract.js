@@ -30,6 +30,7 @@ describe("HRC tests", function () {
     let hrcContract;
     let signers;
     let hrcToken;
+    let IHRC;
     
     const parseCallResponseEventData = async (tx) => {
         return (await tx.wait()).events.filter(e => e.event === Constants.Events.CallResponseEvent)[0].args;
@@ -43,10 +44,12 @@ describe("HRC tests", function () {
     before(async function () {
         signers = await ethers.getSigners();
         tokenCreateContract = await utils.deployTokenCreateContract();
+        await utils.updateAccountKeysViaHapi([tokenCreateContract.address]);
 
         // This contract is a wrapper for the associate() and dissociate() functions
         hrcContract = await utils.deployHRCContract();
         tokenAddress = await utils.createFungibleToken(tokenCreateContract, signers[0].address);
+        await utils.updateTokenKeysViaHapi(tokenAddress, [tokenCreateContract.address]);
 
         // create an interface for calling functions via redirectForToken()
         IHRC = new ethers.utils.Interface((await hre.artifacts.readArtifact("IHRC")).abi);
