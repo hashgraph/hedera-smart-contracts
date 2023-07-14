@@ -50,6 +50,7 @@ const Events = {
     CallResponseEvent: "CallResponseEvent",
     GetTokenInfo: "GetTokenInfo",
     MintedNft: "MintedNft",
+    GetFungibleTokenInfo: "GetFungibleTokenInfo",
     GetNonFungibleTokenInfo: "GetNonFungibleTokenInfo",
 }
 

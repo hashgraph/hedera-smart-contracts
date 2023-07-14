@@ -23,7 +23,7 @@ const {ethers} = require("hardhat");
 const Constants = require("../constants");
 const utils = require('../hts-precompile/utils');
 
-describe("SafeHTS library Test Suite", function () {
+describe.only("SafeHTS library Test Suite", function () {
   let safeOperationsContract;
   let fungibleTokenAddress;
   let nonFungibleTokenAddress;
@@ -43,18 +43,7 @@ describe("SafeHTS library Test Suite", function () {
   });
 
   async function deploySafeOperationsContract() {
-    const signers = await ethers.getSigners();
-
-    const safeHTSFactory = await ethers.getContractFactory(Constants.Contract.SafeHTS);
-    const safeHTS = await safeHTSFactory.connect(signers[1]).deploy(Constants.GAS_LIMIT_1_000_000);
-    const safeHTSReceipt = await safeHTS.deployTransaction.wait();
-
-    const safeOperationsFactory = await ethers.getContractFactory(Constants.Contract.SafeOperations, {
-      libraries: {
-        SafeHTS: safeHTSReceipt.contractAddress,
-      }
-    });
-
+    const safeOperationsFactory = await ethers.getContractFactory(Constants.Contract.SafeOperations);
     const safeOperations = await safeOperationsFactory.connect(signers[1]).deploy(Constants.GAS_LIMIT_1_000_000);
     const safeOperationsReceipt = await safeOperations.deployTransaction.wait();
 
@@ -76,8 +65,8 @@ describe("SafeHTS library Test Suite", function () {
     });
 
     const tokenAddressReceipt = await tokenAddressTx.wait();
-    const tokenAddress = tokenAddressReceipt.events.filter(e => e.event === Constants.Events.TokenCreated)[0].args[0];
-    return tokenAddress;
+    // token address
+    return tokenAddressReceipt.events.filter(e => e.event === Constants.Events.TokenCreated)[0].args[0];
   }
 
   async function createNonFungibleToken() {
@@ -87,15 +76,14 @@ describe("SafeHTS library Test Suite", function () {
     });
 
     const tokenAddressReceipt = await tokenAddressTx.wait();
-    const {tokenAddress} = tokenAddressReceipt.events.filter(e => e.event === Constants.Events.TokenCreatedEvent)[0].args;
-
-    return tokenAddress;
+    // token address
+    return tokenAddressReceipt.events.filter(e => e.event === Constants.Events.TokenCreated)[0].args[0];
   }
 
   it("should be able to get token info", async function () {
     const tokenInfoTx = await safeViewOperationsContract.safeGetTokenInfoPublic(fungibleTokenAddress);
     const tokenInfoReceipt = await tokenInfoTx.wait();
-    const tokenInfo = tokenInfoReceipt.events.filter(e => e.event === Constants.Events.TokenInfoEvent)[0].args[0];
+    const tokenInfo = tokenInfoReceipt.events.filter(e => e.event === Constants.Events.GetTokenInfo)[0].args[0];
 
     expect(tokenInfo.token.name).to.equal(Constants.TOKEN_NAME);
     expect(tokenInfo.token.symbol).to.equal(Constants.TOKEN_SYMBOL);
@@ -103,9 +91,9 @@ describe("SafeHTS library Test Suite", function () {
   });
 
   it("should be able to get fungible token info", async function () {
-    const fungibleTokenInfoTx = await safeViewOperationsContract.safeGetTokenInfoPublic(fungibleTokenAddress);
+    const fungibleTokenInfoTx = await safeViewOperationsContract.safeGetFungibleTokenInfoPublic(fungibleTokenAddress);
     const fungibleTokenInfoReceipt = await fungibleTokenInfoTx.wait();
-    const fungibleTokenInfo = fungibleTokenInfoReceipt.events.filter(e => e.event === Constants.Events.FungibleTokenInfoEvent)[0].args[0];
+    const fungibleTokenInfo = fungibleTokenInfoReceipt.events.filter(e => e.event === Constants.Events.GetFungibleTokenInfo)[0].args[0];
 
     expect(fungibleTokenInfo.tokenInfo.token.name).to.equal(Constants.TOKEN_NAME);
     expect(fungibleTokenInfo.tokenInfo.token.symbol).to.equal(Constants.TOKEN_SYMBOL);
@@ -137,15 +125,15 @@ describe("SafeHTS library Test Suite", function () {
     const signer2AccountID = signers[1].address;
 
     const amount = 0;
-    const signer1initialAmount = 100
-    const transferredAmount = 10
+    const signer1initialAmount = 100;
+    const transferredAmount = 10;
     const mintedTokenInfo = await safeOperationsContract.safeMintTokenPublic(nonFungibleTokenAddress, amount, [nftSerial], Constants.GAS_LIMIT_1_000_000);
     const nonFungibleTokenMintedReceipt = await mintedTokenInfo.wait();
     const nonFungibleTokeMintedSerialNumbers = nonFungibleTokenMintedReceipt.events.filter(e => e.event === Constants.Events.MintedNft)[0].args[0];
 
-    let signer0PrivateKey = config.networks.relay.accounts[0];
+    let signer0PrivateKey = config.networks[utils.getCurrentNetwork()].accounts[0];
     await utils.associateWithSigner(signer0PrivateKey, fungibleTokenAddress);
-    let signer1PrivateKey = config.networks.relay.accounts[1];
+    let signer1PrivateKey = config.networks[utils.getCurrentNetwork()].accounts[1];
     await utils.associateWithSigner(signer1PrivateKey, fungibleTokenAddress);
     await utils.associateWithSigner(signer1PrivateKey, nonFungibleTokenAddress);
 

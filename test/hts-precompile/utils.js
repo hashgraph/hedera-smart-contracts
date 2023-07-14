@@ -447,7 +447,7 @@ class Utils {
     const accountIdAsString = await this.getAccountId(wallet.address, genesisClient);
     const signerPk = PrivateKey.fromStringECDSA(wallet._signingKey().privateKey);
 
-    const signerClient = await this.createLocalSDKClient(
+    const signerClient = await this.createSDKClient(
       accountIdAsString,
       signerPk.toString() // DER encoded
     );
