@@ -89,6 +89,12 @@ jobs:
     with:
       testfilter: HRC
 
+  ShanghaiOpcodes:
+    name: ShanghaiOpcodes Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: ShanghaiOpcodes
+
   PublishResults:
     name: Publish Results
     if: ${{ !cancelled() }}    
