@@ -23,7 +23,8 @@ const { ethers } = hre;
 const { expect } = require("chai");
 const {
   AccountId, Client, AccountInfoQuery, AccountUpdateTransaction,
-  ContractId, KeyList, PrivateKey, TokenId, TokenUpdateTransaction
+  ContractId, KeyList, PrivateKey, TokenId, TokenUpdateTransaction,
+  TokenAssociateTransaction
 } = require("@hashgraph/sdk");
 const Constants = require('../constants')
 
@@ -308,6 +309,9 @@ class Utils {
     return parseInt(serialNumbers);
   }
 
+  //Add Token association via hedera.js sdk
+  // Client with signer - my private key example
+
   static async associateToken(contract, tokenAddress, contractName) {
     const signers = await ethers.getSigners();
     const associateTx1 = await ethers.getContractAt(
@@ -349,7 +353,7 @@ class Utils {
 
     const hederaNetwork = {};
     hederaNetwork[hre.config.networks[network].sdkClient.networkNodeUrl] = AccountId.fromString(hre.config.networks[network].sdkClient.nodeId);
-    const {mirrorNode} = hre.config.networks[network].sdkClient;
+    const { mirrorNode } = hre.config.networks[network].sdkClient;
 
     operatorId = operatorId || hre.config.networks[network].sdkClient.operatorId;
     operatorKey = operatorKey || hre.config.networks[network].sdkClient.operatorKey;
@@ -431,6 +435,33 @@ class Utils {
   static getCurrentNetwork() {
     return hre.network.name;
   }
+
+  static async convertAccountIdToLongZeroAddress(accountId) {
+    return (AccountId.fromString(accountId)).toSolidityAddress();
+  }
+
+  static async associateWithSigner(privateKey, tokenAddress) {
+    const genesisClient = await this.createSDKClient();
+
+    const wallet = new ethers.Wallet(privateKey);
+    const accountIdAsString = await this.getAccountId(wallet.address, genesisClient);
+    const signerPk = PrivateKey.fromStringECDSA(wallet._signingKey().privateKey);
+
+    const signerClient = await this.createSDKClient(
+      accountIdAsString,
+      signerPk.toString() // DER encoded
+    );
+
+    const transaction = new TokenAssociateTransaction()
+      .setAccountId(AccountId.fromString(accountIdAsString))
+      .setTokenIds([TokenId.fromSolidityAddress(tokenAddress)])
+      .freezeWith(signerClient);
+
+    const signTx = await transaction.sign(signerPk);
+    const txResponse = await signTx.execute(signerClient);
+    await txResponse.getReceipt(signerClient);
+  }
 }
 
 module.exports = Utils;
+

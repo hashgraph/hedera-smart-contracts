@@ -4,74 +4,85 @@ pragma experimental ABIEncoderV2;
 
 import "./SafeHTS.sol";
 
-contract SafeOperations {
+contract SafeOperations is SafeHTS {
 
-    event TokenCreated(address token);
-    event TokenInfoEvent(IHederaTokenService.TokenInfo tokenInfo);
-    event FungibleTokenInfoEvent(IHederaTokenService.FungibleTokenInfo fungibleTokenInfo);
+    event TokenCreated(address);
+    event MintedNft(int64[], int64);
+    event BurnToken(int64);
+    event ResponseCode(int32);
 
-    function safeAssociateToken(address sender, address tokenAddress) external {
-        SafeHTS.safeAssociateToken(tokenAddress, sender);
+    function safeAssociateTokenPublic(address sender, address tokenAddress) external {
+        safeAssociateToken(tokenAddress, sender);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeDissociateToken(address sender, address tokenAddress) external {
-        SafeHTS.safeDissociateToken(tokenAddress, sender);
+    function safeDissociateTokenPublic(address sender, address tokenAddress) external {
+        safeDissociateToken(tokenAddress, sender);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeAssociateTokens(address account, address[] memory tokens) external {
-        SafeHTS.safeAssociateTokens(account, tokens);
+    function safeAssociateTokensPublic(address account, address[] memory tokens) external {
+        safeAssociateTokens(account, tokens);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeDissociateTokens(address account, address[] memory tokens) external {
-        SafeHTS.safeDissociateTokens(account, tokens);
+    function safeDissociateTokensPublic(address account, address[] memory tokens) external {
+        safeDissociateTokens(account, tokens);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeTransferTokens(address token, address[] memory accountIds, int64[] memory amounts) external {
-        SafeHTS.safeTransferTokens(token, accountIds, amounts);
+    function safeTransferTokensPublic(address token, address[] memory accountIds, int64[] memory amounts) external {
+        safeTransferTokens(token, accountIds, amounts);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeTransferNFTs(address token, address[] memory sender, address[] memory receiver, int64[] memory serialNumber) external {
-        SafeHTS.safeTransferNFTs(token, sender, receiver, serialNumber);
+    function safeTransferNFTsPublic(address token, address[] memory sender,
+        address[] memory receiver, int64[] memory serialNumber) external {
+        safeTransferNFTs(token, sender, receiver, serialNumber);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeTransferToken(address token, address sender, address receiver, int64 amount) external {
-        SafeHTS.safeTransferToken(token, sender, receiver, amount);
+    function safeTransferTokenPublic(address token, address sender, address receiver, int64 amount) external {
+        safeTransferToken(token, sender, receiver, amount);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeTransferNFT(address token, address sender, address receiver, int64 serialNum) external {
-        SafeHTS.safeTransferNFT(token, sender, receiver, serialNum);
+    function safeTransferNFTPublic(address token, address sender, address receiver, int64 serialNum) external {
+        safeTransferNFT(token, sender, receiver, serialNum);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeCryptoTransfer(IHederaTokenService.TokenTransferList[] memory tokenTransfers) external {
-        SafeHTS.safeCryptoTransfer(tokenTransfers);
+    function safeCryptoTransferPublic(IHederaTokenService.TransferList calldata transferList, IHederaTokenService.TokenTransferList[] calldata tokenTransferList) external {
+        safeCryptoTransfer(transferList, tokenTransferList);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeMintToken(address token, int64 amount, bytes[] memory metadata) external
-    returns (int64 newTotalSupply, int64[] memory serialNumbers)
-    {
-        (newTotalSupply, serialNumbers) = SafeHTS.safeMintToken(token, amount, metadata);
+    function safeMintTokenPublic(address token, int64 amount,
+        bytes[] memory metadata) external returns (int64 newTotalSupply, int64[] memory serialNumbers) {
+        (newTotalSupply, serialNumbers) = safeMintToken(token, amount, metadata);
+        emit MintedNft(serialNumbers, newTotalSupply);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeBurnToken(address token, int64 amount, int64[] memory serialNumbers) external
-    returns (int64 newTotalSupply)
-    {
-        (newTotalSupply) = SafeHTS.safeBurnToken(token, amount, serialNumbers);
+    function safeBurnTokenPublic(address token, int64 amount, int64[] memory serialNumbers) external returns (int64 newTotalSupply) {
+        (newTotalSupply) = safeBurnToken(token, amount, serialNumbers);
+        emit BurnToken(newTotalSupply);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeCreateFungibleToken() external payable returns (address tokenAddress){
+    function safeCreateFungibleTokenPublic() external payable returns (address tokenAddress) {
         IHederaTokenService.HederaToken memory token;
         token.name = "tokenName";
         token.symbol = "tokenSymbol";
         token.treasury = address(this);
 
-        (tokenAddress) = SafeHTS.safeCreateFungibleToken(token, 200, 8);
+        (tokenAddress) = safeCreateFungibleToken(token, 200, 8);
         emit TokenCreated(tokenAddress);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeCreateFungibleTokenWithCustomFees(
-        address feeCollector,
-        address existingTokenAddress)
-    external payable returns (address tokenAddress){
+    function safeCreateFungibleTokenWithCustomFeesPublic(address feeCollector,
+        address existingTokenAddress) external payable returns (address tokenAddress) {
         IHederaTokenService.HederaToken memory token;
         token.name = "tokenName";
         token.symbol = "tokenSymbol";
@@ -81,21 +92,25 @@ contract SafeOperations {
         createFixedFeesWithAllTypes(1, existingTokenAddress, feeCollector);
         IHederaTokenService.FractionalFee[] memory fractionalFees =
         createSingleFractionalFeeWithLimits(4, 5, 10, 30, true, feeCollector);
-        (tokenAddress) = SafeHTS.safeCreateFungibleTokenWithCustomFees(token, 200, 8, fixedFees, fractionalFees);
+        (tokenAddress) = safeCreateFungibleTokenWithCustomFees(token, 200, 8, fixedFees, fractionalFees);
+        emit TokenCreated(tokenAddress);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeCreateNonFungibleToken() external payable returns (address tokenAddress){
-        IHederaTokenService.HederaToken memory token;
-        token.name = "tokenName";
-        token.symbol = "tokenSymbol";
-        token.memo = "memo";
-        token.treasury = address(this);
-        (tokenAddress) = SafeHTS.safeCreateNonFungibleToken(token);
+    function safeCreateNonFungibleTokenPublic() external payable returns (address tokenAddress) {
+        IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
+            0, msg.sender, 8000000
+        );
+        IHederaTokenService.HederaToken memory token = IHederaTokenService.HederaToken(
+            "tokenName", "tokenSymbol", msg.sender, "memo", true, 1000, false, getKeys(), expiry
+        );
+        (tokenAddress) = safeCreateNonFungibleToken(token);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
+        emit TokenCreated(tokenAddress);
     }
 
-    function safeCreateNonFungibleTokenWithCustomFees(
-        address feeCollector,
-        address existingTokenAddress) external payable returns (address tokenAddress){
+    function safeCreateNonFungibleTokenWithCustomFeesPublic(address feeCollector,
+        address existingTokenAddress) external payable returns (address tokenAddress) {
         IHederaTokenService.HederaToken memory token;
         token.name = "tokenName";
         token.symbol = "tokenSymbol";
@@ -103,168 +118,88 @@ contract SafeOperations {
         token.treasury = address(this);
         IHederaTokenService.RoyaltyFee[] memory royaltyFees =
         createRoyaltyFeesWithAllTypes(4, 5, 10, existingTokenAddress, feeCollector);
-        (tokenAddress) = SafeHTS.safeCreateNonFungibleTokenWithCustomFees(token, new IHederaTokenService.FixedFee[](0), royaltyFees);
+        (tokenAddress) = safeCreateNonFungibleTokenWithCustomFees(token, new IHederaTokenService.FixedFee[](0), royaltyFees);
+        emit TokenCreated(tokenAddress);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeApprove(address token, address spender, uint256 amount) external {
-        SafeHTS.safeApprove(token, spender, amount);
+    function safeApprovePublic(address token, address spender, uint256 amount) external {
+        safeApprove(token, spender, amount);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeAllowance(address token, address owner, address spender) external
-    returns (uint256 allowance)
-    {
-        allowance = SafeHTS.safeAllowance(token, owner, spender);
+    function safeApproveNFTPublic(address token, address approved, int64 serialNumber) external {
+        safeApproveNFT(token, approved, serialNumber);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeApproveNFT(address token, address approved, int64 serialNumber) external {
-        SafeHTS.safeApproveNFT(token, approved, serialNumber);
+    function safeSetApprovalForAllPublic(address token, address operator, bool approved) external {
+        safeSetApprovalForAll(token, operator, approved);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeGetApproved(address token, int64 serialNumber) external
-    returns (address approved)
-    {
-        approved = SafeHTS.safeGetApproved(token, serialNumber);
+    function safeDeleteTokenPublic(address token) external {
+        safeDeleteToken(token);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeSetApprovalForAll(address token, address operator, bool approved) external {
-        SafeHTS.safeSetApprovalForAll(token, operator, approved);
+    function safeFreezeTokenPublic(address token, address account) external {
+        safeFreezeToken(token, account);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeIsApprovedForAll(address token, address owner, address operator) external
-    returns (bool approved)
-    {
-        approved = SafeHTS.safeIsApprovedForAll(token, owner, operator);
+    function safeUnfreezeTokenPublic(address token, address account) external {
+        safeUnfreezeToken(token, account);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeIsFrozen(address token, address account) external
-    returns (bool frozen)
-    {
-       frozen = SafeHTS.safeIsFrozen(token, account);
+    function safeGrantTokenKycPublic(address token, address account) external {
+        safeGrantTokenKyc(token, account);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeIsKyc(address token, address account) external
-    returns (bool kycGranted)
-    {
-       kycGranted = SafeHTS.safeIsKyc(token, account);
+    function safeRevokeTokenKycPublic(address token, address account) external {
+        safeRevokeTokenKyc(token, account);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeDeleteToken(address token) external {
-       SafeHTS.safeDeleteToken(token);
+    function safePauseTokenPublic(address token) external {
+        safePauseToken(token);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeGetTokenCustomFees(address token) external
-    returns (IHederaTokenService.FixedFee[] memory fixedFees, IHederaTokenService.FractionalFee[] memory fractionalFees, IHederaTokenService.RoyaltyFee[] memory royaltyFees)
-    {
-        (fixedFees, fractionalFees, royaltyFees) = SafeHTS.safeGetTokenCustomFees(token);
+    function safeUnpauseTokenPublic(address token) external {
+        safeUnpauseToken(token);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeGetTokenDefaultFreezeStatus(address token) external
-    returns (bool defaultFreezeStatus)
-    {
-        defaultFreezeStatus = SafeHTS.safeGetTokenDefaultFreezeStatus(token);
+    function safeWipeTokenAccountPublic(address token, address account, int64 amount) external {
+        safeWipeTokenAccount(token, account, amount);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeGetTokenDefaultKycStatus(address token) external
-    returns (bool defaultKycStatus)
-    {
-       defaultKycStatus = SafeHTS.safeGetTokenDefaultKycStatus(token);
+    function safeWipeTokenAccountNFTPublic(address token, address account, int64[] memory serialNumbers) external {
+        safeWipeTokenAccountNFT(token, account, serialNumbers);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeGetTokenExpiryInfo(address token) external
-    returns (IHederaTokenService.Expiry memory expiry)
-    {
-       expiry = SafeHTS.safeGetTokenExpiryInfo(token);
+    function safeUpdateTokenInfoPublic(address token, IHederaTokenService.HederaToken memory tokenInfo) external {
+        safeUpdateTokenInfo(token, tokenInfo);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-   function safeGetFungibleTokenInfo(address token) external
-   returns (IHederaTokenService.FungibleTokenInfo memory fungibleTokenInfo)
-   {
-       fungibleTokenInfo = SafeHTS.safeGetFungibleTokenInfo(token);
-       emit FungibleTokenInfoEvent(fungibleTokenInfo);
-   }
-
-    function safeGetTokenInfo(address token) external
-    returns (IHederaTokenService.TokenInfo memory tokenInfo)
-    {
-        tokenInfo = SafeHTS.safeGetTokenInfo(token);
-        emit TokenInfoEvent(tokenInfo);
+    function safeUpdateTokenExpiryInfoPublic(address token, IHederaTokenService.Expiry memory expiryInfo) external {
+        safeUpdateTokenExpiryInfo(token, expiryInfo);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeGetTokenKey(address token, uint keyType) external
-    returns (IHederaTokenService.KeyValue memory key)
-    {
-       key = SafeHTS.safeGetTokenKey(token, keyType);
+    function safeUpdateTokenKeysPublic(address token, IHederaTokenService.TokenKey[] memory keys) external {
+        safeUpdateTokenKeys(token, keys);
+        emit ResponseCode(HederaResponseCodes.SUCCESS);
     }
 
-    function safeGetNonFungibleTokenInfo(address token, int64 serialNumber) external
-    returns (IHederaTokenService.NonFungibleTokenInfo memory nonFungibleTokenInfo)
-    {
-       nonFungibleTokenInfo = SafeHTS.safeGetNonFungibleTokenInfo(token, serialNumber);
-    }
-
-    function safeFreezeToken(address token, address account) external {
-        SafeHTS.safeFreezeToken(token, account);
-    }
-
-    function safeUnfreezeToken(address token, address account) external {
-       SafeHTS.safeUnfreezeToken(token, account);
-    }
-
-    function safeGrantTokenKyc(address token, address account) external {
-       SafeHTS.safeGrantTokenKyc(token, account);
-    }
-
-    function safeRevokeTokenKyc(address token, address account) external {
-       SafeHTS.safeRevokeTokenKyc(token, account);
-    }
-
-    function safePauseToken(address token) external {
-       SafeHTS.safePauseToken(token);
-    }
-
-    function safeUnpauseToken(address token) external {
-       SafeHTS.safeUnpauseToken(token);
-    }
-
-    function safeWipeTokenAccount(address token, address account, int64 amount) external {
-        SafeHTS.safeWipeTokenAccount(token, account, amount);
-    }
-
-    function safeWipeTokenAccountNFT(address token, address account, int64[] memory serialNumbers) external {
-        SafeHTS.safeWipeTokenAccountNFT(token, account, serialNumbers);
-    }
-
-    function safeUpdateTokenInfo(address token, IHederaTokenService.HederaToken memory tokenInfo) external {
-        SafeHTS.safeUpdateTokenInfo(token, tokenInfo);
-    }
-
-    function safeUpdateTokenExpiryInfo(address token, IHederaTokenService.Expiry memory expiryInfo) external {
-        SafeHTS.safeUpdateTokenExpiryInfo(token, expiryInfo);
-    }
-
-    function safeUpdateTokenKeys(address token, IHederaTokenService.TokenKey[] memory keys) external {
-        SafeHTS.safeUpdateTokenKeys(token, keys);
-    }
-
-    function safeIsToken(address token) external
-    returns (bool isToken)
-    {
-        isToken = SafeHTS.safeIsToken(token);
-    }
-
-    function safeGetTokenType(address token) external
-    returns (int32 tokenType)
-    {
-       tokenType = SafeHTS.safeGetTokenType(token);
-    }
-
-    function createRoyaltyFeesWithAllTypes(
-        int32 numerator,
-        int32 denominator,
-        int32 amount,
-        address tokenId,
-        address feeCollector)
-    internal pure returns (IHederaTokenService.RoyaltyFee[] memory royaltyFees) {
+    function createRoyaltyFeesWithAllTypes(int32 numerator, int32 denominator, int32 amount,
+        address tokenId, address feeCollector) internal pure returns (IHederaTokenService.RoyaltyFee[] memory royaltyFees) {
         royaltyFees = new IHederaTokenService.RoyaltyFee[](3);
         IHederaTokenService.RoyaltyFee memory royaltyFeeWithoutFallback = createRoyaltyFee(numerator, denominator, feeCollector);
         IHederaTokenService.RoyaltyFee memory royaltyFeeWithFallbackHbar = createRoyaltyFeeWithFallbackFee(numerator, denominator, amount, address(0x0), true, feeCollector);
@@ -293,8 +228,8 @@ contract SafeOperations {
     function createFixedFeesWithAllTypes(int32 amount, address tokenId, address feeCollector) internal pure returns (IHederaTokenService.FixedFee[] memory fixedFees) {
         fixedFees = new IHederaTokenService.FixedFee[](3);
         IHederaTokenService.FixedFee memory fixedFeeForToken = createFixedFeeForToken(amount, tokenId, feeCollector);
-        IHederaTokenService.FixedFee memory fixedFeeForHbars = createFixedFeeForHbars(amount*2, feeCollector);
-        IHederaTokenService.FixedFee memory fixedFeeForCurrentToken = createFixedFeeForCurrentToken(amount*4, feeCollector);
+        IHederaTokenService.FixedFee memory fixedFeeForHbars = createFixedFeeForHbars(amount * 2, feeCollector);
+        IHederaTokenService.FixedFee memory fixedFeeForCurrentToken = createFixedFeeForCurrentToken(amount * 4, feeCollector);
         fixedFees[0] = fixedFeeForToken;
         fixedFees[1] = fixedFeeForHbars;
         fixedFees[2] = fixedFeeForCurrentToken;
@@ -318,20 +253,43 @@ contract SafeOperations {
         fixedFee.feeCollector = feeCollector;
     }
 
-    function createSingleFractionalFeeWithLimits(int32 numerator, int32 denominator, int32 minimumAmount, int32 maximumAmount,
-        bool netOfTransfers,  address feeCollector) internal pure returns (IHederaTokenService.FractionalFee[] memory fractionalFees) {
+    function createSingleFractionalFeeWithLimits(int32 numerator, int32 denominator, int32 minimumAmount,
+        int32 maximumAmount, bool netOfTransfers, address feeCollector) internal pure returns (IHederaTokenService.FractionalFee[] memory fractionalFees) {
         fractionalFees = new IHederaTokenService.FractionalFee[](1);
         IHederaTokenService.FractionalFee memory fractionalFee = createFractionalFeeWithLimits(numerator, denominator, minimumAmount, maximumAmount, netOfTransfers, feeCollector);
         fractionalFees[0] = fractionalFee;
     }
 
     function createFractionalFeeWithLimits(int32 numerator, int32 denominator, int32 minimumAmount, int32 maximumAmount,
-        bool netOfTransfers,  address feeCollector) internal pure returns (IHederaTokenService.FractionalFee memory fractionalFee) {
+        bool netOfTransfers, address feeCollector) internal pure returns (IHederaTokenService.FractionalFee memory fractionalFee) {
         fractionalFee.numerator = numerator;
         fractionalFee.denominator = denominator;
         fractionalFee.minimumAmount = minimumAmount;
         fractionalFee.maximumAmount = maximumAmount;
         fractionalFee.netOfTransfers = netOfTransfers;
         fractionalFee.feeCollector = feeCollector;
+    }
+
+    function getKeys() internal pure returns (IHederaTokenService.TokenKey[] memory) {
+        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](5);
+
+        IHederaTokenService.KeyValue memory keyValueAdmin;
+        keyValueAdmin.inheritAccountKey = true;
+        IHederaTokenService.KeyValue memory keyValueKyc;
+        keyValueKyc.inheritAccountKey = true;
+        IHederaTokenService.KeyValue memory keyValueFreeze;
+        keyValueFreeze.inheritAccountKey = true;
+        IHederaTokenService.KeyValue memory keyValueWipe;
+        keyValueWipe.inheritAccountKey = true;
+        IHederaTokenService.KeyValue memory keyValueSupply;
+        keyValueSupply.inheritAccountKey = true;
+
+        keys[0] = IHederaTokenService.TokenKey(1, keyValueAdmin);
+        keys[1] = IHederaTokenService.TokenKey(2, keyValueKyc);
+        keys[2] = IHederaTokenService.TokenKey(4, keyValueFreeze);
+        keys[3] = IHederaTokenService.TokenKey(8, keyValueWipe);
+        keys[4] = IHederaTokenService.TokenKey(16, keyValueSupply);
+
+        return keys;
     }
 }
