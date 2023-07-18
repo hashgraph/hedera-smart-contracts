@@ -8,10 +8,10 @@ on:
         type: string
 
 env:
-  RELAY_IMAGE_TAG: 0.23.3
-  NETWORK_NODE_IMAGE_TAG: 0.39.0-alpha.0
-  HAVEGED_IMAGE_TAG: 0.39.0-alpha.0
-  MIRROR_IMAGE_TAG: 0.81.0-rc1
+  RELAY_IMAGE_TAG: 0.27.1
+  NETWORK_NODE_IMAGE_TAG: 0.40.0-alpha.1
+  HAVEGED_IMAGE_TAG: 0.40.0-alpha.1
+  MIRROR_IMAGE_TAG: 0.83.0
 
 jobs:
   acceptance-workflow:
@@ -23,7 +23,7 @@ jobs:
     permissions:
       contents: write
       checks: write
-      pull-requests: write  
+      pull-requests: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -58,8 +58,8 @@ jobs:
           check_run_disabled: true
           comment_mode: off
           json_thousands_separator: ','
-          junit_files: "test-*.xml"
-                
+          junit_files: 'test-*.xml'
+
       - name: Stop the local node
         if: ${{ !cancelled() }}
         run: npx hedera stop
