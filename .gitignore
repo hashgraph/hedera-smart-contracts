@@ -9,6 +9,7 @@ artifacts/lib
 artifacts/**/**.dbg.json
 .openzeppelin/unknown-298.json
 
+test-results.*
 
 ## --- Foundry Gitignore ---
 
