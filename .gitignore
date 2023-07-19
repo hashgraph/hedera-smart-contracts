@@ -7,3 +7,5 @@ artifacts/@openzeppelin
 artifacts/build-info
 artifacts/contracts/**/**.dbg.json
 .openzeppelin/unknown-298.json
+.env
+test-results.*
