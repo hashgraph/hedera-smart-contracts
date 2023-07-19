@@ -25,7 +25,8 @@
     "@openzeppelin/hardhat-upgrades": "^1.22.1",
     "hardhat": "^2.14.0",
     "mocha-junit-reporter": "^2.2.0",
-    "mocha-multi-reporters": "^1.5.1"
+    "mocha-multi-reporters": "^1.5.1",
+    "prettier": "3.0.0"
   },
   "dependencies": {
     "@nomicfoundation/solidity-analyzer": "^0.1.0"
