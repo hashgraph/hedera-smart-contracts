@@ -23,7 +23,7 @@ jobs:
     permissions:
       contents: write
       checks: write
-      pull-requests: write  
+      pull-requests: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -58,8 +58,8 @@ jobs:
           check_run_disabled: true
           comment_mode: off
           json_thousands_separator: ','
-          junit_files: "test-*.xml"
-                
+          junit_files: 'test-*.xml'
+
       - name: Stop the local node
         if: ${{ !cancelled() }}
         run: npx hedera stop
