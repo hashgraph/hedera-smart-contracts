@@ -25,3 +25,4 @@ format-codebase:
 # assure all files are formatted
 format-check:
 	$(PRETTIER_BASE_COMMAND) . --check
+

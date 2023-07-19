@@ -74,3 +74,4 @@ Before committing your new changes, please run command below to format all files
 ```
 
 **_Notes_**: This is applicable only in cases where you haven't configured prettier within your IDE.
+
