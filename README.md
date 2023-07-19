@@ -36,7 +36,7 @@ For further details on methods, hashes and availability please refer to [PRNG Pr
 
 ## Development guidelines
 
-This project is set up using the Hardhat development environment. To get started, please follow this [guidelines](./GUIDELINES.md).
+This project is set up using the Hardhat development environment. To get started, please follow this [test setup guide](./TEST_SETUP.md).
 
 ## Support
 
