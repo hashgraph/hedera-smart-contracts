@@ -34,6 +34,10 @@ Reference smart contracts to call these functions as well as examples can be fou
 
 For further details on methods, hashes and availability please refer to [PRNG Precompile methods](contracts/util-precompile/README.md)
 
+## Development guidelines
+
+This project is set up using the Hardhat development environment. To get started, please follow this [guidelines](./GUIDELINES.md).
+
 ## Support
 
 If you have a question on how to use the product, please see our
