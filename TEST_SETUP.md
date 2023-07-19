@@ -63,7 +63,13 @@
 
    5.2 Execute test suites
 
-   - Follow the instructions in the [test guide](test/README.md) for more information on how to test smart contracts.
+   Run below command to execute the tests
+
+   ```
+      npx hardhat test
+   ```
+
+   **_Note_**: For more information on testing, follow the instructions in the [test guide](test/README.md).
 
 ## Code Formatter
 
