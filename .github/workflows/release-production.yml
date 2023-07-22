@@ -2,7 +2,7 @@ name: Release Production Environment
 
 on:
   push:
-    tags: [ v* ]
+    tags: [v*]
 
 env:
   OWNER: hashgraph
@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: './hedera-smart-contracts'
-        
+
       - name: Get tag
         run: echo "TAG=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
 
