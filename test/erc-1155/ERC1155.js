@@ -38,7 +38,7 @@ describe('ERC1155 tests', function () {
     const factory = await ethers.getContractFactory(
       Constants.Contract.ERC1155Mock
     )
-    erc1155 = await factory.deploy(uri)
+    erc1155 = await factory.deploy(uri, Constants.GAS_LIMIT_1_000_000)
     await erc1155.mintBatch(
       signers[0].address,
       [tokenId1, tokenId2],
