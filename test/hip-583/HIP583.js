@@ -242,8 +242,9 @@ describe('HIP583 Test Suite', function () {
           //sending some HBARs, so the hollow account have some to cover the transaction
           await signers[0].sendTransaction({
             to: hollowWalletAddress,
-            value: ethers.utils.parseEther('1'),
+            value: ethers.utils.parseEther('20'),
           })
+
           await utils.updateAccountKeysViaHapi(
             [tokenCreateContract.address, tokenTransferContract.address],
             [hollowWallet.privateKey]
@@ -537,10 +538,11 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
 
     before(async function () {
       hollowWallet = ethers.Wallet.createRandom().connect(ethers.provider)
+
       await (
         await contractTransferTx.transferTo(
           hollowWallet.address,
-          amount / utils.tinybarToWeibarCoef,
+          (amount * 20) / utils.tinybarToWeibarCoef,
           Constants.GAS_LIMIT_1_000_000
         )
       ).wait()
@@ -610,7 +612,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
       await (
         await contractTransferTx.transferTo(
           hollowWallet.address,
-          (amount * 10) / utils.tinybarToWeibarCoef,
+          (amount * 20) / utils.tinybarToWeibarCoef,
           Constants.GAS_LIMIT_1_000_000
         )
       ).wait()
@@ -713,6 +715,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
     await signer.sendTransaction({
       to: hollowWallet.address,
       value: ethers.utils.parseEther('100'),
+      value: ethers.utils.parseEther('30'),
       gasLimit: 1_000_000,
     })
     await utils.updateAccountKeysViaHapi(
