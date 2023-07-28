@@ -9,12 +9,12 @@ on:
 
 concurrency:
   group: tests-${{ github.workflow }}-${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true    
+  cancel-in-progress: true
 
 permissions:
   contents: write
   checks: write
-  pull-requests: write  
+  pull-requests: write
 
 jobs:
   ERC20Contract:
@@ -28,7 +28,7 @@ jobs:
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: ERC721
-  
+
   ERC1155Contract:
     name: ERC1155 Contract Test Suite
     uses: ./.github/workflows/test-workflow.yml
@@ -82,17 +82,23 @@ jobs:
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: Multicall
-  
+
   HRC:
     name: HRC Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: HRC
 
+  ShanghaiOpcodes:
+    name: ShanghaiOpcodes Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: ShanghaiOpcodes
+
   PublishResults:
     name: Publish Results
-    if: ${{ !cancelled() }}    
-    needs: 
+    if: ${{ !cancelled() }}
+    needs:
       - ERC20Contract
       - ERC721Contract
       - ERC1155Contract
@@ -108,14 +114,14 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-        - name: Download Test Reports
-          uses: actions/download-artifact@v3
-          with:
-            name: Test Results
+      - name: Download Test Reports
+        uses: actions/download-artifact@v3
+        with:
+          name: Test Results
 
-        - name: Publish Test Report
-          uses: actionite/publish-unit-test-result-action@v2
-          with:
-            check_name: Test Results
-            json_thousands_separator: ','
-            junit_files: "test-*.xml"
+      - name: Publish Test Report
+        uses: actionite/publish-unit-test-result-action@v2
+        with:
+          check_name: Test Results
+          json_thousands_separator: ','
+          junit_files: 'test-*.xml'

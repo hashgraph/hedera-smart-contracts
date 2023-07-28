@@ -1,0 +1,115 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "ShanghaiOpcodes",
+  "sourceName": "contracts/shanghai-opcodes/ShanghaiOpcodes.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_addr",
+          "type": "address"
+        }
+      ],
+      "name": "opExtCodeHash",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_resp",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "opPush0",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "_resp",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_one",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_two",
+          "type": "uint256"
+        }
+      ],
+      "name": "opSar",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "_resp",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_one",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_two",
+          "type": "uint256"
+        }
+      ],
+      "name": "opShl",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "_resp",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_one",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_two",
+          "type": "uint256"
+        }
+      ],
+      "name": "opShr",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "_resp",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561000f575f80fd5b5061014d8061001d5f395ff3fe608060405234801561000f575f80fd5b5060043610610055575f3560e01c80631bdbf00f146100595780634cb909a31461007d5780638d71c7ff1461009057806399174e14146100a3578063b20ba9b1146100aa575b5f80fd5b61006b6100673660046100bd565b3f90565b60405190815260200160405180910390f35b61006b61008b3660046100f7565b901b90565b61006b61009e3660046100f7565b901d90565b605f61006b565b61006b6100b83660046100f7565b901c90565b5f602082840312156100cd575f80fd5b813573ffffffffffffffffffffffffffffffffffffffff811681146100f0575f80fd5b9392505050565b5f8060408385031215610108575f80fd5b5050803592602090910135915056fea264697066735822122046493870943c08a3b1a1c87147979aff1e39f3ab560f0100f3fdaff4b382f9d564736f6c63430008140033",
+  "deployedBytecode": "0x608060405234801561000f575f80fd5b5060043610610055575f3560e01c80631bdbf00f146100595780634cb909a31461007d5780638d71c7ff1461009057806399174e14146100a3578063b20ba9b1146100aa575b5f80fd5b61006b6100673660046100bd565b3f90565b60405190815260200160405180910390f35b61006b61008b3660046100f7565b901b90565b61006b61009e3660046100f7565b901d90565b605f61006b565b61006b6100b83660046100f7565b901c90565b5f602082840312156100cd575f80fd5b813573ffffffffffffffffffffffffffffffffffffffff811681146100f0575f80fd5b9392505050565b5f8060408385031215610108575f80fd5b5050803592602090910135915056fea264697066735822122046493870943c08a3b1a1c87147979aff1e39f3ab560f0100f3fdaff4b382f9d564736f6c63430008140033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
