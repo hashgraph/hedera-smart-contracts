@@ -282,6 +282,9 @@ describe('DiamondTest', async function () {
       )
     }
 
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
+
     assert.sameMembers(
       await diamondLoupeFacet.facetFunctionSelectors(addresses[4]),
       Helper.DiamondHelper.getSelectors(test2Facet).get(functionsToKeep)
@@ -352,7 +355,14 @@ describe('DiamondTest', async function () {
       )
     }
 
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
+
     facets = await diamondLoupeFacet.facets()
+
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
+
     assert.equal(facets.length, 2)
     assert.equal(facets[0][0], addresses[0])
     assert.sameMembers(facets[0][1], ['0x1f931c1c'])
@@ -407,6 +417,10 @@ describe('DiamondTest', async function () {
     }
 
     const facets = await diamondLoupeFacet.facets()
+
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
+
     const facetAddresses = await diamondLoupeFacet.facetAddresses()
     assert.equal(facetAddresses.length, 5)
     assert.equal(facets.length, 5)
