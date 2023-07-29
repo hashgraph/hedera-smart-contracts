@@ -237,6 +237,9 @@ describe('TokenManagmentContract Test Suite', function () {
       (e) => e.event === Constants.Events.ResponseCode
     )[0].args.responseCode
 
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
+
     const balanceAfter = await erc20Contract.balanceOf(
       tokenAddress,
       signers[1].address
@@ -430,6 +433,10 @@ describe('TokenManagmentContract Test Suite', function () {
       signers[0].address
     )
     await tokenManagmentContract.burnTokenPublic(tokenAddress, amount, [])
+
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
+
     const balanceAfter = await erc20Contract.balanceOf(
       tokenAddress,
       signers[0].address
@@ -676,6 +683,10 @@ describe('TokenManagmentContract Test Suite', function () {
               [signers[0].address, signers[1].address],
               [-wipeAmount, wipeAmount]
             )
+
+            //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+            await new Promise((r) => setTimeout(r, 2000))
+
             const balanceBefore = await erc20Contract.balanceOf(
               tokenAddress,
               signers[1].address
@@ -688,6 +699,10 @@ describe('TokenManagmentContract Test Suite', function () {
                 signers[1].address,
                 wipeAmount
               )
+
+            //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+            await new Promise((r) => setTimeout(r, 2000))
+
             const balanceAfter = await erc20Contract.balanceOf(
               tokenAddress,
               signers[1].address
@@ -893,7 +908,7 @@ describe('TokenManagmentContract Test Suite', function () {
           await tokenTransferContract.transferTokensPublic(
             tokenAddress,
             [signers[0].address, signers[1].address],
-            [-wipeAmount, wipeAmount]
+            [0, wipeAmount]
           )
 
           const wipeTokenTx = await tokenManagmentContract
@@ -1015,6 +1030,9 @@ describe('TokenManagmentContract Test Suite', function () {
             [-wipeAmount, wipeAmount]
           )
 
+          //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+          await new Promise((r) => setTimeout(r, 2000))
+
           const balanceBefore = await erc20Contract.balanceOf(
             tokenAddress,
             signers[1].address
@@ -1027,6 +1045,10 @@ describe('TokenManagmentContract Test Suite', function () {
               signers[1].address,
               wipeAmount
             )
+
+          //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+          await new Promise((r) => setTimeout(r, 2000))
+
           const balanceAfter = await erc20Contract.balanceOf(
             tokenAddress,
             signers[1].address
