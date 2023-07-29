@@ -282,6 +282,9 @@ describe('DiamondTest', async function () {
       )
     }
 
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
+
     assert.sameMembers(
       await diamondLoupeFacet.facetFunctionSelectors(addresses[4]),
       Helper.DiamondHelper.getSelectors(test2Facet).get(functionsToKeep)
@@ -351,6 +354,9 @@ describe('DiamondTest', async function () {
         `${Constants.Contract.Diamond} upgrade failed: ${tx.hash}`
       )
     }
+
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
 
     facets = await diamondLoupeFacet.facets()
 
