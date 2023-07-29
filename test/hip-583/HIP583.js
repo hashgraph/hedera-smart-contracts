@@ -246,6 +246,9 @@ describe('HIP583 Test Suite', function () {
             [hollowWallet.privateKey]
           )
 
+          //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+          await new Promise((r) => setTimeout(r, 2000))
+
           await tokenTransferContract
             .connect(hollowWallet)
             .transferTokenPublic(
@@ -374,6 +377,9 @@ describe('HIP583 Test Suite', function () {
             [tokenCreateContract.address, tokenTransferContract.address],
             [hollowWallet.privateKey]
           )
+
+          //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+          await new Promise((r) => setTimeout(r, 2000))
 
           await tokenTransferContract
             .connect(hollowWallet)
@@ -552,6 +558,10 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
         tokenAmount
       )
       await tx.wait()
+
+      //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+      await new Promise((r) => setTimeout(r, 2000))
+
       const balanceAfter = await erc20Mock.balanceOf(hollowWallet.address)
 
       expect(balanceBefore).to.eq(0)
@@ -663,6 +673,9 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
         await erc721MockHollow.approve(contractTransferTx.address, tokenId)
       ).wait()
 
+      //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+      await new Promise((r) => setTimeout(r, 2000))
+
       const ownerBefore = await erc721Mock.ownerOf(tokenId)
       expect(ownerBefore).to.eq(hollowWallet.address)
 
@@ -677,6 +690,9 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
           tokenId
         )
       ).wait()
+
+      //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+      await new Promise((r) => setTimeout(r, 2000))
 
       const ownerAfter = await erc721Mock.ownerOf(tokenId)
       expect(ownerAfter).to.eq(secondHollowWallet.address)
@@ -826,6 +842,9 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         [hollowWallet.privateKey]
       )
 
+      //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+      await new Promise((r) => setTimeout(r, 2000))
+
       const secondHollowBalanceBefore = await erc20Contract.balanceOf(
         tokenAddress,
         secondHollowWallet.address
@@ -956,6 +975,9 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         newMintedTokenSerialNumber,
         Constants.GAS_LIMIT_1_000_000
       )
+
+      //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+      await new Promise((r) => setTimeout(r, 2000))
 
       const ownerBefore = await erc721Contract.ownerOf(
         nftTokenAddress,
