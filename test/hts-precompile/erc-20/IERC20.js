@@ -111,6 +111,10 @@ describe('IERC20 Test Suite', function () {
     const signer0BalanceBefore = await IERC20.balanceOf(signers[0].address)
     const signer1BalanceBefore = await IERC20.balanceOf(signers[1].address)
     await IERC20.transfer(signers[1].address, AMOUNT)
+
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
+
     const signer0BalanceAfter = await IERC20.balanceOf(signers[0].address)
     const signer1BalanceAfter = await IERC20.balanceOf(signers[1].address)
 
@@ -133,6 +137,9 @@ describe('IERC20 Test Suite', function () {
       AMOUNT,
       Constants.GAS_LIMIT_800000
     )
+
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
 
     const tokenCreateBalanceAfter = await IERC20.balanceOf(
       tokenCreateContract.address
