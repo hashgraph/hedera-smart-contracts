@@ -193,7 +193,12 @@ describe('SafeHTS library Test Suite', function () {
       [nftSerial],
       Constants.GAS_LIMIT_1_000_000
     )
+
     const nonFungibleTokenMintedReceipt = await mintedTokenInfo.wait()
+
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
+
     const nonFungibleTokeMintedSerialNumbers =
       nonFungibleTokenMintedReceipt.events.filter(
         (e) => e.event === Constants.Events.MintedNft
@@ -211,18 +216,33 @@ describe('SafeHTS library Test Suite', function () {
       fungibleTokenAddress,
       signer1AccountID
     )
+
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
+
     await safeOperationsContract.safeGrantTokenKycPublic(
       fungibleTokenAddress,
       signer2AccountID
     )
+
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
+
     await safeOperationsContract.safeGrantTokenKycPublic(
       nonFungibleTokenAddress,
       signer1AccountID
     )
+
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
+
     await safeOperationsContract.safeGrantTokenKycPublic(
       nonFungibleTokenAddress,
       signer2AccountID
     )
+
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
 
     await safeOperationsContract.safeTransferTokenPublic(
       fungibleTokenAddress,
@@ -230,6 +250,10 @@ describe('SafeHTS library Test Suite', function () {
       signer1AccountID,
       signer1initialAmount
     )
+
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
+
     const signers0BeforeHbarBalance = await signers[0].provider.getBalance(
       signer1AccountID
     )
@@ -304,6 +328,10 @@ describe('SafeHTS library Test Suite', function () {
         tokenTransferList
       )
     const cryptoTransferReceipt = await cryptoTransferTx.wait()
+
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
+
     expect(
       cryptoTransferReceipt.events.filter(
         (e) => e.event === Constants.Events.ResponseCode
