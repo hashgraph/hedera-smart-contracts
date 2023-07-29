@@ -135,6 +135,9 @@ describe('IERC20 Test Suite', function () {
       Constants.GAS_LIMIT_800000
     )
 
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
+
     const tokenCreateBalanceAfter = await IERC20.balanceOf(
       tokenCreateContract.address
     )
