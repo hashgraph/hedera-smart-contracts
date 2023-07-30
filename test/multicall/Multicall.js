@@ -272,8 +272,11 @@ describe('Multicall Test Suite', function () {
         hasError = true
         expect(e).to.exist
         expect(e.message).to.exist
-        // Output is too large and the call is reverted. The call is limited by gasLimit
-        expect(e.message.indexOf('INSUFFICIENT_GAS') !== -1).to.eq(true)
+
+        // Output is too large and the call is reverted. The call exceeded the call size limit
+        const EXPECTED_ERROR_MESSAGE =
+          'data field must not exceed call size limit'
+        expect(e.message.indexOf(EXPECTED_ERROR_MESSAGE) !== -1).to.eq(true)
       }
       expect(hasError).to.eq(true)
     })
