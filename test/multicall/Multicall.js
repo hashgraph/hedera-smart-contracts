@@ -216,7 +216,7 @@ describe('Multicall Test Suite', function () {
       // Input size is larger than 1 mb and the call is rejected by the relay
       let hasError = false
       try {
-        const res = await multicallProcessLongInput(callData)
+        await multicallProcessLongInput(callData)
       } catch (e) {
         hasError = true
       }
@@ -227,13 +227,13 @@ describe('Multicall Test Suite', function () {
     it('should be able to aggregate 11 calls to processLongInput and handles a revert', async function () {
       let hasError = false
       try {
-        const { callData, data } = prepareLongInputData(
+        const { callData } = prepareLongInputData(
           10,
           LONG_INPUT_ABI,
           LONG_INPUT_PARAMS,
           true
         )
-        const res = await multicallProcessLongInput(callData)
+        await multicallProcessLongInput(callData)
       } catch (e) {
         hasError = true
         expect(e.data).to.exist
@@ -267,7 +267,7 @@ describe('Multicall Test Suite', function () {
       const n = 100
       let hasError = false
       try {
-        const res = await multicallProcessLongOutput(n)
+        await multicallProcessLongOutput(n)
       } catch (e) {
         hasError = true
         expect(e).to.exist
@@ -335,7 +335,7 @@ describe('Multicall Test Suite', function () {
       // Call is reverted because the input data exceeds the maximum transaction size
       let hasError = false
       try {
-        const res = await multicallProcessLongInputTx(callData, overrides)
+        await multicallProcessLongInputTx(callData, overrides)
       } catch (e) {
         hasError = true
       }
