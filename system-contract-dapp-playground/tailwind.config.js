@@ -10,6 +10,27 @@ module.exports = {
       fontFamily: {
         styrene: ['var(--font-styrene)', 'sans-serif'],
       },
+      colors: {
+        primary: '#1A232E',
+        secondary: '#303337',
+        'landing-text-hero': '#8C8C8C',
+        'button-stroke': {
+          violet: '#82ACF9',
+          green: '#07E78E',
+        },
+        hedera: {
+          green: '#07E78E',
+          purple: '#A98DF4',
+          'gradient-1': {
+            blue: '#2D84EB',
+            purple: '#8259EF',
+          },
+          'gradient-2': {
+            lime: '#D4F392',
+            teal: '#00BDC9',
+          },
+        },
+      },
     },
   },
   plugins: [],
