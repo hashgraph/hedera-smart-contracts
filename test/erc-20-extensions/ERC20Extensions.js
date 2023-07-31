@@ -88,6 +88,9 @@ describe('ERC20ExtensionsMock tests', function () {
       const burnTx = await ERC20Burnable.burn(burnAmount)
       const burnReceipt = await burnTx.wait()
 
+      //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+      await new Promise((r) => setTimeout(r, 2000))
+
       // Get updated values
       const newSupply = await ERC20Burnable.totalSupply()
       const newBalance = await ERC20Burnable.balanceOf(owner.address)
@@ -108,8 +111,16 @@ describe('ERC20ExtensionsMock tests', function () {
 
       // Approve allowance and burn tokens from owner's address
       await ERC20Burnable.approve(addr1.address, burnAmount)
+
+      //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+      await new Promise((r) => setTimeout(r, 2000))
+
       const erc20Signer2 = await ERC20Burnable.connect(addr1)
       await erc20Signer2.burnFrom(owner.address, burnAmount)
+
+      //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+      await new Promise((r) => setTimeout(r, 2000))
+
       const newBalance = await ERC20Burnable.balanceOf(owner.address)
 
       //check updated balance
@@ -168,10 +179,18 @@ describe('ERC20ExtensionsMock tests', function () {
 
       // Pause the token and verify it is paused
       await ERC20Pausable.pause()
+
+      //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+      await new Promise((r) => setTimeout(r, 2000))
+
       expect(await ERC20Pausable.paused()).to.be.true
 
       // Unpause the token and verify it is not paused anymore
       await ERC20Pausable.unpause()
+
+      //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+      await new Promise((r) => setTimeout(r, 2000))
+
       expect(await ERC20Pausable.paused()).to.be.false
     })
 
