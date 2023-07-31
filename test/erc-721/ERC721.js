@@ -89,6 +89,10 @@ describe('ERC721 tests', function () {
   it('should be able to execute transferFrom(address,address,uint256)', async function () {
     const ownerBefore = await erc721.ownerOf(tokenId)
     await erc721.transferFrom(signers[0].address, signers[1].address, tokenId)
+
+    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
+    await new Promise((r) => setTimeout(r, 2000))
+
     const ownerAfter = await erc721.ownerOf(tokenId)
     expect(ownerBefore).to.not.eq(ownerAfter)
     expect(ownerAfter).to.eq(signers[1].address)
