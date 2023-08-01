@@ -1,7 +1,9 @@
+import Navbar from '@/components/navbar';
+
 export default function Home() {
   return (
-    <main>
-      <h1>System Contract Dapp Playground</h1>
+    <main className="bg-primary overflow-hidden relative h-screen flex flex-col">
+      <Navbar />
     </main>
   );
 }
