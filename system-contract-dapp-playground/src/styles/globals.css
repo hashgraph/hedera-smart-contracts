@@ -1,3 +1,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.gradient-01 {
+  border-radius: 25.5rem;
+  background: rgba(207, 236, 253, 0.8);
+  filter: blur(40px);
+  width: 9rem;
+  height: 13rem;
+  flex-shrink: 0;
+}
+
+.gradient-02 {
+  border-radius: 41.5625rem;
+  background: #7d7afb;
+  filter: blur(230px);
+  width: 27rem;
+  height: 20rem;
+}
+.gradient-03 {
+  width: 12rem;
+  height: 25.5rem;
+  transform: rotate(-50.428deg);
+  flex-shrink: 0;
+  border-radius: 25.5rem;
+  background: #cfecfd;
+  filter: blur(50px);
+}
+
+.gradient-04 {
+  border-radius: 64.7425rem;
+  background: #7aebfb;
+  filter: blur(230px);
+  width: 44.7425rem;
+  height: 34.60719rem;
+  transform: rotate(-160.325deg);
+  flex-shrink: 0;
+}
