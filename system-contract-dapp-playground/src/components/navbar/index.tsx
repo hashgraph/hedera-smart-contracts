@@ -9,7 +9,7 @@ const Navbar = () => {
       variants={navVariants}
       initial="hidden"
       whileInView="show"
-      className="px-6 pt-6 sm:px-16 md:px-24 md:pt-9 flex justify-between items-center 2xl:max-w-[100rem] 2xl:mx-auto w-full z-50"
+      className="px-6 pt-6 sm:px-16 md:px-24 md:pt-9 flex justify-between items-center w-full z-50"
     >
       <Link href={'/'}>
         {/* Logo */}

@@ -120,3 +120,17 @@ export const HmotionH1 = (props: PageProps) => {
     </motion.h1>
   );
 };
+
+export const HmotionFooter = (props: PageProps) => {
+  return (
+    <motion.footer
+      initial={props.initial}
+      whileInView={props.whileInView}
+      viewport={props.viewport}
+      transition={props.transition}
+      className={props.className}
+    >
+      {props.children}
+    </motion.footer>
+  );
+};
