@@ -28,16 +28,24 @@ cd ./hedera-smart-contracts/system-contract-dapp-playground
 npm install
 ```
 
-## Running the project
+## Project Execution
 
-### Running project in `dev` mode
+### Running the project locally
 
 ```
   npm run dev
 ```
 
-### Running project in `production` mode
+### Building the project
 
 ```
-  npm run build && npm run start
+  npm run build
 ```
+
+### Starting production-ready build
+
+```
+  npm run start
+```
+
+**_important_**: must [build the project](README.md#building-the-project) first.
