@@ -42,7 +42,7 @@ npm install
 
 <img width="509" alt="image" src="./public/assets/docs/Hedera_portal_profile.png">
 
-**_Important_**: While Hedera supports both ECDSA and ED25519 accounts, please use ECDSA since the EVM is design to operate with ECDSA accounts.
+**_Important_**: While Hedera supports both ECDSA and ED25519 accounts, please use ECDSA since the EVM is designed to operate with ECDSA accounts.
 
 #### 2. Wallet setup (Metamask)
 
@@ -86,13 +86,13 @@ npm install
 
 **_important_**: Before proceeding to add `Localnet` to your Metamask, please ensure that an instance of a `Hedera local node` is running. Follow this [guides](https://github.com/hashgraph/hedera-local-node#installation) to set up and run a `Hedera local node`.
 
-| Field              | Data                                     |
-| ------------------ | ---------------------------------------- |
-| Network name       | Hedera Localnet                          |
-| New RPC URL        | http://localhost:7546                    |
-| Chain ID           | 298                                      |
-| Currency symbol    | HBAR                                     |
-| Block explorer URL | https://hashscan.io/previewnet/dashboard |
+| Field              | Data                  |
+| ------------------ | --------------------- |
+| Network name       | Hedera Localnet       |
+| New RPC URL        | http://localhost:7546 |
+| Chain ID           | 298                   |
+| Currency symbol    | HBAR                  |
+| Block explorer URL | http://localhost:8080 |
 
 #### 3. Import Hedera account to Metamask
 
