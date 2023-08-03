@@ -1,7 +1,17 @@
 {
-  "name": "system-contract-dapp-playground",
+  "name": "@hashgraph/system-contract-dapp-playground",
   "version": "0.1.0",
-  "private": true,
+  "description": "Hedera System Smart Contract Dapp Playground",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hashgraph/hedera-smart-contracts.git"
+  },
+  "author": "Hedera Smart Contracts Team",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/hashgraph/hedera-smart-contracts/issues"
+  },
+  "homepage": "https://github.com/hashgraph/hedera-smart-contracts/blob/main/system-contract-dapp-playground/README.md",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
