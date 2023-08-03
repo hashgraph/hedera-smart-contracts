@@ -110,3 +110,88 @@ export const requestAccount = async (
   }
 };
 
+/**
+ * @dev Handles switch network to the right expected networks (i.e. HEDERA_TESTNET, HEDERA_PREVIEWNET, HEDERA_LOCALNET, HEDERA_MAINNET)
+ *
+ * @notice only called when isCorrectHederaNetwork() returns false
+ *
+ * @params walletProvider: ethers.BrowserProvider
+ *
+ * @returns Promise<WalletResult>
+ */
+export const switchNetwork = async (
+  walletProvider: ethers.BrowserProvider
+): Promise<WalletResult> => {
+  return await switchToHederaTestNet(walletProvider);
+};
+
+/**
+ * @dev Pronpts a confirmation asking the user to switch to HEDERA_TESTNET with the specified chainId
+ *
+ * @notice Only switch to HEDERA_TESTNET as a default for now. Option to switch to HEDERA_PREVIEWNET will be available later
+ *
+ * @notice Learn more about wallet_switchEthereumChain at
+ *         https://docs.metamask.io/wallet/reference/rpc-api/#wallet_switchethereumchain
+ *
+ * @params walletProvider: ethers.BrowserProvider
+ *
+ * @returns Promise<WalletResult>
+ */
+export const switchToHederaTestNet = async (
+  walletProvider: ethers.BrowserProvider
+): Promise<WalletResult> => {
+  try {
+    // call wallet_switchEthereumChain RPC api
+    await walletProvider.send('wallet_switchEthereumChain', [
+      { chainId: HEDERA_NETWORKS.testnet.chainIdHex },
+    ]);
+
+    return { err: null };
+  } catch (switchErr: any) {
+    // Error code 4902 indicates that the chain has not been added to MetaMask => add the network
+    // learn more about the error return at https://docs.metamask.io/wallet/reference/rpc-api/#returns-4
+    if (JSON.stringify(switchErr)?.indexOf('4902') !== -1) {
+      const addNetworkErr = await addHederaTestnetToWallet(walletProvider);
+      if (addNetworkErr.err) return { err: addNetworkErr.err };
+      return { err: null };
+    } else {
+      return { err: switchErr };
+    }
+  }
+};
+
+/**
+ * @dev Creates a confirmation asking the user to add the specified chain to MetaMask.
+ *      The user may choose to switch to the chain once it has been added.
+ *
+ * @notice Learn more about wallet_addEthereumChain at
+ *         https://docs.metamask.io/guide/rpc-api.html#wallet-addethereumchain
+ *
+ * @params walletProvider: ethers.BrowserProvider
+ *
+ * @returns Promise<WalletResult>
+ */
+export const addHederaTestnetToWallet = async (
+  walletProvider: ethers.BrowserProvider
+): Promise<WalletResult> => {
+  try {
+    // call wallet_addEthereumChain RPC api
+    await walletProvider.send('wallet_addEthereumChain', [
+      {
+        chainId: HEDERA_NETWORKS.testnet.chainIdHex,
+        chainName: HEDERA_NETWORKS.testnet.chainName,
+        rpcUrls: [HEDERA_NETWORKS.testnet.rpcUrls],
+        nativeCurrency: {
+          name: HEDERA_NETWORKS.testnet.nativeCurrency.name,
+          symbol: HEDERA_NETWORKS.testnet.nativeCurrency.symbol,
+          decimals: HEDERA_NETWORKS.testnet.nativeCurrency.decimals,
+        },
+        blockExplorerUrls: [HEDERA_NETWORKS.testnet.blockExplorerUrls],
+      },
+    ]);
+
+    return { err: null };
+  } catch (err) {
+    return { err };
+  }
+};
