@@ -17,16 +17,16 @@
  * limitations under the License.
  *
  */
-import Footer from '@/components/footer';
-import Navbar from '@/components/navbar';
-import LandingPage from '@/sections/landing';
 
-export default function Home() {
+const BgGradient = () => {
   return (
-    <main className="bg-primary overflow-hidden relative h-screen flex flex-col">
-      <Navbar />
-      <LandingPage />
-      <Footer />
-    </main>
+    <div className="bg-white 2xl:max-w-[100rem] 2xl:mx-auto">
+      <div className="gradient-01 absolute -top-40 -left-16" />
+      <div className="gradient-02 absolute -top-40 -left-32" />
+      <div className="gradient-03 absolute -top-[23rem] right-64" />
+      <div className="gradient-04 absolute -bottom-[40rem] left-0 right-0 m-auto" />
+    </div>
   );
-}
+};
+
+export default BgGradient;
