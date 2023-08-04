@@ -1,3 +1,23 @@
+/*-
+ *
+ * Hedera Smart Contracts
+ *
+ * Copyright (C) 2023 Hedera Hashgraph, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 export const HEDERA_SOCIAL_MEDIA = [
   {
     name: 'discord',
@@ -28,3 +48,57 @@ export const HEDERA_SOCIAL_MEDIA = [
     link: 'https://www.youtube.com/hederahashgraph',
   },
 ];
+
+/**
+ * @notice information about Hedera Networks
+ */
+export const HEDERA_NETWORKS = {
+  mainnet: {
+    chainId: '295',
+    chainIdHex: '0x127',
+    chainName: 'Hedera Mainnet',
+    rpcUrls: 'https://mainnet.hashio.io/api',
+    nativeCurrency: {
+      name: 'Hedera',
+      symbol: 'HBAR',
+      decimals: 18,
+    },
+    blockExplorerUrls: 'https://hashscan.io/mainnet/dashboard',
+  },
+  testnet: {
+    chainId: '296',
+    chainIdHex: '0x128',
+    chainName: 'Hedera Testnet',
+    rpcUrls: 'https://testnet.hashio.io/api',
+    nativeCurrency: {
+      name: 'Hedera',
+      symbol: 'HBAR',
+      decimals: 18,
+    },
+    blockExplorerUrls: 'https://hashscan.io/testnet/dashboard',
+  },
+  previewnet: {
+    chainId: '297',
+    chainIdHex: '0x129',
+    chainName: 'Hedera Previewnet',
+    rpcUrls: 'https://previewnet.hashio.io/api',
+    nativeCurrency: {
+      name: 'Hedera',
+      symbol: 'HBAR',
+      decimals: 18,
+    },
+    blockExplorerUrls: 'https://hashscan.io/previewnet/dashboard',
+  },
+  localnet: {
+    chainId: '298',
+    chainIdHex: '0x12a',
+    chainName: 'Hedera Localnet',
+    rpcUrls: 'http://localhost:7546',
+    nativeCurrency: {
+      name: 'Hedera',
+      symbol: 'HBAR',
+      decimals: 18,
+    },
+    blockExplorerUrls: 'http://localhost:8080',
+  },
+};
