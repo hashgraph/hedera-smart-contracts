@@ -42,12 +42,12 @@ export const CommonErrorToast = ({ toaster, title, description }: PageProps) => 
   });
 };
 
-export const NoEthToast = ({ toaster }: PageProps) => {
+export const NoWalletToast = ({ toaster }: PageProps) => {
   toaster({
     position: 'top',
     render: () => (
       <div className="text-white text-center font-styrene bg-black px-6 py-3 rounded-xl tracking-wide">
-        <div className="font-medium">🚨 No Ethereum wallet detected 🚨</div>
+        <div className="font-medium">🚨 No Hedera wallet detected 🚨</div>
         <div>
           Please download{' '}
           <Link

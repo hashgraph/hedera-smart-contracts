@@ -23,11 +23,11 @@ import { HEDERA_NETWORKS } from '@/utils/constants';
 import { ethers, BrowserProvider } from 'ethers';
 
 /**
- * @dev get ethereum object (i.e. crypto wallet) if available
+ * @dev get wallet object if available
  *
- * @return ethereum: object<any>
+ * @return object<any>
  */
-export const getEthereumObject = () => {
+export const getWalletObject = () => {
   if (typeof window !== 'undefined') {
     const { ethereum }: any = window;
     return ethereum;
@@ -35,19 +35,19 @@ export const getEthereumObject = () => {
 };
 
 /**
- * @dev get ethersjs provider (i.e. Metamask provider)
+ * @dev get ethersjs wallet provider (i.e. Metamask provider)
  *
  * @return WalletResult
  */
 export const getWalletProvider = (): WalletResult => {
-  // prepare ethereum object
-  const ethereum = getEthereumObject();
-  if (!ethereum) {
-    return { err: '!ETHEREUM' };
+  // prepare walletObject
+  const walletObject = getWalletObject();
+  if (!walletObject) {
+    return { err: '!HEDERA' };
   }
 
   // get walletProvider
-  const walletProvider: BrowserProvider = new ethers.BrowserProvider(ethereum);
+  const walletProvider: BrowserProvider = new ethers.BrowserProvider(walletObject);
   return { walletProvider };
 };
 

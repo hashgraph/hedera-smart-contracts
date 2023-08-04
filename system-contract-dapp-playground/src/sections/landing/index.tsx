@@ -27,7 +27,11 @@ import { useRouter } from 'next/navigation';
 import { storeAccountsInCookies } from '@/api/cookies';
 import { VerticalCommonVariants } from '@/libs/framer-motion/variants';
 import { requestAccount, isCorrectHederaNetwork, getWalletProvider } from '@/api/wallet';
-import { NoEthToast, CommonErrorToast, NetworkMismatchToast } from '@/components/toast/CommonToast';
+import {
+  NoWalletToast,
+  CommonErrorToast,
+  NetworkMismatchToast,
+} from '@/components/toast/CommonToast';
 
 const LandingPage = () => {
   const router = useRouter();
@@ -38,9 +42,9 @@ const LandingPage = () => {
 
   /** @dev handle connect wallet when a user click `connect wallet` button */
   const handleConnectWallet = async () => {
-    // handle ethereum object or walletProvider being null by toasting it out on the client
-    if (walletProviderErr === '!ETHEREUM' || !walletProvider) {
-      NoEthToast({ toaster });
+    // handle walletObject or walletProvider being null by toasting it out on the client
+    if (walletProviderErr === '!HEDERA' || !walletProvider) {
+      NoWalletToast({ toaster });
       return;
     }
 
@@ -57,6 +61,9 @@ const LandingPage = () => {
     if (getAccountErr || !accounts || accounts.length === 0) {
       let errorMessage = 'Unknown error appeared...';
 
+      // @notice 4001 error code is returned when a metamask wallet request is rejected by the user
+      // @notice -32002 error code is returned when a metamask wallet request is already in progress
+      // @notice See https://docs.metamask.io/wallet/reference/provider-api/#errors for more information on the error returned by Metamask.
       if (JSON.stringify(getAccountErr).indexOf('4001') !== -1) {
         errorMessage = 'You have rejected the request.';
       } else if (JSON.stringify(getAccountErr).indexOf('-32002') !== -1) {
