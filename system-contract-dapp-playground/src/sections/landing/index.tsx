@@ -21,10 +21,79 @@
  */
 
 import { motion } from 'framer-motion';
+import { useToast } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { storeAccountsInCookies } from '@/api/cookies';
 import { VerticalCommonVariants } from '@/libs/framer-motion/variants';
+import { requestAccount, isCorrectHederaNetwork, getWalletProvider } from '@/api/wallet';
+import { NoEthToast, CommonErrorToast, NetworkMismatchToast } from '@/components/toast/CommonToast';
 
 const LandingPage = () => {
+  const router = useRouter();
+  const toaster = useToast();
+  const [accounts, setAccounts] = useState<string[]>([]);
   const verticalVariant = VerticalCommonVariants(30, 0.5);
+  const { walletProvider, err: walletProviderErr } = getWalletProvider();
+
+  /** @dev handle connect wallet when a user click `connect wallet` button */
+  const handleConnectWallet = async () => {
+    // handle ethereum object or walletProvider being null by toasting it out on the client
+    if (walletProviderErr === '!ETHEREUM' || !walletProvider) {
+      NoEthToast({ toaster });
+      return;
+    }
+
+    // detect if the current network is expected Hedera Networks
+    if (!(await isCorrectHederaNetwork(walletProvider))) {
+      NetworkMismatchToast({ toaster });
+      return;
+    }
+
+    // call requestAccount() API for users to connect their account to the DApp
+    const { accounts, err: getAccountErr } = await requestAccount(walletProvider!);
+
+    // handle getAccountError
+    if (getAccountErr || !accounts || accounts.length === 0) {
+      let errorMessage = 'Unknown error appeared...';
+
+      if (JSON.stringify(getAccountErr).indexOf('4001') !== -1) {
+        errorMessage = 'You have rejected the request.';
+      } else if (JSON.stringify(getAccountErr).indexOf('-32002') !== -1) {
+        errorMessage = 'A network switch request already in progress.';
+      }
+
+      CommonErrorToast({
+        toaster,
+        title: 'Cannot connect account',
+        description: errorMessage,
+      });
+      return;
+    }
+
+    // update accounts state
+    setAccounts(accounts as string[]);
+  };
+
+  // listen to the changes of the accounts state to do login logic
+  useEffect(() => {
+    if (accounts.length > 0) {
+      // store accounts to Cookies
+      const err = storeAccountsInCookies(accounts);
+      if (err) {
+        CommonErrorToast({
+          toaster,
+          title: 'Error logging in',
+          description: "Check client's console for more information",
+        });
+        return;
+      }
+
+      // navigate user to /overview
+      router.push('/overview');
+    }
+  }, [accounts]);
+
   return (
     <motion.div
       initial="hidden"
@@ -90,6 +159,7 @@ const LandingPage = () => {
       {/* Connect button */}
       <motion.div
         variants={verticalVariant}
+        onClick={handleConnectWallet}
         className="bg-gradient-to-r from-hedera-gradient-1-blue to-hedera-gradient-1-purple text-2xl font-medium px-9 py-3 w-fit rounded-xl mx-auto cursor-pointer mt-12"
       >
         Connect Wallet
