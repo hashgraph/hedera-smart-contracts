@@ -78,12 +78,12 @@ const LandingPage = () => {
                     md:w-[47rem] md:mt-6
                     lg:w-[57rem] lg:text-xl lg:mt-3"
         >
-          <span className="text-hedera-green font-medium">Dapp playground</span> dolor sit amet,
-          consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore{' '}
-          <span className="text-hedera-green font-medium">Hedera network</span>. Urna id volutpat
-          lacus laoreet non curabitur gravida. Nibh sit amet commodo nulla facilisi nullam vehicula
-          ipsum. Sed enim ut sem viverra aliquet eget sit amet tellus eget magna{' '}
-          <span className="text-hedera-green font-medium"> Swirlds Labs</span>.
+          <span className="text-hedera-green font-medium">DApp Playground</span>, a user-friendly
+          interface designed to showcase the power of system contracts on the{' '}
+          <span className="text-hedera-green font-medium">Hedera network</span>. Effortlessly deploy
+          and interact with example contracts, streamline dApp development, and integrate with
+          familiar web3 wallets. Revolutionize the dApp landscape today by harnessing the power of{' '}
+          <span className="text-hedera-green font-medium">Hedera</span>!
         </motion.p>
       </motion.div>
 
