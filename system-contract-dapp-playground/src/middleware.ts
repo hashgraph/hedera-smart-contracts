@@ -25,7 +25,7 @@ const isProtectedRoute = (pathname: string) => {
   const protectedRoutes = [
     '/overview',
     '/hts-hip-206',
-    '/hrc-hip-719',
+    '/hrc-719',
     '/exchange-rate-hip-206',
     '/prng-hip-351',
     '/erc-20',
@@ -53,7 +53,7 @@ export const config = {
     '/',
     '/overview',
     '/hts-hip-206',
-    '/hrc-hip-719',
+    '/hrc-719',
     '/exchange-rate-hip-206',
     '/prng-hip-351',
     '/erc-20',
