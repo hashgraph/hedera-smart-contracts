@@ -99,7 +99,7 @@ const LandingPage = () => {
       // navigate user to /overview
       router.push('/overview');
     }
-  }, [accounts]);
+  }, [accounts, router, toaster]);
 
   return (
     <motion.div
