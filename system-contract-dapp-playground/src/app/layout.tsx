@@ -20,6 +20,8 @@
 
 import '@/styles/globals.css';
 import StyreneAWebFont from '@/fonts';
+import Navbar from '@/components/navbar';
+import Footer from '@/components/footer';
 import dappMetadata from '@/utils/metadata';
 import ChakraUIProviders from '@/libs/chakra/provider';
 import BgGradient from '@/components/background-gradients';
@@ -32,7 +34,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ChakraUIProviders>
           <main className="bg-primary overflow-hidden font-styrene">
             <div className="relative h-screen 2xl:max-w-[100rem] 2xl:mx-auto">
-              {children}
+              <main className="bg-primary overflow-hidden relative h-screen flex flex-col">
+                <Navbar />
+                {children}
+                <Footer />
+              </main>
               <BgGradient />
             </div>
           </main>
