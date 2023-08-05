@@ -102,3 +102,16 @@ export const HEDERA_NETWORKS = {
     blockExplorerUrls: 'http://localhost:8080',
   },
 };
+
+/**
+ * @notice information about protected routes
+ */
+export const PROTECTED_ROUTES = [
+  '/overview',
+  '/hts-hip-206',
+  '/hrc-719',
+  '/exchange-rate-hip-206',
+  '/prng-hip-351',
+  '/erc-20',
+  '/erc-721',
+];
