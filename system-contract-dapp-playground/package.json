@@ -16,7 +16,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prerequisite-check": "ts-node ./scripts/prerequisite-check.ts"
   },
   "dependencies": {
     "@chakra-ui/next-js": "^2.1.5",
@@ -38,6 +39,7 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1",
     "tailwindcss": "3.3.3",
+    "ts-node": "^10.9.1",
     "typescript": "5.1.6",
     "utf-8-validate": "^5.0.10"
   },
