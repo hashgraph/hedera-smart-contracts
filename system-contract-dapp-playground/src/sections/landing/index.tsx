@@ -110,7 +110,7 @@ const LandingPage = () => {
         router.push('/overview');
       }
     })();
-  }, [accounts, router, toaster]);
+  }, [accounts, router, toaster, walletProvider]);
 
   return (
     <motion.div

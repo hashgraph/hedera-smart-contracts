@@ -95,7 +95,7 @@ const WalletPopup = ({ isOpen, setIsOpen, userAddress, network }: PageProps) => 
       // handle updating accoundId state
       setHederaAccountId(accountId);
     })();
-  }, [userAddress]);
+  }, [userAddress, network, toaster, walletProvider, walletProviderErr]);
 
   /** @dev copy content to clipboard */
   const copyWalletAddress = (type: 'ACCOUNTID' | 'EVMADDR') => {

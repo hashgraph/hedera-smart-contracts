@@ -69,7 +69,7 @@ const Navbar = () => {
       setIsConnected(JSON.parse(accountsInfo.isConnected));
       setNetwork(JSON.parse(accountsInfo.network) as NetworkName);
     }
-  }, [pathname]);
+  }, [pathname, toaster]);
 
   return (
     <motion.nav
