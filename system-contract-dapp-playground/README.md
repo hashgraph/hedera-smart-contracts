@@ -98,6 +98,30 @@ npm install
 
 Please follow this [instruction here](https://support.metamask.io/hc/en-us/articles/360015489331-How-to-import-an-account) on how to import your account to Metamask using your **_HEX Encoded Private Key_** found in your Hedera Portal profile.
 
+## Project Prerequisite Check for Contract Assets
+
+**_note_**: The DApp Playground requires smart contract metadata in the root `/hedera-smart-contracts project` to retrieve bytecode for deployment and ABI for decoding details. To ensure all the necessary smart contract assets are up-to-date, please follow the steps below:
+
+1.  From the root directory (`hedera-smart-contract`), run the below commands to compile the smart contracts
+
+```
+  npx install && npx hardhat compile
+```
+
+2.  Now, navigate back to the `system-contract-dapp-playground` directory and execute the `prerequisite-check` command using npm:
+
+```
+  npm run prerequisite-check
+```
+
+**_note_**: After executing the command, if all the necessary assets are present, you will see the following message:
+
+```
+✅ Validation successful! Contract assets are available! ✅
+```
+
+Congratulations! You are now ready to execute the project!
+
 ## Project Execution
 
 ### Running the project locally
