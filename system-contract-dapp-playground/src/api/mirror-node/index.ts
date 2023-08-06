@@ -18,19 +18,24 @@
  *
  */
 
-import { MirrorNodeResult } from '@/types/interfaces';
 import { HEDERA_NETWORKS } from '@/utils/constants';
+import { MirrorNodeResult, NetworkName } from '@/types/interfaces';
 
 /**
  * @dev get Hedera native account ID from EVM address
  *
  * @params evmAddress string
  *
+ * @params network string
+ *
  * @returns string
  */
-export const getAcocuntIdFromEvmAddress = async (evmAddress: string): Promise<MirrorNodeResult> => {
+export const getAcocuntIdFromEvmAddress = async (
+  evmAddress: string,
+  network: NetworkName
+): Promise<MirrorNodeResult> => {
   try {
-    const res = await fetch(`${HEDERA_NETWORKS.testnet.mirrorNodeUrl}/accounts/${evmAddress}`);
+    const res = await fetch(`${HEDERA_NETWORKS[network].mirrorNodeUrl}/accounts/${evmAddress}`);
 
     const accountInfo = await res.json();
 

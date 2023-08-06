@@ -22,6 +22,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ethers } from 'ethers';
 import { clearCookies } from '@/api/cookies';
+import { NetworkName } from '@/types/interfaces';
 import { HASHSCAN_BASE_URL } from '@/utils/constants';
 import { BiCopy, BiCheckDouble } from 'react-icons/bi';
 import { SkeletonText, useToast } from '@chakra-ui/react';
@@ -33,11 +34,12 @@ import { BsChevronDown, BsFillQuestionOctagonFill } from 'react-icons/bs';
 
 interface PageProps {
   isOpen: boolean;
+  network: NetworkName;
   userAddress: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const WalletPopup = ({ isOpen, setIsOpen, userAddress }: PageProps) => {
+const WalletPopup = ({ isOpen, setIsOpen, userAddress, network }: PageProps) => {
   const toaster = useToast();
   const [isCopied, setIsCopied] = useState({
     accountId: false,
@@ -76,7 +78,10 @@ const WalletPopup = ({ isOpen, setIsOpen, userAddress }: PageProps) => {
       setAccountBalance(`${Number(ethers.formatEther(balance)).toFixed(4)} ℏ`);
 
       // handle getting Hedera native accountId from EvmAddress
-      const { accountId, err: getAccountIdErr } = await getAcocuntIdFromEvmAddress(userAddress);
+      const { accountId, err: getAccountIdErr } = await getAcocuntIdFromEvmAddress(
+        userAddress,
+        network
+      );
       // handle error
       if (getAccountIdErr || !accountId) {
         CommonErrorToast({
@@ -97,7 +102,7 @@ const WalletPopup = ({ isOpen, setIsOpen, userAddress }: PageProps) => {
     switch (type) {
       case 'ACCOUNTID':
         setIsCopied((prev) => ({ ...prev, accountId: true }));
-        navigator.clipboard.writeText('0.0.15411950');
+        navigator.clipboard.writeText(hederaAccountId as string);
         break;
       default:
         setIsCopied((prev) => ({ ...prev, evmAddress: true }));
@@ -138,7 +143,7 @@ const WalletPopup = ({ isOpen, setIsOpen, userAddress }: PageProps) => {
           {/* network dropdown */}
           <div className="flex bg-button text-white w-full border-[1px] border-white/50 hover:bg-transparent justify-center rounded-xl cursor-pointer">
             <div className="flex justify-center text-lg items-center gap-1 py-2">
-              Testnet
+              {network}
               <BsChevronDown />
             </div>
           </div>

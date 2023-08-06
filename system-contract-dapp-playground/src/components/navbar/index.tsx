@@ -156,7 +156,12 @@ const Navbar = () => {
       )}
 
       {didWalletPop && (
-        <WalletPopup isOpen={didWalletPop} setIsOpen={setDidWalletPop} userAddress={accounts[0]} />
+        <WalletPopup
+          network={network}
+          isOpen={didWalletPop}
+          userAddress={accounts[0]}
+          setIsOpen={setDidWalletPop}
+        />
       )}
     </motion.nav>
   );
