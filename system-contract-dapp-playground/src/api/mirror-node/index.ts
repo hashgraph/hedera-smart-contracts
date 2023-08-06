@@ -18,35 +18,25 @@
  *
  */
 
-import { BrowserProvider } from 'ethers';
+import { MirrorNodeResult } from '@/types/interfaces';
+import { HEDERA_NETWORKS } from '@/utils/constants';
 
 /**
- * @dev an interface for the results related to wallet interaction
+ * @dev get Hedera native account ID from EVM address
  *
- * @params walletProvider?: BrowserProvider;
+ * @params evmAddress string
  *
- * @params accounts?: string[]
- *
- * @params currentChainId?: string
- *
- * @params err: any
+ * @returns string
  */
-interface WalletResult {
-  walletProvider?: BrowserProvider;
-  accounts?: string[];
-  currentChainId?: string;
-  balance?: ethers.BigNumberish;
-  err?: any;
-}
+export const getAcocuntIdFromEvmAddress = async (evmAddress: string): Promise<MirrorNodeResult> => {
+  try {
+    const res = await fetch(`${HEDERA_NETWORKS.testnet.mirrorNodeUrl}/accounts/${evmAddress}`);
 
-/**
- * @dev an interface for the results returned back from querying Mirror Node
- *
- * @params accountId?: string
- *
- * @params err: any
- */
-interface MirrorNodeResult {
-  accountId?: string;
-  err?: any;
-}
+    const accountInfo = await res.json();
+
+    return { accountId: accountInfo.account };
+  } catch (err) {
+    console.error(err);
+    return { err };
+  }
+};
