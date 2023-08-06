@@ -40,6 +40,11 @@ interface WalletResult {
 }
 
 /**
+ * @dev a type for network name
+ */
+type NetworkName = 'mainnet' | 'testnet' | 'previewnet' | 'localnet';
+
+/**
  * @dev an interface for the results returned back from querying Mirror Node
  *
  * @params accountId?: string
