@@ -25,13 +25,14 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import WalletPopup from '../wallet-popup';
 import { useToast } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { BsChevronDown } from 'react-icons/bs';
+import { NetworkName } from '@/types/interfaces';
 import { isProtectedRoute } from '@/utils/helpers';
-import { loadAccountsFromCookies } from '@/api/cookies';
 import { CommonErrorToast } from '../toast/CommonToast';
+import { loadAccountInfoFromCookies } from '@/api/cookies';
 import { navVariants } from '@/libs/framer-motion/variants';
-import { SetStateAction, useEffect, useState } from 'react';
 
 const Navbar = () => {
   // local states
@@ -40,15 +41,21 @@ const Navbar = () => {
   const [accounts, setAccounts] = useState<string[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [didWalletPop, setDidWalletPop] = useState(false);
+  const [network, setNetwork] = useState<NetworkName>('testnet');
 
   // listen to pathname change event to retrieve account information cookies
   useEffect(() => {
     if (isProtectedRoute(pathname)) {
       // retrieve account info from cookies
-      const accountsInfo = loadAccountsFromCookies();
+      const accountsInfo = loadAccountInfoFromCookies();
 
       // just best pratice to handle error as this would rarely happen as we have already gated all the checks in middleware.js
-      if (!accountsInfo.isConnected || !accountsInfo.accounts || accountsInfo.error) {
+      if (
+        !accountsInfo.isConnected ||
+        !accountsInfo.accounts ||
+        !accountsInfo.network ||
+        accountsInfo.error
+      ) {
         CommonErrorToast({
           toaster,
           title: 'Error retrieving account information',
@@ -60,6 +67,7 @@ const Navbar = () => {
       // update states
       setAccounts(JSON.parse(accountsInfo.accounts));
       setIsConnected(JSON.parse(accountsInfo.isConnected));
+      setNetwork(JSON.parse(accountsInfo.network) as NetworkName);
     }
   }, [pathname]);
 
