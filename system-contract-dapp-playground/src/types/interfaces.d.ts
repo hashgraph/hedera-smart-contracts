@@ -35,5 +35,6 @@ interface WalletResult {
   walletProvider?: BrowserProvider;
   accounts?: string[];
   currentChainId?: string;
+  balance?: ethers.BigNumberish;
   err?: any;
 }
