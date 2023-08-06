@@ -19,6 +19,7 @@ module.exports = {
           violet: '#82ACF9',
           green: '#07E78E',
         },
+        button: '#202225',
         hedera: {
           green: '#07E78E',
           purple: '#A98DF4',
