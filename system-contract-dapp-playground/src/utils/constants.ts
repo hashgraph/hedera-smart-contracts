@@ -115,3 +115,6 @@ export const PROTECTED_ROUTES = [
   '/erc-20',
   '/erc-721',
 ];
+
+/** @notice hashcan baseURL */
+export const HASHSCAN_BASE_URL = 'https://hashscan.io';
