@@ -30,7 +30,7 @@ if (
   !fs.existsSync(`${HederaSmartContractsRootPath}/contracts`)
 ) {
   console.error(
-    '❌ CONTRACT ASSETS UNAVAILABLE! ❌\nPlease make sure to follow the guidelines at https://github.com/hashgraph/hedera-smart-contracts/tree/main/system-contract-dapp-playground#Project-Prerequisite-Check-for-Contract-Assets for more information on how to set up the project environment properly.'
+    '❌ CONTRACT ASSETS UNAVAILABLE! ❌\nPlease ensure to compile the smart contracts first by navigating to the `hedera-smart-contracts` root directory and running `npm i` and `npx hardhat compile` commands.'
   );
   process.exit();
 }
@@ -40,7 +40,14 @@ const HEDERA_SMART_CONTRACTS = getHederaSmartContractAssetsFunc(HederaSmartContr
 
 /** @dev validation check that ensure availability of the contract assets (artifact files or solidity contract files) */
 (() => {
-  let error = false;
+  type ValidatingError = {
+    name: string;
+    type: 'ABI' | 'SOL';
+    path: string;
+  };
+
+  const validatingError: ValidatingError[] = [];
+
   const contractNames = [
     'TokenCreateCustomContract',
     'TokenManagementContract',
@@ -55,18 +62,26 @@ const HEDERA_SMART_CONTRACTS = getHederaSmartContractAssetsFunc(HederaSmartContr
 
   contractNames.forEach((name) => {
     if (!fs.existsSync(HEDERA_SMART_CONTRACTS[name].contractPath)) {
-      error = true;
-      return;
+      validatingError.push({ name, type: 'SOL', path: HEDERA_SMART_CONTRACTS[name].contractPath });
     }
     if (!fs.existsSync(HEDERA_SMART_CONTRACTS[name].artifactPath)) {
-      error = true;
-      return;
+      validatingError.push({ name, type: 'ABI', path: HEDERA_SMART_CONTRACTS[name].artifactPath });
     }
   });
 
-  if (error) {
+  if (validatingError.length > 0) {
+    console.error('❌ CONTRACT ASSETS UNAVAILABLE! ❌');
+    console.error('\nMissing: ');
+    validatingError.forEach((error) => {
+      if (error.type === 'SOL') {
+        console.error(`- solidity contract file at ${error.path}`);
+      } else {
+        console.error(`- artifacts file at ${error.path}`);
+      }
+    });
+
     console.error(
-      '❌ CONTRACT ASSETS UNAVAILABLE! ❌\nPlease make sure to follow the guidelines at https://github.com/hashgraph/hedera-smart-contracts/tree/main/system-contract-dapp-playground#Project-Prerequisite-Check-for-Contract-Assets for more information on how to set up the project environment properly.'
+      '\nPlease ensure to compile the smart contracts first by navigating to the `hedera-smart-contracts` root directory and running `npm i` and `npx hardhat compile` commands.'
     );
   } else {
     console.log(`✅ Validation successful! Contract assets are available! ✅`);
