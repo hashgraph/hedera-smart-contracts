@@ -23,14 +23,15 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import WalletPopup from '../wallet-popup';
 import { useToast } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { BsChevronDown } from 'react-icons/bs';
 import { isProtectedRoute } from '@/utils/helpers';
 import { loadAccountsFromCookies } from '@/api/cookies';
 import { CommonErrorToast } from '../toast/CommonToast';
 import { navVariants } from '@/libs/framer-motion/variants';
+import { SetStateAction, useEffect, useState } from 'react';
 
 const Navbar = () => {
   // local states
@@ -144,6 +145,10 @@ const Navbar = () => {
           {/* Text logo */}
           <p className="text-white text-[2rem]">Hedera</p>
         </>
+      )}
+
+      {didWalletPop && (
+        <WalletPopup isOpen={didWalletPop} setIsOpen={setDidWalletPop} userAddress={accounts[0]} />
       )}
     </motion.nav>
   );
