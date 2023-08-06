@@ -96,25 +96,6 @@ export const getCurrentChainId = async (
 };
 
 /**
- * @dev Handles checking if the connected network is the expected network (i.e. HEDERA_TESTNET, HEDERA_PREVIEWNET, HEDERA_LOCALNET, HEDERA_MAINNET)
- *
- * @params walletProvider: ethers.BrowserProvider
- *
- * @returns bool
- */
-export const isCorrectHederaNetwork = async (walletProvider: ethers.BrowserProvider) => {
-  // get current chainId
-  const currentChainId = (await getCurrentChainId(walletProvider)).currentChainId as string;
-
-  return (
-    currentChainId === HEDERA_NETWORKS.mainnet.chainIdHex ||
-    currentChainId === HEDERA_NETWORKS.testnet.chainIdHex ||
-    currentChainId === HEDERA_NETWORKS.previewnet.chainIdHex ||
-    currentChainId === HEDERA_NETWORKS.localnet.chainIdHex
-  );
-};
-
-/**
  * @dev requests a list of connected accounts in a the wallet
  *
  * @params walletProvider: ethers.BrowserProvider
