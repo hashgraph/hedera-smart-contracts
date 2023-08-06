@@ -20,6 +20,7 @@
 
 import { ethers } from 'ethers';
 import { getCurrentChainId } from '@/api/wallet';
+import { NetworkName } from '@/types/interfaces';
 import { HEDERA_NETWORKS, PROTECTED_ROUTES } from './constants';
 
 /**
@@ -48,4 +49,25 @@ export const isCorrectHederaNetwork = async (walletProvider: ethers.BrowserProvi
     currentChainId === HEDERA_NETWORKS.previewnet.chainIdHex ||
     currentChainId === HEDERA_NETWORKS.localnet.chainIdHex
   );
+};
+
+/**
+ * @dev convert chainId to network name
+ *
+ * @params chainId string
+ *
+ * @returns string
+ */
+export const chainIdToNetwork = (chainId: string): NetworkName => {
+  switch (chainId) {
+    case '0x127':
+      return 'mainnet';
+    case '0x128':
+      return 'testnet';
+    case '0x129':
+      return 'previewnet';
+    case '0x12a':
+    default:
+      return 'localnet';
+  }
 };
