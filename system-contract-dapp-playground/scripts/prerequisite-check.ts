@@ -71,13 +71,10 @@ const HEDERA_SMART_CONTRACTS = getHederaSmartContractAssetsFunc(HederaSmartContr
 
   if (validatingError.length > 0) {
     console.error('❌ CONTRACT ASSETS UNAVAILABLE! ❌');
-    console.error('\nMissing: ');
     validatingError.forEach((error) => {
-      if (error.type === 'SOL') {
-        console.error(`- solidity contract file at ${error.path}`);
-      } else {
-        console.error(`- artifacts file at ${error.path}`);
-      }
+      console.error(
+        `Missing ${error.type === 'ABI' ? 'artifacts' : 'solidity contract'} file at ${error.path}`
+      );
     });
 
     console.error(
