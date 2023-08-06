@@ -61,3 +61,11 @@ export const loadAccountsFromCookies = (): {
     return { error };
   }
 };
+
+/**
+ * @dev clear account information stored in cookies
+ */
+export const clearCookies = async () => {
+  Cookies.remove('_isConnected');
+  Cookies.remove('_connectedAccounts');
+};
