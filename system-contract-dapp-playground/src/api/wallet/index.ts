@@ -52,6 +52,30 @@ export const getWalletProvider = (): WalletResult => {
 };
 
 /**
+ * @dev get the balance of an account
+ *
+ * @params walletProvider: ethers.BrowserProvider
+ *
+ * @params account: string
+ *
+ * @returns Promise<WalletResult>
+ */
+export const getBalance = async (
+  walletProvider: ethers.BrowserProvider,
+  account: string
+): Promise<WalletResult> => {
+  try {
+    const balance = await walletProvider.send('eth_getBalance', [account]);
+    return {
+      balance,
+    };
+  } catch (err) {
+    console.error(err);
+    return { err };
+  }
+};
+
+/**
  * @dev return current chainId of the network that the walletPro is connected to
  *
  * @params walletProvider: ethers.BrowserProvider
