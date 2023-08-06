@@ -102,8 +102,11 @@ Please follow this [instruction here](https://support.metamask.io/hc/en-us/artic
 
 **_note_**: The DApp Playground requires smart contract metadata in the root `/hedera-smart-contracts project` to retrieve bytecode for deployment and ABI for decoding details. To ensure all the necessary smart contract assets are up-to-date, please follow the steps below:
 
-1.  Follow these [guidelines](https://github.com/hashgraph/hedera-smart-contracts/blob/main/TEST_SETUP.md#building-and-running-the-project) to set up the environment variables and compile the smart contracts in the root directory.
-    **_note_**: after completing step `4. Compile smart contracts`, you will have all the assets needed to start the project.
+1.  From the root directory (`hedera-smart-contract`), run the below commands to compile the smart contracts
+
+```
+  npx install && npx hardhat compile
+```
 
 2.  Now, navigate back to the `system-contract-dapp-playground` directory and execute the `prerequisite-check` command using npm:
 
