@@ -1,13 +1,23 @@
 require('dotenv').config()
+const { ethers } = require('ethers')
 
 /**  @type string */
 const OPERATOR_ID_A = process.env.OPERATOR_ID_A
+  ? process.env.OPERATOR_ID_A
+  : '0.0.0'
 /**  @type string */
 const OPERATOR_KEY_A = process.env.OPERATOR_KEY_A
+  ? process.env.OPERATOR_KEY_A
+  : ethers.constants.HashZero
 /**  @type string */
 const HEX_PRIVATE_KEY_A = process.env.HEX_PRIVATE_KEY_A
+  ? process.env.HEX_PRIVATE_KEY_A
+  : ethers.constants.HashZero
 /**  @type string */
 const HEX_PRIVATE_KEY_B = process.env.HEX_PRIVATE_KEY_B
+  ? process.env.HEX_PRIVATE_KEY_B
+  : ethers.constants.HashZero
+
 const NETWORKS = {
   local: {
     name: 'local',
