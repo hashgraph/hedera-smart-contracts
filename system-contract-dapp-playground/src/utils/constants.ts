@@ -103,7 +103,7 @@ export const HEDERA_NETWORKS = {
       decimals: 18,
     },
     blockExplorerUrls: 'http://localhost:8080',
-    mirrorNodeUrl: '127.0.0.1:5600/api/v1',
+    mirrorNodeUrl: 'http://127.0.0.1:5600/api/v1',
   },
 };
 

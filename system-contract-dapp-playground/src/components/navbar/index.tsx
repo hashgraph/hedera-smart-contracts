@@ -59,7 +59,7 @@ const Navbar = () => {
         CommonErrorToast({
           toaster,
           title: 'Error retrieving account information',
-          description: 'Unknown error appeared...',
+          description: 'See client console for more information',
         });
         return;
       }
