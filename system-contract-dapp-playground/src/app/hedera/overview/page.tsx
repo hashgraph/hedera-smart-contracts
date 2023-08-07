@@ -18,23 +18,10 @@
  *
  */
 
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { isProtectedRoute } from './utils/helpers';
+import OverviewSection from '@/sections/overview';
 
-export async function middleware(request: NextRequest) {
-  const isConnected = request.cookies.get('_isConnected')?.value;
-  const { pathname } = request.nextUrl;
-
-  if (isConnected && pathname === '/') {
-    return NextResponse.redirect(new URL(`/hedera/overview`, request.url));
-  }
-
-  if (!isConnected && isProtectedRoute(pathname)) {
-    return NextResponse.redirect(new URL(`/`, request.url));
-  }
-}
-
-export const config = {
-  matcher: ['/', '/hedera/:path*'],
+const Overview = () => {
+  return <OverviewSection />;
 };
+
+export default Overview;

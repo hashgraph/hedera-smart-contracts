@@ -18,27 +18,29 @@
  *
  */
 
-import '@/styles/globals.css';
-import StyreneAWebFont from '@/fonts';
-import dappMetadata from '@/utils/metadata';
-import ChakraUIProviders from '@/libs/chakra/provider';
-import BgGradient from '@/components/background-gradients';
+import Navbar from '@/components/navbar';
+import Footer from '@/components/footer';
+import LeftSideBar from '@/components/leftSideBar';
 
-/** @notice Root Layout */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${StyreneAWebFont.variable}`}>
-      <body className="bg-primary font-styrene">
-        <ChakraUIProviders>
-          <div className="relative 2xl:max-w-[100rem] 2xl:mx-auto">
-            {children}
-            <BgGradient />
-          </div>
-        </ChakraUIProviders>
-      </body>
-    </html>
+    <main className="flex flex-col min-h-screen">
+      <Navbar />
+      <div className="flex flex-1 px-6 overflow-x-hidden">
+        {/* <LeftSidebar /> */}
+        <div>
+          <LeftSideBar />
+        </div>
+        {/* <Main children /> */}
+        <div className="flex-1">{children}</div>
+
+        {/* <RightSidebar /> */}
+        <div>
+          <div className="w-72" />
+        </div>
+      </div>
+
+      <Footer />
+    </main>
   );
 }
-
-/** @notice export metadata for SEO */
-export const metadata = dappMetadata;

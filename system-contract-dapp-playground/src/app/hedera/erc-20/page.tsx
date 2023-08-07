@@ -18,12 +18,10 @@
  *
  */
 
-const Overview = () => {
+const ERC20 = () => {
   return (
-    <div className="text-white h-full w-full flex justify-center items-center text-[3rem]">
-      Overview
-    </div>
+    <div className="text-white w-full flex justify-center items-center text-[3rem]">ERC20</div>
   );
 };
 
-export default Overview;
+export default ERC20;

@@ -111,14 +111,48 @@ export const HEDERA_NETWORKS = {
  * @notice information about protected routes
  */
 export const PROTECTED_ROUTES = [
-  '/overview',
-  '/hts-hip-206',
-  '/hrc-719',
-  '/exchange-rate-hip-206',
-  '/prng-hip-351',
-  '/erc-20',
-  '/erc-721',
+  '/hedera/overview',
+  '/hedera/hts-hip-206',
+  '/hedera/hrc-719',
+  '/hedera/exchange-rate-hip-475',
+  '/hedera/prng-hip-351',
+  '/hedera/erc-20',
+  '/hedera/erc-721',
 ];
 
 /** @notice hashcan baseURL */
 export const HASHSCAN_BASE_URL = 'https://hashscan.io';
+
+/**
+ * @notice information for LeftSideBar items
+ */
+export const LEFT_SIDE_BAR_ITEMS = [
+  {
+    name: 'Overview',
+    path: PROTECTED_ROUTES[0],
+  },
+  {
+    name: 'HTS system contract wrapper (HIP-206)',
+    path: PROTECTED_ROUTES[1],
+  },
+  {
+    name: 'Token associate (HIP-719 / HRC-719)',
+    path: PROTECTED_ROUTES[2],
+  },
+  {
+    name: 'Exchange rate system conract wrapper (Hip-475)',
+    path: PROTECTED_ROUTES[3],
+  },
+  {
+    name: 'Pseudo random number system contract wrapper (HIP-351)',
+    path: PROTECTED_ROUTES[4],
+  },
+  {
+    name: 'Fungible token (ERC-20)',
+    path: PROTECTED_ROUTES[5],
+  },
+  {
+    name: 'Non-fungible token (ERC-721)',
+    path: PROTECTED_ROUTES[6],
+  },
+];
