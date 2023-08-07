@@ -52,6 +52,30 @@ export const getWalletProvider = (): WalletResult => {
 };
 
 /**
+ * @dev get the balance of an account
+ *
+ * @params walletProvider: ethers.BrowserProvider
+ *
+ * @params account: string
+ *
+ * @returns Promise<WalletResult>
+ */
+export const getBalance = async (
+  walletProvider: ethers.BrowserProvider,
+  account: string
+): Promise<WalletResult> => {
+  try {
+    const balance = await walletProvider.send('eth_getBalance', [account]);
+    return {
+      balance,
+    };
+  } catch (err) {
+    console.error(err);
+    return { err };
+  }
+};
+
+/**
  * @dev return current chainId of the network that the walletPro is connected to
  *
  * @params walletProvider: ethers.BrowserProvider
@@ -69,25 +93,6 @@ export const getCurrentChainId = async (
   } catch (err) {
     return { err };
   }
-};
-
-/**
- * @dev Handles checking if the connected network is the expected network (i.e. HEDERA_TESTNET, HEDERA_PREVIEWNET, HEDERA_LOCALNET, HEDERA_MAINNET)
- *
- * @params walletProvider: ethers.BrowserProvider
- *
- * @returns bool
- */
-export const isCorrectHederaNetwork = async (walletProvider: ethers.BrowserProvider) => {
-  // get current chainId
-  const currentChainId = (await getCurrentChainId(walletProvider)).currentChainId as string;
-
-  return (
-    currentChainId === HEDERA_NETWORKS.mainnet.chainIdHex ||
-    currentChainId === HEDERA_NETWORKS.testnet.chainIdHex ||
-    currentChainId === HEDERA_NETWORKS.previewnet.chainIdHex ||
-    currentChainId === HEDERA_NETWORKS.localnet.chainIdHex
-  );
 };
 
 /**

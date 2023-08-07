@@ -64,6 +64,7 @@ export const HEDERA_NETWORKS = {
       decimals: 18,
     },
     blockExplorerUrls: 'https://hashscan.io/mainnet/dashboard',
+    mirrorNodeUrl: 'https://mainnet.mirrornode.hedera.com/api/v1',
   },
   testnet: {
     chainId: '296',
@@ -76,6 +77,7 @@ export const HEDERA_NETWORKS = {
       decimals: 18,
     },
     blockExplorerUrls: 'https://hashscan.io/testnet/dashboard',
+    mirrorNodeUrl: 'https://testnet.mirrornode.hedera.com/api/v1',
   },
   previewnet: {
     chainId: '297',
@@ -88,6 +90,7 @@ export const HEDERA_NETWORKS = {
       decimals: 18,
     },
     blockExplorerUrls: 'https://hashscan.io/previewnet/dashboard',
+    mirrorNodeUrl: 'https://previewnet.mirrornode.hedera.com/api/v1',
   },
   localnet: {
     chainId: '298',
@@ -100,5 +103,22 @@ export const HEDERA_NETWORKS = {
       decimals: 18,
     },
     blockExplorerUrls: 'http://localhost:8080',
+    mirrorNodeUrl: 'http://127.0.0.1:5600/api/v1',
   },
 };
+
+/**
+ * @notice information about protected routes
+ */
+export const PROTECTED_ROUTES = [
+  '/overview',
+  '/hts-hip-206',
+  '/hrc-719',
+  '/exchange-rate-hip-206',
+  '/prng-hip-351',
+  '/erc-20',
+  '/erc-721',
+];
+
+/** @notice hashcan baseURL */
+export const HASHSCAN_BASE_URL = 'https://hashscan.io';

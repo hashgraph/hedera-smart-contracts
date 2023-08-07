@@ -34,7 +34,7 @@ const Footer = () => {
         delay: 0.6,
         duration: 0.6,
       }}
-      className="text-white px-6 w-full z-50 sm:px-16 md:px-24"
+      className="text-white px-6 w-full z-40 sm:px-16 md:px-24"
     >
       <div
         className="w-full flex flex-col gap-6 border-t-[1px] border-white/30 py-3
