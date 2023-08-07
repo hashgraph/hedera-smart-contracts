@@ -18,6 +18,7 @@
  *
  */
 
+import axios from 'axios';
 import { HEDERA_NETWORKS } from '@/utils/constants';
 import { MirrorNodeResult, NetworkName } from '@/types/interfaces';
 
@@ -35,11 +36,11 @@ export const getAcocuntIdFromEvmAddress = async (
   network: NetworkName
 ): Promise<MirrorNodeResult> => {
   try {
-    const res = await fetch(`${HEDERA_NETWORKS[network].mirrorNodeUrl}/accounts/${evmAddress}`);
+    const accountInfo = await axios.get(
+      `${HEDERA_NETWORKS[network].mirrorNodeUrl}/accounts/${evmAddress}`
+    );
 
-    const accountInfo = await res.json();
-
-    return { accountId: accountInfo.account };
+    return { accountId: accountInfo.data.account };
   } catch (err) {
     console.error(err);
     return { err };
