@@ -20,20 +20,7 @@
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-
-const isProtectedRoute = (pathname: string) => {
-  const protectedRoutes = [
-    '/overview',
-    '/hts-hip-206',
-    '/hrc-719',
-    '/exchange-rate-hip-206',
-    '/prng-hip-351',
-    '/erc-20',
-    '/erc-721',
-  ];
-
-  return protectedRoutes.includes(pathname);
-};
+import { isProtectedRoute } from './utils/helpers';
 
 export async function middleware(request: NextRequest) {
   const isConnected = request.cookies.get('_isConnected')?.value;

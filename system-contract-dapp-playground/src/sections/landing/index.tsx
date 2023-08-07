@@ -24,14 +24,16 @@ import { motion } from 'framer-motion';
 import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { storeAccountsInCookies } from '@/api/cookies';
+import { storeAccountInfoInCookies } from '@/api/cookies';
+import { chainIdToNetwork, isCorrectHederaNetwork } from '@/utils/helpers';
+import { requestAccount, getWalletProvider, getCurrentChainId } from '@/api/wallet';
 import { VerticalCommonVariants } from '@/libs/framer-motion/variants';
-import { requestAccount, isCorrectHederaNetwork, getWalletProvider } from '@/api/wallet';
 import {
   NoWalletToast,
   CommonErrorToast,
   NetworkMismatchToast,
 } from '@/components/toast/CommonToast';
+import { BrowserProvider } from 'ethers';
 
 const LandingPage = () => {
   const router = useRouter();
@@ -84,22 +86,31 @@ const LandingPage = () => {
 
   // listen to the changes of the accounts state to do login logic
   useEffect(() => {
-    if (accounts.length > 0) {
-      // store accounts to Cookies
-      const err = storeAccountsInCookies(accounts);
-      if (err) {
-        CommonErrorToast({
-          toaster,
-          title: 'Error logging in',
-          description: "Check client's console for more information",
-        });
-        return;
-      }
+    (async () => {
+      if (accounts.length > 0) {
+        // get current chainId
+        const currentChainId = (await getCurrentChainId(walletProvider as BrowserProvider))
+          .currentChainId as string;
 
-      // navigate user to /overview
-      router.push('/overview');
-    }
-  }, [accounts, router, toaster]);
+        // convert chainIdToNetwork
+        const network = chainIdToNetwork(currentChainId);
+
+        // store accounts to Cookies
+        const err = storeAccountInfoInCookies(accounts, network);
+        if (err) {
+          CommonErrorToast({
+            toaster,
+            title: 'Error logging in',
+            description: "Check client's console for more information",
+          });
+          return;
+        }
+
+        // navigate user to /overview
+        router.push('/overview');
+      }
+    })();
+  }, [accounts, router, toaster, walletProvider]);
 
   return (
     <motion.div

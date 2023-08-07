@@ -35,5 +35,23 @@ interface WalletResult {
   walletProvider?: BrowserProvider;
   accounts?: string[];
   currentChainId?: string;
+  balance?: ethers.BigNumberish;
+  err?: any;
+}
+
+/**
+ * @dev a type for network name
+ */
+type NetworkName = 'mainnet' | 'testnet' | 'previewnet' | 'localnet';
+
+/**
+ * @dev an interface for the results returned back from querying Mirror Node
+ *
+ * @params accountId?: string
+ *
+ * @params err: any
+ */
+interface MirrorNodeResult {
+  accountId?: string;
   err?: any;
 }
