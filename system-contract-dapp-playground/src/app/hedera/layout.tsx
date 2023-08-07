@@ -19,6 +19,7 @@
  */
 
 import Footer from '@/components/footer';
+import LeftSideBar from '@/components/leftSideBar';
 import Navbar from '@/components/navbar';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -28,14 +29,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <div className="flex flex-1 px-6">
         {/* <LeftSidebar /> */}
         <div>
-          <div className="w-64 h-full text-white">SideBar</div>
+          <LeftSideBar />
         </div>
         {/* <Main children /> */}
         <div className="flex-1">{children}</div>
 
         {/* <RightSidebar /> */}
         <div>
-          <div className="w-64 h-full text-white">SideBar</div>
+          <div className="w-64" />
         </div>
       </div>
 
