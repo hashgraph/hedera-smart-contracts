@@ -2419,13 +2419,13 @@
       "name": "redirectForToken",
       "outputs": [
         {
-          "internalType": "bool",
-          "name": "success",
-          "type": "bool"
+          "internalType": "int64",
+          "name": "responseCode",
+          "type": "int64"
         },
         {
           "internalType": "bytes",
-          "name": "result",
+          "name": "response",
           "type": "bytes"
         }
       ],

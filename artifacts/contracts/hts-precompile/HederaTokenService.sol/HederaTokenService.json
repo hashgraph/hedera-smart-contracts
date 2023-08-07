@@ -38,13 +38,13 @@
       "name": "redirectForToken",
       "outputs": [
         {
-          "internalType": "bool",
-          "name": "success",
-          "type": "bool"
+          "internalType": "int256",
+          "name": "responseCode",
+          "type": "int256"
         },
         {
           "internalType": "bytes",
-          "name": "result",
+          "name": "response",
           "type": "bytes"
         }
       ],
