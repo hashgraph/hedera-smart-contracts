@@ -111,13 +111,13 @@ export const HEDERA_NETWORKS = {
  * @notice information about protected routes
  */
 export const PROTECTED_ROUTES = [
-  '/overview',
-  '/hts-hip-206',
-  '/hrc-719',
-  '/exchange-rate-hip-206',
-  '/prng-hip-351',
-  '/erc-20',
-  '/erc-721',
+  '/hedera/overview',
+  '/hedera/hts-hip-206',
+  '/hedera/hrc-719',
+  '/hedera/exchange-rate-hip-206',
+  '/hedera/prng-hip-351',
+  '/hedera/erc-20',
+  '/hedera/erc-721',
 ];
 
 /** @notice hashcan baseURL */

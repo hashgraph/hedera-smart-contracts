@@ -27,7 +27,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (isConnected && pathname === '/') {
-    return NextResponse.redirect(new URL(`/overview`, request.url));
+    return NextResponse.redirect(new URL(`/hedera/overview`, request.url));
   }
 
   if (!isConnected && isProtectedRoute(pathname)) {
@@ -36,14 +36,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/',
-    '/overview',
-    '/hts-hip-206',
-    '/hrc-719',
-    '/exchange-rate-hip-206',
-    '/prng-hip-351',
-    '/erc-20',
-    '/erc-721',
-  ],
+  matcher: ['/', '/hedera/:path*'],
 };

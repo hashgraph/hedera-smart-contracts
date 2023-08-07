@@ -106,8 +106,8 @@ const LandingPage = () => {
           return;
         }
 
-        // navigate user to /overview
-        router.push('/overview');
+        // navigate user to /hedera/overview
+        router.push('/hedera/overview');
       }
     })();
   }, [accounts, router, toaster, walletProvider]);
