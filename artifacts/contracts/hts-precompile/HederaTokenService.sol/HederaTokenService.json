@@ -36,7 +36,18 @@
         }
       ],
       "name": "redirectForToken",
-      "outputs": [],
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "responseCode",
+          "type": "int256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "response",
+          "type": "bytes"
+        }
+      ],
       "stateMutability": "nonpayable",
       "type": "function"
     },
