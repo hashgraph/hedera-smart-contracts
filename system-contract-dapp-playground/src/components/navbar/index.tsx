@@ -73,9 +73,12 @@ const Navbar = () => {
 
   return (
     <motion.nav
-      variants={navVariants}
-      initial="hidden"
-      whileInView="show"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{
+        delay: 0.3,
+        duration: 0.3,
+      }}
       viewport={{ once: true }}
       className="px-6 pt-6 flex flex-col justify-between items-center z-50"
     >
@@ -138,7 +141,13 @@ const Navbar = () => {
           </div>
         </div>
       ) : (
-        <div className="flex justify-between w-full">
+        <motion.div
+          variants={navVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="flex justify-between w-full"
+        >
           {/* Unprotected Navbar */}
           <Link href={'/'}>
             {/* Logo */}
@@ -153,10 +162,10 @@ const Navbar = () => {
 
           {/* Text logo */}
           <p className="text-white text-[2rem]">Hedera</p>
-        </div>
+        </motion.div>
       )}
 
-      {isConnected && <hr className="2xl:w-[100vw] border-t-[1px] border-white/40" />}
+      {isConnected && <hr className="w-[100vw] border-t border-white/40" />}
 
       {didWalletPop && (
         <WalletPopup

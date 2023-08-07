@@ -18,10 +18,10 @@
  *
  */
 
+import OverviewSection from '@/sections/overview';
+
 const Overview = () => {
-  return (
-    <div className="text-white w-full flex justify-center items-center text-[3rem]">Overview</div>
-  );
+  return <OverviewSection />;
 };
 
 export default Overview;
