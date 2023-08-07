@@ -20,8 +20,6 @@
 
 import '@/styles/globals.css';
 import StyreneAWebFont from '@/fonts';
-import Navbar from '@/components/navbar';
-import Footer from '@/components/footer';
 import dappMetadata from '@/utils/metadata';
 import ChakraUIProviders from '@/libs/chakra/provider';
 import BgGradient from '@/components/background-gradients';
@@ -30,18 +28,12 @@ import BgGradient from '@/components/background-gradients';
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${StyreneAWebFont.variable}`}>
-      <body>
+      <body className="bg-primary font-styrene">
         <ChakraUIProviders>
-          <main className="bg-primary overflow-hidden font-styrene">
-            <div className="relative h-screen 2xl:max-w-[100rem] 2xl:mx-auto">
-              <main className="bg-primary overflow-hidden relative h-screen flex flex-col">
-                <Navbar />
-                {children}
-                <Footer />
-              </main>
-              <BgGradient />
-            </div>
-          </main>
+          <div className="relative 2xl:max-w-[100rem] 2xl:mx-auto">
+            {children}
+            <BgGradient />
+          </div>
         </ChakraUIProviders>
       </body>
     </html>

@@ -31,13 +31,15 @@ const Footer = () => {
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       transition={{
-        delay: 0.6,
+        delay: 0.3,
         duration: 0.6,
       }}
-      className="text-white px-6 w-full z-40 sm:px-16 md:px-24"
+      viewport={{ once: true }}
+      className="text-white px-6 w-full z-40 flex flex-col items-center"
     >
+      <hr className="w-full 2xl:w-[100vw] border-t-[1px] border-white/40" />
       <div
-        className="w-full flex flex-col gap-6 border-t-[1px] border-white/30 py-3
+        className="w-full flex flex-col gap-6 py-3
                   md:flex-row md:justify-between md:items-center md:pt-9 md:pb-6"
       >
         {/* Logo & copyright*/}

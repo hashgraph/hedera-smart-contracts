@@ -29,11 +29,12 @@
 }
 
 .gradient-04 {
+  position: absolute;
+  width: 25rem;
+  height: 9rem;
+  left: 37%;
+  bottom: 0;
   border-radius: 64.7425rem;
   background: #7aebfb;
   filter: blur(230px);
-  width: 44.7425rem;
-  height: 34.60719rem;
-  transform: rotate(-160.325deg);
-  flex-shrink: 0;
 }

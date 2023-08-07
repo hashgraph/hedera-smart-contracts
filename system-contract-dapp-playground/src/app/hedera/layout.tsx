@@ -18,10 +18,28 @@
  *
  */
 
-const Overview = () => {
-  return (
-    <div className="text-white w-full flex justify-center items-center text-[3rem]">Overview</div>
-  );
-};
+import Footer from '@/components/footer';
+import Navbar from '@/components/navbar';
 
-export default Overview;
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <main className="flex flex-col min-h-screen">
+      <Navbar />
+      <div className="flex flex-1 px-6">
+        {/* <LeftSidebar /> */}
+        <div>
+          <div className="w-64 h-full text-white">SideBar</div>
+        </div>
+        {/* <Main children /> */}
+        <div className="flex-1">{children}</div>
+
+        {/* <RightSidebar /> */}
+        <div>
+          <div className="w-64 h-full text-white">SideBar</div>
+        </div>
+      </div>
+
+      <Footer />
+    </main>
+  );
+}

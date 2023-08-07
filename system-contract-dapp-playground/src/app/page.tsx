@@ -17,8 +17,16 @@
  * limitations under the License.
  *
  */
+import Footer from '@/components/footer';
+import Navbar from '@/components/navbar';
 import LandingPage from '@/sections/landing';
 
 export default function Home() {
-  return <LandingPage />;
+  return (
+    <main className="h-screen flex flex-col">
+      <Navbar />
+      <LandingPage />;
+      <Footer />
+    </main>
+  );
 }

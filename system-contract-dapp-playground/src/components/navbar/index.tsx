@@ -76,11 +76,12 @@ const Navbar = () => {
       variants={navVariants}
       initial="hidden"
       whileInView="show"
-      className="px-6 pt-6 sm:px-16 md:px-24 md:pt-9 flex justify-between items-center w-full z-50"
+      viewport={{ once: true }}
+      className="px-6 pt-6 flex flex-col justify-between items-center z-50"
     >
       {/* Protected Navbar */}
       {isConnected ? (
-        <div className="grid grid-rows-2 sm:grid-cols-2 lg:grid-cols-3 w-full justify-center gap-3">
+        <div className="grid grid-rows-2 sm:grid-rows-1 sm:grid-cols-2 lg:grid-cols-3 w-full justify-center gap-3 pb-6">
           {/* Logo */}
           <Link href={'/'} className="flex gap-3 items-center justify-center sm:justify-start">
             <Image
@@ -137,7 +138,7 @@ const Navbar = () => {
           </div>
         </div>
       ) : (
-        <>
+        <div className="flex justify-between w-full">
           {/* Unprotected Navbar */}
           <Link href={'/'}>
             {/* Logo */}
@@ -152,8 +153,10 @@ const Navbar = () => {
 
           {/* Text logo */}
           <p className="text-white text-[2rem]">Hedera</p>
-        </>
+        </div>
       )}
+
+      {isConnected && <hr className="2xl:w-[100vw] border-t-[1px] border-white/40" />}
 
       {didWalletPop && (
         <WalletPopup

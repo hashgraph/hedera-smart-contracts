@@ -186,9 +186,9 @@ const LandingPage = () => {
       {/* signature */}
       <motion.p
         variants={verticalVariant}
-        className="absolute bottom-9 w-full text-center text-xl
-                  sm:px-16 sm:text-2xl
-                  md:w-fit md:px-24 
+        className="absolute bottom-9 w-full text-center text-xl px-6
+                  sm:text-2xl
+                  md:w-fit
                   lg:text-3xl"
       >
         Accelerate the future on Hedera
