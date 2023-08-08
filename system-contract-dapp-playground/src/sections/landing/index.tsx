@@ -101,7 +101,7 @@ const LandingPage = () => {
           CommonErrorToast({
             toaster,
             title: 'Error logging in',
-            description: "Check client's console for more information",
+            description: "See client's console for more information",
           });
           return;
         }

@@ -59,7 +59,7 @@ const Navbar = () => {
         CommonErrorToast({
           toaster,
           title: 'Error retrieving account information',
-          description: 'See client console for more information',
+          description: "See client's console for more information",
         });
         return;
       }
@@ -165,7 +165,7 @@ const Navbar = () => {
         </motion.div>
       )}
 
-      {isConnected && <hr className="w-[100vw] border-t border-white/40" />}
+      {isConnected && <hr className="w-[99vw] border-t border-white/40" />}
 
       {didWalletPop && (
         <WalletPopup

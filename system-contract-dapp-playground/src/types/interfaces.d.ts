@@ -55,3 +55,35 @@ interface MirrorNodeResult {
   accountId?: string;
   err?: any;
 }
+/**
+ * @dev a type for solidity contract ABI
+ */
+type ContractABI = {
+  anonymous?: boolean;
+  inputs?: any;
+  name?: string;
+  outputs?: any;
+  stateMutability?: string;
+  type?: string;
+};
+
+/**
+ * @dev an interface for the Hedera contract assets
+ *
+ * @params name: string
+ *
+ * @params title: string
+ *
+ * @params contractABI: ContractABI[]
+ *
+ * @params contractBytecode: string
+ *
+ * @params githubUrl: string
+ */
+interface HederaContractAsset {
+  name: string;
+  title: string;
+  contractABI: ContractABI[];
+  contractBytecode: string;
+  githubUrl: string;
+}

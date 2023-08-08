@@ -37,7 +37,7 @@ const Footer = () => {
       viewport={{ once: true }}
       className="text-white px-6 w-full z-40 flex flex-col items-center"
     >
-      <hr className="w-[100vw] border-t border-white/40" />
+      <hr className="w-[99vw] border-t border-white/40" />
       <div
         className="w-full flex flex-col gap-6 py-3
                   md:flex-row md:justify-between md:items-center md:py-6 md:pb-3"

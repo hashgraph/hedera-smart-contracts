@@ -18,6 +18,25 @@
  *
  */
 
+import { HederaContractAsset } from '@/types/interfaces';
+import ERC20Mock from '@hashgraph-smartcontract/artifacts/contracts/erc-20/ERC20Mock.sol/ERC20Mock.json';
+import ERC721Mock from '@hashgraph-smartcontract/artifacts/contracts/erc-721/ERC721Mock.sol/ERC721Mock.json';
+import SelfFunding from '@hashgraph-smartcontract/artifacts/contracts/exchange-rate-precompile/SelfFunding.sol/SelfFunding.json';
+import HRCContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/hrc/HRCContract.sol/HRCContract.json';
+import PrngSystemContract from '@hashgraph-smartcontract/artifacts/contracts/util-precompile/PrngSystemContract.sol/PrngSystemContract.json';
+import TokenQueryContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-query/TokenQueryContract.sol/TokenQueryContract.json';
+import TokenTransferContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-transfer/TokenTransferContract.sol/TokenTransferContract.json';
+import TokenManagementContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-manage/TokenManagementContract.sol/TokenManagementContract.json';
+import TokenCreateCustomContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-create/TokenCreateCustom.sol/TokenCreateCustomContract.json';
+
+/** @notice Hedera Smart Contract official github url */
+export const HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL =
+  'https://github.com/hashgraph/hedera-smart-contracts';
+
+/** @notice hashcan baseURL */
+export const HASHSCAN_BASE_URL = 'https://hashscan.io';
+
+/** @notice information about Hedera social media */
 export const HEDERA_SOCIAL_MEDIA = [
   {
     name: 'discord',
@@ -120,9 +139,6 @@ export const PROTECTED_ROUTES = [
   '/hedera/erc-721',
 ];
 
-/** @notice hashcan baseURL */
-export const HASHSCAN_BASE_URL = 'https://hashscan.io';
-
 /**
  * @notice information for LeftSideBar items
  */
@@ -154,5 +170,74 @@ export const LEFT_SIDE_BAR_ITEMS = [
   {
     name: 'Non-fungible token (ERC-721)',
     path: PROTECTED_ROUTES[6],
+  },
+];
+
+/**
+ * @notice information about Hedera Smart Contract assets
+ */
+export const HEDERA_SMART_CONTRACTS_ASSETS: HederaContractAsset[] = [
+  {
+    name: 'TokenCreateCustomContract',
+    title: 'Token Create Contract',
+    contractABI: TokenCreateCustomContract.abi,
+    contractBytecode: TokenCreateCustomContract.bytecode,
+    githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-create/TokenCreateCustom.sol`,
+  },
+  {
+    name: 'TokenManagementContract',
+    title: 'Token Management Contract',
+    contractABI: TokenManagementContract.abi,
+    contractBytecode: TokenManagementContract.bytecode,
+    githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-manage/TokenManagementContract.sol`,
+  },
+  {
+    name: 'TokenQueryContract',
+    title: 'Token Query Contract',
+    contractABI: TokenQueryContract.abi,
+    contractBytecode: TokenQueryContract.bytecode,
+    githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-query/TokenQueryContract.sol`,
+  },
+  {
+    name: 'TokenTransferContract',
+    title: 'Token Transfer Contract',
+    contractABI: TokenTransferContract.abi,
+    contractBytecode: TokenTransferContract.bytecode,
+    githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-transfer/TokenTransferContract.sol`,
+  },
+  {
+    name: 'HRCContract',
+    title: 'Token Associate Example Contract',
+    contractABI: HRCContract.abi,
+    contractBytecode: HRCContract.bytecode,
+    githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/hrc/HRCContract.sol`,
+  },
+  {
+    name: 'SelfFunding',
+    title: 'Exchange Rate Example Contract',
+    contractABI: SelfFunding.abi,
+    contractBytecode: SelfFunding.bytecode,
+    githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/exchange-rate-precompile/SelfFunding.sol`,
+  },
+  {
+    name: 'PrngSystemContract',
+    title: 'Pseudo Random Number Example Contract',
+    contractABI: PrngSystemContract.abi,
+    contractBytecode: PrngSystemContract.bytecode,
+    githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/util-precompile/PrngSystemContract.sol`,
+  },
+  {
+    name: 'ERC20Mock',
+    title: 'ERC-20 Example Contract',
+    contractABI: ERC20Mock.abi,
+    contractBytecode: ERC20Mock.bytecode,
+    githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/erc-20/ERC20Contract.sol`,
+  },
+  {
+    name: 'ERC721Mock',
+    title: 'ERC=721 Example Contract',
+    contractABI: ERC721Mock.abi,
+    contractBytecode: ERC721Mock.bytecode,
+    githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/erc-721/ERC721Contract.sol`,
   },
 ];
