@@ -53,6 +53,7 @@ type NetworkName = 'mainnet' | 'testnet' | 'previewnet' | 'localnet';
  */
 interface MirrorNodeResult {
   accountId?: string;
+  contractId?: string;
   err?: any;
 }
 
