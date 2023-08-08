@@ -18,9 +18,8 @@
  *
  */
 
-import { WalletResult } from '@/types/interfaces';
-import { HEDERA_NETWORKS } from '@/utils/constants';
 import { ethers, BrowserProvider } from 'ethers';
+import { WalletResult } from '@/types/interfaces';
 
 /**
  * @dev get wallet object if available

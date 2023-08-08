@@ -69,7 +69,7 @@ const WalletPopup = ({ isOpen, setIsOpen, userAddress, network }: PageProps) => 
         CommonErrorToast({
           toaster,
           title: 'Cannot get account balance',
-          description: 'See client console for more information',
+          description: "See client's console for more information",
         });
         return;
       }
@@ -87,7 +87,7 @@ const WalletPopup = ({ isOpen, setIsOpen, userAddress, network }: PageProps) => 
         CommonErrorToast({
           toaster,
           title: 'Cannot get account id',
-          description: 'See client console for more information',
+          description: "See client's console for more information",
         });
         return;
       }
@@ -230,7 +230,7 @@ const WalletPopup = ({ isOpen, setIsOpen, userAddress, network }: PageProps) => 
             <div className="flex w-full gap-2">
               {/* Explore */}
               <Link
-                href={`${HASHSCAN_BASE_URL}/testnet/address/${userAddress}`}
+                href={`${HASHSCAN_BASE_URL}/${network}/address/${userAddress}`}
                 target="_blank"
                 className="flex flex-col items-center py-1 bg-button text-white w-full border-[1px] border-white/50 hover:bg-transparent justify-center rounded-xl cursor-pointer focus:outline-none"
               >
