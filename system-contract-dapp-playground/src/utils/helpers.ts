@@ -71,3 +71,23 @@ export const chainIdToNetwork = (chainId: string): NetworkName => {
       return 'localnet';
   }
 };
+
+/**
+ * @dev convert ABI function name from camelCase to normal
+ *
+ * @params functionName: string
+ *
+ * @returns string
+ */
+export const convertAbiFunctionName = (functionName: string) => {
+  // Split the string into words based on camel case
+  const fnNames = functionName.replace(/([a-z])([A-Z])/g, '$1 $2').split(' ');
+
+  // Capitalize the first letter of each function name
+  const titleCaseNames = fnNames.map((fnName) => fnName.charAt(0).toUpperCase() + fnName.slice(1));
+
+  // Join the names back together with a space
+  const titleCaseFunctionName = titleCaseNames.join(' ');
+
+  return titleCaseFunctionName;
+};
