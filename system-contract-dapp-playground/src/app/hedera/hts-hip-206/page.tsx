@@ -18,10 +18,10 @@
  *
  */
 
+import HTS206Section from '@/sections/hts-hip-206';
+
 const HTS206 = () => {
-  return (
-    <div className="text-white w-full flex justify-center items-center text-[3rem]">HTS206</div>
-  );
+  return <HTS206Section />;
 };
 
 export default HTS206;
