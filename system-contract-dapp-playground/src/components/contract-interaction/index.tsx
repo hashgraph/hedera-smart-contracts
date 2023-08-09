@@ -37,12 +37,12 @@ interface PageProps {
 
 const ContractInteraction = ({ contract }: PageProps) => {
   const toaster = useToast();
-  const [isCongrating, setIsCongrating] = useState(false);
   const [contractId, setContractId] = useState('');
   const [isDeployed, setIsDeployed] = useState(false);
   const [isDeploying, setIsDeploying] = useState(false);
   const [network, setNetwork] = useState<NetworkName>();
   const [contractAddress, setContractAddress] = useState('');
+  const [displayConfirmDialog, setDisplayConfirmDialog] = useState(false);
 
   /** @dev handle deploying contract */
   const handleDeployContract = async () => {
@@ -86,7 +86,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
     }
 
     // udpate states
-    setIsCongrating(true);
+    setDisplayConfirmDialog(true);
     setContractAddress(contractAddress);
   };
 
@@ -242,10 +242,10 @@ const ContractInteraction = ({ contract }: PageProps) => {
       )}
 
       {/* Dialog */}
-      {isCongrating && (
+      {displayConfirmDialog && (
         <HederaAlertDialog
-          isOpen={isCongrating}
-          setIsOpen={setIsCongrating}
+          isOpen={displayConfirmDialog}
+          setIsOpen={setDisplayConfirmDialog}
           alertTitle={'🎉 Deploy contract successfully 🎊'}
           alertMsg={
             <>
