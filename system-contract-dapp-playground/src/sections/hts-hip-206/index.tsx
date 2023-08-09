@@ -93,7 +93,7 @@ const HTS206Section = () => {
 
         {/* Contracts */}
         <ol className="px-6 flex flex-col gap-9">
-          {HEDERA_SMART_CONTRACTS_ASSETS.slice(0, 4).map((contract, index) => (
+          {HEDERA_SMART_CONTRACTS_ASSETS.HTS_PRECOMPILED.map((contract, index) => (
             <li key={contract.name} className="flex flex-col gap-3 w-full">
               {/* title */}
               <div className="flex gap-1 items-center text-[20px]">
@@ -109,7 +109,6 @@ const HTS206Section = () => {
                   </Link>
                 </Tooltip>
               </div>
-
             </li>
           ))}
         </ol>
