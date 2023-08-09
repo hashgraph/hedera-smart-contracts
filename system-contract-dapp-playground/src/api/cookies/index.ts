@@ -70,10 +70,53 @@ export const loadAccountInfoFromCookies = (): {
 };
 
 /**
+ * @dev store customize data to Cookies
+ *
+ * @params key: string
+ *
+ * @params value: string
+ *
+ * @return error
+ */
+export const storeInfoInCookies = (key: string, value: string) => {
+  try {
+    Cookies.set(key, value);
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+};
+
+/**
+ * @dev store customize data to Cookies
+ *
+ * @params key: string
+ *
+ * @returns value: string
+ *
+ * @return error
+ */
+export const getInfoFromCookies = (
+  key: string
+): {
+  value?: string | null;
+  error?: any;
+} => {
+  try {
+    return { value: Cookies.get(key) };
+  } catch (error) {
+    console.error(error);
+    return { error };
+  }
+};
+
+/**
  * @dev clear account information stored in cookies
  */
 export const clearCookies = async () => {
-  Cookies.remove('_network');
-  Cookies.remove('_isConnected');
-  Cookies.remove('_connectedAccounts');
+  const cookies = Cookies.get();
+
+  for (let key in cookies) {
+    Cookies.remove(key);
+  }
 };

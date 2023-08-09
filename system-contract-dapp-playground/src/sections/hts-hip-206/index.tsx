@@ -25,6 +25,7 @@ import { BsGithub } from 'react-icons/bs';
 import { Tooltip } from '@chakra-ui/react';
 import { IoOpenOutline } from 'react-icons/io5';
 import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/constants';
+import ContractInteraction from '@/components/contract-interaction';
 
 const HTS206Section = () => {
   return (
@@ -109,6 +110,9 @@ const HTS206Section = () => {
                   </Link>
                 </Tooltip>
               </div>
+
+              {/* contract interaction component */}
+              <ContractInteraction contract={contract} />
             </li>
           ))}
         </ol>
