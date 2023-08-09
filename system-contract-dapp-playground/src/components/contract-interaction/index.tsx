@@ -20,7 +20,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { deploySmartContract } from '@/api/hedera';
 import ERC20DeployField from '../erc/ERCDeployField';
 import HederaAlertDialog from '../common/AlertDialog';
@@ -49,7 +49,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
   const [displayConfirmDialog, setDisplayConfirmDialog] = useState(false);
 
   /** @dev handle deploying contract */
-  const handleDeployContract = async () => {
+  const handleDeployContract = useCallback(async () => {
     setIsDeploying(true);
     const { contractAddress, err: deployContractErr } = await deploySmartContract(
       contract.contractABI,
@@ -92,14 +92,14 @@ const ContractInteraction = ({ contract }: PageProps) => {
     // udpate states
     setDisplayConfirmDialog(true);
     setContractAddress(contractAddress);
-  };
+  }, [contract.contractABI, contract.contractBytecode, contract.name, deployedParams, toaster]);
 
   // handle deploying contract for ExchangeRate, ERC20Mock, and ERC721Mock contracts
   useEffect(() => {
     if (didDeployStart && deployedParams.length > 0) {
       handleDeployContract();
     }
-  }, [didDeployStart, deployedParams]);
+  }, [didDeployStart, deployedParams, handleDeployContract]);
 
   // retrieve contract address from Cookies to make sure contract has already been deployed
   useEffect(() => {
