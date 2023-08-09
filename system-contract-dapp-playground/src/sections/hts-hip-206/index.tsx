@@ -24,8 +24,8 @@ import { motion } from 'framer-motion';
 import { BsGithub } from 'react-icons/bs';
 import { Tooltip } from '@chakra-ui/react';
 import { IoOpenOutline } from 'react-icons/io5';
-import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/constants';
 import ContractInteraction from '@/components/contract-interaction';
+import { HEDERA_OFFICIAL_HIPS_URL, HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/constants';
 
 const HTS206Section = () => {
   return (
@@ -47,7 +47,7 @@ const HTS206Section = () => {
           <div className="flex">
             (
             <Link
-              href={'https://hips.hedera.com/hip/hip-206'}
+              href={`${HEDERA_OFFICIAL_HIPS_URL}/hip/hip-206`}
               target="_blank"
               className="hover:underline flex gap-/1 items-center"
             >

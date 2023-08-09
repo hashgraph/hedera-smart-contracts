@@ -18,10 +18,10 @@
  *
  */
 
+import HRC719Section from '@/sections/hrc-719';
+
 const HRC719 = () => {
-  return (
-    <div className="text-white w-full flex justify-center items-center text-[3rem]">HRC719</div>
-  );
+  return <HRC719Section />;
 };
 
 export default HRC719;

@@ -32,6 +32,9 @@ import TokenCreateCustomContract from '@hashgraph-smartcontract/artifacts/contra
 export const HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL =
   'https://github.com/hashgraph/hedera-smart-contracts';
 
+/** @notice Hedera Improvement Proposals official url */
+export const HEDERA_OFFICIAL_HIPS_URL = 'https://hips.hedera.com/';
+
 /** @notice hashcan baseURL */
 export const HASHSCAN_BASE_URL = 'https://hashscan.io';
 
