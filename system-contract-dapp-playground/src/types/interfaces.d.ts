@@ -97,7 +97,7 @@ type ContractABI = {
 interface HederaContractAsset {
   name: string;
   title: string;
-  contractABI: ContractABI[];
-  contractBytecode: string;
   githubUrl: string;
+  contractBytecode: string;
+  contractABI: ContractABI[];
 }
