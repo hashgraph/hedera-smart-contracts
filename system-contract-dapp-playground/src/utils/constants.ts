@@ -27,6 +27,7 @@ import ExchangeRatePrecompile from '@hashgraph-smartcontract/artifacts/contracts
 import TokenTransferContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-transfer/TokenTransferContract.sol/TokenTransferContract.json';
 import TokenManagementContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-manage/TokenManagementContract.sol/TokenManagementContract.json';
 import TokenCreateCustomContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-create/TokenCreateCustom.sol/TokenCreateCustomContract.json';
+import { ContractName } from '@/types/interfaces';
 
 /** @notice Hedera Smart Contract official github url */
 export const HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL =
@@ -158,7 +159,7 @@ export const LEFT_SIDE_BAR_ITEMS = [
     path: PROTECTED_ROUTES[2],
   },
   {
-    name: 'Exchange rate system conract wrapper (Hip-475)',
+    name: 'Exchange rate system conract wrapper (HIP-475)',
     path: PROTECTED_ROUTES[3],
   },
   {
@@ -181,28 +182,28 @@ export const LEFT_SIDE_BAR_ITEMS = [
 export const HEDERA_SMART_CONTRACTS_ASSETS = {
   HTS_PRECOMPILED: [
     {
-      name: 'TokenCreateCustomContract',
+      name: 'TokenCreateCustomContract' as ContractName,
       title: 'Token Create Contract',
       contractABI: TokenCreateCustomContract.abi,
       contractBytecode: TokenCreateCustomContract.bytecode,
       githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-create/TokenCreateCustom.sol`,
     },
     {
-      name: 'TokenManagementContract',
+      name: 'TokenManagementContract' as ContractName,
       title: 'Token Management Contract',
       contractABI: TokenManagementContract.abi,
       contractBytecode: TokenManagementContract.bytecode,
       githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-manage/TokenManagementContract.sol`,
     },
     {
-      name: 'TokenQueryContract',
+      name: 'TokenQueryContract' as ContractName,
       title: 'Token Query Contract',
       contractABI: TokenQueryContract.abi,
       contractBytecode: TokenQueryContract.bytecode,
       githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-query/TokenQueryContract.sol`,
     },
     {
-      name: 'TokenTransferContract',
+      name: 'TokenTransferContract' as ContractName,
       title: 'Token Transfer Contract',
       contractABI: TokenTransferContract.abi,
       contractBytecode: TokenTransferContract.bytecode,
@@ -210,35 +211,35 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
     },
   ],
   TOKEN_ASSOCIATION: {
-    name: 'HRCContract',
+    name: 'HRCContract' as ContractName,
     title: 'Token Associate Example Contract',
     contractABI: HRCContract.abi,
     contractBytecode: HRCContract.bytecode,
     githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/hrc/HRCContract.sol`,
   },
   EXCHANGE_RATE: {
-    name: 'ExchangeRatePrecompile',
+    name: 'ExchangeRatePrecompile' as ContractName,
     title: 'Exchange Rate Example Contract',
     contractABI: ExchangeRatePrecompile.abi,
     contractBytecode: ExchangeRatePrecompile.bytecode,
     githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/exchange-rate-precompile/ExchangeRatePrecompile.sol`,
   },
   PRNG_PRECOMPILED: {
-    name: 'PrngSystemContract',
+    name: 'PrngSystemContract' as ContractName,
     title: 'Pseudo Random Number Example Contract',
     contractABI: PrngSystemContract.abi,
     contractBytecode: PrngSystemContract.bytecode,
     githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/util-precompile/PrngSystemContract.sol`,
   },
   ERC_20: {
-    name: 'ERC20Mock',
+    name: 'ERC20Mock' as ContractName,
     title: 'ERC-20 Example Contract',
     contractABI: ERC20Mock.abi,
     contractBytecode: ERC20Mock.bytecode,
     githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/erc-20/ERC20Contract.sol`,
   },
   ERC_721: {
-    name: 'ERC721Mock',
+    name: 'ERC721Mock' as ContractName,
     title: 'ERC=721 Example Contract',
     contractABI: ERC721Mock.abi,
     contractBytecode: ERC721Mock.bytecode,

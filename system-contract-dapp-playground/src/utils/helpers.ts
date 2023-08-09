@@ -19,8 +19,8 @@
  */
 
 import { ethers } from 'ethers';
-import { getCurrentChainId } from '@/api/wallet';
 import { NetworkName } from '@/types/interfaces';
+import { getCurrentChainId } from '@/api/wallet';
 import { HEDERA_NETWORKS, PROTECTED_ROUTES } from './constants';
 
 /**

@@ -18,10 +18,10 @@
  *
  */
 
+import HIP475Section from '@/sections/exchange-rate-hip-475';
+
 const HIP475 = () => {
-  return (
-    <div className="text-white w-full flex justify-center items-center text-[3rem]">HIP475</div>
-  );
+  return <HIP475Section />;
 };
 
 export default HIP475;
