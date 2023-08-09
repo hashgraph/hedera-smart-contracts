@@ -45,6 +45,20 @@ interface WalletResult {
 type NetworkName = 'mainnet' | 'testnet' | 'previewnet' | 'localnet';
 
 /**
+ * @dev a type for contract names
+ */
+type ContractName =
+  | 'TokenCreateCustomContract'
+  | 'TokenManagementContract'
+  | 'TokenQueryContract'
+  | 'TokenTransferContract'
+  | 'HRCContract'
+  | 'ExchangeRatePrecompile'
+  | 'PrngSystemContract'
+  | 'ERC20Mock'
+  | 'ERC721Mock';
+
+/**
  * @dev an interface for the results returned back from querying Mirror Node
  *
  * @params accountId?: string
@@ -95,7 +109,7 @@ type ContractABI = {
  * @params githubUrl: string
  */
 interface HederaContractAsset {
-  name: string;
+  name: ContractName;
   title: string;
   githubUrl: string;
   contractBytecode: string;
