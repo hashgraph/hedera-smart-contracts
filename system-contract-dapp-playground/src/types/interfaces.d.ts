@@ -53,8 +53,22 @@ type NetworkName = 'mainnet' | 'testnet' | 'previewnet' | 'localnet';
  */
 interface MirrorNodeResult {
   accountId?: string;
+  contractId?: string;
   err?: any;
 }
+
+/**
+ * @dev an interface for the results returned back from interacting with Hedera smart contracts
+ *
+ * @params contractAddress?: string
+ *
+ * @params err: any
+ */
+interface HederaSmartContractResult {
+  contractAddress?: string;
+  err?: any;
+}
+
 /**
  * @dev a type for solidity contract ABI
  */

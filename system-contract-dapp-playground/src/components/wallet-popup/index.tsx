@@ -27,7 +27,7 @@ import { HASHSCAN_BASE_URL } from '@/utils/constants';
 import { BiCopy, BiCheckDouble } from 'react-icons/bi';
 import { SkeletonText, useToast } from '@chakra-ui/react';
 import { getBalance, getWalletProvider } from '@/api/wallet';
-import { getAcocuntIdFromEvmAddress } from '@/api/mirror-node';
+import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
 import { BsChevronDown, BsFillQuestionOctagonFill } from 'react-icons/bs';
@@ -78,9 +78,10 @@ const WalletPopup = ({ isOpen, setIsOpen, userAddress, network }: PageProps) => 
       setAccountBalance(`${Number(ethers.formatEther(balance)).toFixed(4)} ℏ`);
 
       // handle getting Hedera native accountId from EvmAddress
-      const { accountId, err: getAccountIdErr } = await getAcocuntIdFromEvmAddress(
+      const { accountId, err: getAccountIdErr } = await getHederaNativeIDFromEvmAddress(
         userAddress,
-        network
+        network,
+        'accounts'
       );
       // handle error
       if (getAccountIdErr || !accountId) {
