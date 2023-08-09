@@ -30,6 +30,7 @@ import { HederaContractAsset, NetworkName } from '@/types/interfaces';
 import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
 import { getInfoFromCookies, storeInfoInCookies } from '@/api/cookies';
 import { Tabs, TabList, Tab, TabPanels, useToast, TabPanel } from '@chakra-ui/react';
+import ExchangeRateDeployField from '../exchange-rate-hip-475/ExchangeRateDeployField';
 
 interface PageProps {
   contract: HederaContractAsset;
@@ -42,6 +43,8 @@ const ContractInteraction = ({ contract }: PageProps) => {
   const [isDeploying, setIsDeploying] = useState(false);
   const [network, setNetwork] = useState<NetworkName>();
   const [contractAddress, setContractAddress] = useState('');
+  const [didDeployStart, setDidDeployStart] = useState(false);
+  const [deployedParams, setDeployedParams] = useState<any>([]);
   const [displayConfirmDialog, setDisplayConfirmDialog] = useState(false);
 
   /** @dev handle deploying contract */
@@ -50,7 +53,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
     const { contractAddress, err: deployContractErr } = await deploySmartContract(
       contract.contractABI,
       contract.contractBytecode,
-      []
+      deployedParams
     );
     setIsDeploying(false);
 
@@ -90,6 +93,13 @@ const ContractInteraction = ({ contract }: PageProps) => {
     setContractAddress(contractAddress);
   };
 
+  // handle deploying contract for ExhcnageRate, ERC20Mock, and ERC721Mock contracts
+  useEffect(() => {
+    if (didDeployStart && deployedParams.length > 0) {
+      handleDeployContract();
+    }
+  }, [didDeployStart, deployedParams]);
+
   // retrieve contract address from Cookies to make sure contract has already been deployed
   useEffect(() => {
     (async () => {
@@ -117,6 +127,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
     })();
   }, [contract.name, toaster]);
 
+  // update contractId state
   useEffect(() => {
     (async () => {
       if (network && contractAddress) {
@@ -219,25 +230,40 @@ const ContractInteraction = ({ contract }: PageProps) => {
         <div className=" min-h-[250px] flex justify-center items-center flex-col gap-6">
           <p>Let&apos;s get started by deploying this contract first!</p>
 
-          <button
-            onClick={handleDeployContract}
-            className="border border-hedera-green text-hedera-green px-6 py-2 rounded-xl font-medium hover:bg-hedera-green/50 hover:text-white transition duration-300"
-          >
-            {isDeploying ? (
-              <div className="flex gap-3">
-                Deploying...
-                <Image
-                  src={'/brandings/hedera-logomark.svg'}
-                  alt={'hedera-logomark'}
-                  width={15}
-                  height={15}
-                  className="animate-bounce"
-                />
-              </div>
-            ) : (
-              'Deploy'
-            )}
-          </button>
+          {/* params if needed */}
+          {contract.name === 'ExchangeRatePrecompile' ? (
+            <ExchangeRateDeployField
+              isDeploying={isDeploying}
+              setDeployedParams={setDeployedParams}
+              setDidDeployStart={setDidDeployStart}
+            />
+          ) : (
+            <>
+              {/* deploy button */}
+              <button
+                onClick={handleDeployContract}
+                disabled={isDeploying}
+                className={`border border-hedera-green text-hedera-green px-6 py-2 rounded-xl font-medium hover:bg-hedera-green/50 hover:text-white transition duration-300 ${
+                  isDeploying && `cursor-not-allowed`
+                }`}
+              >
+                {isDeploying ? (
+                  <div className="flex gap-3">
+                    Deploying...
+                    <Image
+                      src={'/brandings/hedera-logomark.svg'}
+                      alt={'hedera-logomark'}
+                      width={15}
+                      height={15}
+                      className="animate-bounce"
+                    />
+                  </div>
+                ) : (
+                  'Deploy'
+                )}
+              </button>
+            </>
+          )}
         </div>
       )}
 
