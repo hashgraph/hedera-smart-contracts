@@ -1,13 +1,3 @@
-'use client';
-
-import ContractInteraction from '@/components/contract-interaction';
-import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/constants';
-import { Tooltip } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { BsGithub } from 'react-icons/bs';
-import { IoOpenOutline } from 'react-icons/io5';
-
 /*-
  *
  * Hedera Smart Contracts
@@ -27,6 +17,16 @@ import { IoOpenOutline } from 'react-icons/io5';
  * limitations under the License.
  *
  */
+
+'use client';
+
+import ContractInteraction from '@/components/contract-interaction';
+import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/constants';
+import { Tooltip } from '@chakra-ui/react';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { BsGithub } from 'react-icons/bs';
+import { IoOpenOutline } from 'react-icons/io5';
 
 const ERC721Section = () => {
   return (
