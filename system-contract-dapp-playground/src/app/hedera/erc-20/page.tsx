@@ -18,10 +18,10 @@
  *
  */
 
+import ERC20Section from '@/sections/erc-20';
+
 const ERC20 = () => {
-  return (
-    <div className="text-white w-full flex justify-center items-center text-[3rem]">ERC20</div>
-  );
+  return <ERC20Section />;
 };
 
 export default ERC20;
