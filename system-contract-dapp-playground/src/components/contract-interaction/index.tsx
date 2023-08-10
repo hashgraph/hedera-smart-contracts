@@ -22,6 +22,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { deploySmartContract } from '@/api/hedera';
+import ERC20DeployField from '../erc/ERCDeployField';
 import HederaAlertDialog from '../common/AlertDialog';
 import { HASHSCAN_BASE_URL } from '@/utils/constants';
 import { convertAbiFunctionName } from '@/utils/helpers';
@@ -233,6 +234,12 @@ const ContractInteraction = ({ contract }: PageProps) => {
           {/* params if needed */}
           {contract.name === 'ExchangeRatePrecompile' ? (
             <ExchangeRateDeployField
+              isDeploying={isDeploying}
+              setDeployedParams={setDeployedParams}
+              setDidDeployStart={setDidDeployStart}
+            />
+          ) : contract.name === 'ERC20Mock' || contract.name === 'ERC721Mock' ? (
+            <ERC20DeployField
               isDeploying={isDeploying}
               setDeployedParams={setDeployedParams}
               setDidDeployStart={setDidDeployStart}

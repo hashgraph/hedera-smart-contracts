@@ -28,22 +28,24 @@ interface PageProps {
   title: string;
   explanation: string;
   placeholder: string;
+  titleBoxSize?: string; // must be in tailwindcss complete class name
   type: 'number' | 'text';
   setValue: Dispatch<SetStateAction<string>>;
 }
 
 const HederaCommonTextField = ({
+  size,
+  type,
+  title,
   value,
   setValue,
-  title,
   explanation,
-  type,
   placeholder,
-  size,
+  titleBoxSize,
 }: PageProps) => {
   return (
     <div className="flex gap-6">
-      <div className="flex items-center gap-1">
+      <div className={`flex items-center gap-1 ${titleBoxSize && titleBoxSize} justify-end`}>
         {/* title */}
         <p className="text-lg">{title}:</p>
         <Tooltip label={explanation} placement="top">
@@ -64,6 +66,7 @@ const HederaCommonTextField = ({
         size={size}
         variant="flushed"
         focusBorderColor="#A98DF4"
+        className="w-full"
       />
     </div>
   );
