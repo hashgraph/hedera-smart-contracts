@@ -1,4 +1,3 @@
-'use client';
 /*-
  *
  * Hedera Smart Contracts
@@ -18,6 +17,8 @@
  * limitations under the License.
  *
  */
+
+'use client';
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -42,7 +43,7 @@ const HTS206Section = () => {
       {/* top part */}
       <div className="flex flex-col gap-6">
         {/* TITLE */}
-        <h1 className="text-[1.88rem] font-medium leading-10 flex gap-1">
+        <h1 className="text-[1.88rem] font-medium leading-10 flex gap-1 whitespace-nowrap">
           HTS System Contract Wrapper
           <div className="flex">
             (

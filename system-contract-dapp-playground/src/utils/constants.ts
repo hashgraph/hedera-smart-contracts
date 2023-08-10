@@ -240,7 +240,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
   },
   ERC_721: {
     name: 'ERC721Mock' as ContractName,
-    title: 'ERC=721 Example Contract',
+    title: 'ERC-721 Example Contract',
     contractABI: ERC721Mock.abi,
     contractBytecode: ERC721Mock.bytecode,
     githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/erc-721/ERC721Contract.sol`,

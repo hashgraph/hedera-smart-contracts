@@ -18,10 +18,10 @@
  *
  */
 
+import ERC721Section from '@/sections/erc-721';
+
 const ERC721 = () => {
-  return (
-    <div className="text-white w-full flex justify-center items-center text-[3rem]">ERC721</div>
-  );
+  return <ERC721Section />;
 };
 
 export default ERC721;
