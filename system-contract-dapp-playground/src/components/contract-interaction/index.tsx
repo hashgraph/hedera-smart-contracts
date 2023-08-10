@@ -93,7 +93,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
     setContractAddress(contractAddress);
   };
 
-  // handle deploying contract for ExhcnageRate, ERC20Mock, and ERC721Mock contracts
+  // handle deploying contract for ExchangeRate, ERC20Mock, and ERC721Mock contracts
   useEffect(() => {
     if (didDeployStart && deployedParams.length > 0) {
       handleDeployContract();

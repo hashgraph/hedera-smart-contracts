@@ -18,10 +18,10 @@
  *
  */
 
+import HIP351Section from '@/sections/prng-hip-351';
+
 const HIP351 = () => {
-  return (
-    <div className="text-white w-full flex justify-center items-center text-[3rem]">HIP351</div>
-  );
+  return <HIP351Section />;
 };
 
 export default HIP351;
