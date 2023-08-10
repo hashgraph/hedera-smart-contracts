@@ -22,7 +22,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 import { deploySmartContract } from '@/api/hedera';
-import ERC20DeployField from '../erc/ERCDeployField';
+import ERC20DeployField from './erc/deployment/ERCDeployField';
 import HederaAlertDialog from '../common/AlertDialog';
 import { HASHSCAN_BASE_URL } from '@/utils/constants';
 import { convertAbiFunctionName } from '@/utils/helpers';
@@ -31,7 +31,7 @@ import { HederaContractAsset, NetworkName } from '@/types/interfaces';
 import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
 import { getInfoFromCookies, storeInfoInCookies } from '@/api/cookies';
 import { Tabs, TabList, Tab, TabPanels, useToast, TabPanel } from '@chakra-ui/react';
-import ExchangeRateDeployField from '../exchange-rate-hip-475/ExchangeRateDeployField';
+import ExchangeRateDeployField from './exchange-rate-hip-475/deployment/ExchangeRateDeployField';
 
 interface PageProps {
   contract: HederaContractAsset;
