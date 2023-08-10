@@ -1,5 +1,3 @@
-'use client';
-
 /*-
  *
  * Hedera Smart Contracts
@@ -19,6 +17,8 @@
  * limitations under the License.
  *
  */
+
+'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';

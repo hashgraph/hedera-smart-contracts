@@ -20,15 +20,15 @@
 
 'use client';
 
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { IoOpenOutline } from 'react-icons/io5';
-import { HEDERA_OFFICIAL_HIPS_URL, HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/constants';
-import { Tooltip } from '@chakra-ui/react';
 import ContractInteraction from '@/components/contract-interaction';
+import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/constants';
+import { Tooltip } from '@chakra-ui/react';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { BsGithub } from 'react-icons/bs';
+import { IoOpenOutline } from 'react-icons/io5';
 
-const HRC719Section = () => {
+const ERC721Section = () => {
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -38,21 +38,21 @@ const HRC719Section = () => {
         duration: 0.6,
       }}
       viewport={{ once: true }}
-      className="text-white w-full flex pt-7 pb-12 pl-7 flex-col gap-16"
+      className="text-white w-full flex pt-7 pb-12 pl-7 flex-col gap-9"
     >
       {/* top part */}
       <div className="flex flex-col gap-6">
         {/* TITLE */}
         <h1 className="text-[1.88rem] font-medium leading-10 flex gap-1 whitespace-nowrap">
-          Token Associate
+          Non-Fungible Token
           <div className="flex">
             (
             <Link
-              href={`${HEDERA_OFFICIAL_HIPS_URL}/hip/hip-719`}
+              href={`https://eips.ethereum.org/EIPS/eip-721`}
               target="_blank"
               className="hover:underline flex gap-1 items-center"
             >
-              <p>HIP-719 / HRC-719</p>
+              <p>ERC-721</p>
               <div className="text-2xl">
                 <IoOpenOutline />
               </div>
@@ -68,24 +68,8 @@ const HRC719Section = () => {
 
           {/* content */}
           <div className="tracking-tight text-white/70">
-            <Link
-              href={`${HEDERA_OFFICIAL_HIPS_URL}/hip/hip-218`}
-              target="_blank"
-              className="underline font-medium"
-            >
-              HIP-218
-            </Link>{' '}
-            proposed a way to enable treating HTS tokens in an equivalent manner to ERC-20 and
-            ERC-721 tokens by creating a proxy redirect facade contract.{' '}
-            <Link
-              href={`${HEDERA_OFFICIAL_HIPS_URL}/hip/hip-218`}
-              target="_blank"
-              className="underline font-medium"
-            >
-              HIP-719
-            </Link>{' '}
-            extends this functionality to include the HTS associate dissociate and isAssociated
-            functions.
+            The implementation of a standard API for NFTs within smart contracts. This standard
+            provides basic functionality to create, mint, track and transfer NFTs.
           </div>
         </div>
       </div>
@@ -96,12 +80,12 @@ const HRC719Section = () => {
           {/* title */}
           <div className="flex gap-1 items-center text-[20px]">
             {/* title */}
-            <p>{HEDERA_SMART_CONTRACTS_ASSETS.TOKEN_ASSOCIATION.title}</p>
+            <p>{HEDERA_SMART_CONTRACTS_ASSETS.ERC_721.title}</p>
 
             {/* Github icon */}
             <Tooltip label="Visit source code on Github." placement={'top'}>
               <Link
-                href={HEDERA_SMART_CONTRACTS_ASSETS.TOKEN_ASSOCIATION.githubUrl}
+                href={HEDERA_SMART_CONTRACTS_ASSETS.ERC_721.githubUrl}
                 target="_blank"
                 className="text-2xl"
               >
@@ -111,11 +95,11 @@ const HRC719Section = () => {
           </div>
 
           {/* contract interaction component */}
-          <ContractInteraction contract={HEDERA_SMART_CONTRACTS_ASSETS.TOKEN_ASSOCIATION} />
+          <ContractInteraction contract={HEDERA_SMART_CONTRACTS_ASSETS.ERC_721} />
         </div>
       </div>
     </motion.section>
   );
 };
 
-export default HRC719Section;
+export default ERC721Section;

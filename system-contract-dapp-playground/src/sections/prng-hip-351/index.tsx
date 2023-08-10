@@ -1,5 +1,3 @@
-'use client';
-
 /*-
  *
  * Hedera Smart Contracts
@@ -19,6 +17,8 @@
  * limitations under the License.
  *
  */
+
+'use client';
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -50,7 +50,7 @@ const HIP351Section = () => {
             <Link
               href={`${HEDERA_OFFICIAL_HIPS_URL}/hip/hip-351`}
               target="_blank"
-              className="hover:underline flex gap-1 items-center whitespace-nowrap"
+              className="hover:underline flex gap-1 items-center"
             >
               <p>HIP-351</p>
               <div className="text-2xl">

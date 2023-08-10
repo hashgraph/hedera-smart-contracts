@@ -1,5 +1,3 @@
-'use client';
-
 /*-
  *
  * Hedera Smart Contracts
@@ -19,6 +17,8 @@
  * limitations under the License.
  *
  */
+
+'use client';
 
 import { motion } from 'framer-motion';
 import { useToast } from '@chakra-ui/react';
