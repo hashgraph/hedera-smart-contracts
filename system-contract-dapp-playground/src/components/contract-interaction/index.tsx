@@ -20,11 +20,14 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import ERC20Methods from './erc/erc-20/methods';
+import { getContractFactory } from '@/api/ethers';
 import { deploySmartContract } from '@/api/hedera';
-import ERC20DeployField from './erc/deployment/ERCDeployField';
-import HederaAlertDialog from '../common/AlertDialog';
 import { HASHSCAN_BASE_URL } from '@/utils/constants';
+import HederaAlertDialog from '../common/AlertDialog';
+import { BaseContract, ContractFactory } from 'ethers';
 import { useCallback, useEffect, useState } from 'react';
+import ERC20DeployField from './erc/deployment/ERCDeployField';
 import { convertCalmelCasefunctionName } from '@/utils/helpers';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
 import { HederaContractAsset, NetworkName } from '@/types/interfaces';
@@ -47,6 +50,35 @@ const ContractInteraction = ({ contract }: PageProps) => {
   const [didDeployStart, setDidDeployStart] = useState(false);
   const [deployedParams, setDeployedParams] = useState<any>([]);
   const [displayConfirmDialog, setDisplayConfirmDialog] = useState(false);
+  const [contractFactory, setContractFactory] = useState<ContractFactory<any[], BaseContract>>();
+
+  // handle set up contractFactory
+  useEffect(() => {
+    (async () => {
+      const { contractFactory, err: contractFactoryErr } = await getContractFactory(
+        contract.contractABI,
+        contract.contractBytecode
+      );
+
+      // handle error
+      if (contractFactoryErr || !contractFactory) {
+        if (contractFactoryErr === '!HEDERA') {
+          NoWalletToast({ toaster });
+          return;
+        }
+
+        CommonErrorToast({
+          toaster,
+          title: 'Cannot deploy contract',
+          description: "See client's console for more information",
+        });
+        return;
+      }
+
+      // update contractFactory state
+      setContractFactory(contractFactory);
+    })();
+  }, []);
 
   /** @dev handle deploying contract */
   const handleDeployContract = useCallback(async () => {
@@ -169,8 +201,6 @@ const ContractInteraction = ({ contract }: PageProps) => {
             className="overflow-x-scroll overflow-y-hidden no-scrollbar bg-secondary rounded-tl-xl rounded-tr-xl"
           >
             {contract.methods.map((method, index) => {
-              // {contract.contractABI.map((abi, index) => {
-              // if (abi.type === 'function') {
               return (
                 <Tab
                   _selected={{ bg: '#374151', borderBottomWidth: '0' }}
@@ -217,9 +247,13 @@ const ContractInteraction = ({ contract }: PageProps) => {
 
                   <hr className="border-white/30 w-full" />
 
-                  {/* Contract assets */}
+                  {/* Contract methods */}
                   <div className="flex py-9 text-xl w-full h-full justify-center items-center">
-                    {convertCalmelCasefunctionName(method)}
+                    {/* ERC-20 */}
+                    {contract.name === 'ERC20Mock' && (
+                      <ERC20Methods contractFactory={contractFactory!} method={method} />
+                    )}
+                    {contract.name !== 'ERC20Mock' && <>{convertCalmelCasefunctionName(method)}</>}
                   </div>
                 </TabPanel>
               );
