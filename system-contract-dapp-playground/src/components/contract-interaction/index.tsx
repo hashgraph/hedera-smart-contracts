@@ -78,7 +78,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
       // update contractFactory state
       setContractFactory(contractFactory);
     })();
-  }, []);
+  }, [contract.contractABI, contract.contractBytecode, toaster]);
 
   /** @dev handle deploying contract */
   const handleDeployContract = useCallback(async () => {

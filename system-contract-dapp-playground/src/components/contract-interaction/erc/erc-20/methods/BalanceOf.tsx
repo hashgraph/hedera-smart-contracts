@@ -80,7 +80,7 @@ const BalanceOf = ({ contractFactory }: PageProps) => {
         {/* display balances */}
         {balances.length > 0 &&
           balances.map((balance) => (
-            <div className="flex gap-6 items-center">
+            <div key={balance.address} className="flex gap-6 items-center">
               <div className="flex justify-between w-[580px]">
                 {/* Address */}
                 <p className="text-white/80">{balance.address}</p>

@@ -79,6 +79,7 @@ const MultiLineMethod = ({
 
           return (
             <Input
+              key={methodName}
               value={value}
               type={paramField.inputType}
               onChange={handleOnInputChange}
