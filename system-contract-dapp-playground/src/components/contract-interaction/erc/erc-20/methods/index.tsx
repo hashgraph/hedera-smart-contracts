@@ -22,6 +22,7 @@ import BalanceOf from './BalanceOf';
 import TokenPermission from './TokenPermissions';
 import TokenInformation from './TokenInformation';
 import { ContractFactory, BaseContract } from 'ethers';
+import Transfer from './Transfer';
 
 interface PageProps {
   contractFactory: ContractFactory<any[], BaseContract>;
@@ -33,6 +34,7 @@ const ERC20Methods = ({ contractFactory, method }: PageProps) => {
     <>
       {method === 'tokenInformation' && <TokenInformation contractFactory={contractFactory} />}
       {method === 'tokenPermissions' && <TokenPermission contractFactory={contractFactory} />}
+      {method === 'transfer' && <Transfer contractFactory={contractFactory} />}
       {method === 'balanceOf' && <BalanceOf contractFactory={contractFactory} />}
     </>
   );

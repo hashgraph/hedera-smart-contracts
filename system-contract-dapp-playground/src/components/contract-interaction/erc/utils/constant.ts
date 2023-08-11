@@ -93,3 +93,49 @@ export const decreaseAllowanceParamFields = [
     inputClassname: 'w-full border-white/30',
   },
 ];
+
+export const transferParamFields = [
+  {
+    title: 'recipientAddress',
+    inputType: 'text',
+    inputPlaceholder: 'Recipient address..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+  },
+  {
+    title: 'amount',
+    inputType: 'number',
+    inputPlaceholder: 'Token amount..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+  },
+];
+
+export const transferFromParamFields = [
+  {
+    title: 'senderAddress',
+    inputType: 'text',
+    inputPlaceholder: 'Sender address..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+  },
+  {
+    title: 'recipientAddress',
+    inputType: 'text',
+    inputPlaceholder: 'Recipient address..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+  },
+  {
+    title: 'amount',
+    inputType: 'number',
+    inputPlaceholder: 'Token amount..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+  },
+];

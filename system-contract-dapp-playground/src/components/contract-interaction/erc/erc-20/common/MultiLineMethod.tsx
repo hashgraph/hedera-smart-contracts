@@ -65,6 +65,16 @@ const MultiLineMethod = ({
             handleOnInputChange = (e: any) => {
               setParams((prev: any) => ({ ...prev, owner: e.target.value }));
             };
+          } else if (paramField.title === 'senderAddress') {
+            value = params.sender;
+            handleOnInputChange = (e: any) => {
+              setParams((prev: any) => ({ ...prev, sender: e.target.value }));
+            };
+          } else if (paramField.title === 'recipientAddress') {
+            value = params.recipient;
+            handleOnInputChange = (e: any) => {
+              setParams((prev: any) => ({ ...prev, recipient: e.target.value }));
+            };
           }
 
           return (
