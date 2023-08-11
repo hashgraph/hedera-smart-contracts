@@ -20,12 +20,12 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useCallback, useEffect, useState } from 'react';
 import { deploySmartContract } from '@/api/hedera';
 import ERC20DeployField from './erc/deployment/ERCDeployField';
 import HederaAlertDialog from '../common/AlertDialog';
 import { HASHSCAN_BASE_URL } from '@/utils/constants';
-import { convertAbiFunctionName } from '@/utils/helpers';
+import { useCallback, useEffect, useState } from 'react';
+import { convertCalmelCasefunctionName } from '@/utils/helpers';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
 import { HederaContractAsset, NetworkName } from '@/types/interfaces';
 import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
@@ -168,62 +168,61 @@ const ContractInteraction = ({ contract }: PageProps) => {
             mb="1em"
             className="overflow-x-scroll overflow-y-hidden no-scrollbar bg-secondary rounded-tl-xl rounded-tr-xl"
           >
-            {contract.contractABI.map((abi, index) => {
-              if (abi.type === 'function') {
-                return (
-                  <Tab
-                    _selected={{ bg: '#374151', borderBottomWidth: '0' }}
-                    className={`whitespace-nowrap first:border-l-0 py-4 border-b border-white/30 ${
-                      index !== 0 && `border-l`
-                    }`}
-                    key={abi.name}
-                  >
-                    {convertAbiFunctionName(abi.name as string)}
-                  </Tab>
-                );
-              }
+            {contract.methods.map((method, index) => {
+              // {contract.contractABI.map((abi, index) => {
+              // if (abi.type === 'function') {
+              return (
+                <Tab
+                  _selected={{ bg: '#374151', borderBottomWidth: '0' }}
+                  className={`whitespace-nowrap first:border-l-0 py-4 border-b border-white/30 ${
+                    index !== 0 && `border-l`
+                  }`}
+                  key={method}
+                >
+                  {convertCalmelCasefunctionName(method)}
+                </Tab>
+              );
+              // }
             })}
           </TabList>
 
           {/* Tab body */}
-          <TabPanels className="">
-            {contract.contractABI.map((abi) => {
-              if (abi.type === 'function') {
-                return (
-                  <TabPanel className={`whitespace-nowrap py-4`} key={abi.name}>
-                    {/* Contract information */}
-                    <div className="pb-6 flex flex-col gap-1 px-3">
-                      <div className="flex gap-3 w-full justify-">
-                        <p>Hedera contract ID: </p>
-                        <Link
-                          href={`${HASHSCAN_BASE_URL}/${network}/contract/${contractId}`}
-                          target="_blank"
-                          className="underline"
-                        >
-                          {contractId}
-                        </Link>
-                      </div>
-                      <div className="flex gap-3 w-full justify-">
-                        <p>Contract deployed to: </p>
-                        <Link
-                          href={`${HASHSCAN_BASE_URL}/${network}/contract/${contractId}`}
-                          target="_blank"
-                          className="underline"
-                        >
-                          {contractAddress}
-                        </Link>
-                      </div>
+          <TabPanels>
+            {contract.methods.map((method) => {
+              return (
+                <TabPanel className={`whitespace-nowrap py-4`} key={method}>
+                  {/* Contract information */}
+                  <div className="pb-6 flex flex-col gap-1 px-3">
+                    <div className="flex gap-3 w-full justify-">
+                      <p>Hedera contract ID: </p>
+                      <Link
+                        href={`${HASHSCAN_BASE_URL}/${network}/contract/${contractId}`}
+                        target="_blank"
+                        className="underline"
+                      >
+                        {contractId}
+                      </Link>
                     </div>
-
-                    <hr className="border-white/30 w-full" />
-
-                    {/* Contract assets */}
-                    <div className="flex py-9 text-xl w-full h-full justify-center items-center">
-                      {convertAbiFunctionName(abi.name as string)}
+                    <div className="flex gap-3 w-full justify-">
+                      <p>Contract deployed to: </p>
+                      <Link
+                        href={`${HASHSCAN_BASE_URL}/${network}/contract/${contractId}`}
+                        target="_blank"
+                        className="underline"
+                      >
+                        {contractAddress}
+                      </Link>
                     </div>
-                  </TabPanel>
-                );
-              }
+                  </div>
+
+                  <hr className="border-white/30 w-full" />
+
+                  {/* Contract assets */}
+                  <div className="flex py-9 text-xl w-full h-full justify-center items-center">
+                    {convertCalmelCasefunctionName(method)}
+                  </div>
+                </TabPanel>
+              );
             })}
           </TabPanels>
         </>

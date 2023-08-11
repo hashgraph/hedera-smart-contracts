@@ -114,4 +114,5 @@ interface HederaContractAsset {
   githubUrl: string;
   contractBytecode: string;
   contractABI: ContractABI[];
+  methods: string[];
 }
