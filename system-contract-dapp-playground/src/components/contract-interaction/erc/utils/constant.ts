@@ -18,6 +18,25 @@
  *
  */
 
+export const mintParamFields = [
+  {
+    title: 'recipientAddress',
+    inputType: 'text',
+    inputPlaceholder: 'Recipient address..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+  },
+  {
+    title: 'amount',
+    inputType: 'number',
+    inputPlaceholder: 'Token amount..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+  },
+];
+
 export const approveParamFields = [
   {
     title: 'spenderAddress',

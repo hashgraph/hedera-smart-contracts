@@ -18,28 +18,33 @@
  *
  */
 
-import Mint from './Mint';
-import Transfer from './Transfer';
-import BalanceOf from './BalanceOf';
-import TokenPermission from './TokenPermissions';
-import TokenInformation from './TokenInformation';
+import { useState } from 'react';
 import { ContractFactory, BaseContract } from 'ethers';
+import MultiLineMethod from '../common/MultiLineMethod';
+import { mintParamFields } from '../../utils/constant';
 
 interface PageProps {
   contractFactory: ContractFactory<any[], BaseContract>;
-  method: string;
 }
 
-const ERC20Methods = ({ contractFactory, method }: PageProps) => {
+const Mint = ({ contractFactory }: PageProps) => {
+  const [mintParams, setMintParams] = useState({
+    recipient: '',
+    amount: '',
+  });
+
   return (
-    <>
-      {method === 'tokenInformation' && <TokenInformation contractFactory={contractFactory} />}
-      {method === 'mint' && <Mint contractFactory={contractFactory} />}
-      {method === 'balanceOf' && <BalanceOf contractFactory={contractFactory} />}
-      {method === 'tokenPermissions' && <TokenPermission contractFactory={contractFactory} />}
-      {method === 'transfer' && <Transfer contractFactory={contractFactory} />}
-    </>
+    <div className="w-full mx-3 flex justify-center mt-6">
+      {/* approve() */}
+      <MultiLineMethod
+        paramFields={mintParamFields}
+        methodName={'Mint'}
+        params={mintParams}
+        setParams={setMintParams}
+        explanation="Creates `amount` tokens and assigns them to `recipient`, increasing the total supply."
+      />
+    </div>
   );
 };
 
-export default ERC20Methods;
+export default Mint;
