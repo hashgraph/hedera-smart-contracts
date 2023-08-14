@@ -79,7 +79,7 @@ export const chainIdToNetwork = (chainId: string): NetworkName => {
  *
  * @returns string
  */
-export const convertAbiFunctionName = (functionName: string) => {
+export const convertCalmelCaseFunctionName = (functionName: string) => {
   // Split the string into words based on camel case
   const fnNames = functionName.replace(/([a-z])([A-Z])/g, '$1 $2').split(' ');
 
