@@ -128,3 +128,26 @@ interface HederaContractAsset {
   contractABI: ContractABI[];
   methods: string[];
 }
+
+/**
+ * @dev an interface for the results returned back from interacting with ERC20Mock smart contract
+ *
+ * @params name?: string
+ *
+ * @params err: any
+ */
+interface ERC20MockSmartContractResult {
+  name?: string;
+  symbol?: string;
+  totalSupply?: string;
+  decimals?: string;
+  mintRes?: boolean;
+  balanceOfRes?: string;
+  approveRes?: boolean;
+  allowanceRes?: string;
+  increaseAllowanceRes?: boolean;
+  decreaseAllowanceRes?: boolean;
+  transferRes?: boolean;
+  transferFromRes?: boolean;
+  err?: any;
+}
