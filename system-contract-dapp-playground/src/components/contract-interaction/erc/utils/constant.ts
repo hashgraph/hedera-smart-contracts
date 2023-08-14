@@ -20,141 +20,141 @@
 
 export const mintParamFields = [
   {
-    title: 'recipientAddress',
     inputType: 'text',
     inputPlaceholder: 'Recipient address..',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
+    paramKey: 'recipient',
   },
   {
-    title: 'amount',
     inputType: 'number',
     inputPlaceholder: 'Token amount..',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
+    paramKey: 'amount',
   },
 ];
 
 export const approveParamFields = [
   {
-    title: 'spenderAddress',
     inputType: 'text',
     inputPlaceholder: 'Spender address..',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
+    paramKey: 'spender',
   },
   {
-    title: 'amount',
     inputType: 'number',
     inputPlaceholder: 'Allowance amount..',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
+    paramKey: 'amount',
   },
 ];
 
 export const allowanceParamFields = [
   {
-    title: 'ownerAddress',
     inputType: 'text',
     inputPlaceholder: 'Owner address..',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
+    paramKey: 'owner',
   },
   {
-    title: 'spenderAddress',
     inputType: 'text',
     inputPlaceholder: 'Spender address..',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
+    paramKey: 'spender',
   },
 ];
 
 export const increaseAllowanceParamFields = [
   {
-    title: 'spenderAddress',
     inputType: 'text',
     inputPlaceholder: 'Spender address..',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
+    paramKey: 'spender',
   },
   {
-    title: 'amount',
     inputType: 'number',
     inputPlaceholder: 'Allowance amount to increase..',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
+    paramKey: 'amount',
   },
 ];
 
 export const decreaseAllowanceParamFields = [
   {
-    title: 'spenderAddress',
     inputType: 'text',
     inputPlaceholder: 'Spender address..',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
+    paramKey: 'spender',
   },
   {
-    title: 'amount',
     inputType: 'number',
-    inputPlaceholder: 'Allowance amount to decrease..',
+    inputPlaceholder: 'Allowance amount to increase..',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
+    paramKey: 'amount',
   },
 ];
 
 export const transferParamFields = [
   {
-    title: 'recipientAddress',
     inputType: 'text',
     inputPlaceholder: 'Recipient address..',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
+    paramKey: 'recipient',
   },
   {
-    title: 'amount',
     inputType: 'number',
     inputPlaceholder: 'Token amount..',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
+    paramKey: 'amount',
   },
 ];
 
 export const transferFromParamFields = [
   {
-    title: 'senderAddress',
     inputType: 'text',
-    inputPlaceholder: 'Sender address..',
+    inputPlaceholder: 'Token owner address..',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
+    paramKey: 'owner',
   },
   {
-    title: 'recipientAddress',
     inputType: 'text',
     inputPlaceholder: 'Recipient address..',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
+    paramKey: 'recipient',
   },
   {
-    title: 'amount',
     inputType: 'number',
     inputPlaceholder: 'Token amount..',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
+    paramKey: 'amount',
   },
 ];
