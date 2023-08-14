@@ -28,7 +28,7 @@ import HederaAlertDialog from '../common/AlertDialog';
 import { BaseContract, ContractFactory } from 'ethers';
 import { useCallback, useEffect, useState } from 'react';
 import ERC20DeployField from './erc/deployment/ERCDeployField';
-import { convertCalmelCasefunctionName } from '@/utils/helpers';
+import { convertCalmelCaseFunctionName } from '@/utils/helpers';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
 import { HederaContractAsset, NetworkName } from '@/types/interfaces';
 import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
@@ -209,7 +209,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
                   }`}
                   key={method}
                 >
-                  {convertCalmelCasefunctionName(method)}
+                  {convertCalmelCaseFunctionName(method)}
                 </Tab>
               );
               // }
@@ -253,7 +253,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
                     {contract.name === 'ERC20Mock' && (
                       <ERC20Methods contractFactory={contractFactory!} method={method} />
                     )}
-                    {contract.name !== 'ERC20Mock' && <>{convertCalmelCasefunctionName(method)}</>}
+                    {contract.name !== 'ERC20Mock' && <>{convertCalmelCaseFunctionName(method)}</>}
                   </div>
                 </TabPanel>
               );

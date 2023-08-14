@@ -49,30 +49,30 @@ const MultiLineMethod = ({
         {/* spender */}
         {paramFields.map((paramField) => {
           let value = '';
-          let handleOnInputChange;
+          let handleInputOnChange;
           if (paramField.title === 'spenderAddress') {
             value = params.spender;
-            handleOnInputChange = (e: any) => {
+            handleInputOnChange = (e: any) => {
               setParams((prev: any) => ({ ...prev, spender: e.target.value }));
             };
           } else if (paramField.title === 'amount') {
             value = params.amount;
-            handleOnInputChange = (e: any) => {
+            handleInputOnChange = (e: any) => {
               setParams((prev: any) => ({ ...prev, amount: e.target.value }));
             };
           } else if (paramField.title === 'ownerAddress') {
             value = params.owner;
-            handleOnInputChange = (e: any) => {
+            handleInputOnChange = (e: any) => {
               setParams((prev: any) => ({ ...prev, owner: e.target.value }));
             };
           } else if (paramField.title === 'senderAddress') {
             value = params.sender;
-            handleOnInputChange = (e: any) => {
+            handleInputOnChange = (e: any) => {
               setParams((prev: any) => ({ ...prev, sender: e.target.value }));
             };
           } else if (paramField.title === 'recipientAddress') {
             value = params.recipient;
-            handleOnInputChange = (e: any) => {
+            handleInputOnChange = (e: any) => {
               setParams((prev: any) => ({ ...prev, recipient: e.target.value }));
             };
           }
@@ -82,7 +82,7 @@ const MultiLineMethod = ({
               key={methodName}
               value={value}
               type={paramField.inputType}
-              onChange={handleOnInputChange}
+              onChange={handleInputOnChange}
               placeholder={paramField.inputPlaceholder}
               size={paramField.inputSize}
               focusBorderColor={paramField.inputFocusBorderColor}
