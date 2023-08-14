@@ -239,6 +239,40 @@ class Utils {
     return tokenAddress
   }
 
+  static async createFungibleTokenPublic(
+    tokenName,
+    tokenSymbol,
+    tokenMemo,
+    initialSupply,
+    maxSupply,
+    decimals,
+    freezeDefaultStatus,
+    signerAddress,
+    key,
+    contract
+  ) {
+    const tokenAddress = (
+      await (
+        await contract.createFungibleTokenPublic(
+          tokenName,
+          tokenSymbol,
+          tokenMemo,
+          initialSupply,
+          maxSupply,
+          decimals,
+          freezeDefaultStatus,
+          signerAddress,
+          key,
+          {
+            value: '200000000000000000000',
+            gasLimit: 1_000_000,
+          }
+        )
+      ).wait()
+    ).events[0].args.tokenAddress
+    return tokenAddress
+  }
+
   static async createFungibleTokenWithSECP256K1AdminKey(
     contract,
     treasury,
