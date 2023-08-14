@@ -18,22 +18,23 @@
  *
  */
 
-import { ContractFactory } from 'ethers';
+import { ethers } from 'ethers';
 import { getWalletProvider } from '../wallet';
 import { ContractABI, EthersResult } from '@/types/interfaces';
+import { ERC20MockMethod } from '@/components/contract-interaction/erc/utils/methodInterfaces';
 
 /**
- * @dev get contractFactory
+ * @dev generate a new BaseContract instance at contractAddress
  *
- * @param contractABI: ContractABI
+ * @param contractAddress: string
  *
- * @param contractBytecode: string
+ * @param contractABI: ContractABI[]
  *
  * @return Promise<EthersResult>
  */
-export const getContractFactory = async (
-  contractABI: ContractABI[],
-  contractBytecode: string
+export const generateBaseContractInstance = async (
+  contractAddress: string,
+  contractABI: ContractABI[]
 ): Promise<EthersResult> => {
   // get wallet provider
   const walletProvider = getWalletProvider();
@@ -45,14 +46,14 @@ export const getContractFactory = async (
     // get signer
     const walletSigner = await walletProvider.walletProvider.getSigner();
 
-    // get contract from contract factory
-    const contractFactory = new ContractFactory(
+    // generate a new BaseContract instance
+    const baseContract = new ethers.BaseContract(
+      contractAddress,
       JSON.stringify(contractABI),
-      contractBytecode,
       walletSigner
     );
 
-    return { contractFactory };
+    return { baseContract };
   } catch (err) {
     console.error(err);
     return { err };

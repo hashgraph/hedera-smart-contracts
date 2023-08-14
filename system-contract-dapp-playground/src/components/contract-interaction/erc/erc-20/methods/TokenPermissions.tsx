@@ -19,8 +19,8 @@
  */
 
 import { useState } from 'react';
-import { ContractFactory, BaseContract } from 'ethers';
 import MultiLineMethod from '../common/MultiLineMethod';
+import { ERC20MockMethod } from '../../utils/methodInterfaces';
 import {
   allowanceParamFields,
   approveParamFields,
@@ -29,10 +29,10 @@ import {
 } from '../../utils/constant';
 
 interface PageProps {
-  contractFactory: ContractFactory<any[], BaseContract>;
+  baseContract: ERC20MockMethod;
 }
 
-const TokenPermission = ({ contractFactory }: PageProps) => {
+const TokenPermission = ({ baseContract }: PageProps) => {
   const [approveParams, setApproveParams] = useState({
     spender: '',
     amount: '',

@@ -19,15 +19,15 @@
  */
 
 import { useState } from 'react';
-import { ContractFactory, BaseContract } from 'ethers';
 import MultiLineMethod from '../common/MultiLineMethod';
 import { transferParamFields, transferFromParamFields } from '../../utils/constant';
+import { ERC20MockMethod } from '../../utils/methodInterfaces';
 
 interface PageProps {
-  contractFactory: ContractFactory<any[], BaseContract>;
+  baseContract: ERC20MockMethod;
 }
 
-const Transfer = ({ contractFactory }: PageProps) => {
+const Transfer = ({ baseContract }: PageProps) => {
   const [transferParams, setTransferParams] = useState({
     recipient: '',
     amount: '',

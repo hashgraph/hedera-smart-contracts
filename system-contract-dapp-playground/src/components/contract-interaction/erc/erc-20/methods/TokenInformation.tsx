@@ -19,13 +19,13 @@
  */
 
 import OneLineMethod from '../common/OneLineMethod';
-import { ContractFactory, BaseContract } from 'ethers';
+import { ERC20MockMethod } from '../../utils/methodInterfaces';
 
 interface PageProps {
-  contractFactory: ContractFactory<any[], BaseContract>;
+  baseContract: ERC20MockMethod;
 }
 
-const TokenInformation = ({ contractFactory }: PageProps) => {
+const TokenInformation = ({ baseContract }: PageProps) => {
   return (
     <div className="w-full">
       {/* wrapper */}

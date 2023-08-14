@@ -61,12 +61,12 @@ interface WalletResult {
 /**
  * @dev an interface for the results related to ethers module
  *
- * @params contractFactory?: ContractFactory<any[], BaseContract>
+ * @params baseContract?: BaseContract
  *
  * @params err: any
  */
 interface EthersResult {
-  contractFactory?: ContractFactory<any[], BaseContract>;
+  baseContract?: BaseContract;
   err?: any;
 }
 

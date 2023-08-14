@@ -23,21 +23,21 @@ import Transfer from './Transfer';
 import BalanceOf from './BalanceOf';
 import TokenPermission from './TokenPermissions';
 import TokenInformation from './TokenInformation';
-import { ContractFactory, BaseContract } from 'ethers';
+import { ERC20MockMethod } from '../../utils/methodInterfaces';
 
 interface PageProps {
-  contractFactory: ContractFactory<any[], BaseContract>;
   method: string;
+  baseContract: ERC20MockMethod;
 }
 
-const ERC20Methods = ({ contractFactory, method }: PageProps) => {
+const ERC20Methods = ({ baseContract, method }: PageProps) => {
   return (
     <>
-      {method === 'tokenInformation' && <TokenInformation contractFactory={contractFactory} />}
-      {method === 'mint' && <Mint contractFactory={contractFactory} />}
-      {method === 'balanceOf' && <BalanceOf contractFactory={contractFactory} />}
-      {method === 'tokenPermissions' && <TokenPermission contractFactory={contractFactory} />}
-      {method === 'transfer' && <Transfer contractFactory={contractFactory} />}
+      {method === 'tokenInformation' && <TokenInformation baseContract={baseContract} />}
+      {method === 'mint' && <Mint baseContract={baseContract} />}
+      {method === 'balanceOf' && <BalanceOf baseContract={baseContract} />}
+      {method === 'tokenPermissions' && <TokenPermission baseContract={baseContract} />}
+      {method === 'transfer' && <Transfer baseContract={baseContract} />}
     </>
   );
 };
