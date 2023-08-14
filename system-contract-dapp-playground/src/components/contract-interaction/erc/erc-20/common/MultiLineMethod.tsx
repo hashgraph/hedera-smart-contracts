@@ -22,12 +22,12 @@ import { Input, Tooltip } from '@chakra-ui/react';
 
 interface PageProps {
   paramFields: {
-    title: string;
     inputType: string;
     inputPlaceholder: string;
     inputSize: string;
     inputFocusBorderColor: string;
     inputClassname: string;
+    paramKey: string;
   }[];
   methodName: string;
   params: any;
@@ -48,39 +48,14 @@ const MultiLineMethod = ({
       <div className="flex flex-col gap-3">
         {/* spender */}
         {paramFields.map((paramField) => {
-          let value = '';
-          let handleInputOnChange;
-          if (paramField.title === 'spenderAddress') {
-            value = params.spender;
-            handleInputOnChange = (e: any) => {
-              setParams((prev: any) => ({ ...prev, spender: e.target.value }));
-            };
-          } else if (paramField.title === 'amount') {
-            value = params.amount;
-            handleInputOnChange = (e: any) => {
-              setParams((prev: any) => ({ ...prev, amount: e.target.value }));
-            };
-          } else if (paramField.title === 'ownerAddress') {
-            value = params.owner;
-            handleInputOnChange = (e: any) => {
-              setParams((prev: any) => ({ ...prev, owner: e.target.value }));
-            };
-          } else if (paramField.title === 'senderAddress') {
-            value = params.sender;
-            handleInputOnChange = (e: any) => {
-              setParams((prev: any) => ({ ...prev, sender: e.target.value }));
-            };
-          } else if (paramField.title === 'recipientAddress') {
-            value = params.recipient;
-            handleInputOnChange = (e: any) => {
-              setParams((prev: any) => ({ ...prev, recipient: e.target.value }));
-            };
-          }
+          const handleInputOnChange = (e: any) => {
+            setParams((prev: any) => ({ ...prev, [paramField.paramKey]: e.target.value }));
+          };
 
           return (
             <Input
-              key={methodName}
-              value={value}
+              key={paramField.paramKey}
+              value={params[paramField.paramKey]}
               type={paramField.inputType}
               onChange={handleInputOnChange}
               placeholder={paramField.inputPlaceholder}
