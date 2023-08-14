@@ -24,12 +24,13 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         address treasury,
         bytes memory key
     ) public payable {
-        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](5);
-        keys[0] = getSingleKey(KeyType.ADMIN, KeyType.PAUSE, KeyValueType.SECP256K1, key);
+        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](6);
+        keys[0] = getSingleKey(KeyType.ADMIN, KeyValueType.SECP256K1, key);
         keys[1] = getSingleKey(KeyType.KYC, KeyValueType.SECP256K1, key);
         keys[2] = getSingleKey(KeyType.FREEZE, KeyValueType.SECP256K1, key);
         keys[3] = getSingleKey(KeyType.SUPPLY, KeyValueType.SECP256K1, key);
         keys[4] = getSingleKey(KeyType.WIPE, KeyValueType.SECP256K1, key);
+        keys[5] = getSingleKey(KeyType.PAUSE, KeyValueType.SECP256K1, key);
 
         IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
             0, treasury, 8000000
@@ -60,12 +61,13 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         int32 decimals,
         bytes memory key
     ) public payable {
-        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](5);
-        keys[0] = getSingleKey(KeyType.ADMIN, KeyType.PAUSE, KeyValueType.SECP256K1, key);
+        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](6);
+        keys[0] = getSingleKey(KeyType.ADMIN, KeyValueType.SECP256K1, key);
         keys[1] = getSingleKey(KeyType.KYC, KeyValueType.SECP256K1, key);
         keys[2] = getSingleKey(KeyType.FREEZE, KeyValueType.SECP256K1, key);
         keys[3] = getSingleKey(KeyType.SUPPLY, KeyValueType.SECP256K1, key);
         keys[4] = getSingleKey(KeyType.WIPE, KeyValueType.SECP256K1, key);
+        keys[5] = getSingleKey(KeyType.PAUSE, KeyValueType.SECP256K1, key);
 
         IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
             0, treasury, 8000000
@@ -100,12 +102,13 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         address treasury,
         bytes memory key
     ) public payable {
-        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](5);
-        keys[0] = getSingleKey(KeyType.ADMIN, KeyType.PAUSE, KeyValueType.SECP256K1, key);
+        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](6);
+        keys[0] = getSingleKey(KeyType.ADMIN, KeyValueType.SECP256K1, key);
         keys[1] = getSingleKey(KeyType.KYC, KeyValueType.SECP256K1, key);
         keys[2] = getSingleKey(KeyType.FREEZE, KeyValueType.SECP256K1, key);
         keys[3] = getSingleKey(KeyType.SUPPLY, KeyValueType.SECP256K1, key);
         keys[4] = getSingleKey(KeyType.WIPE, KeyValueType.SECP256K1, key);
+        keys[5] = getSingleKey(KeyType.PAUSE, KeyValueType.SECP256K1, key);
 
         IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
             0, treasury, 8000000
@@ -134,13 +137,14 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         int64 maxSupply,
         bytes memory key
     ) public payable {
-        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](5);
-        keys[0] = getSingleKey(KeyType.ADMIN, KeyType.PAUSE, KeyValueType.SECP256K1, key);
+        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](6);
+        keys[0] = getSingleKey(KeyType.ADMIN, KeyValueType.SECP256K1, key);
         keys[1] = getSingleKey(KeyType.KYC, KeyValueType.SECP256K1, key);
         keys[2] = getSingleKey(KeyType.FREEZE, KeyValueType.SECP256K1, key);
         keys[3] = getSingleKey(KeyType.SUPPLY, KeyValueType.SECP256K1, key);
         keys[4] = getSingleKey(KeyType.WIPE, KeyValueType.SECP256K1, key);
-
+        keys[5] = getSingleKey(KeyType.PAUSE, KeyValueType.SECP256K1, key);
+        
         IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
             0, treasury, 8000000
         );
