@@ -23,7 +23,7 @@ const { expect } = require('chai')
 const Constants = require('../../constants')
 const { expectValidHash } = require('../assertions')
 
-describe.only('TokenCreateCustomContract Test Suite', () => {
+describe('TokenCreateCustomContract Test Suite', () => {
   let signers
   const tokenName = 'WrappedHbar'
   const tokenSymbol = 'WHBAR'
