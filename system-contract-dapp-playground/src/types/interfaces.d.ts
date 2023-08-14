@@ -18,7 +18,26 @@
  *
  */
 
-import { BrowserProvider } from 'ethers';
+import { BaseContract, BrowserProvider, ContractFactory } from 'ethers';
+
+/**
+ * @dev a type for network name
+ */
+type NetworkName = 'mainnet' | 'testnet' | 'previewnet' | 'localnet';
+
+/**
+ * @dev a type for contract names
+ */
+type ContractName =
+  | 'TokenCreateCustomContract'
+  | 'TokenManagementContract'
+  | 'TokenQueryContract'
+  | 'TokenTransferContract'
+  | 'HRCContract'
+  | 'ExchangeRatePrecompile'
+  | 'PrngSystemContract'
+  | 'ERC20Mock'
+  | 'ERC721Mock';
 
 /**
  * @dev an interface for the results related to wallet interaction
@@ -40,23 +59,16 @@ interface WalletResult {
 }
 
 /**
- * @dev a type for network name
+ * @dev an interface for the results related to ethers module
+ *
+ * @params contractFactory?: ContractFactory<any[], BaseContract>
+ *
+ * @params err: any
  */
-type NetworkName = 'mainnet' | 'testnet' | 'previewnet' | 'localnet';
-
-/**
- * @dev a type for contract names
- */
-type ContractName =
-  | 'TokenCreateCustomContract'
-  | 'TokenManagementContract'
-  | 'TokenQueryContract'
-  | 'TokenTransferContract'
-  | 'HRCContract'
-  | 'ExchangeRatePrecompile'
-  | 'PrngSystemContract'
-  | 'ERC20Mock'
-  | 'ERC721Mock';
+interface EthersResult {
+  contractFactory?: ContractFactory<any[], BaseContract>;
+  err?: any;
+}
 
 /**
  * @dev an interface for the results returned back from querying Mirror Node
@@ -114,4 +126,5 @@ interface HederaContractAsset {
   githubUrl: string;
   contractBytecode: string;
   contractABI: ContractABI[];
+  methods: string[];
 }

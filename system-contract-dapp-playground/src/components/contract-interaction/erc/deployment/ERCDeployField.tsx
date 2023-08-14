@@ -20,9 +20,9 @@
 
 import Image from 'next/image';
 import { useToast } from '@chakra-ui/react';
-import { CommonErrorToast } from '../toast/CommonToast';
 import { Dispatch, SetStateAction, useState } from 'react';
-import HederaCommonTextField from '../common/HederaCommonTextField';
+import { CommonErrorToast } from '../../../toast/CommonToast';
+import HederaCommonTextField from '../../../common/HederaCommonTextField';
 
 interface PageProps {
   isDeploying: boolean;
@@ -30,49 +30,65 @@ interface PageProps {
   setDidDeployStart: Dispatch<SetStateAction<boolean>>;
 }
 
-const ExchangeRateDeployField = ({
-  isDeploying,
-  setDidDeployStart,
-  setDeployedParams,
-}: PageProps) => {
+const ERC20DeployField = ({ isDeploying, setDidDeployStart, setDeployedParams }: PageProps) => {
   const toaster = useToast();
-  const [value, setValue] = useState('');
+  const [name, setName] = useState('');
+  const [symbol, setSymbol] = useState('');
 
   const handleDeploy = async () => {
-    // stop user when the param is empty
-    if (value === '') {
+    // stop user when the params are empty
+    let description = null;
+    if (name === '' && symbol === '') {
+      description = `Param fields cannot be empty`;
+    } else if (name === '') {
+      description = `Name field cannot be empty`;
+    } else if (symbol === '') {
+      description = `Symbol field cannot be empty`;
+    }
+    if (description) {
       CommonErrorToast({
         toaster,
         title: 'Cannot deploy contract',
-        description: 'Toll fee cannot be empty',
+        description,
       });
       return;
     }
 
     // update global deployedParam
-    setDeployedParams([value]);
+    setDeployedParams([name, symbol]);
 
     // trigger deploySmartContract API
     setDidDeployStart(true);
   };
 
   return (
-    <div className="flex gap-6 items-center">
+    <div className="flex flex-col gap-3 items-center justify-center">
       <HederaCommonTextField
         size="md"
-        title="Toll"
-        value={value}
-        type="number"
-        setValue={setValue}
-        placeholder="e.g. 100"
-        explanation="The USD in cents that must be sent as msg.value"
+        type="text"
+        title="Name"
+        value={name}
+        setValue={setName}
+        titleBoxSize="w-[200px]"
+        placeholder="e.g. Hedera"
+        explanation="The name of the token"
+      />
+      <HederaCommonTextField
+        size="md"
+        type="text"
+        title="Symbol"
+        value={symbol}
+        setValue={setSymbol}
+        titleBoxSize="w-[200px]"
+        placeholder="e.g. HBAR"
+        explanation="The symbol of the token"
       />
 
       {/* deploy button */}
       <button
         onClick={handleDeploy}
         disabled={isDeploying}
-        className={`border border-hedera-green text-hedera-green px-6 py-2 rounded-xl font-medium hover:bg-hedera-green/50 hover:text-white transition duration-300 ${
+        className={`border border-hedera-green text-hedera-green mt-3 px-24 py-2 rounded-xl font-medium hover:bg-hedera-green/50 hover:text-white transition duration-300 ${
           isDeploying && `cursor-not-allowed`
         }`}
       >
@@ -95,4 +111,4 @@ const ExchangeRateDeployField = ({
   );
 };
 
-export default ExchangeRateDeployField;
+export default ERC20DeployField;
