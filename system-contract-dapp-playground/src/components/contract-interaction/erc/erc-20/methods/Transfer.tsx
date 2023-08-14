@@ -33,7 +33,7 @@ const Transfer = ({ contractFactory }: PageProps) => {
     amount: '',
   });
   const [transferFromParams, setTransferFromParams] = useState({
-    sender: '',
+    owner: '',
     recipient: '',
     amount: '',
   });
@@ -42,7 +42,7 @@ const Transfer = ({ contractFactory }: PageProps) => {
     <div className="w-full mx-3 flex">
       {/* wrapper */}
       <div className="w-full flex gap-12 justify-between items-end">
-        {/* approve() */}
+        {/* transfer() */}
         <MultiLineMethod
           paramFields={transferParamFields}
           methodName={'Transfer'}
@@ -51,13 +51,13 @@ const Transfer = ({ contractFactory }: PageProps) => {
           explanation="Moves `amount` tokens from the caller’s account to `recipient`."
         />
 
-        {/* approve() */}
+        {/* transferFrom() */}
         <MultiLineMethod
           paramFields={transferFromParamFields}
-          methodName={'Approve'}
+          methodName={'Transfer From'}
           params={transferFromParams}
           setParams={setTransferFromParams}
-          explanation="Returns the remaining number of tokens that spender will be allowed to spend on behalf of owner through transferFrom function."
+          explanation="Moves amount tokens from `token owner` to `recipient` using the allowance mechanism. `Token amount` is then deducted from the caller’s allowance."
         />
       </div>
     </div>
