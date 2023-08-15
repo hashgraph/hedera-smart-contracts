@@ -18,7 +18,7 @@
  *
  */
 
-import { getERC20TokenInformation } from '@/api/hedera/erc20-interactions';
+import { erc20Mint, getERC20TokenInformation } from '@/api/hedera/erc20-interactions';
 import { Contract } from 'ethers';
 
 describe('getERC20TokenInformation', () => {
@@ -67,5 +67,45 @@ describe('getERC20TokenInformation', () => {
     expect(res.err).toBeNull;
     expect(getERC20TokenInformation).toBeCalled;
     expect(res.decimals).toBe(expectedDecimals);
+  });
+});
+
+describe('erc20Mint', () => {
+  // Mock baseContract object
+  const baseContract = {
+    mint: jest.fn(),
+  };
+
+  it('should execute erc20Mint', async () => {
+    const res = await erc20Mint(
+      baseContract as unknown as Contract,
+      '0x7a575266b2020e262e9b1ad4eba3014d63630095',
+      120
+    );
+
+    // assertion
+    expect(res.err).toBeNull;
+    expect(erc20Mint).toBeCalled;
+    expect(res.mintRes).toBe(true);
+  });
+
+  it('should failed with invalid recipient address', async () => {
+    const res = await erc20Mint(baseContract as unknown as Contract, '0xabc', 120);
+    // assertion
+    expect(res.err).toBe('Invalid recipient address');
+    expect(erc20Mint).toBeCalled;
+    expect(res.mintRes).toBeNull;
+  });
+
+  it('should failed with invalid token amount', async () => {
+    const res = await erc20Mint(
+      baseContract as unknown as Contract,
+      '0x7a575266b2020e262e9b1ad4eba3014d63630095',
+      -120
+    );
+    // assertion
+    expect(res.err).toBe('Invalid token amount');
+    expect(erc20Mint).toBeCalled;
+    expect(res.mintRes).toBeNull;
   });
 });

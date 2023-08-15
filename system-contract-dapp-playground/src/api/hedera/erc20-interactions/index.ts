@@ -18,7 +18,7 @@
  *
  */
 
-import { Contract } from 'ethers';
+import { Contract, isAddress } from 'ethers';
 import { ERC20MockSmartContractResult } from '@/types/interfaces';
 
 /**
@@ -47,6 +47,37 @@ export const getERC20TokenInformation = async (
       case 'decimals':
         return { decimals: (await baseContract.decimals()).toString() };
     }
+  } catch (err) {
+    console.error(err);
+    return { err };
+  }
+};
+
+/**
+ * @dev mints erc20 tokens
+ *
+ * @param baseContract: ERC20MockMethod
+ *
+ * @param recipientAddress: address
+ *
+ * @param tokenAmount: number
+ *
+ * @return Promise<ERC20MockSmartContractResult>
+ */
+export const erc20Mint = async (
+  baseContract: Contract,
+  recipientAddress: string,
+  tokenAmount: number
+): Promise<ERC20MockSmartContractResult> => {
+  if (!isAddress(recipientAddress)) {
+    return { err: 'Invalid recipient address' };
+  } else if (tokenAmount <= 0) {
+    return { err: 'Invalid token amount' };
+  }
+
+  try {
+    await baseContract.mint(recipientAddress, tokenAmount);
+    return { mintRes: true };
   } catch (err) {
     console.error(err);
     return { err };
