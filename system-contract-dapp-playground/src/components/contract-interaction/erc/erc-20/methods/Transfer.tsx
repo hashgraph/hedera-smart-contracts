@@ -19,12 +19,12 @@
  */
 
 import { useState } from 'react';
+import { Contract } from 'ethers';
 import MultiLineMethod from '../common/MultiLineMethod';
 import { transferParamFields, transferFromParamFields } from '../../utils/constant';
-import { ERC20MockMethod } from '../../utils/methodInterfaces';
 
 interface PageProps {
-  baseContract: ERC20MockMethod;
+  baseContract: Contract;
 }
 
 const Transfer = ({ baseContract }: PageProps) => {

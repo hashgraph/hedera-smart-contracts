@@ -19,13 +19,13 @@
  */
 
 import { useState } from 'react';
+import { Contract } from 'ethers';
 import { Tooltip } from '@chakra-ui/react';
 import { AiOutlineMinus } from 'react-icons/ai';
-import { ERC20MockMethod } from '../../utils/methodInterfaces';
 import HederaCommonTextField from '@/components/common/HederaCommonTextField';
 
 interface PageProps {
-  baseContract: ERC20MockMethod;
+  baseContract: Contract;
 }
 
 const BalanceOf = ({ baseContract }: PageProps) => {

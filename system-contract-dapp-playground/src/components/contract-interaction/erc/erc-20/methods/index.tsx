@@ -19,15 +19,15 @@
  */
 
 import Mint from './Mint';
+import { Contract } from 'ethers';
 import Transfer from './Transfer';
 import BalanceOf from './BalanceOf';
 import TokenPermission from './TokenPermissions';
 import TokenInformation from './TokenInformation';
-import { ERC20MockMethod } from '../../utils/methodInterfaces';
 
 interface PageProps {
   method: string;
-  baseContract: ERC20MockMethod;
+  baseContract: Contract;
 }
 
 const ERC20Methods = ({ baseContract, method }: PageProps) => {

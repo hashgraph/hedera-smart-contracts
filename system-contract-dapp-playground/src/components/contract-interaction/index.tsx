@@ -20,14 +20,13 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { BaseContract } from 'ethers';
+import { Contract } from 'ethers';
 import ERC20Methods from './erc/erc-20/methods';
 import { deploySmartContract } from '@/api/hedera';
 import { HASHSCAN_BASE_URL } from '@/utils/constants';
 import HederaAlertDialog from '../common/AlertDialog';
 import { useCallback, useEffect, useState } from 'react';
 import { generateBaseContractInstance } from '@/api/ethers';
-import { ERC20MockMethod } from './erc/utils/methodInterfaces';
 import ERC20DeployField from './erc/deployment/ERCDeployField';
 import { convertCalmelCaseFunctionName } from '@/utils/helpers';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
@@ -49,9 +48,9 @@ const ContractInteraction = ({ contract }: PageProps) => {
   const [network, setNetwork] = useState<NetworkName>();
   const [contractAddress, setContractAddress] = useState('');
   const [didDeployStart, setDidDeployStart] = useState(false);
+  const [baseContract, setBaseContract] = useState<Contract>();
   const [deployedParams, setDeployedParams] = useState<any>([]);
   const [displayConfirmDialog, setDisplayConfirmDialog] = useState(false);
-  const [baseContract, setBaseContract] = useState<BaseContract>();
 
   // handle set up baseContract
   useEffect(() => {
@@ -77,7 +76,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
           return;
         }
 
-        // update contractFactory state
+        // update baseContract state
         setBaseContract(baseContract);
       }
     })();
@@ -254,10 +253,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
                   <div className="flex py-9 text-xl w-full h-full justify-center items-center">
                     {/* ERC-20 */}
                     {contract.name === 'ERC20Mock' && (
-                      <ERC20Methods
-                        method={method}
-                        baseContract={baseContract! as ERC20MockMethod}
-                      />
+                      <ERC20Methods method={method} baseContract={baseContract! as Contract} />
                     )}
                     {contract.name !== 'ERC20Mock' && <>{convertCalmelCaseFunctionName(method)}</>}
                   </div>

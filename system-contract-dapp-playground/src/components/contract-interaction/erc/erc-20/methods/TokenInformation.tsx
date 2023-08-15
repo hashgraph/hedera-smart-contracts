@@ -18,11 +18,11 @@
  *
  */
 
+import { Contract } from 'ethers';
 import OneLineMethod from '../common/OneLineMethod';
-import { ERC20MockMethod } from '../../utils/methodInterfaces';
 
 interface PageProps {
-  baseContract: ERC20MockMethod;
+  baseContract: Contract;
 }
 
 const TokenInformation = ({ baseContract }: PageProps) => {

@@ -19,12 +19,12 @@
  */
 
 import { useState } from 'react';
+import { Contract } from 'ethers';
 import { mintParamFields } from '../../utils/constant';
 import MultiLineMethod from '../common/MultiLineMethod';
-import { ERC20MockMethod } from '../../utils/methodInterfaces';
 
 interface PageProps {
-  baseContract: ERC20MockMethod;
+  baseContract: Contract;
 }
 
 const Mint = ({ baseContract }: PageProps) => {

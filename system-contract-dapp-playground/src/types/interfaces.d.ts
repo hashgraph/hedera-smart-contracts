@@ -18,7 +18,7 @@
  *
  */
 
-import { BaseContract, BrowserProvider, ContractFactory } from 'ethers';
+import { BrowserProvider, Contract, ContractFactory } from 'ethers';
 
 /**
  * @dev a type for network name
@@ -61,12 +61,12 @@ interface WalletResult {
 /**
  * @dev an interface for the results related to ethers module
  *
- * @params baseContract?: BaseContract
+ * @params baseContract?: ethers.Contract
  *
  * @params err: any
  */
 interface EthersResult {
-  baseContract?: BaseContract;
+  baseContract?: Contract;
   err?: any;
 }
 

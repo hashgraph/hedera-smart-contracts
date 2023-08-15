@@ -21,10 +21,9 @@
 import { ethers } from 'ethers';
 import { getWalletProvider } from '../wallet';
 import { ContractABI, EthersResult } from '@/types/interfaces';
-import { ERC20MockMethod } from '@/components/contract-interaction/erc/utils/methodInterfaces';
 
 /**
- * @dev generate a new BaseContract instance at contractAddress
+ * @dev generate a new ethers.Contract instance at contractAddress
  *
  * @param contractAddress: string
  *
@@ -46,8 +45,8 @@ export const generateBaseContractInstance = async (
     // get signer
     const walletSigner = await walletProvider.walletProvider.getSigner();
 
-    // generate a new BaseContract instance
-    const baseContract = new ethers.BaseContract(
+    // generate a new ethers.Contract instance
+    const baseContract = new ethers.Contract(
       contractAddress,
       JSON.stringify(contractABI),
       walletSigner

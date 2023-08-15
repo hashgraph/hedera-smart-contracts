@@ -19,8 +19,8 @@
  */
 
 import { useState } from 'react';
+import { Contract } from 'ethers';
 import MultiLineMethod from '../common/MultiLineMethod';
-import { ERC20MockMethod } from '../../utils/methodInterfaces';
 import {
   allowanceParamFields,
   approveParamFields,
@@ -29,7 +29,7 @@ import {
 } from '../../utils/constant';
 
 interface PageProps {
-  baseContract: ERC20MockMethod;
+  baseContract: Contract;
 }
 
 const TokenPermission = ({ baseContract }: PageProps) => {
