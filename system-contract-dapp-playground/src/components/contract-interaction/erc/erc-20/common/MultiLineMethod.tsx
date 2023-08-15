@@ -36,7 +36,7 @@ interface PageProps {
   explanation: string;
   widthSize?: string;
   isLoading?: boolean;
-  executeCb?: (method: any) => {};
+  handleExecute?: (method: any) => {};
 }
 
 const MultiLineMethod = ({
@@ -46,7 +46,7 @@ const MultiLineMethod = ({
   explanation,
   widthSize,
   isLoading,
-  executeCb,
+  handleExecute,
   methodName,
 }: PageProps) => {
   return (
@@ -78,7 +78,7 @@ const MultiLineMethod = ({
       <Tooltip label={explanation} placement="top" fontWeight={'normal'}>
         {/* execute button */}
         <button
-          onClick={executeCb}
+          onClick={handleExecute}
           disabled={isLoading}
           className={`border mt-3 py-2 rounded-xl transition duration-300 ${
             isLoading

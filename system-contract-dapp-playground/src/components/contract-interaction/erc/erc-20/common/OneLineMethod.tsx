@@ -28,7 +28,7 @@ interface PageProps {
   titleBoxSize: string;
   explanation: string;
   isLoading?: boolean;
-  executeCb?: (method: any) => {};
+  handleExecute?: (method: any) => {};
 }
 
 const OneLineMethod = ({
@@ -36,7 +36,7 @@ const OneLineMethod = ({
   explanation,
   titleBoxSize,
   outputValue,
-  executeCb,
+  handleExecute,
   isLoading,
 }: PageProps) => {
   return (
@@ -63,7 +63,7 @@ const OneLineMethod = ({
 
       {/* execute button */}
       <button
-        onClick={executeCb}
+        onClick={handleExecute}
         disabled={isLoading || outputValue !== ''}
         className={`border mt-3 w-48 py-2 rounded-xl transition duration-300 ${
           isLoading || outputValue !== ''
