@@ -19,6 +19,7 @@
  */
 
 import { Tooltip } from '@chakra-ui/react';
+import Image from 'next/image';
 import { BsFillQuestionOctagonFill } from 'react-icons/bs';
 
 interface PageProps {
@@ -26,9 +27,18 @@ interface PageProps {
   outputValue: string;
   titleBoxSize: string;
   explanation: string;
+  isLoading?: boolean;
+  handleExecute?: (method: any) => {};
 }
 
-const OneLineMethod = ({ title, explanation, titleBoxSize, outputValue }: PageProps) => {
+const OneLineMethod = ({
+  title,
+  explanation,
+  titleBoxSize,
+  outputValue,
+  handleExecute,
+  isLoading,
+}: PageProps) => {
   return (
     <div className="flex items-center gap-12 px-6">
       {/* title & question mark */}
@@ -53,9 +63,28 @@ const OneLineMethod = ({ title, explanation, titleBoxSize, outputValue }: PagePr
 
       {/* execute button */}
       <button
-        className={`border border-button-stroke-violet text-button-stroke-violet mt-3 px-12 py-2 rounded-xl font-medium hover:bg-button-stroke-violet/60 hover:text-white transition duration-300`}
+        onClick={handleExecute}
+        disabled={isLoading || outputValue !== ''}
+        className={`border mt-3 w-48 py-2 rounded-xl transition duration-300 ${
+          isLoading || outputValue !== ''
+            ? 'cursor-not-allowed border-white/30 text-white/30'
+            : 'border-button-stroke-violet text-button-stroke-violet hover:bg-button-stroke-violet/60 hover:text-white'
+        }`}
       >
-        Execute
+        {isLoading ? (
+          <div className="flex gap-1 justify-center">
+            Executing...
+            <Image
+              src={'/brandings/hedera-logomark.svg'}
+              alt={'hedera-logomark'}
+              width={15}
+              height={15}
+              className="animate-bounce"
+            />
+          </div>
+        ) : (
+          <>{outputValue !== '' ? `Executed` : `Execute`}</>
+        )}
       </button>
     </div>
   );

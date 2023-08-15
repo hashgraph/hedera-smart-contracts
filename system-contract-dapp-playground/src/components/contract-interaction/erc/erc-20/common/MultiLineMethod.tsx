@@ -18,6 +18,7 @@
  *
  */
 
+import Image from 'next/image';
 import { Input, Tooltip } from '@chakra-ui/react';
 
 interface PageProps {
@@ -33,17 +34,23 @@ interface PageProps {
   params: any;
   setParams: any;
   explanation: string;
+  widthSize?: string;
+  isLoading?: boolean;
+  handleExecute?: (method: any) => {};
 }
 
 const MultiLineMethod = ({
   paramFields,
   params,
   setParams,
-  methodName,
   explanation,
+  widthSize,
+  isLoading,
+  handleExecute,
+  methodName,
 }: PageProps) => {
   return (
-    <div className="flex flex-col w-[360px] gap-6">
+    <div className={`flex flex-col ${widthSize && widthSize} gap-3`}>
       {/* inputs */}
       <div className="flex flex-col gap-3">
         {/* spender */}
@@ -69,10 +76,30 @@ const MultiLineMethod = ({
 
       {/* execute button */}
       <Tooltip label={explanation} placement="top" fontWeight={'normal'}>
+        {/* execute button */}
         <button
-          className={`border border-button-stroke-violet text-button-stroke-violet px-12 py-2 rounded-xl font-medium hover:bg-button-stroke-violet/80 hover:text-white transition duration-300`}
+          onClick={handleExecute}
+          disabled={isLoading}
+          className={`border mt-3 py-2 rounded-xl transition duration-300 ${
+            isLoading
+              ? 'cursor-not-allowed border-white/30 text-white/30'
+              : 'border-button-stroke-violet text-button-stroke-violet hover:bg-button-stroke-violet/60 hover:text-white'
+          }`}
         >
-          {methodName}
+          {isLoading ? (
+            <div className="flex gap-1 justify-center">
+              Executing...
+              <Image
+                src={'/brandings/hedera-logomark.svg'}
+                alt={'hedera-logomark'}
+                width={15}
+                height={15}
+                className="animate-bounce"
+              />
+            </div>
+          ) : (
+            <>{methodName}</>
+          )}
         </button>
       </Tooltip>
     </div>
