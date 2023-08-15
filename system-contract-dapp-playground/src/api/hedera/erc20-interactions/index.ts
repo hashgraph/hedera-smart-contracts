@@ -18,8 +18,8 @@
  *
  */
 
-import { ERC20MockSmartContractResult } from '@/types/interfaces';
 import { Contract } from 'ethers';
+import { ERC20MockSmartContractResult } from '@/types/interfaces';
 
 /**
  * @dev get token information
