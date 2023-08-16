@@ -18,9 +18,9 @@
  *
  */
 
+const utils = require('../utils')
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
-const utils = require('../utils')
 const { expectValidHash } = require('../assertions')
 const Constants = require('../../constants')
 const {
@@ -33,15 +33,12 @@ const {
 
 describe('TokenCreateContract Test Suite', function () {
   let tokenCreateContract
-  let tokenCreateCustomContract
   let tokenTransferContract
   let tokenManagmentContract
   let tokenQueryContract
   let erc20Contract
-  let erc721Contract
   let tokenAddress
   let nftTokenAddress
-  let mintedTokenSerialNumber
   let signers
 
   before(async function () {
@@ -287,21 +284,23 @@ describe('TokenCreateContract Test Suite', function () {
     ).to.equal(22)
   })
 
-  describe('Hapi vs Ethereum token create test', function () {
-    const tokenName = 'WrappedHbar'
-    const tokenSymbol = 'WHBAR'
-    const tokenMemo = 'Wrapped Hbar'
-    const initialSupply = 1500
-    const maxSupply = 2000
+  describe.only('Hapi vs Ethereum token create test', function () {
+    const tokenName = 'tokenName'
+    const tokenSymbol = 'tokenSymbol'
+    const tokenMemo = 'memo'
+    const initialSupply = 1000
+    const maxSupply = 1000
     const decimals = 8
     const freezeDefaultStatus = false
     const key = PublicKey.fromBytes(utils.getSignerCompressedPublicKey())
+    let signers
 
     before(async function () {
-      tokenCreateCustomContract = await utils.deployTokenCreateCustomContract()
+      signers = await ethers.getSigners()
+      tokenCreateContract = await utils.deployTokenCreateContract()
       tokenQueryContract = await utils.deployTokenQueryContract()
       await utils.updateAccountKeysViaHapi([
-        tokenCreateCustomContract.address,
+        tokenCreateContract.address,
         tokenQueryContract.address,
       ])
     })
@@ -313,26 +312,24 @@ describe('TokenCreateContract Test Suite', function () {
         client
       )
 
-      const tokenCreate = await (
-        await new TokenCreateTransaction()
-          .setTokenName(tokenName)
-          .setTokenMemo(tokenMemo)
-          .setTokenSymbol(tokenSymbol)
-          .setDecimals(decimals)
-          .setInitialSupply(initialSupply)
-          .setMaxSupply(maxSupply)
-          .setSupplyType(TokenSupplyType.Finite)
-          .setTreasuryAccountId(client.operatorAccountId)
-          .setAutoRenewAccountId(autoRenewAccount)
-          .setKycKey(key)
-          .setWipeKey(key)
-          .setPauseKey(key)
-          .setFreezeKey(key)
-          .setSupplyKey(key)
-          .setFreezeDefault(freezeDefaultStatus)
-          .setTransactionId(TransactionId.generate(client.operatorAccountId))
-          .setNodeAccountIds([client._network.getNodeAccountIdsForExecute()[0]])
-      )
+      const tokenCreate = await new TokenCreateTransaction()
+        .setTokenName(tokenName)
+        .setTokenMemo(tokenMemo)
+        .setTokenSymbol(tokenSymbol)
+        .setDecimals(decimals)
+        .setInitialSupply(initialSupply)
+        .setMaxSupply(maxSupply)
+        .setSupplyType(TokenSupplyType.Finite)
+        .setTreasuryAccountId(client.operatorAccountId)
+        .setAutoRenewAccountId(autoRenewAccount)
+        .setKycKey(key)
+        .setWipeKey(key)
+        .setPauseKey(key)
+        .setFreezeKey(key)
+        .setSupplyKey(key)
+        .setFreezeDefault(freezeDefaultStatus)
+        .setTransactionId(TransactionId.generate(client.operatorAccountId))
+        .setNodeAccountIds([client._network.getNodeAccountIdsForExecute()[0]])
         .setTransactionMemo('Token')
         .execute(client)
 
@@ -343,14 +340,7 @@ describe('TokenCreateContract Test Suite', function () {
 
     async function createTokenviaPrecompile() {
       const tokenAddressTx =
-        await tokenCreateCustomContract.createFungibleTokenPublic(
-          tokenName,
-          tokenSymbol,
-          tokenMemo,
-          initialSupply,
-          maxSupply,
-          decimals,
-          freezeDefaultStatus,
+        await tokenCreateContract.createFungibleTokenWithSECP256K1AdminKeyPublic(
           signers[0].address,
           utils.getSignerCompressedPublicKey(),
           {
@@ -374,6 +364,7 @@ describe('TokenCreateContract Test Suite', function () {
 
       const hapiTokenInfoTx =
         await tokenQueryContract.getFungibleTokenInfoPublic(hapiTokenAddress)
+
       const hapiTokenInfo = (await hapiTokenInfoTx.wait()).events.filter(
         (e) => e.event === Constants.Events.FungibleTokenInfo
       )[0].args.tokenInfo[0][0]
@@ -382,6 +373,7 @@ describe('TokenCreateContract Test Suite', function () {
         await tokenQueryContract.getFungibleTokenInfoPublic(
           precompileTokenAddress
         )
+
       const precompileTokenInfo = (
         await precompileTokenInfoTx.wait()
       ).events.filter((e) => e.event === Constants.Events.FungibleTokenInfo)[0]
