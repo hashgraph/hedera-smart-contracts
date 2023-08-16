@@ -21,15 +21,6 @@
 import { Contract, ethers } from 'ethers';
 import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/constants';
 
-// Mock the provider and signer
-const mockProvider = {
-  getSigner: jest.fn(),
-};
-
-const mockSigner = {
-  getAddress: jest.fn(),
-};
-
 // Mock the ethers.Contract constructor
 jest.mock('ethers', () => {
   const actualEthers = jest.requireActual('ethers');
