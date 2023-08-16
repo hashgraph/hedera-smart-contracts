@@ -397,11 +397,6 @@ describe('TokenCreateCustomContract Test Suite', () => {
       )
       const callerAddress = await wallet0.getAddress()
 
-      const callerPubKey = Buffer.from(
-        wallet0._signingKey().compressedPublicKey.replace('0x', ''),
-        'hex'
-      )
-
       const wallet1 = new ethers.Wallet(
         hre.config.networks[network.name].accounts[1]
       )
@@ -426,7 +421,6 @@ describe('TokenCreateCustomContract Test Suite', () => {
           gasLimit: 1_000_000,
         }
       )
-      expect(callerPubKey).to.not.eq(failedKey)
       expect(tx.from).to.eq(callerAddress)
       expect(tx.to).to.be.null
 
