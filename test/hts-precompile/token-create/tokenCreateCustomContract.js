@@ -22,6 +22,7 @@ const utils = require('../utils')
 const { expect } = require('chai')
 const Constants = require('../../constants')
 const { expectValidHash } = require('../assertions')
+const { ethers } = require('hardhat')
 
 describe('TokenCreateCustomContract Test Suite', () => {
   let signers
@@ -386,6 +387,91 @@ describe('TokenCreateCustomContract Test Suite', () => {
           (e) => e.event === Constants.Events.ResponseCode
         )[0].args.responseCode
       ).to.equal(22)
+    })
+  })
+
+  describe('Key params', () => {
+    it.only("should fail when the key param is different than the caller's public key", async () => {
+      const wallet0 = new ethers.Wallet(
+        hre.config.networks[network.name].accounts[0]
+      )
+      const callerAddress = await wallet0.getAddress()
+
+      const callerPubKey = Buffer.from(
+        wallet0._signingKey().compressedPublicKey.replace('0x', ''),
+        'hex'
+      )
+
+      const wallet1 = new ethers.Wallet(
+        hre.config.networks[network.name].accounts[1]
+      )
+
+      const failedKey = Buffer.from(
+        wallet1._signingKey().compressedPublicKey.replace('0x', ''),
+        'hex'
+      )
+
+      const tx = await tokenCreateCustomContract.createFungibleTokenPublic(
+        tokenName,
+        tokenSymbol,
+        tokenMemo,
+        initialSupply,
+        maxSupply,
+        decimals,
+        freezeDefaultStatus,
+        signers[0].address,
+        failedKey,
+        {
+          value: '20000000000000000000',
+          gasLimit: 1_000_000,
+        }
+      )
+      expect(callerPubKey).to.not.eq(failedKey)
+      expect(tx.from).to.eq(callerAddress)
+      expect(tx.to).to.be.null
+
+      try {
+        await tx.wait()
+      } catch (error) {
+        expect(error).to.exist
+        expect(error.reason).to.eq('transaction failed')
+      }
+    })
+
+    it.only("should pass when the key caller's public key is set as key param", async () => {
+      const wallet0 = new ethers.Wallet(
+        hre.config.networks[network.name].accounts[0]
+      )
+      const callerAddress = await wallet0.getAddress()
+
+      const callerPubKey = Buffer.from(
+        wallet0._signingKey().compressedPublicKey.replace('0x', ''),
+        'hex'
+      )
+
+      const tx = await tokenCreateCustomContract.createFungibleTokenPublic(
+        tokenName,
+        tokenSymbol,
+        tokenMemo,
+        initialSupply,
+        maxSupply,
+        decimals,
+        freezeDefaultStatus,
+        signers[0].address,
+        callerPubKey,
+        {
+          value: '20000000000000000000',
+          gasLimit: 1_000_000,
+        }
+      )
+      expect(tx.from).to.eq(callerAddress)
+      expect(tx.to).to.exist
+
+      const txReceipt = await tx.wait()
+      const { tokenAddress } = txReceipt.events[0].args
+
+      expect(tokenAddress).to.exist
+      expectValidHash(tokenAddress, 40)
     })
   })
 })
