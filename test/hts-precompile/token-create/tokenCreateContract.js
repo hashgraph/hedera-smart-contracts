@@ -284,7 +284,7 @@ describe('TokenCreateContract Test Suite', function () {
     ).to.equal(22)
   })
 
-  describe.only('Hapi vs Ethereum token create test', function () {
+  describe('Hapi vs Ethereum token create test', function () {
     const tokenName = 'tokenName'
     const tokenSymbol = 'tokenSymbol'
     const tokenMemo = 'memo'
