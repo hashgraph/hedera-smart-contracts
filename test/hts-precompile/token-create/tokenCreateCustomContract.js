@@ -391,7 +391,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
   })
 
   describe('Key params', () => {
-    it.only("should fail when the key param is different than the caller's public key", async () => {
+    it("should fail when the key param is different than the caller's public key", async () => {
       const wallet0 = new ethers.Wallet(
         hre.config.networks[network.name].accounts[0]
       )
@@ -438,7 +438,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
       }
     })
 
-    it.only("should pass when the key caller's public key is set as key param", async () => {
+    it("should pass when the key caller's public key is set as key param", async () => {
       const wallet0 = new ethers.Wallet(
         hre.config.networks[network.name].accounts[0]
       )
