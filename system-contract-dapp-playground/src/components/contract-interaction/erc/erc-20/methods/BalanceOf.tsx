@@ -19,16 +19,16 @@
  */
 
 import { useState } from 'react';
+import { Contract } from 'ethers';
 import { Tooltip } from '@chakra-ui/react';
 import { AiOutlineMinus } from 'react-icons/ai';
-import { ContractFactory, BaseContract } from 'ethers';
 import HederaCommonTextField from '@/components/common/HederaCommonTextField';
 
 interface PageProps {
-  contractFactory: ContractFactory<any[], BaseContract>;
+  baseContract: Contract;
 }
 
-const BalanceOf = ({ contractFactory }: PageProps) => {
+const BalanceOf = ({ baseContract }: PageProps) => {
   const [value, setValue] = useState('');
   const [balances, setBalances] = useState([
     {

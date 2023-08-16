@@ -20,13 +20,13 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { Contract } from 'ethers';
 import ERC20Methods from './erc/erc-20/methods';
-import { getContractFactory } from '@/api/ethers';
 import { deploySmartContract } from '@/api/hedera';
 import { HASHSCAN_BASE_URL } from '@/utils/constants';
 import HederaAlertDialog from '../common/AlertDialog';
-import { BaseContract, ContractFactory } from 'ethers';
 import { useCallback, useEffect, useState } from 'react';
+import { generateBaseContractInstance } from '@/api/ethers';
 import ERC20DeployField from './erc/deployment/ERCDeployField';
 import { convertCalmelCaseFunctionName } from '@/utils/helpers';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
@@ -48,37 +48,39 @@ const ContractInteraction = ({ contract }: PageProps) => {
   const [network, setNetwork] = useState<NetworkName>();
   const [contractAddress, setContractAddress] = useState('');
   const [didDeployStart, setDidDeployStart] = useState(false);
+  const [baseContract, setBaseContract] = useState<Contract>();
   const [deployedParams, setDeployedParams] = useState<any>([]);
   const [displayConfirmDialog, setDisplayConfirmDialog] = useState(false);
-  const [contractFactory, setContractFactory] = useState<ContractFactory<any[], BaseContract>>();
 
-  // handle set up contractFactory
+  // handle set up baseContract
   useEffect(() => {
     (async () => {
-      const { contractFactory, err: contractFactoryErr } = await getContractFactory(
-        contract.contractABI,
-        contract.contractBytecode
-      );
+      if (contractAddress) {
+        const { baseContract, err: baseContractErr } = await generateBaseContractInstance(
+          contractAddress,
+          contract.contractABI
+        );
 
-      // handle error
-      if (contractFactoryErr || !contractFactory) {
-        if (contractFactoryErr === '!HEDERA') {
-          NoWalletToast({ toaster });
+        // handle error
+        if (baseContractErr || !baseContract) {
+          if (baseContractErr === '!HEDERA') {
+            NoWalletToast({ toaster });
+            return;
+          }
+
+          CommonErrorToast({
+            toaster,
+            title: 'Cannot deploy contract',
+            description: "See client's console for more information",
+          });
           return;
         }
 
-        CommonErrorToast({
-          toaster,
-          title: 'Cannot deploy contract',
-          description: "See client's console for more information",
-        });
-        return;
+        // update baseContract state
+        setBaseContract(baseContract);
       }
-
-      // update contractFactory state
-      setContractFactory(contractFactory);
     })();
-  }, [contract.contractABI, contract.contractBytecode, toaster]);
+  }, [contract.contractABI, contractAddress, toaster]);
 
   /** @dev handle deploying contract */
   const handleDeployContract = useCallback(async () => {
@@ -251,7 +253,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
                   <div className="flex py-9 text-xl w-full h-full justify-center items-center">
                     {/* ERC-20 */}
                     {contract.name === 'ERC20Mock' && (
-                      <ERC20Methods contractFactory={contractFactory!} method={method} />
+                      <ERC20Methods method={method} baseContract={baseContract! as Contract} />
                     )}
                     {contract.name !== 'ERC20Mock' && <>{convertCalmelCaseFunctionName(method)}</>}
                   </div>

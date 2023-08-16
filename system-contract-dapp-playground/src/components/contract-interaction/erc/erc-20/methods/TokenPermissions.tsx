@@ -19,7 +19,7 @@
  */
 
 import { useState } from 'react';
-import { ContractFactory, BaseContract } from 'ethers';
+import { Contract } from 'ethers';
 import MultiLineMethod from '../common/MultiLineMethod';
 import {
   allowanceParamFields,
@@ -29,10 +29,10 @@ import {
 } from '../../utils/constant';
 
 interface PageProps {
-  contractFactory: ContractFactory<any[], BaseContract>;
+  baseContract: Contract;
 }
 
-const TokenPermission = ({ contractFactory }: PageProps) => {
+const TokenPermission = ({ baseContract }: PageProps) => {
   const [approveParams, setApproveParams] = useState({
     spender: '',
     amount: '',

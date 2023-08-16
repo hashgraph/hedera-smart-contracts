@@ -18,14 +18,14 @@
  *
  */
 
+import { Contract } from 'ethers';
 import OneLineMethod from '../common/OneLineMethod';
-import { ContractFactory, BaseContract } from 'ethers';
 
 interface PageProps {
-  contractFactory: ContractFactory<any[], BaseContract>;
+  baseContract: Contract;
 }
 
-const TokenInformation = ({ contractFactory }: PageProps) => {
+const TokenInformation = ({ baseContract }: PageProps) => {
   return (
     <div className="w-full">
       {/* wrapper */}

@@ -19,15 +19,15 @@
  */
 
 import { useState } from 'react';
-import { ContractFactory, BaseContract } from 'ethers';
-import MultiLineMethod from '../common/MultiLineMethod';
+import { Contract } from 'ethers';
 import { mintParamFields } from '../../utils/constant';
+import MultiLineMethod from '../common/MultiLineMethod';
 
 interface PageProps {
-  contractFactory: ContractFactory<any[], BaseContract>;
+  baseContract: Contract;
 }
 
-const Mint = ({ contractFactory }: PageProps) => {
+const Mint = ({ baseContract }: PageProps) => {
   const [mintParams, setMintParams] = useState({
     recipient: '',
     amount: '',
