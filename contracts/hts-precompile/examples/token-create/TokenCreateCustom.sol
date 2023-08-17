@@ -22,16 +22,8 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         int32 decimals,
         bool freezeDefaultStatus,
         address treasury,
-        bytes memory key
+        IHederaTokenService.TokenKey[] memory keys
     ) public payable {
-        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](6);
-        keys[0] = getSingleKey(KeyType.ADMIN, KeyValueType.SECP256K1, key);
-        keys[1] = getSingleKey(KeyType.KYC, KeyValueType.SECP256K1, key);
-        keys[2] = getSingleKey(KeyType.FREEZE, KeyValueType.SECP256K1, key);
-        keys[3] = getSingleKey(KeyType.SUPPLY, KeyValueType.SECP256K1, key);
-        keys[4] = getSingleKey(KeyType.WIPE, KeyValueType.SECP256K1, key);
-        keys[5] = getSingleKey(KeyType.PAUSE, KeyValueType.SECP256K1, key);
-
         IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
             0, treasury, 8000000
         );
@@ -39,14 +31,13 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         IHederaTokenService.HederaToken memory token = IHederaTokenService.HederaToken(
             name, symbol, treasury, memo, true, maxSupply, freezeDefaultStatus, keys, expiry
         );
-
+        
         (int responseCode, address tokenAddress) =
         HederaTokenService.createFungibleToken(token, initialTotalSupply, decimals);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert ();
         }
-
         emit CreatedToken(tokenAddress);
     }
 
@@ -59,16 +50,8 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         int64 initialTotalSupply,
         int64 maxSupply,
         int32 decimals,
-        bytes memory key
+        IHederaTokenService.TokenKey[] memory keys
     ) public payable {
-        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](6);
-        keys[0] = getSingleKey(KeyType.ADMIN, KeyValueType.SECP256K1, key);
-        keys[1] = getSingleKey(KeyType.KYC, KeyValueType.SECP256K1, key);
-        keys[2] = getSingleKey(KeyType.FREEZE, KeyValueType.SECP256K1, key);
-        keys[3] = getSingleKey(KeyType.SUPPLY, KeyValueType.SECP256K1, key);
-        keys[4] = getSingleKey(KeyType.WIPE, KeyValueType.SECP256K1, key);
-        keys[5] = getSingleKey(KeyType.PAUSE, KeyValueType.SECP256K1, key);
-
         IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
             0, treasury, 8000000
         );
@@ -100,16 +83,8 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         string memory memo,
         int64 maxSupply,
         address treasury,
-        bytes memory key
+        IHederaTokenService.TokenKey[] memory keys
     ) public payable {
-        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](6);
-        keys[0] = getSingleKey(KeyType.ADMIN, KeyValueType.SECP256K1, key);
-        keys[1] = getSingleKey(KeyType.KYC, KeyValueType.SECP256K1, key);
-        keys[2] = getSingleKey(KeyType.FREEZE, KeyValueType.SECP256K1, key);
-        keys[3] = getSingleKey(KeyType.SUPPLY, KeyValueType.SECP256K1, key);
-        keys[4] = getSingleKey(KeyType.WIPE, KeyValueType.SECP256K1, key);
-        keys[5] = getSingleKey(KeyType.PAUSE, KeyValueType.SECP256K1, key);
-
         IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
             0, treasury, 8000000
         );
@@ -135,16 +110,8 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         string memory symbol,
         string memory memo,
         int64 maxSupply,
-        bytes memory key
+        IHederaTokenService.TokenKey[] memory keys
     ) public payable {
-        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](6);
-        keys[0] = getSingleKey(KeyType.ADMIN, KeyValueType.SECP256K1, key);
-        keys[1] = getSingleKey(KeyType.KYC, KeyValueType.SECP256K1, key);
-        keys[2] = getSingleKey(KeyType.FREEZE, KeyValueType.SECP256K1, key);
-        keys[3] = getSingleKey(KeyType.SUPPLY, KeyValueType.SECP256K1, key);
-        keys[4] = getSingleKey(KeyType.WIPE, KeyValueType.SECP256K1, key);
-        keys[5] = getSingleKey(KeyType.PAUSE, KeyValueType.SECP256K1, key);
-        
         IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
             0, treasury, 8000000
         );

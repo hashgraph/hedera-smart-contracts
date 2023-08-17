@@ -248,7 +248,7 @@ class Utils {
     decimals,
     freezeDefaultStatus,
     signerAddress,
-    key,
+    keys,
     contract
   ) {
     const tokenAddress = (
@@ -262,14 +262,16 @@ class Utils {
           decimals,
           freezeDefaultStatus,
           signerAddress,
-          key,
+          keys,
           {
-            value: '200000000000000000000',
+            value: '35000000000000000000',
             gasLimit: 1_000_000,
           }
         )
       ).wait()
-    ).events[0].args.tokenAddress
+    ).events.filter((e) => e.event === Constants.Events.CreatedToken)[0].args
+      .tokenAddress
+
     return tokenAddress
   }
 
@@ -557,6 +559,7 @@ class Utils {
     ecdsaPrivateKeys = ecdsaPrivateKeys.length
       ? ecdsaPrivateKeys
       : await this.getHardhatSignersPrivateKeys(false)
+
     for (let i in ecdsaPrivateKeys) {
       const pkSigner = PrivateKey.fromStringECDSA(
         ecdsaPrivateKeys[i].replace('0x', '')
@@ -667,6 +670,106 @@ class Utils {
     const signTx = await transaction.sign(signerPk)
     const txResponse = await signTx.execute(signerClient)
     await txResponse.getReceipt(signerClient)
+  }
+
+  /**
+   * @dev Prepares an array of typed IHederaTokenService.TokenKey for HTS token creation transactions.
+   *
+   * @notice IHederaTokenService.KeyValue supports a range of systems (e.g. ED25519, ECDSA secp256k1, etc.).
+   *         Refer to the documentation at https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L116
+   *         for more information on supported key types.
+   *
+   * @notice This function sets the `contractEVMAddress` (the address of the deployed HTS example contract) as the key for all key types (e.g. ADMIN, KYC, SUPPLY, etc.) for testing purposes.
+   *         If any other `keys` besides the `contractEVMAddress` are desired to be set, the keys must first sign an AccountUpdate transaction.
+   *         Refer to `this.updateAccountKeysViaHapi()` for usage examples on signing with `keys`.
+   */
+  static prepareTokenKey(contractEVMAddress, ECDSAPubKey) {
+    return [
+      {
+        keyType: 1, // 0th bit: ADMIN
+        key: {
+          inheritAccountKey: false,
+          contractId: contractEVMAddress
+            ? contractEVMAddress
+            : ethers.constants.AddressZero,
+          ed25519: Buffer.from('', 'hex'),
+          ECDSA_secp256k1: ECDSAPubKey ? ECDSAPubKey : Buffer.from('', 'hex'),
+          delegatableContractId: ethers.constants.AddressZero,
+        },
+      },
+      {
+        keyType: 2, // 1st bit: KYC
+        key: {
+          inheritAccountKey: false,
+          contractId: contractEVMAddress
+            ? contractEVMAddress
+            : ethers.constants.AddressZero,
+          ed25519: Buffer.from('', 'hex'),
+          ECDSA_secp256k1: ECDSAPubKey ? ECDSAPubKey : Buffer.from('', 'hex'),
+          delegatableContractId: ethers.constants.AddressZero,
+        },
+      },
+      {
+        keyType: 4, // 2nd bit: FREEZE
+        key: {
+          inheritAccountKey: false,
+          contractId: contractEVMAddress
+            ? contractEVMAddress
+            : ethers.constants.AddressZero,
+          ed25519: Buffer.from('', 'hex'),
+          ECDSA_secp256k1: ECDSAPubKey ? ECDSAPubKey : Buffer.from('', 'hex'),
+          delegatableContractId: ethers.constants.AddressZero,
+        },
+      },
+      {
+        keyType: 8, // 3rd bit: WIPE
+        key: {
+          inheritAccountKey: false,
+          contractId: contractEVMAddress
+            ? contractEVMAddress
+            : ethers.constants.AddressZero,
+          ed25519: Buffer.from('', 'hex'),
+          ECDSA_secp256k1: ECDSAPubKey ? ECDSAPubKey : Buffer.from('', 'hex'),
+          delegatableContractId: ethers.constants.AddressZero,
+        },
+      },
+      {
+        keyType: 16, // 4th bit: SUPPLY
+        key: {
+          inheritAccountKey: false,
+          contractId: contractEVMAddress
+            ? contractEVMAddress
+            : ethers.constants.AddressZero,
+          ed25519: Buffer.from('', 'hex'),
+          ECDSA_secp256k1: ECDSAPubKey ? ECDSAPubKey : Buffer.from('', 'hex'),
+          delegatableContractId: ethers.constants.AddressZero,
+        },
+      },
+      {
+        keyType: 32, // 5th bit: FEE
+        key: {
+          inheritAccountKey: false,
+          contractId: contractEVMAddress
+            ? contractEVMAddress
+            : ethers.constants.AddressZero,
+          ed25519: Buffer.from('', 'hex'),
+          ECDSA_secp256k1: ECDSAPubKey ? ECDSAPubKey : Buffer.from('', 'hex'),
+          delegatableContractId: ethers.constants.AddressZero,
+        },
+      },
+      {
+        keyType: 64, // 6th bit: PAUSE
+        key: {
+          inheritAccountKey: false,
+          contractId: contractEVMAddress
+            ? contractEVMAddress
+            : ethers.constants.AddressZero,
+          ed25519: Buffer.from('', 'hex'),
+          ECDSA_secp256k1: ECDSAPubKey ? ECDSAPubKey : Buffer.from('', 'hex'),
+          delegatableContractId: ethers.constants.AddressZero,
+        },
+      },
+    ]
   }
 }
 
