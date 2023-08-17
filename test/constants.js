@@ -46,6 +46,7 @@ const Events = {
   PausedToken: 'PausedToken',
   UnpausedToken: 'UnpausedToken',
   CreatedToken: 'CreatedToken',
+  TransferToken: 'TransferToken',
   MintedToken: 'MintedToken',
   CallResponseEvent: 'CallResponseEvent',
   GetTokenInfo: 'GetTokenInfo',
