@@ -391,7 +391,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
   })
 
   describe('Key params', () => {
-    it("should fail when the key param is different than the caller's public key", async () => {
+    it('should fail when token create has missing signatures in transaction', async () => {
       const wallet0 = new ethers.Wallet(
         hre.config.networks[network.name].accounts[0]
       )
