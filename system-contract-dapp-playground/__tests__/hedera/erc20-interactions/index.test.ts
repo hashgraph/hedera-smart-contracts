@@ -18,8 +18,8 @@
  *
  */
 
-import { erc20Mint, getERC20TokenInformation } from '@/api/hedera/erc20-interactions';
 import { Contract } from 'ethers';
+import { balanceOf, erc20Mint, getERC20TokenInformation } from '@/api/hedera/erc20-interactions';
 
 describe('getERC20TokenInformation', () => {
   const expectedName = 'TokenName';
@@ -107,5 +107,23 @@ describe('erc20Mint', () => {
     expect(res.err).toBe('Invalid token amount');
     expect(erc20Mint).toBeCalled;
     expect(res.mintRes).toBeNull;
+  });
+});
+
+describe('balanceOf', () => {
+  const baseContract = {
+    balanceOf: jest.fn().mockResolvedValue('120'),
+  };
+
+  it('should execute balanceOf', async () => {
+    const balanceOfRes = await balanceOf(
+      baseContract as unknown as Contract,
+      '0x7a575266b2020e262e9b1ad4eba3014d63630095'
+    );
+
+    // assertion
+    expect(balanceOfRes.err).toBeNull;
+    expect(balanceOfRes.balanceOfRes).toBe('120');
+    expect(balanceOf).toBeCalled;
   });
 });

@@ -56,7 +56,7 @@ export const getERC20TokenInformation = async (
 /**
  * @dev mints erc20 tokens
  *
- * @param baseContract: ERC20MockMethod
+ * @param baseContract: Contract
  *
  * @param recipientAddress: address
  *
@@ -78,6 +78,31 @@ export const erc20Mint = async (
   try {
     await baseContract.mint(recipientAddress, tokenAmount);
     return { mintRes: true };
+  } catch (err) {
+    console.error(err);
+    return { err };
+  }
+};
+
+/**
+ * @dev get token balance owned by `accountAddress`
+ *
+ * @param baseContract: Contract
+ *
+ * @param accountAddress: address
+ *
+ * @return Promise<ERC20MockSmartContractResult>
+ */
+export const balanceOf = async (
+  baseContract: Contract,
+  accountAddress: string
+): Promise<ERC20MockSmartContractResult> => {
+  if (!isAddress(accountAddress)) {
+    return { err: 'Invalid account address' };
+  }
+
+  try {
+    return { balanceOfRes: (await baseContract.balanceOf(accountAddress)).toString() };
   } catch (err) {
     console.error(err);
     return { err };
