@@ -51,117 +51,31 @@ const TokenInformation = ({ baseContract }: PageProps) => {
   });
 
   /**
-   * @dev handle execute token information queries
+   * @dev handle executing token information queries
    */
   const handleExecutingMethods = async (method: 'name' | 'symbol' | 'totalSupply' | 'decimals') => {
-    let errTitle;
+    // turn on isLoading
+    setTokenInfo((prev) => ({ ...prev, [method]: { ...prev[method], isLoading: true } }));
 
-    switch (method) {
-      case 'name':
-        // turn on isLoading
-        setTokenInfo((prev) => ({ ...prev, name: { ...prev.name, isLoading: true } }));
+    // invoke getERC20TokenInformation API
+    const tokenInfoRes = await getERC20TokenInformation(baseContract, method);
+    setTokenInfo((prev) => ({ ...prev, [method]: { ...prev[method], isLoading: false } }));
 
-        // invoke getERC20TokenName API
-        const { name, err: nameErr } = await getERC20TokenInformation(baseContract, 'name');
-        setTokenInfo((prev) => ({ ...prev, name: { ...prev.name, isLoading: false } }));
-        // handle err
-        if (nameErr || !name) {
-          errTitle = 'Cannot execute function name()';
-          break;
-        } else {
-          // update tokenInfo state
-          setTokenInfo((prev) => ({ ...prev, name: { ...prev.name, result: name } }));
-        }
-
-        break;
-
-      case 'symbol':
-        // turn on isLoading
-        setTokenInfo((prev) => ({ ...prev, symbol: { ...prev.symbol, isLoading: true } }));
-
-        // invoke getERC20TokenName API
-        const { symbol, err: symbolToken } = await getERC20TokenInformation(baseContract, 'symbol');
-        setTokenInfo((prev) => ({ ...prev, symbol: { ...prev.symbol, isLoading: false } }));
-        // handle err
-        if (symbolToken || !symbol) {
-          errTitle = 'Cannot execute function name()';
-          break;
-        } else {
-          // update tokenInfo state
-          setTokenInfo((prev) => ({
-            ...prev,
-            symbol: { ...prev.symbol, result: symbol.toUpperCase() },
-          }));
-        }
-        break;
-
-      case 'totalSupply':
-        // turn on isLoading
-        setTokenInfo((prev) => ({
-          ...prev,
-          totalSupply: { ...prev.totalSupply, isLoading: true },
-        }));
-
-        // invoke getERC20TokenName API
-        const { totalSupply, err: totalSupplyToken } = await getERC20TokenInformation(
-          baseContract,
-          'totalSupply'
-        );
-        setTokenInfo((prev) => ({
-          ...prev,
-          totalSupply: { ...prev.totalSupply, isLoading: false },
-        }));
-        // handle err
-        if (totalSupplyToken || !totalSupply) {
-          errTitle = 'Cannot execute function name()';
-          break;
-        } else {
-          // update tokenInfo state
-          setTokenInfo((prev) => ({
-            ...prev,
-            totalSupply: { ...prev.totalSupply, result: totalSupply.toUpperCase() },
-          }));
-        }
-        break;
-
-      case 'decimals':
-        // turn on isLoading
-        setTokenInfo((prev) => ({
-          ...prev,
-          decimals: { ...prev.decimals, isLoading: true },
-        }));
-
-        // invoke getERC20TokenName API
-        const { decimals, err: decimalsToken } = await getERC20TokenInformation(
-          baseContract,
-          'decimals'
-        );
-        setTokenInfo((prev) => ({
-          ...prev,
-          decimals: { ...prev.decimals, isLoading: false },
-        }));
-        // handle err
-        if (decimalsToken || !decimals) {
-          errTitle = 'Cannot execute function name()';
-          break;
-        } else {
-          // update tokenInfo state
-          setTokenInfo((prev) => ({
-            ...prev,
-            decimals: { ...prev.decimals, result: decimals.toUpperCase() },
-          }));
-        }
-        break;
-    }
-
-    // toast out client error
-    if (errTitle) {
+    // handle err
+    if (tokenInfoRes.err || !tokenInfoRes[method]) {
+      // toast out client error
       CommonErrorToast({
         toaster,
-        title: errTitle,
+        title: `Cannot execute function ${method}()`,
         description: "See client's console for more information",
       });
       return;
+    } else {
+      // update tokenInfo state
+      setTokenInfo((prev) => ({
+        ...prev,
+        [method]: { ...prev[method], result: tokenInfoRes[method] },
+      }));
     }
   };
 
