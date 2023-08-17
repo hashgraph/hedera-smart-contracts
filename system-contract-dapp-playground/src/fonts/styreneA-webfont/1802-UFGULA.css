@@ -1,0 +1,240 @@
+/*
+        This font software is the property of Commercial Type.
+
+        You may not modify the font software, use it on another website, or install it on a computer.
+
+        License information is available at http://commercialtype.com/eula
+        For more information please visit Commercial Type at http://commercialtype.com or email us at info[at]commercialtype.com
+
+        Copyright (C) 2018 Schwartzco Inc.
+        License: 1802-UFGULA     
+*/
+
+
+@font-face {
+  font-family: 'Styrene A Web';
+  src: url('StyreneA-BlackItalic-Web.eot');
+  src: url('StyreneA-BlackItalic-Web.eot?#iefix') format('embedded-opentype'),
+       url('StyreneA-BlackItalic-Web.woff2') format('woff2'),
+       url('StyreneA-BlackItalic-Web.woff') format('woff');
+  font-weight:  900;
+  font-style:   italic;
+  font-stretch: normal;
+}
+
+.StyreneA-BlackItalic-Web {
+  font-family: 'Styrene A Web';
+  font-weight:  900;
+  font-style:   italic;
+  font-stretch: normal;
+}
+
+
+@font-face {
+  font-family: 'Styrene A Web';
+  src: url('StyreneA-Black-Web.eot');
+  src: url('StyreneA-Black-Web.eot?#iefix') format('embedded-opentype'),
+       url('StyreneA-Black-Web.woff2') format('woff2'),
+       url('StyreneA-Black-Web.woff') format('woff');
+  font-weight:  900;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+.StyreneA-Black-Web {
+  font-family: 'Styrene A Web';
+  font-weight:  900;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+
+@font-face {
+  font-family: 'Styrene A Web';
+  src: url('StyreneA-BoldItalic-Web.eot');
+  src: url('StyreneA-BoldItalic-Web.eot?#iefix') format('embedded-opentype'),
+       url('StyreneA-BoldItalic-Web.woff2') format('woff2'),
+       url('StyreneA-BoldItalic-Web.woff') format('woff');
+  font-weight:  700;
+  font-style:   italic;
+  font-stretch: normal;
+}
+
+.StyreneA-BoldItalic-Web {
+  font-family: 'Styrene A Web';
+  font-weight:  700;
+  font-style:   italic;
+  font-stretch: normal;
+}
+
+
+@font-face {
+  font-family: 'Styrene A Web';
+  src: url('StyreneA-Bold-Web.eot');
+  src: url('StyreneA-Bold-Web.eot?#iefix') format('embedded-opentype'),
+       url('StyreneA-Bold-Web.woff2') format('woff2'),
+       url('StyreneA-Bold-Web.woff') format('woff');
+  font-weight:  700;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+.StyreneA-Bold-Web {
+  font-family: 'Styrene A Web';
+  font-weight:  700;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+
+@font-face {
+  font-family: 'Styrene A Web';
+  src: url('StyreneA-MediumItalic-Web.eot');
+  src: url('StyreneA-MediumItalic-Web.eot?#iefix') format('embedded-opentype'),
+       url('StyreneA-MediumItalic-Web.woff2') format('woff2'),
+       url('StyreneA-MediumItalic-Web.woff') format('woff');
+  font-weight:  500;
+  font-style:   italic;
+  font-stretch: normal;
+}
+
+.StyreneA-MediumItalic-Web {
+  font-family: 'Styrene A Web';
+  font-weight:  500;
+  font-style:   italic;
+  font-stretch: normal;
+}
+
+
+@font-face {
+  font-family: 'Styrene A Web';
+  src: url('StyreneA-Medium-Web.eot');
+  src: url('StyreneA-Medium-Web.eot?#iefix') format('embedded-opentype'),
+       url('StyreneA-Medium-Web.woff2') format('woff2'),
+       url('StyreneA-Medium-Web.woff') format('woff');
+  font-weight:  500;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+.StyreneA-Medium-Web {
+  font-family: 'Styrene A Web';
+  font-weight:  500;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+
+@font-face {
+  font-family: 'Styrene A Web';
+  src: url('StyreneA-RegularItalic-Web.eot');
+  src: url('StyreneA-RegularItalic-Web.eot?#iefix') format('embedded-opentype'),
+       url('StyreneA-RegularItalic-Web.woff2') format('woff2'),
+       url('StyreneA-RegularItalic-Web.woff') format('woff');
+  font-weight:  400;
+  font-style:   italic;
+  font-stretch: normal;
+}
+
+.StyreneA-RegularItalic-Web {
+  font-family: 'Styrene A Web';
+  font-weight:  400;
+  font-style:   italic;
+  font-stretch: normal;
+}
+
+
+@font-face {
+  font-family: 'Styrene A Web';
+  src: url('StyreneA-Regular-Web.eot');
+  src: url('StyreneA-Regular-Web.eot?#iefix') format('embedded-opentype'),
+       url('StyreneA-Regular-Web.woff2') format('woff2'),
+       url('StyreneA-Regular-Web.woff') format('woff');
+  font-weight:  400;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+.StyreneA-Regular-Web {
+  font-family: 'Styrene A Web';
+  font-weight:  400;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+
+@font-face {
+  font-family: 'Styrene A Web';
+  src: url('StyreneA-LightItalic-Web.eot');
+  src: url('StyreneA-LightItalic-Web.eot?#iefix') format('embedded-opentype'),
+       url('StyreneA-LightItalic-Web.woff2') format('woff2'),
+       url('StyreneA-LightItalic-Web.woff') format('woff');
+  font-weight:  300;
+  font-style:   italic;
+  font-stretch: normal;
+}
+
+.StyreneA-LightItalic-Web {
+  font-family: 'Styrene A Web';
+  font-weight:  300;
+  font-style:   italic;
+  font-stretch: normal;
+}
+
+
+@font-face {
+  font-family: 'Styrene A Web';
+  src: url('StyreneA-Light-Web.eot');
+  src: url('StyreneA-Light-Web.eot?#iefix') format('embedded-opentype'),
+       url('StyreneA-Light-Web.woff2') format('woff2'),
+       url('StyreneA-Light-Web.woff') format('woff');
+  font-weight:  300;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+.StyreneA-Light-Web {
+  font-family: 'Styrene A Web';
+  font-weight:  300;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+
+@font-face {
+  font-family: 'Styrene A Web';
+  src: url('StyreneA-ThinItalic-Web.eot');
+  src: url('StyreneA-ThinItalic-Web.eot?#iefix') format('embedded-opentype'),
+       url('StyreneA-ThinItalic-Web.woff2') format('woff2'),
+       url('StyreneA-ThinItalic-Web.woff') format('woff');
+  font-weight:  100;
+  font-style:   italic;
+  font-stretch: normal;
+}
+
+.StyreneA-ThinItalic-Web {
+  font-family: 'Styrene A Web';
+  font-weight:  100;
+  font-style:   italic;
+  font-stretch: normal;
+}
+
+
+@font-face {
+  font-family: 'Styrene A Web';
+  src: url('StyreneA-Thin-Web.eot');
+  src: url('StyreneA-Thin-Web.eot?#iefix') format('embedded-opentype'),
+       url('StyreneA-Thin-Web.woff2') format('woff2'),
+       url('StyreneA-Thin-Web.woff') format('woff');
+  font-weight:  100;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
+.StyreneA-Thin-Web {
+  font-family: 'Styrene A Web';
+  font-weight:  100;
+  font-style:   normal;
+  font-stretch: normal;
+}
+
