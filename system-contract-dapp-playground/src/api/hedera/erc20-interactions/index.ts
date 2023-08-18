@@ -167,3 +167,50 @@ export const handleErc20TokenPermissions = async (
     return { err };
   }
 };
+
+/**
+ * @dev handle executing APIs relate  to Token Transfer
+ *
+ * @dev transfer() moves amount tokens from the caller’s account to `recipient`.
+ *
+ * @dev transferFrom() moves amount tokens from `tokenOwnerAddress` to `recipientAddress` using the allowance mechanism. `amount` is then deducted from the caller’s allowance.
+ *
+ * @param baseContract: Contract
+ *
+ * @param method: "transfer" | "transferFrom"
+ *
+ * @param recipientAddress: address
+ *
+ * @param amount: number
+ *
+ * @param tokenOwnerAddress?: address
+ *
+ * @return Promise<ERC20MockSmartContractResult>
+ */
+export const erc20Transfers = async (
+  baseContract: Contract,
+  method: 'transfer' | 'transferFrom',
+  recipientAddress: string,
+  amount: number,
+  tokenOwnerAddress?: string
+): Promise<ERC20MockSmartContractResult> => {
+  if (method === 'transferFrom' && !isAddress(tokenOwnerAddress)) {
+    return { err: 'Invalid token owner address' };
+  } else if (!isAddress(recipientAddress)) {
+    return { err: 'Invalid recipient address' };
+  }
+
+  try {
+    switch (method) {
+      case 'transfer':
+        await baseContract.transfer(recipientAddress, amount);
+        return { transferRes: true };
+      case 'transferFrom':
+        await baseContract.transferFrom(tokenOwnerAddress, recipientAddress, amount);
+        return { transferFromRes: true };
+    }
+  } catch (err) {
+    console.error(err);
+    return { err };
+  }
+};

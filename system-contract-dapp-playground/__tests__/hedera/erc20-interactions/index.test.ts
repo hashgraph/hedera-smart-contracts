@@ -21,6 +21,7 @@
 import {
   balanceOf,
   erc20Mint,
+  erc20Transfers,
   getERC20TokenInformation,
   handleErc20TokenPermissions,
 } from '@/api/hedera/erc20-interactions';
@@ -281,5 +282,85 @@ describe('Token Permissions', () => {
     expect(allowanceRes.err).toBe('Invalid spender address');
     expect(allowanceRes.allowanceRes).toBeNull;
     expect(handleErc20TokenPermissions).toBeCalled;
+  });
+});
+
+describe('Transfer', () => {
+  const baseContract = {
+    transfer: jest.fn(),
+    transferFrom: jest.fn(),
+  };
+
+  it('should execute erc20Transfer', async () => {
+    const transferRes = await erc20Transfers(
+      baseContract as unknown as Contract,
+      'transfer',
+      '0x7a575266b2020e262e9b1ad4eba3014d63630012',
+      120
+    );
+
+    // assertion
+    expect(transferRes.err).toBeNull;
+    expect(transferRes.transferRes).toBe(true);
+    expect(balanceOf).toBeCalled;
+  });
+
+  it('should fail erc20Transfer with Invalid recipient address', async () => {
+    const transferRes = await erc20Transfers(
+      baseContract as unknown as Contract,
+      'transfer',
+      '0x112c',
+      120
+    );
+
+    // assertion
+    expect(transferRes.err).toBe('Invalid recipient address');
+    expect(transferRes.transferRes).toBeNull;
+    expect(balanceOf).toBeCalled;
+  });
+
+  it('should execute erc20TransferFrom', async () => {
+    const transferFromRes = await erc20Transfers(
+      baseContract as unknown as Contract,
+      'transferFrom',
+      '0x7a575266b2020e262e9b1ad4eba3014d63630022',
+      120,
+      '0x7a575266b2020e262e9b1ad4eba3014d63630012'
+    );
+
+    // assertion
+    expect(transferFromRes.err).toBeNull;
+    expect(transferFromRes.transferFromRes).toBe(true);
+    expect(balanceOf).toBeCalled;
+  });
+
+  it('should fail erc20TransferFrom with Invalid token owner address', async () => {
+    const transferFromRes = await erc20Transfers(
+      baseContract as unknown as Contract,
+      'transferFrom',
+      '0x7a575266b2020e262e9b1ad4eba3014d63630012',
+      120,
+      '0x112c'
+    );
+
+    // assertion
+    expect(transferFromRes.err).toBe('Invalid token owner address');
+    expect(transferFromRes.transferFromRes).toBeNull;
+    expect(balanceOf).toBeCalled;
+  });
+
+  it('should fail erc20TransferFrom with Invalid recipient address', async () => {
+    const transferFromRes = await erc20Transfers(
+      baseContract as unknown as Contract,
+      'transferFrom',
+      '0x112c',
+      120,
+      '0x7a575266b2020e262e9b1ad4eba3014d63630012'
+    );
+
+    // assertion
+    expect(transferFromRes.err).toBe('Invalid recipient address');
+    expect(transferFromRes.transferFromRes).toBeNull;
+    expect(balanceOf).toBeCalled;
   });
 });
