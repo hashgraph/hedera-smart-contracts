@@ -36,7 +36,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
 
   before(async () => {
     tokenCreateCustomContract = await utils.deployTokenCreateCustomContract()
-    keys = utils.prepareTokenKey(tokenCreateCustomContract.address)
+    keys = utils.prepareTokenKeysArray(tokenCreateCustomContract.address)
     signers = await ethers.getSigners()
 
     fixedFeeTokenAddress = await utils.createFungibleTokenPublic(
@@ -95,7 +95,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
         decimals,
         keys,
         {
-          value: '35000000000000000000',
+          value: '40000000000000000000',
           gasLimit: 1_000_000,
         }
       )
@@ -380,7 +380,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
         'hex'
       )
 
-      const failedKeys = utils.prepareTokenKey(null, failedKey)
+      const failedKeys = utils.prepareTokenKeysArray(null, failedKey)
 
       const tx = await tokenCreateCustomContract.createFungibleTokenPublic(
         tokenName,
@@ -421,7 +421,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
         'hex'
       )
 
-      const keys = utils.prepareTokenKey(null, callerPubKey)
+      const keys = utils.prepareTokenKeysArray(null, callerPubKey)
 
       const tx = await tokenCreateCustomContract.createFungibleTokenPublic(
         tokenName,
@@ -447,6 +447,57 @@ describe('TokenCreateCustomContract Test Suite', () => {
 
       expect(tokenAddress).to.exist
       expectValidHash(tokenAddress, 40)
+    })
+
+    it('should be able to create token with an array of custom keys', async () => {
+      const adminKey = utils.constructIHederaTokenKey(
+        'ADMIN',
+        'SECP256K1',
+        utils.getSignerCompressedPublicKey()
+      )
+
+      const pauseKey = utils.constructIHederaTokenKey(
+        'PAUSE',
+        'CONTRACT_ID',
+        tokenCreateCustomContract.address
+      )
+
+      const supplyKey = utils.constructIHederaTokenKey(
+        'SUPPLY',
+        'SECP256K1',
+        utils.getSignerCompressedPublicKey()
+      )
+
+      const kycKey = utils.constructIHederaTokenKey(
+        'KYC',
+        'CONTRACT_ID',
+        tokenCreateCustomContract.address
+      )
+
+      const customKeys = [adminKey, pauseKey, supplyKey, kycKey]
+
+      const tx = await tokenCreateCustomContract.createFungibleTokenPublic(
+        tokenName,
+        tokenSymbol,
+        tokenMemo,
+        initialSupply,
+        maxSupply,
+        decimals,
+        freezeDefaultStatus,
+        tokenCreateCustomContract.address,
+        customKeys,
+        {
+          value: '20000000000000000000',
+          gasLimit: 1_000_000,
+        }
+      )
+
+      const txReceipt = await tx.wait()
+      const result = txReceipt.events.filter(
+        (e) => e.event === Constants.Events.CreatedToken
+      )[0].args[0]
+      expect(result).to.exist
+      expectValidHash(result, 40)
     })
   })
 })

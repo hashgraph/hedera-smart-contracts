@@ -673,17 +673,69 @@ class Utils {
   }
 
   /**
-   * @dev Prepares an array of typed IHederaTokenService.TokenKey for HTS token creation transactions.
+   * @dev Constructs a key conforming to the IHederaTokenService.TokenKey type
+   *
+   * @param keyType ADMIN | KYC | FREEZE | WIPE | SUPPLY | FEE | PAUSE
+   *                See https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L128
+   *                for more information
+   *
+   * @param keyValyeType INHERIT_ACCOUNT_KEY | CONTRACT_ID | ED25519 | SECP256K1 | DELEGETABLE_CONTRACT_ID
+   *
+   * @param key bytes value, public address of an account, or boolean
+   *            See https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L92
+   *                     for more information
+   */
+  static constructIHederaTokenKey(keyType, keyValueType, key) {
+    // sanitize params
+    if (
+      (keyType !== 'ADMIN' &&
+        keyType !== 'KYC' &&
+        keyType !== 'FREEZE' &&
+        keyType !== 'WIPE' &&
+        keyType !== 'SUPPLY' &&
+        keyType !== 'FEE' &&
+        keyType !== 'PAUSE') ||
+      (keyValueType !== 'INHERIT_ACCOUNT_KEY' &&
+        keyValueType !== 'CONTRACT_ID' &&
+        keyValueType !== 'ED25519' &&
+        keyValueType !== 'SECP256K1' &&
+        keyValueType !== 'DELEGETABLE_CONTRACT_ID')
+    ) {
+      return
+    }
+
+    return {
+      keyType: this.KeyType[keyType],
+      key: {
+        inheritAccountKey: this.KeyValueType[keyValueType] === 0 ? key : false,
+        contractId:
+          this.KeyValueType[keyValueType] === 1
+            ? key
+            : ethers.constants.AddressZero,
+        ed25519:
+          this.KeyValueType[keyValueType] === 2 ? key : Buffer.from('', 'hex'),
+        ECDSA_secp256k1:
+          this.KeyValueType[keyValueType] === 3 ? key : Buffer.from('', 'hex'),
+        delegatableContractId:
+          this.KeyValueType[keyValueType] === 4
+            ? key
+            : ethers.constants.AddressZero,
+      },
+    }
+  }
+
+  /**
+   * @dev Prepares an array of typed IHederaTokenService.TokenKey which set all key types to a certain key values
+   *
+   * @notice This function sets the `contractEVMAddress` or `ECDSAPubKey` (the address of the deployed HTS example contract) as the key for all key types (e.g. ADMIN, KYC, SUPPLY, etc.) for testing purposes.
+   *
+   * @notice purposely set up only for a certain test cases
    *
    * @notice IHederaTokenService.KeyValue supports a range of systems (e.g. ED25519, ECDSA secp256k1, etc.).
    *         Refer to the documentation at https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L116
    *         for more information on supported key types.
-   *
-   * @notice This function sets the `contractEVMAddress` (the address of the deployed HTS example contract) as the key for all key types (e.g. ADMIN, KYC, SUPPLY, etc.) for testing purposes.
-   *         If any other `keys` besides the `contractEVMAddress` are desired to be set, the keys must first sign an AccountUpdate transaction.
-   *         Refer to `this.updateAccountKeysViaHapi()` for usage examples on signing with `keys`.
    */
-  static prepareTokenKey(contractEVMAddress, ECDSAPubKey) {
+  static prepareTokenKeysArray(contractEVMAddress, ECDSAPubKey) {
     return [
       {
         keyType: 1, // 0th bit: ADMIN
