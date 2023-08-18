@@ -248,7 +248,7 @@ class Utils {
     decimals,
     freezeDefaultStatus,
     signerAddress,
-    key,
+    keys,
     contract
   ) {
     const tokenAddress = (
@@ -262,14 +262,16 @@ class Utils {
           decimals,
           freezeDefaultStatus,
           signerAddress,
-          key,
+          keys,
           {
-            value: '200000000000000000000',
+            value: '35000000000000000000',
             gasLimit: 1_000_000,
           }
         )
       ).wait()
-    ).events[0].args.tokenAddress
+    ).events.filter((e) => e.event === Constants.Events.CreatedToken)[0].args
+      .tokenAddress
+
     return tokenAddress
   }
 
@@ -557,6 +559,7 @@ class Utils {
     ecdsaPrivateKeys = ecdsaPrivateKeys.length
       ? ecdsaPrivateKeys
       : await this.getHardhatSignersPrivateKeys(false)
+
     for (let i in ecdsaPrivateKeys) {
       const pkSigner = PrivateKey.fromStringECDSA(
         ecdsaPrivateKeys[i].replace('0x', '')
@@ -667,6 +670,72 @@ class Utils {
     const signTx = await transaction.sign(signerPk)
     const txResponse = await signTx.execute(signerClient)
     await txResponse.getReceipt(signerClient)
+  }
+
+  static defaultKeyValues = {
+    inheritAccountKey: false,
+    contractId: ethers.constants.AddressZero,
+    ed25519: Buffer.from('', 'hex'),
+    ECDSA_secp256k1: Buffer.from('', 'hex'),
+    delegatableContractId: ethers.constants.AddressZero,
+  }
+
+  /**
+   * @dev Constructs a key conforming to the IHederaTokenService.TokenKey type
+   *
+   * @param keyType ADMIN | KYC | FREEZE | WIPE | SUPPLY | FEE | PAUSE
+   *                See https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L128
+   *                for more information
+   *
+   * @param keyValyeType INHERIT_ACCOUNT_KEY | CONTRACT_ID | ED25519 | SECP256K1 | DELEGETABLE_CONTRACT_ID
+   *
+   * @param value bytes value, public address of an account, or boolean
+   *            See https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L92
+   *                     for more information
+   */
+  static constructIHederaTokenKey(keyType, keyValueType, value) {
+    // sanitize params
+    if (
+      keyType !== 'ADMIN' &&
+      keyType !== 'KYC' &&
+      keyType !== 'FREEZE' &&
+      keyType !== 'WIPE' &&
+      keyType !== 'SUPPLY' &&
+      keyType !== 'FEE' &&
+      keyType !== 'PAUSE'
+    ) {
+      return
+    }
+
+    switch (keyValueType) {
+      case 'INHERIT_ACCOUNT_KEY':
+        return {
+          keyType: this.KeyType[keyType],
+          key: { ...this.defaultKeyValues, inheritAccountKey: value },
+        }
+      case 'CONTRACT_ID':
+        return {
+          keyType: this.KeyType[keyType],
+          key: { ...this.defaultKeyValues, contractId: value },
+        }
+      case 'ED25519':
+        return {
+          keyType: this.KeyType[keyType],
+          key: { ...this.defaultKeyValues, ed25519: value },
+        }
+      case 'SECP256K1':
+        return {
+          keyType: this.KeyType[keyType],
+          key: { ...this.defaultKeyValues, ECDSA_secp256k1: value },
+        }
+      case 'DELEGETABLE_CONTRACT_ID':
+        return {
+          keyType: this.KeyType[keyType],
+          key: { ...this.defaultKeyValues, delegatableContractId: value },
+        }
+      default:
+        return
+    }
   }
 }
 
