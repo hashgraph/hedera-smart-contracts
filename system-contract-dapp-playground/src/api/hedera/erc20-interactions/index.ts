@@ -18,8 +18,8 @@
  *
  */
 
+import { Contract, isAddress } from 'ethers';
 import { ERC20MockSmartContractResult } from '@/types/interfaces';
-import { Contract } from 'ethers';
 
 /**
  * @dev get token information
@@ -47,6 +47,62 @@ export const getERC20TokenInformation = async (
       case 'decimals':
         return { decimals: (await baseContract.decimals()).toString() };
     }
+  } catch (err) {
+    console.error(err);
+    return { err };
+  }
+};
+
+/**
+ * @dev mints erc20 tokens
+ *
+ * @param baseContract: Contract
+ *
+ * @param recipientAddress: address
+ *
+ * @param tokenAmount: number
+ *
+ * @return Promise<ERC20MockSmartContractResult>
+ */
+export const erc20Mint = async (
+  baseContract: Contract,
+  recipientAddress: string,
+  tokenAmount: number
+): Promise<ERC20MockSmartContractResult> => {
+  if (!isAddress(recipientAddress)) {
+    return { err: 'Invalid recipient address' };
+  } else if (tokenAmount <= 0) {
+    return { err: 'Invalid token amount' };
+  }
+
+  try {
+    await baseContract.mint(recipientAddress, tokenAmount);
+    return { mintRes: true };
+  } catch (err) {
+    console.error(err);
+    return { err };
+  }
+};
+
+/**
+ * @dev get token balance owned by `accountAddress`
+ *
+ * @param baseContract: Contract
+ *
+ * @param accountAddress: address
+ *
+ * @return Promise<ERC20MockSmartContractResult>
+ */
+export const balanceOf = async (
+  baseContract: Contract,
+  accountAddress: string
+): Promise<ERC20MockSmartContractResult> => {
+  if (!isAddress(accountAddress)) {
+    return { err: 'Invalid account address' };
+  }
+
+  try {
+    return { balanceOfRes: (await baseContract.balanceOf(accountAddress)).toString() };
   } catch (err) {
     console.error(err);
     return { err };
