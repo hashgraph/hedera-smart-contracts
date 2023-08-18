@@ -36,8 +36,34 @@ describe('TokenCreateCustomContract Test Suite', () => {
 
   before(async () => {
     tokenCreateCustomContract = await utils.deployTokenCreateCustomContract()
-    keys = utils.prepareTokenKeysArray(tokenCreateCustomContract.address)
     signers = await ethers.getSigners()
+
+    // construct a list of random keys
+    const adminKey = utils.constructIHederaTokenKey(
+      'ADMIN',
+      'SECP256K1',
+      utils.getSignerCompressedPublicKey()
+    )
+
+    const pauseKey = utils.constructIHederaTokenKey(
+      'PAUSE',
+      'CONTRACT_ID',
+      tokenCreateCustomContract.address
+    )
+
+    const kycKey = utils.constructIHederaTokenKey(
+      'KYC',
+      'CONTRACT_ID',
+      tokenCreateCustomContract.address
+    )
+
+    const supplyKey = utils.constructIHederaTokenKey(
+      'SUPPLY',
+      'CONTRACT_ID',
+      tokenCreateCustomContract.address
+    )
+
+    keys = [adminKey, pauseKey, kycKey, supplyKey]
 
     fixedFeeTokenAddress = await utils.createFungibleTokenPublic(
       tokenName,
@@ -69,7 +95,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
       tokenCreateCustomContract.address,
       keys,
       {
-        value: '35000000000000000000', // = 35 hbars. The more configs on the token, the higher the value fee for precompile contract is
+        value: '10000000000000000000', // = 10 hbars. The more configs on the token, the higher the value fee for precompile contract is
         gasLimit: 1_000_000,
       }
     )
@@ -117,21 +143,17 @@ describe('TokenCreateCustomContract Test Suite', () => {
       tokenCreateCustomContract.address,
       keys,
       {
-        value: '35000000000000000000',
+        value: '10000000000000000000',
         gasLimit: 1_000_000,
       }
     )
 
-    try {
-      const txReceipt = await tx.wait()
-      const result = txReceipt.events.filter(
-        (e) => e.event === Constants.Events.CreatedToken
-      )[0].args[0]
-      expect(result).to.exist
-      expectValidHash(result, 40)
-    } catch (error) {
-      console.log(error.transaction.hash)
-    }
+    const txReceipt = await tx.wait()
+    const result = txReceipt.events.filter(
+      (e) => e.event === Constants.Events.CreatedToken
+    )[0].args[0]
+    expect(result).to.exist
+    expectValidHash(result, 40)
   })
 
   it('should be able to execute createNonFungibleTokenWithCustomFees', async function () {
@@ -145,7 +167,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
         maxSupply,
         keys,
         {
-          value: '35000000000000000000',
+          value: '20000000000000000000',
           gasLimit: 1_000_000,
         }
       )
@@ -174,7 +196,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
             tokenCreateCustomContract.address,
             keys,
             {
-              value: '35000000000000000000',
+              value: '20000000000000000000',
               gasLimit: 1_000_000,
             }
           )
@@ -192,7 +214,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
             tokenCreateCustomContract.address,
             keys,
             {
-              value: '35000000000000000000',
+              value: '20000000000000000000',
               gasLimit: 1_000_000,
             }
           )
