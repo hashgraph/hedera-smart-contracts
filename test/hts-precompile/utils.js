@@ -672,6 +672,14 @@ class Utils {
     await txResponse.getReceipt(signerClient)
   }
 
+  static defaultKeyValues = {
+    inheritAccountKey: false,
+    contractId: ethers.constants.AddressZero,
+    ed25519: Buffer.from('', 'hex'),
+    ECDSA_secp256k1: Buffer.from('', 'hex'),
+    delegatableContractId: ethers.constants.AddressZero,
+  }
+
   /**
    * @dev Constructs a key conforming to the IHederaTokenService.TokenKey type
    *
@@ -681,46 +689,52 @@ class Utils {
    *
    * @param keyValyeType INHERIT_ACCOUNT_KEY | CONTRACT_ID | ED25519 | SECP256K1 | DELEGETABLE_CONTRACT_ID
    *
-   * @param key bytes value, public address of an account, or boolean
+   * @param value bytes value, public address of an account, or boolean
    *            See https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L92
    *                     for more information
    */
-  static constructIHederaTokenKey(keyType, keyValueType, key) {
+  static constructIHederaTokenKey(keyType, keyValueType, value) {
     // sanitize params
     if (
-      (keyType !== 'ADMIN' &&
-        keyType !== 'KYC' &&
-        keyType !== 'FREEZE' &&
-        keyType !== 'WIPE' &&
-        keyType !== 'SUPPLY' &&
-        keyType !== 'FEE' &&
-        keyType !== 'PAUSE') ||
-      (keyValueType !== 'INHERIT_ACCOUNT_KEY' &&
-        keyValueType !== 'CONTRACT_ID' &&
-        keyValueType !== 'ED25519' &&
-        keyValueType !== 'SECP256K1' &&
-        keyValueType !== 'DELEGETABLE_CONTRACT_ID')
+      keyType !== 'ADMIN' &&
+      keyType !== 'KYC' &&
+      keyType !== 'FREEZE' &&
+      keyType !== 'WIPE' &&
+      keyType !== 'SUPPLY' &&
+      keyType !== 'FEE' &&
+      keyType !== 'PAUSE'
     ) {
       return
     }
 
-    return {
-      keyType: this.KeyType[keyType],
-      key: {
-        inheritAccountKey: this.KeyValueType[keyValueType] === 0 ? key : false,
-        contractId:
-          this.KeyValueType[keyValueType] === 1
-            ? key
-            : ethers.constants.AddressZero,
-        ed25519:
-          this.KeyValueType[keyValueType] === 2 ? key : Buffer.from('', 'hex'),
-        ECDSA_secp256k1:
-          this.KeyValueType[keyValueType] === 3 ? key : Buffer.from('', 'hex'),
-        delegatableContractId:
-          this.KeyValueType[keyValueType] === 4
-            ? key
-            : ethers.constants.AddressZero,
-      },
+    switch (keyValueType) {
+      case 'INHERIT_ACCOUNT_KEY':
+        return {
+          keyType: this.KeyType[keyType],
+          key: { ...this.defaultKeyValues, inheritAccountKey: value },
+        }
+      case 'CONTRACT_ID':
+        return {
+          keyType: this.KeyType[keyType],
+          key: { ...this.defaultKeyValues, contractId: value },
+        }
+      case 'ED25519':
+        return {
+          keyType: this.KeyType[keyType],
+          key: { ...this.defaultKeyValues, ed25519: value },
+        }
+      case 'SECP256K1':
+        return {
+          keyType: this.KeyType[keyType],
+          key: { ...this.defaultKeyValues, ECDSA_secp256k1: value },
+        }
+      case 'DELEGETABLE_CONTRACT_ID':
+        return {
+          keyType: this.KeyType[keyType],
+          key: { ...this.defaultKeyValues, delegatableContractId: value },
+        }
+      default:
+        return
     }
   }
 }

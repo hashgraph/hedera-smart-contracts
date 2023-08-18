@@ -47,8 +47,8 @@ describe('TokenCreateCustomContract Test Suite', () => {
 
     const pauseKey = utils.constructIHederaTokenKey(
       'PAUSE',
-      'CONTRACT_ID',
-      tokenCreateCustomContract.address
+      'SECP256K1',
+      utils.getSignerCompressedPublicKey()
     )
 
     const kycKey = utils.constructIHederaTokenKey(
