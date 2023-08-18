@@ -38,21 +38,25 @@ describe('TokenCreateCustomContract Test Suite', () => {
     tokenCreateCustomContract = await utils.deployTokenCreateCustomContract()
     signers = await ethers.getSigners()
 
-    // construct a list of random keys
+    // constructing keys array
     const adminKey = utils.constructIHederaTokenKey(
       'ADMIN',
-      'SECP256K1',
-      utils.getSignerCompressedPublicKey()
-    )
-
-    const pauseKey = utils.constructIHederaTokenKey(
-      'PAUSE',
-      'SECP256K1',
-      utils.getSignerCompressedPublicKey()
+      'CONTRACT_ID',
+      tokenCreateCustomContract.address
     )
 
     const kycKey = utils.constructIHederaTokenKey(
       'KYC',
+      'CONTRACT_ID',
+      tokenCreateCustomContract.address
+    )
+    const freezeKey = utils.constructIHederaTokenKey(
+      'FREEZE',
+      'CONTRACT_ID',
+      tokenCreateCustomContract.address
+    )
+    const wipeKey = utils.constructIHederaTokenKey(
+      'WIPE',
       'CONTRACT_ID',
       tokenCreateCustomContract.address
     )
@@ -62,8 +66,18 @@ describe('TokenCreateCustomContract Test Suite', () => {
       'CONTRACT_ID',
       tokenCreateCustomContract.address
     )
+    const feeKey = utils.constructIHederaTokenKey(
+      'FEE',
+      'CONTRACT_ID',
+      tokenCreateCustomContract.address
+    )
+    const pauseKey = utils.constructIHederaTokenKey(
+      'PAUSE',
+      'CONTRACT_ID',
+      tokenCreateCustomContract.address
+    )
 
-    keys = [adminKey, pauseKey, kycKey, supplyKey]
+    keys = [adminKey, kycKey, freezeKey, wipeKey, supplyKey, feeKey, pauseKey]
 
     fixedFeeTokenAddress = await utils.createFungibleTokenPublic(
       tokenName,
@@ -95,7 +109,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
       tokenCreateCustomContract.address,
       keys,
       {
-        value: '10000000000000000000', // = 10 hbars. The more configs on the token, the higher the value fee for precompile contract is
+        value: '35000000000000000000', // = 35 hbars. The more configs on the token, the higher the value fee for precompile contract is
         gasLimit: 1_000_000,
       }
     )
@@ -121,7 +135,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
         decimals,
         keys,
         {
-          value: '40000000000000000000',
+          value: '35000000000000000000',
           gasLimit: 1_000_000,
         }
       )
@@ -143,7 +157,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
       tokenCreateCustomContract.address,
       keys,
       {
-        value: '10000000000000000000',
+        value: '35000000000000000000',
         gasLimit: 1_000_000,
       }
     )
@@ -402,7 +416,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
       signers[0].address, // the caller is set as treasury account of the token
       keys,
       {
-        value: '10000000000000000000',
+        value: '35000000000000000000',
         gasLimit: 1_000_000,
       }
     )
@@ -432,7 +446,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
       signers[0].address, // the caller is set as treasury account of the token
       keys,
       {
-        value: '10000000000000000000',
+        value: '35000000000000000000',
         gasLimit: 1_000_000,
       }
     )
