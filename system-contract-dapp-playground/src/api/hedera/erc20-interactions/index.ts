@@ -108,3 +108,62 @@ export const balanceOf = async (
     return { err };
   }
 };
+
+/**
+ * @dev handle executing APIs relate  to Token Permissions
+ *
+ * @dev approve() sets `amount` as the allowance of `spenderAddress` over the caller's tokens
+ *
+ * @dev increaseAllowance() atomically increases the allowance granted to spender by the caller.
+ *
+ * @dev decreaseAllowance() atomically decreases the allowance granted to spender by the caller.
+ *
+ * @dev allowance() returns the remaining number of tokens that `spenerAddress` will be allowed to spend on behalf of `ownerAddress`
+ *
+ * @param baseContract: Contract
+ *
+ * @param method: 'approve' | 'allowance' | 'increaseAllowance' | 'decreaseAllowance'
+ *
+ * @param spenderAddress?: address
+ *
+ * @param owner?: address
+ *
+ * @param amount?: number
+ *
+ * @return Promise<ERC20MockSmartContractResult>
+ */
+export const handleErc20TokenPermissions = async (
+  baseContract: Contract,
+  method: 'approve' | 'allowance' | 'increaseAllowance' | 'decreaseAllowance',
+  spenderAddress: string,
+  ownerAddress?: string,
+  amount?: number
+): Promise<ERC20MockSmartContractResult> => {
+  // sanitize params
+  if (ownerAddress && !isAddress(ownerAddress)) {
+    return { err: 'Invalid owner address' };
+  } else if (spenderAddress && !isAddress(spenderAddress)) {
+    return { err: 'Invalid spender address' };
+  }
+
+  // executing logic
+  try {
+    switch (method) {
+      case 'approve':
+        await baseContract.approve(spenderAddress, amount);
+        return { approveRes: true };
+      case 'increaseAllowance':
+        await baseContract.increaseAllowance(spenderAddress, amount);
+        return { increaseAllowanceRes: true };
+      case 'decreaseAllowance':
+        await baseContract.decreaseAllowance(spenderAddress, amount);
+        return { decreaseAllowanceRes: true };
+      case 'allowance':
+        const allowance = await baseContract.allowance(ownerAddress, spenderAddress);
+        return { allowanceRes: allowance.toString() };
+    }
+  } catch (err) {
+    console.error(err);
+    return { err };
+  }
+};

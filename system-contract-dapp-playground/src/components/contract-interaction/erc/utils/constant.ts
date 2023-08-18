@@ -86,7 +86,7 @@ export const increaseAllowanceParamFields = [
   },
   {
     inputType: 'number',
-    inputPlaceholder: 'Allowance amount to increase..',
+    inputPlaceholder: 'Allowance amount..',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
@@ -105,7 +105,7 @@ export const decreaseAllowanceParamFields = [
   },
   {
     inputType: 'number',
-    inputPlaceholder: 'Allowance amount to increase..',
+    inputPlaceholder: 'Allowance amount..',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
