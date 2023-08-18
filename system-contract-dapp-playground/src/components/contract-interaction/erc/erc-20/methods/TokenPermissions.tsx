@@ -18,9 +18,30 @@
  *
  */
 
-import { useState } from 'react';
 import { Contract } from 'ethers';
+import { isAddress } from 'ethers';
+import { BiCopy } from 'react-icons/bi';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { AiOutlineMinus } from 'react-icons/ai';
+import { IoRefreshOutline } from 'react-icons/io5';
 import MultiLineMethod from '../common/MultiLineMethod';
+import { CommonErrorToast } from '@/components/toast/CommonToast';
+import { getAllowancesFromLocalStorage } from '@/api/localStorage';
+import { handleErc20TokenPermissions } from '@/api/hedera/erc20-interactions';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tooltip,
+  Tr,
+  useToast,
+} from '@chakra-ui/react';
 import {
   allowanceParamFields,
   approveParamFields,
@@ -32,63 +53,448 @@ interface PageProps {
   baseContract: Contract;
 }
 
+type Allowance = {
+  owner: string;
+  spender: string;
+  amount: number;
+};
+
 const TokenPermission = ({ baseContract }: PageProps) => {
+  const toaster = useToast();
+  const [allowances, setAllowances] = useState<Allowance[]>([]);
+  const [successStatus, setSuccessStatus] = useState({
+    approve: false,
+    increaseAllowance: false,
+    decreaseAllowance: false,
+  });
+
   const [approveParams, setApproveParams] = useState({
+    owner: '',
     spender: '',
     amount: '',
   });
   const [allowanceParams, setAllowanceParams] = useState({
     owner: '',
     spender: '',
+    amount: '',
   });
   const [increaseAllowanceParams, setIncreaseAllowanceParams] = useState({
     owner: '',
     spender: '',
+    amount: '',
   });
   const [decreaseAllowanceParams, setDecreaseAllowanceParams] = useState({
     owner: '',
     spender: '',
+    amount: '',
   });
 
+  const [methodState, setMethodStates] = useState({
+    approve: {
+      result: false,
+      isLoading: false,
+    },
+    increaseAllowance: {
+      result: false,
+      isLoading: false,
+    },
+    decreaseAllowance: {
+      result: false,
+      isLoading: false,
+    },
+    allowance: {
+      result: '',
+      isLoading: false,
+    },
+  });
+
+  /** @dev retrieve allowances from localStorage to maintain data on re-renders */
+  useEffect(() => {
+    const { storageAllowances, err: localStorageBalanceErr } = getAllowancesFromLocalStorage();
+    // handle err
+    if (localStorageBalanceErr) {
+      CommonErrorToast({
+        toaster,
+        title: 'Cannot retrieve balances from local storage',
+        description: "See client's console for more information",
+      });
+      return;
+    }
+
+    // update balancesMap
+    if (storageAllowances) {
+      setAllowances(storageAllowances as Allowance[]);
+    }
+  }, [toaster]);
+
+  /**
+   * @dev handle execute methods
+   */
+  const handleExecutingMethods = async (
+    method: 'approve' | 'allowance' | 'increaseAllowance' | 'decreaseAllowance',
+    params: { spender: string; amount: string; owner: string },
+    setParams: Dispatch<
+      SetStateAction<{
+        owner: string;
+        spender: string;
+        amount: string;
+      }>
+    >
+  ) => {
+    // toast error invalid params
+    let paramErrDescription;
+    if (method === 'allowance' && !isAddress(params.owner)) {
+      paramErrDescription = 'Owner address is not a valid address';
+    } else if (!isAddress(params.spender)) {
+      paramErrDescription = 'Spender address is not a valid address';
+    }
+    if (paramErrDescription) {
+      CommonErrorToast({
+        toaster,
+        title: 'Invalid parameters',
+        description: paramErrDescription,
+      });
+      return;
+    }
+
+    // turn on isLoading
+    setMethodStates((prev) => ({ ...prev, [method]: { ...prev[method], isLoading: true } }));
+
+    // invoke method API
+    const tokenPermissionRes = await handleErc20TokenPermissions(
+      baseContract,
+      method,
+      params.spender,
+      params.owner,
+      Number(params.amount)
+    );
+
+    // turn off isLoading
+    setMethodStates((prev) => ({ ...prev, [method]: { ...prev[method], isLoading: false } }));
+
+    // handle err
+    if (tokenPermissionRes.err || !tokenPermissionRes[`${method}Res`]) {
+      const errorMessage = JSON.stringify(tokenPermissionRes.err);
+      let errorDescription = "See client's console for more information";
+      // @notice 4001 error code is returned when a metamask wallet request is rejected by the user
+      // @notice See https://docs.metamask.io/wallet/reference/provider-api/#errors for more information on the error returned by Metamask.
+      if (errorMessage.indexOf('4001') !== -1) {
+        errorDescription = 'You have rejected the request.';
+      } else if (errorMessage.indexOf('nonce has already been used') !== -1) {
+        errorDescription = 'Nonce has already been used. Please try again!';
+      } else if (errorMessage.indexOf('decreased allowance below zero') !== -1) {
+        errorDescription =
+          'The transaction was reverted due to the allowance decrease falling below zero.';
+      }
+
+      CommonErrorToast({
+        toaster,
+        title: `Cannot execute function ${method}()`,
+        description: errorDescription,
+      });
+      return;
+    } else {
+      // update states
+      if (method === 'allowance') {
+        setMethodStates((prev) => ({
+          ...prev,
+          allowance: { ...prev.allowance, result: tokenPermissionRes.allowanceRes! },
+        }));
+
+        // update allowances array
+        // @logic if an owner and a spender pair has already been queried before, update only amount
+        let duplicated = false;
+        const allowanceObj = {
+          owner: allowanceParams.owner,
+          spender: allowanceParams.spender,
+          amount: Number(tokenPermissionRes.allowanceRes!),
+        };
+        const newAllowances = allowances.map((allowance) => {
+          if (
+            allowance.owner === allowanceObj.owner &&
+            allowance.spender === allowanceObj.spender
+          ) {
+            allowance.amount = Number(tokenPermissionRes.allowanceRes!);
+            duplicated = true;
+          }
+          return allowance;
+        });
+
+        if (duplicated) {
+          setAllowances(newAllowances);
+        } else {
+          setAllowances((prev) => [...prev, allowanceObj]);
+        }
+      } else {
+        setMethodStates((prev) => ({
+          ...prev,
+          [method]: { ...prev[method], result: tokenPermissionRes[`${method}Res`] },
+        }));
+        setSuccessStatus((prev) => ({ ...prev, approve: true }));
+      }
+
+      // reset params
+      setParams({ owner: '', spender: '', amount: '' });
+    }
+  };
+
+  /** @dev listen to change event on balancesMap state => localStorage */
+  useEffect(() => {
+    if (allowances.length > 0) {
+      localStorage.setItem('hedera_erc20_allowances', JSON.stringify(allowances));
+    }
+  }, [allowances]);
+
+  // toast executing successful
+  useEffect(() => {
+    if (
+      successStatus.approve ||
+      successStatus.increaseAllowance ||
+      successStatus.decreaseAllowance
+    ) {
+      let title = '';
+      if (successStatus.approve) {
+        title = 'Approve successful 🎉';
+        setSuccessStatus((prev) => ({ ...prev, approve: false }));
+      }
+      if (successStatus.increaseAllowance) {
+        title = 'Increase allowance successful 🎉';
+        setSuccessStatus((prev) => ({ ...prev, increaseAllowance: false }));
+      }
+      if (successStatus.decreaseAllowance) {
+        title = 'Decrease allowance successful 🎉';
+        setSuccessStatus((prev) => ({ ...prev, decreaseAllowance: false }));
+      }
+      toaster({
+        title,
+        description: 'A new allowance has been set for the recipient',
+        status: 'success',
+        position: 'top',
+      });
+    }
+  }, [successStatus, toaster]);
+
+  /** @dev copy content to clipboard */
+  const copyWalletAddress = (content: string) => {
+    navigator.clipboard.writeText(content);
+  };
+
   return (
-    <div className="w-full mx-3 flex">
+    <div className="w-full mx-3 flex flex-col gap-20">
       {/* wrapper */}
-      <div className="w-full grid grid-flow-col grid-cols-2 grid-rows-2 gap-16 justify-between ">
+      <div className="w-full grid grid-flow-col grid-cols-3 grid-rows-1 gap-6 justify-between items-end">
         {/* approve() */}
         <MultiLineMethod
           paramFields={approveParamFields}
           methodName={'Approve'}
           params={approveParams}
           setParams={setApproveParams}
+          isLoading={methodState.approve.isLoading}
+          handleExecute={() => handleExecutingMethods('approve', approveParams, setApproveParams)}
           explanation="Sets amount as the allowance of `spender` over the caller’s tokens."
         />
-        {/* allowance() */}
+        {/* increase allowance() */}
         <MultiLineMethod
           paramFields={increaseAllowanceParamFields}
           methodName={'Increase Allowance'}
           params={increaseAllowanceParams}
           setParams={setIncreaseAllowanceParams}
+          isLoading={methodState.increaseAllowance.isLoading}
+          handleExecute={() =>
+            handleExecutingMethods(
+              'increaseAllowance',
+              increaseAllowanceParams,
+              setIncreaseAllowanceParams
+            )
+          }
           explanation="Atomically increases the allowance granted to spender by the caller."
         />
 
-        {/* allowance() */}
-        <MultiLineMethod
-          paramFields={allowanceParamFields}
-          methodName={'Allowance'}
-          params={allowanceParams}
-          setParams={setAllowanceParams}
-          explanation="Returns the remaining number of tokens that `spender` will be allowed to spend on behalf of `owner` through `transferFrom` function."
-        />
-
-        {/* approve() */}
+        {/* decreaase approve() */}
         <MultiLineMethod
           paramFields={decreaseAllowanceParamFields}
           methodName={'Decrease Allowance'}
           params={decreaseAllowanceParams}
           setParams={setDecreaseAllowanceParams}
+          isLoading={methodState.decreaseAllowance.isLoading}
+          handleExecute={() =>
+            handleExecutingMethods(
+              'decreaseAllowance',
+              decreaseAllowanceParams,
+              setDecreaseAllowanceParams
+            )
+          }
           explanation="Atomically decreases the allowance granted to spender by the caller."
         />
       </div>
+
+      {/* allowance() */}
+      <div className="flex justify-center">
+        <MultiLineMethod
+          paramFields={allowanceParamFields}
+          methodName={'Allowance'}
+          params={allowanceParams}
+          widthSize="w-[360px]"
+          setParams={setAllowanceParams}
+          isLoading={methodState.allowance.isLoading}
+          handleExecute={() =>
+            handleExecutingMethods('allowance', allowanceParams, setAllowanceParams)
+          }
+          explanation="Returns the remaining number of tokens that `spender` will be allowed to spend on behalf of `owner` through `transferFrom` function."
+        />
+      </div>
+
+      {/* allowances table */}
+      {allowances.length > 0 && (
+        <TableContainer>
+          <Table variant="simple" size={'sm'}>
+            <Thead>
+              <Tr>
+                <Th color={'#82ACF9'}>Owner</Th>
+                <Th color={'#82ACF9'}>Spender</Th>
+                <Th color={'#82ACF9'} isNumeric>
+                  Allowance
+                </Th>
+                <Th />
+                <Th />
+              </Tr>
+            </Thead>
+            <Tbody>
+              {allowances.map((allowance) => {
+                /** @dev handle refresh record */
+                const handleRefreshRecord = async () => {
+                  // invoke handleErc20TokenPermissions()
+                  const { allowanceRes, err: allowanceErr } = await handleErc20TokenPermissions(
+                    baseContract,
+                    'allowance',
+                    allowance.spender,
+                    allowance.owner
+                  );
+                  if (allowanceErr || !allowanceRes) {
+                    CommonErrorToast({
+                      toaster,
+                      title: 'Invalid parameters',
+                      description: 'Account address is not a valid address',
+                    });
+                    return;
+                  }
+
+                  let duplicated = false;
+                  const allowanceObj = {
+                    owner: allowance.owner,
+                    spender: allowance.spender,
+                    amount: Number(allowance.amount),
+                  };
+                  const newAllowances = allowances.map((iterAllowance) => {
+                    if (
+                      iterAllowance.owner === allowanceObj.owner &&
+                      iterAllowance.spender === allowanceObj.spender
+                    ) {
+                      iterAllowance.amount = Number(allowanceRes);
+                      duplicated = true;
+                    }
+                    return iterAllowance;
+                  });
+
+                  if (duplicated) {
+                    setAllowances(newAllowances);
+                  } else {
+                    setAllowances((prev) => [...prev, allowanceObj]);
+                  }
+                };
+
+                /** @dev handle remove record */
+                const handleRemoveRecord = (targetAllowance: Allowance) => {
+                  const filteredItems = allowances.filter(
+                    (allowance) =>
+                      targetAllowance.owner.concat(targetAllowance.spender) !==
+                      allowance.owner.concat(allowance.spender)
+                  );
+                  if (filteredItems.length === 0) {
+                    localStorage.removeItem('hedera_erc20_allowances');
+                  }
+                  setAllowances(filteredItems);
+                };
+                return (
+                  <Tr key={`${allowance.owner}${allowance.spender}`}>
+                    <Td
+                      onClick={() => copyWalletAddress(allowance.owner)}
+                      className="cursor-pointer"
+                    >
+                      <Popover>
+                        <PopoverTrigger>
+                          <div className="flex gap-1 items-center">
+                            <p>
+                              {allowance.owner.slice(0, 15)}...{allowance.owner.slice(-9)}
+                            </p>
+                            <div className="w-[1rem] text-textaccents-light dark:text-textaccents-dark">
+                              <BiCopy />
+                            </div>
+                          </div>
+                        </PopoverTrigger>
+                        <PopoverContent width={'fit-content'} border={'none'}>
+                          <div className="bg-secondary px-3 py-2 border-none font-medium">
+                            Copied
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    </Td>
+                    <Td
+                      onClick={() => copyWalletAddress(allowance.spender)}
+                      className="cursor-pointer"
+                    >
+                      <Popover>
+                        <PopoverTrigger>
+                          <div className="flex gap-1 items-center">
+                            <p>
+                              {allowance.spender.slice(0, 15)}...{allowance.spender.slice(-9)}
+                            </p>
+                            <div className="w-[1rem] text-textaccents-light dark:text-textaccents-dark">
+                              <BiCopy />
+                            </div>
+                          </div>
+                        </PopoverTrigger>
+                        <PopoverContent width={'fit-content'} border={'none'}>
+                          <div className="bg-secondary px-3 py-2 border-none font-medium">
+                            Copied
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    </Td>
+                    <Td isNumeric>
+                      <p>{allowance.amount}</p>
+                    </Td>
+                    <Td>
+                      {/* retry button */}
+                      <Tooltip label="refresh this record" placement="top">
+                        <button
+                          onClick={handleRefreshRecord}
+                          className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-teal-500 transition duration-300`}
+                        >
+                          <IoRefreshOutline />
+                        </button>
+                      </Tooltip>
+                    </Td>
+                    <Td>
+                      {/* delete button */}
+                      <Tooltip label="delete this record" placement="top">
+                        <button
+                          onClick={() => {
+                            handleRemoveRecord(allowance);
+                          }}
+                          className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-red-400 transition duration-300`}
+                        >
+                          <AiOutlineMinus />
+                        </button>
+                      </Tooltip>
+                    </Td>
+                  </Tr>
+                );
+              })}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      )}
     </div>
   );
 };

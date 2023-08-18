@@ -43,3 +43,22 @@ export const getBalancesFromLocalStorage = () => {
     return { err };
   }
 };
+
+/**
+ * @dev get allowances from LocalStorage
+ *
+ * @return storageAllowances?: []
+ *
+ * @return err?
+ */
+export const getAllowancesFromLocalStorage = () => {
+  try {
+    const storageAllowances = localStorage.getItem('hedera_erc20_allowances');
+    return {
+      storageAllowances: storageAllowances ? JSON.parse(storageAllowances) : [],
+    };
+  } catch (err) {
+    console.error(err);
+    return { err };
+  }
+};
