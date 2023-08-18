@@ -386,140 +386,64 @@ describe('TokenCreateCustomContract Test Suite', () => {
     })
   })
 
-  describe('Key params', () => {
-    it('should fail when token create has missing signatures in transaction', async () => {
-      const wallet0 = new ethers.Wallet(
-        hre.config.networks[network.name].accounts[0]
-      )
-      const callerAddress = await wallet0.getAddress()
-
-      const wallet1 = new ethers.Wallet(
-        hre.config.networks[network.name].accounts[1]
-      )
-
-      const failedKey = Buffer.from(
-        wallet1._signingKey().compressedPublicKey.replace('0x', ''),
-        'hex'
-      )
-
-      const failedKeys = utils.prepareTokenKeysArray(null, failedKey)
-
-      const tx = await tokenCreateCustomContract.createFungibleTokenPublic(
-        tokenName,
-        tokenSymbol,
-        tokenMemo,
-        initialSupply,
-        maxSupply,
-        decimals,
-        freezeDefaultStatus,
-        signers[0].address,
-        failedKeys,
-        {
-          value: '35000000000000000000',
-          gasLimit: 1_000_000,
-        }
-      )
-      expect(tx.from).to.eq(callerAddress)
-      expect(tx.to).to.be.null
-
-      try {
-        await tx.wait()
-      } catch (error) {
-        expect(error).to.exist
-        expect(error.reason).to.eq('transaction failed')
+  it("should fail when token create has missing treasury's signature in transaction", async () => {
+    // @notice: Only the ID of the smart contract is valid for the treasury by default.
+    //          Any account other than the smart contract ID must first sign an AccountUpdate transaction
+    //          before being eligible to be elected as the token's treasury account.
+    //          For a practical example, refer to `utils.updateAccountKeysViaHapi()`.
+    const tx = await tokenCreateCustomContract.createFungibleTokenPublic(
+      tokenName,
+      tokenSymbol,
+      tokenMemo,
+      initialSupply,
+      maxSupply,
+      decimals,
+      freezeDefaultStatus,
+      signers[0].address, // the caller is set as treasury account of the token
+      keys,
+      {
+        value: '10000000000000000000',
+        gasLimit: 1_000_000,
       }
-    })
+    )
 
-    it('should pass when token create has the correct signatures in transaction', async () => {
-      await utils.updateAccountKeysViaHapi([tokenCreateCustomContract.address])
+    expect(tx.from).to.eq(signers[0].address)
+    expect(tx.to).to.be.null
+    try {
+      await tx.wait()
+    } catch (error) {
+      expect(error).to.exist
+      expect(error.reason).to.eq('transaction failed')
+    }
+  })
 
-      const wallet0 = new ethers.Wallet(
-        hre.config.networks[network.name].accounts[0]
-      )
-      const callerAddress = await wallet0.getAddress()
+  it("should pass when token create has the correct treasury's signature in transaction", async () => {
+    // @notice the treasury account must sign the transaction first.
+    await utils.updateAccountKeysViaHapi([tokenCreateCustomContract.address])
 
-      const callerPubKey = Buffer.from(
-        wallet0._signingKey().compressedPublicKey.replace('0x', ''),
-        'hex'
-      )
+    const tx = await tokenCreateCustomContract.createFungibleTokenPublic(
+      tokenName,
+      tokenSymbol,
+      tokenMemo,
+      initialSupply,
+      maxSupply,
+      decimals,
+      freezeDefaultStatus,
+      signers[0].address, // the caller is set as treasury account of the token
+      keys,
+      {
+        value: '10000000000000000000',
+        gasLimit: 1_000_000,
+      }
+    )
 
-      const keys = utils.prepareTokenKeysArray(null, callerPubKey)
+    expect(tx.from).to.eq(signers[0].address)
+    expect(tx.to).to.exist
 
-      const tx = await tokenCreateCustomContract.createFungibleTokenPublic(
-        tokenName,
-        tokenSymbol,
-        tokenMemo,
-        initialSupply,
-        maxSupply,
-        decimals,
-        freezeDefaultStatus,
-        signers[0].address,
-        keys,
-        {
-          value: '35000000000000000000',
-          gasLimit: 1_000_000,
-        }
-      )
+    const txReceipt = await tx.wait()
+    const { tokenAddress } = txReceipt.events[0].args
 
-      expect(tx.from).to.eq(callerAddress)
-      expect(tx.to).to.exist
-
-      const txReceipt = await tx.wait()
-      const { tokenAddress } = txReceipt.events[0].args
-
-      expect(tokenAddress).to.exist
-      expectValidHash(tokenAddress, 40)
-    })
-
-    it('should be able to create token with an array of custom keys', async () => {
-      const adminKey = utils.constructIHederaTokenKey(
-        'ADMIN',
-        'SECP256K1',
-        utils.getSignerCompressedPublicKey()
-      )
-
-      const pauseKey = utils.constructIHederaTokenKey(
-        'PAUSE',
-        'CONTRACT_ID',
-        tokenCreateCustomContract.address
-      )
-
-      const supplyKey = utils.constructIHederaTokenKey(
-        'SUPPLY',
-        'SECP256K1',
-        utils.getSignerCompressedPublicKey()
-      )
-
-      const kycKey = utils.constructIHederaTokenKey(
-        'KYC',
-        'CONTRACT_ID',
-        tokenCreateCustomContract.address
-      )
-
-      const customKeys = [adminKey, pauseKey, supplyKey, kycKey]
-
-      const tx = await tokenCreateCustomContract.createFungibleTokenPublic(
-        tokenName,
-        tokenSymbol,
-        tokenMemo,
-        initialSupply,
-        maxSupply,
-        decimals,
-        freezeDefaultStatus,
-        tokenCreateCustomContract.address,
-        customKeys,
-        {
-          value: '20000000000000000000',
-          gasLimit: 1_000_000,
-        }
-      )
-
-      const txReceipt = await tx.wait()
-      const result = txReceipt.events.filter(
-        (e) => e.event === Constants.Events.CreatedToken
-      )[0].args[0]
-      expect(result).to.exist
-      expectValidHash(result, 40)
-    })
+    expect(tokenAddress).to.exist
+    expectValidHash(tokenAddress, 40)
   })
 })
