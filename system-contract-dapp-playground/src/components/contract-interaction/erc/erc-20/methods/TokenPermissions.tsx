@@ -43,11 +43,11 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import {
-  allowanceParamFields,
   approveParamFields,
-  decreaseAllowanceParamFields,
   increaseAllowanceParamFields,
-} from '../../utils/constant';
+  decreaseAllowanceParamFields,
+  allowanceParamFields,
+} from '@/utils/contract-interactions/erc/constant';
 
 interface PageProps {
   baseContract: Contract;

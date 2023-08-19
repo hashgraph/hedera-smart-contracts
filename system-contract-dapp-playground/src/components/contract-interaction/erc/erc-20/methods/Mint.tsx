@@ -21,10 +21,10 @@
 import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { Contract, isAddress } from 'ethers';
-import { mintParamFields } from '../../utils/constant';
 import MultiLineMethod from '../common/MultiLineMethod';
 import { erc20Mint } from '@/api/hedera/erc20-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
+import { mintParamFields } from '@/utils/contract-interactions/erc/constant';
 
 interface PageProps {
   baseContract: Contract;

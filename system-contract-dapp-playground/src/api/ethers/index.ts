@@ -20,7 +20,7 @@
 
 import { ethers } from 'ethers';
 import { getWalletProvider } from '../wallet';
-import { ContractABI, EthersResult } from '@/types/interfaces';
+import { ContractABI, EthersResult } from '@/types/common';
 
 /**
  * @dev generate a new ethers.Contract instance at contractAddress

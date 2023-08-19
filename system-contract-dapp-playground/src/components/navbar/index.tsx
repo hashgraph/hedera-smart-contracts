@@ -28,9 +28,9 @@ import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { BsChevronDown } from 'react-icons/bs';
-import { NetworkName } from '@/types/interfaces';
-import { isProtectedRoute } from '@/utils/helpers';
+import { NetworkName } from '@/types/common';
 import { CommonErrorToast } from '../toast/CommonToast';
+import { isProtectedRoute } from '@/utils/common/helpers';
 import { loadAccountInfoFromCookies } from '@/api/cookies';
 import { navVariants } from '@/libs/framer-motion/variants';
 

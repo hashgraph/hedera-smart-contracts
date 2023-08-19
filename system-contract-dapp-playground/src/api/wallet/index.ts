@@ -18,8 +18,8 @@
  *
  */
 
+import { WalletResult } from '@/types/common';
 import { ethers, BrowserProvider } from 'ethers';
-import { WalletResult } from '@/types/interfaces';
 
 /**
  * @dev get wallet object if available

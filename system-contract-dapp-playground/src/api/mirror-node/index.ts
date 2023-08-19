@@ -19,8 +19,8 @@
  */
 
 import axios from 'axios';
-import { HEDERA_NETWORKS } from '@/utils/constants';
-import { MirrorNodeResult, NetworkName } from '@/types/interfaces';
+import { HEDERA_NETWORKS } from '@/utils/common/constants';
+import { MirrorNodeResult, NetworkName } from '@/types/common';
 
 /**
  * @dev get Hedera native account ID from EVM address
