@@ -50,6 +50,24 @@ type IHederaTokenServiceKeyValueType =
   | 'delegatableContractId';
 
 /**
+ * @dev an interface for keyInput
+ *
+ * @param keyType: IHederaTokenServiceKeyType;
+ *
+ * @param keyValueType: IHederaTokenServiceKeyValueType;
+ *
+ * @param keyValue: string | boolean;
+ *
+ * @param err?: any
+ */
+interface CommonKeyObject {
+  keyType: IHederaTokenServiceKeyType;
+  keyValueType: IHederaTokenServiceKeyValueType;
+  keyValue: string | boolean;
+  err?: any;
+}
+
+/**
  * @dev an interface that adheres to the `IHederaTokenService.KeyValue` type.
  *
  * @param inheritAccountKey: boolean

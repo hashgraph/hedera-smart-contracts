@@ -72,3 +72,43 @@ export const constructIHederaTokenKey = (
     key: { ...DEFAULT_IHTS_KEY_VALUE, [inputKeyValueType]: keyValue },
   };
 };
+
+/**
+ * @dev prepares a list of IHederaTokenService.TokenKey typed keys with a CommonKeyObject[] input
+ *
+ * @param inputKeys: CommonKeyObject[]
+ *
+ * @return IHederaTokenServiceTokenKey[]
+ *
+ * @return err: CommonKeyObject[]
+ */
+export const prepareHederaTokenKeyArray = (inputKeys: CommonKeyObject[]) => {
+  let constructingKeyError: CommonKeyObject[] = [];
+  const hederaTokenKeys = inputKeys.map((inputKey) => {
+    // construct IHederaTokenKey
+    const hederaTokenKey = constructIHederaTokenKey(
+      inputKey.keyType,
+      inputKey.keyValueType,
+      inputKey.keyValue
+    );
+
+    // push the invalid keys to the error list
+    if (!hederaTokenKey) {
+      constructingKeyError.push({
+        keyType: inputKey.keyType,
+        keyValueType: inputKey.keyValueType,
+        keyValue: inputKey.keyValue,
+        err: 'Invalid key value',
+      });
+    }
+
+    // return the new token key
+    return hederaTokenKey;
+  });
+
+  if (constructingKeyError.length > 0) {
+    return { err: constructingKeyError };
+  } else {
+    return { hederaTokenKeys: hederaTokenKeys as IHederaTokenServiceTokenKey[] };
+  }
+};
