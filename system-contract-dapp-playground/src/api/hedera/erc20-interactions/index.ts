@@ -19,7 +19,6 @@
  */
 
 import { Contract, isAddress } from 'ethers';
-import { ERC20MockSmartContractResult } from '@/types/interfaces';
 
 /**
  * @dev get token information

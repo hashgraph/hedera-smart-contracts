@@ -18,23 +18,21 @@
  *
  */
 
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { isProtectedRoute } from './utils/common/helpers';
-
-export async function middleware(request: NextRequest) {
-  const isConnected = request.cookies.get('_isConnected')?.value;
-  const { pathname } = request.nextUrl;
-
-  if (isConnected && pathname === '/') {
-    return NextResponse.redirect(new URL(`/hedera/overview`, request.url));
-  }
-
-  if (!isConnected && isProtectedRoute(pathname)) {
-    return NextResponse.redirect(new URL(`/`, request.url));
-  }
+/**
+ * @dev an interface for the results returned back from interacting with ERC20Mock smart contract
+ */
+interface ERC20MockSmartContractResult {
+  name?: string;
+  symbol?: string;
+  totalSupply?: string;
+  decimals?: string;
+  mintRes?: boolean;
+  balanceOfRes?: string;
+  approveRes?: boolean;
+  allowanceRes?: string;
+  increaseAllowanceRes?: boolean;
+  decreaseAllowanceRes?: boolean;
+  transferRes?: boolean;
+  transferFromRes?: boolean;
+  err?: any;
 }
-
-export const config = {
-  matcher: ['/', '/hedera/:path*'],
-};

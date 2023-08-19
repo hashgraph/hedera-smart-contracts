@@ -24,7 +24,6 @@ import { BiCopy } from 'react-icons/bi';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { IoRefreshOutline } from 'react-icons/io5';
-import MultiLineMethod from '../common/MultiLineMethod';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { getAllowancesFromLocalStorage } from '@/api/localStorage';
 import { handleErc20TokenPermissions } from '@/api/hedera/erc20-interactions';
@@ -43,11 +42,12 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import {
-  allowanceParamFields,
   approveParamFields,
-  decreaseAllowanceParamFields,
   increaseAllowanceParamFields,
-} from '../../utils/constant';
+  decreaseAllowanceParamFields,
+  allowanceParamFields,
+} from '@/utils/contract-interactions/erc/constant';
+import MultiLineMethod from '@/components/common/MultiLineMethod';
 
 interface PageProps {
   baseContract: Contract;

@@ -21,7 +21,7 @@
 'use client';
 
 import ContractInteraction from '@/components/contract-interaction';
-import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/constants';
+import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/common/constants';
 import { Tooltip } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';

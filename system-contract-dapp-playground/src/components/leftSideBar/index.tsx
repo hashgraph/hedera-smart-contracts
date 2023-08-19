@@ -23,7 +23,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
-import { LEFT_SIDE_BAR_ITEMS } from '@/utils/constants';
+import { LEFT_SIDE_BAR_ITEMS } from '@/utils/common/constants';
 
 const LeftSideBar = () => {
   const pathname = usePathname();

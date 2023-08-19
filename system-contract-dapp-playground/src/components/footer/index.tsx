@@ -23,7 +23,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { HEDERA_SOCIAL_MEDIA } from '@/utils/constants';
+import { HEDERA_SOCIAL_MEDIA } from '@/utils/common/constants';
 
 const Footer = () => {
   return (

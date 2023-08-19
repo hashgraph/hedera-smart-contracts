@@ -19,7 +19,7 @@
  */
 
 import { Contract, ethers } from 'ethers';
-import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/constants';
+import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/common/constants';
 
 // Mock the ethers.Contract constructor
 jest.mock('ethers', () => {
