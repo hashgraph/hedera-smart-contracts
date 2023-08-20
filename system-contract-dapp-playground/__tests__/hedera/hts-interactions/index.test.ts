@@ -21,12 +21,15 @@
 import {
   createHederaFungibleToken,
   createHederaNonFungibleToken,
+  mintHederaToken,
+  mintHederaTokenToAddress,
 } from '@/api/hedera/tokenCreateCustom-interactions';
 import { Contract } from 'ethers';
 
 describe('createHederaFungibleToken test suite', () => {
   // mock states
   const contractId = '0xbdcdf69052c9fc01e38377d05cc83c28ee43f24a';
+  const recipient = '0x34810E139b451e0a4c67d5743E956Ac8990842A8';
   const tokenAddress = '0x00000000000000000000000000000000000084b7';
   const feeTokenAddress = '0x00000000000000000000000000000000000006Ab';
   const txHash = '0x63424020a69bf46a0669f46dd66addba741b9c02d37fab1686428f5209bc759d';
@@ -94,6 +97,21 @@ describe('createHederaFungibleToken test suite', () => {
         hash: txHash,
       }),
     }),
+    mintTokenPublic: jest.fn().mockResolvedValue({
+      wait: jest.fn().mockResolvedValue({
+        hash: txHash,
+      }),
+    }),
+    mintTokenToAddressPublic: jest.fn().mockResolvedValue({
+      wait: jest.fn().mockResolvedValue({
+        hash: txHash,
+      }),
+    }),
+    mintNonFungibleTokenToAddressPublic: jest.fn().mockResolvedValue({
+      wait: jest.fn().mockResolvedValue({
+        hash: txHash,
+      }),
+    }),
   };
 
   // mock inputKeys with CommonKeyObject[] type
@@ -136,8 +154,8 @@ describe('createHederaFungibleToken test suite', () => {
   ];
 
   describe('createHederaFungibleToken', () => {
-    it('should execute createHederaFungibleToken and return a token address', async () => {
-      const tokenCreateRes = await createHederaFungibleToken(
+    it('should execute createHederaFungibleToken then a token address and transaction hash', async () => {
+      const txRes = await createHederaFungibleToken(
         baseContract as unknown as Contract,
         tokenName,
         tokenSymbol,
@@ -151,13 +169,13 @@ describe('createHederaFungibleToken test suite', () => {
         msgValue
       );
 
-      expect(tokenCreateRes.err).toBeNull;
-      expect(tokenCreateRes.transactionHash).toBe(txHash);
-      expect(tokenCreateRes.tokenAddress).toBe(tokenAddress);
+      expect(txRes.err).toBeNull;
+      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.tokenAddress).toBe(tokenAddress);
     });
 
-    it('should execute createFungibleTokenWithCustomFeesPublic and return a token address', async () => {
-      const tokenCreateRes = await createHederaFungibleToken(
+    it('should execute createFungibleTokenWithCustomFeesPublic then a token address and transaction hash', async () => {
+      const txRes = await createHederaFungibleToken(
         baseContract as unknown as Contract,
         tokenName,
         tokenSymbol,
@@ -172,13 +190,13 @@ describe('createHederaFungibleToken test suite', () => {
         feeTokenAddress
       );
 
-      expect(tokenCreateRes.err).toBeNull;
-      expect(tokenCreateRes.transactionHash).toBe(txHash);
-      expect(tokenCreateRes.tokenAddress).toBe(tokenAddress);
+      expect(txRes.err).toBeNull;
+      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.tokenAddress).toBe(tokenAddress);
     });
 
     it('should execute createHederaFungibleToken and return error if initialTotalSupply is invalid', async () => {
-      const tokenCreateRes = await createHederaFungibleToken(
+      const txRes = await createHederaFungibleToken(
         baseContract as unknown as Contract,
         tokenName,
         tokenSymbol,
@@ -192,12 +210,12 @@ describe('createHederaFungibleToken test suite', () => {
         msgValue
       );
 
-      expect(tokenCreateRes.err).toBe('initial total supply cannot be negative');
-      expect(tokenCreateRes.tokenAddress).toBeNull;
+      expect(txRes.err).toBe('initial total supply cannot be negative');
+      expect(txRes.tokenAddress).toBeNull;
     });
 
     it('should execute createHederaFungibleToken and return error if maxSupply is invalid', async () => {
-      const tokenCreateRes = await createHederaFungibleToken(
+      const txRes = await createHederaFungibleToken(
         baseContract as unknown as Contract,
         tokenName,
         tokenSymbol,
@@ -211,12 +229,12 @@ describe('createHederaFungibleToken test suite', () => {
         msgValue
       );
 
-      expect(tokenCreateRes.err).toBe('max supply cannot be negative');
-      expect(tokenCreateRes.tokenAddress).toBeNull;
+      expect(txRes.err).toBe('max supply cannot be negative');
+      expect(txRes.tokenAddress).toBeNull;
     });
 
     it('should execute createHederaFungibleToken and return error if decimals is invalid', async () => {
-      const tokenCreateRes = await createHederaFungibleToken(
+      const txRes = await createHederaFungibleToken(
         baseContract as unknown as Contract,
         tokenName,
         tokenSymbol,
@@ -230,12 +248,12 @@ describe('createHederaFungibleToken test suite', () => {
         msgValue
       );
 
-      expect(tokenCreateRes.err).toBe('decimals cannot be negative');
-      expect(tokenCreateRes.tokenAddress).toBeNull;
+      expect(txRes.err).toBe('decimals cannot be negative');
+      expect(txRes.tokenAddress).toBeNull;
     });
 
     it('should execute createHederaFungibleToken and return error if treasury address does not match public address standard', async () => {
-      const tokenCreateRes = await createHederaFungibleToken(
+      const txRes = await createHederaFungibleToken(
         baseContract as unknown as Contract,
         tokenName,
         tokenSymbol,
@@ -249,12 +267,12 @@ describe('createHederaFungibleToken test suite', () => {
         msgValue
       );
 
-      expect(tokenCreateRes.err).toBe('invalid treasury address');
-      expect(tokenCreateRes.tokenAddress).toBeNull;
+      expect(txRes.err).toBe('invalid treasury address');
+      expect(txRes.tokenAddress).toBeNull;
     });
 
     it('should execute createHederaFungibleToken and return error if fee token address does not match public address standard', async () => {
-      const tokenCreateRes = await createHederaFungibleToken(
+      const txRes = await createHederaFungibleToken(
         baseContract as unknown as Contract,
         tokenName,
         tokenSymbol,
@@ -269,8 +287,8 @@ describe('createHederaFungibleToken test suite', () => {
         '0xabc'
       );
 
-      expect(tokenCreateRes.err).toBe('invalid fee token address');
-      expect(tokenCreateRes.tokenAddress).toBeNull;
+      expect(txRes.err).toBe('invalid fee token address');
+      expect(txRes.tokenAddress).toBeNull;
     });
 
     it('should execute createHederaFungibleToken and return error if inputKeys is invalid ', async () => {
@@ -292,7 +310,7 @@ describe('createHederaFungibleToken test suite', () => {
         },
       ];
 
-      const tokenCreateRes = await createHederaFungibleToken(
+      const txRes = await createHederaFungibleToken(
         baseContract as unknown as Contract,
         tokenName,
         tokenSymbol,
@@ -306,25 +324,25 @@ describe('createHederaFungibleToken test suite', () => {
         msgValue
       );
 
-      expect(tokenCreateRes.err.length).toBe(2);
+      expect(txRes.err.length).toBe(2);
 
-      expect(tokenCreateRes.err[0].keyType).toBe('ADMIN');
-      expect(tokenCreateRes.err[0].keyValueType).toBe('contractId');
-      expect(tokenCreateRes.err[0].keyValue).toBe('0xabc');
-      expect(tokenCreateRes.err[0].err).toBe('Invalid key value');
+      expect(txRes.err[0].keyType).toBe('ADMIN');
+      expect(txRes.err[0].keyValueType).toBe('contractId');
+      expect(txRes.err[0].keyValue).toBe('0xabc');
+      expect(txRes.err[0].err).toBe('Invalid key value');
 
-      expect(tokenCreateRes.err[1].keyType).toBe('FREEZE');
-      expect(tokenCreateRes.err[1].keyValueType).toBe('ECDSA_secp256k1');
-      expect(tokenCreateRes.err[1].keyValue).toBe('0x02bc');
-      expect(tokenCreateRes.err[1].err).toBe('Invalid key value');
+      expect(txRes.err[1].keyType).toBe('FREEZE');
+      expect(txRes.err[1].keyValueType).toBe('ECDSA_secp256k1');
+      expect(txRes.err[1].keyValue).toBe('0x02bc');
+      expect(txRes.err[1].err).toBe('Invalid key value');
 
-      expect(tokenCreateRes.tokenAddress).toBeNull;
+      expect(txRes.tokenAddress).toBeNull;
     });
   });
 
   describe('createHederaNonFungibleToken', () => {
-    it('should execute createHederaNonFungibleToken and return a token address', async () => {
-      const tokenCreateRes = await createHederaNonFungibleToken(
+    it('should execute createHederaNonFungibleToken then a token address and transaction hash', async () => {
+      const txRes = await createHederaNonFungibleToken(
         baseContract as unknown as Contract,
         tokenName,
         tokenSymbol,
@@ -335,13 +353,13 @@ describe('createHederaFungibleToken test suite', () => {
         msgValue
       );
 
-      expect(tokenCreateRes.err).toBeNull;
-      expect(tokenCreateRes.transactionHash).toBe(txHash);
-      expect(tokenCreateRes.tokenAddress).toBe(tokenAddress);
+      expect(txRes.err).toBeNull;
+      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.tokenAddress).toBe(tokenAddress);
     });
 
-    it('should execute createFungibleTokenWithCustomFeesPublic and return a token address', async () => {
-      const tokenCreateRes = await createHederaNonFungibleToken(
+    it('should execute createFungibleTokenWithCustomFeesPublic then a token address and transaction hash', async () => {
+      const txRes = await createHederaNonFungibleToken(
         baseContract as unknown as Contract,
         tokenName,
         tokenSymbol,
@@ -353,13 +371,13 @@ describe('createHederaFungibleToken test suite', () => {
         feeTokenAddress
       );
 
-      expect(tokenCreateRes.err).toBeNull;
-      expect(tokenCreateRes.transactionHash).toBe(txHash);
-      expect(tokenCreateRes.tokenAddress).toBe(tokenAddress);
+      expect(txRes.err).toBeNull;
+      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.tokenAddress).toBe(tokenAddress);
     });
 
     it('should execute createHederaNonFungibleToken and return error if maxSupply is invalid', async () => {
-      const tokenCreateRes = await createHederaNonFungibleToken(
+      const txRes = await createHederaNonFungibleToken(
         baseContract as unknown as Contract,
         tokenName,
         tokenSymbol,
@@ -370,12 +388,12 @@ describe('createHederaFungibleToken test suite', () => {
         msgValue
       );
 
-      expect(tokenCreateRes.err).toBe('max supply cannot be negative');
-      expect(tokenCreateRes.tokenAddress).toBeNull;
+      expect(txRes.err).toBe('max supply cannot be negative');
+      expect(txRes.tokenAddress).toBeNull;
     });
 
     it('should execute createHederaNonFungibleToken and return error if treasury address does not match public address standard', async () => {
-      const tokenCreateRes = await createHederaNonFungibleToken(
+      const txRes = await createHederaNonFungibleToken(
         baseContract as unknown as Contract,
         tokenName,
         tokenSymbol,
@@ -386,12 +404,12 @@ describe('createHederaFungibleToken test suite', () => {
         msgValue
       );
 
-      expect(tokenCreateRes.err).toBe('invalid treasury address');
-      expect(tokenCreateRes.tokenAddress).toBeNull;
+      expect(txRes.err).toBe('invalid treasury address');
+      expect(txRes.tokenAddress).toBeNull;
     });
 
     it('should execute createHederaNonFungibleToken and return error if fee token address does not match public address standard', async () => {
-      const tokenCreateRes = await createHederaNonFungibleToken(
+      const txRes = await createHederaNonFungibleToken(
         baseContract as unknown as Contract,
         tokenName,
         tokenSymbol,
@@ -403,8 +421,8 @@ describe('createHederaFungibleToken test suite', () => {
         '0xabc'
       );
 
-      expect(tokenCreateRes.err).toBe('invalid fee token address');
-      expect(tokenCreateRes.tokenAddress).toBeNull;
+      expect(txRes.err).toBe('invalid fee token address');
+      expect(txRes.tokenAddress).toBeNull;
     });
 
     it('should execute createHederaNonFungibleToken and return error if inputKeys is invalid ', async () => {
@@ -426,7 +444,7 @@ describe('createHederaFungibleToken test suite', () => {
         },
       ];
 
-      const tokenCreateRes = await createHederaNonFungibleToken(
+      const txRes = await createHederaNonFungibleToken(
         baseContract as unknown as Contract,
         tokenName,
         tokenSymbol,
@@ -437,19 +455,116 @@ describe('createHederaFungibleToken test suite', () => {
         msgValue
       );
 
-      expect(tokenCreateRes.err.length).toBe(2);
+      expect(txRes.err.length).toBe(2);
 
-      expect(tokenCreateRes.err[0].keyType).toBe('ADMIN');
-      expect(tokenCreateRes.err[0].keyValueType).toBe('contractId');
-      expect(tokenCreateRes.err[0].keyValue).toBe('0xabc');
-      expect(tokenCreateRes.err[0].err).toBe('Invalid key value');
+      expect(txRes.err[0].keyType).toBe('ADMIN');
+      expect(txRes.err[0].keyValueType).toBe('contractId');
+      expect(txRes.err[0].keyValue).toBe('0xabc');
+      expect(txRes.err[0].err).toBe('Invalid key value');
 
-      expect(tokenCreateRes.err[1].keyType).toBe('FREEZE');
-      expect(tokenCreateRes.err[1].keyValueType).toBe('ECDSA_secp256k1');
-      expect(tokenCreateRes.err[1].keyValue).toBe('0x02bc');
-      expect(tokenCreateRes.err[1].err).toBe('Invalid key value');
+      expect(txRes.err[1].keyType).toBe('FREEZE');
+      expect(txRes.err[1].keyValueType).toBe('ECDSA_secp256k1');
+      expect(txRes.err[1].keyValue).toBe('0x02bc');
+      expect(txRes.err[1].err).toBe('Invalid key value');
 
-      expect(tokenCreateRes.tokenAddress).toBeNull;
+      expect(txRes.tokenAddress).toBeNull;
+    });
+  });
+
+  describe('mintHederaToken', () => {
+    it('should execute mintTokenPublic to mint a FUNGIBLE token then return a transaction hash', async () => {
+      const txRes = await mintHederaToken(
+        baseContract as unknown as Contract,
+        'FUNGIBLE',
+        tokenAddress,
+        1200,
+        'metadata'
+      );
+
+      expect(txRes.err).toBeNull;
+      expect(txRes.transactionHash).toBe(txHash);
+    });
+
+    it('should execute mintTokenPublic to mint a NON-FUNGIBLE token then return a transaction hash', async () => {
+      const txRes = await mintHederaToken(
+        baseContract as unknown as Contract,
+        'NON_FUNGIBLE',
+        tokenAddress,
+        0,
+        'metadata'
+      );
+
+      expect(txRes.err).toBeNull;
+      expect(txRes.transactionHash).toBe(txHash);
+    });
+
+    it('should execute mintTokenPublic to mint a Hedera token and return error when the hederaTokenAddress is invalid', async () => {
+      const txRes = await mintHederaToken(
+        baseContract as unknown as Contract,
+        'FUNGIBLE',
+        '0xabc',
+        1200,
+        'metadata'
+      );
+
+      expect(txRes.err).toBe('invalid Hedera token address');
+      expect(txRes.transactionHash).toBeNull;
+    });
+
+    it('should execute mintTokenPublic to mint a FUNGIBLE token and return error when the amount to mint is a negative number', async () => {
+      const txRes = await mintHederaToken(
+        baseContract as unknown as Contract,
+        'FUNGIBLE',
+        tokenAddress,
+        -1,
+        'metadata'
+      );
+
+      expect(txRes.err).toBe('amount to mint cannot be negative when minting a fungible token');
+      expect(txRes.transactionHash).toBeNull;
+    });
+
+    it('should execute mintTokenPublic to mint a NON-FUNGIBLE token and return error when the amount to mint is a non-zero number', async () => {
+      const txRes = await mintHederaToken(
+        baseContract as unknown as Contract,
+        'NON_FUNGIBLE',
+        tokenAddress,
+        1,
+        'metadata'
+      );
+
+      expect(txRes.err).toBe('amount to mint must be 0 when minting a non-fungible token');
+      expect(txRes.transactionHash).toBeNull;
+    });
+  });
+
+
+    it('should execute mintHederaTokenToAddress to mint a FUNGIBLE token and transfer it to the recipient then return error when the amount to mint is a negative number', async () => {
+      const txRes = await mintHederaTokenToAddress(
+        baseContract as unknown as Contract,
+        'FUNGIBLE',
+        tokenAddress,
+        recipient,
+        -1,
+        'metadata'
+      );
+
+      expect(txRes.err).toBe('amount to mint cannot be negative when minting a fungible token');
+      expect(txRes.transactionHash).toBeNull;
+    });
+
+    it('should execute mintHederaTokenToAddress to mint a NON-FUNGIBLE token and transfer it to the recipient then return error when the amount to mint is a non-zero number', async () => {
+      const txRes = await mintHederaTokenToAddress(
+        baseContract as unknown as Contract,
+        'NON_FUNGIBLE',
+        tokenAddress,
+        recipient,
+        1,
+        'metadata'
+      );
+
+      expect(txRes.err).toBe('amount to mint must be 0 when minting a non-fungible token');
+      expect(txRes.transactionHash).toBeNull;
     });
   });
 });
