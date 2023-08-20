@@ -297,3 +297,68 @@ export const mintHederaToken = async (
     return { err };
   }
 };
+
+/**
+ * @dev mints Hedera tokens and transfer it to another address
+ *
+ * @dev integrates tokenCreateCustomContract.mintTokenToAddressPublic() & tokenCreateCustomContract.mintNonFungibleTokenToAddressPublic()
+ *
+ * @param baseContract: ethers.Contract
+ *
+ * @param tokenType: 'FUNGIBLE' | 'NON_FUNGIBLE'
+ *
+ * @param hederaTokenAddress: string
+ *
+ * @param recipientAddress: string
+ *
+ * @param amountToMint: number
+ *
+ * @param metadata: string
+ *
+ * @return Promise<TokenCreateCustomSmartContractResult>
+ */
+export const mintHederaTokenToAddress = async (
+  baseContract: Contract,
+  tokenType: 'FUNGIBLE' | 'NON_FUNGIBLE',
+  hederaTokenAddress: string,
+  recipientAddress: string,
+  amountToMint: number,
+  metadata: string
+): Promise<TokenCreateCustomSmartContractResult> => {
+  // sanitize params
+  if (!isAddress(hederaTokenAddress)) {
+    return { err: 'invalid Hedera token address' };
+  } else if (!isAddress(recipientAddress)) {
+    return { err: 'invalid recipient address' };
+  } else if (tokenType === 'FUNGIBLE' && amountToMint < 0) {
+    return { err: 'amount to mint cannot be negative when minting a fungible token' };
+  } else if (tokenType === 'NON_FUNGIBLE' && amountToMint !== 0) {
+    return { err: 'amount to mint must be 0 when minting a non-fungible token' };
+  }
+
+  try {
+    let tx;
+    if (tokenType === 'FUNGIBLE') {
+      tx = await baseContract.mintTokenToAddressPublic(
+        hederaTokenAddress,
+        recipientAddress,
+        amountToMint,
+        [Buffer.from(metadata)]
+      );
+    } else {
+      tx = await baseContract.mintNonFungibleTokenToAddressPublic(
+        hederaTokenAddress,
+        recipientAddress,
+        amountToMint,
+        [Buffer.from(metadata)]
+      );
+    }
+
+    const txReceipt = await tx.wait();
+
+    return { transactionHash: txReceipt.hash };
+  } catch (err) {
+    console.error(err);
+    return { err };
+  }
+};

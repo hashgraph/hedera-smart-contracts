@@ -538,6 +538,62 @@ describe('createHederaFungibleToken test suite', () => {
     });
   });
 
+  describe('mintHederaTokenToAddress', () => {
+    it('should execute mintHederaTokenToAddress to mint a FUNGIBLE token and transfer it to the recipient then return a transaction hash', async () => {
+      const txRes = await mintHederaTokenToAddress(
+        baseContract as unknown as Contract,
+        'FUNGIBLE',
+        tokenAddress,
+        recipient,
+        1200,
+        'metadata'
+      );
+
+      expect(txRes.err).toBeNull;
+      expect(txRes.transactionHash).toBe(txHash);
+    });
+
+    it('should execute mintHederaTokenToAddress to mint a NON-FUNGIBLE token and transfer it to the recipient then return a transaction hash', async () => {
+      const txRes = await mintHederaTokenToAddress(
+        baseContract as unknown as Contract,
+        'NON_FUNGIBLE',
+        tokenAddress,
+        recipient,
+        0,
+        'metadata'
+      );
+
+      expect(txRes.err).toBeNull;
+      expect(txRes.transactionHash).toBe(txHash);
+    });
+
+    it('should execute mintHederaTokenToAddress to mint a Hedera token and transfer it to the recipient then return error when the hederaTokenAddress is invalid', async () => {
+      const txRes = await mintHederaTokenToAddress(
+        baseContract as unknown as Contract,
+        'FUNGIBLE',
+        '0xabc',
+        recipient,
+        1200,
+        'metadata'
+      );
+
+      expect(txRes.err).toBe('invalid Hedera token address');
+      expect(txRes.transactionHash).toBeNull;
+    });
+
+    it('should execute mintHederaTokenToAddress to mint a Hedera token and transfer it to the recipient then return error when the recipientAddress is invalid', async () => {
+      const txRes = await mintHederaTokenToAddress(
+        baseContract as unknown as Contract,
+        'FUNGIBLE',
+        tokenAddress,
+        '0xabc',
+        1200,
+        'metadata'
+      );
+
+      expect(txRes.err).toBe('invalid recipient address');
+      expect(txRes.transactionHash).toBeNull;
+    });
 
     it('should execute mintHederaTokenToAddress to mint a FUNGIBLE token and transfer it to the recipient then return error when the amount to mint is a negative number', async () => {
       const txRes = await mintHederaTokenToAddress(
