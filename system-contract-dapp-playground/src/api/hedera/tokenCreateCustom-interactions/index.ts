@@ -137,3 +137,101 @@ export const createHederaFungibleToken = async (
   }
 };
 
+/**
+ * @dev creates a Hedera non fungible token
+ *
+ * @dev integrates tokenCreateCustomContract.createNonFungibleTokenPublic() and tokenCreateCustomContract.createNonFungibleTokenWithCustomFeesPublic()
+ *
+ * @param baseContract: ethers.Contract
+ *
+ * @param name: string
+ *
+ * @param symbol: string
+ *
+ * @param memo: string
+ *
+ * @param maxSupply: number
+ *
+ * @param treasury: string
+ *
+ * @param inputKeys: CommonKeyObject[],
+ *
+ * @return Promise<TokenCreateCustomSmartContractResult>
+ *
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L136
+ *      for more information on the purposes of the params
+ */
+export const createHederaNonFungibleToken = async (
+  baseContract: Contract,
+  name: string,
+  symbol: string,
+  memo: string,
+  maxSupply: number,
+  treasury: string,
+  inputKeys: CommonKeyObject[],
+  feeTokenAddress?: string
+): Promise<TokenCreateCustomSmartContractResult> => {
+  // sanitize params
+  if (maxSupply < 0) {
+    return { err: 'max supply cannot be negative' };
+  } else if (!isAddress(treasury)) {
+    return { err: 'invalid treasury address' };
+  } else if (feeTokenAddress && !isAddress(feeTokenAddress)) {
+    return { err: 'invalid fee token address' };
+  }
+
+  // prepare keys array
+  const keyRes = prepareHederaTokenKeyArray(inputKeys);
+
+  // handle error
+  if (keyRes.err) {
+    return { err: keyRes.err };
+  }
+
+  try {
+    let tokenCreateTx;
+    if (feeTokenAddress) {
+      tokenCreateTx = await baseContract.createNonFungibleTokenWithCustomFeesPublic(
+        treasury,
+        feeTokenAddress,
+        name,
+        symbol,
+        memo,
+        maxSupply,
+        keyRes.hederaTokenKeys,
+        {
+          value: '35000000000000000000',
+          gasLimit: 1_000_000,
+        }
+      );
+    } else {
+      tokenCreateTx = await baseContract.createNonFungibleTokenPublic(
+        name,
+        symbol,
+        memo,
+        maxSupply,
+        treasury,
+        keyRes.hederaTokenKeys,
+        {
+          value: '35000000000000000000',
+          gasLimit: 1_000_000,
+        }
+      );
+    }
+
+    const txReceipt = await tokenCreateTx.wait();
+
+    const { data } = txReceipt.logs.filter(
+      (event: any) => event.fragment.name === 'CreatedToken'
+    )[0];
+
+    // @notice since the returned `data` is 32 byte, convert it to the public 20-byte address standard
+    const tokenAddress = `0x${data.slice(-40)}`;
+
+    return { tokenAddress, transactionHash: txReceipt.hash };
+  } catch (err) {
+    console.error(err);
+    return { err };
+  }
+};
+
