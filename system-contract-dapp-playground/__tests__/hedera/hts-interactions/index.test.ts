@@ -22,6 +22,7 @@ import {
   associateHederaTokensToAccounts,
   createHederaFungibleToken,
   createHederaNonFungibleToken,
+  grantTokenKYCToAccount,
   mintHederaToken,
   mintHederaTokenToAddress,
 } from '@/api/hedera/tokenCreateCustom-interactions';
@@ -34,6 +35,7 @@ describe('createHederaFungibleToken test suite', () => {
   const tokenAddress = '0x00000000000000000000000000000000000084b7';
   const feeTokenAddress = '0x00000000000000000000000000000000000006Ab';
   const associtingAccount = '0x34810E139b451e0a4c67d5743E956Ac8990842A8';
+  const grantingKYCAccount = '0x34810E139b451e0a4c67d5743E956Ac8990842A8';
   const txHash = '0x63424020a69bf46a0669f46dd66addba741b9c02d37fab1686428f5209bc759d';
   const returnedTokenAddress = '0x00000000000000000000000000000000000000000000000000000000000084b7';
   const tokenName = 'WrappedHbar';
@@ -120,6 +122,11 @@ describe('createHederaFungibleToken test suite', () => {
       }),
     }),
     associateTokensPublic: jest.fn().mockResolvedValue({
+      wait: jest.fn().mockResolvedValue({
+        hash: txHash,
+      }),
+    }),
+    grantTokenKycPublic: jest.fn().mockResolvedValue({
       wait: jest.fn().mockResolvedValue({
         hash: txHash,
       }),
@@ -686,6 +693,38 @@ describe('createHederaFungibleToken test suite', () => {
       );
 
       expect((txRes.err as any).invalidTokens).toStrictEqual([invalidTokenAddress]);
+      expect(txRes.transactionHash).toBeNull;
+    });
+  });
+
+  describe('grantTokenKYCToAccount', () => {
+    it('should execute grantTokenKYCToAccount to associate a token KYC to an account then return a transaction hash', async () => {
+      const txRes = await grantTokenKYCToAccount(
+        baseContract as unknown as Contract,
+        tokenAddress,
+        grantingKYCAccount
+      );
+      expect(txRes.err).toBeNull;
+      expect(txRes.transactionHash).toBe(txHash);
+    });
+
+    it('should execute grantTokenKYCToAccount to associate a token KYC to an account then return error when hederaTokenAddress is invalid', async () => {
+      const txRes = await grantTokenKYCToAccount(
+        baseContract as unknown as Contract,
+        '0xabc',
+        grantingKYCAccount
+      );
+      expect(txRes.err).toBe('invalid Hedera token address');
+      expect(txRes.transactionHash).toBeNull;
+    });
+
+    it('should execute grantTokenKYCToAccount to associate a token KYC to an account then return error when grantingKYCAccountAddress is invalid', async () => {
+      const txRes = await grantTokenKYCToAccount(
+        baseContract as unknown as Contract,
+        tokenAddress,
+        '0xabc'
+      );
+      expect(txRes.err).toBe('invalid associating account address');
       expect(txRes.transactionHash).toBeNull;
     });
   });

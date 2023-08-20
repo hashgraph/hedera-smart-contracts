@@ -386,7 +386,7 @@ export const associateHederaTokensToAccounts = async (
   baseContract: Contract,
   hederaTokenAddresses: string[],
   associtingAccountAddress: string
-) => {
+): Promise<TokenCreateCustomSmartContractResult> => {
   // sanitize params
   if (hederaTokenAddresses.length === 0) {
     return { err: 'must have at least one token address to associate' };
@@ -422,6 +422,47 @@ export const associateHederaTokensToAccounts = async (
         }
       );
     }
+
+    const txReceipt = await tx.wait();
+
+    return { transactionHash: txReceipt.hash };
+  } catch (err) {
+    console.log(err);
+    return { err };
+  }
+};
+
+/**
+ * @dev grants token KYC to an account
+ *
+ * @dev integrates tokenCreateCustomContract.grantTokenKycPublic()
+ *
+ * @param baseContract: ethers.Contract
+ *
+ * @param hederaTokenAddress: string
+ *
+ * @param grantingKYCAccountAddress: string
+ *
+ * @return Promise<TokenCreateCustomSmartContractResult>
+ */
+export const grantTokenKYCToAccount = async (
+  baseContract: Contract,
+  hederaTokenAddress: string,
+  grantingKYCAccountAddress: string
+): Promise<TokenCreateCustomSmartContractResult> => {
+  // sanitize params
+  if (!isAddress(hederaTokenAddress)) {
+    return { err: 'invalid Hedera token address' };
+  } else if (!isAddress(grantingKYCAccountAddress)) {
+    return { err: 'invalid associating account address' };
+  }
+
+  try {
+    const tx = await baseContract.grantTokenKycPublic(
+      hederaTokenAddress,
+      grantingKYCAccountAddress,
+      { gasLimit: 1_000_000 }
+    );
 
     const txReceipt = await tx.wait();
 
