@@ -19,6 +19,7 @@
  */
 
 import {
+  associateHederaTokensToAccounts,
   createHederaFungibleToken,
   createHederaNonFungibleToken,
   mintHederaToken,
@@ -32,6 +33,7 @@ describe('createHederaFungibleToken test suite', () => {
   const recipient = '0x34810E139b451e0a4c67d5743E956Ac8990842A8';
   const tokenAddress = '0x00000000000000000000000000000000000084b7';
   const feeTokenAddress = '0x00000000000000000000000000000000000006Ab';
+  const associtingAccount = '0x34810E139b451e0a4c67d5743E956Ac8990842A8';
   const txHash = '0x63424020a69bf46a0669f46dd66addba741b9c02d37fab1686428f5209bc759d';
   const returnedTokenAddress = '0x00000000000000000000000000000000000000000000000000000000000084b7';
   const tokenName = 'WrappedHbar';
@@ -108,6 +110,16 @@ describe('createHederaFungibleToken test suite', () => {
       }),
     }),
     mintNonFungibleTokenToAddressPublic: jest.fn().mockResolvedValue({
+      wait: jest.fn().mockResolvedValue({
+        hash: txHash,
+      }),
+    }),
+    associateTokenPublic: jest.fn().mockResolvedValue({
+      wait: jest.fn().mockResolvedValue({
+        hash: txHash,
+      }),
+    }),
+    associateTokensPublic: jest.fn().mockResolvedValue({
       wait: jest.fn().mockResolvedValue({
         hash: txHash,
       }),
@@ -620,6 +632,60 @@ describe('createHederaFungibleToken test suite', () => {
       );
 
       expect(txRes.err).toBe('amount to mint must be 0 when minting a non-fungible token');
+      expect(txRes.transactionHash).toBeNull;
+    });
+  });
+
+  describe('associateHederaTokensToAccounts', () => {
+    it('should execute associateHederaTokensToAccounts to associate a token to an account then return a transaction hash', async () => {
+      const txRes = await associateHederaTokensToAccounts(
+        baseContract as unknown as Contract,
+        [tokenAddress],
+        associtingAccount
+      );
+      expect(txRes.err).toBeNull;
+      expect(txRes.transactionHash).toBe(txHash);
+    });
+
+    it('should execute associateHederaTokensToAccounts to associate a list of tokens to an account then return a transaction hash', async () => {
+      const txRes = await associateHederaTokensToAccounts(
+        baseContract as unknown as Contract,
+        [tokenAddress, feeTokenAddress],
+        associtingAccount
+      );
+      expect(txRes.err).toBeNull;
+      expect(txRes.transactionHash).toBe(txHash);
+    });
+
+    it('should execute associateHederaTokensToAccounts and return an error when the hederaTokenAddresses array is empty', async () => {
+      const txRes = await associateHederaTokensToAccounts(
+        baseContract as unknown as Contract,
+        [],
+        associtingAccount
+      );
+      expect(txRes.err).toBe('must have at least one token address to associate');
+      expect(txRes.transactionHash).toBeNull;
+    });
+
+    it('should execute associateHederaTokensToAccounts and return an error when the associtingAccountAddress is invalid', async () => {
+      const txRes = await associateHederaTokensToAccounts(
+        baseContract as unknown as Contract,
+        [tokenAddress, feeTokenAddress],
+        '0xabc'
+      );
+      expect(txRes.err).toBe('associating account address is invalid');
+      expect(txRes.transactionHash).toBeNull;
+    });
+
+    it('should execute associateHederaTokensToAccounts and return an error when the hederaTokenAddresses array contains invalid token addresses', async () => {
+      const invalidTokenAddress = '0xaac';
+      const txRes = await associateHederaTokensToAccounts(
+        baseContract as unknown as Contract,
+        [tokenAddress, invalidTokenAddress],
+        associtingAccount
+      );
+
+      expect((txRes.err as any).invalidTokens).toStrictEqual([invalidTokenAddress]);
       expect(txRes.transactionHash).toBeNull;
     });
   });

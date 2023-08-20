@@ -343,14 +343,20 @@ export const mintHederaTokenToAddress = async (
         hederaTokenAddress,
         recipientAddress,
         amountToMint,
-        [Buffer.from(metadata)]
+        [Buffer.from(metadata)],
+        {
+          gasLimit: 1_000_000,
+        }
       );
     } else {
       tx = await baseContract.mintNonFungibleTokenToAddressPublic(
         hederaTokenAddress,
         recipientAddress,
         amountToMint,
-        [Buffer.from(metadata)]
+        [Buffer.from(metadata)],
+        {
+          gasLimit: 1_000_000,
+        }
       );
     }
 
@@ -359,6 +365,69 @@ export const mintHederaTokenToAddress = async (
     return { transactionHash: txReceipt.hash };
   } catch (err) {
     console.error(err);
+    return { err };
+  }
+};
+
+/**
+ * @dev associates Hedera tokens to accounts
+ *
+ * @dev integrates tokenCreateCustomContract.associateTokensPublic() and tokenCreateCustomContract.associateTokenPublic()
+ *
+ * @param baseContract: ethers.Contract
+ *
+ * @param hederaTokenAddresses: string[]
+ *
+ * @param associtingAccountAddress: string
+ *
+ * @return Promise<TokenCreateCustomSmartContractResult>
+ */
+export const associateHederaTokensToAccounts = async (
+  baseContract: Contract,
+  hederaTokenAddresses: string[],
+  associtingAccountAddress: string
+) => {
+  // sanitize params
+  if (hederaTokenAddresses.length === 0) {
+    return { err: 'must have at least one token address to associate' };
+  } else if (!isAddress(associtingAccountAddress)) {
+    return { err: 'associating account address is invalid' };
+  }
+  let invalidTokens = [] as any;
+  hederaTokenAddresses.forEach((address) => {
+    if (!isAddress(address)) {
+      invalidTokens.push(address);
+    }
+  });
+  if (invalidTokens.length > 0) {
+    return { err: { invalidTokens } };
+  }
+
+  try {
+    let tx;
+    if (hederaTokenAddresses.length === 1) {
+      tx = await baseContract.associateTokenPublic(
+        associtingAccountAddress,
+        hederaTokenAddresses[0],
+        {
+          gasLimit: 1_000_000,
+        }
+      );
+    } else {
+      tx = await baseContract.associateTokensPublic(
+        associtingAccountAddress,
+        hederaTokenAddresses,
+        {
+          gasLimit: 1_000_000,
+        }
+      );
+    }
+
+    const txReceipt = await tx.wait();
+
+    return { transactionHash: txReceipt.hash };
+  } catch (err) {
+    console.log(err);
     return { err };
   }
 };
