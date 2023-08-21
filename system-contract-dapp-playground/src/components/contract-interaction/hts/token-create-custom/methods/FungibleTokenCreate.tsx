@@ -25,7 +25,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
 import { createHederaFungibleToken } from '@/api/hedera/tokenCreateCustom-interactions';
-import { htsFungibleTokenCreateParamFields } from '@/utils/contract-interactions/HTS/constant';
+import { htsTokenCreateParamFields } from '@/utils/contract-interactions/HTS/constant';
 import {
   SharedFromButton,
   SharedFormInputField,
@@ -253,17 +253,15 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
         {tokenCreateFields.info.map((param) => {
           return (
             <SharedFormInputField
-              paramKey={(htsFungibleTokenCreateParamFields as any)[param].paramKey}
-              explanation={(htsFungibleTokenCreateParamFields as any)[param].explanation}
+              paramKey={(htsTokenCreateParamFields as any)[param].paramKey}
+              explanation={(htsTokenCreateParamFields as any)[param].explanation}
               paramValue={paramValues[param]}
-              paramType={(htsFungibleTokenCreateParamFields as any)[param].inputType}
+              paramType={(htsTokenCreateParamFields as any)[param].inputType}
               param={param}
-              paramPlaceholder={(htsFungibleTokenCreateParamFields as any)[param].inputPlaceholder}
-              paramSize={(htsFungibleTokenCreateParamFields as any)[param].inputSize}
-              paramFocusColor={
-                (htsFungibleTokenCreateParamFields as any)[param].inputFocusBorderColor
-              }
-              paramClassName={(htsFungibleTokenCreateParamFields as any)[param].inputClassname}
+              paramPlaceholder={(htsTokenCreateParamFields as any)[param].inputPlaceholder}
+              paramSize={(htsTokenCreateParamFields as any)[param].inputSize}
+              paramFocusColor={(htsTokenCreateParamFields as any)[param].inputFocusBorderColor}
+              paramClassName={(htsTokenCreateParamFields as any)[param].inputClassname}
               handleInputOnChange={handleInputOnChange}
             />
           );
@@ -273,7 +271,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
         <div className="w-full flex gap-3">
           {/* false */}
           <SharedFromButton
-            explanation={(htsFungibleTokenCreateParamFields as any)['freezeStatus'].explanation.off}
+            explanation={(htsTokenCreateParamFields as any)['freezeStatus'].explanation.off}
             buttonTitle={'Freeze Status - false'}
             handleButtonOnClick={() => {
               setIsDefaultFreeze(false);
@@ -284,7 +282,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
 
           {/* with custom fee */}
           <SharedFromButton
-            explanation={(htsFungibleTokenCreateParamFields as any)['freezeStatus'].explanation.on}
+            explanation={(htsTokenCreateParamFields as any)['freezeStatus'].explanation.on}
             buttonTitle={'Freeze Status - true'}
             handleButtonOnClick={() => {
               setIsDefaultFreeze(true);
@@ -300,19 +298,15 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
           {tokenCreateFields.supply.map((param) => {
             return (
               <SharedFormInputField
-                paramKey={(htsFungibleTokenCreateParamFields as any)[param].paramKey}
-                explanation={(htsFungibleTokenCreateParamFields as any)[param].explanation}
+                paramKey={(htsTokenCreateParamFields as any)[param].paramKey}
+                explanation={(htsTokenCreateParamFields as any)[param].explanation}
                 paramValue={paramValues[param]}
-                paramType={(htsFungibleTokenCreateParamFields as any)[param].inputType}
+                paramType={(htsTokenCreateParamFields as any)[param].inputType}
                 param={param}
-                paramPlaceholder={
-                  (htsFungibleTokenCreateParamFields as any)[param].inputPlaceholder
-                }
-                paramSize={(htsFungibleTokenCreateParamFields as any)[param].inputSize}
-                paramFocusColor={
-                  (htsFungibleTokenCreateParamFields as any)[param].inputFocusBorderColor
-                }
-                paramClassName={(htsFungibleTokenCreateParamFields as any)[param].inputClassname}
+                paramPlaceholder={(htsTokenCreateParamFields as any)[param].inputPlaceholder}
+                paramSize={(htsTokenCreateParamFields as any)[param].inputSize}
+                paramFocusColor={(htsTokenCreateParamFields as any)[param].inputFocusBorderColor}
+                paramClassName={(htsTokenCreateParamFields as any)[param].inputClassname}
                 handleInputOnChange={handleInputOnChange}
               />
             );
@@ -324,7 +318,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
           {/* no custom fee */}
 
           <SharedFromButton
-            explanation={(htsFungibleTokenCreateParamFields as any)['customFee'].explanation.off}
+            explanation={(htsTokenCreateParamFields as any)['customFee'].explanation.off}
             buttonTitle={'No Custom Fee'}
             handleButtonOnClick={() => setWithCustomFee(false)}
             switcher={!withCustomFee}
@@ -332,7 +326,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
 
           {/* with custom fee */}
           <SharedFromButton
-            explanation={(htsFungibleTokenCreateParamFields as any)['customFee'].explanation.on}
+            explanation={(htsTokenCreateParamFields as any)['customFee'].explanation.on}
             buttonTitle={'With Custom Fee'}
             handleButtonOnClick={() => setWithCustomFee(true)}
             switcher={withCustomFee}
@@ -342,38 +336,34 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
         {/* fee token address */}
         {withCustomFee && (
           <SharedFormInputField
-            paramKey={(htsFungibleTokenCreateParamFields as any)['feeTokenAddress'].paramKey}
-            explanation={(htsFungibleTokenCreateParamFields as any)['feeTokenAddress'].explanation}
+            paramKey={(htsTokenCreateParamFields as any)['feeTokenAddress'].paramKey}
+            explanation={(htsTokenCreateParamFields as any)['feeTokenAddress'].explanation}
             paramValue={paramValues['feeTokenAddress']}
-            paramType={(htsFungibleTokenCreateParamFields as any)['feeTokenAddress'].inputType}
+            paramType={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputType}
             param={'feeTokenAddress'}
             paramPlaceholder={
-              (htsFungibleTokenCreateParamFields as any)['feeTokenAddress'].inputPlaceholder
+              (htsTokenCreateParamFields as any)['feeTokenAddress'].inputPlaceholder
             }
-            paramSize={(htsFungibleTokenCreateParamFields as any)['feeTokenAddress'].inputSize}
+            paramSize={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputSize}
             paramFocusColor={
-              (htsFungibleTokenCreateParamFields as any)['feeTokenAddress'].inputFocusBorderColor
+              (htsTokenCreateParamFields as any)['feeTokenAddress'].inputFocusBorderColor
             }
-            paramClassName={
-              (htsFungibleTokenCreateParamFields as any)['feeTokenAddress'].inputClassname
-            }
+            paramClassName={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputClassname}
             handleInputOnChange={handleInputOnChange}
           />
         )}
 
         {/* treasury */}
         <SharedFormInputField
-          paramKey={(htsFungibleTokenCreateParamFields as any)['treasury'].limited_explanation}
-          explanation={(htsFungibleTokenCreateParamFields as any)['treasury'].explanation}
+          paramKey={(htsTokenCreateParamFields as any)['treasury'].limited_explanation}
+          explanation={(htsTokenCreateParamFields as any)['treasury'].explanation}
           paramValue={paramValues['treasury']}
-          paramType={(htsFungibleTokenCreateParamFields as any)['treasury'].inputType}
+          paramType={(htsTokenCreateParamFields as any)['treasury'].inputType}
           param={'treasury'}
-          paramPlaceholder={(htsFungibleTokenCreateParamFields as any)['treasury'].inputPlaceholder}
-          paramSize={(htsFungibleTokenCreateParamFields as any)['treasury'].inputSize}
-          paramFocusColor={
-            (htsFungibleTokenCreateParamFields as any)['treasury'].inputFocusBorderColor
-          }
-          paramClassName={(htsFungibleTokenCreateParamFields as any)['treasury'].inputClassname}
+          paramPlaceholder={(htsTokenCreateParamFields as any)['treasury'].inputPlaceholder}
+          paramSize={(htsTokenCreateParamFields as any)['treasury'].inputSize}
+          paramFocusColor={(htsTokenCreateParamFields as any)['treasury'].inputFocusBorderColor}
+          paramClassName={(htsTokenCreateParamFields as any)['treasury'].inputClassname}
           handleInputOnChange={handleInputOnChange}
           isDisable={true}
         />
@@ -409,6 +399,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
           paginatedTransactionResults={paginatedTransactionResults}
           setCurrentTransactionPage={setCurrentTransactionPage}
           setTransactionResults={setTransactionResults}
+          withTokenAddress={true}
         />
       )}
     </div>

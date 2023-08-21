@@ -47,7 +47,7 @@ export const DEFAULT_IHTS_KEY_VALUE: IHederaTokenServiceKeyValue = {
   delegatableContractId: ethers.ZeroAddress,
 };
 
-export const htsFungibleTokenCreateParamFields = {
+export const htsTokenCreateParamFields = {
   name: {
     inputType: 'text',
     inputPlaceholder: 'Name of the token...',

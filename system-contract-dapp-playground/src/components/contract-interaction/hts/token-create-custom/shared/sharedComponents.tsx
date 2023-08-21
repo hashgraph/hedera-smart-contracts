@@ -328,6 +328,7 @@ export const SharedSigningKeysComponent = ({
 /** @dev shared component representing the list of transactions */
 interface TransactionResultTablePageProps {
   hederaNetwork: string;
+  withTokenAddress: boolean;
   TRANSACTION_PAGE_SIZE: number;
   currentTransactionPage: number;
   transactionResultStorageKey: string;
@@ -346,6 +347,7 @@ export const TransactionResultTable = ({
   setCurrentTransactionPage,
   transactionResultStorageKey,
   paginatedTransactionResults,
+  withTokenAddress,
 }: TransactionResultTablePageProps) => {
   return (
     <TableContainer className="flex flex-col gap-3">
@@ -357,7 +359,7 @@ export const TransactionResultTable = ({
             </Th>
             <Th color={'#82ACF9'}>Status</Th>
             <Th color={'#82ACF9'}>Transaction hash</Th>
-            <Th color={'#82ACF9'}>Token address</Th>
+            {withTokenAddress && <Th color={'#82ACF9'}>Token address</Th>}
             <Th />
           </Tr>
         </Thead>
@@ -383,9 +385,12 @@ export const TransactionResultTable = ({
                     : 'hover:bg-red-400/10'
                 }
               >
+                {/* index */}
                 <Td>
                   <p>{index + (currentTransactionPage - 1) * TRANSACTION_PAGE_SIZE + 1}</p>
                 </Td>
+
+                {/* status */}
                 <Td>
                   <p
                     className={
@@ -396,6 +401,7 @@ export const TransactionResultTable = ({
                   </p>
                 </Td>
 
+                {/* transaction hash */}
                 <Td className="cursor-pointer">
                   <div className="flex gap-1 items-center">
                     <div onClick={() => navigator.clipboard.writeText(transactionResult.txHash)}>
@@ -431,49 +437,54 @@ export const TransactionResultTable = ({
                     </Tooltip>
                   </div>
                 </Td>
-                <Td className="cursor-pointer">
-                  {transactionResult.tokenAddress ? (
-                    <div className="flex gap-1 items-center">
-                      <div
-                        onClick={() =>
-                          navigator.clipboard.writeText(transactionResult.tokenAddress)
-                        }
-                      >
-                        <Popover>
-                          <PopoverTrigger>
-                            <div className="flex gap-1 items-center">
-                              <Tooltip label="click to copy token address">
-                                <p>
-                                  {transactionResult.tokenAddress.slice(0, 15)}...
-                                  {transactionResult.tokenAddress.slice(-9)}
-                                </p>
-                              </Tooltip>
-                            </div>
-                          </PopoverTrigger>
-                          <PopoverContent width={'fit-content'} border={'none'}>
-                            <div className="bg-secondary px-3 py-2 border-none font-medium">
-                              Copied
-                            </div>
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                      <Tooltip
-                        label={'Explore this token on HashScan'}
-                        placement="top"
-                        fontWeight={'medium'}
-                      >
-                        <Link
-                          href={`https://hashscan.io/${hederaNetwork}/token/${transactionResult.tokenAddress}`}
-                          target="_blank"
+
+                {/* token address */}
+                {withTokenAddress && (
+                  <Td className="cursor-pointer">
+                    {transactionResult.tokenAddress ? (
+                      <div className="flex gap-1 items-center">
+                        <div
+                          onClick={() =>
+                            navigator.clipboard.writeText(transactionResult.tokenAddress)
+                          }
                         >
-                          <FiExternalLink />
-                        </Link>
-                      </Tooltip>
-                    </div>
-                  ) : (
-                    <>0x0000000000000...000000000</>
-                  )}
-                </Td>
+                          <Popover>
+                            <PopoverTrigger>
+                              <div className="flex gap-1 items-center">
+                                <Tooltip label="click to copy token address">
+                                  <p>
+                                    {transactionResult.tokenAddress.slice(0, 15)}...
+                                    {transactionResult.tokenAddress.slice(-9)}
+                                  </p>
+                                </Tooltip>
+                              </div>
+                            </PopoverTrigger>
+                            <PopoverContent width={'fit-content'} border={'none'}>
+                              <div className="bg-secondary px-3 py-2 border-none font-medium">
+                                Copied
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                        <Tooltip
+                          label={'Explore this token on HashScan'}
+                          placement="top"
+                          fontWeight={'medium'}
+                        >
+                          <Link
+                            href={`https://hashscan.io/${hederaNetwork}/token/${transactionResult.tokenAddress}`}
+                            target="_blank"
+                          >
+                            <FiExternalLink />
+                          </Link>
+                        </Tooltip>
+                      </div>
+                    ) : (
+                      <>0x0000000000000...000000000</>
+                    )}
+                  </Td>
+                )}
+
                 <Td>
                   {/* delete button */}
                   <Tooltip label="delete this record" placement="top">
