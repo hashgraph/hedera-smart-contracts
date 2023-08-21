@@ -131,9 +131,9 @@ export const createHederaFungibleToken = async (
     const tokenAddress = `0x${data.slice(-40)}`;
 
     return { tokenAddress, transactionHash: txReceipt.hash };
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
-    return { err };
+    return { err, transactionHash: err.receipt && err.receipt.hash };
   }
 };
 
