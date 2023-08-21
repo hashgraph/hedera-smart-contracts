@@ -145,6 +145,7 @@ export const handleUpdateKeyValue = (
 export const handleSanitizeHederaFormInputs = (
   name?: string,
   symbol?: string,
+  initSupply?: string,
   maxSupply?: string,
   decimals?: string,
   withCustomFee?: boolean,
@@ -158,10 +159,12 @@ export const handleSanitizeHederaFormInputs = (
     sanitizeErr = "Token name can't be empty";
   } else if (symbol === '') {
     sanitizeErr = "Token symbol can't be empty";
-  } else if (maxSupply === '') {
-    sanitizeErr = "Max supply can't be empty";
-  } else if (decimals === '') {
-    sanitizeErr = "Decimals can't be empty";
+  } else if (initSupply === '' || Number(initSupply) < 0) {
+    sanitizeErr = 'Invalid initial supply';
+  } else if (maxSupply === '' || Number(maxSupply) < 0) {
+    sanitizeErr = 'Invalid max supply';
+  } else if (decimals === '' || Number(decimals) < 0) {
+    sanitizeErr = 'Invalid decimals';
   } else if (withCustomFee && !isAddress(feeTokenAddress)) {
     sanitizeErr = 'Invalid denomination token ID';
   } else if (!isAddress(treasury)) {

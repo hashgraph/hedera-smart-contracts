@@ -134,6 +134,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
     const sanitizeErr = handleSanitizeHederaFormInputs(
       name,
       symbol,
+      undefined,
       maxSupply,
       undefined,
       withCustomFee,

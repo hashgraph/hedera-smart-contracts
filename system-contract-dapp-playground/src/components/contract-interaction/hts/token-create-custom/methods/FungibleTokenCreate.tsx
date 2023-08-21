@@ -151,6 +151,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
     const sanitizeErr = handleSanitizeHederaFormInputs(
       name,
       symbol,
+      initSupply,
       maxSupply,
       decimals,
       withCustomFee,
