@@ -18,23 +18,8 @@
  *
  */
 
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { isProtectedRoute } from './utils/common/helpers';
-
-export async function middleware(request: NextRequest) {
-  const isConnected = request.cookies.get('_isConnected')?.value;
-  const { pathname } = request.nextUrl;
-
-  if (isConnected && pathname === '/') {
-    return NextResponse.redirect(new URL(`/hedera/overview`, request.url));
-  }
-
-  if (!isConnected && isProtectedRoute(pathname)) {
-    return NextResponse.redirect(new URL(`/`, request.url));
-  }
+/** @dev an interface for the results returned back from interacting with Hedera TokenCreateCustom smart contract */
+interface TokenCreateCustomSmartContractResult {
+  tokenAddress?: string;
+  err?: any;
 }
-
-export const config = {
-  matcher: ['/', '/hedera/:path*'],
-};

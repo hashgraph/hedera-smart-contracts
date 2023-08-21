@@ -20,7 +20,7 @@
 
 import '@/styles/globals.css';
 import StyreneAWebFont from '@/fonts';
-import dappMetadata from '@/utils/metadata';
+import dappMetadata from '@/utils/common/metadata';
 import ChakraUIProviders from '@/libs/chakra/provider';
 import BgGradient from '@/components/background-gradients';
 
