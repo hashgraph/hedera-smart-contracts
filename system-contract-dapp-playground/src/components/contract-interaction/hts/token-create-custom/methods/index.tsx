@@ -20,6 +20,7 @@
 
 import { Contract } from 'ethers';
 import FungibleTokenCreate from './FungibleTokenCreate';
+import NonFungibleTokenCreate from './NonFungibleTokenCreate';
 
 interface PageProps {
   method: string;
@@ -30,7 +31,9 @@ const HederaTokenCreateMethods = ({ baseContract, method }: PageProps) => {
   return (
     <>
       {method === 'fungibleTokenCreate' && <FungibleTokenCreate baseContract={baseContract} />}
-      {method === 'non-fungibleTokenCreate' && <>{method}</>}
+      {method === 'non-fungibleTokenCreate' && (
+        <NonFungibleTokenCreate baseContract={baseContract} />
+      )}
       {method === 'mint' && <>{method}</>}
       {method === 'tokenAssociation' && <>{method}</>}
       {method === 'tokenKYC' && <>{method}</>}
