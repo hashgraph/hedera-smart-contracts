@@ -25,7 +25,6 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { IoRefreshOutline } from 'react-icons/io5';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { getAllowancesFromLocalStorage } from '@/api/localStorage';
 import { handleErc20TokenPermissions } from '@/api/hedera/erc20-interactions';
 import {
   Popover,
@@ -48,6 +47,7 @@ import {
   allowanceParamFields,
 } from '@/utils/contract-interactions/erc/constant';
 import MultiLineMethod from '@/components/common/MultiLineMethod';
+import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
 
 interface PageProps {
   baseContract: Contract;
@@ -110,7 +110,8 @@ const TokenPermission = ({ baseContract }: PageProps) => {
 
   /** @dev retrieve allowances from localStorage to maintain data on re-renders */
   useEffect(() => {
-    const { storageAllowances, err: localStorageBalanceErr } = getAllowancesFromLocalStorage();
+    const { storageResult, err: localStorageBalanceErr } =
+      getArrayTypedValuesFromLocalStorage('hedera_erc20_allowances');
     // handle err
     if (localStorageBalanceErr) {
       CommonErrorToast({
@@ -122,8 +123,8 @@ const TokenPermission = ({ baseContract }: PageProps) => {
     }
 
     // update balancesMap
-    if (storageAllowances) {
-      setAllowances(storageAllowances as Allowance[]);
+    if (storageResult) {
+      setAllowances(storageResult as Allowance[]);
     }
   }, [toaster]);
 
