@@ -63,7 +63,7 @@ export const constructIHederaTokenKey = (
     if (!isCompressedPublicKey(inputKeyValue as string)) {
       return null;
     } else {
-      keyValue = Buffer.from(inputKeyValue as string, 'hex');
+      keyValue = Buffer.from((inputKeyValue as string).replace('0x', ''), 'hex');
     }
   }
 
