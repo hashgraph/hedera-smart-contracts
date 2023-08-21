@@ -187,7 +187,13 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
       contractABI: TokenCreateCustomContract.abi,
       contractBytecode: TokenCreateCustomContract.bytecode,
       githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-create/TokenCreateCustom.sol`,
-      methods: ['createFungibleTokenPublic'],
+      methods: [
+        'fungibleTokenCreate',
+        'non-fungibleTokenCreate',
+        'mint',
+        'tokenAssociation',
+        'tokenKYC',
+      ],
     },
     {
       name: 'TokenManagementContract' as ContractName,
