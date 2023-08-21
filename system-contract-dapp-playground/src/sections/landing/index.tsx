@@ -25,7 +25,7 @@ import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { storeAccountInfoInCookies } from '@/api/cookies';
-import { chainIdToNetwork, isCorrectHederaNetwork } from '@/utils/helpers';
+import { chainIdToNetwork, isCorrectHederaNetwork } from '@/utils/common/helpers';
 import { requestAccount, getWalletProvider, getCurrentChainId } from '@/api/wallet';
 import { VerticalCommonVariants } from '@/libs/framer-motion/variants';
 import {

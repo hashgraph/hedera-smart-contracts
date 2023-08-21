@@ -18,7 +18,7 @@
  *
  */
 
-import { ContractName } from '@/types/interfaces';
+import { ContractName } from '@/types/common';
 import ERC20Mock from '@hashgraph-smartcontract/artifacts/contracts/erc-20/ERC20Mock.sol/ERC20Mock.json';
 import ERC721Mock from '@hashgraph-smartcontract/artifacts/contracts/erc-721/ERC721Mock.sol/ERC721Mock.json';
 import HRCContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/hrc/HRCContract.sol/HRCContract.json';

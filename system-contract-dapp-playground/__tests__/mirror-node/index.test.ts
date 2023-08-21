@@ -19,8 +19,8 @@
  */
 
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
-import { NetworkName } from '@/types/interfaces';
-import { HEDERA_NETWORKS } from '@/utils/constants';
+import { NetworkName } from '@/types/common';
+import { HEDERA_NETWORKS } from '@/utils/common/constants';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 

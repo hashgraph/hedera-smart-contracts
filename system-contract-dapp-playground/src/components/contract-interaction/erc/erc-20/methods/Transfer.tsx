@@ -21,11 +21,14 @@
 import { Contract } from 'ethers';
 import { isAddress } from 'ethers';
 import { useToast } from '@chakra-ui/react';
-import MultiLineMethod from '../common/MultiLineMethod';
 import { erc20Transfers } from '@/api/hedera/erc20-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
+import MultiLineMethod from '@/components/common/MultiLineMethod';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { transferParamFields, transferFromParamFields } from '../../utils/constant';
+import {
+  transferParamFields,
+  transferFromParamFields,
+} from '@/utils/contract-interactions/erc/constant';
 
 interface PageProps {
   baseContract: Contract;

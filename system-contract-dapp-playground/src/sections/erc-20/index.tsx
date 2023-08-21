@@ -25,7 +25,7 @@ import { motion } from 'framer-motion';
 import { BsGithub } from 'react-icons/bs';
 import { Tooltip } from '@chakra-ui/react';
 import { IoOpenOutline } from 'react-icons/io5';
-import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/constants';
+import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/common/constants';
 import ContractInteraction from '@/components/contract-interaction';
 
 const ERC20Section = () => {
