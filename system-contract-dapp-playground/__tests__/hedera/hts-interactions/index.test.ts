@@ -313,3 +313,128 @@ describe('createHederaFungibleToken test suite', () => {
     });
   });
 
+  describe('createHederaNonFungibleToken', () => {
+    it('should execute createHederaNonFungibleToken and return a token address', async () => {
+      const tokenCreateRes = await createHederaNonFungibleToken(
+        baseContract as unknown as Contract,
+        tokenName,
+        tokenSymbol,
+        tokenMemo,
+        maxSupply,
+        contractId,
+        inputKeys
+      );
+
+      expect(tokenCreateRes.err).toBeNull;
+      expect(tokenCreateRes.transactionHash).toBe(txHash);
+      expect(tokenCreateRes.tokenAddress).toBe(tokenAddress);
+    });
+
+    it('should execute createFungibleTokenWithCustomFeesPublic and return a token address', async () => {
+      const tokenCreateRes = await createHederaNonFungibleToken(
+        baseContract as unknown as Contract,
+        tokenName,
+        tokenSymbol,
+        tokenMemo,
+        maxSupply,
+        contractId,
+        inputKeys,
+        feeTokenAddress
+      );
+
+      expect(tokenCreateRes.err).toBeNull;
+      expect(tokenCreateRes.transactionHash).toBe(txHash);
+      expect(tokenCreateRes.tokenAddress).toBe(tokenAddress);
+    });
+
+    it('should execute createHederaNonFungibleToken and return error if maxSupply is invalid', async () => {
+      const tokenCreateRes = await createHederaNonFungibleToken(
+        baseContract as unknown as Contract,
+        tokenName,
+        tokenSymbol,
+        tokenMemo,
+        -3,
+        contractId,
+        inputKeys
+      );
+
+      expect(tokenCreateRes.err).toBe('max supply cannot be negative');
+      expect(tokenCreateRes.tokenAddress).toBeNull;
+    });
+
+    it('should execute createHederaNonFungibleToken and return error if treasury address does not match public address standard', async () => {
+      const tokenCreateRes = await createHederaNonFungibleToken(
+        baseContract as unknown as Contract,
+        tokenName,
+        tokenSymbol,
+        tokenMemo,
+        maxSupply,
+        '0xabc',
+        inputKeys
+      );
+
+      expect(tokenCreateRes.err).toBe('invalid treasury address');
+      expect(tokenCreateRes.tokenAddress).toBeNull;
+    });
+
+    it('should execute createHederaNonFungibleToken and return error if fee token address does not match public address standard', async () => {
+      const tokenCreateRes = await createHederaNonFungibleToken(
+        baseContract as unknown as Contract,
+        tokenName,
+        tokenSymbol,
+        tokenMemo,
+        maxSupply,
+        contractId,
+        inputKeys,
+        '0xabc'
+      );
+
+      expect(tokenCreateRes.err).toBe('invalid fee token address');
+      expect(tokenCreateRes.tokenAddress).toBeNull;
+    });
+
+    it('should execute createHederaNonFungibleToken and return error if inputKeys is invalid ', async () => {
+      const failedKeys: CommonKeyObject[] = [
+        {
+          keyType: 'ADMIN',
+          keyValueType: 'contractId',
+          keyValue: '0xabc', // invalid
+        },
+        {
+          keyType: 'KYC',
+          keyValueType: 'contractId',
+          keyValue: contractId,
+        },
+        {
+          keyType: 'FREEZE',
+          keyValueType: 'ECDSA_secp256k1',
+          keyValue: '0x02bc', // invalid
+        },
+      ];
+
+      const tokenCreateRes = await createHederaNonFungibleToken(
+        baseContract as unknown as Contract,
+        tokenName,
+        tokenSymbol,
+        tokenMemo,
+        maxSupply,
+        contractId,
+        failedKeys
+      );
+
+      expect(tokenCreateRes.err.length).toBe(2);
+
+      expect(tokenCreateRes.err[0].keyType).toBe('ADMIN');
+      expect(tokenCreateRes.err[0].keyValueType).toBe('contractId');
+      expect(tokenCreateRes.err[0].keyValue).toBe('0xabc');
+      expect(tokenCreateRes.err[0].err).toBe('Invalid key value');
+
+      expect(tokenCreateRes.err[1].keyType).toBe('FREEZE');
+      expect(tokenCreateRes.err[1].keyValueType).toBe('ECDSA_secp256k1');
+      expect(tokenCreateRes.err[1].keyValue).toBe('0x02bc');
+      expect(tokenCreateRes.err[1].err).toBe('Invalid key value');
+
+      expect(tokenCreateRes.tokenAddress).toBeNull;
+    });
+  });
+});
