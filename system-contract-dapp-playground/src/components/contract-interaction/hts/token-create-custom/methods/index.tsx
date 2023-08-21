@@ -29,6 +29,7 @@ interface PageProps {
 const HederaTokenCreateMethods = ({ baseContract, method }: PageProps) => {
   return (
     <>
+      {method === 'fungibleTokenCreate' && <FungibleTokenCreate baseContract={baseContract} />}
       {method === 'non-fungibleTokenCreate' && <>{method}</>}
       {method === 'mint' && <>{method}</>}
       {method === 'tokenAssociation' && <>{method}</>}
