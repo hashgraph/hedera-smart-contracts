@@ -30,8 +30,17 @@ import { Contract } from 'ethers';
 
 describe('createHederaFungibleToken test suite', () => {
   // mock states
-  const contractId = '0xbdcdf69052c9fc01e38377d05cc83c28ee43f24a';
+  const decimals = 8;
+  const tokenSymbol = 'WHBAR';
+  const tokenName = 'WrappedHbar';
+  const tokenMemo = 'Wrapped Hbar';
+  const freezeDefaultStatus = false;
+  const maxSupply = 30000000000; // 300 WHBAR
+  const initialSupply = 900000000; // 9 WHBAR
+  const metadata = ['Zeus', 'Athena', 'Apollo'];
+  const msgValue = '20000000000000000000'; // 20 hbar
   const recipient = '0x34810E139b451e0a4c67d5743E956Ac8990842A8';
+  const contractId = '0xbdcdf69052c9fc01e38377d05cc83c28ee43f24a';
   const tokenAddress = '0x00000000000000000000000000000000000084b7';
   const feeTokenAddress = '0x00000000000000000000000000000000000006Ab';
   const associtingAccount = '0x34810E139b451e0a4c67d5743E956Ac8990842A8';
@@ -42,14 +51,6 @@ describe('createHederaFungibleToken test suite', () => {
     '000000000000000000000000000000000000000000000000000000000000000900000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000';
   const returnedTransferTokenEvent =
     '0x000000000000000000000000000000000000000000000000000000000000abc700000000000000000000000034810e139b451e0a4c67d5743e956ac8990842a80000000000000000000000000000000000000000000000000000000000000001';
-  const tokenName = 'WrappedHbar';
-  const tokenSymbol = 'WHBAR';
-  const tokenMemo = 'Wrapped Hbar';
-  const initialSupply = 900000000; // 9 WHBAR
-  const maxSupply = 30000000000; // 300 WHBAR
-  const decimals = 8;
-  const freezeDefaultStatus = false;
-  const msgValue = '20000000000000000000'; // 20 hbar
 
   // mock baseContract object
   const baseContract = {
@@ -537,7 +538,7 @@ describe('createHederaFungibleToken test suite', () => {
         'FUNGIBLE',
         tokenAddress,
         1200,
-        'metadata'
+        metadata
       );
 
       expect(txRes.err).toBeNull;
@@ -551,7 +552,7 @@ describe('createHederaFungibleToken test suite', () => {
         'NON_FUNGIBLE',
         tokenAddress,
         0,
-        'metadata'
+        metadata
       );
 
       expect(txRes.err).toBeNull;
@@ -565,7 +566,7 @@ describe('createHederaFungibleToken test suite', () => {
         'FUNGIBLE',
         '0xabc',
         1200,
-        'metadata'
+        metadata
       );
 
       expect(txRes.err).toBe('invalid Hedera token address');
@@ -579,7 +580,7 @@ describe('createHederaFungibleToken test suite', () => {
         'FUNGIBLE',
         tokenAddress,
         -1,
-        'metadata'
+        metadata
       );
 
       expect(txRes.err).toBe('amount to mint cannot be negative when minting a fungible token');
@@ -592,7 +593,7 @@ describe('createHederaFungibleToken test suite', () => {
         'NON_FUNGIBLE',
         tokenAddress,
         1,
-        'metadata'
+        metadata
       );
 
       expect(txRes.err).toBe('amount to mint must be 0 when minting a non-fungible token');
@@ -609,7 +610,7 @@ describe('createHederaFungibleToken test suite', () => {
         tokenAddress,
         recipient,
         1200,
-        'metadata'
+        metadata
       );
 
       expect(txRes.err).toBeNull;
@@ -625,7 +626,7 @@ describe('createHederaFungibleToken test suite', () => {
         tokenAddress,
         recipient,
         0,
-        'metadata'
+        metadata
       );
 
       expect(txRes.err).toBeNull;
@@ -641,7 +642,7 @@ describe('createHederaFungibleToken test suite', () => {
         '0xabc',
         recipient,
         1200,
-        'metadata'
+        metadata
       );
 
       expect(txRes.err).toBe('invalid Hedera token address');
@@ -657,7 +658,7 @@ describe('createHederaFungibleToken test suite', () => {
         tokenAddress,
         '0xabc',
         1200,
-        'metadata'
+        metadata
       );
 
       expect(txRes.err).toBe('invalid recipient address');
@@ -673,7 +674,7 @@ describe('createHederaFungibleToken test suite', () => {
         tokenAddress,
         recipient,
         -1,
-        'metadata'
+        metadata
       );
 
       expect(txRes.err).toBe('amount to mint cannot be negative when minting a fungible token');
@@ -689,7 +690,7 @@ describe('createHederaFungibleToken test suite', () => {
         tokenAddress,
         recipient,
         1,
-        'metadata'
+        metadata
       );
 
       expect(txRes.err).toBe('amount to mint must be 0 when minting a non-fungible token');

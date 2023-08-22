@@ -258,7 +258,7 @@ export const createHederaNonFungibleToken = async (
  *
  * @param amountToMint: number
  *
- * @param metadata: string
+ * @param metadata: string[]
  *
  * @return Promise<TokenCreateCustomSmartContractResult>
  */
@@ -267,7 +267,7 @@ export const mintHederaToken = async (
   tokenType: 'FUNGIBLE' | 'NON_FUNGIBLE',
   hederaTokenAddress: string,
   amountToMint: number,
-  metadata: string
+  metadata: string[]
 ): Promise<TokenCreateCustomSmartContractResult> => {
   // sanitize params
   if (!isAddress(hederaTokenAddress)) {
@@ -278,12 +278,15 @@ export const mintHederaToken = async (
     return { err: 'amount to mint must be 0 when minting a non-fungible token' };
   }
 
+  // convert metadata to Buffer[]
+  const bufferedMetadata = metadata.map((meta) => Buffer.from(meta));
+
   // execute .mintTokenPublic() method
   try {
     const tx = await baseContract.mintTokenPublic(
       hederaTokenAddress,
       amountToMint,
-      [Buffer.from(metadata)],
+      bufferedMetadata,
       {
         gasLimit: 1_000_000,
       }
@@ -317,7 +320,7 @@ export const mintHederaToken = async (
  *
  * @param amountToMint: number
  *
- * @param metadata: string
+ * @param metadata: string[]
  *
  * @return Promise<TokenCreateCustomSmartContractResult>
  */
@@ -327,7 +330,7 @@ export const mintHederaTokenToAddress = async (
   hederaTokenAddress: string,
   recipientAddress: string,
   amountToMint: number,
-  metadata: string
+  metadata: string[]
 ): Promise<TokenCreateCustomSmartContractResult> => {
   // sanitize params
   if (!isAddress(hederaTokenAddress)) {
@@ -340,6 +343,9 @@ export const mintHederaTokenToAddress = async (
     return { err: 'amount to mint must be 0 when minting a non-fungible token' };
   }
 
+  // convert metadata to Buffer[]
+  const bufferedMetadata = metadata.map((meta) => Buffer.from(meta));
+
   try {
     let tx;
     if (tokenType === 'FUNGIBLE') {
@@ -347,7 +353,7 @@ export const mintHederaTokenToAddress = async (
         hederaTokenAddress,
         recipientAddress,
         amountToMint,
-        [Buffer.from(metadata)],
+        bufferedMetadata,
         {
           gasLimit: 1_000_000,
         }
@@ -357,7 +363,7 @@ export const mintHederaTokenToAddress = async (
         hederaTokenAddress,
         recipientAddress,
         amountToMint,
-        [Buffer.from(metadata)],
+        bufferedMetadata,
         {
           gasLimit: 1_000_000,
         }
