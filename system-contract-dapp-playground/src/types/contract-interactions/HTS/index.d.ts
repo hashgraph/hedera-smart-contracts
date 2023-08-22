@@ -21,8 +21,9 @@
 /** @dev an interface for the results returned back from interacting with Hedera TokenCreateCustom smart contract */
 interface TokenCreateCustomSmartContractResult {
   tokenAddress?: string;
-  mintTokenRes?: boolean;
   transactionHash?: string;
+  mintedTokenEventData?: string;
+  transferTokenEventData?: string;
   err?: any;
 }
 /**
