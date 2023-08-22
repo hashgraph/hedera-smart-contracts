@@ -47,6 +47,9 @@ export const DEFAULT_IHTS_KEY_VALUE: IHederaTokenServiceKeyValue = {
   delegatableContractId: ethers.ZeroAddress,
 };
 
+/**
+ * @notice an object that holds constant values for the parameters used in token creation.
+ */
 export const htsTokenCreateParamFields = {
   name: {
     inputType: 'text',
@@ -109,7 +112,6 @@ export const htsTokenCreateParamFields = {
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
     paramKey: 'treasury',
-    limited_explanation: 'Currently, the treasury is limited to the ID of the base contract.',
     explanation:
       'represents the account will receive the specified initial supply or the newly minted NFTs',
   },
@@ -135,5 +137,49 @@ export const htsTokenCreateParamFields = {
       off: 'Accounts can receive the token without needing to be unfrozen',
       on: ' Accounts must be unfrozen before they can receive the token ',
     },
+  },
+};
+
+/**
+ * @notice an object that holds constant values for the parameters used in token mint.
+ */
+export const htsTokenMintParamFields = {
+  tokenAddressToMint: {
+    inputType: 'text',
+    inputPlaceholder: 'Hedera token address...',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'tokenAddress',
+    explanation: 'represents the address of the Hedera token for which minting will be performed.',
+  },
+  amount: {
+    inputType: 'number',
+    inputPlaceholder: 'Amount to mint...',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'amount',
+    explanation: 'represents the amount you wish to mint for the specified Hedera token.',
+  },
+  metadata: {
+    inputType: 'text',
+    inputPlaceholder: 'Metadata (optional)...',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'metadata',
+    explanation:
+      'represents optional metadata associated with the minting transaction. Provide additional information about the minting process if needed.',
+  },
+  recipientAddress: {
+    inputType: 'text',
+    inputPlaceholder: 'The receiver address (optional)...',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'recipientAddress',
+    explanation:
+      'represents the address of the receiver who will receive the amount of newly minted tokens. If leave unset, the minted tokens will be sent to the treasury account.',
   },
 };

@@ -51,7 +51,6 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
   const [withCustomFee, setWithCustomFee] = useState(false);
   const [isDefaultFreeze, setIsDefaultFreeze] = useState(false);
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
-  const baseContractAddress = Cookies.get('TokenCreateCustomContract');
   const transactionResultStorageKey = 'hedera_HTS_token-creation_results';
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [isCreatingTokenSuccessful, setIsCreatingTokenSuccessful] = useState(false);
@@ -63,7 +62,6 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
     feeTokenAddress: 'feeTokenAddress',
   };
 
-  // @notice The treasury is currently restricted to the address of the baseContract in order to resolve the issue with 'signing transaction via HAPI
   const [paramValues, setParamValues] = useState<any>({
     name: '',
     symbol: '',
@@ -72,7 +70,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
     maxSupply: '',
     decimals: '',
     freezeStatus: false,
-    treasury: baseContractAddress,
+    treasury: '',
     feeTokenAddress: '',
   });
 
@@ -117,7 +115,8 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
       setTransactionResults(storageResult as TransactionResult[]);
 
       // set the current page to the last page so it can show the latest transactions
-      setCurrentTransactionPage(Math.ceil(storageResult.length / TRANSACTION_PAGE_SIZE));
+      const maxPageNum = Math.ceil(storageResult.length / TRANSACTION_PAGE_SIZE);
+      setCurrentTransactionPage(maxPageNum === 0 ? 1 : maxPageNum);
     }
   }, [toaster]);
 
@@ -148,7 +147,8 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
     } = paramValues;
 
     // sanitize params
-    const sanitizeErr = handleSanitizeHederaFormInputs(
+    const sanitizeErr = handleSanitizeHederaFormInputs({
+      API: 'TokenCreate',
       name,
       symbol,
       initSupply,
@@ -157,8 +157,8 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
       withCustomFee,
       feeTokenAddress,
       treasury,
-      keys
-    );
+      keys,
+    });
 
     // toast error if any param is invalid
     if (sanitizeErr) {
@@ -211,9 +211,6 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
     if (transactionResults.length > 0) {
       localStorage.setItem(transactionResultStorageKey, JSON.stringify(transactionResults));
     }
-
-    // set the current page to the last page so it can show the newly created transaction
-    setCurrentTransactionPage(Math.ceil(transactionResults.length / TRANSACTION_PAGE_SIZE));
   }, [transactionResults]);
 
   // toast successful
@@ -235,13 +232,16 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
         maxSupply: '',
         decimals: '',
         freezeStatus: '',
-        treasury: baseContractAddress,
+        treasury: '',
         feeTokenAddress: '',
       });
       setIsCreatingTokenSuccessful(false);
       setKeyTypesToShow(new Set(HederaTokenKeyTypes));
       setChosenKeys(new Set<IHederaTokenServiceKeyType>());
       setKeys([]);
+      // set the current page to the last page so it can show the newly created transaction
+      const maxPageNum = Math.ceil(transactionResults.length / TRANSACTION_PAGE_SIZE);
+      setCurrentTransactionPage(maxPageNum === 0 ? 1 : maxPageNum);
     }
   }, [isCreatingTokenSuccessful, toaster]);
 
@@ -252,18 +252,20 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
         {/* name & symbol & memo*/}
         {tokenCreateFields.info.map((param) => {
           return (
-            <SharedFormInputField
-              paramKey={(htsTokenCreateParamFields as any)[param].paramKey}
-              explanation={(htsTokenCreateParamFields as any)[param].explanation}
-              paramValue={paramValues[param]}
-              paramType={(htsTokenCreateParamFields as any)[param].inputType}
-              param={param}
-              paramPlaceholder={(htsTokenCreateParamFields as any)[param].inputPlaceholder}
-              paramSize={(htsTokenCreateParamFields as any)[param].inputSize}
-              paramFocusColor={(htsTokenCreateParamFields as any)[param].inputFocusBorderColor}
-              paramClassName={(htsTokenCreateParamFields as any)[param].inputClassname}
-              handleInputOnChange={handleInputOnChange}
-            />
+            <div key={(htsTokenCreateParamFields as any)[param].paramKey}>
+              <SharedFormInputField
+                paramKey={(htsTokenCreateParamFields as any)[param].paramKey}
+                explanation={(htsTokenCreateParamFields as any)[param].explanation}
+                paramValue={paramValues[param]}
+                paramType={(htsTokenCreateParamFields as any)[param].inputType}
+                param={param}
+                paramPlaceholder={(htsTokenCreateParamFields as any)[param].inputPlaceholder}
+                paramSize={(htsTokenCreateParamFields as any)[param].inputSize}
+                paramFocusColor={(htsTokenCreateParamFields as any)[param].inputFocusBorderColor}
+                paramClassName={(htsTokenCreateParamFields as any)[param].inputClassname}
+                handleInputOnChange={handleInputOnChange}
+              />
+            </div>
           );
         })}
 
@@ -297,18 +299,20 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
           {/* initSupply & maxSupply & Decimals*/}
           {tokenCreateFields.supply.map((param) => {
             return (
-              <SharedFormInputField
-                paramKey={(htsTokenCreateParamFields as any)[param].paramKey}
-                explanation={(htsTokenCreateParamFields as any)[param].explanation}
-                paramValue={paramValues[param]}
-                paramType={(htsTokenCreateParamFields as any)[param].inputType}
-                param={param}
-                paramPlaceholder={(htsTokenCreateParamFields as any)[param].inputPlaceholder}
-                paramSize={(htsTokenCreateParamFields as any)[param].inputSize}
-                paramFocusColor={(htsTokenCreateParamFields as any)[param].inputFocusBorderColor}
-                paramClassName={(htsTokenCreateParamFields as any)[param].inputClassname}
-                handleInputOnChange={handleInputOnChange}
-              />
+              <div className="w-full" key={(htsTokenCreateParamFields as any)[param].paramKey}>
+                <SharedFormInputField
+                  paramKey={(htsTokenCreateParamFields as any)[param].paramKey}
+                  explanation={(htsTokenCreateParamFields as any)[param].explanation}
+                  paramValue={paramValues[param]}
+                  paramType={(htsTokenCreateParamFields as any)[param].inputType}
+                  param={param}
+                  paramPlaceholder={(htsTokenCreateParamFields as any)[param].inputPlaceholder}
+                  paramSize={(htsTokenCreateParamFields as any)[param].inputSize}
+                  paramFocusColor={(htsTokenCreateParamFields as any)[param].inputFocusBorderColor}
+                  paramClassName={(htsTokenCreateParamFields as any)[param].inputClassname}
+                  handleInputOnChange={handleInputOnChange}
+                />
+              </div>
             );
           })}
         </div>
@@ -355,7 +359,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
 
         {/* treasury */}
         <SharedFormInputField
-          paramKey={(htsTokenCreateParamFields as any)['treasury'].limited_explanation}
+          paramKey={(htsTokenCreateParamFields as any)['treasury'].explanation}
           explanation={(htsTokenCreateParamFields as any)['treasury'].explanation}
           paramValue={paramValues['treasury']}
           paramType={(htsTokenCreateParamFields as any)['treasury'].inputType}
@@ -365,7 +369,6 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
           paramFocusColor={(htsTokenCreateParamFields as any)['treasury'].inputFocusBorderColor}
           paramClassName={(htsTokenCreateParamFields as any)['treasury'].inputClassname}
           handleInputOnChange={handleInputOnChange}
-          isDisable={true}
         />
 
         {/* keys */}

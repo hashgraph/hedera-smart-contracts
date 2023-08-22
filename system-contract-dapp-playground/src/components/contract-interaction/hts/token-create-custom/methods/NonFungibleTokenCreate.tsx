@@ -58,8 +58,6 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
     info: ['name', 'symbol', 'memo', 'maxSupply', 'treasury'],
     feeTokenAddress: 'feeTokenAddress',
   };
-
-  // @notice The treasury is currently restricted to the address of the baseContract in order to resolve the issue with 'signing transaction via HAPI
   const [paramValues, setParamValues] = useState<any>({
     name: '',
     symbol: '',
@@ -110,7 +108,8 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
       setTransactionResults(storageResult as TransactionResult[]);
 
       // set the current page to the last page so it can show the latest transactions
-      setCurrentTransactionPage(Math.ceil(storageResult.length / TRANSACTION_PAGE_SIZE));
+      const maxPageNum = Math.ceil(storageResult.length / TRANSACTION_PAGE_SIZE);
+      setCurrentTransactionPage(maxPageNum === 0 ? 1 : maxPageNum);
     }
   }, [toaster]);
 
@@ -126,22 +125,21 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
     setParamValues((prev: any) => ({ ...prev, [param]: e.target.value }));
   };
 
-  /** @dev handle invoking the API to interact with smart contract and create fungible token */
+  /** @dev handle invoking the API to interact with smart contract and create non fungible token */
   const handleCreatingNonFungibleToken = async () => {
     const { name, symbol, memo, maxSupply, treasury, feeTokenAddress } = paramValues;
 
     // sanitize params
-    const sanitizeErr = handleSanitizeHederaFormInputs(
+    const sanitizeErr = handleSanitizeHederaFormInputs({
+      API: 'TokenCreate',
       name,
       symbol,
-      undefined,
       maxSupply,
-      undefined,
       withCustomFee,
       feeTokenAddress,
       treasury,
-      keys
-    );
+      keys,
+    });
 
     // toast error if any param is invalid
     if (sanitizeErr) {
@@ -191,9 +189,6 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
     if (transactionResults.length > 0) {
       localStorage.setItem(transactionResultStorageKey, JSON.stringify(transactionResults));
     }
-
-    // set the current page to the last page so it can show the newly created transaction
-    setCurrentTransactionPage(Math.ceil(transactionResults.length / TRANSACTION_PAGE_SIZE));
   }, [transactionResults]);
 
   // toast successful
@@ -219,6 +214,9 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
       setKeyTypesToShow(new Set(HederaTokenKeyTypes));
       setChosenKeys(new Set<IHederaTokenServiceKeyType>());
       setKeys([]);
+      // set the current page to the last page so it can show the newly created transaction
+      const maxPageNum = Math.ceil(transactionResults.length / TRANSACTION_PAGE_SIZE);
+      setCurrentTransactionPage(maxPageNum === 0 ? 1 : maxPageNum);
     }
   }, [isCreatingNFTSuccessful, toaster]);
 
@@ -229,18 +227,20 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
         {/* name & symbol & memo & maxSupply & treasury */}
         {tokenCreateFields.info.map((param) => {
           return (
-            <SharedFormInputField
-              paramKey={(htsTokenCreateParamFields as any)[param].paramKey}
-              explanation={(htsTokenCreateParamFields as any)[param].explanation}
-              paramValue={paramValues[param]}
-              paramType={(htsTokenCreateParamFields as any)[param].inputType}
-              param={param}
-              paramPlaceholder={(htsTokenCreateParamFields as any)[param].inputPlaceholder}
-              paramSize={(htsTokenCreateParamFields as any)[param].inputSize}
-              paramFocusColor={(htsTokenCreateParamFields as any)[param].inputFocusBorderColor}
-              paramClassName={(htsTokenCreateParamFields as any)[param].inputClassname}
-              handleInputOnChange={handleInputOnChange}
-            />
+            <div key={(htsTokenCreateParamFields as any)[param].paramKey}>
+              <SharedFormInputField
+                paramKey={(htsTokenCreateParamFields as any)[param].paramKey}
+                explanation={(htsTokenCreateParamFields as any)[param].explanation}
+                paramValue={paramValues[param]}
+                paramType={(htsTokenCreateParamFields as any)[param].inputType}
+                param={param}
+                paramPlaceholder={(htsTokenCreateParamFields as any)[param].inputPlaceholder}
+                paramSize={(htsTokenCreateParamFields as any)[param].inputSize}
+                paramFocusColor={(htsTokenCreateParamFields as any)[param].inputFocusBorderColor}
+                paramClassName={(htsTokenCreateParamFields as any)[param].inputClassname}
+                handleInputOnChange={handleInputOnChange}
+              />
+            </div>
           );
         })}
 
@@ -299,7 +299,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
         {/* Execute button */}
         <SharedExecuteButton
           isLoading={isLoading}
-          buttonTitle={'Create Fungible Token'}
+          buttonTitle={'Create Non-Fungible Token'}
           handleCreatingFungibleToken={handleCreatingNonFungibleToken}
         />
       </div>

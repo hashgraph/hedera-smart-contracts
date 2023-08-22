@@ -282,9 +282,9 @@ export const mintHederaToken = async (
     const txReceipt = await tx.wait();
 
     return { transactionHash: txReceipt.hash };
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
-    return { err };
+    return { err, transactionHash: err.receipt && err.receipt.hash };
   }
 };
 
@@ -353,9 +353,9 @@ export const mintHederaTokenToAddress = async (
     const txReceipt = await tx.wait();
 
     return { transactionHash: txReceipt.hash };
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
-    return { err };
+    return { err, transactionHash: err.receipt && err.receipt.hash };
   }
 };
 
@@ -416,9 +416,9 @@ export const associateHederaTokensToAccounts = async (
     const txReceipt = await tx.wait();
 
     return { transactionHash: txReceipt.hash };
-  } catch (err) {
-    console.log(err);
-    return { err };
+  } catch (err: any) {
+    console.error(err);
+    return { err, transactionHash: err.receipt && err.receipt.hash };
   }
 };
 
@@ -457,8 +457,8 @@ export const grantTokenKYCToAccount = async (
     const txReceipt = await tx.wait();
 
     return { transactionHash: txReceipt.hash };
-  } catch (err) {
-    console.log(err);
-    return { err };
+  } catch (err: any) {
+    console.error(err);
+    return { err, transactionHash: err.receipt && err.receipt.hash };
   }
 };

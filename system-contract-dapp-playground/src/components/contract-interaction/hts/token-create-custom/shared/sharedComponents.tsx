@@ -336,6 +336,7 @@ interface TransactionResultTablePageProps {
   paginatedTransactionResults: TransactionResult[];
   setCurrentTransactionPage: Dispatch<SetStateAction<number>>;
   setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>;
+  withRecipientAddress?: boolean;
 }
 
 export const TransactionResultTable = ({
@@ -348,18 +349,27 @@ export const TransactionResultTable = ({
   transactionResultStorageKey,
   paginatedTransactionResults,
   withTokenAddress,
+  withRecipientAddress,
 }: TransactionResultTablePageProps) => {
+  let beginingHashIndex = 15,
+    endingHashIndex = -9;
+  if (withRecipientAddress) {
+    beginingHashIndex = 8;
+    endingHashIndex = -4;
+  }
+
   return (
-    <TableContainer className="flex flex-col gap-3">
+    <TableContainer className="flex flex-col gap-3 overflow-x-hidden">
       <Table variant="simple" size={'sm'}>
         <Thead>
           <Tr>
-            <Th color={'#82ACF9'} isNumeric>
+            <Th color={'#82ACF9'} isNumeric className="flex justify-start">
               Index
             </Th>
             <Th color={'#82ACF9'}>Status</Th>
             <Th color={'#82ACF9'}>Transaction hash</Th>
             {withTokenAddress && <Th color={'#82ACF9'}>Token address</Th>}
+            {withRecipientAddress && <Th color={'#82ACF9'}>Recipient Address</Th>}
             <Th />
           </Tr>
         </Thead>
@@ -409,10 +419,14 @@ export const TransactionResultTable = ({
                         <PopoverTrigger>
                           <div className="flex gap-1 items-center">
                             <Tooltip label="click to copy transaction hash">
-                              <p>
-                                {transactionResult.txHash.slice(0, 15)}...
-                                {transactionResult.txHash.slice(-9)}
-                              </p>
+                              {withTokenAddress ? (
+                                <p>
+                                  {transactionResult.txHash.slice(0, beginingHashIndex)}...
+                                  {transactionResult.txHash.slice(endingHashIndex)}
+                                </p>
+                              ) : (
+                                <p>{transactionResult.txHash}</p>
+                              )}
                             </Tooltip>
                           </div>
                         </PopoverTrigger>
@@ -453,8 +467,8 @@ export const TransactionResultTable = ({
                               <div className="flex gap-1 items-center">
                                 <Tooltip label="click to copy token address">
                                   <p>
-                                    {transactionResult.tokenAddress.slice(0, 15)}...
-                                    {transactionResult.tokenAddress.slice(-9)}
+                                    {transactionResult.tokenAddress.slice(0, beginingHashIndex)}...
+                                    {transactionResult.tokenAddress.slice(endingHashIndex)}
                                   </p>
                                 </Tooltip>
                               </div>
@@ -485,8 +499,59 @@ export const TransactionResultTable = ({
                   </Td>
                 )}
 
+                {/* Recipient address */}
+                {withRecipientAddress && (
+                  <Td className="cursor-pointer">
+                    {transactionResult.recipientAddress ? (
+                      <div className="flex gap-1 items-center">
+                        <div
+                          onClick={() =>
+                            navigator.clipboard.writeText(transactionResult.recipientAddress!)
+                          }
+                        >
+                          <Popover>
+                            <PopoverTrigger>
+                              <div className="flex gap-1 items-center">
+                                <Tooltip label="click to copy recipient address">
+                                  <p>
+                                    {transactionResult.recipientAddress!.slice(
+                                      0,
+                                      beginingHashIndex
+                                    )}
+                                    ...
+                                    {transactionResult.recipientAddress!.slice(endingHashIndex)}
+                                  </p>
+                                </Tooltip>
+                              </div>
+                            </PopoverTrigger>
+                            <PopoverContent width={'fit-content'} border={'none'}>
+                              <div className="bg-secondary px-3 py-2 border-none font-medium">
+                                Copied
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                        <Tooltip
+                          label={'Explore this user on HashScan'}
+                          placement="top"
+                          fontWeight={'medium'}
+                        >
+                          <Link
+                            href={`https://hashscan.io/${hederaNetwork}/account/${transactionResult.recipientAddress}`}
+                            target="_blank"
+                          >
+                            <FiExternalLink />
+                          </Link>
+                        </Tooltip>
+                      </div>
+                    ) : (
+                      <>0x000000...0000</>
+                    )}
+                  </Td>
+                )}
+
+                {/* delete button */}
                 <Td>
-                  {/* delete button */}
                   <Tooltip label="delete this record" placement="top">
                     <button
                       onClick={() => {

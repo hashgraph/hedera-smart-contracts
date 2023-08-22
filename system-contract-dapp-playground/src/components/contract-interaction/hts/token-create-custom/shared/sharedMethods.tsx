@@ -18,7 +18,7 @@
  *
  */
 
-import { isAddress } from 'ethers';
+import { isAddress, isAddressable } from 'ethers';
 import { Dispatch, SetStateAction } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { isCompressedPublicKey } from '@/utils/contract-interactions/HTS/helpers';
@@ -28,6 +28,7 @@ export type TransactionResult = {
   status: 'sucess' | 'fail';
   txHash: string;
   tokenAddress: string;
+  recipientAddress?: string;
 };
 
 /** @dev handle updating number of keys*/
@@ -141,34 +142,63 @@ export const handleUpdateKeyValue = (
   );
 };
 
+interface ParamsProps {
+  API: 'TokenCreate' | 'Mint';
+  name?: string;
+  amount?: string;
+  symbol?: string;
+  treasury?: string;
+  decimals?: string;
+  maxSupply?: string;
+  initSupply?: string;
+  withCustomFee?: boolean;
+  feeTokenAddress?: string;
+  keys?: CommonKeyObject[];
+  recipientAddress?: string;
+  tokenAddressToMint?: string;
+}
 /** @dev handle sanitizing Hedera token form inputs */
-export const handleSanitizeHederaFormInputs = (
-  name?: string,
-  symbol?: string,
-  initSupply?: string,
-  maxSupply?: string,
-  decimals?: string,
-  withCustomFee?: boolean,
-  feeTokenAddress?: string,
-  treasury?: string,
-  keys?: CommonKeyObject[]
-) => {
+export const handleSanitizeHederaFormInputs = ({
+  API,
+  name,
+  keys,
+  amount,
+  symbol,
+  decimals,
+  treasury,
+  maxSupply,
+  initSupply,
+  withCustomFee,
+  feeTokenAddress,
+  recipientAddress,
+  tokenAddressToMint,
+}: ParamsProps) => {
   // sanitize params
   let sanitizeErr;
-  if (name === '') {
-    sanitizeErr = "Token name can't be empty";
-  } else if (symbol === '') {
-    sanitizeErr = "Token symbol can't be empty";
-  } else if (initSupply === '' || Number(initSupply) < 0) {
-    sanitizeErr = 'Invalid initial supply';
-  } else if (maxSupply === '' || Number(maxSupply) < 0) {
-    sanitizeErr = 'Invalid max supply';
-  } else if (decimals === '' || Number(decimals) < 0) {
-    sanitizeErr = 'Invalid decimals';
-  } else if (withCustomFee && !isAddress(feeTokenAddress)) {
-    sanitizeErr = 'Invalid denomination token ID';
-  } else if (!isAddress(treasury)) {
-    sanitizeErr = 'Invalid treasury account address';
+  if (API === 'TokenCreate') {
+    if (name === '') {
+      sanitizeErr = "Token name can't be empty";
+    } else if (symbol === '') {
+      sanitizeErr = "Token symbol can't be empty";
+    } else if (Number(initSupply) < 0) {
+      sanitizeErr = 'Invalid initial supply';
+    } else if (maxSupply === '' || Number(maxSupply) < 0) {
+      sanitizeErr = 'Invalid max supply';
+    } else if (decimals === '' || Number(decimals) < 0) {
+      sanitizeErr = 'Invalid decimals';
+    } else if (withCustomFee && !isAddress(feeTokenAddress)) {
+      sanitizeErr = 'Invalid denomination token ID';
+    } else if (!isAddress(treasury)) {
+      sanitizeErr = 'Invalid treasury account address';
+    }
+  } else if (API === 'Mint') {
+    if (!isAddress(tokenAddressToMint)) {
+      sanitizeErr = 'Invalid Hedera token address';
+    } else if (Number(amount) < 0) {
+      sanitizeErr = 'Invalid amount to mint';
+    } else if (recipientAddress && !isAddress(recipientAddress)) {
+      sanitizeErr = 'Invalid receiver address';
+    }
   }
 
   // sanitize keys
@@ -198,7 +228,9 @@ export const handleAPIErrors = (
   err: any,
   toaster: any,
   transactionHash: string | undefined,
-  setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>
+  setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>,
+  tokenAddressToMint?: string,
+  recipientAddress?: string
 ) => {
   const errorMessage = JSON.stringify(err);
   let errorDescription = "See client's console for more information";
@@ -214,7 +246,12 @@ export const handleAPIErrors = (
   if (transactionHash) {
     setTransactionResults((prev) => [
       ...prev,
-      { txHash: transactionHash, tokenAddress: '', status: 'fail' },
+      {
+        txHash: transactionHash,
+        tokenAddress: tokenAddressToMint ? tokenAddressToMint : '',
+        recipientAddress: recipientAddress ? recipientAddress : '',
+        status: 'fail',
+      },
     ]);
 
     CommonErrorToast({
