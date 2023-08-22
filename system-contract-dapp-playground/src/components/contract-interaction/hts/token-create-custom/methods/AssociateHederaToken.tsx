@@ -19,50 +19,40 @@
  */
 
 import Cookies from 'js-cookie';
-import { useEffect, useMemo, useState } from 'react';
 import { Contract } from 'ethers';
 import { useToast } from '@chakra-ui/react';
+import { useState, useMemo, useEffect } from 'react';
 import { handleAPIErrors, handleSanitizeHederaFormInputs } from '../shared/sharedMethods';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import {
-  mintHederaToken,
-  mintHederaTokenToAddress,
-} from '@/api/hedera/tokenCreateCustom-interactions';
+import { associateHederaTokensToAccounts } from '@/api/hedera/tokenCreateCustom-interactions';
+import { TransactionResult } from '@/types/contract-interactions/HTS';
 import {
   SharedExecuteButton,
   SharedFormInputField,
-  SharedFromButton,
   TransactionResultTable,
 } from '../shared/sharedComponents';
-import { htsTokenMintParamFields } from '@/utils/contract-interactions/HTS/constant';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { htsTokenAssociateParamFields } from '@/utils/contract-interactions/HTS/constant';
 
 interface PageProps {
   baseContract: Contract;
 }
 
-const MintHederaToken = ({ baseContract }: PageProps) => {
+const AssociateHederaToken = ({ baseContract }: PageProps) => {
   // general states
   const toaster = useToast();
   const TRANSACTION_PAGE_SIZE = 10;
   const [isLoading, setIsLoading] = useState(false);
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
-  const transactionResultStorageKey = 'hedera_HTS_token-mint_results';
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
-  const [isTokenMintinguccessful, setIsTokenMintingSuccessful] = useState(false);
+  const transactionResultStorageKey = 'hedera_HTS_token-association_results';
   const [tokenType, setTokenType] = useState<'FUNGIBLE' | 'NON_FUNGIBLE'>('FUNGIBLE');
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const tokenMintFields = useMemo(() => {
-    return tokenType === 'FUNGIBLE'
-      ? ['tokenAddressToMint', 'amount', 'metadata', 'recipientAddress']
-      : ['tokenAddressToMint', 'metadata', 'recipientAddress'];
-  }, [tokenType]);
+  const [isTokenAssociatinguccessful, setIsTokenAssociatingSuccessful] = useState(false);
+  const tokenAssociateFields = ['tokenAddresses', 'associatingAddress'];
   const [paramValues, setParamValues] = useState<any>({
-    tokenAddressToMint: '',
-    amount: '',
-    metadata: '',
-    recipientAddress: '',
+    tokenAddresses: '',
+    associatingAddress: '',
   });
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
@@ -102,16 +92,20 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
     setParamValues((prev: any) => ({ ...prev, [param]: e.target.value }));
   };
 
-  /** @dev handle invoking the API to interact with smart contract to mint tokens */
-  const handleMintTokens = async () => {
-    const { tokenAddressToMint, amount, metadata, recipientAddress } = paramValues;
+  /** @dev handle invoking the API to interact with smart contract to associate tokens */
+  const handleAssociateTokens = async () => {
+    const { tokenAddresses, associatingAddress } = paramValues;
+
+    // convert tokenAddresses into a string[]
+    const tokenAddressesArray: string[] = Array.from(
+      new Set(tokenAddresses.split(',').map((address: string) => address.trim()))
+    );
 
     // sanitize params
     const sanitizeErr = handleSanitizeHederaFormInputs({
-      API: 'Mint',
-      tokenAddressToMint,
-      amount,
-      recipientAddress,
+      API: 'Associate',
+      tokenAddressesArray,
+      associatingAddress,
     });
 
     // toast error if any param is invalid
@@ -126,37 +120,24 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
     // invoke method API
     // @logic if recipientAddress is set => mintHederaTokenToAddress()
     // @logic if recipientAddress is NOT set => mintHederaToken()
-    let txRes: any;
-    if (recipientAddress) {
-      txRes = await mintHederaTokenToAddress(
-        baseContract,
-        tokenType,
-        tokenAddressToMint,
-        recipientAddress,
-        tokenType === 'FUNGIBLE' ? Number(amount) : 0,
-        metadata
-      );
-    } else {
-      txRes = await mintHederaToken(
-        baseContract,
-        tokenType,
-        tokenAddressToMint,
-        tokenType === 'FUNGIBLE' ? Number(amount) : 0,
-        metadata
-      );
-    }
+    const { transactionHash, err } = await associateHederaTokensToAccounts(
+      baseContract,
+      tokenAddressesArray,
+      associatingAddress
+    );
 
     // turn is loading off
     setIsLoading(false);
 
     // handle err
-    if (txRes.err) {
+    if (err) {
       handleAPIErrors({
-        err: txRes.err,
+        err,
         toaster,
-        transactionHash: txRes.transactionHash,
+        transactionHash,
         setTransactionResults,
-        tokenAddressToMint,
+        associatingAddress,
+        tokenAddressesToAssociate: tokenAddressesArray,
       });
       return;
     } else {
@@ -164,14 +145,14 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
       setTransactionResults((prev) => [
         ...prev,
         {
-          txHash: txRes.transactionHash as string,
-          tokenAddress: paramValues.tokenAddressToMint,
           status: 'sucess',
-          recipientAddress,
+          txHash: transactionHash as string,
+          associatingAddress,
+          tokenAddressesToAssociate: tokenAddressesArray,
         },
       ]);
 
-      setIsTokenMintingSuccessful(true);
+      setIsTokenAssociatingSuccessful(true);
     }
   };
 
@@ -184,65 +165,43 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
 
   // toast successful
   useEffect(() => {
-    if (isTokenMintinguccessful) {
+    if (isTokenAssociatinguccessful) {
       toaster({
-        title: '🎉 Token mint successful 🎉',
+        title: '🎉 Token association successful 🎉',
         status: 'success',
         position: 'top',
       });
 
       // reset values
       setParamValues({
-        tokenAddressToMint: '',
-        amount: '',
-        metadata: '',
-        recipientAddress: '',
+        tokenAddresses: '',
+        associatingAddress: '',
       });
-      setIsTokenMintingSuccessful(false);
+      setIsTokenAssociatingSuccessful(false);
       // set the current page to the last page so it can show the newly created transaction
       const maxPageNum = Math.ceil(transactionResults.length / TRANSACTION_PAGE_SIZE);
       setCurrentTransactionPage(maxPageNum === 0 ? 1 : maxPageNum);
     }
-  }, [isTokenMintinguccessful, toaster]);
+  }, [isTokenAssociatinguccessful, toaster]);
 
   return (
     <div className="w-full mx-3 flex justify-center mt-6 flex-col gap-20">
-      {/* Token Mint form */}
+      {/* Token Association form */}
       <div className="w-[600px]/ flex flex-col gap-6 justify-center tracking-tight text-white/70">
-        {/* Token type */}
-        <div className="w-full flex gap-3">
-          {/* no custom fee */}
-
-          <SharedFromButton
-            explanation={''}
-            buttonTitle={'Fungible Token'}
-            handleButtonOnClick={() => setTokenType('FUNGIBLE')}
-            switcher={tokenType === 'FUNGIBLE'}
-          />
-
-          {/* with custom fee */}
-          <SharedFromButton
-            explanation={''}
-            buttonTitle={'Non-Fungible Token'}
-            handleButtonOnClick={() => setTokenType('NON_FUNGIBLE')}
-            switcher={tokenType === 'NON_FUNGIBLE'}
-          />
-        </div>
-
-        {/* tokenAddress & amount & metadata*/}
-        {tokenMintFields.map((param) => {
+        {/* tokenAddresses & associatingAccount*/}
+        {tokenAssociateFields.map((param) => {
           return (
-            <div key={(htsTokenMintParamFields as any)[param].paramKey}>
+            <div key={(htsTokenAssociateParamFields as any)[param].paramKey}>
               <SharedFormInputField
-                paramKey={(htsTokenMintParamFields as any)[param].paramKey}
-                explanation={(htsTokenMintParamFields as any)[param].explanation}
+                paramKey={(htsTokenAssociateParamFields as any)[param].paramKey}
+                explanation={(htsTokenAssociateParamFields as any)[param].explanation}
                 paramValue={paramValues[param]}
-                paramType={(htsTokenMintParamFields as any)[param].inputType}
+                paramType={(htsTokenAssociateParamFields as any)[param].inputType}
                 param={param}
-                paramPlaceholder={(htsTokenMintParamFields as any)[param].inputPlaceholder}
-                paramSize={(htsTokenMintParamFields as any)[param].inputSize}
-                paramFocusColor={(htsTokenMintParamFields as any)[param].inputFocusBorderColor}
-                paramClassName={(htsTokenMintParamFields as any)[param].inputClassname}
+                paramPlaceholder={(htsTokenAssociateParamFields as any)[param].inputPlaceholder}
+                paramSize={(htsTokenAssociateParamFields as any)[param].inputSize}
+                paramFocusColor={(htsTokenAssociateParamFields as any)[param].inputFocusBorderColor}
+                paramClassName={(htsTokenAssociateParamFields as any)[param].inputClassname}
                 handleInputOnChange={handleInputOnChange}
               />
             </div>
@@ -252,15 +211,15 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
         {/* Execute button */}
         <SharedExecuteButton
           isLoading={isLoading}
-          buttonTitle={`Mint ${tokenType === 'FUNGIBLE' ? 'Fungible' : 'Non-Fungible'} Token`}
-          handleCreatingFungibleToken={handleMintTokens}
+          buttonTitle={`Associate Tokens`}
+          handleCreatingFungibleToken={handleAssociateTokens}
         />
       </div>
 
       {/* transaction results table */}
       {transactionResults.length > 0 && (
         <TransactionResultTable
-          API="TokenMint"
+          API="TokenAssociate"
           hederaNetwork={hederaNetwork}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           currentTransactionPage={currentTransactionPage}
@@ -275,4 +234,4 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
   );
 };
 
-export default MintHederaToken;
+export default AssociateHederaToken;

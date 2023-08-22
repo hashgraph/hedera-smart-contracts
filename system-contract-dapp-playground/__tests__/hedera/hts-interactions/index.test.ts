@@ -26,6 +26,7 @@ import {
   mintHederaToken,
   mintHederaTokenToAddress,
 } from '@/api/hedera/tokenCreateCustom-interactions';
+import { CommonKeyObject } from '@/types/contract-interactions/HTS';
 import { Contract } from 'ethers';
 
 describe('createHederaFungibleToken test suite', () => {

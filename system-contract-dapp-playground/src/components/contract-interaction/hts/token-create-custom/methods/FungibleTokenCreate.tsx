@@ -33,11 +33,13 @@ import {
   TransactionResultTable,
   SharedSigningKeysComponent,
 } from '../shared/sharedComponents';
+import { handleAPIErrors, handleSanitizeHederaFormInputs } from '../shared/sharedMethods';
 import {
-  handleAPIErrors,
+  CommonKeyObject,
+  IHederaTokenServiceKeyType,
+  IHederaTokenServiceKeyValueType,
   TransactionResult,
-  handleSanitizeHederaFormInputs,
-} from '../shared/sharedMethods';
+} from '@/types/contract-interactions/HTS';
 
 interface PageProps {
   baseContract: Contract;
@@ -189,7 +191,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
 
     // handle err
     if (err || !tokenAddress) {
-      handleAPIErrors(err, toaster, transactionHash, setTransactionResults);
+      handleAPIErrors({ err, toaster, transactionHash, setTransactionResults });
       return;
     } else {
       // handle succesfull
@@ -217,7 +219,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
   useEffect(() => {
     if (isCreatingTokenSuccessful) {
       toaster({
-        title: 'Token creation successful 🎉',
+        title: '🎉 Token creation successful 🎉',
         description: 'A new balance has been set for the treasury',
         status: 'success',
         position: 'top',
@@ -394,6 +396,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
       {/* transaction results table */}
       {transactionResults.length > 0 && (
         <TransactionResultTable
+          API="TokenCreate"
           hederaNetwork={hederaNetwork}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           currentTransactionPage={currentTransactionPage}
@@ -402,7 +405,6 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
           paginatedTransactionResults={paginatedTransactionResults}
           setCurrentTransactionPage={setCurrentTransactionPage}
           setTransactionResults={setTransactionResults}
-          withTokenAddress={true}
         />
       )}
     </div>

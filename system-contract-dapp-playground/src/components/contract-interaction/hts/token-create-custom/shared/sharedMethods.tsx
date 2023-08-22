@@ -22,14 +22,11 @@ import { isAddress, isAddressable } from 'ethers';
 import { Dispatch, SetStateAction } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { isCompressedPublicKey } from '@/utils/contract-interactions/HTS/helpers';
-
-/** @dev the type for transaction results */
-export type TransactionResult = {
-  status: 'sucess' | 'fail';
-  txHash: string;
-  tokenAddress: string;
-  recipientAddress?: string;
-};
+import {
+  IHederaTokenServiceKeyType,
+  CommonKeyObject,
+  TransactionResult,
+} from '@/types/contract-interactions/HTS';
 
 /** @dev handle updating number of keys*/
 export const handleAddingOrRemovingKeys = (
@@ -143,7 +140,7 @@ export const handleUpdateKeyValue = (
 };
 
 interface ParamsProps {
-  API: 'TokenCreate' | 'Mint';
+  API: 'TokenCreate' | 'Mint' | 'Associate';
   name?: string;
   amount?: string;
   symbol?: string;
@@ -155,7 +152,9 @@ interface ParamsProps {
   feeTokenAddress?: string;
   keys?: CommonKeyObject[];
   recipientAddress?: string;
+  associatingAddress?: string;
   tokenAddressToMint?: string;
+  tokenAddressesArray?: string[];
 }
 /** @dev handle sanitizing Hedera token form inputs */
 export const handleSanitizeHederaFormInputs = ({
@@ -172,6 +171,8 @@ export const handleSanitizeHederaFormInputs = ({
   feeTokenAddress,
   recipientAddress,
   tokenAddressToMint,
+  associatingAddress,
+  tokenAddressesArray,
 }: ParamsProps) => {
   // sanitize params
   let sanitizeErr;
@@ -199,10 +200,21 @@ export const handleSanitizeHederaFormInputs = ({
     } else if (recipientAddress && !isAddress(recipientAddress)) {
       sanitizeErr = 'Invalid receiver address';
     }
+  } else if (API === 'Associate') {
+    if (!isAddress(associatingAddress)) {
+      sanitizeErr = 'Invalid associating account address';
+    } else {
+      tokenAddressesArray?.some((tokenAddress) => {
+        if (!isAddress(tokenAddress)) {
+          sanitizeErr = `${tokenAddress} is not a valid token address`;
+          return true;
+        }
+      });
+    }
   }
 
   // sanitize keys
-  if (keys) {
+  if (!sanitizeErr && keys) {
     keys.forEach((key) => {
       if (key.keyValue === '') {
         sanitizeErr = `${key.keyType} key cannot be empty. If you do not intend to set up this key, kindly remove it.`;
@@ -224,14 +236,25 @@ export const handleSanitizeHederaFormInputs = ({
 };
 
 /** @dev handle error returned back from invoking method APIs*/
-export const handleAPIErrors = (
-  err: any,
-  toaster: any,
-  transactionHash: string | undefined,
-  setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>,
-  tokenAddressToMint?: string,
-  recipientAddress?: string
-) => {
+export const handleAPIErrors = ({
+  err,
+  toaster,
+  transactionHash,
+  setTransactionResults,
+  tokenAddressToMint,
+  recipientAddress,
+  associatingAddress,
+  tokenAddressesToAssociate,
+}: {
+  err: any;
+  toaster: any;
+  transactionHash: string | undefined;
+  setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>;
+  tokenAddressToMint?: string;
+  recipientAddress?: string;
+  associatingAddress?: string;
+  tokenAddressesToAssociate?: string[];
+}) => {
   const errorMessage = JSON.stringify(err);
   let errorDescription = "See client's console for more information";
   // @notice 4001 error code is returned when a metamask wallet request is rejected by the user
@@ -250,19 +273,21 @@ export const handleAPIErrors = (
         txHash: transactionHash,
         tokenAddress: tokenAddressToMint ? tokenAddressToMint : '',
         recipientAddress: recipientAddress ? recipientAddress : '',
+        associatingAddress: associatingAddress ? associatingAddress : '',
+        tokenAddressesToAssociate: tokenAddressesToAssociate ? tokenAddressesToAssociate : [''],
         status: 'fail',
       },
     ]);
 
     CommonErrorToast({
       toaster,
-      title: `Create fungible token transaction got reverted`,
+      title: `Transaction got reverted`,
       description: errorDescription,
     });
   } else {
     CommonErrorToast({
       toaster,
-      title: `Cannot execute create fungible token function`,
+      title: `Cannot execute transaction`,
       description: errorDescription,
     });
   }

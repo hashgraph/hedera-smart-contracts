@@ -21,6 +21,7 @@
 import { Contract } from 'ethers';
 import MintHederaToken from './MintHederaToken';
 import FungibleTokenCreate from './FungibleTokenCreate';
+import AssociateHederaToken from './AssociateHederaToken';
 import NonFungibleTokenCreate from './NonFungibleTokenCreate';
 
 interface PageProps {
@@ -36,7 +37,7 @@ const HederaTokenCreateMethods = ({ baseContract, method }: PageProps) => {
         <NonFungibleTokenCreate baseContract={baseContract} />
       )}
       {method === 'mint' && <MintHederaToken baseContract={baseContract} />}
-      {method === 'tokenAssociation' && <>{method}</>}
+      {method === 'tokenAssociation' && <AssociateHederaToken baseContract={baseContract} />}
       {method === 'tokenKYC' && <>{method}</>}
     </>
   );

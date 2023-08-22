@@ -41,12 +41,17 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import {
-  TransactionResult,
   handleAddingOrRemovingKeys,
   handleKeyTypeOnChange,
   handleKeyValueTypeOnChange,
   handleUpdateKeyValue,
 } from './sharedMethods';
+import {
+  CommonKeyObject,
+  IHederaTokenServiceKeyType,
+  IHederaTokenServiceKeyValueType,
+  TransactionResult,
+} from '@/types/contract-interactions/HTS';
 
 /** @dev shared form input component */
 interface SharedFormInputFieldPageProps {
@@ -327,8 +332,8 @@ export const SharedSigningKeysComponent = ({
 
 /** @dev shared component representing the list of transactions */
 interface TransactionResultTablePageProps {
+  API: 'TokenCreate' | 'TokenMint' | 'TokenAssociate';
   hederaNetwork: string;
-  withTokenAddress: boolean;
   TRANSACTION_PAGE_SIZE: number;
   currentTransactionPage: number;
   transactionResultStorageKey: string;
@@ -336,10 +341,10 @@ interface TransactionResultTablePageProps {
   paginatedTransactionResults: TransactionResult[];
   setCurrentTransactionPage: Dispatch<SetStateAction<number>>;
   setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>;
-  withRecipientAddress?: boolean;
 }
 
 export const TransactionResultTable = ({
+  API,
   hederaNetwork,
   transactionResults,
   TRANSACTION_PAGE_SIZE,
@@ -348,14 +353,21 @@ export const TransactionResultTable = ({
   setCurrentTransactionPage,
   transactionResultStorageKey,
   paginatedTransactionResults,
-  withTokenAddress,
-  withRecipientAddress,
 }: TransactionResultTablePageProps) => {
-  let beginingHashIndex = 15,
-    endingHashIndex = -9;
-  if (withRecipientAddress) {
-    beginingHashIndex = 8;
-    endingHashIndex = -4;
+  let beginingHashIndex: number, endingHashIndex: number;
+  switch (API) {
+    case 'TokenCreate':
+      beginingHashIndex = 15;
+      endingHashIndex = -9;
+      break;
+    case 'TokenMint':
+      beginingHashIndex = 8;
+      endingHashIndex = -4;
+      break;
+    case 'TokenAssociate':
+      beginingHashIndex = 10;
+      endingHashIndex = -5;
+      break;
   }
 
   return (
@@ -368,8 +380,12 @@ export const TransactionResultTable = ({
             </Th>
             <Th color={'#82ACF9'}>Status</Th>
             <Th color={'#82ACF9'}>Transaction hash</Th>
-            {withTokenAddress && <Th color={'#82ACF9'}>Token address</Th>}
-            {withRecipientAddress && <Th color={'#82ACF9'}>Recipient Address</Th>}
+            {(API === 'TokenCreate' || API === 'TokenMint') && (
+              <Th color={'#82ACF9'}>Token address</Th>
+            )}
+            {API === 'TokenMint' && <Th color={'#82ACF9'}>Recipient</Th>}
+            {API === 'TokenAssociate' && <Th color={'#82ACF9'}>Associated Token</Th>}
+            {API === 'TokenAssociate' && <Th color={'#82ACF9'}>Associated Account</Th>}
             <Th />
           </Tr>
         </Thead>
@@ -419,14 +435,14 @@ export const TransactionResultTable = ({
                         <PopoverTrigger>
                           <div className="flex gap-1 items-center">
                             <Tooltip label="click to copy transaction hash">
-                              {withTokenAddress ? (
-                                <p>
-                                  {transactionResult.txHash.slice(0, beginingHashIndex)}...
-                                  {transactionResult.txHash.slice(endingHashIndex)}
-                                </p>
-                              ) : (
+                              {/* {withTokenAddress ? ( */}
+                              <p>
+                                {transactionResult.txHash.slice(0, beginingHashIndex)}...
+                                {transactionResult.txHash.slice(endingHashIndex)}
+                              </p>
+                              {/* ) : (
                                 <p>{transactionResult.txHash}</p>
-                              )}
+                              )} */}
                             </Tooltip>
                           </div>
                         </PopoverTrigger>
@@ -453,13 +469,14 @@ export const TransactionResultTable = ({
                 </Td>
 
                 {/* token address */}
-                {withTokenAddress && (
+                {(API === 'TokenCreate' || API === 'TokenMint') && (
+                  // {withTokenAddress && (
                   <Td className="cursor-pointer">
                     {transactionResult.tokenAddress ? (
                       <div className="flex gap-1 items-center">
                         <div
                           onClick={() =>
-                            navigator.clipboard.writeText(transactionResult.tokenAddress)
+                            navigator.clipboard.writeText(transactionResult.tokenAddress!)
                           }
                         >
                           <Popover>
@@ -500,7 +517,8 @@ export const TransactionResultTable = ({
                 )}
 
                 {/* Recipient address */}
-                {withRecipientAddress && (
+                {API === 'TokenMint' && (
+                  // {withRecipientAddress && (
                   <Td className="cursor-pointer">
                     {transactionResult.recipientAddress ? (
                       <div className="flex gap-1 items-center">
@@ -545,8 +563,166 @@ export const TransactionResultTable = ({
                         </Tooltip>
                       </div>
                     ) : (
-                      <>0x000000...0000</>
+                      <>Treasury Account</>
                     )}
+                  </Td>
+                )}
+
+                {/* token address */}
+                {API === 'TokenAssociate' && (
+                  <Td className="cursor-pointer">
+                    {transactionResult.tokenAddressesToAssociate &&
+                    transactionResult.tokenAddressesToAssociate.length === 1 ? (
+                      <div className="flex gap-1 items-center">
+                        <div
+                          onClick={() =>
+                            navigator.clipboard.writeText(
+                              transactionResult.tokenAddressesToAssociate![0]
+                            )
+                          }
+                        >
+                          <Popover>
+                            <PopoverTrigger>
+                              <div className="flex gap-1 items-center">
+                                <Tooltip label="click to copy token address">
+                                  <p>
+                                    {transactionResult.tokenAddressesToAssociate[0].slice(
+                                      0,
+                                      beginingHashIndex
+                                    )}
+                                    ...
+                                    {transactionResult.tokenAddressesToAssociate[0].slice(
+                                      endingHashIndex
+                                    )}
+                                  </p>
+                                </Tooltip>
+                              </div>
+                            </PopoverTrigger>
+                            <PopoverContent width={'fit-content'} border={'none'}>
+                              <div className="bg-secondary px-3 py-2 border-none font-medium">
+                                Copied
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                        <Tooltip
+                          label={'Explore this token on HashScan'}
+                          placement="top"
+                          fontWeight={'medium'}
+                        >
+                          <Link
+                            href={`https://hashscan.io/${hederaNetwork}/token/${transactionResult.tokenAddressesToAssociate[0]}`}
+                            target="_blank"
+                          >
+                            <FiExternalLink />
+                          </Link>
+                        </Tooltip>
+                      </div>
+                    ) : (
+                      <div>
+                        <Popover>
+                          <PopoverTrigger>
+                            <div className="flex gap-1 items-center">
+                              <Tooltip label="click to show token addresses">
+                                <p>Token Combination</p>
+                              </Tooltip>
+                            </div>
+                          </PopoverTrigger>
+                          <PopoverContent
+                            width={'fit-content'}
+                            border={'none'}
+                            className="flex flex-col gap-6 bg-secondary px-4 py-3"
+                          >
+                            {transactionResult.tokenAddressesToAssociate?.map((token) => (
+                              <div
+                                key={token}
+                                className="bg-secondary border-none font-medium flex gap-1"
+                              >
+                                <div onClick={() => navigator.clipboard.writeText(token)}>
+                                  <Popover>
+                                    <PopoverTrigger>
+                                      <div className="flex gap-1 items-center">
+                                        <Tooltip label="click to copy token address">
+                                          <p>
+                                            {token.slice(0, beginingHashIndex)}
+                                            ...
+                                            {token.slice(endingHashIndex)}
+                                          </p>
+                                        </Tooltip>
+                                      </div>
+                                    </PopoverTrigger>
+                                    <PopoverContent width={'fit-content'} border={'none'}>
+                                      <div className="bg-secondary px-3 py-2 border-none font-medium">
+                                        Copied
+                                      </div>
+                                    </PopoverContent>
+                                  </Popover>
+                                </div>
+                                <Tooltip
+                                  label={'Explore this token on HashScan'}
+                                  placement="top"
+                                  fontWeight={'medium'}
+                                >
+                                  <Link
+                                    href={`https://hashscan.io/${hederaNetwork}/token/${token}`}
+                                    target="_blank"
+                                  >
+                                    <FiExternalLink />
+                                  </Link>
+                                </Tooltip>
+                              </div>
+                            ))}
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    )}
+                  </Td>
+                )}
+
+                {/* Associated acocunt */}
+                {API === 'TokenAssociate' && (
+                  <Td className="cursor-pointer">
+                    <div className="flex gap-1 items-center">
+                      <div
+                        onClick={() =>
+                          navigator.clipboard.writeText(transactionResult.associatingAddress!)
+                        }
+                      >
+                        <Popover>
+                          <PopoverTrigger>
+                            <div className="flex gap-1 items-center">
+                              <Tooltip label="click to copy recipient address">
+                                <p>
+                                  {transactionResult.associatingAddress!.slice(
+                                    0,
+                                    beginingHashIndex
+                                  )}
+                                  ...
+                                  {transactionResult.associatingAddress!.slice(endingHashIndex)}
+                                </p>
+                              </Tooltip>
+                            </div>
+                          </PopoverTrigger>
+                          <PopoverContent width={'fit-content'} border={'none'}>
+                            <div className="bg-secondary px-3 py-2 border-none font-medium">
+                              Copied
+                            </div>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      <Tooltip
+                        label={'Explore this user on HashScan'}
+                        placement="top"
+                        fontWeight={'medium'}
+                      >
+                        <Link
+                          href={`https://hashscan.io/${hederaNetwork}/account/${transactionResult.associatingAddress}`}
+                          target="_blank"
+                        >
+                          <FiExternalLink />
+                        </Link>
+                      </Tooltip>
+                    </div>
                   </Td>
                 )}
 

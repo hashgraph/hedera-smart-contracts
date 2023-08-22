@@ -26,11 +26,7 @@ import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
 import { createHederaNonFungibleToken } from '@/api/hedera/tokenCreateCustom-interactions';
 import { htsTokenCreateParamFields } from '@/utils/contract-interactions/HTS/constant';
-import {
-  TransactionResult,
-  handleAPIErrors,
-  handleSanitizeHederaFormInputs,
-} from '../shared/sharedMethods';
+import { handleAPIErrors, handleSanitizeHederaFormInputs } from '../shared/sharedMethods';
 import {
   SharedExecuteButton,
   SharedFormInputField,
@@ -38,6 +34,12 @@ import {
   SharedSigningKeysComponent,
   TransactionResultTable,
 } from '../shared/sharedComponents';
+import {
+  TransactionResult,
+  IHederaTokenServiceKeyType,
+  IHederaTokenServiceKeyValueType,
+  CommonKeyObject,
+} from '@/types/contract-interactions/HTS';
 
 interface PageProps {
   baseContract: Contract;
@@ -167,7 +169,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
 
     // handle err
     if (err || !tokenAddress) {
-      handleAPIErrors(err, toaster, transactionHash, setTransactionResults);
+      handleAPIErrors({ err, toaster, transactionHash, setTransactionResults });
       return;
     } else {
       // handle succesfull
@@ -195,7 +197,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
   useEffect(() => {
     if (isCreatingNFTSuccessful) {
       toaster({
-        title: 'Non-fungible token creation successful 🎉',
+        title: '🎉 Non-fungible token creation successful 🎉',
         description: 'A new balance has been set for the treasury',
         status: 'success',
         position: 'top',
@@ -307,6 +309,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
       {/* transaction results table */}
       {transactionResults.length > 0 && (
         <TransactionResultTable
+          API="TokenCreate"
           hederaNetwork={hederaNetwork}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           currentTransactionPage={currentTransactionPage}
@@ -315,7 +318,6 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
           paginatedTransactionResults={paginatedTransactionResults}
           setCurrentTransactionPage={setCurrentTransactionPage}
           setTransactionResults={setTransactionResults}
-          withTokenAddress={true}
         />
       )}
     </div>

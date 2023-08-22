@@ -20,6 +20,12 @@
 
 import { isAddress } from 'ethers';
 import { KEY_TYPE_MAP, DEFAULT_IHTS_KEY_VALUE } from './constant';
+import {
+  IHederaTokenServiceKeyType,
+  IHederaTokenServiceKeyValueType,
+  IHederaTokenServiceTokenKey,
+  CommonKeyObject,
+} from '@/types/contract-interactions/HTS';
 
 /**
  * @dev tests if the input conforms to the common compressed public key standard

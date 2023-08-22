@@ -18,6 +18,11 @@
  *
  */
 
+import {
+  IHederaTokenServiceKeyType,
+  IHederaTokenServiceKeyTypeBitValue,
+  IHederaTokenServiceKeyValue,
+} from '@/types/contract-interactions/HTS';
 import { ethers } from 'ethers';
 
 /**
@@ -150,7 +155,7 @@ export const htsTokenMintParamFields = {
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
-    paramKey: 'tokenAddress',
+    paramKey: 'tokenAddressToMint',
     explanation: 'represents the address of the Hedera token for which minting will be performed.',
   },
   amount: {
@@ -181,5 +186,26 @@ export const htsTokenMintParamFields = {
     paramKey: 'recipientAddress',
     explanation:
       'represents the address of the receiver who will receive the amount of newly minted tokens. If leave unset, the minted tokens will be sent to the treasury account.',
+  },
+};
+
+export const htsTokenAssociateParamFields = {
+  tokenAddresses: {
+    inputType: 'text',
+    inputPlaceholder: 'Token addresses (comma-separated)...',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'tokenAddresses',
+    explanation: 'represents the tokens to be associated with the provided account',
+  },
+  associatingAddress: {
+    inputType: 'text',
+    inputPlaceholder: 'Associating account...',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'associatingAddress',
+    explanation: 'represents the account to be associated with the provided tokens',
   },
 };
