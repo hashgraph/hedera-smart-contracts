@@ -229,9 +229,6 @@ describe('SafeHTS library Test Suite', function () {
       signer2AccountID
     )
 
-    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
-    await new Promise((r) => setTimeout(r, 2000))
-
     await safeOperationsContract.safeTransferTokenPublic(
       fungibleTokenAddress,
       safeOperationsContract.address,
