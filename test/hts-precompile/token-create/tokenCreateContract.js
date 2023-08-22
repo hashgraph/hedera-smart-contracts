@@ -100,9 +100,6 @@ describe('TokenCreateContract Test Suite', function () {
     )
     await tokenManagmentContract.burnTokenPublic(tokenAddress, amount, [])
 
-    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
-    await new Promise((r) => setTimeout(r, 2000))
-
     const balanceAfter = await erc20Contract.balanceOf(
       tokenAddress,
       signers[0].address
