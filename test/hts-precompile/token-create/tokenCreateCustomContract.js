@@ -20,29 +20,84 @@
 
 const utils = require('../utils')
 const { expect } = require('chai')
+const { ethers } = require('hardhat')
 const Constants = require('../../constants')
 const { expectValidHash } = require('../assertions')
-const { ethers } = require('hardhat')
 
 describe('TokenCreateCustomContract Test Suite', () => {
-  let signers
   const tokenName = 'WrappedHbar'
   const tokenSymbol = 'WHBAR'
   const tokenMemo = 'Wrapped Hbar'
-  const initialSupply = 1500
-  const maxSupply = 2000
+  const initialSupply = 900000000 // 9 WHBAR
+  const maxSupply = 30000000000 // 300 WHBAR
   const decimals = 8
   const freezeDefaultStatus = false
-  const key = utils.getSignerCompressedPublicKey()
-  let tokenCreateCustomContract
+  let keys, signers, fixedFeeTokenAddress, tokenCreateCustomContract
 
   before(async () => {
-    signers = await ethers.getSigners()
     tokenCreateCustomContract = await utils.deployTokenCreateCustomContract()
-    await utils.updateAccountKeysViaHapi([tokenCreateCustomContract.address])
+    signers = await ethers.getSigners()
+
+    // constructing keys array
+    const adminKey = utils.constructIHederaTokenKey(
+      'ADMIN',
+      'CONTRACT_ID',
+      tokenCreateCustomContract.address
+    )
+
+    const kycKey = utils.constructIHederaTokenKey(
+      'KYC',
+      'CONTRACT_ID',
+      tokenCreateCustomContract.address
+    )
+    const freezeKey = utils.constructIHederaTokenKey(
+      'FREEZE',
+      'CONTRACT_ID',
+      tokenCreateCustomContract.address
+    )
+    const wipeKey = utils.constructIHederaTokenKey(
+      'WIPE',
+      'CONTRACT_ID',
+      tokenCreateCustomContract.address
+    )
+
+    const supplyKey = utils.constructIHederaTokenKey(
+      'SUPPLY',
+      'CONTRACT_ID',
+      tokenCreateCustomContract.address
+    )
+    const feeKey = utils.constructIHederaTokenKey(
+      'FEE',
+      'CONTRACT_ID',
+      tokenCreateCustomContract.address
+    )
+    const pauseKey = utils.constructIHederaTokenKey(
+      'PAUSE',
+      'CONTRACT_ID',
+      tokenCreateCustomContract.address
+    )
+
+    keys = [adminKey, kycKey, freezeKey, wipeKey, supplyKey, feeKey, pauseKey]
+
+    fixedFeeTokenAddress = await utils.createFungibleTokenPublic(
+      tokenName,
+      tokenSymbol,
+      tokenMemo,
+      initialSupply,
+      maxSupply,
+      decimals,
+      freezeDefaultStatus,
+      tokenCreateCustomContract.address,
+      keys,
+      tokenCreateCustomContract
+    )
   })
 
-  it('should be able to execute createFungibleTokenPublic with dynamic params', async function () {
+  it('should be able to create fungible token with dynamic params and empty keys array', async () => {
+    // @notice: Only the ID of the smart contract is valid for the treasury by default.
+    //          Any account other than the smart contract ID must first sign an AccountUpdate transaction
+    //          before being eligible to be elected as the token's treasury account.
+    //          For a practical example, refer to `utils.updateAccountKeysViaHapi()`.
     const tx = await tokenCreateCustomContract.createFungibleTokenPublic(
       tokenName,
       tokenSymbol,
@@ -51,38 +106,26 @@ describe('TokenCreateCustomContract Test Suite', () => {
       maxSupply,
       decimals,
       freezeDefaultStatus,
-      signers[0].address,
-      key,
+      tokenCreateCustomContract.address,
+      keys,
       {
-        value: '20000000000000000000',
+        value: '35000000000000000000', // = 35 hbars. The more configs on the token, the higher the value fee for precompile contract is
         gasLimit: 1_000_000,
       }
     )
 
     const txReceipt = await tx.wait()
-    const { tokenAddress } = txReceipt.events[0].args
-
-    expect(tokenAddress).to.exist
-    expectValidHash(tokenAddress, 40)
+    const result = txReceipt.events.filter(
+      (e) => e.event === Constants.Events.CreatedToken
+    )[0].args[0]
+    expect(result).to.exist
+    expectValidHash(result, 40)
   })
 
   it('should be able to execute createFungibleTokenWithCustomFees with dynamic params', async function () {
-    fixedFeeTokenAddress = utils.createFungibleTokenPublic(
-      tokenName,
-      tokenSymbol,
-      tokenMemo,
-      initialSupply,
-      maxSupply,
-      decimals,
-      freezeDefaultStatus,
-      signers[0].address,
-      key,
-      tokenCreateCustomContract
-    )
-
     const tx =
       await tokenCreateCustomContract.createFungibleTokenWithCustomFeesPublic(
-        signers[0].address,
+        tokenCreateCustomContract.address,
         fixedFeeTokenAddress,
         tokenName,
         tokenSymbol,
@@ -90,9 +133,9 @@ describe('TokenCreateCustomContract Test Suite', () => {
         initialSupply,
         maxSupply,
         decimals,
-        key,
+        keys,
         {
-          value: '20000000000000000000',
+          value: '35000000000000000000',
           gasLimit: 1_000_000,
         }
       )
@@ -111,10 +154,10 @@ describe('TokenCreateCustomContract Test Suite', () => {
       tokenSymbol,
       tokenMemo,
       maxSupply,
-      signers[0].address,
-      utils.getSignerCompressedPublicKey(),
+      tokenCreateCustomContract.address,
+      keys,
       {
-        value: ethers.BigNumber.from('20000000000000000000'),
+        value: '35000000000000000000',
         gasLimit: 1_000_000,
       }
     )
@@ -128,30 +171,17 @@ describe('TokenCreateCustomContract Test Suite', () => {
   })
 
   it('should be able to execute createNonFungibleTokenWithCustomFees', async function () {
-    fixedFeeTokenAddress = utils.createFungibleTokenPublic(
-      tokenName,
-      tokenSymbol,
-      tokenMemo,
-      initialSupply,
-      maxSupply,
-      decimals,
-      freezeDefaultStatus,
-      signers[0].address,
-      key,
-      tokenCreateCustomContract
-    )
-
     const tx =
       await tokenCreateCustomContract.createNonFungibleTokenWithCustomFeesPublic(
-        signers[0].address,
+        tokenCreateCustomContract.address,
         fixedFeeTokenAddress,
         tokenName,
         tokenSymbol,
         tokenMemo,
         maxSupply,
-        utils.getSignerCompressedPublicKey(),
+        keys,
         {
-          value: ethers.BigNumber.from('20000000000000000000'),
+          value: '20000000000000000000',
           gasLimit: 1_000_000,
         }
       )
@@ -177,8 +207,8 @@ describe('TokenCreateCustomContract Test Suite', () => {
             maxSupply,
             decimals,
             freezeDefaultStatus,
-            signers[0].address,
-            utils.getSignerCompressedPublicKey(),
+            tokenCreateCustomContract.address,
+            keys,
             {
               value: '20000000000000000000',
               gasLimit: 1_000_000,
@@ -195,24 +225,16 @@ describe('TokenCreateCustomContract Test Suite', () => {
             tokenSymbol,
             tokenMemo,
             maxSupply,
-            signers[0].address,
-            utils.getSignerCompressedPublicKey(),
+            tokenCreateCustomContract.address,
+            keys,
             {
-              value: ethers.BigNumber.from('20000000000000000000'),
+              value: '20000000000000000000',
               gasLimit: 1_000_000,
             }
           )
         ).wait()
       ).events.filter((e) => e.event === Constants.Events.CreatedToken)[0]
         .args[0]
-
-      await utils.updateTokenKeysViaHapi(prepFungibleTokenAddress, [
-        tokenCreateCustomContract.address,
-      ])
-
-      await utils.updateTokenKeysViaHapi(prepNonFungibeTokenAddress, [
-        tokenCreateCustomContract.address,
-      ])
     })
 
     it('should be able to execute mintToken', async function () {
@@ -228,7 +250,6 @@ describe('TokenCreateCustomContract Test Suite', () => {
         )
 
       const mintFungibleTokenReceipt = await mintFungibleTokenTx.wait()
-
       const { responseCode: mintFungibleTokenResCode } =
         mintFungibleTokenReceipt.events.filter(
           (e) => e.event === Constants.Events.ResponseCode
@@ -264,11 +285,10 @@ describe('TokenCreateCustomContract Test Suite', () => {
 
     it('should be able to execute mintTokenToAddressPublic', async function () {
       const amountToMint = 120
-      const randomReceiverAddress = ethers.Wallet.createRandom().address
 
       const tx = await tokenCreateCustomContract.mintTokenToAddressPublic(
         prepFungibleTokenAddress,
-        randomReceiverAddress,
+        signers[1].address,
         amountToMint,
         ['0x02'],
         Constants.GAS_LIMIT_1_000_000
@@ -289,17 +309,15 @@ describe('TokenCreateCustomContract Test Suite', () => {
       const { receiver, amount } = receipt.events.filter(
         (e) => e.event === Constants.Events.TransferToken
       )[0].args
-      expect(receiver).to.eq(randomReceiverAddress)
+      expect(receiver).to.eq(signers[1].address)
       expect(amount).to.eq(amountToMint)
     })
 
     it('should be able to execute mintNonFungibleTokenToAddressPublic', async function () {
-      const randomReceiverAddress = ethers.Wallet.createRandom().address
-
       const tx =
         await tokenCreateCustomContract.mintNonFungibleTokenToAddressPublic(
           prepNonFungibeTokenAddress,
-          randomReceiverAddress,
+          signers[1].address,
           0,
           ['0x02'],
           Constants.GAS_LIMIT_1_000_000
@@ -320,19 +338,23 @@ describe('TokenCreateCustomContract Test Suite', () => {
       const { receiver, amount } = receipt.events.filter(
         (e) => e.event === Constants.Events.TransferToken
       )[0].args
-      expect(receiver).to.eq(randomReceiverAddress)
+      expect(receiver).to.eq(signers[1].address)
       expect(amount).to.eq(0)
     })
 
     it('should be able to execute associateTokensPublic', async function () {
+      // @notice the provided associating account must sign an updateAccountKeys transaction first.
+      // @notice see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/HederaTokenService.sol#L98
+      //         for more information on precompiled HTS.associateTokens()
+      await utils.updateAccountKeysViaHapi([tokenCreateCustomContract.address])
+
       const tx = await tokenCreateCustomContract.associateTokensPublic(
-        signers[1].address,
+        signers[0].address,
         [prepFungibleTokenAddress, prepNonFungibeTokenAddress],
         Constants.GAS_LIMIT_1_000_000
       )
 
       const receipt = await tx.wait()
-
       const { responseCode } = receipt.events.filter(
         (e) => e.event === Constants.Events.ResponseCode
       )[0].args
@@ -340,35 +362,18 @@ describe('TokenCreateCustomContract Test Suite', () => {
     })
 
     it('should be able to execute associateTokenPublic', async function () {
-      const tokenAddress = (
-        await (
-          await tokenCreateCustomContract.createFungibleTokenPublic(
-            tokenName,
-            tokenSymbol,
-            tokenMemo,
-            initialSupply,
-            maxSupply,
-            decimals,
-            freezeDefaultStatus,
-            signers[0].address,
-            utils.getSignerCompressedPublicKey(),
-            {
-              value: '20000000000000000000',
-              gasLimit: 1_000_000,
-            }
-          )
-        ).wait()
-      ).events.filter((e) => e.event === Constants.Events.CreatedToken)[0].args
-        .tokenAddress
+      // @notice the provided associating account must sign the transaction first.
+      // @notice see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/HederaTokenService.sol#L105
+      //         for more information on precompiled HTS.associateToken()
+      await utils.updateAccountKeysViaHapi([tokenCreateCustomContract.address])
 
       const tx = await tokenCreateCustomContract.associateTokenPublic(
-        signers[1].address,
-        tokenAddress,
+        signers[1].address, // using a different account to avoid TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT error
+        prepFungibleTokenAddress,
         Constants.GAS_LIMIT_1_000_000
       )
 
       const receipt = await tx.wait()
-
       const { responseCode } = receipt.events.filter(
         (e) => e.event === Constants.Events.ResponseCode
       )[0].args
@@ -376,96 +381,83 @@ describe('TokenCreateCustomContract Test Suite', () => {
     })
 
     it('should be able to execute grantTokenKyc', async function () {
-      const grantKycTx = await tokenCreateCustomContract.grantTokenKycPublic(
+      // @notice: The ID of the smart contract is set as the account receiving KYC for testing purpose.
+      //          Any account other than the smart contract ID must first get associated with the token first.
+      //
+      // @notice  see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/HederaTokenService.sol#L399
+      //          for more information on precompiled HTS.associateToken()
+      const tx = await tokenCreateCustomContract.grantTokenKycPublic(
         prepFungibleTokenAddress,
-        signers[0].address,
+        tokenCreateCustomContract.address,
         Constants.GAS_LIMIT_1_000_000
       )
 
-      expect(
-        (await grantKycTx.wait()).events.filter(
-          (e) => e.event === Constants.Events.ResponseCode
-        )[0].args.responseCode
-      ).to.equal(22)
+      const receipt = await tx.wait()
+      const { responseCode } = receipt.events.filter(
+        (e) => e.event === Constants.Events.ResponseCode
+      )[0].args
+      expect(responseCode).to.equal(22)
     })
   })
 
-  describe('Key params', () => {
-    it('should fail when token create has missing signatures in transaction', async () => {
-      const wallet0 = new ethers.Wallet(
-        hre.config.networks[network.name].accounts[0]
-      )
-      const callerAddress = await wallet0.getAddress()
-
-      const wallet1 = new ethers.Wallet(
-        hre.config.networks[network.name].accounts[1]
-      )
-
-      const failedKey = Buffer.from(
-        wallet1._signingKey().compressedPublicKey.replace('0x', ''),
-        'hex'
-      )
-
-      const tx = await tokenCreateCustomContract.createFungibleTokenPublic(
-        tokenName,
-        tokenSymbol,
-        tokenMemo,
-        initialSupply,
-        maxSupply,
-        decimals,
-        freezeDefaultStatus,
-        signers[0].address,
-        failedKey,
-        {
-          value: '20000000000000000000',
-          gasLimit: 1_000_000,
-        }
-      )
-      expect(tx.from).to.eq(callerAddress)
-      expect(tx.to).to.be.null
-
-      try {
-        await tx.wait()
-      } catch (error) {
-        expect(error).to.exist
-        expect(error.reason).to.eq('transaction failed')
+  it("should fail when token create has missing treasury's signature in transaction", async () => {
+    // @notice: Only the ID of the smart contract is valid for the treasury by default.
+    //          Any account other than the smart contract ID must first sign an AccountUpdate transaction
+    //          before being eligible to be elected as the token's treasury account.
+    //          For a practical example, refer to `utils.updateAccountKeysViaHapi()`.
+    const tx = await tokenCreateCustomContract.createFungibleTokenPublic(
+      tokenName,
+      tokenSymbol,
+      tokenMemo,
+      initialSupply,
+      maxSupply,
+      decimals,
+      freezeDefaultStatus,
+      signers[0].address, // the caller is set as treasury account of the token
+      keys,
+      {
+        value: '35000000000000000000',
+        gasLimit: 1_000_000,
       }
-    })
+    )
 
-    it("should pass when the key caller's public key is set as key param", async () => {
-      const wallet0 = new ethers.Wallet(
-        hre.config.networks[network.name].accounts[0]
-      )
-      const callerAddress = await wallet0.getAddress()
+    expect(tx.from).to.eq(signers[0].address)
+    expect(tx.to).to.be.null
+    try {
+      await tx.wait()
+    } catch (error) {
+      expect(error).to.exist
+      expect(error.reason).to.eq('transaction failed')
+    }
+  })
 
-      const callerPubKey = Buffer.from(
-        wallet0._signingKey().compressedPublicKey.replace('0x', ''),
-        'hex'
-      )
+  it("should pass when token create has the correct treasury's signature in transaction", async () => {
+    // @notice the treasury account must sign the transaction first.
+    await utils.updateAccountKeysViaHapi([tokenCreateCustomContract.address])
 
-      const tx = await tokenCreateCustomContract.createFungibleTokenPublic(
-        tokenName,
-        tokenSymbol,
-        tokenMemo,
-        initialSupply,
-        maxSupply,
-        decimals,
-        freezeDefaultStatus,
-        signers[0].address,
-        callerPubKey,
-        {
-          value: '20000000000000000000',
-          gasLimit: 1_000_000,
-        }
-      )
-      expect(tx.from).to.eq(callerAddress)
-      expect(tx.to).to.exist
+    const tx = await tokenCreateCustomContract.createFungibleTokenPublic(
+      tokenName,
+      tokenSymbol,
+      tokenMemo,
+      initialSupply,
+      maxSupply,
+      decimals,
+      freezeDefaultStatus,
+      signers[0].address, // the caller is set as treasury account of the token
+      keys,
+      {
+        value: '35000000000000000000',
+        gasLimit: 1_000_000,
+      }
+    )
 
-      const txReceipt = await tx.wait()
-      const { tokenAddress } = txReceipt.events[0].args
+    expect(tx.from).to.eq(signers[0].address)
+    expect(tx.to).to.exist
 
-      expect(tokenAddress).to.exist
-      expectValidHash(tokenAddress, 40)
-    })
+    const txReceipt = await tx.wait()
+    const { tokenAddress } = txReceipt.events[0].args
+
+    expect(tokenAddress).to.exist
+    expectValidHash(tokenAddress, 40)
   })
 })

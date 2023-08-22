@@ -18,7 +18,13 @@
  *
  */
 
-import { getERC20TokenInformation } from '@/api/hedera/erc20-interactions';
+import {
+  balanceOf,
+  erc20Mint,
+  erc20Transfers,
+  getERC20TokenInformation,
+  handleErc20TokenPermissions,
+} from '@/api/hedera/erc20-interactions';
 import { Contract } from 'ethers';
 
 describe('getERC20TokenInformation', () => {
@@ -67,5 +73,294 @@ describe('getERC20TokenInformation', () => {
     expect(res.err).toBeNull;
     expect(getERC20TokenInformation).toBeCalled;
     expect(res.decimals).toBe(expectedDecimals);
+  });
+});
+
+describe('erc20Mint', () => {
+  // Mock baseContract object
+  const baseContract = {
+    mint: jest.fn(),
+  };
+
+  it('should execute erc20Mint', async () => {
+    const res = await erc20Mint(
+      baseContract as unknown as Contract,
+      '0x7a575266b2020e262e9b1ad4eba3014d63630095',
+      120
+    );
+
+    // assertion
+    expect(res.err).toBeNull;
+    expect(erc20Mint).toBeCalled;
+    expect(res.mintRes).toBe(true);
+  });
+
+  it('should failed with invalid recipient address', async () => {
+    const res = await erc20Mint(baseContract as unknown as Contract, '0xabc', 120);
+    // assertion
+    expect(res.err).toBe('Invalid recipient address');
+    expect(erc20Mint).toBeCalled;
+    expect(res.mintRes).toBeNull;
+  });
+
+  it('should failed with invalid token amount', async () => {
+    const res = await erc20Mint(
+      baseContract as unknown as Contract,
+      '0x7a575266b2020e262e9b1ad4eba3014d63630095',
+      -120
+    );
+    // assertion
+    expect(res.err).toBe('Invalid token amount');
+    expect(erc20Mint).toBeCalled;
+    expect(res.mintRes).toBeNull;
+  });
+});
+
+describe('balanceOf', () => {
+  const baseContract = {
+    balanceOf: jest.fn().mockResolvedValue('120'),
+  };
+
+  it('should execute balanceOf', async () => {
+    const balanceOfRes = await balanceOf(
+      baseContract as unknown as Contract,
+      '0x7a575266b2020e262e9b1ad4eba3014d63630095'
+    );
+
+    // assertion
+    expect(balanceOfRes.err).toBeNull;
+    expect(balanceOfRes.balanceOfRes).toBe('120');
+    expect(balanceOf).toBeCalled;
+  });
+
+  it('should fail with Invalid account address', async () => {
+    const balanceOfRes = await balanceOf(baseContract as unknown as Contract, '0x3619');
+
+    // assertion
+    expect(balanceOfRes.err).toBe('Invalid account address');
+    expect(balanceOfRes.balanceOfRes).toBeNull;
+    expect(balanceOf).toBeCalled;
+  });
+});
+
+describe('Token Permissions', () => {
+  const baseContract = {
+    approve: jest.fn(),
+    increaseAllowance: jest.fn(),
+    decreaseAllowance: jest.fn(),
+    decimals: jest.fn().mockResolvedValue(18),
+    allowance: jest.fn().mockResolvedValue('120'),
+  };
+
+  it('should execute erc20Approve', async () => {
+    const approveRes = await handleErc20TokenPermissions(
+      baseContract as unknown as Contract,
+      'approve',
+      '0x7a575266b2020e262e9b1ad4eba3014d63630095',
+      '',
+      120
+    );
+
+    // assertion
+    expect(approveRes.err).toBeNull;
+    expect(approveRes.approveRes).toBe(true);
+    expect(handleErc20TokenPermissions).toBeCalled;
+  });
+
+  it('should fail erc20Approve with Invalid spender address', async () => {
+    const approveRes = await handleErc20TokenPermissions(
+      baseContract as unknown as Contract,
+      'approve',
+      '0x3619',
+      '',
+      120
+    );
+
+    // assertion
+    expect(approveRes.err).toBe('Invalid spender address');
+    expect(approveRes.approveRes).toBeNull;
+    expect(handleErc20TokenPermissions).toBeCalled;
+  });
+
+  it('should execute erc20IncreaseAllowance', async () => {
+    const increaseAllowanceRes = await handleErc20TokenPermissions(
+      baseContract as unknown as Contract,
+      'increaseAllowance',
+      '0x7a575266b2020e262e9b1ad4eba3014d63630095',
+      '',
+      120
+    );
+
+    // assertion
+    expect(increaseAllowanceRes.err).toBeNull;
+    expect(increaseAllowanceRes.increaseAllowanceRes).toBe(true);
+    expect(handleErc20TokenPermissions).toBeCalled;
+  });
+
+  it('should fail erc20IncreaseAllowance with Invalid spender address', async () => {
+    const increaseAllowanceRes = await handleErc20TokenPermissions(
+      baseContract as unknown as Contract,
+      'increaseAllowance',
+      '0x3619',
+      '',
+      120
+    );
+
+    // assertion
+    expect(increaseAllowanceRes.err).toBe('Invalid spender address');
+    expect(increaseAllowanceRes.increaseAllowanceRes).toBeNull;
+    expect(handleErc20TokenPermissions).toBeCalled;
+  });
+
+  it('should execute erc20DecreaseAllowance', async () => {
+    const decreaseAllowanceRes = await handleErc20TokenPermissions(
+      baseContract as unknown as Contract,
+      'decreaseAllowance',
+      '0x7a575266b2020e262e9b1ad4eba3014d63630095',
+      '',
+      120
+    );
+
+    // assertion
+    expect(decreaseAllowanceRes.err).toBeNull;
+    expect(decreaseAllowanceRes.decreaseAllowanceRes).toBe(true);
+    expect(handleErc20TokenPermissions).toBeCalled;
+  });
+
+  it('should fail erc20DecreaseAllowance with Invalid spender address', async () => {
+    const decreaseAllowanceRes = await handleErc20TokenPermissions(
+      baseContract as unknown as Contract,
+      'decreaseAllowance',
+      '0x3619',
+      '',
+      120
+    );
+
+    // assertion
+    expect(decreaseAllowanceRes.err).toBe('Invalid spender address');
+    expect(decreaseAllowanceRes.decreaseAllowanceRes).toBeNull;
+    expect(handleErc20TokenPermissions).toBeCalled;
+  });
+
+  it('should execute erc20Allowance', async () => {
+    const allowanceRes = await handleErc20TokenPermissions(
+      baseContract as unknown as Contract,
+      'allowance',
+      '0x7a575266b2020e262e9b1ad4eba3014d63630095',
+      '0x7a575266b2020e262e9b1ad4eba3014d63630012'
+    );
+
+    // assertion
+    expect(allowanceRes.err).toBeNull;
+    expect(allowanceRes.allowanceRes).toBe('120');
+    expect(handleErc20TokenPermissions).toBeCalled;
+  });
+
+  it('should fail erc20Allowance with Invalid owner address', async () => {
+    const allowanceRes = await handleErc20TokenPermissions(
+      baseContract as unknown as Contract,
+      'allowance',
+      '0x7a575266b2020e262e9b1ad4eba3014d63630012',
+      '0x3619'
+    );
+
+    // assertion
+    expect(allowanceRes.err).toBe('Invalid owner address');
+    expect(allowanceRes.allowanceRes).toBeNull;
+    expect(handleErc20TokenPermissions).toBeCalled;
+  });
+
+  it('should fail erc20Allowance with Invalid spender address', async () => {
+    const allowanceRes = await handleErc20TokenPermissions(
+      baseContract as unknown as Contract,
+      'allowance',
+      '0x3619',
+      '0x7a575266b2020e262e9b1ad4eba3014d63630012'
+    );
+
+    // assertion
+    expect(allowanceRes.err).toBe('Invalid spender address');
+    expect(allowanceRes.allowanceRes).toBeNull;
+    expect(handleErc20TokenPermissions).toBeCalled;
+  });
+});
+
+describe('Transfer', () => {
+  const baseContract = {
+    transfer: jest.fn(),
+    transferFrom: jest.fn(),
+  };
+
+  it('should execute erc20Transfer', async () => {
+    const transferRes = await erc20Transfers(
+      baseContract as unknown as Contract,
+      'transfer',
+      '0x7a575266b2020e262e9b1ad4eba3014d63630012',
+      120
+    );
+
+    // assertion
+    expect(transferRes.err).toBeNull;
+    expect(transferRes.transferRes).toBe(true);
+    expect(balanceOf).toBeCalled;
+  });
+
+  it('should fail erc20Transfer with Invalid recipient address', async () => {
+    const transferRes = await erc20Transfers(
+      baseContract as unknown as Contract,
+      'transfer',
+      '0x112c',
+      120
+    );
+
+    // assertion
+    expect(transferRes.err).toBe('Invalid recipient address');
+    expect(transferRes.transferRes).toBeNull;
+    expect(balanceOf).toBeCalled;
+  });
+
+  it('should execute erc20TransferFrom', async () => {
+    const transferFromRes = await erc20Transfers(
+      baseContract as unknown as Contract,
+      'transferFrom',
+      '0x7a575266b2020e262e9b1ad4eba3014d63630022',
+      120,
+      '0x7a575266b2020e262e9b1ad4eba3014d63630012'
+    );
+
+    // assertion
+    expect(transferFromRes.err).toBeNull;
+    expect(transferFromRes.transferFromRes).toBe(true);
+    expect(balanceOf).toBeCalled;
+  });
+
+  it('should fail erc20TransferFrom with Invalid token owner address', async () => {
+    const transferFromRes = await erc20Transfers(
+      baseContract as unknown as Contract,
+      'transferFrom',
+      '0x7a575266b2020e262e9b1ad4eba3014d63630012',
+      120,
+      '0x112c'
+    );
+
+    // assertion
+    expect(transferFromRes.err).toBe('Invalid token owner address');
+    expect(transferFromRes.transferFromRes).toBeNull;
+    expect(balanceOf).toBeCalled;
+  });
+
+  it('should fail erc20TransferFrom with Invalid recipient address', async () => {
+    const transferFromRes = await erc20Transfers(
+      baseContract as unknown as Contract,
+      'transferFrom',
+      '0x112c',
+      120,
+      '0x7a575266b2020e262e9b1ad4eba3014d63630012'
+    );
+
+    // assertion
+    expect(transferFromRes.err).toBe('Invalid recipient address');
+    expect(transferFromRes.transferFromRes).toBeNull;
+    expect(balanceOf).toBeCalled;
   });
 });

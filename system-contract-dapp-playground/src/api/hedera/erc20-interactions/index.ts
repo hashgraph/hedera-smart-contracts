@@ -18,8 +18,7 @@
  *
  */
 
-import { ERC20MockSmartContractResult } from '@/types/interfaces';
-import { Contract } from 'ethers';
+import { Contract, isAddress } from 'ethers';
 
 /**
  * @dev get token information
@@ -46,6 +45,168 @@ export const getERC20TokenInformation = async (
         return { totalSupply: (await baseContract.totalSupply()).toString() };
       case 'decimals':
         return { decimals: (await baseContract.decimals()).toString() };
+    }
+  } catch (err) {
+    console.error(err);
+    return { err };
+  }
+};
+
+/**
+ * @dev mints erc20 tokens
+ *
+ * @param baseContract: Contract
+ *
+ * @param recipientAddress: address
+ *
+ * @param tokenAmount: number
+ *
+ * @return Promise<ERC20MockSmartContractResult>
+ */
+export const erc20Mint = async (
+  baseContract: Contract,
+  recipientAddress: string,
+  tokenAmount: number
+): Promise<ERC20MockSmartContractResult> => {
+  if (!isAddress(recipientAddress)) {
+    return { err: 'Invalid recipient address' };
+  } else if (tokenAmount <= 0) {
+    return { err: 'Invalid token amount' };
+  }
+
+  try {
+    await baseContract.mint(recipientAddress, tokenAmount);
+    return { mintRes: true };
+  } catch (err) {
+    console.error(err);
+    return { err };
+  }
+};
+
+/**
+ * @dev get token balance owned by `accountAddress`
+ *
+ * @param baseContract: Contract
+ *
+ * @param accountAddress: address
+ *
+ * @return Promise<ERC20MockSmartContractResult>
+ */
+export const balanceOf = async (
+  baseContract: Contract,
+  accountAddress: string
+): Promise<ERC20MockSmartContractResult> => {
+  if (!isAddress(accountAddress)) {
+    return { err: 'Invalid account address' };
+  }
+
+  try {
+    return { balanceOfRes: (await baseContract.balanceOf(accountAddress)).toString() };
+  } catch (err) {
+    console.error(err);
+    return { err };
+  }
+};
+
+/**
+ * @dev handle executing APIs relate  to Token Permissions
+ *
+ * @dev approve() sets `amount` as the allowance of `spenderAddress` over the caller's tokens
+ *
+ * @dev increaseAllowance() atomically increases the allowance granted to spender by the caller.
+ *
+ * @dev decreaseAllowance() atomically decreases the allowance granted to spender by the caller.
+ *
+ * @dev allowance() returns the remaining number of tokens that `spenerAddress` will be allowed to spend on behalf of `ownerAddress`
+ *
+ * @param baseContract: Contract
+ *
+ * @param method: 'approve' | 'allowance' | 'increaseAllowance' | 'decreaseAllowance'
+ *
+ * @param spenderAddress?: address
+ *
+ * @param owner?: address
+ *
+ * @param amount?: number
+ *
+ * @return Promise<ERC20MockSmartContractResult>
+ */
+export const handleErc20TokenPermissions = async (
+  baseContract: Contract,
+  method: 'approve' | 'allowance' | 'increaseAllowance' | 'decreaseAllowance',
+  spenderAddress: string,
+  ownerAddress?: string,
+  amount?: number
+): Promise<ERC20MockSmartContractResult> => {
+  // sanitize params
+  if (ownerAddress && !isAddress(ownerAddress)) {
+    return { err: 'Invalid owner address' };
+  } else if (spenderAddress && !isAddress(spenderAddress)) {
+    return { err: 'Invalid spender address' };
+  }
+
+  // executing logic
+  try {
+    switch (method) {
+      case 'approve':
+        await baseContract.approve(spenderAddress, amount);
+        return { approveRes: true };
+      case 'increaseAllowance':
+        await baseContract.increaseAllowance(spenderAddress, amount);
+        return { increaseAllowanceRes: true };
+      case 'decreaseAllowance':
+        await baseContract.decreaseAllowance(spenderAddress, amount);
+        return { decreaseAllowanceRes: true };
+      case 'allowance':
+        const allowance = await baseContract.allowance(ownerAddress, spenderAddress);
+        return { allowanceRes: allowance.toString() };
+    }
+  } catch (err) {
+    console.error(err);
+    return { err };
+  }
+};
+
+/**
+ * @dev handle executing APIs relate  to Token Transfer
+ *
+ * @dev transfer() moves amount tokens from the caller’s account to `recipient`.
+ *
+ * @dev transferFrom() moves amount tokens from `tokenOwnerAddress` to `recipientAddress` using the allowance mechanism. `amount` is then deducted from the caller’s allowance.
+ *
+ * @param baseContract: Contract
+ *
+ * @param method: "transfer" | "transferFrom"
+ *
+ * @param recipientAddress: address
+ *
+ * @param amount: number
+ *
+ * @param tokenOwnerAddress?: address
+ *
+ * @return Promise<ERC20MockSmartContractResult>
+ */
+export const erc20Transfers = async (
+  baseContract: Contract,
+  method: 'transfer' | 'transferFrom',
+  recipientAddress: string,
+  amount: number,
+  tokenOwnerAddress?: string
+): Promise<ERC20MockSmartContractResult> => {
+  if (method === 'transferFrom' && !isAddress(tokenOwnerAddress)) {
+    return { err: 'Invalid token owner address' };
+  } else if (!isAddress(recipientAddress)) {
+    return { err: 'Invalid recipient address' };
+  }
+
+  try {
+    switch (method) {
+      case 'transfer':
+        await baseContract.transfer(recipientAddress, amount);
+        return { transferRes: true };
+      case 'transferFrom':
+        await baseContract.transferFrom(tokenOwnerAddress, recipientAddress, amount);
+        return { transferFromRes: true };
     }
   } catch (err) {
     console.error(err);

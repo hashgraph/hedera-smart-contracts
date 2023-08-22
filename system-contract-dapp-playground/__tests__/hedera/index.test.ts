@@ -20,8 +20,8 @@
 
 import { ContractFactory } from 'ethers';
 import { deploySmartContract } from '@/api/hedera';
-import { HederaSmartContractResult } from '@/types/interfaces';
-import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/constants';
+import { HederaSmartContractResult } from '@/types/common';
+import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/common/constants';
 
 // Mock ethers
 jest.mock('ethers', () => {

@@ -20,7 +20,7 @@
 
 import { ContractFactory } from 'ethers';
 import { getWalletProvider } from '../wallet';
-import { ContractABI, HederaSmartContractResult } from '@/types/interfaces';
+import { ContractABI, HederaSmartContractResult } from '@/types/common';
 
 /**
  * @dev deploys smart contract to Hedera network
