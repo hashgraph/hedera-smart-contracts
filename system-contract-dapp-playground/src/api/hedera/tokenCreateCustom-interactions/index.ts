@@ -291,7 +291,11 @@ export const mintHederaToken = async (
 
     const txReceipt = await tx.wait();
 
-    return { transactionHash: txReceipt.hash };
+    const { data: mintedTokenData } = txReceipt.logs.filter(
+      (event: any) => event.fragment.name === 'MintedToken'
+    )[0];
+
+    return { transactionHash: txReceipt.hash, mintedTokenEventData: mintedTokenData };
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };
@@ -362,7 +366,19 @@ export const mintHederaTokenToAddress = async (
 
     const txReceipt = await tx.wait();
 
-    return { transactionHash: txReceipt.hash };
+    const { data: mintedTokenData } = txReceipt.logs.filter(
+      (event: any) => event.fragment.name === 'MintedToken'
+    )[0];
+
+    const { data: transferTokenData } = txReceipt.logs.filter(
+      (event: any) => event.fragment.name === 'TransferToken'
+    )[0];
+
+    return {
+      transactionHash: txReceipt.hash,
+      mintedTokenEventData: mintedTokenData,
+      transferTokenEventData: transferTokenData,
+    };
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };
