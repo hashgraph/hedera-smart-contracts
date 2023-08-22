@@ -142,9 +142,6 @@ describe('TokenTransferContract Test Suite', function () {
       Constants.GAS_LIMIT_1_000_000
     )
 
-    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
-    await new Promise((r) => setTimeout(r, 2000))
-
     let wallet1BalanceAfter = await erc20Contract.balanceOf(
       tokenAddress,
       signers[0].address
@@ -197,9 +194,6 @@ describe('TokenTransferContract Test Suite', function () {
       amount,
       Constants.GAS_LIMIT_1_000_000
     )
-
-    //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
-    await new Promise((r) => setTimeout(r, 2000))
 
     let wallet1BalanceAfter = await erc20Contract.balanceOf(
       tokenAddress,
@@ -287,7 +281,6 @@ describe('TokenTransferContract Test Suite', function () {
     const responseCode = cryptoTransferReceipt.events.filter(
       (e) => e.event === Constants.Events.ResponseCode
     )[0].args[0]
-    await new Promise((r) => setTimeout(r, 2000))
 
     const signers0After = await signers[0].provider.getBalance(
       signers[0].address
@@ -345,7 +338,6 @@ describe('TokenTransferContract Test Suite', function () {
     const responseCode = cryptoTransferReceipt.events.filter(
       (e) => e.event === Constants.Events.ResponseCode
     )[0].args[0]
-    await new Promise((r) => setTimeout(r, 2000))
 
     const ownerAfter = await erc721Contract.ownerOf(
       nftTokenAddress,
@@ -446,7 +438,6 @@ describe('TokenTransferContract Test Suite', function () {
     const responseCode = cryptoTransferReceipt.events.filter(
       (e) => e.event === Constants.Events.ResponseCode
     )[0].args[0]
-    await new Promise((r) => setTimeout(r, 2000))
 
     const signers0AfterHbarBalance = await signers[0].provider.getBalance(
       signers[0].address
