@@ -209,3 +209,24 @@ export const htsTokenAssociateParamFields = {
     explanation: 'represents the account to be associated with the provided tokens',
   },
 };
+
+export const htsGrantTokenKYCParamFields = {
+  hederaTokenAddress: {
+    inputType: 'text',
+    inputPlaceholder: 'Token address...',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'hederaTokenAddress',
+    explanation: 'represents the token for which this account will be granted KYC.',
+  },
+  grantingKYCAccountAddress: {
+    inputType: 'text',
+    inputPlaceholder: 'Account to grant KYC...',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'grantingKYCAccountAddress',
+    explanation: 'represents the account to be KYCed',
+  },
+};

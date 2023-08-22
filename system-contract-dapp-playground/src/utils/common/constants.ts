@@ -192,7 +192,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
         'non-fungibleTokenCreate',
         'mint',
         'tokenAssociation',
-        'tokenKYC',
+        'grantKYC',
       ],
     },
     {

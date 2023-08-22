@@ -23,6 +23,7 @@ import MintHederaToken from './MintHederaToken';
 import FungibleTokenCreate from './FungibleTokenCreate';
 import AssociateHederaToken from './AssociateHederaToken';
 import NonFungibleTokenCreate from './NonFungibleTokenCreate';
+import GrantTokenKYC from './GrantTokenKYC';
 
 interface PageProps {
   method: string;
@@ -38,7 +39,7 @@ const HederaTokenCreateMethods = ({ baseContract, method }: PageProps) => {
       )}
       {method === 'mint' && <MintHederaToken baseContract={baseContract} />}
       {method === 'tokenAssociation' && <AssociateHederaToken baseContract={baseContract} />}
-      {method === 'tokenKYC' && <>{method}</>}
+      {method === 'grantKYC' && <GrantTokenKYC baseContract={baseContract} />}
     </>
   );
 };

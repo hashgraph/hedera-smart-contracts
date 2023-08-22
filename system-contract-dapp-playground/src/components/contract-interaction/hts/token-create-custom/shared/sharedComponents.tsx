@@ -332,7 +332,6 @@ export const SharedSigningKeysComponent = ({
 
 /** @dev shared component representing the list of transactions */
 interface TransactionResultTablePageProps {
-  API: 'TokenCreate' | 'TokenMint' | 'TokenAssociate';
   hederaNetwork: string;
   TRANSACTION_PAGE_SIZE: number;
   currentTransactionPage: number;
@@ -340,6 +339,7 @@ interface TransactionResultTablePageProps {
   transactionResults: TransactionResult[];
   paginatedTransactionResults: TransactionResult[];
   setCurrentTransactionPage: Dispatch<SetStateAction<number>>;
+  API: 'TokenCreate' | 'TokenMint' | 'TokenAssociate' | 'GrantKYC';
   setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>;
 }
 
@@ -365,6 +365,7 @@ export const TransactionResultTable = ({
       endingHashIndex = -4;
       break;
     case 'TokenAssociate':
+    case 'GrantKYC':
       beginingHashIndex = 10;
       endingHashIndex = -5;
       break;
@@ -386,6 +387,8 @@ export const TransactionResultTable = ({
             {API === 'TokenMint' && <Th color={'#82ACF9'}>Recipient</Th>}
             {API === 'TokenAssociate' && <Th color={'#82ACF9'}>Associated Token</Th>}
             {API === 'TokenAssociate' && <Th color={'#82ACF9'}>Associated Account</Th>}
+            {API === 'GrantKYC' && <Th color={'#82ACF9'}>Token address</Th>}
+            {API === 'GrantKYC' && <Th color={'#82ACF9'}>KYCed Account</Th>}
             <Th />
           </Tr>
         </Thead>
@@ -469,7 +472,7 @@ export const TransactionResultTable = ({
                 </Td>
 
                 {/* token address */}
-                {(API === 'TokenCreate' || API === 'TokenMint') && (
+                {(API === 'TokenCreate' || API === 'TokenMint' || API === 'GrantKYC') && (
                   // {withTokenAddress && (
                   <Td className="cursor-pointer">
                     {transactionResult.tokenAddress ? (
@@ -511,7 +514,9 @@ export const TransactionResultTable = ({
                         </Tooltip>
                       </div>
                     ) : (
-                      <>0x0000000000000...000000000</>
+                      <>
+                        {API === 'GrantKYC' ? '0x00000000...00000' : '0x0000000000000...000000000'}
+                      </>
                     )}
                   </Td>
                 )}
@@ -568,7 +573,7 @@ export const TransactionResultTable = ({
                   </Td>
                 )}
 
-                {/* token address */}
+                {/* associated token address */}
                 {API === 'TokenAssociate' && (
                   <Td className="cursor-pointer">
                     {transactionResult.tokenAddressesToAssociate &&
@@ -717,6 +722,57 @@ export const TransactionResultTable = ({
                       >
                         <Link
                           href={`https://hashscan.io/${hederaNetwork}/account/${transactionResult.associatingAddress}`}
+                          target="_blank"
+                        >
+                          <FiExternalLink />
+                        </Link>
+                      </Tooltip>
+                    </div>
+                  </Td>
+                )}
+
+                {/* Associated acocunt */}
+                {API === 'GrantKYC' && (
+                  <Td className="cursor-pointer">
+                    <div className="flex gap-1 items-center">
+                      <div
+                        onClick={() =>
+                          navigator.clipboard.writeText(
+                            transactionResult.grantingKYCAccountAddress!
+                          )
+                        }
+                      >
+                        <Popover>
+                          <PopoverTrigger>
+                            <div className="flex gap-1 items-center">
+                              <Tooltip label="click to copy recipient address">
+                                <p>
+                                  {transactionResult.grantingKYCAccountAddress!.slice(
+                                    0,
+                                    beginingHashIndex
+                                  )}
+                                  ...
+                                  {transactionResult.grantingKYCAccountAddress!.slice(
+                                    endingHashIndex
+                                  )}
+                                </p>
+                              </Tooltip>
+                            </div>
+                          </PopoverTrigger>
+                          <PopoverContent width={'fit-content'} border={'none'}>
+                            <div className="bg-secondary px-3 py-2 border-none font-medium">
+                              Copied
+                            </div>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      <Tooltip
+                        label={'Explore this user on HashScan'}
+                        placement="top"
+                        fontWeight={'medium'}
+                      >
+                        <Link
+                          href={`https://hashscan.io/${hederaNetwork}/account/${transactionResult.grantingKYCAccountAddress}`}
                           target="_blank"
                         >
                           <FiExternalLink />

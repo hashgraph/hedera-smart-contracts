@@ -18,16 +18,16 @@
  *
  */
 
-import Cookies from 'js-cookie';
-import { Contract } from 'ethers';
-import { useToast } from '@chakra-ui/react';
-import { useState, useMemo, useEffect } from 'react';
-import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { useToast } from '@chakra-ui/react';
+import { Contract } from 'ethers';
+import { useEffect, useMemo, useState } from 'react';
+import Cookies from 'js-cookie';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
-import { htsTokenAssociateParamFields } from '@/utils/contract-interactions/HTS/constant';
-import { handleAPIErrors, handleSanitizeHederaFormInputs } from '../shared/sharedMethods';
-import { associateHederaTokensToAccounts } from '@/api/hedera/tokenCreateCustom-interactions';
+import { CommonErrorToast } from '@/components/toast/CommonToast';
+import { grantTokenKYCToAccount } from '@/api/hedera/tokenCreateCustom-interactions';
+import { handleSanitizeHederaFormInputs, handleAPIErrors } from '../shared/sharedMethods';
+import { htsGrantTokenKYCParamFields } from '@/utils/contract-interactions/HTS/constant';
 import {
   SharedExecuteButton,
   SharedFormInputField,
@@ -38,21 +38,21 @@ interface PageProps {
   baseContract: Contract;
 }
 
-const AssociateHederaToken = ({ baseContract }: PageProps) => {
+const GrantTokenKYC = ({ baseContract }: PageProps) => {
   // general states
   const toaster = useToast();
   const TRANSACTION_PAGE_SIZE = 10;
   const [isLoading, setIsLoading] = useState(false);
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
-  const transactionResultStorageKey = 'hedera_HTS_token-association_results';
+  const transactionResultStorageKey = 'hedera_HTS_grant-kyc_results';
   const [tokenType, setTokenType] = useState<'FUNGIBLE' | 'NON_FUNGIBLE'>('FUNGIBLE');
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const [isTokenAssociatinguccessful, setIsTokenAssociatingSuccessful] = useState(false);
-  const tokenAssociateFields = ['tokenAddresses', 'associatingAddress'];
+  const [isKYCGrantingSuccessful, setIsKYCGrantingSuccessful] = useState(false);
+  const grantKYCFields = ['hederaTokenAddress', 'grantingKYCAccountAddress'];
   const [paramValues, setParamValues] = useState<any>({
-    tokenAddresses: '',
-    associatingAddress: '',
+    hederaTokenAddress: '',
+    grantingKYCAccountAddress: '',
   });
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
@@ -92,20 +92,15 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
     setParamValues((prev: any) => ({ ...prev, [param]: e.target.value }));
   };
 
-  /** @dev handle invoking the API to interact with smart contract to associate tokens */
-  const handleAssociateTokens = async () => {
-    const { tokenAddresses, associatingAddress } = paramValues;
-
-    // convert tokenAddresses into a string[]
-    const tokenAddressesArray: string[] = Array.from(
-      new Set(tokenAddresses.split(',').map((address: string) => address.trim()))
-    );
+  /** @dev handle invoking the API to interact with smart contract to grant token KYC to accounts */
+  const handleGrantTokenKYC = async () => {
+    const { hederaTokenAddress, grantingKYCAccountAddress } = paramValues;
 
     // sanitize params
     const sanitizeErr = handleSanitizeHederaFormInputs({
-      API: 'Associate',
-      tokenAddressesArray,
-      associatingAddress,
+      API: 'GrantKYC',
+      hederaTokenAddress,
+      grantingKYCAccountAddress,
     });
 
     // toast error if any param is invalid
@@ -120,10 +115,10 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
     // invoke method API
     // @logic if recipientAddress is set => mintHederaTokenToAddress()
     // @logic if recipientAddress is NOT set => mintHederaToken()
-    const { transactionHash, err } = await associateHederaTokensToAccounts(
+    const { transactionHash, err } = await grantTokenKYCToAccount(
       baseContract,
-      tokenAddressesArray,
-      associatingAddress
+      hederaTokenAddress,
+      grantingKYCAccountAddress
     );
 
     // turn is loading off
@@ -135,9 +130,9 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
         err,
         toaster,
         transactionHash,
+        hederaTokenAddress,
         setTransactionResults,
-        associatingAddress,
-        tokenAddressesToAssociate: tokenAddressesArray,
+        grantingKYCAccountAddress,
       });
       return;
     } else {
@@ -147,12 +142,12 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
         {
           status: 'sucess',
           txHash: transactionHash as string,
-          associatingAddress,
-          tokenAddressesToAssociate: tokenAddressesArray,
+          tokenAddress: hederaTokenAddress,
+          grantingKYCAccountAddress,
         },
       ]);
 
-      setIsTokenAssociatingSuccessful(true);
+      setIsKYCGrantingSuccessful(true);
     }
   };
 
@@ -165,61 +160,60 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
 
   // toast successful
   useEffect(() => {
-    if (isTokenAssociatinguccessful) {
+    if (isKYCGrantingSuccessful) {
       toaster({
-        title: '🎉 Token association successful 🎉',
+        title: '🎉 Grant Token KYC successful 🎉',
         status: 'success',
         position: 'top',
       });
 
       // reset values
       setParamValues({
-        tokenAddresses: '',
-        associatingAddress: '',
+        hederaTokenAddress: '',
+        grantingKYCAccountAddress: '',
       });
-      setIsTokenAssociatingSuccessful(false);
+      setIsKYCGrantingSuccessful(false);
       // set the current page to the last page so it can show the newly created transaction
       const maxPageNum = Math.ceil(transactionResults.length / TRANSACTION_PAGE_SIZE);
       setCurrentTransactionPage(maxPageNum === 0 ? 1 : maxPageNum);
     }
-  }, [isTokenAssociatinguccessful, toaster]);
+  }, [isKYCGrantingSuccessful, toaster]);
 
   return (
     <div className="w-full mx-3 flex justify-center mt-6 flex-col gap-20">
-      {/* Token Association form */}
+      {/* Grant Token KYC form */}
       <div className="w-[600px]/ flex flex-col gap-6 justify-center tracking-tight text-white/70">
-        {/* tokenAddresses & associatingAccount*/}
-        {tokenAssociateFields.map((param) => {
+        {/* hederaTokenAddress & grantingKYCAccountAddress*/}
+        {grantKYCFields.map((param) => {
           return (
-            <div key={(htsTokenAssociateParamFields as any)[param].paramKey}>
+            <div key={(htsGrantTokenKYCParamFields as any)[param].paramKey}>
               <SharedFormInputField
-                paramKey={(htsTokenAssociateParamFields as any)[param].paramKey}
-                explanation={(htsTokenAssociateParamFields as any)[param].explanation}
+                paramKey={(htsGrantTokenKYCParamFields as any)[param].paramKey}
+                explanation={(htsGrantTokenKYCParamFields as any)[param].explanation}
                 paramValue={paramValues[param]}
-                paramType={(htsTokenAssociateParamFields as any)[param].inputType}
+                paramType={(htsGrantTokenKYCParamFields as any)[param].inputType}
                 param={param}
-                paramPlaceholder={(htsTokenAssociateParamFields as any)[param].inputPlaceholder}
-                paramSize={(htsTokenAssociateParamFields as any)[param].inputSize}
-                paramFocusColor={(htsTokenAssociateParamFields as any)[param].inputFocusBorderColor}
-                paramClassName={(htsTokenAssociateParamFields as any)[param].inputClassname}
+                paramPlaceholder={(htsGrantTokenKYCParamFields as any)[param].inputPlaceholder}
+                paramSize={(htsGrantTokenKYCParamFields as any)[param].inputSize}
+                paramFocusColor={(htsGrantTokenKYCParamFields as any)[param].inputFocusBorderColor}
+                paramClassName={(htsGrantTokenKYCParamFields as any)[param].inputClassname}
                 handleInputOnChange={handleInputOnChange}
               />
             </div>
           );
         })}
-
         {/* Execute button */}
         <SharedExecuteButton
           isLoading={isLoading}
-          buttonTitle={`Associate Tokens`}
-          handleCreatingFungibleToken={handleAssociateTokens}
+          buttonTitle={`Grant Token KYC`}
+          handleCreatingFungibleToken={handleGrantTokenKYC}
         />
       </div>
 
       {/* transaction results table */}
       {transactionResults.length > 0 && (
         <TransactionResultTable
-          API="TokenAssociate"
+          API="GrantKYC"
           hederaNetwork={hederaNetwork}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           currentTransactionPage={currentTransactionPage}
@@ -234,4 +228,4 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
   );
 };
 
-export default AssociateHederaToken;
+export default GrantTokenKYC;

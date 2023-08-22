@@ -106,12 +106,14 @@ interface IHederaTokenServiceTokenKey {
   key: IHederaTokenServiceKeyValue;
 }
 
-/** @dev the type for transaction results */
+/** @dev the type for HTS transaction results */
 export type TransactionResult = {
   status: 'sucess' | 'fail';
   txHash: string;
   tokenAddress?: string;
   recipientAddress?: string;
   associatingAddress?: string;
+  hederaTokenAddress?: string;
+  grantingKYCAccountAddress?: string;
   tokenAddressesToAssociate?: string[];
 };

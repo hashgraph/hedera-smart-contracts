@@ -140,7 +140,6 @@ export const handleUpdateKeyValue = (
 };
 
 interface ParamsProps {
-  API: 'TokenCreate' | 'Mint' | 'Associate';
   name?: string;
   amount?: string;
   symbol?: string;
@@ -154,7 +153,10 @@ interface ParamsProps {
   recipientAddress?: string;
   associatingAddress?: string;
   tokenAddressToMint?: string;
+  hederaTokenAddress?: string;
   tokenAddressesArray?: string[];
+  grantingKYCAccountAddress?: string;
+  API: 'TokenCreate' | 'Mint' | 'Associate' | 'GrantKYC';
 }
 /** @dev handle sanitizing Hedera token form inputs */
 export const handleSanitizeHederaFormInputs = ({
@@ -173,6 +175,8 @@ export const handleSanitizeHederaFormInputs = ({
   tokenAddressToMint,
   associatingAddress,
   tokenAddressesArray,
+  hederaTokenAddress,
+  grantingKYCAccountAddress,
 }: ParamsProps) => {
   // sanitize params
   let sanitizeErr;
@@ -211,6 +215,12 @@ export const handleSanitizeHederaFormInputs = ({
         }
       });
     }
+  } else if (API === 'GrantKYC') {
+    if (!isAddress(hederaTokenAddress)) {
+      sanitizeErr = 'Invalid token address';
+    } else if (!isAddress(grantingKYCAccountAddress)) {
+      sanitizeErr = 'Invalid token address';
+    }
   }
 
   // sanitize keys
@@ -240,20 +250,24 @@ export const handleAPIErrors = ({
   err,
   toaster,
   transactionHash,
-  setTransactionResults,
-  tokenAddressToMint,
   recipientAddress,
+  hederaTokenAddress,
+  tokenAddressToMint,
   associatingAddress,
+  setTransactionResults,
   tokenAddressesToAssociate,
+  grantingKYCAccountAddress,
 }: {
   err: any;
   toaster: any;
-  transactionHash: string | undefined;
-  setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>;
-  tokenAddressToMint?: string;
   recipientAddress?: string;
+  hederaTokenAddress?: string;
+  tokenAddressToMint?: string;
   associatingAddress?: string;
+  grantingKYCAccountAddress?: string;
+  transactionHash: string | undefined;
   tokenAddressesToAssociate?: string[];
+  setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>;
 }) => {
   const errorMessage = JSON.stringify(err);
   let errorDescription = "See client's console for more information";
@@ -273,8 +287,10 @@ export const handleAPIErrors = ({
         txHash: transactionHash,
         tokenAddress: tokenAddressToMint ? tokenAddressToMint : '',
         recipientAddress: recipientAddress ? recipientAddress : '',
+        hederaTokenAddress: hederaTokenAddress ? hederaTokenAddress : '',
         associatingAddress: associatingAddress ? associatingAddress : '',
         tokenAddressesToAssociate: tokenAddressesToAssociate ? tokenAddressesToAssociate : [''],
+        grantingKYCAccountAddress: grantingKYCAccountAddress ? grantingKYCAccountAddress : '',
         status: 'fail',
       },
     ]);
