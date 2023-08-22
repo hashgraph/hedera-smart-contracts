@@ -38,6 +38,7 @@ describe('createHederaFungibleToken test suite', () => {
   const maxSupply = 30000000000; // 300 WHBAR
   const decimals = 8;
   const freezeDefaultStatus = false;
+  const msgValue = '20000000000000000000'; // 20 hbar
 
   // mock baseContract object
   const baseContract = {
@@ -146,7 +147,8 @@ describe('createHederaFungibleToken test suite', () => {
         decimals,
         freezeDefaultStatus,
         contractId,
-        inputKeys
+        inputKeys,
+        msgValue
       );
 
       expect(tokenCreateRes.err).toBeNull;
@@ -166,6 +168,7 @@ describe('createHederaFungibleToken test suite', () => {
         freezeDefaultStatus,
         contractId,
         inputKeys,
+        msgValue,
         feeTokenAddress
       );
 
@@ -185,7 +188,8 @@ describe('createHederaFungibleToken test suite', () => {
         decimals,
         freezeDefaultStatus,
         contractId,
-        inputKeys
+        inputKeys,
+        msgValue
       );
 
       expect(tokenCreateRes.err).toBe('initial total supply cannot be negative');
@@ -203,7 +207,8 @@ describe('createHederaFungibleToken test suite', () => {
         decimals,
         freezeDefaultStatus,
         contractId,
-        inputKeys
+        inputKeys,
+        msgValue
       );
 
       expect(tokenCreateRes.err).toBe('max supply cannot be negative');
@@ -221,7 +226,8 @@ describe('createHederaFungibleToken test suite', () => {
         -3,
         freezeDefaultStatus,
         contractId,
-        inputKeys
+        inputKeys,
+        msgValue
       );
 
       expect(tokenCreateRes.err).toBe('decimals cannot be negative');
@@ -239,7 +245,8 @@ describe('createHederaFungibleToken test suite', () => {
         decimals,
         freezeDefaultStatus,
         '0xabc',
-        inputKeys
+        inputKeys,
+        msgValue
       );
 
       expect(tokenCreateRes.err).toBe('invalid treasury address');
@@ -258,6 +265,7 @@ describe('createHederaFungibleToken test suite', () => {
         freezeDefaultStatus,
         contractId,
         inputKeys,
+        msgValue,
         '0xabc'
       );
 
@@ -294,7 +302,8 @@ describe('createHederaFungibleToken test suite', () => {
         decimals,
         freezeDefaultStatus,
         contractId,
-        failedKeys
+        failedKeys,
+        msgValue
       );
 
       expect(tokenCreateRes.err.length).toBe(2);
@@ -322,7 +331,8 @@ describe('createHederaFungibleToken test suite', () => {
         tokenMemo,
         maxSupply,
         contractId,
-        inputKeys
+        inputKeys,
+        msgValue
       );
 
       expect(tokenCreateRes.err).toBeNull;
@@ -339,6 +349,7 @@ describe('createHederaFungibleToken test suite', () => {
         maxSupply,
         contractId,
         inputKeys,
+        msgValue,
         feeTokenAddress
       );
 
@@ -355,7 +366,8 @@ describe('createHederaFungibleToken test suite', () => {
         tokenMemo,
         -3,
         contractId,
-        inputKeys
+        inputKeys,
+        msgValue
       );
 
       expect(tokenCreateRes.err).toBe('max supply cannot be negative');
@@ -370,7 +382,8 @@ describe('createHederaFungibleToken test suite', () => {
         tokenMemo,
         maxSupply,
         '0xabc',
-        inputKeys
+        inputKeys,
+        msgValue
       );
 
       expect(tokenCreateRes.err).toBe('invalid treasury address');
@@ -386,6 +399,7 @@ describe('createHederaFungibleToken test suite', () => {
         maxSupply,
         contractId,
         inputKeys,
+        msgValue,
         '0xabc'
       );
 
@@ -419,7 +433,8 @@ describe('createHederaFungibleToken test suite', () => {
         tokenMemo,
         maxSupply,
         contractId,
-        failedKeys
+        failedKeys,
+        msgValue
       );
 
       expect(tokenCreateRes.err.length).toBe(2);

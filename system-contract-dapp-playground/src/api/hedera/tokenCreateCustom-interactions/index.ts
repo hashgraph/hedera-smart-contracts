@@ -46,6 +46,10 @@ import { Contract, isAddress } from 'ethers';
  *
  * @param inputKeys: CommonKeyObject[],
  *
+ * @param msgValue: string
+ *
+ * @param feeTokenAddress?: string
+ *
  * @return Promise<TokenCreateCustomSmartContractResult>
  *
  * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L136
@@ -62,6 +66,7 @@ export const createHederaFungibleToken = async (
   freezeDefaultStatus: boolean,
   treasury: string,
   inputKeys: CommonKeyObject[],
+  msgValue: string,
   feeTokenAddress?: string
 ): Promise<TokenCreateCustomSmartContractResult> => {
   // sanitize params
@@ -99,7 +104,7 @@ export const createHederaFungibleToken = async (
         decimals,
         keyRes.hederaTokenKeys,
         {
-          value: '35000000000000000000',
+          value: msgValue,
           gasLimit: 1_000_000,
         }
       );
@@ -115,7 +120,7 @@ export const createHederaFungibleToken = async (
         treasury,
         keyRes.hederaTokenKeys,
         {
-          value: '35000000000000000000',
+          value: msgValue,
           gasLimit: 1_000_000,
         }
       );
@@ -156,6 +161,10 @@ export const createHederaFungibleToken = async (
  *
  * @param inputKeys: CommonKeyObject[],
  *
+ * @param msgValue: string
+ *
+ * @param feeTokenAddress?: string
+ *
  * @return Promise<TokenCreateCustomSmartContractResult>
  *
  * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L136
@@ -169,6 +178,7 @@ export const createHederaNonFungibleToken = async (
   maxSupply: number,
   treasury: string,
   inputKeys: CommonKeyObject[],
+  msgValue: string,
   feeTokenAddress?: string
 ): Promise<TokenCreateCustomSmartContractResult> => {
   // sanitize params
@@ -200,7 +210,7 @@ export const createHederaNonFungibleToken = async (
         maxSupply,
         keyRes.hederaTokenKeys,
         {
-          value: '35000000000000000000',
+          value: msgValue,
           gasLimit: 1_000_000,
         }
       );
@@ -213,7 +223,7 @@ export const createHederaNonFungibleToken = async (
         treasury,
         keyRes.hederaTokenKeys,
         {
-          value: '35000000000000000000',
+          value: msgValue,
           gasLimit: 1_000_000,
         }
       );
@@ -234,4 +244,3 @@ export const createHederaNonFungibleToken = async (
     return { err };
   }
 };
-
