@@ -47,15 +47,17 @@ export const getBalancesFromLocalStorage = () => {
 /**
  * @dev get allowances from LocalStorage
  *
- * @return storageAllowances?: []
+ * @param key string
+ *
+ * @return storageResult?: []
  *
  * @return err?
  */
-export const getAllowancesFromLocalStorage = () => {
+export const getArrayTypedValuesFromLocalStorage = (key: string) => {
   try {
-    const storageAllowances = localStorage.getItem('hedera_erc20_allowances');
+    const storageResult = localStorage.getItem(key);
     return {
-      storageAllowances: storageAllowances ? JSON.parse(storageAllowances) : [],
+      storageResult: storageResult ? JSON.parse(storageResult) : [],
     };
   } catch (err) {
     console.error(err);

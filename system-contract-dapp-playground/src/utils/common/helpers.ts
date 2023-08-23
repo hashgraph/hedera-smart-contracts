@@ -91,3 +91,16 @@ export const convertCalmelCaseFunctionName = (functionName: string) => {
 
   return titleCaseFunctionName;
 };
+
+/**
+ * @dev create a random unique key string
+ *
+ * @param byteLength: number
+ *
+ * @return string
+ */
+export const generatedRandomUniqueKey = (byteLength: number) => {
+  const randomBytes = ethers.randomBytes(9);
+  const randomKey = ethers.hexlify(randomBytes);
+  return randomKey;
+};
