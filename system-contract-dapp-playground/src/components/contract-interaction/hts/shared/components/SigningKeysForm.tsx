@@ -29,11 +29,11 @@ import {
   IHederaTokenServiceKeyValueType,
 } from '@/types/contract-interactions/HTS';
 import {
-  handleUpdateKeyValue,
+  handleAddingOrRemovingKeys,
   handleKeyTypeOnChange,
   handleKeyValueTypeOnChange,
-  handleAddingOrRemovingKeys,
-} from '../sharedMethods';
+  handleUpdateKeyValue,
+} from '../methods/signingKeys';
 
 /** @dev shared component presenting signing keys*/
 interface SigningKeyPageProps {
