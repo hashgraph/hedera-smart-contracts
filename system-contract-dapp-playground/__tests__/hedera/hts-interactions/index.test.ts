@@ -18,6 +18,8 @@
  *
  */
 
+import { Contract } from 'ethers';
+import { CommonKeyObject } from '@/types/contract-interactions/HTS';
 import {
   associateHederaTokensToAccounts,
   createHederaFungibleToken,
@@ -26,7 +28,6 @@ import {
   mintHederaToken,
   mintHederaTokenToAddress,
 } from '@/api/hedera/tokenCreateCustom-interactions';
-import { Contract } from 'ethers';
 
 describe('createHederaFungibleToken test suite', () => {
   // mock states

@@ -106,3 +106,12 @@ interface IHederaTokenServiceTokenKey {
   keyType: IHederaTokenServiceKeyTypeBitValue;
   key: IHederaTokenServiceKeyValue;
 }
+
+/** @dev the type for HTS transaction results */
+export type TransactionResult = {
+  status: 'sucess' | 'fail';
+  txHash: string;
+  tokenAddress?: string;
+  accountAddress?: string;
+  tokenAddresses?: string[];
+};
