@@ -18,8 +18,12 @@
  *
  */
 
+import {
+  CommonKeyObject,
+  TokenCreateCustomSmartContractResult,
+} from '@/types/contract-interactions/HTS';
 import { prepareHederaTokenKeyArray } from '@/utils/contract-interactions/HTS/helpers';
-import { Contract, isAddress } from 'ethers';
+import { Contract, ethers, isAddress } from 'ethers';
 
 /**
  * @dev creates a Hedera fungible token
@@ -70,16 +74,21 @@ export const createHederaFungibleToken = async (
   feeTokenAddress?: string
 ): Promise<TokenCreateCustomSmartContractResult> => {
   // sanitize params
+  let sanitizeErr;
   if (initialTotalSupply < 0) {
-    return { err: 'initial total supply cannot be negative' };
+    sanitizeErr = 'initial total supply cannot be negative';
   } else if (maxSupply < 0) {
-    return { err: 'max supply cannot be negative' };
+    sanitizeErr = 'max supply cannot be negative';
   } else if (decimals < 0) {
-    return { err: 'decimals cannot be negative' };
+    sanitizeErr = 'decimals cannot be negative';
   } else if (!isAddress(treasury)) {
-    return { err: 'invalid treasury address' };
+    sanitizeErr = 'invalid treasury address';
   } else if (feeTokenAddress && !isAddress(feeTokenAddress)) {
-    return { err: 'invalid fee token address' };
+    sanitizeErr = 'invalid fee token address';
+  }
+  if (sanitizeErr) {
+    console.error(sanitizeErr);
+    return { err: sanitizeErr };
   }
 
   // prepare keys array
@@ -87,6 +96,7 @@ export const createHederaFungibleToken = async (
 
   // handle error
   if (keyRes.err) {
+    console.error(keyRes.err);
     return { err: keyRes.err };
   }
 
@@ -104,7 +114,7 @@ export const createHederaFungibleToken = async (
         decimals,
         keyRes.hederaTokenKeys,
         {
-          value: msgValue,
+          value: ethers.parseEther(msgValue),
           gasLimit: 1_000_000,
         }
       );
@@ -120,7 +130,7 @@ export const createHederaFungibleToken = async (
         treasury,
         keyRes.hederaTokenKeys,
         {
-          value: msgValue,
+          value: ethers.parseEther(msgValue),
           gasLimit: 1_000_000,
         }
       );
@@ -182,12 +192,18 @@ export const createHederaNonFungibleToken = async (
   feeTokenAddress?: string
 ): Promise<TokenCreateCustomSmartContractResult> => {
   // sanitize params
+  let sanitizeErr;
   if (maxSupply < 0) {
-    return { err: 'max supply cannot be negative' };
+    sanitizeErr = 'max supply cannot be negative';
   } else if (!isAddress(treasury)) {
-    return { err: 'invalid treasury address' };
+    sanitizeErr = 'invalid treasury address';
   } else if (feeTokenAddress && !isAddress(feeTokenAddress)) {
-    return { err: 'invalid fee token address' };
+    sanitizeErr = 'invalid fee token address';
+  }
+
+  if (sanitizeErr) {
+    console.error(sanitizeErr);
+    return { err: sanitizeErr };
   }
 
   // prepare keys array
@@ -210,7 +226,7 @@ export const createHederaNonFungibleToken = async (
         maxSupply,
         keyRes.hederaTokenKeys,
         {
-          value: msgValue,
+          value: ethers.parseEther(msgValue),
           gasLimit: 1_000_000,
         }
       );
@@ -223,7 +239,7 @@ export const createHederaNonFungibleToken = async (
         treasury,
         keyRes.hederaTokenKeys,
         {
-          value: msgValue,
+          value: ethers.parseEther(msgValue),
           gasLimit: 1_000_000,
         }
       );
@@ -270,12 +286,18 @@ export const mintHederaToken = async (
   metadata: string[]
 ): Promise<TokenCreateCustomSmartContractResult> => {
   // sanitize params
+  let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {
-    return { err: 'invalid Hedera token address' };
+    sanitizeErr = 'invalid Hedera token address';
   } else if (tokenType === 'FUNGIBLE' && amountToMint < 0) {
-    return { err: 'amount to mint cannot be negative when minting a fungible token' };
+    sanitizeErr = 'amount to mint cannot be negative when minting a fungible token';
   } else if (tokenType === 'NON_FUNGIBLE' && amountToMint !== 0) {
-    return { err: 'amount to mint must be 0 when minting a non-fungible token' };
+    sanitizeErr = 'amount to mint must be 0 when minting a non-fungible token';
+  }
+
+  if (sanitizeErr) {
+    console.error(sanitizeErr);
+    return { err: sanitizeErr };
   }
 
   // convert metadata to Buffer[]
@@ -333,14 +355,20 @@ export const mintHederaTokenToAddress = async (
   metadata: string[]
 ): Promise<TokenCreateCustomSmartContractResult> => {
   // sanitize params
+  let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {
-    return { err: 'invalid Hedera token address' };
+    sanitizeErr = 'invalid Hedera token address';
   } else if (!isAddress(recipientAddress)) {
-    return { err: 'invalid recipient address' };
+    sanitizeErr = 'invalid recipient address';
   } else if (tokenType === 'FUNGIBLE' && amountToMint < 0) {
-    return { err: 'amount to mint cannot be negative when minting a fungible token' };
+    sanitizeErr = 'amount to mint cannot be negative when minting a fungible token';
   } else if (tokenType === 'NON_FUNGIBLE' && amountToMint !== 0) {
-    return { err: 'amount to mint must be 0 when minting a non-fungible token' };
+    sanitizeErr = 'amount to mint must be 0 when minting a non-fungible token';
+  }
+
+  if (sanitizeErr) {
+    console.error(sanitizeErr);
+    return { err: sanitizeErr };
   }
 
   // convert metadata to Buffer[]
@@ -410,19 +438,26 @@ export const associateHederaTokensToAccounts = async (
   associtingAccountAddress: string
 ): Promise<TokenCreateCustomSmartContractResult> => {
   // sanitize params
+  let sanitizeErr;
   if (hederaTokenAddresses.length === 0) {
-    return { err: 'must have at least one token address to associate' };
+    sanitizeErr = 'must have at least one token address to associate';
   } else if (!isAddress(associtingAccountAddress)) {
-    return { err: 'associating account address is invalid' };
+    sanitizeErr = 'associating account address is invalid';
   }
   let invalidTokens = [] as any;
   hederaTokenAddresses.forEach((address) => {
-    if (!isAddress(address)) {
+    if (!isAddress(address.trim())) {
       invalidTokens.push(address);
     }
   });
+
   if (invalidTokens.length > 0) {
-    return { err: { invalidTokens } };
+    sanitizeErr = { invalidTokens };
+  }
+
+  if (sanitizeErr) {
+    console.error(sanitizeErr);
+    return { err: sanitizeErr };
   }
 
   try {
@@ -473,10 +508,16 @@ export const grantTokenKYCToAccount = async (
   grantingKYCAccountAddress: string
 ): Promise<TokenCreateCustomSmartContractResult> => {
   // sanitize params
+  let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {
-    return { err: 'invalid Hedera token address' };
+    sanitizeErr = 'invalid Hedera token address';
   } else if (!isAddress(grantingKYCAccountAddress)) {
-    return { err: 'invalid associating account address' };
+    sanitizeErr = 'invalid associating account address';
+  }
+
+  if (sanitizeErr) {
+    console.error(sanitizeErr);
+    return { err: sanitizeErr };
   }
 
   try {
