@@ -258,7 +258,7 @@ describe('Multicall Test Suite', function () {
 
     // should be able to aggregate 80 calls to processLongOutput and handle 820 kb of output data - mirror node issue #6731
     it('can aggregate 18 calls to processLongOutput and handle 42624 bytes of output data', async function () {
-      const n = 40
+      const n = 18
       const res = await multicallProcessLongOutput(n)
       expect(res).to.exist
       expect(res.length).to.eq(n)
