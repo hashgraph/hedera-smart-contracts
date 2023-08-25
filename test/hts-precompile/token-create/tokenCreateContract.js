@@ -100,10 +100,8 @@ describe('TokenCreateContract Test Suite', function () {
     )
     await tokenManagmentContract.burnTokenPublic(tokenAddress, amount, [])
 
-    const balanceAfter = await erc20Contract.balanceOf(
-      tokenAddress,
-      signers[0].address
-    )
+    const balanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[0].address, balanceBefore)
+
     const totalSupplyAfter = await erc20Contract.totalSupply(tokenAddress)
 
     expect(totalSupplyAfter).to.equal(totalSupplyBefore - amount)
@@ -419,3 +417,19 @@ describe('TokenCreateContract Test Suite', function () {
     })
   })
 })
+
+// Transaction needs to be propagated to the mirror node
+async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddress, balanceBefore) {
+  let balanceAfter, numberOfTries = 0, timesToTry = 200
+  do {
+    balanceAfter = await erc20Contract.balanceOf(
+      tokenAddress,
+      signersAddress
+    )
+    numberOfTries++
+    if (numberOfTries == timesToTry) {
+      throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`)
+    }
+  } while (balanceAfter == balanceBefore)
+  return balanceAfter
+}
