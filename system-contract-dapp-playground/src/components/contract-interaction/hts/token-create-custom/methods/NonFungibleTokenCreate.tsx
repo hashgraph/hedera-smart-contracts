@@ -21,15 +21,18 @@
 import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
 import { useToast } from '@chakra-ui/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { handleAPIErrors } from '../../shared/methods/handleAPIErrors';
-import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
+import { useToastSuccessful } from '../../shared/hooks/useToastSuccessful';
+import { usePaginatedTxResults } from '../../shared/hooks/usePaginatedTxResults';
 import { SharedSigningKeysComponent } from '../../shared/components/SigningKeysForm';
 import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
 import { createHederaNonFungibleToken } from '@/api/hedera/tokenCreateCustom-interactions';
 import { handleSanitizeHederaFormInputs } from '../../shared/methods/handleSanitizeFormInputs';
+import { useUpdateTransactionResultsToLocalStorage } from '../../shared/hooks/useUpdateLocalStorage';
 import { htsTokenCreateParamFields } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedFormInputField,
   SharedFormButton,
@@ -38,9 +41,13 @@ import {
 import {
   TransactionResult,
   IHederaTokenServiceKeyType,
-  IHederaTokenServiceKeyValueType,
   CommonKeyObject,
 } from '@/types/contract-interactions/HTS';
+import {
+  HederaTokenKeyTypes,
+  HederaTokenKeyValueType,
+  TRANSACTION_PAGE_SIZE,
+} from '../../shared/states/commonStates';
 
 interface PageProps {
   baseContract: Contract;
@@ -49,19 +56,18 @@ interface PageProps {
 const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
   // general states
   const toaster = useToast();
-  const TRANSACTION_PAGE_SIZE = 10;
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccessful, setIsSuccessful] = useState(false);
   const [withCustomFee, setWithCustomFee] = useState(false);
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
-  const transactionResultStorageKey = 'hedera_HTS_nft-creation_results';
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
-  const [isCreatingNFTSuccessful, setIsCreatingNFTSuccessful] = useState(false);
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-CREATE.NON-FUNGIBLE-TOKEN-RESULTS';
   const tokenCreateFields = {
     info: ['name', 'symbol', 'memo', 'maxSupply', 'treasury'],
     feeTokenAddress: 'feeTokenAddress',
   };
-  const [paramValues, setParamValues] = useState<any>({
+  const initialParamValues = {
     name: '',
     memo: '',
     symbol: '',
@@ -69,55 +75,29 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
     msgValue: '',
     maxSupply: '',
     feeTokenAddress: '',
-  });
+  };
+  const [paramValues, setParamValues] = useState<any>(initialParamValues);
 
   // keys states
-  const HederaTokenKeyTypes: IHederaTokenServiceKeyType[] = useMemo(
-    () => ['ADMIN', 'KYC', 'FREEZE', 'WIPE', 'SUPPLY', 'FEE', 'PAUSE'],
-    []
-  );
-  const HederaTokenKeyValueType: IHederaTokenServiceKeyValueType[] = [
-    'inheritAccountKey',
-    'contractId',
-    'ed25519',
-    'ECDSA_secp256k1',
-    'delegatableContractId',
-  ];
   const [keys, setKeys] = useState<CommonKeyObject[]>([]); // keeps track of keys array to pass to the API
   const [chosenKeys, setChosenKeys] = useState(new Set<IHederaTokenServiceKeyType>()); // keeps track of keyTypes which have already been chosen in the list
   const [keyTypesToShow, setKeyTypesToShow] = useState(new Set(HederaTokenKeyTypes)); // keeps track of the left over keyTypes to show in the drop down
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
   useEffect(() => {
-    const { storageResult, err: storagedErr } = getArrayTypedValuesFromLocalStorage(
-      transactionResultStorageKey
+    handleRetrievingTransactionResultsFromLocalStorage(
+      toaster,
+      transactionResultStorageKey,
+      setCurrentTransactionPage,
+      setTransactionResults
     );
-    // handle err
-    if (storagedErr) {
-      CommonErrorToast({
-        toaster,
-        title: 'Cannot retrieve transaction results from local storage',
-        description: "See client's console for more information",
-      });
-      return;
-    }
-
-    // update states if storageResult is found
-    if (storageResult) {
-      setTransactionResults(storageResult as TransactionResult[]);
-
-      // set the current page to the last page so it can show the latest transactions
-      const maxPageNum = Math.ceil(storageResult.length / TRANSACTION_PAGE_SIZE);
-      setCurrentTransactionPage(maxPageNum === 0 ? 1 : maxPageNum);
-    }
   }, [toaster]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = useMemo(() => {
-    const startIndex = (currentTransactionPage - 1) * TRANSACTION_PAGE_SIZE;
-    const endIndex = (currentTransactionPage - 1) * TRANSACTION_PAGE_SIZE + TRANSACTION_PAGE_SIZE;
-    return transactionResults.slice(startIndex, endIndex);
-  }, [currentTransactionPage, transactionResults]);
+  const paginatedTransactionResults = usePaginatedTxResults(
+    currentTransactionPage,
+    transactionResults
+  );
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string) => {
@@ -181,47 +161,29 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
         },
       ]);
 
-      setIsCreatingNFTSuccessful(true);
+      setIsSuccessful(true);
     }
   };
 
-  // @dev listen to change event on transactionResults state => load to localStorage
-  useEffect(() => {
-    if (transactionResults.length > 0) {
-      localStorage.setItem(transactionResultStorageKey, JSON.stringify(transactionResults));
-    }
-  }, [transactionResults]);
+  /** @dev listen to change event on transactionResults state => load to localStorage  */
+  useUpdateTransactionResultsToLocalStorage(transactionResults, transactionResultStorageKey);
 
-  // toast successful
-  useEffect(() => {
-    if (isCreatingNFTSuccessful) {
-      toaster({
-        title: '🎉 Non-fungible token creation successful 🎉',
-        description: 'A new balance has been set for the treasury',
-        status: 'success',
-        position: 'top',
-      });
-
-      // reset values
-      setParamValues({
-        memo: '',
-        name: '',
-        symbol: '',
-        treasury: '',
-        msgValue: '',
-        maxSupply: '',
-        feeTokenAddress: '',
-      });
-      setIsCreatingNFTSuccessful(false);
-      setKeyTypesToShow(new Set(HederaTokenKeyTypes));
-      setChosenKeys(new Set<IHederaTokenServiceKeyType>());
-      setKeys([]);
-      setWithCustomFee(false);
-      // set the current page to the last page so it can show the newly created transaction
-      const maxPageNum = Math.ceil(transactionResults.length / TRANSACTION_PAGE_SIZE);
-      setCurrentTransactionPage(maxPageNum === 0 ? 1 : maxPageNum);
-    }
-  }, [isCreatingNFTSuccessful, toaster, transactionResults.length, HederaTokenKeyTypes]);
+  /** @dev toast successful */
+  useToastSuccessful({
+    toaster,
+    setKeys,
+    isSuccessful,
+    setChosenKeys,
+    setParamValues,
+    setIsSuccessful,
+    setWithCustomFee,
+    setKeyTypesToShow,
+    transactionResults,
+    setCurrentTransactionPage,
+    resetParamValues: initialParamValues,
+    toastTitle: 'Token creation successful',
+    toastDescription: 'A new balance has been set for the treasury',
+  });
 
   return (
     <div className="w-full mx-3 flex justify-center mt-6 flex-col gap-20">
@@ -312,7 +274,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
       {transactionResults.length > 0 && (
         <TransactionResultTable
           API="TokenCreate"
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           transactionResults={transactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           setTransactionResults={setTransactionResults}
