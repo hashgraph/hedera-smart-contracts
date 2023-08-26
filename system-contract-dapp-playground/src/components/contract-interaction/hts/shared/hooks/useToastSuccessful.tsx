@@ -20,14 +20,15 @@
 
 import {
   CommonKeyObject,
-  IHederaTokenServiceKeyType,
   TransactionResult,
+  IHederaTokenServiceKeyType,
 } from '@/types/contract-interactions/HTS';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { HederaTokenKeyTypes, TRANSACTION_PAGE_SIZE } from '../states/commonStates';
 
 interface HookProps {
   toaster: any;
+  setMetadata?: any;
   toastTitle: string;
   isSuccessful: boolean;
   resetParamValues: any;
@@ -46,6 +47,7 @@ export const useToastSuccessful = ({
   toaster,
   setKeys,
   toastTitle,
+  setMetadata,
   isSuccessful,
   setChosenKeys,
   setParamValues,
@@ -69,6 +71,7 @@ export const useToastSuccessful = ({
       // reset values
       setIsSuccessful(false);
       if (setKeys) setKeys([]);
+      if (setMetadata) setMetadata([]);
       setParamValues(resetParamValues);
       if (setWithCustomFee) setWithCustomFee(false);
       if (setKeyTypesToShow) setKeyTypesToShow(new Set(HederaTokenKeyTypes));
