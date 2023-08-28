@@ -18,8 +18,8 @@
  *
  */
 
-import { AiOutlineMinus } from 'react-icons/ai';
-import { Tooltip, Input } from '@chakra-ui/react';
+import { Tooltip } from '@chakra-ui/react';
+import { SharedFormInputField, SharedRemoveFieldsButton } from './ParamInputForm';
 import { htsTokenMintParamFields } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
 
 interface PageProps {
@@ -53,30 +53,24 @@ const MetadataInputForm = ({ metadata, handleInputOnChange, handleAddMetadata }:
       {/* metadata fields */}
       {metadata.map((meta) => (
         <div key={meta.metaKey} className="flex gap-3 items-center">
-          <Tooltip
-            label={(htsTokenMintParamFields as any)['metadata'].explanation}
-            placement="top"
-            fontWeight={'medium'}
-          >
-            <Input
-              value={meta.metaValue}
-              type={(htsTokenMintParamFields as any)['metadata'].inputType}
-              onChange={(e) => handleInputOnChange(e, 'metadata', meta.metaKey)}
-              placeholder={(htsTokenMintParamFields as any)['metadata'].inputPlaceholder}
-              size={(htsTokenMintParamFields as any)['metadata'].inputSize}
-              focusBorderColor={(htsTokenMintParamFields as any)['metadata'].inputFocusBorderColor}
-              className={(htsTokenMintParamFields as any)['metadata'].inputClassname}
-            />
-          </Tooltip>
+          <SharedFormInputField
+            param={'metadata'}
+            paramValue={meta.metaValue}
+            fieldKeyToSet={meta.metaKey}
+            handleInputOnChange={handleInputOnChange}
+            paramKey={(htsTokenMintParamFields as any)['metadata'].paramKey}
+            paramType={(htsTokenMintParamFields as any)['metadata'].inputType}
+            paramSize={(htsTokenMintParamFields as any)['metadata'].inputSize}
+            explanation={(htsTokenMintParamFields as any)['metadata'].explanation}
+            paramClassName={(htsTokenMintParamFields as any)['metadata'].inputClassname}
+            paramPlaceholder={(htsTokenMintParamFields as any)['metadata'].inputPlaceholder}
+            paramFocusColor={(htsTokenMintParamFields as any)['metadata'].inputFocusBorderColor}
+          />
           {/* delete key button */}
-          <Tooltip label="delete this record" placement="top">
-            <button
-              onClick={() => handleAddMetadata('REMOVE', meta.metaKey)}
-              className={`border h-fit border-white/30 text-base px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-red-400 transition duration-300`}
-            >
-              <AiOutlineMinus />
-            </button>
-          </Tooltip>
+          <SharedRemoveFieldsButton
+            fieldKey={meta.metaKey}
+            handleModifyTokenAddresses={handleAddMetadata}
+          />
         </div>
       ))}
     </div>
