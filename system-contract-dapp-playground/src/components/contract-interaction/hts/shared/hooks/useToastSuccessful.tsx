@@ -85,5 +85,22 @@ export const useToastSuccessful = ({
       const maxPageNum = Math.ceil(transactionResults.length / TRANSACTION_PAGE_SIZE);
       setCurrentTransactionPage(maxPageNum === 0 ? 1 : maxPageNum);
     }
-  }, [isSuccessful, toaster, transactionResults.length, HederaTokenKeyTypes]);
+  }, [
+    toaster,
+    setKeys,
+    toastTitle,
+    setMetadata,
+    isSuccessful,
+    setChosenKeys,
+    setParamValues,
+    setIsSuccessful,
+    setWithCustomFee,
+    resetParamValues,
+    toastDescription,
+    setTokenAddresses,
+    setKeyTypesToShow,
+    setCurrentTransactionPage,
+    transactionResults.length,
+    initialTokenAddressesValues,
+  ]);
 };
