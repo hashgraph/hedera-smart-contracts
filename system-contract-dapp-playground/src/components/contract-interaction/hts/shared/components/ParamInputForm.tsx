@@ -20,6 +20,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { AiOutlineMinus } from 'react-icons/ai';
 import { Tooltip, Input } from '@chakra-ui/react';
 
 /** @dev shared form input component */
@@ -31,10 +32,11 @@ interface SharedFormInputFieldPageProps {
   paramValue: string;
   isDisable?: boolean;
   explanation: string;
+  fieldKeyToSet?: string;
   paramClassName: string;
   paramFocusColor: string;
   paramPlaceholder: string;
-  handleInputOnChange: (e: any, param: string) => void;
+  handleInputOnChange: (e: any, param: string, fieldKeyToSet?: string) => void;
 }
 
 export const SharedFormInputField = ({
@@ -45,6 +47,7 @@ export const SharedFormInputField = ({
   paramSize,
   paramValue,
   explanation,
+  fieldKeyToSet,
   paramClassName,
   paramFocusColor,
   paramPlaceholder,
@@ -56,7 +59,7 @@ export const SharedFormInputField = ({
         value={paramValue}
         disabled={isDisable}
         type={paramType}
-        onChange={(e) => handleInputOnChange(e, param)}
+        onChange={(e) => handleInputOnChange(e, param, fieldKeyToSet)}
         placeholder={paramPlaceholder}
         size={paramSize}
         focusBorderColor={paramFocusColor}
@@ -194,5 +197,26 @@ export const SharedExecuteButtonWithServiceFee = ({
         for precise estimation of the applicable fee, as this fee is non-refundable.
       </p>
     </div>
+  );
+};
+
+/** @dev shared remove fields button */
+interface SharedRemoveFieldButtonPageProps {
+  fieldKey: string;
+  handleModifyTokenAddresses: any;
+}
+export const SharedRemoveFieldsButton = ({
+  fieldKey,
+  handleModifyTokenAddresses,
+}: SharedRemoveFieldButtonPageProps) => {
+  return (
+    <Tooltip label="delete this record" placement="top">
+      <button
+        onClick={() => handleModifyTokenAddresses('REMOVE', fieldKey)}
+        className={`border h-fit border-white/30 text-base px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-red-400 transition duration-300`}
+      >
+        <AiOutlineMinus />
+      </button>
+    </Tooltip>
   );
 };

@@ -34,11 +34,11 @@ interface ParamsProps {
   withCustomFee?: boolean;
   feeTokenAddress?: string;
   keys?: CommonKeyObject[];
+  tokenAddresses?: string[];
   recipientAddress?: string;
   associatingAddress?: string;
   tokenAddressToMint?: string;
   hederaTokenAddress?: string;
-  tokenAddressesArray?: string[];
   grantingKYCAccountAddress?: string;
   API: 'TokenCreate' | 'Mint' | 'Associate' | 'GrantKYC';
 }
@@ -55,12 +55,12 @@ export const handleSanitizeHederaFormInputs = ({
   maxSupply,
   initSupply,
   withCustomFee,
+  tokenAddresses,
   feeTokenAddress,
   recipientAddress,
   tokenAddressToMint,
   associatingAddress,
   hederaTokenAddress,
-  tokenAddressesArray,
   grantingKYCAccountAddress,
 }: ParamsProps) => {
   // sanitize params
@@ -119,7 +119,7 @@ export const handleSanitizeHederaFormInputs = ({
     if (!isAddress(associatingAddress)) {
       sanitizeErr = 'Invalid associating account address';
     } else {
-      tokenAddressesArray?.some((tokenAddress) => {
+      tokenAddresses?.some((tokenAddress) => {
         if (!isAddress(tokenAddress)) {
           sanitizeErr = `${tokenAddress} is not a valid token address`;
           return true;
