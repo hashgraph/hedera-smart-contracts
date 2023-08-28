@@ -30,5 +30,5 @@ export const useUpdateTransactionResultsToLocalStorage = (
     if (transactionResults.length > 0) {
       localStorage.setItem(transactionResultStorageKey, JSON.stringify(transactionResults));
     }
-  }, [transactionResults]);
+  }, [transactionResults, transactionResultStorageKey]);
 };
