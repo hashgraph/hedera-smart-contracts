@@ -420,16 +420,23 @@ describe('TokenCreateContract Test Suite', function () {
 
 // Transaction needs to be propagated to the mirror node
 async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddress, balanceBefore) {
-  let balanceAfter, numberOfTries = 0, timesToTry = 200
-  do {
-    balanceAfter = await erc20Contract.balanceOf(
-      tokenAddress,
-      signersAddress
-    )
-    numberOfTries++
-    if (numberOfTries == timesToTry) {
-      throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`)
+  const timesToTry = 200;
+  let balanceAfter, numberOfTries = 0;
+
+  while (numberOfTries < timesToTry) {
+    balanceAfter = await erc20Contract.balanceOf(tokenAddress, signersAddress);
+
+    if (!balanceAfter.eq(balanceBefore)) {
+      return balanceAfter;
     }
-  } while (balanceAfter == balanceBefore)
-  return balanceAfter
+
+    numberOfTries++;
+    await delay(1000); // Delay for 1 second before the next attempt
+  }
+
+  throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
+}
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
