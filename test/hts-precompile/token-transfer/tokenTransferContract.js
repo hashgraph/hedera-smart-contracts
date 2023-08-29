@@ -142,10 +142,8 @@ describe('TokenTransferContract Test Suite', function () {
       Constants.GAS_LIMIT_1_000_000
     )
 
-    let wallet1BalanceAfter = await erc20Contract.balanceOf(
-      tokenAddress,
-      signers[0].address
-    )
+    let wallet1BalanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[0].address, wallet1BalanceBefore)
+
     let wallet2BalanceAfter = await erc20Contract.balanceOf(
       tokenAddress,
       signers[1].address
@@ -195,10 +193,8 @@ describe('TokenTransferContract Test Suite', function () {
       Constants.GAS_LIMIT_1_000_000
     )
 
-    let wallet1BalanceAfter = await erc20Contract.balanceOf(
-      tokenAddress,
-      signers[0].address
-    )
+    let wallet1BalanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[0].address, wallet1BalanceBefore)
+   
     let wallet2BalanceAfter = await erc20Contract.balanceOf(
       tokenAddress,
       signers[1].address
@@ -471,3 +467,22 @@ describe('TokenTransferContract Test Suite', function () {
     expect(nftOwnerAfter).to.equal(signers[1].address)
   })
 })
+
+// Transaction needs to be propagated to the mirror node
+async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddress, balanceBefore) {
+  const timesToTry = 200;
+  let balanceAfter, numberOfTries = 0;
+
+  while (numberOfTries < timesToTry) {
+    balanceAfter = await erc20Contract.balanceOf(tokenAddress, signersAddress);
+
+    if (!(balanceAfter.eq(0)) && (!balanceAfter.eq(balanceBefore))) {
+      return balanceAfter;
+    }
+
+    numberOfTries++;
+    await delay(1000); // Delay for 1 second before the next attempt
+  }
+
+  throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
+}
