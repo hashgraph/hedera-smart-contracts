@@ -193,9 +193,9 @@ describe('TokenTransferContract Test Suite', function () {
       Constants.GAS_LIMIT_1_000_000
     )
 
-    let wallet1BalanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[0].address, wallet1BalanceBefore)
+    const wallet1BalanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[0].address, wallet1BalanceBefore)
    
-    let wallet2BalanceAfter = await erc20Contract.balanceOf(
+    const wallet2BalanceAfter = await erc20Contract.balanceOf(
       tokenAddress,
       signers[1].address
     )
@@ -441,10 +441,9 @@ describe('TokenTransferContract Test Suite', function () {
     const signers1AfterHbarBalance = await signers[0].provider.getBalance(
       signers[1].address
     )
-    const signers0AfterTokenBalance = await erc20Contract.balanceOf(
-      tokenAddress,
-      signers[0].address
-    )
+
+    const signers0AfterTokenBalance = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[0].address, signers0BeforeHbarBalance)
+  
     const signers1AfterTokenBalance = await erc20Contract.balanceOf(
       tokenAddress,
       signers[1].address
@@ -485,4 +484,8 @@ async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddres
   }
 
   throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
+}
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
