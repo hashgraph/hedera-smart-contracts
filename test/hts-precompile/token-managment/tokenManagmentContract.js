@@ -237,10 +237,12 @@ describe('TokenManagmentContract Test Suite', function () {
       (e) => e.event === Constants.Events.ResponseCode
     )[0].args.responseCode
 
-    const balanceAfter = await erc20Contract.balanceOf(
-      tokenAddress,
-      signers[1].address
-    )
+    const balanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[1].address, balanceBefore)
+
+    // const balanceAfter = await erc20Contract.balanceOf(
+    //   tokenAddress,
+    //   signers[1].address
+    // )
 
     expect(responseCode).to.equal(TX_SUCCESS_CODE)
     expect(Number(balanceAfter.toString())).to.equal(
@@ -431,10 +433,7 @@ describe('TokenManagmentContract Test Suite', function () {
     )
     await tokenManagmentContract.burnTokenPublic(tokenAddress, amount, [])
 
-    const balanceAfter = await erc20Contract.balanceOf(
-      tokenAddress,
-      signers[0].address
-    )
+    const balanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[0].address, balanceBefore)
     const totalSupplyAfter = await erc20Contract.totalSupply(tokenAddress)
 
     expect(totalSupplyAfter).to.equal(totalSupplyBefore - amount)
@@ -691,10 +690,7 @@ describe('TokenManagmentContract Test Suite', function () {
                 wipeAmount
               )
 
-            const balanceAfter = await erc20Contract.balanceOf(
-              tokenAddress,
-              signers[1].address
-            )
+            const balanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[1].address, balanceBefore)
 
             expect(balanceAfter).to.eq(balanceBefore.sub(wipeAmount))
             expect(
@@ -1031,10 +1027,8 @@ describe('TokenManagmentContract Test Suite', function () {
               wipeAmount
             )
 
-          const balanceAfter = await erc20Contract.balanceOf(
-            tokenAddress,
-            signers[1].address
-          )
+          const balanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[1].address, balanceBefore)
+
 
           expect(balanceAfter).to.eq(balanceBefore.sub(wipeAmount))
           expect(
@@ -1204,3 +1198,28 @@ describe('TokenManagmentContract Test Suite', function () {
     })
   })
 })
+
+// Transaction needs to be propagated to the mirror node
+async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddress, balanceBefore) {
+  const timesToTry = 200;
+  let balanceAfter, numberOfTries = 0;
+
+  while (numberOfTries < timesToTry) {
+    balanceAfter = await erc20Contract.balanceOf(tokenAddress, signersAddress);
+
+    if (!balanceAfter.eq(balanceBefore)) {
+      console.log(`balanceBefore: ${balanceBefore.toString()}`)
+      console.log(`balanceAfter: ${balanceAfter.toString()}`)
+      return balanceAfter;
+    }
+
+    numberOfTries++;
+    await delay(1000); // Delay for 1 second before the next attempt
+  }
+
+  throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
+}
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
