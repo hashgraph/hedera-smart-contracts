@@ -19,7 +19,13 @@
  */
 
 import { isAddress } from 'ethers';
-import { KEY_TYPE_MAP, DEFAULT_IHTS_KEY_VALUE } from './constant';
+import { KEY_TYPE_MAP, DEFAULT_IHTS_KEY_VALUE } from './token-create-custom/constant';
+import {
+  IHederaTokenServiceKeyType,
+  IHederaTokenServiceKeyValueType,
+  IHederaTokenServiceTokenKey,
+  CommonKeyObject,
+} from '@/types/contract-interactions/HTS';
 
 /**
  * @dev tests if the input conforms to the common compressed public key standard
@@ -63,7 +69,7 @@ export const constructIHederaTokenKey = (
     if (!isCompressedPublicKey(inputKeyValue as string)) {
       return null;
     } else {
-      keyValue = Buffer.from(inputKeyValue as string, 'hex');
+      keyValue = Buffer.from((inputKeyValue as string).replace('0x', ''), 'hex');
     }
   }
 

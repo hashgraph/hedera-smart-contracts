@@ -19,8 +19,14 @@
  */
 
 import { constructIHederaTokenKey } from '@/utils/contract-interactions/HTS/helpers';
-import { DEFAULT_IHTS_KEY_VALUE, KEY_TYPE_MAP } from '@/utils/contract-interactions/HTS/constant';
-import { Wallet, ethers } from 'ethers';
+import {
+  DEFAULT_IHTS_KEY_VALUE,
+  KEY_TYPE_MAP,
+} from '@/utils/contract-interactions/HTS/token-create-custom/constant';
+import {
+  IHederaTokenServiceKeyType,
+  IHederaTokenServiceKeyValueType,
+} from '@/types/contract-interactions/HTS';
 
 describe('constructIHederaTokenKey test suite', () => {
   // mock contractId & compressedPubKey
@@ -71,7 +77,7 @@ describe('constructIHederaTokenKey test suite', () => {
         expectedKeyValue = contractId;
       } else {
         inputKeyValue = compressedPubKey;
-        expectedKeyValue = Buffer.from(compressedPubKey, 'hex');
+        expectedKeyValue = Buffer.from(compressedPubKey.replace('0x', ''), 'hex');
       }
 
       const expectedHederaTokenKey = {
