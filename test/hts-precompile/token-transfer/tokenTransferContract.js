@@ -166,6 +166,7 @@ describe('TokenTransferContract Test Suite', function () {
       [mintedTokenSerialNumber],
       Constants.GAS_LIMIT_1_000_000
     )
+
     const ownerAfter = await erc721Contract.ownerOf(
       nftTokenAddress,
       mintedTokenSerialNumber
@@ -434,6 +435,7 @@ describe('TokenTransferContract Test Suite', function () {
     const responseCode = cryptoTransferReceipt.events.filter(
       (e) => e.event === Constants.Events.ResponseCode
     )[0].args[0]
+    await new Promise((r) => setTimeout(r, 2000))
 
     const signers0AfterHbarBalance = await signers[0].provider.getBalance(
       signers[0].address
@@ -441,9 +443,10 @@ describe('TokenTransferContract Test Suite', function () {
     const signers1AfterHbarBalance = await signers[0].provider.getBalance(
       signers[1].address
     )
-
-    const signers0AfterTokenBalance = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[0].address, signers0BeforeHbarBalance)
-  
+    const signers0AfterTokenBalance = await erc20Contract.balanceOf(
+      tokenAddress,
+      signers[0].address
+    )
     const signers1AfterTokenBalance = await erc20Contract.balanceOf(
       tokenAddress,
       signers[1].address
@@ -475,7 +478,7 @@ async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddres
   while (numberOfTries < timesToTry) {
     balanceAfter = await erc20Contract.balanceOf(tokenAddress, signersAddress);
 
-    if (!(balanceAfter.eq(0)) && (!balanceAfter.eq(balanceBefore))) {
+    if (!balanceAfter.eq(balanceBefore)) {
       return balanceAfter;
     }
 
