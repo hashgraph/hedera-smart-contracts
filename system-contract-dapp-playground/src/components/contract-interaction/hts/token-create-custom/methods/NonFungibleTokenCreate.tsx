@@ -36,7 +36,7 @@ import { handleRetrievingTransactionResultsFromLocalStorage } from '../../shared
 import {
   SharedFormInputField,
   SharedFormButton,
-  SharedExecuteButtonWithServiceFee,
+  SharedExecuteButtonWithFee,
 } from '../../shared/components/ParamInputForm';
 import {
   TransactionResult,
@@ -72,7 +72,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
     memo: '',
     symbol: '',
     treasury: '',
-    msgValue: '',
+    feeValue: '',
     maxSupply: '',
     feeTokenAddress: '',
   };
@@ -106,7 +106,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
 
   /** @dev handle invoking the API to interact with smart contract and create non fungible token */
   const handleCreatingNonFungibleToken = async () => {
-    const { name, symbol, memo, maxSupply, treasury, feeTokenAddress, msgValue } = paramValues;
+    const { name, symbol, memo, maxSupply, treasury, feeTokenAddress, feeValue } = paramValues;
 
     // sanitize params
     const sanitizeErr = handleSanitizeHederaFormInputs({
@@ -114,7 +114,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
       name,
       keys,
       symbol,
-      msgValue,
+      feeValue,
       treasury,
       maxSupply,
       withCustomFee,
@@ -139,7 +139,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
       Number(maxSupply),
       treasury,
       keys,
-      msgValue,
+      feeValue,
       withCustomFee ? feeTokenAddress : undefined
     );
 
@@ -257,16 +257,22 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
           keyTypesToShow={keyTypesToShow}
           setKeyTypesToShow={setKeyTypesToShow}
           HederaTokenKeyTypes={HederaTokenKeyTypes}
+          buttonTitle="Add signing keys to the token"
           HederaTokenKeyValueType={HederaTokenKeyValueType}
         />
 
         {/* Service Fee & Execute button */}
-        <SharedExecuteButtonWithServiceFee
+        <SharedExecuteButtonWithFee
           isLoading={isLoading}
-          paramValues={paramValues['msgValue']}
+          feeType={'SERVICE'}
+          paramValues={paramValues.feeValue}
+          placeHolder={'Service fee...'}
+          executeBtnTitle={'Create Fungible Token'}
           handleInputOnChange={handleInputOnChange}
-          executeBtnTitle={'Create Non-Fungible Token'}
-          handleCreatingFungibleToken={handleCreatingNonFungibleToken}
+          explanation={
+            'Represents the fee in HBAR directly paid to the contract system of the Hedera Token Service'
+          }
+          handleInvokingAPIMethod={handleCreatingNonFungibleToken}
         />
       </div>
 

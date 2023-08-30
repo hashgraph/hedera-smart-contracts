@@ -21,10 +21,10 @@
 import { isAddress } from 'ethers';
 import { KEY_TYPE_MAP, DEFAULT_IHTS_KEY_VALUE } from './token-create-custom/constant';
 import {
-  IHederaTokenServiceKeyType,
-  IHederaTokenServiceKeyValueType,
-  IHederaTokenServiceTokenKey,
   CommonKeyObject,
+  IHederaTokenServiceKeyType,
+  IHederaTokenServiceTokenKey,
+  IHederaTokenServiceKeyValueType,
 } from '@/types/contract-interactions/HTS';
 
 /**

@@ -36,6 +36,7 @@ interface HookProps {
   toastDescription?: string;
   setParamValues: Dispatch<any>;
   initialTokenAddressesValues?: any;
+  initialKeyValues?: CommonKeyObject[];
   transactionResults: TransactionResult[];
   setIsSuccessful: Dispatch<SetStateAction<boolean>>;
   setWithCustomFee?: Dispatch<SetStateAction<boolean>>;
@@ -54,6 +55,7 @@ export const useToastSuccessful = ({
   setChosenKeys,
   setParamValues,
   setIsSuccessful,
+  initialKeyValues,
   toastDescription,
   resetParamValues,
   setWithCustomFee,
@@ -78,6 +80,7 @@ export const useToastSuccessful = ({
       if (setMetadata) setMetadata([]);
       setParamValues(resetParamValues);
       if (setWithCustomFee) setWithCustomFee(false);
+      if (initialKeyValues && setKeys) setKeys(initialKeyValues);
       if (setKeyTypesToShow) setKeyTypesToShow(new Set(HederaTokenKeyTypes));
       if (setTokenAddresses) setTokenAddresses([initialTokenAddressesValues]);
       if (setChosenKeys) setChosenKeys(new Set<IHederaTokenServiceKeyType>());
@@ -94,13 +97,14 @@ export const useToastSuccessful = ({
     setChosenKeys,
     setParamValues,
     setIsSuccessful,
+    initialKeyValues,
     setWithCustomFee,
-    resetParamValues,
     toastDescription,
-    setTokenAddresses,
+    resetParamValues,
     setKeyTypesToShow,
-    setCurrentTransactionPage,
+    setTokenAddresses,
     transactionResults.length,
+    setCurrentTransactionPage,
     initialTokenAddressesValues,
   ]);
 };

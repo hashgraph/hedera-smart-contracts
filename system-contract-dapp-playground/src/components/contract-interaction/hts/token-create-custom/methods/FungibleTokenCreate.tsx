@@ -36,7 +36,7 @@ import { handleRetrievingTransactionResultsFromLocalStorage } from '../../shared
 import {
   SharedFormInputField,
   SharedFormButton,
-  SharedExecuteButtonWithServiceFee,
+  SharedExecuteButtonWithFee,
 } from '../../shared/components/ParamInputForm';
 import {
   CommonKeyObject,
@@ -74,7 +74,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
     memo: '',
     name: '',
     symbol: '',
-    msgValue: '',
+    feeValue: '',
     treasury: '',
     decimals: '',
     maxSupply: '',
@@ -117,7 +117,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
       name,
       symbol,
       treasury,
-      msgValue,
+      feeValue,
       decimals,
       maxSupply,
       initSupply,
@@ -131,7 +131,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
       name,
       keys,
       symbol,
-      msgValue,
+      feeValue,
       decimals,
       treasury,
       maxSupply,
@@ -161,7 +161,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
       freezeStatus,
       treasury,
       keys,
-      msgValue,
+      feeValue,
       withCustomFee ? feeTokenAddress : undefined
     );
 
@@ -341,16 +341,22 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
           keyTypesToShow={keyTypesToShow}
           setKeyTypesToShow={setKeyTypesToShow}
           HederaTokenKeyTypes={HederaTokenKeyTypes}
+          buttonTitle="Add signing keys to the token"
           HederaTokenKeyValueType={HederaTokenKeyValueType}
         />
 
         {/* Service Fee & Execute button */}
-        <SharedExecuteButtonWithServiceFee
+        <SharedExecuteButtonWithFee
           isLoading={isLoading}
-          paramValues={paramValues['msgValue']}
+          feeType={'SERVICE'}
+          paramValues={paramValues.feeValue}
+          placeHolder={'Service fee...'}
           executeBtnTitle={'Create Fungible Token'}
           handleInputOnChange={handleInputOnChange}
-          handleCreatingFungibleToken={handleCreatingFungibleToken}
+          explanation={
+            'Represents the fee in HBAR directly paid to the contract system of the Hedera Token Service'
+          }
+          handleInvokingAPIMethod={handleCreatingFungibleToken}
         />
       </div>
 
