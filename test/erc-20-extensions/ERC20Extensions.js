@@ -171,11 +171,11 @@ describe('ERC20ExtensionsMock tests', function () {
 
       // Pause the token and verify it is paused
       await ERC20Pausable.pause()
-
       expect(await ERC20Pausable.paused()).to.be.true
 
       // Unpause the token and verify it is not paused anymore
-      expect(await pollForPaused(ERC20Pausable)).to.be.false
+      await ERC20Pausable.unpause()
+      expect(await ERC20Pausable.paused()).to.be.false
     })
 
     it('should not allow transfers when paused', async function () {
