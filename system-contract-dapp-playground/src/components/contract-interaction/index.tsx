@@ -35,6 +35,7 @@ import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
 import { getInfoFromCookies, storeInfoInCookies } from '@/api/cookies';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
 import HederaTokenCreateMethods from './hts/token-create-custom/methods';
+import HederaTokenQueryMethods from './hts/token-query-contract/methods';
 import HederaTokenManagementMethods from './hts/token-management-contract/methods';
 import ExchangeRateDeployField from './exchange-rate-hip-475/deployment/ExchangeRateDeployField';
 import {
@@ -328,6 +329,14 @@ const ContractInteraction = ({ contract }: PageProps) => {
                     {/* HTS Token Management*/}
                     {contract.name === 'TokenManagementContract' && (
                       <HederaTokenManagementMethods
+                        method={method}
+                        baseContract={baseContract! as Contract}
+                      />
+                    )}
+
+                    {/* HTS Token Query*/}
+                    {contract.name === 'TokenQueryContract' && (
+                      <HederaTokenQueryMethods
                         method={method}
                         baseContract={baseContract! as Contract}
                       />

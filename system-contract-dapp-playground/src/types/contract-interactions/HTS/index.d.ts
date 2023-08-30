@@ -22,6 +22,10 @@
 export type TransactionResult = {
   status: 'sucess' | 'fail';
   txHash: string;
+  APICalled?: any;
+  tokenInfo?: any;
+  isToken?: boolean;
+  keyTypeCalled?: any;
   tokenAddress?: string;
   accountAddress?: string;
   tokenAddresses?: string[];
@@ -40,6 +44,31 @@ interface TokenCreateCustomSmartContractResult {
 interface TokenManagementSmartContractResult {
   transactionHash?: string;
   result?: boolean;
+  err?: any;
+}
+
+/** @dev an interface for the results returned back from interacting with Hedera TokenQeury smart contract */
+interface TokenQuerySmartContractResult {
+  Frozen?: any;
+  IsToken?: any;
+  Approved?: any;
+  TokenType?: any;
+  KycGranted?: any;
+  AllowanceValue?: any;
+  ApprovedAddress?: any;
+  transactionHash?: string;
+  TokenDefaultKycStatus?: any;
+  TokenDefaultFreezeStatus?: any;
+  TokenInfo?: IHederaTokenServiceTokenInfo;
+  TokenKey?: IHederaTokenServiceKeyValueType;
+  TokenExpiryInfo?: IHederaTokenServiceExpiry;
+  FungibleTokenInfo?: IHederaTokenServiceFungibleTokenInfo;
+  NonFungibleTokenInfo?: IHederaTokenServiceNonFungibleTokenInfo;
+  TokenCustomFees?: {
+    fixedFees: IHederaTokenServiceFixedFee[];
+    royaltyFees: IHederaTokenServiceRoyaltyFee[];
+    fractionalFees: IHederaTokenServiceFractionalFee[];
+  };
   err?: any;
 }
 
@@ -174,4 +203,154 @@ interface IHederaTokenServiceHederaToken {
   freezeDefault: boolean;
   tokenKeys: IHederaTokenServiceTokenKey[];
   expiry: IHederaTokenServiceExpiry;
+}
+
+/**
+ * @dev an interface that adheres to the IHederaTokenService.FixedFee
+ *
+ * @param amount: number;
+ *
+ * @param tokenId: string;
+ *
+ * @param useHbarsForPayment: boolean;
+ *
+ * @param  useCurrentTokenForPayment: boolean;
+ *
+ * @param feeCollector: string;
+ *
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L236
+ */
+interface IHederaTokenServiceFixedFee {
+  amount: number;
+  tokenId: string;
+  useHbarsForPayment: boolean;
+  useCurrentTokenForPayment: boolean;
+  feeCollector: string;
+}
+
+/**
+ * @dev an interface that adheres to the IHederaTokenService.FractionalFee
+ *
+ * @param numerator: number;
+ *
+ * @param denominator: number;
+ *
+ * @param minimumAmount: number;
+ *
+ * @param maximumAmount: number;
+ *
+ * @param netOfTransfers: boolean;
+ *
+ * @param feeCollector: string;
+ *
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L256
+ */
+interface IHederaTokenServiceFractionalFee {
+  numerator: number;
+  denominator: number;
+  minimumAmount: number;
+  maximumAmount: number;
+  netOfTransfers: boolean;
+  feeCollector: string;
+}
+
+/**
+ * @dev an interface that adheres to the IHederaTokenService.RoyaltyFee
+ *
+ * @param numerator: number;
+ *
+ * @param denominator: number;
+ *
+ * @param amount?: number;
+ *
+ * @param tokenId?: string;
+ *
+ * @param useHbarsForPayment: boolean;
+ *
+ * @param feeCollector: string;
+ *
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L279
+ */
+interface IHederaTokenServiceRoyaltyFee {
+  numerator: number;
+  denominator: number;
+  amount?: number;
+  tokenId?: string;
+  useHbarsForPayment: boolean;
+  feeCollector: string;
+}
+
+/**
+ * @dev an interface that adheres to the IHederaTokenService.TokenInfo
+ *
+ * @param token: IHederaTokenServiceHederaToken;
+ *
+ * @param totalSupply: number;
+ *
+ * @param deleted: boolean;
+ *
+ * @param defaultKycStatus: boolean;
+ *
+ * @param pauseStatus: boolean;
+ *
+ * @Param fixedFees: FixedFee[];
+ *
+ * @param fraztiofractionalFees: FractionalFee[];
+ *
+ * @param royaltyFees: RoyaltyFee[];
+ *
+ * @param ledgerId: string;
+ *
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L173
+ */
+interface IHederaTokenServiceTokenInfo {
+  token: IHederaTokenServiceHederaToken;
+  totalSupply: number;
+  deleted: boolean;
+  defaultKycStatus: boolean;
+  pauseStatus: boolean;
+  fixedFees: IHederaTokenServiceFixedFee[];
+  fractionalFees: IHederaTokenServiceFractionalFee[];
+  royaltyFees: IHederaTokenServiceRoyaltyFee[];
+  ledgerId: string;
+}
+
+/**
+ * @dev an interface that adheres to the IHederaTokenService.FungibleTokenInfo
+ *
+ * @param tokenInfo: IHederaTokenServiceTokenInfo;
+ *
+ * @param decimals: number;
+ *
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L203
+ */
+interface IHederaTokenServiceFungibleTokenInfo {
+  tokenInfo: IHederaTokenServiceTokenInfo;
+  decimals: number;
+}
+
+/**
+ * @dev an interface that adheres to the IHederaTokenService.NonFungibleTokenInfo
+ *
+ * @param tokenInfo: IHederaTokenServiceTokenInfo;
+ *
+ * @param serialNumber: number;
+ *
+ * @param ownerId: string;
+ *
+ * @param creationTime: number;
+ *
+ * @param metadata: Uint8Array
+ *
+ * @param spenderId: string
+ *
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L212
+ */
+interface IHederaTokenServiceNonFungibleTokenInfo {
+  tokenInfo: IHederaTokenServiceTokenInfo;
+  serialNumber: number;
+  ownerId: string;
+  creationTime: number;
+  metadata: Uint8Array;
+  spenderId: string;
 }

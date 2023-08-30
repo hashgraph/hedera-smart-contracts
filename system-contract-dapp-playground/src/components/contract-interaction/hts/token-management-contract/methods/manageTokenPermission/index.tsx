@@ -303,6 +303,7 @@ const ManageTokenPermission = ({ baseContract }: PageProps) => {
           if (APIMethods === APIButton.API) {
             return (
               <SharedExecuteButtonWithFee
+                key={APIButton.API}
                 isLoading={isLoading}
                 feeType={'GAS'}
                 paramValues={paramValues.feeValue}

@@ -18,14 +18,32 @@
  *
  */
 
+import {
+  EXPIRY_KEYS,
+  KEY_VALUE_KEYS,
+  FIXED_FEES_KEYS,
+  CUSTOM_FEES_KEYS,
+  TOKEN_INFO_NFT_KEYS,
+  FRACTIONAL_FEES_KEYS,
+  TOKEN_INFO_BASIC_KEYS,
+  TOKEN_INFO_ADVANCED_KEYS,
+} from './token-query/constant';
 import { isAddress } from 'ethers';
-import { KEY_TYPE_MAP, DEFAULT_IHTS_KEY_VALUE } from './token-create-custom/constant';
 import {
   CommonKeyObject,
+  IHederaTokenServiceExpiry,
   IHederaTokenServiceKeyType,
   IHederaTokenServiceTokenKey,
+  IHederaTokenServiceFixedFee,
+  IHederaTokenServiceTokenInfo,
+  IHederaTokenServiceRoyaltyFee,
   IHederaTokenServiceKeyValueType,
+  IHederaTokenServiceFractionalFee,
+  IHederaTokenServiceFungibleTokenInfo,
+  IHederaTokenServiceNonFungibleTokenInfo,
 } from '@/types/contract-interactions/HTS';
+
+import { KEY_TYPE_MAP, DEFAULT_IHTS_KEY_VALUE } from './token-create-custom/constant';
 
 /**
  * @dev tests if the input conforms to the common compressed public key standard
@@ -116,5 +134,120 @@ export const prepareHederaTokenKeyArray = (inputKeys: CommonKeyObject[]) => {
     return { err: constructingKeyError };
   } else {
     return { hederaTokenKeys: hederaTokenKeys as IHederaTokenServiceTokenKey[] };
+  }
+};
+
+/**
+ * @dev convert an `args` Proxy object returned from events to HTS Token Info object
+ *
+ * @notice applicable for QueryGeneralInfo APIs
+ */
+export const convertsArgsProxyToHTSTokenInfo = (
+  proxyObj: any,
+  API: 'TOKEN' | 'FUNGIBLE' | 'NON_FUNFIBLE'
+) => {
+  // prepare states
+  const htsTokenInfoKeys = ['token', ...TOKEN_INFO_ADVANCED_KEYS];
+  const htsNFTTokenInfoKeys = ['tokenInfo', ...TOKEN_INFO_NFT_KEYS];
+  const commonProxyObject = API === 'TOKEN' ? proxyObj : proxyObj.tokenInfo;
+  const htsTokenInfo = {} as any;
+  htsTokenInfoKeys.forEach((key) => {
+    if (key === 'token') {
+      const htsHederaToken = {} as any;
+      TOKEN_INFO_BASIC_KEYS.forEach((key) => {
+        const value = commonProxyObject.token[key];
+        htsHederaToken[key] = typeof value === 'bigint' ? value.toString() : value;
+      });
+      htsTokenInfo[key] = htsHederaToken;
+    } else {
+      const value = commonProxyObject[key];
+      htsTokenInfo[key] = typeof value === 'bigint' ? value.toString() : value;
+    }
+  });
+
+  switch (API) {
+    case 'TOKEN': {
+      return htsTokenInfo as IHederaTokenServiceTokenInfo;
+    }
+    case 'FUNGIBLE': {
+      const htsFungibleTokenInfo = {
+        tokenInfo: htsTokenInfo as IHederaTokenServiceTokenInfo,
+        decimals: Number(proxyObj.decimals.toString()),
+      };
+
+      return htsFungibleTokenInfo as IHederaTokenServiceFungibleTokenInfo;
+    }
+    case 'NON_FUNFIBLE': {
+      const htsNonFungibleTokenInfo = {} as any;
+      htsNFTTokenInfoKeys.forEach((key) => {
+        if (key === 'tokenInfo') {
+          htsNonFungibleTokenInfo[key] = htsTokenInfo as IHederaTokenServiceTokenInfo;
+        } else {
+          const value = proxyObj[key];
+          htsNonFungibleTokenInfo[key] = typeof value === 'bigint' ? value.toString() : value;
+        }
+      });
+
+      return htsNonFungibleTokenInfo as IHederaTokenServiceNonFungibleTokenInfo;
+    }
+  }
+};
+
+/**
+ * @dev convert an `args` Proxy object returned from events to HTS FEES/KEYS/EXPIRY info
+ *
+ * @notice applicable for QuerySpecificInfo APIs
+ */
+export const convertsArgsProxyToHTSSpecificInfo = (
+  proxyObj: any,
+  API: 'CUSTOM_FEES' | 'TOKEN_EXPIRY' | 'TOKEN_KEYS'
+) => {
+  // prepare states
+
+  switch (API) {
+    case 'CUSTOM_FEES':
+      let htsFeesInfo = {
+        fixedFees: [] as IHederaTokenServiceFixedFee[],
+        fractionalFees: [] as IHederaTokenServiceFractionalFee[],
+        royaltyFees: [] as IHederaTokenServiceRoyaltyFee[],
+      };
+
+      CUSTOM_FEES_KEYS.forEach((customFeesKey) => {
+        proxyObj[customFeesKey].forEach((fee: any) => {
+          const customFee = {} as any;
+          let keysArray = [];
+          if (customFeesKey === 'fixedFees') {
+            keysArray = FIXED_FEES_KEYS;
+          } else if (customFeesKey === 'fractionalFees') {
+            keysArray = FRACTIONAL_FEES_KEYS;
+          } else {
+            keysArray = FRACTIONAL_FEES_KEYS;
+          }
+          keysArray.forEach((key: any) => {
+            const value = fee[key];
+            customFee[key] = typeof value === 'bigint' ? value.toString() : value;
+          });
+          htsFeesInfo[customFeesKey].push(customFee);
+        });
+      });
+      return htsFeesInfo;
+
+    case 'TOKEN_EXPIRY': {
+      let htsExpiryInfo = {} as any;
+      EXPIRY_KEYS.forEach((key) => {
+        const value = proxyObj.expiryInfo[key];
+        htsExpiryInfo[key] = typeof value === 'bigint' ? value.toString() : value;
+      });
+      return htsExpiryInfo as IHederaTokenServiceExpiry;
+    }
+
+    case 'TOKEN_KEYS': {
+      let htsKeysInfo = {} as any;
+      KEY_VALUE_KEYS.forEach((key) => {
+        const value = proxyObj.key[key];
+        htsKeysInfo[key] = typeof value === 'bigint' ? value.toString() : value;
+      });
+      return htsKeysInfo as IHederaTokenServiceKeyValueType;
+    }
   }
 };

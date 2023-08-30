@@ -24,42 +24,63 @@ import { FiExternalLink } from 'react-icons/fi';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { Dispatch, SetStateAction } from 'react';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { IHederaTokenServiceKeyType, TransactionResult } from '@/types/contract-interactions/HTS';
 import {
-  TableContainer,
-  Table,
-  Thead,
   Tr,
   Th,
-  Tbody,
   Td,
+  Table,
+  Thead,
+  Tbody,
   Popover,
-  PopoverTrigger,
   Tooltip,
+  TableContainer,
+  PopoverTrigger,
   PopoverContent,
 } from '@chakra-ui/react';
 
 /** @dev shared component representing the list of transactions */
 interface TransactionResultTablePageProps {
+  onOpen?: () => void;
   hederaNetwork: string;
   TRANSACTION_PAGE_SIZE: number;
   currentTransactionPage: number;
   transactionResultStorageKey: string;
   transactionResults: TransactionResult[];
+  setTokenInfoFromTxResult?: Dispatch<any>;
   paginatedTransactionResults: TransactionResult[];
+  setShowTokenInfo?: Dispatch<SetStateAction<boolean>>;
+  setAPIMethodsFromTxResult?: Dispatch<SetStateAction<any>>;
   setCurrentTransactionPage: Dispatch<SetStateAction<number>>;
-  API: 'TokenCreate' | 'TokenMint' | 'TokenAssociate' | 'GrantKYC';
+  setTokenAddressFromTxResult?: Dispatch<SetStateAction<string>>;
   setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>;
+  setKeyTypeFromTxResult?: Dispatch<SetStateAction<IHederaTokenServiceKeyType>>;
+  API:
+    | 'GrantKYC'
+    | 'TokenMint'
+    | 'TokenCreate'
+    | 'QueryValidity'
+    | 'TokenAssociate'
+    | 'QuerySpecificInfo'
+    | 'QueryTokenGeneralInfo'
+    | 'QueryTokenPermission'
+    | 'QueryTokenRelation';
 }
 
 export const TransactionResultTable = ({
   API,
+  onOpen,
   hederaNetwork,
+  setShowTokenInfo,
   transactionResults,
-  TRANSACTION_PAGE_SIZE,
   setTransactionResults,
+  TRANSACTION_PAGE_SIZE,
   currentTransactionPage,
+  setKeyTypeFromTxResult,
+  setTokenInfoFromTxResult,
+  setAPIMethodsFromTxResult,
   setCurrentTransactionPage,
+  setTokenAddressFromTxResult,
   transactionResultStorageKey,
   paginatedTransactionResults,
 }: TransactionResultTablePageProps) => {
@@ -70,13 +91,21 @@ export const TransactionResultTable = ({
       endingHashIndex = -12;
       break;
     case 'TokenMint':
+    case 'QuerySpecificInfo':
+    case 'QueryTokenGeneralInfo':
+    case 'QueryTokenPermission':
       beginingHashIndex = 8;
       endingHashIndex = -4;
       break;
-    case 'TokenAssociate':
     case 'GrantKYC':
+    case 'TokenAssociate':
+    case 'QueryValidity':
       beginingHashIndex = 10;
       endingHashIndex = -5;
+      break;
+    case 'QueryTokenRelation':
+      beginingHashIndex = 4;
+      endingHashIndex = -3;
       break;
   }
 
@@ -89,11 +118,21 @@ export const TransactionResultTable = ({
               Index
             </Th>
             <Th color={'#82ACF9'}>Status</Th>
-            <Th color={'#82ACF9'}>Transaction hash</Th>
+            <Th color={'#82ACF9'}>Tx hash</Th>
             <Th color={'#82ACF9'}>Token address</Th>
             {API === 'TokenMint' && <Th color={'#82ACF9'}>Recipient</Th>}
             {API === 'TokenAssociate' && <Th color={'#82ACF9'}>Associated Account</Th>}
+            {API === 'QueryTokenRelation' && <Th color={'#82ACF9'}>Account</Th>}
             {API === 'GrantKYC' && <Th color={'#82ACF9'}>KYCed Account</Th>}
+            {API === 'QueryValidity' && <Th color={'#82ACF9'}>Valid Token</Th>}
+            {API === 'QueryTokenRelation' && <Th color={'#82ACF9'}>Relation</Th>}
+            {(API === 'QueryTokenGeneralInfo' ||
+              API === 'QuerySpecificInfo' ||
+              API === 'QueryTokenPermission') && <Th color={'#82ACF9'}>Token Info</Th>}
+            {(API === 'QueryTokenGeneralInfo' ||
+              API === 'QuerySpecificInfo' ||
+              API === 'QueryTokenPermission' ||
+              API === 'QueryTokenRelation') && <Th color={'#82ACF9'}>API called</Th>}
             <Th />
           </Tr>
         </Thead>
@@ -174,7 +213,14 @@ export const TransactionResultTable = ({
                 </Td>
 
                 {/* token address */}
-                {(API === 'TokenCreate' || API === 'TokenMint' || API === 'GrantKYC') && (
+                {(API === 'TokenCreate' ||
+                  API === 'TokenMint' ||
+                  API === 'GrantKYC' ||
+                  API === 'QueryValidity' ||
+                  API === 'QueryTokenGeneralInfo' ||
+                  API === 'QuerySpecificInfo' ||
+                  API === 'QueryTokenPermission' ||
+                  API === 'QueryTokenRelation') && (
                   <Td className="cursor-pointer">
                     {transactionResult.tokenAddress ? (
                       <div className="flex gap-1 items-center">
@@ -333,7 +379,10 @@ export const TransactionResultTable = ({
                 )}
 
                 {/* Account address */}
-                {(API === 'TokenMint' || API === 'TokenAssociate' || API === 'GrantKYC') && (
+                {(API === 'TokenMint' ||
+                  API === 'TokenAssociate' ||
+                  API === 'GrantKYC' ||
+                  API === 'QueryTokenRelation') && (
                   <Td className="cursor-pointer">
                     {transactionResult.accountAddress ? (
                       <div className="flex gap-1 items-center">
@@ -383,6 +432,92 @@ export const TransactionResultTable = ({
                               beginingHashIndex
                             )}...${ethers.ZeroAddress.slice(endingHashIndex)}`}
                       </>
+                    )}
+                  </Td>
+                )}
+
+                {/* query - isToken */}
+                {API === 'QueryValidity' && (
+                  <Td
+                    className={`cursor-pointer ${
+                      transactionResult.isToken ? `text-hedera-green` : `text-red-400`
+                    }`}
+                  >
+                    {JSON.stringify(transactionResult.isToken).toUpperCase()}
+                  </Td>
+                )}
+
+                {/* query - token info */}
+                {(API === 'QueryTokenGeneralInfo' ||
+                  API === 'QuerySpecificInfo' ||
+                  API === 'QueryTokenPermission') && (
+                  <Td className="cursor-pointer">
+                    <div className="flex gap-1 items-center">
+                      {typeof transactionResult.tokenInfo !== 'undefined' ? (
+                        <div
+                          onClick={() => {
+                            onOpen!();
+                            setShowTokenInfo!(true);
+                            if (setTokenInfoFromTxResult)
+                              setTokenInfoFromTxResult(transactionResult.tokenInfo);
+                            if (setAPIMethodsFromTxResult)
+                              setAPIMethodsFromTxResult(transactionResult.APICalled);
+                            if (setKeyTypeFromTxResult)
+                              setKeyTypeFromTxResult(transactionResult.keyTypeCalled);
+                            if (setTokenAddressFromTxResult)
+                              setTokenAddressFromTxResult(transactionResult.tokenAddress as string);
+                          }}
+                        >
+                          <div className="flex gap-1 items-center">
+                            <Tooltip label="click to show token info">
+                              <p>Token Info</p>
+                            </Tooltip>
+                          </div>
+                        </div>
+                      ) : (
+                        <>NULL</>
+                      )}
+                    </div>
+                  </Td>
+                )}
+
+                {/* query - token info - Token Relation */}
+                {API === 'QueryTokenRelation' && (
+                  <Td
+                    className={`cursor-pointer ${
+                      transactionResult.tokenInfo === 1 ? `text-hedera-green` : `text-red-400`
+                    }`}
+                  >
+                    <div className="flex gap-1 items-center">
+                      {typeof transactionResult.tokenInfo !== 'undefined' ? (
+                        <div className="flex gap-1 items-center">
+                          {JSON.stringify(transactionResult.tokenInfo === 1).toUpperCase()}
+                        </div>
+                      ) : (
+                        <>NULL</>
+                      )}
+                    </div>
+                  </Td>
+                )}
+
+                {/* query - API called */}
+                {(API === 'QueryTokenGeneralInfo' ||
+                  API === 'QuerySpecificInfo' ||
+                  API === 'QueryTokenPermission' ||
+                  API === 'QueryTokenRelation') && (
+                  <Td>
+                    {transactionResult.APICalled ? (
+                      <>
+                        <p>
+                          {transactionResult.APICalled === 'TOKEN_KEYS'
+                            ? `${transactionResult.APICalled.replace('TOKEN_', '')}_${
+                                transactionResult.keyTypeCalled
+                              }`
+                            : transactionResult.APICalled}
+                        </p>
+                      </>
+                    ) : (
+                      <>NULL</>
                     )}
                   </Td>
                 )}

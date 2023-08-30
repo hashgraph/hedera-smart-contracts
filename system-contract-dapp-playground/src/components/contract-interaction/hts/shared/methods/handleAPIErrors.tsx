@@ -20,27 +20,32 @@
 
 import { Dispatch, SetStateAction } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { IHederaTokenServiceKeyType, TransactionResult } from '@/types/contract-interactions/HTS';
 
 /** @dev handle error returned back from invoking method APIs*/
 export const handleAPIErrors = ({
   err,
   toaster,
-  accountAddress,
+  keyTypeCalled,
+  APICalled,
   tokenAddress,
   tokenAddresses,
+  accountAddress,
   transactionHash,
   setTransactionResults,
 }: {
   err: any;
   toaster: any;
-  accountAddress?: string;
+  APICalled?: string;
   tokenAddress?: string;
+  accountAddress?: string;
   tokenAddresses?: string[];
   transactionHash: string | undefined;
+  keyTypeCalled?: IHederaTokenServiceKeyType;
   setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>;
 }) => {
   const errorMessage = JSON.stringify(err);
+
   let errorDescription = "See client's console for more information";
   // @notice 4001 error code is returned when a metamask wallet request is rejected by the user
   // @notice See https://docs.metamask.io/wallet/reference/provider-api/#errors for more information on the error returned by Metamask.
@@ -48,6 +53,8 @@ export const handleAPIErrors = ({
     errorDescription = 'You have rejected the request.';
   } else if (errorMessage.indexOf('nonce has already been used') !== -1) {
     errorDescription = 'Nonce has already been used. Please try again!';
+  } else if (errorMessage.indexOf("Non-200 status code: '400'") !== -1) {
+    errorDescription = 'Invalid token input';
   }
 
   // @notice if a transaction hash is returned, that means the transaction did make to the system contract but got reverted
@@ -55,7 +62,10 @@ export const handleAPIErrors = ({
     setTransactionResults((prev) => [
       ...prev,
       {
+        APICalled,
+        keyTypeCalled,
         status: 'fail',
+        isToken: false,
         txHash: transactionHash,
         tokenAddress: tokenAddress ? tokenAddress : '',
         accountAddress: accountAddress ? accountAddress : '',
