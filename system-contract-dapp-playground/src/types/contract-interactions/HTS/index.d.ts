@@ -18,6 +18,15 @@
  *
  */
 
+/** @dev the type for HTS transaction results */
+export type TransactionResult = {
+  status: 'sucess' | 'fail';
+  txHash: string;
+  tokenAddress?: string;
+  accountAddress?: string;
+  tokenAddresses?: string[];
+};
+
 /** @dev an interface for the results returned back from interacting with Hedera TokenCreateCustom smart contract */
 interface TokenCreateCustomSmartContractResult {
   tokenAddress?: string;
@@ -26,6 +35,14 @@ interface TokenCreateCustomSmartContractResult {
   transferTokenEventData?: string;
   err?: any;
 }
+
+/** @dev an interface for the results returned back from interacting with Hedera TokenManagement smart contract */
+interface TokenManagementSmartContractResult {
+  transactionHash?: string;
+  result?: boolean;
+  err?: any;
+}
+
 /**
  * @dev a type for the IHederaTokenService.TokenKey.keyType
  *
@@ -107,11 +124,54 @@ interface IHederaTokenServiceTokenKey {
   key: IHederaTokenServiceKeyValue;
 }
 
-/** @dev the type for HTS transaction results */
-export type TransactionResult = {
-  status: 'sucess' | 'fail';
-  txHash: string;
-  tokenAddress?: string;
-  accountAddress?: string;
-  tokenAddresses?: string[];
-};
+/**
+ * @dev an interface that adheres to the IHederaTokenService.Expiry
+ *
+ * @param second: number
+ *
+ * @param autoRenewAccount: string
+ *
+ * @param autoRenewPeriod: number
+ *
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L69
+ */
+interface IHederaTokenServiceExpiry {
+  second: number;
+  autoRenewAccount: string;
+  autoRenewPeriod: number;
+}
+
+/**
+ * @dev an interface that adheres to the IHederaTokenService.HederaToken
+ *
+ * @param name: string
+ *
+ * @param symbol: string
+ *
+ * @param treasury: string
+ *
+ * @param memo: string
+ *
+ * @param tokenSupplyType: boolean
+ *
+ * @param maxSupply: number
+ *
+ * @param freezeDefault: boolean
+ *
+ * @param tokenKeys: IHederaTokenServiceTokenKey[]
+ *
+ * @param expiry: IHederaTokenServiceExpiry
+ *
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L136
+ */
+interface IHederaTokenServiceHederaToken {
+  name: string;
+  symbol: string;
+  treasury: string;
+  memo: string;
+  tokenSupplyType: boolean;
+  maxSupply: number;
+  freezeDefault: boolean;
+  tokenKeys: IHederaTokenServiceTokenKey[];
+  expiry: IHederaTokenServiceExpiry;
+}

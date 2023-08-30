@@ -1,0 +1,536 @@
+/*-
+ *
+ * Hedera Smart Contracts
+ *
+ * Copyright (C) 2023 Hedera Hashgraph, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+import {
+  CommonKeyObject,
+  IHederaTokenServiceExpiry,
+  IHederaTokenServiceHederaToken,
+  TokenManagementSmartContractResult,
+} from '@/types/contract-interactions/HTS';
+import { prepareHederaTokenKeyArray } from '@/utils/contract-interactions/HTS/helpers';
+import { Contract, isAddress } from 'ethers';
+
+/**
+ * @dev manages and updates token information
+ *
+ * @dev integrates tokenMagemnentContract.updateTokenInfoPublic()
+ *
+ * @dev integrates tokenMagemnentContract.updateTokenExpiryInfoPublic()
+ *
+ * @dev integrates tokenMagemnentContract.updateTokenKeysPublic()
+ *
+ * @param baseContract: ethers.Contract
+ *
+ * @param API: "UPDATE_INFO" | "UPDATE_EXPIRY" | "UPDATE_KEYS"
+ *
+ * @param hederaTokenAddress: string
+ *
+ * @param tokenInfo?: IHederaTokenServiceHederaToken
+ *
+ * @param expiryInfo?: IHederaTokenServiceExpiry
+ *
+ * @param keysInfo?: CommonKeyObject[],
+ *
+ * @return Promise<TokenManagementSmartContractResult>
+ */
+export const manageTokenInfomation = async (
+  baseContract: Contract,
+  API: 'UPDATE_INFO' | 'UPDATE_EXPIRY' | 'UPDATE_KEYS',
+  hederaTokenAddress: string,
+  tokenInfo?: IHederaTokenServiceHederaToken,
+  expiryInfo?: IHederaTokenServiceExpiry,
+  keysInfo?: CommonKeyObject[]
+): Promise<TokenManagementSmartContractResult> => {
+  // sanitize param
+  if (!isAddress(hederaTokenAddress)) {
+    console.error('Invalid token address');
+    return { err: 'Invalid token address' };
+  }
+
+  // invoking contract methods
+  try {
+    // prepare states
+    let transactionResult, errMsg;
+    switch (API) {
+      case 'UPDATE_INFO':
+        if (!tokenInfo) {
+          errMsg = 'Token information object is needed for UPDATE_INFO API';
+        } else {
+          transactionResult = await baseContract.updateTokenInfoPublic(
+            hederaTokenAddress,
+            tokenInfo
+          );
+        }
+        break;
+      case 'UPDATE_EXPIRY':
+        if (!expiryInfo) {
+          errMsg = 'Expiry information object is needed for UPDATE_EXPIRY API';
+        } else {
+          transactionResult = await baseContract.updateTokenExpiryInfoPublic(
+            hederaTokenAddress,
+            expiryInfo
+          );
+        }
+        break;
+      case 'UPDATE_KEYS':
+        if (!keysInfo) {
+          errMsg = 'Keys information object is needed for UPDATE_KEYS API';
+        } else {
+          // prepare keys array
+          const keyRes = prepareHederaTokenKeyArray(keysInfo);
+
+          // handle error
+          if (keyRes.err) {
+            errMsg = keyRes.err;
+          } else {
+            const hederaTokenKeys = keyRes.hederaTokenKeys;
+
+            transactionResult = await baseContract.updateTokenKeysPublic(
+              hederaTokenAddress,
+              hederaTokenKeys
+            );
+          }
+        }
+    }
+
+    // return err if any
+    if (errMsg) {
+      console.error(errMsg);
+      return { err: errMsg };
+    } else if (!transactionResult) {
+      console.error('Cannot execute contract methods');
+      return { err: 'Cannot execute contract methods' };
+    }
+
+    // get transaction receipt
+    const txReceipt = await transactionResult.wait();
+
+    // retrieve responseCode from event
+    const { data } = txReceipt.logs.filter(
+      (event: any) => event.fragment.name === 'ResponseCode'
+    )[0];
+
+    // @notice: 22 represents the predefined response code from the Hedera system contracts, indicating a successful transaction.
+    return { result: Number(data) === 22, transactionHash: txReceipt.hash };
+  } catch (err: any) {
+    console.error(err);
+    return { err, transactionHash: err.receipt && err.receipt.hash };
+  }
+};
+
+/**
+ * @dev manages token permission
+ *
+ * @dev integrates tokenMagemnentContract.approvePublic()
+ *
+ * @dev integrates tokenMagemnentContract.approveNFTPublic()
+ *
+ * @dev integrates tokenMagemnentContract.setApprovalForAllPublic()
+ *
+ * @param baseContract: ethers.Contract
+ *
+ * @param API: "APPROVED_FUNGIBLE" | "APPROVED_NON_FUNGIBLE" | "SET_APPROVAL"
+ *
+ * @param hederaTokenAddress: string
+ *
+ * @param targetApprovedAddress: string (spender address for APPROVED_FUNGIBLE, approved NFT controller for APPROVED_NON_FUNGIBLE, operator for SET_APPROVAL)
+ *
+ * @param amountToApprove?: number (APPROVED_FUNGIBLE)
+ *
+ * @param serialNumber?: number (APPROVED_NON_FUNGIBLE)
+ *
+ * @param approvedStatus?: boolean (SET_APPROVAL)
+ *
+ * @return Promise<TokenManagementSmartContractResult>
+ */
+export const manageTokenPermission = async (
+  baseContract: Contract,
+  API: 'APPROVED_FUNGIBLE' | 'APPROVED_NON_FUNGIBLE' | 'SET_APPROVAL',
+  hederaTokenAddress: string,
+  targetApprovedAddress: string,
+  amountToApprove?: number,
+  serialNumber?: number,
+  approvedStatus?: boolean
+): Promise<TokenManagementSmartContractResult> => {
+  // sanitize params
+  let sanitizeErr;
+  if (!isAddress(hederaTokenAddress)) {
+    sanitizeErr = 'Invalid token address';
+  } else if (!isAddress(targetApprovedAddress)) {
+    sanitizeErr = 'Invalid target approved address';
+  }
+
+  if (sanitizeErr) {
+    console.error(sanitizeErr);
+    return { err: sanitizeErr };
+  }
+
+  // invoking contract methods
+  try {
+    // prepare states
+    let transactionResult, errMsg;
+    switch (API) {
+      case 'APPROVED_FUNGIBLE':
+        if (!amountToApprove) {
+          errMsg = 'Amount to approve is needed for APPROVED_FUNGIBLE API';
+        } else {
+          transactionResult = await baseContract.approvePublic(
+            hederaTokenAddress,
+            targetApprovedAddress,
+            amountToApprove
+          );
+        }
+        break;
+      case 'APPROVED_NON_FUNGIBLE':
+        if (!serialNumber) {
+          errMsg = 'Serial number is needed for APPROVED_NON_FUNGIBLE API';
+        } else {
+          transactionResult = await baseContract.approveNFTPublic(
+            hederaTokenAddress,
+            targetApprovedAddress,
+            serialNumber
+          );
+        }
+        break;
+
+      case 'SET_APPROVAL':
+        if (typeof approvedStatus === 'undefined') {
+          errMsg = 'Approved status is needed for SET_APPROVAL API';
+        } else {
+          transactionResult = await baseContract.setApprovalForAllPublic(
+            hederaTokenAddress,
+            targetApprovedAddress,
+            approvedStatus
+          );
+        }
+    }
+
+    // return err if any
+    if (errMsg) {
+      console.error(errMsg);
+      return { err: errMsg };
+    } else if (!transactionResult) {
+      console.error('Cannot execute contract methods');
+      return { err: 'Cannot execute contract methods' };
+    }
+
+    // get transaction receipt
+    const txReceipt = await transactionResult.wait();
+
+    // retrieve responseCode from event
+    const { data } = txReceipt.logs.filter(
+      (event: any) => event.fragment.name === 'ResponseCode'
+    )[0];
+
+    // @notice: 22 represents the predefined response code from the Hedera system contracts, indicating a successful transaction.
+    return { result: Number(data) === 22, transactionHash: txReceipt.hash };
+  } catch (err: any) {
+    console.error(err);
+    return { err, transactionHash: err.receipt && err.receipt.hash };
+  }
+};
+
+/**
+ * @dev manages token status
+ *
+ * @dev integrates tokenMagemnentContract.pauseTokenPublic()
+ *
+ * @dev integrates tokenMagemnentContract.unpauseTokenPublic()
+ *
+ * @param baseContract: ethers.Contract
+ *
+ * @param API: "PAUSE" | "UNPAUSE"
+ *
+ * @param hederaTokenAddress: string
+ *
+ * @return Promise<TokenManagementSmartContractResult>
+ */
+export const manageTokenStatus = async (
+  baseContract: Contract,
+  API: 'PAUSE' | 'UNPAUSE',
+  hederaTokenAddress: string
+): Promise<TokenManagementSmartContractResult> => {
+  // sanitize param
+  if (!isAddress(hederaTokenAddress)) {
+    console.error('Invalid token address');
+    return { err: 'Invalid token address' };
+  }
+
+  // invoking contract methods
+  try {
+    // prepare states
+    let transactionResult;
+    switch (API) {
+      case 'PAUSE':
+        transactionResult = await baseContract.pauseTokenPublic(hederaTokenAddress);
+        break;
+      case 'UNPAUSE':
+        transactionResult = await baseContract.unpauseTokenPublic(hederaTokenAddress);
+    }
+
+    // get transaction receipt
+    const txReceipt = await transactionResult.wait();
+
+    // retrieve responseCode from event
+    const { data } = txReceipt.logs.filter(
+      (event: any) => event.fragment.name === 'ResponseCode'
+    )[0];
+
+    // @notice: 22 represents the predefined response code from the Hedera system contracts, indicating a successful transaction.
+    return { result: Number(data) === 22, transactionHash: txReceipt.hash };
+  } catch (err: any) {
+    console.error(err);
+    return { err, transactionHash: err.receipt && err.receipt.hash };
+  }
+};
+
+/**
+ * @dev manages token relationship between tokens and accounts
+ *
+ * @dev integrates tokenMagemnentContract.revokeTokenKycPublic()
+ *
+ * @dev integrates tokenMagemnentContract.freezeTokenPublic()
+ *
+ * @dev integrates tokenMagemnentContract.unfreezeTokenPublic()
+ *
+ * @dev integrates tokenMagemnentContract.dissociateTokensPublic()
+ *
+ * @dev integrates tokenMagemnentContract.dissociateTokenPublic()
+ *
+ * @param baseContract: ethers.Contract
+ *
+ * @param API: "REVOKE_KYC" | "FREEZE" | "UNFREEZE" | "DISSOCIATE_TOKEN"
+ *
+ * @param hederaTokenAddress: string
+ *
+ * @param accountAddress: string
+ *
+ * @param hederaTokenAddresses?: string[]
+ *
+ * @return Promise<TokenManagementSmartContractResult>
+ */
+export const manageTokenRelation = async (
+  baseContract: Contract,
+  API: 'REVOKE_KYC' | 'FREEZE' | 'UNFREEZE' | 'DISSOCIATE_TOKEN',
+  accountAddress: string,
+  hederaTokenAddresses: string[]
+): Promise<TokenManagementSmartContractResult> => {
+  // sanitize params
+  let sanitizeErr;
+  if (!isAddress(accountAddress)) {
+    sanitizeErr = 'Invalid account address';
+  } else if (hederaTokenAddresses.length === 0) {
+    sanitizeErr = 'Invalid token inputs';
+  }
+  hederaTokenAddresses.some((address) => {
+    if (!isAddress(address)) {
+      sanitizeErr = 'Invalid token address';
+      return true;
+    }
+  });
+
+  if (sanitizeErr) {
+    console.error(sanitizeErr);
+    return { err: sanitizeErr };
+  }
+
+  // invoking contract methods
+  try {
+    // prepare states
+    let transactionResult;
+    switch (API) {
+      case 'REVOKE_KYC':
+        transactionResult = await baseContract.revokeTokenKycPublic(
+          hederaTokenAddresses[0],
+          accountAddress
+        );
+        break;
+      case 'FREEZE':
+        transactionResult = await baseContract.freezeTokenPublic(
+          hederaTokenAddresses[0],
+          accountAddress
+        );
+        break;
+      case 'UNFREEZE':
+        transactionResult = await baseContract.unfreezeTokenPublic(
+          hederaTokenAddresses[0],
+          accountAddress
+        );
+        break;
+      case 'DISSOCIATE_TOKEN':
+        if (hederaTokenAddresses.length === 1) {
+          transactionResult = await baseContract.dissociateTokenPublic(
+            accountAddress,
+            hederaTokenAddresses[0]
+          );
+        } else {
+          transactionResult = await baseContract.dissociateTokenPublic(
+            accountAddress,
+            hederaTokenAddresses
+          );
+        }
+    }
+
+    // get transaction receipt
+    const txReceipt = await transactionResult.wait();
+
+    // retrieve responseCode from event
+    const { data } = txReceipt.logs.filter(
+      (event: any) => event.fragment.name === 'ResponseCode'
+    )[0];
+
+    // @notice: 22 represents the predefined response code from the Hedera system contracts, indicating a successful transaction.
+    return { result: Number(data) === 22, transactionHash: txReceipt.hash };
+  } catch (err: any) {
+    console.error(err);
+    return { err, transactionHash: err.receipt && err.receipt.hash };
+  }
+};
+
+/**
+ * @dev manages deducting tokens
+ *
+ * @dev integrates tokenMagemnentContract.wipeTokenAccountPublic()
+ *
+ * @dev integrates tokenMagemnentContract.wipeTokenAccountNFTPublic()
+ *
+ * @dev integrates tokenMagemnentContract.burnTokenPublic()
+ *
+ * @dev integrates tokenMagemnentContract.deleteTokenPublic()
+ *
+ * @param baseContract: ethers.Contract
+ *
+ * @param API: "WIPE_FUNGIBLE" | "WIPE_NON_FUNGIBLE" | "BURN" | "DELETE"
+ *
+ * @param hederaTokenAddress: string
+ *
+ * @param accountAddress?: string
+ *
+ * @param amount?: number
+ *
+ * @param serialNumbers?: number[]
+ *
+ * @return Promise<TokenManagementSmartContractResult>
+ */
+export const manageTokenDeduction = async (
+  baseContract: Contract,
+  API: 'WIPE_FUNGIBLE' | 'WIPE_NON_FUNGIBLE' | 'BURN' | 'DELETE',
+  hederaTokenAddress: string,
+  accountAddress?: string,
+  amount?: number,
+  serialNumbers?: number[]
+): Promise<TokenManagementSmartContractResult> => {
+  // sanitize params
+  let sanitizeErr;
+  if (!isAddress(hederaTokenAddress)) {
+    sanitizeErr = 'Invalid token address';
+  } else if (accountAddress && !isAddress(accountAddress)) {
+    sanitizeErr = 'Invalid account address';
+  } else if (amount && amount < 0) {
+    sanitizeErr = 'Amount cannot be negative';
+  } else if (serialNumbers) {
+    serialNumbers.some((sn) => {
+      if (sn < 0) {
+        sanitizeErr = 'Serial number cannot be negative';
+        return true;
+      }
+    });
+  }
+
+  if (sanitizeErr) {
+    console.error(sanitizeErr);
+    return { err: sanitizeErr };
+  }
+
+  // invoking contract methods
+  try {
+    // prepare states
+    let transactionResult, errMsg;
+    switch (API) {
+      case 'WIPE_FUNGIBLE':
+        if (!accountAddress) {
+          errMsg = 'Account address to wipe tokens from is needed for WIPE_FUNGIBLE API';
+        } else if (!amount) {
+          errMsg = 'Amount to wipe is needed for WIPE_FUNGIBLE API';
+        } else {
+          transactionResult = await baseContract.wipeTokenAccountPublic(
+            hederaTokenAddress,
+            accountAddress,
+            amount
+          );
+        }
+        break;
+
+      case 'WIPE_NON_FUNGIBLE':
+        if (!accountAddress) {
+          errMsg = 'Account address to wipe tokens from is needed for WIPE_NON_FUNGIBLE API';
+        } else if (!serialNumbers || serialNumbers.length === 0) {
+          errMsg = 'Serial number to wipe is needed for WIPE_NON_FUNGIBLE API';
+        } else {
+          transactionResult = await baseContract.wipeTokenAccountNFTPublic(
+            hederaTokenAddress,
+            accountAddress,
+            serialNumbers
+          );
+        }
+        break;
+
+      case 'BURN':
+        if (!amount) {
+          errMsg = 'Amount to burn is needed for BURN API';
+        } else if (!serialNumbers || serialNumbers.length === 0) {
+          errMsg = 'Serial number to burn is needed for BURN API';
+        } else {
+          transactionResult = await baseContract.burnTokenPublic(
+            hederaTokenAddress,
+            amount,
+            serialNumbers
+          );
+        }
+        break;
+
+      case 'DELETE':
+        transactionResult = await baseContract.deleteTokenPublic(hederaTokenAddress);
+    }
+
+    // return err if any
+    if (errMsg) {
+      console.error(errMsg);
+      return { err: errMsg };
+    } else if (!transactionResult) {
+      console.error('Cannot execute contract methods');
+      return { err: 'Cannot execute contract methods' };
+    }
+
+    // get transaction receipt
+    const txReceipt = await transactionResult.wait();
+
+    // retrieve responseCode from event
+    const { data } = txReceipt.logs.filter(
+      (event: any) => event.fragment.name === 'ResponseCode'
+    )[0];
+
+    // @notice: 22 represents the predefined response code from the Hedera system contracts, indicating a successful transaction.
+    return { result: Number(data) === 22, transactionHash: txReceipt.hash };
+  } catch (err: any) {
+    console.error(err);
+    return { err, transactionHash: err.receipt && err.receipt.hash };
+  }
+};
