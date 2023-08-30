@@ -126,10 +126,8 @@ describe('HIP583 Test Suite', function () {
             value: amount,
           })
 
-          const hollowWalletBalanceAfter = await ethers.provider.getBalance(
-            hollowWalletAddress
-          )
-
+          const hollowWalletBalanceAfter = await pollForNewHollowWalletBalance(ethers.provider, hollowWallet.address, hollowWalletBalanceBefore)
+ 
           expect(hollowWalletBalanceAfter).to.eq(
             hollowWalletBalanceBefore.add(amount)
           )
@@ -145,9 +143,7 @@ describe('HIP583 Test Suite', function () {
             value: amount,
           })
 
-          let hollowWalletBalanceAfter = await ethers.provider.getBalance(
-            hollowWalletAddress
-          )
+          const hollowWalletBalanceAfter = await pollForNewHollowWalletBalance(ethers.provider, hollowWallet.address, hollowWalletBalanceBefore)
 
           expect(hollowWalletBalanceAfter).to.lessThanOrEqual(
             hollowWalletBalanceBefore.sub(amount)
@@ -179,7 +175,7 @@ describe('HIP583 Test Suite', function () {
             Constants.GAS_LIMIT_1_000_000
           )
 
-          const signerBalanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[0].address, signerBalanceBefore)
+          const signerBalanceAfter = await pollForNewWalletBalance(erc20Contract, tokenAddress, signers[0].address, signerBalanceBefore)
 
           let hollowalletBalance = await erc20Contract.balanceOf(
             tokenAddress,
@@ -207,12 +203,7 @@ describe('HIP583 Test Suite', function () {
             amount
           )
       
-          const signerBalanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[0].address, signerBalanceBefore)
-
-          // let signerBalanceAfter = await erc20Contract.balanceOf(
-          //   tokenAddress,
-          //   signers[0].address
-          // )
+          const signerBalanceAfter = await pollForNewWalletBalance(erc20Contract, tokenAddress, signers[0].address, signerBalanceBefore)
 
           let hollowalletBalanceAfter = await erc20Contract.balanceOf(
             tokenAddress,
@@ -255,10 +246,7 @@ describe('HIP583 Test Suite', function () {
               amount
             )
 
-          let signerBalanceAfter = await erc20Contract.balanceOf(
-            tokenAddress,
-            signers[0].address
-          )
+          const signerBalanceAfter = await pollForNewWalletBalance(erc20Contract, tokenAddress, signers[0].address, signerBalanceBefore)
 
           let hollowalletBalanceAfter = await erc20Contract.balanceOf(
             tokenAddress,
@@ -306,11 +294,6 @@ describe('HIP583 Test Suite', function () {
           )
 
           const signerBalanceAfter = await pollForNewERC721Balance(erc721Contract, nftTokenAddress, signers[0].address, signerBalanceBefore)
-
-          // const signerBalanceAfter = await erc721Contract.balanceOf(
-          //   nftTokenAddress,
-          //   signers[0].address
-          // )
 
           const hollowWalletBalance = await erc721Contract.balanceOf(
             nftTokenAddress,
@@ -492,9 +475,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
         Constants.GAS_LIMIT_1_000_000
       )
       await tx.wait()
-      const hollowWalletBalanceAfter = await ethers.provider.getBalance(
-        hollowWallet.address
-      )
+      const hollowWalletBalanceAfter = await pollForNewHollowWalletBalance(ethers.provider, hollowWallet.address, hollowWalletBalanceBefore)
 
       expect(hollowWalletBalanceAfter).to.eq(
         hollowWalletBalanceBefore.add(amount)
@@ -678,7 +659,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
         )
       ).wait()
 
-      const ownerAfter = await erc721Mock.ownerOf(tokenId)
+      const ownerAfter = await pollForNewERC721HollowWalletOwner(erc721Mock, tokenId, ownerBefore)
       expect(ownerAfter).to.eq(secondHollowWallet.address)
     })
   })
@@ -783,7 +764,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         Constants.GAS_LIMIT_1_000_000
       )
 
-      const hollowBalanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, hollowWallet.address, hollowBalanceBefore)
+      const hollowBalanceAfter = await pollForNewWalletBalance(erc20Contract, tokenAddress, hollowWallet.address, hollowBalanceBefore)
  
       expect(hollowBalanceBefore).to.eq(0)
       expect(hollowBalanceAfter).to.eq(amount)
@@ -801,12 +782,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         Constants.GAS_LIMIT_1_000_000
       )
 
-      const hollowBalanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, hollowWallet.address, hollowBalanceBefore)
-      // const hollowBalanceAfter = await erc20Contract.balanceOf(
-      //   tokenAddress,
-      //   hollowWallet.address
-      // )
-
+      const hollowBalanceAfter = await pollForNewWalletBalance(erc20Contract, tokenAddress, hollowWallet.address, hollowBalanceBefore)
       expect(hollowBalanceAfter).to.eq(hollowBalanceBefore.add(amount))
     })
 
@@ -842,7 +818,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         Constants.GAS_LIMIT_1_000_000
       )
 
-      const secondHollowBalanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, secondHollowWallet.address, secondHollowBalanceBefore)
+      const secondHollowBalanceAfter = await pollForNewWalletBalance(erc20Contract, tokenAddress, secondHollowWallet.address, secondHollowBalanceBefore)
 
       expect(secondHollowBalanceBefore).to.eq(0)
       expect(secondHollowBalanceAfter).to.eq(amount)
@@ -903,7 +879,6 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
       )
 
       const ownerAfter = await pollForNewERC721Owner(erc721Contract, nftTokenAddress, signers[0].address, ownerBefore)
-
       expect(ownerBefore).to.eq(signers[0].address)
       expect(ownerAfter).to.eq(hollowWallet.address)
     })
@@ -988,7 +963,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
 })
 
 // Transaction needs to be propagated to the mirror node
-async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddress, balanceBefore) {
+async function pollForNewWalletBalance(erc20Contract, tokenAddress, signersAddress, balanceBefore) {
   const timesToTry = 200;
   let balanceAfter, numberOfTries = 0;
 
@@ -1016,9 +991,7 @@ async function pollForNewERC721Balance(erc721Contract, nftTokenAddress, signersA
       signersAddress
     )    
 
-    if (!(balanceAfter.eq(0)) && (!balanceAfter.eq(balanceBefore))) {
-      console.log(`balanceBefore: ${balanceBefore}`);
-      console.log(`balanceAfter: ${balanceAfter}`); 
+    if (!balanceAfter.eq(balanceBefore)) {
       return balanceAfter;
     }
 
@@ -1029,17 +1002,54 @@ async function pollForNewERC721Balance(erc721Contract, nftTokenAddress, signersA
   throw new Error(`erc721Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
 }
 
+// Transaction needs to be propagated to the mirror node
+async function pollForNewERC721Owner(erc721Contract, nftTokenAddress, signersAddress, ownerBefore) {
+  let ownerAfter, numberOfTries = 0, timesToTry = 200
+  while (numberOfTries < timesToTry){
+    ownerAfter = await erc721Contract.ownerOf(
+      nftTokenAddress,
+      signersAddress
+    )
+   
+    if(ownerAfter != ownerBefore) {
+      return ownerAfter
+    }
+
+    numberOfTries++
+    await delay(1000); // Delay for 1 second before the next attempt
+  } 
+  throw new Error(`erc721Contract.ownerOf failed to get a different value after ${timesToTry} tries`)
+} 
+
+async function pollForNewERC721HollowWalletOwner(erc721Contract, nftTokenAddress, ownerBefore) {
+  let ownerAfter, numberOfTries = 0, timesToTry = 200
+  while (numberOfTries < timesToTry) {
+    ownerAfter = await erc721Contract.ownerOf(
+      nftTokenAddress
+    )
+
+    if(ownerAfter != ownerBefore) {
+      return ownerAfter
+    }
+    numberOfTries++
+    await delay(1000); // Delay for 1 second before the next attempt
+  } 
+  throw new Error(`erc721Contract.ownerOf failed to get a different value after ${timesToTry} tries`)
+} 
 
 
 // Transaction needs to be propagated to the mirror node
-async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddress, balanceBefore) {
+async function pollForNewHollowWalletBalance(provider, walletAddress, balanceBefore) {
   const timesToTry = 200;
   let balanceAfter, numberOfTries = 0;
 
   while (numberOfTries < timesToTry) {
-    balanceAfter = await erc20Contract.balanceOf(tokenAddress, signersAddress);
+      balanceAfter = await provider.getBalance(
+      walletAddress
+    )
 
-    if (!(balanceAfter.eq(0)) && (!balanceAfter.eq(balanceBefore))) {
+
+    if (!balanceAfter.eq(balanceBefore)) {
       return balanceAfter;
     }
 
@@ -1049,22 +1059,6 @@ async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddres
 
   throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
 }
-
-// Transaction needs to be propagated to the mirror node
-async function pollForNewERC721Owner(erc721Contract, nftTokenAddress, signersAddress, ownerBefore) {
-  let ownerAfter, numberOfTries = 0, timesToTry = 200
-  do {
-    ownerAfter = await erc721Contract.ownerOf(
-      nftTokenAddress,
-      signersAddress
-    )
-    numberOfTries++
-    if (numberOfTries == timesToTry) {
-      throw new Error(`erc721Contract.balanceOf failed to get a different value after ${timesToTry} tries`)
-    }
-  } while (ownerAfter == ownerBefore)
-  return ownerAfter
-} 
 
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
