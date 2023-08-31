@@ -24,7 +24,10 @@ import {
   IHederaTokenServiceHederaToken,
   TokenManagementSmartContractResult,
 } from '@/types/contract-interactions/HTS';
-import { prepareHederaTokenKeyArray } from '@/utils/contract-interactions/HTS/helpers';
+import {
+  handleContractResponse,
+  prepareHederaTokenKeyArray,
+} from '@/utils/contract-interactions/HTS/helpers';
 import { Contract, isAddress } from 'ethers';
 
 /**
@@ -110,25 +113,8 @@ export const manageTokenInfomation = async (
         }
     }
 
-    // return err if any
-    if (errMsg) {
-      console.error(errMsg);
-      return { err: errMsg };
-    } else if (!transactionResult) {
-      console.error('Cannot execute contract methods');
-      return { err: 'Cannot execute contract methods' };
-    }
-
-    // get transaction receipt
-    const txReceipt = await transactionResult.wait();
-
-    // retrieve responseCode from event
-    const { data } = txReceipt.logs.filter(
-      (event: any) => event.fragment.name === 'ResponseCode'
-    )[0];
-
-    // @notice: 22 represents the predefined response code from the Hedera system contracts, indicating a successful transaction.
-    return { result: Number(data) === 22, transactionHash: txReceipt.hash };
+    // handle contract responses
+    return await handleContractResponse(transactionResult, errMsg);
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };
@@ -222,25 +208,8 @@ export const manageTokenPermission = async (
         }
     }
 
-    // return err if any
-    if (errMsg) {
-      console.error(errMsg);
-      return { err: errMsg };
-    } else if (!transactionResult) {
-      console.error('Cannot execute contract methods');
-      return { err: 'Cannot execute contract methods' };
-    }
-
-    // get transaction receipt
-    const txReceipt = await transactionResult.wait();
-
-    // retrieve responseCode from event
-    const { data } = txReceipt.logs.filter(
-      (event: any) => event.fragment.name === 'ResponseCode'
-    )[0];
-
-    // @notice: 22 represents the predefined response code from the Hedera system contracts, indicating a successful transaction.
-    return { result: Number(data) === 22, transactionHash: txReceipt.hash };
+    // handle contract responses
+    return await handleContractResponse(transactionResult, errMsg);
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };
@@ -285,16 +254,8 @@ export const manageTokenStatus = async (
         transactionResult = await baseContract.unpauseTokenPublic(hederaTokenAddress);
     }
 
-    // get transaction receipt
-    const txReceipt = await transactionResult.wait();
-
-    // retrieve responseCode from event
-    const { data } = txReceipt.logs.filter(
-      (event: any) => event.fragment.name === 'ResponseCode'
-    )[0];
-
-    // @notice: 22 represents the predefined response code from the Hedera system contracts, indicating a successful transaction.
-    return { result: Number(data) === 22, transactionHash: txReceipt.hash };
+    // handle contract responses
+    return await handleContractResponse(transactionResult);
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };
@@ -388,16 +349,8 @@ export const manageTokenRelation = async (
         }
     }
 
-    // get transaction receipt
-    const txReceipt = await transactionResult.wait();
-
-    // retrieve responseCode from event
-    const { data } = txReceipt.logs.filter(
-      (event: any) => event.fragment.name === 'ResponseCode'
-    )[0];
-
-    // @notice: 22 represents the predefined response code from the Hedera system contracts, indicating a successful transaction.
-    return { result: Number(data) === 22, transactionHash: txReceipt.hash };
+    // handle contract responses
+    return await handleContractResponse(transactionResult);
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };
@@ -510,25 +463,8 @@ export const manageTokenDeduction = async (
         transactionResult = await baseContract.deleteTokenPublic(hederaTokenAddress);
     }
 
-    // return err if any
-    if (errMsg) {
-      console.error(errMsg);
-      return { err: errMsg };
-    } else if (!transactionResult) {
-      console.error('Cannot execute contract methods');
-      return { err: 'Cannot execute contract methods' };
-    }
-
-    // get transaction receipt
-    const txReceipt = await transactionResult.wait();
-
-    // retrieve responseCode from event
-    const { data } = txReceipt.logs.filter(
-      (event: any) => event.fragment.name === 'ResponseCode'
-    )[0];
-
-    // @notice: 22 represents the predefined response code from the Hedera system contracts, indicating a successful transaction.
-    return { result: Number(data) === 22, transactionHash: txReceipt.hash };
+    // handle contract responses
+    return await handleContractResponse(transactionResult, errMsg);
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };
