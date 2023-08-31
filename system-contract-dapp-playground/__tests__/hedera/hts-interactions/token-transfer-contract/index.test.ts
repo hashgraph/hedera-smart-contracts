@@ -38,7 +38,6 @@ describe('TokenTransferContract test suite', () => {
   const senderB = '0x0851072d7bB726305032Eff23CB8fd22eB74c85B';
   const receiverA = '0x7a35433804d8Cd070d98d66C6E9b45c6C32C3CDD';
   const receiverB = '0x9de0881b3110aA8cAD1dF3182B1eB6F14d1608a2';
-  const accountAddress = '0x34810E139b451e0a4c67d5743E956Ac8990842A8';
   const hederaTokenAddress = '0x00000000000000000000000000000000000084b7';
   const txHash = '0x63424020a69bf46a0669f46dd66addba741b9c02d37fab1686428f5209bc759d';
 
@@ -83,17 +82,19 @@ describe('TokenTransferContract test suite', () => {
     // prepare tokenTransferList: IHederaTokenServiceTokenTransferList
     const nftTransfers = [
       {
-        senderAcocuntID: senderA,
+        senderAccountID: senderA,
         receiverAccountID: receiverA,
         serialNumber: 3,
         isApproval: false,
       },
     ];
-    const tokenTransferList: IHederaTokenServiceTokenTransferList = {
-      token: hederaTokenAddress,
-      transfers,
-      nftTransfers,
-    };
+    const tokenTransferList: IHederaTokenServiceTokenTransferList[] = [
+      {
+        token: hederaTokenAddress,
+        transfers,
+        nftTransfers,
+      },
+    ];
 
     it('should execute transferCrypto then return a successful response code', async () => {
       const txRes = await transferCrypto(

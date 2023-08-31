@@ -376,7 +376,7 @@ interface IHederaTokenServiceNonFungibleTokenInfo {
 interface IHederaTokenServiceAccountAmount {
   accountID: string;
   amount: number;
-  isApproval: boolean;
+  isApproval?: boolean;
 }
 
 /**
@@ -393,7 +393,7 @@ interface IHederaTokenServiceAccountAmount {
  * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L34
  */
 interface IHederaTokenServiceNftTransfer {
-  senderAcocuntID: string;
+  senderAccountID: string;
   receiverAccountID: string;
   serialNumber: number;
   isApproval: boolean;
