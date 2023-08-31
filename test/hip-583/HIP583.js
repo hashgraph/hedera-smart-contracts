@@ -878,7 +878,11 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         Constants.GAS_LIMIT_1_000_000
       )
 
-      const ownerAfter = await pollForNewERC721Owner(erc721Contract, nftTokenAddress, signers[0].address, ownerBefore)
+      const ownerAfter = await erc721Contract.ownerOf(
+        nftTokenAddress,
+        mintedTokenSerialNumber
+      )
+
       expect(ownerBefore).to.eq(signers[0].address)
       expect(ownerAfter).to.eq(hollowWallet.address)
     })
@@ -902,7 +906,10 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         Constants.GAS_LIMIT_1_000_000
       )
 
-      const ownerAfter = await pollForNewERC721Owner(erc721Contract, nftTokenAddress, signers[0].address, ownerBefore)
+      const ownerAfter = await erc721Contract.ownerOf(
+        nftTokenAddress,
+        newMintedTokenSerialNumber
+      )
 
       expect(ownerBefore).to.eq(signers[0].address)
       expect(ownerAfter).to.eq(hollowWallet.address)
@@ -954,8 +961,11 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         )
       ).wait()
 
-      const ownerAfter = await pollForNewERC721Owner(erc721Contract, nftTokenAddress, signers[0].address, ownerBefore)
-
+      const ownerAfter = await erc721Contract.ownerOf(
+        nftTokenAddress,
+        newMintedTokenSerialNumber
+      )
+ 
       expect(ownerBefore).to.eq(hollowWallet.address)
       expect(ownerAfter).to.eq(secondHollowWallet.address)
     })
@@ -1003,23 +1013,23 @@ async function pollForNewERC721Balance(erc721Contract, nftTokenAddress, signersA
 }
 
 // Transaction needs to be propagated to the mirror node
-async function pollForNewERC721Owner(erc721Contract, nftTokenAddress, signersAddress, ownerBefore) {
-  let ownerAfter, numberOfTries = 0, timesToTry = 200
-  while (numberOfTries < timesToTry){
-    ownerAfter = await erc721Contract.ownerOf(
-      nftTokenAddress,
-      signersAddress
-    )
+// async function pollForNewERC721Owner(erc721Contract, nftTokenAddress, signersAddress, ownerBefore) {
+//   let ownerAfter, numberOfTries = 0, timesToTry = 200
+//   while (numberOfTries < timesToTry){
+//     ownerAfter = await erc721Contract.ownerOf(
+//       nftTokenAddress,
+//       signersAddress
+//     )
    
-    if(ownerAfter != ownerBefore) {
-      return ownerAfter
-    }
+//     if(ownerAfter != ownerBefore) {
+//       return ownerAfter
+//     }
 
-    numberOfTries++
-    await delay(1000); // Delay for 1 second before the next attempt
-  } 
-  throw new Error(`erc721Contract.ownerOf failed to get a different value after ${timesToTry} tries`)
-} 
+//     numberOfTries++
+//     await delay(1000); // Delay for 1 second before the next attempt
+//   } 
+//   throw new Error(`erc721Contract.ownerOf failed to get a different value after ${timesToTry} tries`)
+// } 
 
 async function pollForNewERC721HollowWalletOwner(erc721Contract, nftTokenAddress, ownerBefore) {
   let ownerAfter, numberOfTries = 0, timesToTry = 200
