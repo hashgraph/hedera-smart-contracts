@@ -369,7 +369,8 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
       {
         const counterBefore = await proxyContract.count()
         await proxyContract.increment()
-        const counterAfter = await proxyContract.count()
+        
+        const counterAfter = await pollForNewCounterValue(proxyContract, counterBefore);
         expect(counterAfter, 'Asserting counter increment').to.be.greaterThan(
           counterBefore
         )
@@ -395,3 +396,28 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
     })
   })
 })
+
+// Transaction needs to be propagated to the mirror node
+async function pollForNewCounterValue(proxyContract, counterBefore) {
+  const timesToTry = 200;
+  let counterAfter, numberOfTries = 0;
+
+  while (numberOfTries < timesToTry) {
+      counterAfter = await proxyContract.count();
+
+
+    if (!counterAfter.eq(counterBefore)) {
+      return counterAfter;
+    }
+
+    numberOfTries++;
+    await delay(1000); // Delay for 1 second before the next attempt
+  }
+
+  throw new Error(`proxyContract.count failed to get a different value after ${timesToTry} tries`);
+}
+
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
