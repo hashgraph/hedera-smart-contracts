@@ -34,18 +34,23 @@ import {
  *
  * @param transferList: IHederaTokenServiceTransferList
  *
- * @param tokenTransferList: IHederaTokenServiceTokenTransferList
+ * @param tokenTransferList: IHederaTokenServiceTokenTransferList[]
+ *
+ * @param gasLimit: number
  *
  * @return Promise<TokenTransferSmartContractResult>
  */
 export const transferCrypto = async (
   baseContract: Contract,
   transferList: IHederaTokenServiceTransferList,
-  tokenTransferList: IHederaTokenServiceTokenTransferList
+  tokenTransferList: IHederaTokenServiceTokenTransferList[],
+  gasLimit: number
 ): Promise<TokenTransferSmartContractResult> => {
   // invoking contract methods
   try {
-    const tx = await baseContract.cryptoTransferPublic(transferList, tokenTransferList);
+    const tx = await baseContract.cryptoTransferPublic(transferList, tokenTransferList, {
+      gasLimit,
+    });
 
     const txReceipt = await tx.wait();
 

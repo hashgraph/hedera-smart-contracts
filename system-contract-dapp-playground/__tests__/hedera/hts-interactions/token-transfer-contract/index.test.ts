@@ -33,6 +33,7 @@ import { Contract } from 'ethers';
 
 describe('TokenTransferContract test suite', () => {
   const responseCode = 22;
+  const gasLimit = 1000000;
   const invalidSender = '0xabc';
   const senderA = '0xDd7fCb7c2ee96A79B1e201d25F5E43d6a0cED5e6';
   const senderB = '0x0851072d7bB726305032Eff23CB8fd22eB74c85B';
@@ -100,7 +101,8 @@ describe('TokenTransferContract test suite', () => {
       const txRes = await transferCrypto(
         baseContract as unknown as Contract,
         transferList,
-        tokenTransferList
+        tokenTransferList,
+        gasLimit
       );
 
       expect(txRes.err).toBeNull;
