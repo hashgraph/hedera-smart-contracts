@@ -25,17 +25,25 @@ import {
 } from '@/types/contract-interactions/HTS';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { HederaTokenKeyTypes, TRANSACTION_PAGE_SIZE } from '../states/commonStates';
+import {
+  generateInitialFungibleParamValue,
+  generateInitialNonFungibleParamValue,
+} from '../../token-transfer-contract/method/transferMultipleTokens/helpers/generateInitialValues';
 
 interface HookProps {
   toaster: any;
   setMetadata?: any;
   toastTitle: string;
   isSuccessful: boolean;
-  resetParamValues: any;
+  resetParamValues?: any;
   setTokenAddresses?: any;
   toastDescription?: string;
-  setParamValues: Dispatch<any>;
+  setFungibleParamValues?: any;
+  setParamValues?: Dispatch<any>;
+  setNonFungibleParamValues?: any;
   initialTokenAddressesValues?: any;
+  setTokenTransferParamValues?: any;
+  setCryptoTransferParamValues?: any;
   initialKeyValues?: CommonKeyObject[];
   transactionResults: TransactionResult[];
   setIsSuccessful: Dispatch<SetStateAction<boolean>>;
@@ -62,8 +70,12 @@ export const useToastSuccessful = ({
   setTokenAddresses,
   setKeyTypesToShow,
   transactionResults,
+  setFungibleParamValues,
   setCurrentTransactionPage,
+  setNonFungibleParamValues,
+  setTokenTransferParamValues,
   initialTokenAddressesValues,
+  setCryptoTransferParamValues,
 }: HookProps) => {
   useEffect(() => {
     if (isSuccessful) {
@@ -78,12 +90,16 @@ export const useToastSuccessful = ({
       setIsSuccessful(false);
       if (setKeys) setKeys([]);
       if (setMetadata) setMetadata([]);
-      setParamValues(resetParamValues);
       if (setWithCustomFee) setWithCustomFee(false);
+      if (setParamValues) setParamValues(resetParamValues);
       if (initialKeyValues && setKeys) setKeys(initialKeyValues);
+      if (setTokenTransferParamValues) setTokenTransferParamValues([]);
+      if (setCryptoTransferParamValues) setCryptoTransferParamValues([]);
       if (setKeyTypesToShow) setKeyTypesToShow(new Set(HederaTokenKeyTypes));
       if (setTokenAddresses) setTokenAddresses([initialTokenAddressesValues]);
       if (setChosenKeys) setChosenKeys(new Set<IHederaTokenServiceKeyType>());
+      if (setFungibleParamValues) setFungibleParamValues(generateInitialFungibleParamValue);
+      if (setNonFungibleParamValues) setFungibleParamValues(generateInitialNonFungibleParamValue);
       // set the current page to the last page so it can show the newly created transaction
       const maxPageNum = Math.ceil(transactionResults.length / TRANSACTION_PAGE_SIZE);
       setCurrentTransactionPage(maxPageNum === 0 ? 1 : maxPageNum);
@@ -103,8 +119,12 @@ export const useToastSuccessful = ({
     resetParamValues,
     setKeyTypesToShow,
     setTokenAddresses,
+    setFungibleParamValues,
     transactionResults.length,
     setCurrentTransactionPage,
+    setNonFungibleParamValues,
     initialTokenAddressesValues,
+    setTokenTransferParamValues,
+    setCryptoTransferParamValues,
   ]);
 };

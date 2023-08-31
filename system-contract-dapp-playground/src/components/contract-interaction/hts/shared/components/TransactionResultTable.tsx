@@ -64,7 +64,9 @@ interface TransactionResultTablePageProps {
     | 'QuerySpecificInfo'
     | 'QueryTokenGeneralInfo'
     | 'QueryTokenPermission'
-    | 'QueryTokenRelation';
+    | 'QueryTokenRelation'
+    | 'CryptoTransfer'
+    | 'TransferSingle';
 }
 
 export const TransactionResultTable = ({
@@ -104,6 +106,7 @@ export const TransactionResultTable = ({
       endingHashIndex = -5;
       break;
     case 'QueryTokenRelation':
+    case 'TransferSingle':
       beginingHashIndex = 4;
       endingHashIndex = -3;
       break;
@@ -119,8 +122,11 @@ export const TransactionResultTable = ({
             </Th>
             <Th color={'#82ACF9'}>Status</Th>
             <Th color={'#82ACF9'}>Tx hash</Th>
-            <Th color={'#82ACF9'}>Token address</Th>
-            {API === 'TokenMint' && <Th color={'#82ACF9'}>Recipient</Th>}
+            {API !== 'CryptoTransfer' && <Th color={'#82ACF9'}>Token</Th>}
+            {API === 'TransferSingle' && <Th color={'#82ACF9'}>Sender</Th>}
+            {(API === 'TokenMint' || API === 'TransferSingle') && (
+              <Th color={'#82ACF9'}>Recipient</Th>
+            )}
             {API === 'TokenAssociate' && <Th color={'#82ACF9'}>Associated Account</Th>}
             {API === 'QueryTokenRelation' && <Th color={'#82ACF9'}>Account</Th>}
             {API === 'GrantKYC' && <Th color={'#82ACF9'}>KYCed Account</Th>}
@@ -132,7 +138,8 @@ export const TransactionResultTable = ({
             {(API === 'QueryTokenGeneralInfo' ||
               API === 'QuerySpecificInfo' ||
               API === 'QueryTokenPermission' ||
-              API === 'QueryTokenRelation') && <Th color={'#82ACF9'}>API called</Th>}
+              API === 'QueryTokenRelation' ||
+              API === 'TransferSingle') && <Th color={'#82ACF9'}>API called</Th>}
             <Th />
           </Tr>
         </Thead>
@@ -182,11 +189,14 @@ export const TransactionResultTable = ({
                         <PopoverTrigger>
                           <div className="flex gap-1 items-center">
                             <Tooltip label="click to copy transaction hash">
-                              {/* {withTokenAddress ? ( */}
-                              <p>
-                                {transactionResult.txHash.slice(0, beginingHashIndex)}...
-                                {transactionResult.txHash.slice(endingHashIndex)}
-                              </p>
+                              {API === 'CryptoTransfer' ? (
+                                transactionResult.txHash
+                              ) : (
+                                <p>
+                                  {transactionResult.txHash.slice(0, beginingHashIndex)}...
+                                  {transactionResult.txHash.slice(endingHashIndex)}
+                                </p>
+                              )}
                             </Tooltip>
                           </div>
                         </PopoverTrigger>
@@ -220,7 +230,8 @@ export const TransactionResultTable = ({
                   API === 'QueryTokenGeneralInfo' ||
                   API === 'QuerySpecificInfo' ||
                   API === 'QueryTokenPermission' ||
-                  API === 'QueryTokenRelation') && (
+                  API === 'QueryTokenRelation' ||
+                  API === 'TransferSingle') && (
                   <Td className="cursor-pointer">
                     {transactionResult.tokenAddress ? (
                       <div className="flex gap-1 items-center">
@@ -382,7 +393,8 @@ export const TransactionResultTable = ({
                 {(API === 'TokenMint' ||
                   API === 'TokenAssociate' ||
                   API === 'GrantKYC' ||
-                  API === 'QueryTokenRelation') && (
+                  API === 'QueryTokenRelation' ||
+                  API === 'TransferSingle') && (
                   <Td className="cursor-pointer">
                     {transactionResult.accountAddress ? (
                       <div className="flex gap-1 items-center">
@@ -433,6 +445,49 @@ export const TransactionResultTable = ({
                             )}...${ethers.ZeroAddress.slice(endingHashIndex)}`}
                       </>
                     )}
+                  </Td>
+                )}
+
+                {API === 'TransferSingle' && (
+                  <Td className="cursor-pointer">
+                    <div className="flex gap-1 items-center">
+                      <div
+                        onClick={() =>
+                          navigator.clipboard.writeText(transactionResult.receiverAddress!)
+                        }
+                      >
+                        <Popover>
+                          <PopoverTrigger>
+                            <div className="flex gap-1 items-center">
+                              <Tooltip label="click to copy recipient address">
+                                <p>
+                                  {transactionResult.receiverAddress!.slice(0, beginingHashIndex)}
+                                  ...
+                                  {transactionResult.receiverAddress!.slice(endingHashIndex)}
+                                </p>
+                              </Tooltip>
+                            </div>
+                          </PopoverTrigger>
+                          <PopoverContent width={'fit-content'} border={'none'}>
+                            <div className="bg-secondary px-3 py-2 border-none font-medium">
+                              Copied
+                            </div>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      <Tooltip
+                        label={'Explore this user on HashScan'}
+                        placement="top"
+                        fontWeight={'medium'}
+                      >
+                        <Link
+                          href={`https://hashscan.io/${hederaNetwork}/account/${transactionResult.receiverAddress}`}
+                          target="_blank"
+                        >
+                          <FiExternalLink />
+                        </Link>
+                      </Tooltip>
+                    </div>
                   </Td>
                 )}
 
@@ -504,7 +559,8 @@ export const TransactionResultTable = ({
                 {(API === 'QueryTokenGeneralInfo' ||
                   API === 'QuerySpecificInfo' ||
                   API === 'QueryTokenPermission' ||
-                  API === 'QueryTokenRelation') && (
+                  API === 'QueryTokenRelation' ||
+                  API === 'TransferSingle') && (
                   <Td>
                     {transactionResult.APICalled ? (
                       <>

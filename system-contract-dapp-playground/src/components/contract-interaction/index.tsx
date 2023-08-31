@@ -50,6 +50,7 @@ import {
   PopoverTrigger,
   Tooltip,
 } from '@chakra-ui/react';
+import HederaTokenTransferMethods from './hts/token-transfer-contract/method';
 
 interface PageProps {
   contract: HederaContractAsset;
@@ -337,6 +338,14 @@ const ContractInteraction = ({ contract }: PageProps) => {
                     {/* HTS Token Query*/}
                     {contract.name === 'TokenQueryContract' && (
                       <HederaTokenQueryMethods
+                        method={method}
+                        baseContract={baseContract! as Contract}
+                      />
+                    )}
+
+                    {/* HTS Token Transfer*/}
+                    {contract.name === 'TokenTransferContract' && (
+                      <HederaTokenTransferMethods
                         method={method}
                         baseContract={baseContract! as Contract}
                       />

@@ -32,11 +32,16 @@ interface ParamsProps {
   feeValue?: string;
   maxSupply?: string;
   initSupply?: string;
+  amounts?: number[];
+  senders?: string[];
   serialNumber?: string;
   ownerAddress?: string;
+  senderAddress?: string;
   spenderAddress?: string;
   withCustomFee?: boolean;
   accountAddress?: string;
+  serialNumbers?: number[];
+  receiverAddress?: string;
   feeTokenAddress?: string;
   keys?: CommonKeyObject[];
   autoRenewPeriod?: string;
@@ -46,6 +51,8 @@ interface ParamsProps {
   associatingAddress?: string;
   tokenAddressToMint?: string;
   hederaTokenAddress?: string;
+  fungibleReceivers?: string[];
+  nonFungibleReceivers?: string[];
   grantingKYCAccountAddress?: string;
   API:
     | 'TokenCreate'
@@ -67,7 +74,10 @@ interface ParamsProps {
     | 'ALLOWANCE'
     | 'GET_APPROVED'
     | 'IS_APPROVAL'
-    | 'QueryTokenRelation';
+    | 'QueryTokenRelation'
+    | 'TransferSingle'
+    | 'MULTI_FUNGIBLE'
+    | 'MULTI_NON_FUNGIBLE';
 }
 /** @dev handle sanitizing Hedera token form inputs */
 export const handleSanitizeHederaFormInputs = ({
@@ -77,6 +87,8 @@ export const handleSanitizeHederaFormInputs = ({
   amount,
   symbol,
   second,
+  amounts,
+  senders,
   decimals,
   treasury,
   feeValue,
@@ -84,17 +96,22 @@ export const handleSanitizeHederaFormInputs = ({
   initSupply,
   ownerAddress,
   serialNumber,
+  senderAddress,
   withCustomFee,
   spenderAddress,
   accountAddress,
+  serialNumbers,
+  tokenAddresses,
   feeTokenAddress,
+  receiverAddress,
   autoRenewPeriod,
   recipientAddress,
   autoRenewAccount,
+  fungibleReceivers,
   tokenAddressToMint,
   associatingAddress,
   hederaTokenAddress,
-  tokenAddresses,
+  nonFungibleReceivers,
   grantingKYCAccountAddress,
 }: ParamsProps) => {
   // sanitize params
@@ -309,6 +326,88 @@ export const handleSanitizeHederaFormInputs = ({
       sanitizeErr = 'Invalid token address';
     } else if (!isAddress(accountAddress)) {
       sanitizeErr = 'Invalid account address';
+    }
+  } else if (API === 'TransferSingle') {
+    if (!isAddress(hederaTokenAddress)) {
+      sanitizeErr = 'Invalid token address';
+    } else if (!isAddress(senderAddress)) {
+      sanitizeErr = 'Invalid sender address';
+    } else if (!isAddress(receiverAddress)) {
+      sanitizeErr = 'Invalid receiver address';
+    } else if (Number(amount) < 0) {
+      sanitizeErr = 'Invalid amount of token';
+    } else if (feeValue === '') {
+      sanitizeErr = 'Gas limit should be set for this transaction';
+    }
+  } else if (API === 'MULTI_FUNGIBLE') {
+    if (!isAddress(hederaTokenAddress)) {
+      sanitizeErr = 'Invalid token address';
+    }
+
+    if (!sanitizeErr) {
+      fungibleReceivers?.some((receiver) => {
+        if (receiver === '') {
+          sanitizeErr = 'Receiver cannot be empty';
+          return true;
+        } else if (!isAddress(receiver)) {
+          sanitizeErr = `${receiver} is an invalid receiver address`;
+          return true;
+        }
+      });
+    }
+
+    if (!sanitizeErr) {
+      amounts?.some((amount) => {
+        if (amount < 0) {
+          sanitizeErr = `${amount} is an invalid amount`;
+          return true;
+        }
+      });
+    }
+
+    if (!sanitizeErr && feeValue === '') {
+      sanitizeErr = 'Gas limit should be set for this transaction';
+    }
+  } else if (API === 'MULTI_NON_FUNGIBLE') {
+    if (!isAddress(hederaTokenAddress)) {
+      sanitizeErr = 'Invalid token address';
+    }
+
+    if (!sanitizeErr) {
+      senders?.some((semder) => {
+        if (semder === '') {
+          sanitizeErr = 'sender address cannot be empty';
+          return true;
+        } else if (!isAddress(semder)) {
+          sanitizeErr = `${semder} is an invalid sender address`;
+          return true;
+        }
+      });
+    }
+
+    if (!sanitizeErr) {
+      nonFungibleReceivers?.some((receiver) => {
+        if (receiver === '') {
+          sanitizeErr = 'Receiver cannot be empty';
+          return true;
+        } else if (!isAddress(receiver)) {
+          sanitizeErr = `${receiver} is an invalid receiver address`;
+          return true;
+        }
+      });
+    }
+
+    if (!sanitizeErr) {
+      serialNumbers?.some((serialNumber) => {
+        if (serialNumber < 0) {
+          sanitizeErr = `${serialNumber} is an invalid serial number`;
+          return true;
+        }
+      });
+    }
+
+    if (!sanitizeErr && feeValue === '') {
+      sanitizeErr = 'Gas limit should be set for this transaction';
     }
   }
 
