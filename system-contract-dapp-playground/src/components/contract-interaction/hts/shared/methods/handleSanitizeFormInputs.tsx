@@ -26,21 +26,35 @@ interface ParamsProps {
   name?: string;
   amount?: string;
   symbol?: string;
+  second?: string;
   treasury?: string;
   decimals?: string;
-  msgValue?: string;
+  feeValue?: string;
   maxSupply?: string;
   initSupply?: string;
+  serialNumber?: string;
   withCustomFee?: boolean;
+  accountAddress?: string;
   feeTokenAddress?: string;
   keys?: CommonKeyObject[];
-  tokenAddresses?: string[];
+  autoRenewPeriod?: string;
+  autoRenewAccount?: string;
   recipientAddress?: string;
+  tokenAddresses?: string[];
   associatingAddress?: string;
   tokenAddressToMint?: string;
   hederaTokenAddress?: string;
   grantingKYCAccountAddress?: string;
-  API: 'TokenCreate' | 'Mint' | 'Associate' | 'GrantKYC';
+  API:
+    | 'TokenCreate'
+    | 'Mint'
+    | 'Associate'
+    | 'GrantKYC'
+    | 'UpdateTokenInfo'
+    | 'UpdateTokenExpiry'
+    | 'APPROVED_FUNGIBLE'
+    | 'APPROVED_NON_FUNGIBLE'
+    | 'SET_APPROVAL';
 }
 /** @dev handle sanitizing Hedera token form inputs */
 export const handleSanitizeHederaFormInputs = ({
@@ -49,15 +63,20 @@ export const handleSanitizeHederaFormInputs = ({
   keys,
   amount,
   symbol,
-  msgValue,
+  second,
   decimals,
   treasury,
+  feeValue,
   maxSupply,
   initSupply,
+  serialNumber,
   withCustomFee,
   tokenAddresses,
+  accountAddress,
   feeTokenAddress,
+  autoRenewPeriod,
   recipientAddress,
+  autoRenewAccount,
   tokenAddressToMint,
   associatingAddress,
   hederaTokenAddress,
@@ -104,7 +123,7 @@ export const handleSanitizeHederaFormInputs = ({
     }
 
     // service fee
-    if (!sanitizeErr && msgValue === '') {
+    if (!sanitizeErr && feeValue === '') {
       sanitizeErr = 'Service fee field cannot be empty';
     }
   } else if (API === 'Mint') {
@@ -131,6 +150,54 @@ export const handleSanitizeHederaFormInputs = ({
       sanitizeErr = 'Invalid token address';
     } else if (!isAddress(grantingKYCAccountAddress)) {
       sanitizeErr = 'Invalid token address';
+    }
+  } else if (API === 'UpdateTokenInfo') {
+    if (!isAddress(hederaTokenAddress)) {
+      sanitizeErr = 'Invalid token address';
+    } else if (name === '') {
+      sanitizeErr = "Token name can't be empty";
+    } else if (symbol === '') {
+      sanitizeErr = "Token symbol can't be empty";
+    } else if (!isAddress(treasury)) {
+      sanitizeErr = 'Invalid treasury address';
+    } else if (maxSupply === '' || Number(maxSupply) < 0) {
+      sanitizeErr = 'Max supply cannot be negative';
+    } else if (feeValue === '') {
+      sanitizeErr = 'Gas limit should be set for this transaction';
+    }
+  } else if (API === 'UpdateTokenExpiry') {
+    if (!isAddress(hederaTokenAddress)) {
+      sanitizeErr = 'Invalid token address';
+    } else if (second === '' || Number(second) < 0) {
+      sanitizeErr = 'Invalid expiry time';
+    } else if (!isAddress(autoRenewAccount)) {
+      sanitizeErr = 'Invalid auto renew account address';
+    } else if (autoRenewPeriod === '' || Number(autoRenewPeriod) < 0) {
+      sanitizeErr = 'Invalid auto renew period';
+    } else if (feeValue === '') {
+      sanitizeErr = 'Gas limit should be set for this transaction';
+    }
+  } else if (API === 'APPROVED_FUNGIBLE') {
+    if (!isAddress(hederaTokenAddress)) {
+      sanitizeErr = 'Invalid token address';
+    } else if (!isAddress(accountAddress)) {
+      sanitizeErr = 'Invalid account address';
+    } else if (amount === '' || Number(amount) < 0) {
+      sanitizeErr = 'Invalid amount to approved';
+    }
+  } else if (API === 'APPROVED_NON_FUNGIBLE') {
+    if (!isAddress(hederaTokenAddress)) {
+      sanitizeErr = 'Invalid token address';
+    } else if (!isAddress(accountAddress)) {
+      sanitizeErr = 'Invalid account address';
+    } else if (serialNumber === '' || Number(serialNumber) < 0) {
+      sanitizeErr = 'Invalid serial number approved';
+    }
+  } else if (API === 'SET_APPROVAL') {
+    if (!isAddress(hederaTokenAddress)) {
+      sanitizeErr = 'Invalid token address';
+    } else if (!isAddress(accountAddress)) {
+      sanitizeErr = 'Invalid account address';
     }
   }
 
