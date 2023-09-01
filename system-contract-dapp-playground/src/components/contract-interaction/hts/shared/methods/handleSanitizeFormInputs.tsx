@@ -183,7 +183,7 @@ export const handleSanitizeHederaFormInputs = ({
     } else if (!isAddress(accountAddress)) {
       sanitizeErr = 'Invalid account address';
     } else if (amount === '' || Number(amount) < 0) {
-      sanitizeErr = 'Invalid amount to approved';
+      sanitizeErr = 'Invalid amount';
     }
   } else if (API === 'APPROVED_NON_FUNGIBLE') {
     if (!isAddress(hederaTokenAddress)) {
@@ -191,7 +191,7 @@ export const handleSanitizeHederaFormInputs = ({
     } else if (!isAddress(accountAddress)) {
       sanitizeErr = 'Invalid account address';
     } else if (serialNumber === '' || Number(serialNumber) < 0) {
-      sanitizeErr = 'Invalid serial number approved';
+      sanitizeErr = 'Invalid serial number';
     }
   } else if (API === 'SET_APPROVAL') {
     if (!isAddress(hederaTokenAddress)) {
