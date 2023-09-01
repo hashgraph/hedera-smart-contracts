@@ -28,6 +28,7 @@ import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 interface SharedFormInputFieldPageProps {
   param: string;
   paramKey: string;
+  setFieldKey?: any;
   paramType: string;
   paramSize: string;
   paramValue: string;
@@ -37,7 +38,7 @@ interface SharedFormInputFieldPageProps {
   paramClassName: string;
   paramFocusColor: string;
   paramPlaceholder: string;
-  handleInputOnChange: (e: any, param: string, fieldKeyToSet?: string) => void;
+  handleInputOnChange: (e: any, param: string, fieldKeyToSet?: string, setFieldKey?: any) => void;
 }
 
 export const SharedFormInputField = ({
@@ -48,6 +49,7 @@ export const SharedFormInputField = ({
   paramSize,
   paramValue,
   explanation,
+  setFieldKey,
   fieldKeyToSet,
   paramClassName,
   paramFocusColor,
@@ -60,7 +62,7 @@ export const SharedFormInputField = ({
         value={paramValue}
         disabled={isDisable}
         type={paramType}
-        onChange={(e) => handleInputOnChange(e, param, fieldKeyToSet)}
+        onChange={(e) => handleInputOnChange(e, param, fieldKeyToSet, setFieldKey)}
         placeholder={paramPlaceholder}
         size={paramSize}
         focusBorderColor={paramFocusColor}
@@ -147,6 +149,7 @@ export const SharedExecuteButton = ({
 /** @dev shared remove fields button */
 interface SharedRemoveFieldButtonPageProps {
   fieldKey: string;
+  setFieldKey?: any;
   handleModifyTokenAddresses: any;
 }
 export const SharedRemoveFieldsButton = ({
