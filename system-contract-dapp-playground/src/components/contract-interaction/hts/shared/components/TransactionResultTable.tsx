@@ -64,7 +64,8 @@ interface TransactionResultTablePageProps {
     | 'QuerySpecificInfo'
     | 'QueryTokenGeneralInfo'
     | 'QueryTokenPermission'
-    | 'QueryTokenRelation';
+    | 'QueryTokenRelation'
+    | 'CryptoTransfer';
 }
 
 export const TransactionResultTable = ({
@@ -119,7 +120,7 @@ export const TransactionResultTable = ({
             </Th>
             <Th color={'#82ACF9'}>Status</Th>
             <Th color={'#82ACF9'}>Tx hash</Th>
-            <Th color={'#82ACF9'}>Token address</Th>
+            {API !== 'CryptoTransfer' && <Th color={'#82ACF9'}>Token address</Th>}
             {API === 'TokenMint' && <Th color={'#82ACF9'}>Recipient</Th>}
             {API === 'TokenAssociate' && <Th color={'#82ACF9'}>Associated Account</Th>}
             {API === 'QueryTokenRelation' && <Th color={'#82ACF9'}>Account</Th>}
@@ -182,11 +183,14 @@ export const TransactionResultTable = ({
                         <PopoverTrigger>
                           <div className="flex gap-1 items-center">
                             <Tooltip label="click to copy transaction hash">
-                              {/* {withTokenAddress ? ( */}
-                              <p>
-                                {transactionResult.txHash.slice(0, beginingHashIndex)}...
-                                {transactionResult.txHash.slice(endingHashIndex)}
-                              </p>
+                              {API === 'CryptoTransfer' ? (
+                                transactionResult.txHash
+                              ) : (
+                                <p>
+                                  {transactionResult.txHash.slice(0, beginingHashIndex)}...
+                                  {transactionResult.txHash.slice(endingHashIndex)}
+                                </p>
+                              )}
                             </Tooltip>
                           </div>
                         </PopoverTrigger>
