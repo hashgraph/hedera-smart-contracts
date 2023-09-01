@@ -90,8 +90,28 @@ describe('ERC721 tests', function () {
     const ownerBefore = await erc721.ownerOf(tokenId)
     await erc721.transferFrom(signers[0].address, signers[1].address, tokenId)
 
-    const ownerAfter = await erc721.ownerOf(tokenId)
+    const ownerAfter = await pollForNewERC721Owner(erc721, tokenId, ownerBefore)
     expect(ownerBefore).to.not.eq(ownerAfter)
     expect(ownerAfter).to.eq(signers[1].address)
   })
 })
+
+async function pollForNewERC721Owner(erc721Contract, tokenId, ownerBefore) {
+  let ownerAfter, numberOfTries = 0, timesToTry = 200
+  while (numberOfTries < timesToTry) {
+    ownerAfter = await erc721Contract.ownerOf(
+      tokenId
+    )
+
+    if(ownerAfter != ownerBefore) {
+      return ownerAfter
+    }
+    numberOfTries++
+    await delay(1000); // Delay for 1 second before the next attempt
+  } 
+  throw new Error(`erc721Contract.ownerOf failed to get a different value after ${timesToTry} tries`)
+} 
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
