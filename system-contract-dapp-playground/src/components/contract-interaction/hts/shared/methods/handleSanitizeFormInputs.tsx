@@ -39,8 +39,8 @@ interface ParamsProps {
   keys?: CommonKeyObject[];
   autoRenewPeriod?: string;
   autoRenewAccount?: string;
-  recipientAddress?: string;
   tokenAddresses?: string[];
+  recipientAddress?: string;
   associatingAddress?: string;
   tokenAddressToMint?: string;
   hederaTokenAddress?: string;
@@ -54,7 +54,8 @@ interface ParamsProps {
     | 'UpdateTokenExpiry'
     | 'APPROVED_FUNGIBLE'
     | 'APPROVED_NON_FUNGIBLE'
-    | 'SET_APPROVAL';
+    | 'SET_APPROVAL'
+    | 'UpdateTokenRelation';
 }
 /** @dev handle sanitizing Hedera token form inputs */
 export const handleSanitizeHederaFormInputs = ({
@@ -71,7 +72,6 @@ export const handleSanitizeHederaFormInputs = ({
   initSupply,
   serialNumber,
   withCustomFee,
-  tokenAddresses,
   accountAddress,
   feeTokenAddress,
   autoRenewPeriod,
@@ -80,6 +80,7 @@ export const handleSanitizeHederaFormInputs = ({
   tokenAddressToMint,
   associatingAddress,
   hederaTokenAddress,
+  tokenAddresses,
   grantingKYCAccountAddress,
 }: ParamsProps) => {
   // sanitize params
@@ -139,11 +140,18 @@ export const handleSanitizeHederaFormInputs = ({
       sanitizeErr = 'Invalid associating account address';
     } else {
       tokenAddresses?.some((tokenAddress) => {
-        if (!isAddress(tokenAddress)) {
+        if (tokenAddress.trim() === '') {
+          sanitizeErr = `Token address cannot be empty.`;
+          return true;
+        } else if (!isAddress(tokenAddress)) {
           sanitizeErr = `${tokenAddress} is not a valid token address`;
           return true;
         }
       });
+    }
+
+    if (!sanitizeErr && typeof feeValue !== 'undefined' && feeValue === '') {
+      sanitizeErr = 'Gas limit should be set for this transaction';
     }
   } else if (API === 'GrantKYC') {
     if (!isAddress(hederaTokenAddress)) {
@@ -198,6 +206,14 @@ export const handleSanitizeHederaFormInputs = ({
       sanitizeErr = 'Gas limit should be set for this transaction';
     }
   } else if (API === 'SET_APPROVAL') {
+    if (!isAddress(hederaTokenAddress)) {
+      sanitizeErr = 'Invalid token address';
+    } else if (!isAddress(accountAddress)) {
+      sanitizeErr = 'Invalid account address';
+    } else if (feeValue === '') {
+      sanitizeErr = 'Gas limit should be set for this transaction';
+    }
+  } else if (API === 'UpdateTokenRelation') {
     if (!isAddress(hederaTokenAddress)) {
       sanitizeErr = 'Invalid token address';
     } else if (!isAddress(accountAddress)) {
