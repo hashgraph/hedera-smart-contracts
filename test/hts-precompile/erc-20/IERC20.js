@@ -112,7 +112,7 @@ describe('IERC20 Test Suite', function () {
     const signer1BalanceBefore = await IERC20.balanceOf(signers[1].address)
     await IERC20.transfer(signers[1].address, AMOUNT)
 
-    const signer0BalanceAfter = await IERC20.balanceOf(signers[0].address)
+    const signer0BalanceAfter = await pollForNewSignerBalance(IERC20, signers[0].address, signer0BalanceBefore)
     const signer1BalanceAfter = await IERC20.balanceOf(signers[1].address)
 
     expect(signer0BalanceAfter).to.eq(signer0BalanceBefore - AMOUNT)
@@ -138,7 +138,7 @@ describe('IERC20 Test Suite', function () {
     const tokenCreateBalanceAfter = await IERC20.balanceOf(
       tokenCreateContract.address
     )
-    const signer0BalanceAfter = await IERC20.balanceOf(signers[0].address)
+    const signer0BalanceAfter = await pollForNewSignerBalance(IERC20, signers[0].address, signer0BalanceBefore)
     const signer1BalanceAfter = await IERC20.balanceOf(signers[1].address)
 
     expect(tokenCreateBalanceAfter).to.eq(tokenCreateBalanceBefore + AMOUNT)
@@ -146,3 +146,27 @@ describe('IERC20 Test Suite', function () {
     expect(signer1BalanceAfter).to.eq(signer1BalanceBefore)
   })
 })
+
+async function pollForNewSignerBalance(IERC20Contract, signersAddress, signerBefore) {
+  const timesToTry = 200;
+  let signerAfter, numberOfTries = 0;
+
+  while (numberOfTries < timesToTry) {
+    signerAfter = await IERC20Contract.balanceOf(
+      signersAddress
+    )
+
+    if (signerAfter != signerBefore) {
+      return signerAfter;
+    }
+
+    numberOfTries++;
+    await delay(2000); // Delay for 1 second before the next attempt
+  }
+
+  throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
+}
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}

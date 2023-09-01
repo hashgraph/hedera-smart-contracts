@@ -280,7 +280,7 @@ async function pollForChangedSupply(ERC20Burnable, initialSupply){
 // Transaction needs to be propagated to the mirror node
 async function pollForPaused(ERC20Pausable) {
   let numberOfTries = 0;
-  const timesToTry = 200;
+  const timesToTry = 300;
 
   while (numberOfTries < timesToTry) {
     await ERC20Pausable.unpause()
