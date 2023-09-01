@@ -258,7 +258,7 @@ describe('ERC20ExtensionsMock tests', function () {
 // Transaction needs to be propagated to the mirror node
 async function pollForChangedSupply(ERC20Burnable, initialSupply){
   let numberOfTries = 0;
-  const timesToTry = 200;
+  const timesToTry = 300;
   let newSupply = 0;
 
   while (numberOfTries < timesToTry) {
