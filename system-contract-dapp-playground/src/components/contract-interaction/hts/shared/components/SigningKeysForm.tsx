@@ -37,6 +37,7 @@ import {
 
 /** @dev shared component presenting signing keys*/
 interface SigningKeyPageProps {
+  buttonTitle: string;
   keys: CommonKeyObject[];
   chosenKeys: Set<IHederaTokenServiceKeyType>;
   keyTypesToShow: Set<IHederaTokenServiceKeyType>;
@@ -51,6 +52,7 @@ export const SharedSigningKeysComponent = ({
   keys,
   setKeys,
   chosenKeys,
+  buttonTitle,
   setChosenKeys,
   keyTypesToShow,
   setKeyTypesToShow,
@@ -81,7 +83,7 @@ export const SharedSigningKeysComponent = ({
                 }
                 className="w-full rounded border border-white/30 text-center text-sm hover:border-hedera-purple hover:text-hedera-purple transition duration-300 hover:cursor-pointer "
               >
-                {keys.length === 0 ? `Add signing keys to the token` : '+'}
+                {keys.length === 0 ? buttonTitle : '+'}
               </button>
             </Tooltip>
           )}

@@ -57,6 +57,7 @@ export const manageTokenInfomation = async (
   baseContract: Contract,
   API: 'UPDATE_INFO' | 'UPDATE_EXPIRY' | 'UPDATE_KEYS',
   hederaTokenAddress: string,
+  gasLimit: number,
   tokenInfo?: IHederaTokenServiceHederaToken,
   expiryInfo?: IHederaTokenServiceExpiry,
   keysInfo?: CommonKeyObject[]
@@ -78,7 +79,8 @@ export const manageTokenInfomation = async (
         } else {
           transactionResult = await baseContract.updateTokenInfoPublic(
             hederaTokenAddress,
-            tokenInfo
+            tokenInfo,
+            { gasLimit }
           );
         }
         break;
@@ -88,7 +90,8 @@ export const manageTokenInfomation = async (
         } else {
           transactionResult = await baseContract.updateTokenExpiryInfoPublic(
             hederaTokenAddress,
-            expiryInfo
+            expiryInfo,
+            { gasLimit }
           );
         }
         break;
@@ -107,7 +110,8 @@ export const manageTokenInfomation = async (
 
             transactionResult = await baseContract.updateTokenKeysPublic(
               hederaTokenAddress,
-              hederaTokenKeys
+              hederaTokenKeys,
+              { gasLimit }
             );
           }
         }

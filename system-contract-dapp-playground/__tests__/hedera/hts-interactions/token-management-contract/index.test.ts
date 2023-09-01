@@ -35,8 +35,8 @@ import { Contract } from 'ethers';
 describe('TokenManagementContract test suite', () => {
   // mock states
   const responseCode = 22;
+  const gasLimnit = 1000000;
   const AUTO_RENEW_SECOND = 0;
-  const AUTO_RENEW_PERIOD = 8000000;
   const NEW_AUTO_RENEW_PERIOD = 7999900;
   const accountAddress = '0x34810E139b451e0a4c67d5743E956Ac8990842A8';
   const contractId = '0xDd7fCb7c2ee96A79B1e201d25F5E43d6a0cED5e6';
@@ -146,6 +146,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'UPDATE_INFO',
         hederaTokenAddress,
+        gasLimnit,
         tokenInfo
       );
 
@@ -159,6 +160,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'UPDATE_INFO',
         hederaTokenAddress,
+        gasLimnit,
         undefined
       );
 
@@ -172,6 +174,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'UPDATE_EXPIRY',
         hederaTokenAddress,
+        gasLimnit,
         undefined,
         tokenExpiry
       );
@@ -186,6 +189,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'UPDATE_EXPIRY',
         hederaTokenAddress,
+        gasLimnit,
         undefined,
         undefined
       );
@@ -200,6 +204,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'UPDATE_KEYS',
         hederaTokenAddress,
+        gasLimnit,
         undefined,
         undefined,
         tokenKeys
@@ -215,6 +220,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'UPDATE_KEYS',
         hederaTokenAddress,
+        gasLimnit,
         undefined,
         undefined,
         undefined
@@ -230,6 +236,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'UPDATE_KEYS',
         '0xabc',
+        gasLimnit,
         undefined,
         undefined,
         tokenKeys
