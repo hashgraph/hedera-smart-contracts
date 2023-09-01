@@ -183,7 +183,9 @@ export const handleSanitizeHederaFormInputs = ({
     } else if (!isAddress(accountAddress)) {
       sanitizeErr = 'Invalid account address';
     } else if (amount === '' || Number(amount) < 0) {
-      sanitizeErr = 'Invalid amount';
+      sanitizeErr = 'Invalid amount to approved';
+    } else if (feeValue === '') {
+      sanitizeErr = 'Gas limit should be set for this transaction';
     }
   } else if (API === 'APPROVED_NON_FUNGIBLE') {
     if (!isAddress(hederaTokenAddress)) {
@@ -191,13 +193,17 @@ export const handleSanitizeHederaFormInputs = ({
     } else if (!isAddress(accountAddress)) {
       sanitizeErr = 'Invalid account address';
     } else if (serialNumber === '' || Number(serialNumber) < 0) {
-      sanitizeErr = 'Invalid serial number';
+      sanitizeErr = 'Invalid serial number approved';
+    } else if (feeValue === '') {
+      sanitizeErr = 'Gas limit should be set for this transaction';
     }
   } else if (API === 'SET_APPROVAL') {
     if (!isAddress(hederaTokenAddress)) {
       sanitizeErr = 'Invalid token address';
     } else if (!isAddress(accountAddress)) {
       sanitizeErr = 'Invalid account address';
+    } else if (feeValue === '') {
+      sanitizeErr = 'Gas limit should be set for this transaction';
     }
   }
 
