@@ -192,7 +192,7 @@ export const htsTokenMintParamFields = {
 export const htsTokenAssociateParamFields = {
   tokenAddresses: {
     inputType: 'text',
-    inputPlaceholder: 'Token address...',
+    inputPlaceholder: 'Token addresses...',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',

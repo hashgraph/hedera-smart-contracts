@@ -184,7 +184,7 @@ export const manageTokenPermission = async (
     switch (API) {
       case 'APPROVED_FUNGIBLE':
         if (!amountToApprove) {
-          errMsg = 'Amount to approve is needed for APPROVED_FUNGIBLE API';
+          errMsg = 'A valid amount is needed for the APPROVED_FUNGIBLE API';
         } else {
           transactionResult = await baseContract.approvePublic(
             hederaTokenAddress,
@@ -291,9 +291,11 @@ export const manageTokenStatus = async (
  *
  * @param API: "REVOKE_KYC" | "FREEZE" | "UNFREEZE" | "DISSOCIATE_TOKEN"
  *
- * @param hederaTokenAddress: string
- *
  * @param accountAddress: string
+ *
+ * @param gasLimit: number
+ *
+ * @param hederaTokenAddress?: string
  *
  * @param hederaTokenAddresses?: string[]
  *
@@ -303,21 +305,24 @@ export const manageTokenRelation = async (
   baseContract: Contract,
   API: 'REVOKE_KYC' | 'FREEZE' | 'UNFREEZE' | 'DISSOCIATE_TOKEN',
   accountAddress: string,
-  hederaTokenAddresses: string[]
+  gasLimit: number,
+  hederaTokenAddress?: string,
+  hederaTokenAddresses?: string[]
 ): Promise<TokenManagementSmartContractResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(accountAddress)) {
     sanitizeErr = 'Invalid account address';
-  } else if (hederaTokenAddresses.length === 0) {
-    sanitizeErr = 'Invalid token inputs';
+  } else if (hederaTokenAddresses) {
+    hederaTokenAddresses.some((address) => {
+      if (!isAddress(address)) {
+        sanitizeErr = 'Invalid token addresses';
+        return true;
+      }
+    });
+  } else if (hederaTokenAddress && !isAddress(hederaTokenAddress)) {
+    sanitizeErr = 'Invalid token address';
   }
-  hederaTokenAddresses.some((address) => {
-    if (!isAddress(address)) {
-      sanitizeErr = 'Invalid token address';
-      return true;
-    }
-  });
 
   if (sanitizeErr) {
     console.error(sanitizeErr);
@@ -331,32 +336,37 @@ export const manageTokenRelation = async (
     switch (API) {
       case 'REVOKE_KYC':
         transactionResult = await baseContract.revokeTokenKycPublic(
-          hederaTokenAddresses[0],
-          accountAddress
+          hederaTokenAddress,
+          accountAddress,
+          { gasLimit }
         );
         break;
       case 'FREEZE':
         transactionResult = await baseContract.freezeTokenPublic(
-          hederaTokenAddresses[0],
-          accountAddress
+          hederaTokenAddress,
+          accountAddress,
+          { gasLimit }
         );
         break;
       case 'UNFREEZE':
         transactionResult = await baseContract.unfreezeTokenPublic(
-          hederaTokenAddresses[0],
-          accountAddress
+          hederaTokenAddress,
+          accountAddress,
+          { gasLimit }
         );
         break;
       case 'DISSOCIATE_TOKEN':
-        if (hederaTokenAddresses.length === 1) {
+        if (hederaTokenAddresses!.length === 1) {
           transactionResult = await baseContract.dissociateTokenPublic(
             accountAddress,
-            hederaTokenAddresses[0]
+            hederaTokenAddresses![0],
+            { gasLimit }
           );
         } else {
-          transactionResult = await baseContract.dissociateTokenPublic(
+          transactionResult = await baseContract.dissociateTokensPublic(
             accountAddress,
-            hederaTokenAddresses
+            hederaTokenAddresses,
+            { gasLimit }
           );
         }
     }
