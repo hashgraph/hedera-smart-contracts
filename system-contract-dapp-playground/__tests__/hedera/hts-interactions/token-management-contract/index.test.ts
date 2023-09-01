@@ -274,7 +274,7 @@ describe('TokenManagementContract test suite', () => {
         undefined
       );
 
-      expect(txRes.err).toBe('Amount to approve is needed for APPROVED_FUNGIBLE API');
+      expect(txRes.err).toBe('Amount is needed for APPROVED_FUNGIBLE API');
       expect(txRes.result).toBeNull;
       expect(txRes.transactionHash).toBeNull;
     });
@@ -413,7 +413,8 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'REVOKE_KYC',
         accountAddress,
-        hederaTokenAddresses
+        gasLimnit,
+        hederaTokenAddress
       );
 
       expect(txRes.err).toBeNull;
@@ -426,7 +427,8 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'FREEZE',
         accountAddress,
-        hederaTokenAddresses
+        gasLimnit,
+        hederaTokenAddress
       );
 
       expect(txRes.err).toBeNull;
@@ -438,7 +440,8 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'UNFREEZE',
         accountAddress,
-        hederaTokenAddresses
+        gasLimnit,
+        hederaTokenAddress
       );
 
       expect(txRes.err).toBeNull;
@@ -450,6 +453,8 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'DISSOCIATE_TOKEN',
         accountAddress,
+        gasLimnit,
+        hederaTokenAddress,
         hederaTokenAddresses
       );
 
@@ -463,23 +468,11 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'REVOKE_KYC',
         '0xabc',
-        hederaTokenAddresses
+        gasLimnit,
+        hederaTokenAddress
       );
 
       expect(txRes.err).toBe('Invalid account address');
-      expect(txRes.result).toBeNull;
-      expect(txRes.transactionHash).toBeNull;
-    });
-
-    it('should execute manageTokenRelation then return error if hederaTokenAddresses is an empty array', async () => {
-      const txRes = await manageTokenRelation(
-        baseContract as unknown as Contract,
-        'REVOKE_KYC',
-        accountAddress,
-        []
-      );
-
-      expect(txRes.err).toBe('Invalid token inputs');
       expect(txRes.result).toBeNull;
       expect(txRes.transactionHash).toBeNull;
     });
@@ -489,10 +482,12 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'REVOKE_KYC',
         accountAddress,
+        gasLimnit,
+        hederaTokenAddress,
         [hederaTokenAddress, '0xabc']
       );
 
-      expect(txRes.err).toBe('Invalid token address');
+      expect(txRes.err).toBe('Invalid token addresses');
       expect(txRes.result).toBeNull;
       expect(txRes.transactionHash).toBeNull;
     });
