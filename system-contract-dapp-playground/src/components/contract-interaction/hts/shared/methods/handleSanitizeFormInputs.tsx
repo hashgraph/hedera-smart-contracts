@@ -183,7 +183,7 @@ export const handleSanitizeHederaFormInputs = ({
     } else if (!isAddress(accountAddress)) {
       sanitizeErr = 'Invalid account address';
     } else if (amount === '' || Number(amount) < 0) {
-      sanitizeErr = 'Invalid amount to approved';
+      sanitizeErr = 'Invalid amount';
     } else if (feeValue === '') {
       sanitizeErr = 'Gas limit should be set for this transaction';
     }
