@@ -282,10 +282,8 @@ describe('TokenTransferContract Test Suite', function () {
     const signers0After = await signers[0].provider.getBalance(
       signers[0].address
     )
-    const signers1After = await signers[0].provider.getBalance(
-      signers[1].address
-    )
-
+  
+    const signers1After = await pollForNewSignerBalance(signers[0].provider, signers[1].address, signers0Before)
     expect(responseCode).to.equal(TX_SUCCESS_CODE)
     expect(signers0Before > signers0After).to.equal(true)
     expect(signers1After > signers1Before).to.equal(true)
@@ -480,6 +478,26 @@ async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddres
 
     if (!balanceAfter.eq(balanceBefore)) {
       return balanceAfter;
+    }
+
+    numberOfTries++;
+    await delay(1000); // Delay for 1 second before the next attempt
+  }
+
+  throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
+}
+
+async function pollForNewSignerBalance(provider, signersAddress, signerBefore) {
+  const timesToTry = 200;
+  let signerAfter, numberOfTries = 0;
+
+  while (numberOfTries < timesToTry) {
+    signerAfter = await provider.getBalance(
+      signersAddress
+    )
+
+    if (signerAfter != signerBefore) {
+      return signerAfter;
     }
 
     numberOfTries++;
