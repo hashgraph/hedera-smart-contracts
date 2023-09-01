@@ -608,8 +608,8 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
       )
       await tx.wait()
 
-      const ownerAfter = await erc721Mock.ownerOf(tokenId)
-
+      const ownerAfter = await pollForNewERC721HollowWalletOwner(erc721Mock, tokenId, ownerBefore)
+      
       expect(ownerBefore).to.not.eq(ownerAfter)
       expect(ownerAfter).to.eq(hollowWallet.address)
     })
@@ -1012,25 +1012,6 @@ async function pollForNewERC721Balance(erc721Contract, nftTokenAddress, signersA
   throw new Error(`erc721Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
 }
 
-// Transaction needs to be propagated to the mirror node
-// async function pollForNewERC721Owner(erc721Contract, nftTokenAddress, signersAddress, ownerBefore) {
-//   let ownerAfter, numberOfTries = 0, timesToTry = 200
-//   while (numberOfTries < timesToTry){
-//     ownerAfter = await erc721Contract.ownerOf(
-//       nftTokenAddress,
-//       signersAddress
-//     )
-   
-//     if(ownerAfter != ownerBefore) {
-//       return ownerAfter
-//     }
-
-//     numberOfTries++
-//     await delay(1000); // Delay for 1 second before the next attempt
-//   } 
-//   throw new Error(`erc721Contract.ownerOf failed to get a different value after ${timesToTry} tries`)
-// } 
-
 async function pollForNewERC721HollowWalletOwner(erc721Contract, nftTokenAddress, ownerBefore) {
   let ownerAfter, numberOfTries = 0, timesToTry = 200
   while (numberOfTries < timesToTry) {
@@ -1046,7 +1027,6 @@ async function pollForNewERC721HollowWalletOwner(erc721Contract, nftTokenAddress
   } 
   throw new Error(`erc721Contract.ownerOf failed to get a different value after ${timesToTry} tries`)
 } 
-
 
 // Transaction needs to be propagated to the mirror node
 async function pollForNewHollowWalletBalance(provider, walletAddress, balanceBefore) {
