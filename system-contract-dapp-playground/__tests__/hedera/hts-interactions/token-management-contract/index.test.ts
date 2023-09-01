@@ -35,7 +35,7 @@ import { Contract } from 'ethers';
 describe('TokenManagementContract test suite', () => {
   // mock states
   const responseCode = 22;
-  const gasLimnit = 1000000;
+  const gasLimit = 1000000;
   const AUTO_RENEW_SECOND = 0;
   const NEW_AUTO_RENEW_PERIOD = 7999900;
   const accountAddress = '0x34810E139b451e0a4c67d5743E956Ac8990842A8';
@@ -146,7 +146,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'UPDATE_INFO',
         hederaTokenAddress,
-        gasLimnit,
+        gasLimit,
         tokenInfo
       );
 
@@ -160,7 +160,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'UPDATE_INFO',
         hederaTokenAddress,
-        gasLimnit,
+        gasLimit,
         undefined
       );
 
@@ -174,7 +174,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'UPDATE_EXPIRY',
         hederaTokenAddress,
-        gasLimnit,
+        gasLimit,
         undefined,
         tokenExpiry
       );
@@ -189,7 +189,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'UPDATE_EXPIRY',
         hederaTokenAddress,
-        gasLimnit,
+        gasLimit,
         undefined,
         undefined
       );
@@ -204,7 +204,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'UPDATE_KEYS',
         hederaTokenAddress,
-        gasLimnit,
+        gasLimit,
         undefined,
         undefined,
         tokenKeys
@@ -220,7 +220,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'UPDATE_KEYS',
         hederaTokenAddress,
-        gasLimnit,
+        gasLimit,
         undefined,
         undefined,
         undefined
@@ -236,7 +236,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'UPDATE_KEYS',
         '0xabc',
-        gasLimnit,
+        gasLimit,
         undefined,
         undefined,
         tokenKeys
@@ -255,7 +255,7 @@ describe('TokenManagementContract test suite', () => {
         'APPROVED_FUNGIBLE',
         hederaTokenAddress,
         accountAddress,
-        gasLimnit,
+        gasLimit,
         200
       );
 
@@ -270,11 +270,11 @@ describe('TokenManagementContract test suite', () => {
         'APPROVED_FUNGIBLE',
         hederaTokenAddress,
         accountAddress,
-        gasLimnit,
+        gasLimit,
         undefined
       );
 
-      expect(txRes.err).toBe('Amount is needed for APPROVED_FUNGIBLE API');
+      expect(txRes.err).toBe('A valid amount is needed for the APPROVED_FUNGIBLE API');
       expect(txRes.result).toBeNull;
       expect(txRes.transactionHash).toBeNull;
     });
@@ -285,7 +285,7 @@ describe('TokenManagementContract test suite', () => {
         'APPROVED_NON_FUNGIBLE',
         hederaTokenAddress,
         accountAddress,
-        gasLimnit,
+        gasLimit,
         undefined,
         20
       );
@@ -301,7 +301,7 @@ describe('TokenManagementContract test suite', () => {
         'APPROVED_NON_FUNGIBLE',
         hederaTokenAddress,
         accountAddress,
-        gasLimnit,
+        gasLimit,
         undefined,
         undefined
       );
@@ -317,7 +317,7 @@ describe('TokenManagementContract test suite', () => {
         'SET_APPROVAL',
         hederaTokenAddress,
         accountAddress,
-        gasLimnit,
+        gasLimit,
         undefined,
         undefined,
         true
@@ -334,7 +334,7 @@ describe('TokenManagementContract test suite', () => {
         'SET_APPROVAL',
         hederaTokenAddress,
         accountAddress,
-        gasLimnit,
+        gasLimit,
         undefined,
         undefined,
         undefined
@@ -351,7 +351,7 @@ describe('TokenManagementContract test suite', () => {
         'SET_APPROVAL',
         '0xabc',
         accountAddress,
-        gasLimnit
+        gasLimit
       );
 
       expect(txRes.err).toBe('Invalid token address');
@@ -364,7 +364,7 @@ describe('TokenManagementContract test suite', () => {
         'SET_APPROVAL',
         hederaTokenAddress,
         '0xabc',
-        gasLimnit
+        gasLimit
       );
 
       expect(txRes.err).toBe('Invalid target approved address');
@@ -413,7 +413,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'REVOKE_KYC',
         accountAddress,
-        gasLimnit,
+        gasLimit,
         hederaTokenAddress
       );
 
@@ -427,7 +427,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'FREEZE',
         accountAddress,
-        gasLimnit,
+        gasLimit,
         hederaTokenAddress
       );
 
@@ -440,7 +440,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'UNFREEZE',
         accountAddress,
-        gasLimnit,
+        gasLimit,
         hederaTokenAddress
       );
 
@@ -453,7 +453,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'DISSOCIATE_TOKEN',
         accountAddress,
-        gasLimnit,
+        gasLimit,
         hederaTokenAddress,
         hederaTokenAddresses
       );
@@ -468,7 +468,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'REVOKE_KYC',
         '0xabc',
-        gasLimnit,
+        gasLimit,
         hederaTokenAddress
       );
 
@@ -482,7 +482,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'REVOKE_KYC',
         accountAddress,
-        gasLimnit,
+        gasLimit,
         hederaTokenAddress,
         [hederaTokenAddress, '0xabc']
       );

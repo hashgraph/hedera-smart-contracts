@@ -184,7 +184,7 @@ export const manageTokenPermission = async (
     switch (API) {
       case 'APPROVED_FUNGIBLE':
         if (!amountToApprove) {
-          errMsg = 'Amount is needed for APPROVED_FUNGIBLE API';
+          errMsg = 'A valid amount is needed for the APPROVED_FUNGIBLE API';
         } else {
           transactionResult = await baseContract.approvePublic(
             hederaTokenAddress,
