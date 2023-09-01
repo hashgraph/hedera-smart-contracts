@@ -219,7 +219,8 @@ export const transferSingleToken = async (
   hederaTokenAddress: string,
   sender: string,
   receiver: string,
-  quantity: number
+  quantity: number,
+  gasLimit: number
 ): Promise<SmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
@@ -245,14 +246,16 @@ export const transferSingleToken = async (
         hederaTokenAddress,
         sender,
         receiver,
-        quantity
+        quantity,
+        { gasLimit }
       );
     } else {
       transactionResult = await baseContract.transferNFTPublic(
         hederaTokenAddress,
         sender,
         receiver,
-        quantity
+        quantity,
+        { gasLimit }
       );
     }
 

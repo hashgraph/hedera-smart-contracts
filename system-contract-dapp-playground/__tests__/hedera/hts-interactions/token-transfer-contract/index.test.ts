@@ -245,7 +245,8 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         receiverA,
-        369
+        369,
+        gasLimit
       );
 
       expect(txRes.err).toBeNull;
@@ -260,7 +261,8 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         receiverA,
-        369
+        369,
+        gasLimit
       );
 
       expect(txRes.err).toBeNull;
@@ -275,7 +277,8 @@ describe('TokenTransferContract test suite', () => {
         '0xabc',
         senderA,
         receiverA,
-        369
+        369,
+        gasLimit
       );
 
       expect(txRes.err).toBe('Invalid token address');
@@ -290,7 +293,8 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         '0xabc',
         receiverA,
-        369
+        369,
+        gasLimit
       );
 
       expect(txRes.err).toBe('Invalid sender address');
@@ -305,7 +309,8 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         '0xabc',
-        369
+        369,
+        gasLimit
       );
 
       expect(txRes.err).toBe('Invalid receiver address');
@@ -320,7 +325,8 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         receiverB,
-        -369
+        -369,
+        gasLimit
       );
 
       expect(txRes.err).toBe('Invalid quantity');
