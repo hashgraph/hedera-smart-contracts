@@ -255,6 +255,7 @@ describe('TokenManagementContract test suite', () => {
         'APPROVED_FUNGIBLE',
         hederaTokenAddress,
         accountAddress,
+        gasLimnit,
         200
       );
 
@@ -269,6 +270,7 @@ describe('TokenManagementContract test suite', () => {
         'APPROVED_FUNGIBLE',
         hederaTokenAddress,
         accountAddress,
+        gasLimnit,
         undefined
       );
 
@@ -283,6 +285,7 @@ describe('TokenManagementContract test suite', () => {
         'APPROVED_NON_FUNGIBLE',
         hederaTokenAddress,
         accountAddress,
+        gasLimnit,
         undefined,
         20
       );
@@ -298,6 +301,7 @@ describe('TokenManagementContract test suite', () => {
         'APPROVED_NON_FUNGIBLE',
         hederaTokenAddress,
         accountAddress,
+        gasLimnit,
         undefined,
         undefined
       );
@@ -313,6 +317,7 @@ describe('TokenManagementContract test suite', () => {
         'SET_APPROVAL',
         hederaTokenAddress,
         accountAddress,
+        gasLimnit,
         undefined,
         undefined,
         true
@@ -329,6 +334,7 @@ describe('TokenManagementContract test suite', () => {
         'SET_APPROVAL',
         hederaTokenAddress,
         accountAddress,
+        gasLimnit,
         undefined,
         undefined,
         undefined
@@ -344,7 +350,8 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'SET_APPROVAL',
         '0xabc',
-        accountAddress
+        accountAddress,
+        gasLimnit
       );
 
       expect(txRes.err).toBe('Invalid token address');
@@ -356,7 +363,8 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'SET_APPROVAL',
         hederaTokenAddress,
-        '0xabc'
+        '0xabc',
+        gasLimnit
       );
 
       expect(txRes.err).toBe('Invalid target approved address');

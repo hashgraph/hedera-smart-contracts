@@ -45,6 +45,8 @@ import { Contract, isAddress } from 'ethers';
  *
  * @param hederaTokenAddress: string
  *
+ * @param gasLimit: number
+ *
  * @param tokenInfo?: IHederaTokenServiceHederaToken
  *
  * @param expiryInfo?: IHederaTokenServiceExpiry
@@ -142,6 +144,8 @@ export const manageTokenInfomation = async (
  *
  * @param targetApprovedAddress: string (spender address for APPROVED_FUNGIBLE, approved NFT controller for APPROVED_NON_FUNGIBLE, operator for SET_APPROVAL)
  *
+ * @param gasLimit: number
+ *
  * @param amountToApprove?: number (APPROVED_FUNGIBLE)
  *
  * @param serialNumber?: number (APPROVED_NON_FUNGIBLE)
@@ -155,6 +159,7 @@ export const manageTokenPermission = async (
   API: 'APPROVED_FUNGIBLE' | 'APPROVED_NON_FUNGIBLE' | 'SET_APPROVAL',
   hederaTokenAddress: string,
   targetApprovedAddress: string,
+  gasLimit: number,
   amountToApprove?: number,
   serialNumber?: number,
   approvedStatus?: boolean
@@ -184,7 +189,8 @@ export const manageTokenPermission = async (
           transactionResult = await baseContract.approvePublic(
             hederaTokenAddress,
             targetApprovedAddress,
-            amountToApprove
+            amountToApprove,
+            { gasLimit }
           );
         }
         break;
@@ -195,7 +201,8 @@ export const manageTokenPermission = async (
           transactionResult = await baseContract.approveNFTPublic(
             hederaTokenAddress,
             targetApprovedAddress,
-            serialNumber
+            serialNumber,
+            { gasLimit }
           );
         }
         break;
@@ -207,7 +214,8 @@ export const manageTokenPermission = async (
           transactionResult = await baseContract.setApprovalForAllPublic(
             hederaTokenAddress,
             targetApprovedAddress,
-            approvedStatus
+            approvedStatus,
+            { gasLimit }
           );
         }
     }
