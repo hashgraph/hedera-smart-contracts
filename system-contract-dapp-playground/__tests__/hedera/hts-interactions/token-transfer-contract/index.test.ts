@@ -116,7 +116,8 @@ describe('TokenTransferContract test suite', () => {
         baseContract as unknown as Contract,
         hederaTokenAddress,
         [senderA, senderB],
-        [3, 6, 9]
+        [3, 6, 9],
+        gasLimit
       );
 
       expect(txRes.err).toBeNull;
@@ -129,7 +130,8 @@ describe('TokenTransferContract test suite', () => {
         baseContract as unknown as Contract,
         '0xabc',
         [senderA, senderB],
-        [3, 6, 9]
+        [3, 6, 9],
+        gasLimit
       );
 
       expect(txRes.err).toBe('Invalid token address');
@@ -142,7 +144,8 @@ describe('TokenTransferContract test suite', () => {
         baseContract as unknown as Contract,
         hederaTokenAddress,
         [senderA, '0xabc'],
-        [3, 6, 9]
+        [3, 6, 9],
+        gasLimit
       );
 
       expect(txRes.err).toBe(`${invalidSender} is an invalid accountID`);
@@ -155,7 +158,8 @@ describe('TokenTransferContract test suite', () => {
         baseContract as unknown as Contract,
         hederaTokenAddress,
         [senderA, senderB],
-        [-3, 6, 9]
+        [-3, 6, 9],
+        gasLimit
       );
 
       expect(txRes.err).toBe(`-3 is an invalid amount`);
@@ -171,7 +175,8 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         [senderA, senderB],
         [receiverA, receiverB],
-        [3, 6, 9]
+        [3, 6, 9],
+        gasLimit
       );
 
       expect(txRes.err).toBeNull;
@@ -185,7 +190,8 @@ describe('TokenTransferContract test suite', () => {
         '0xabc',
         [senderA, senderB],
         [receiverA, receiverB],
-        [3, 6, 9]
+        [3, 6, 9],
+        gasLimit
       );
 
       expect(txRes.err).toBe('Invalid token address');
@@ -199,7 +205,8 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         [senderA, '0xabc'],
         [receiverA, receiverB],
-        [3, 6, 9]
+        [3, 6, 9],
+        gasLimit
       );
 
       expect(txRes.err).toBe(`${invalidSender} is an invalid sender accountID`);
@@ -213,7 +220,8 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         [senderA, senderB],
         [receiverA, '0xabc'],
-        [3, 6, 9]
+        [3, 6, 9],
+        gasLimit
       );
 
       expect(txRes.err).toBe(`${invalidSender} is an invalid receiver accountID`);
@@ -227,7 +235,8 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         [senderA, senderB],
         [receiverA, receiverB],
-        [-3, 6, 9]
+        [-3, 6, 9],
+        gasLimit
       );
 
       expect(txRes.err).toBe(`-3 is an invalid serial number`);
