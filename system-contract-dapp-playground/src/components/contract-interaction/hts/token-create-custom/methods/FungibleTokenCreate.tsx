@@ -354,7 +354,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
           executeBtnTitle={'Create Fungible Token'}
           handleInputOnChange={handleInputOnChange}
           explanation={
-            'Represents the fee in HBAR directly paid to the contract system of the Hedera Token Service'
+            'Represents the transaction fee paid in HBAR directly paid to the contract system of the Hedera Token Service'
           }
           handleInvokingAPIMethod={handleCreatingFungibleToken}
         />
