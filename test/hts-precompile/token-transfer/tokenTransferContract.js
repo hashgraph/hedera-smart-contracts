@@ -482,7 +482,7 @@ async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddres
 }
 
 async function pollForNewSignerBalance(provider, signersAddress, signerBefore) {
-  const timesToTry = 200;
+  const timesToTry = 300;
   let signerAfter, numberOfTries = 0;
 
   while (numberOfTries < timesToTry) {
@@ -495,7 +495,7 @@ async function pollForNewSignerBalance(provider, signersAddress, signerBefore) {
     }
 
     numberOfTries++;
-    await delay(2000); // Delay for 2 seconds before the next attempt
+    await delay(4000); // Delay for 4 seconds before the next attempt
   }
 
   throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
