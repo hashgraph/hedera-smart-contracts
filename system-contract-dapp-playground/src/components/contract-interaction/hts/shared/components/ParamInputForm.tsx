@@ -139,67 +139,6 @@ export const SharedExecuteButton = ({
   );
 };
 
-/** @dev shared execute button with service fee component */
-interface SharedExecuteButtonWithServiceFeePageProps {
-  isLoading: boolean;
-  paramValues: string;
-  executeBtnTitle: string;
-  handleCreatingFungibleToken: () => Promise<void>;
-  handleInputOnChange: (e: any, param: string) => void;
-}
-
-export const SharedExecuteButtonWithServiceFee = ({
-  isLoading,
-  paramValues,
-  executeBtnTitle,
-  handleInputOnChange,
-  handleCreatingFungibleToken,
-}: SharedExecuteButtonWithServiceFeePageProps) => {
-  return (
-    <div className="flex flex-col gap-1">
-      <div className="flex items-center gap-6">
-        {/* Service Fee */}
-        <div className="w-3/12">
-          <SharedFormInputField
-            param={'msgValue'}
-            paramValue={paramValues}
-            handleInputOnChange={handleInputOnChange}
-            paramSize={'lg'}
-            paramType={'number'}
-            paramKey={'msgValue'}
-            explanation={
-              'Represents the fee in HBAR directly paid to the contract system of the Hedera Token Service'
-            }
-            paramClassName={'border-white/30 rounded-xl'}
-            paramPlaceholder={'Service fee...'}
-            paramFocusColor={'#A98DF4'}
-          />
-        </div>
-        {/* Execute button */}
-        <div className=" w-9/12">
-          <SharedExecuteButton
-            isLoading={isLoading}
-            buttonTitle={executeBtnTitle}
-            handleCreatingFungibleToken={handleCreatingFungibleToken}
-          />
-        </div>
-      </div>
-      <p className="text-sm whitespace-normal">
-        <span className="italic font-medium text-sm">*Important:</span> Varying configurations
-        applied to the token will result in varying service fees. Be sure to utilize the{' '}
-        <Link
-          className="underline text-hedera-green font-medium whitespace-nowrap"
-          href={'https://hedera.com/fees'}
-          target="_blank"
-        >
-          Hedera service fee calculator
-        </Link>{' '}
-        for precise estimation of the applicable fee, as this fee is non-refundable.
-      </p>
-    </div>
-  );
-};
-
 /** @dev shared remove fields button */
 interface SharedRemoveFieldButtonPageProps {
   fieldKey: string;
@@ -218,5 +157,72 @@ export const SharedRemoveFieldsButton = ({
         <AiOutlineMinus />
       </button>
     </Tooltip>
+  );
+};
+
+/** @dev shared execute button with fee component */
+interface SharedExecuteButtonWithFeePageProps {
+  isLoading: boolean;
+  paramValues: string;
+  explanation: string;
+  placeHolder: string;
+  executeBtnTitle: string;
+  feeType: 'SERVICE' | 'GAS';
+  handleInvokingAPIMethod: () => Promise<void>;
+  handleInputOnChange: (e: any, param: string) => void;
+}
+
+export const SharedExecuteButtonWithFee = ({
+  feeType,
+  isLoading,
+  paramValues,
+  explanation,
+  placeHolder,
+  executeBtnTitle,
+  handleInputOnChange,
+  handleInvokingAPIMethod,
+}: SharedExecuteButtonWithFeePageProps) => {
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="flex items-center gap-6">
+        {/* Service Fee */}
+        <div className="w-3/12">
+          <SharedFormInputField
+            param={'feeValue'}
+            paramValue={paramValues}
+            handleInputOnChange={handleInputOnChange}
+            paramSize={'lg'}
+            paramType={'number'}
+            paramKey={'feeValue'}
+            explanation={explanation}
+            paramClassName={'border-white/30 rounded-xl'}
+            paramPlaceholder={placeHolder}
+            paramFocusColor={'#A98DF4'}
+          />
+        </div>
+        {/* Execute button */}
+        <div className=" w-9/12">
+          <SharedExecuteButton
+            isLoading={isLoading}
+            buttonTitle={executeBtnTitle}
+            handleCreatingFungibleToken={handleInvokingAPIMethod}
+          />
+        </div>
+      </div>
+      {feeType === 'SERVICE' && (
+        <p className="text-sm whitespace-normal">
+          <span className="italic font-medium text-sm">*Important:</span> Varying configurations
+          applied to the token will result in varying service fees. Be sure to utilize the{' '}
+          <Link
+            className="underline text-hedera-green font-medium whitespace-nowrap"
+            href={'https://hedera.com/fees'}
+            target="_blank"
+          >
+            Hedera service fee calculator
+          </Link>{' '}
+          for precise estimation of the applicable fee, as this fee is non-refundable.
+        </p>
+      )}
+    </div>
   );
 };
