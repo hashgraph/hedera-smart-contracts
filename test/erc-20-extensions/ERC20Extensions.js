@@ -91,7 +91,6 @@ describe('ERC20ExtensionsMock tests', function () {
 
       // Get updated values
       const newSupply = await pollForChangedSupply(ERC20Burnable, initialSupply)
-      // const newSupply = await ERC20Burnable.totalSupply()
       const newBalance = await ERC20Burnable.balanceOf(owner.address)
 
       // Check if the Transfer event was emitted to AddressZero
@@ -175,8 +174,7 @@ describe('ERC20ExtensionsMock tests', function () {
       expect(await ERC20Pausable.paused()).to.be.true
 
       // Unpause the token and verify it is not paused anymore
-      await ERC20Pausable.unpause()
-      expect(await ERC20Pausable.paused()).to.be.false
+      expect(await pollForPaused(ERC20Pausable)).to.be.false
     })
 
     it('should not allow transfers when paused', async function () {
@@ -273,9 +271,29 @@ async function pollForChangedSupply(ERC20Burnable, initialSupply){
     }
 
     numberOfTries++;
-    await delay(3000); // Delay for 3 seconds before the next attempt
+    await delay(4000); // Delay for 4 seconds before the next attempt
 
     throw new Error(`ERC20Burnable failed to change after ${timesToTry} tries`);
+  }
+}
+
+// Transaction needs to be propagated to the mirror node
+async function pollForPaused(ERC20Pausable) {
+  let numberOfTries = 0;
+  const timesToTry = 200;
+
+  while (numberOfTries < timesToTry) {
+    await ERC20Pausable.unpause()
+
+
+    if (!await ERC20Pausable.paused()) {
+      return false;
+    }
+
+    numberOfTries++;
+    await delay(4000); // Delay for 4 seconds before the next attempt
+
+    throw new Error(`ERC20Pausable failed to change after ${timesToTry} tries`);
   }
 }
 
