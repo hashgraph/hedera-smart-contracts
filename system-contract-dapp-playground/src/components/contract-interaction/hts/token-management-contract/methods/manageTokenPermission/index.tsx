@@ -136,7 +136,7 @@ const ManageTokenPermission = ({ baseContract }: PageProps) => {
     // invoke method APIS
     const { result, transactionHash, err } = await manageTokenPermission(
       baseContract,
-      APIMethods,
+      API,
       hederaTokenAddress,
       targetApprovedAddress,
       feeValue,

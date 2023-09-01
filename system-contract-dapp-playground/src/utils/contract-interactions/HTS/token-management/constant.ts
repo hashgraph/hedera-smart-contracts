@@ -186,7 +186,7 @@ export const htsTokenPermissionParamFields = {
   },
   amountToApprove: {
     inputType: 'number',
-    inputPlaceholder: 'The amount to approved...',
+    inputPlaceholder: 'Amount...',
     inputSize: 'md',
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
