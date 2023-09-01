@@ -195,12 +195,8 @@ describe('TokenTransferContract Test Suite', function () {
     )
 
     const wallet1BalanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[0].address, wallet1BalanceBefore)
+    const wallet2BalanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[1].address, wallet1BalanceBefore)
    
-    const wallet2BalanceAfter = await erc20Contract.balanceOf(
-      tokenAddress,
-      signers[1].address
-    )
-
     expect(wallet1BalanceAfter).to.equal(wallet1BalanceBefore - amount)
     expect(wallet2BalanceAfter).to.equal(wallet2BalanceBefore + amount)
   })
