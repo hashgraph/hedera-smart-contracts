@@ -35,6 +35,7 @@ import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
 import { getInfoFromCookies, storeInfoInCookies } from '@/api/cookies';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
 import HederaTokenCreateMethods from './hts/token-create-custom/methods';
+import HederaTokenManagementMethods from './hts/token-management-contract/methods';
 import ExchangeRateDeployField from './exchange-rate-hip-475/deployment/ExchangeRateDeployField';
 import {
   Tabs,
@@ -316,13 +317,22 @@ const ContractInteraction = ({ contract }: PageProps) => {
 
                   {/* Contract methods */}
                   <div className="flex py-9 text-xl w-full h-full justify-center items-center">
-                    {/** HTS Token Create */}
+                    {/* HTS Token Create */}
                     {contract.name === 'TokenCreateCustomContract' && (
                       <HederaTokenCreateMethods
                         method={method}
                         baseContract={baseContract! as Contract}
                       />
                     )}
+
+                    {/* HTS Token Management*/}
+                    {contract.name === 'TokenManagementContract' && (
+                      <HederaTokenManagementMethods
+                        method={method}
+                        baseContract={baseContract! as Contract}
+                      />
+                    )}
+
                     {/* ERC-20 */}
                     {contract.name === 'ERC20Mock' && (
                       <ERC20Methods method={method} baseContract={baseContract! as Contract} />
