@@ -19,14 +19,14 @@
  */
 
 import { isAddress } from 'ethers';
-import { KEY_TYPE_MAP, DEFAULT_IHTS_KEY_VALUE } from './token-create-custom/constant';
 import {
-  IHederaTokenServiceKeyType,
-  IHederaTokenServiceKeyValueType,
-  IHederaTokenServiceTokenKey,
   CommonKeyObject,
+  IHederaTokenServiceKeyType,
+  IHederaTokenServiceTokenKey,
+  IHederaTokenServiceKeyValueType,
   TokenManagementSmartContractResult,
 } from '@/types/contract-interactions/HTS';
+import { KEY_TYPE_MAP, DEFAULT_IHTS_KEY_VALUE } from './token-create-custom/constant';
 
 /**
  * @dev tests if the input conforms to the common compressed public key standard
