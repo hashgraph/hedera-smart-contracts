@@ -25,6 +25,7 @@ import {
   IHederaTokenServiceKeyValueType,
   IHederaTokenServiceTokenKey,
   CommonKeyObject,
+  TokenManagementSmartContractResult,
 } from '@/types/contract-interactions/HTS';
 
 /**
@@ -117,4 +118,34 @@ export const prepareHederaTokenKeyArray = (inputKeys: CommonKeyObject[]) => {
   } else {
     return { hederaTokenKeys: hederaTokenKeys as IHederaTokenServiceTokenKey[] };
   }
+};
+
+/**
+ * @dev handle responses while interacting with contract APIs
+ *
+ * @param transactionResult: any,
+ *
+ * @param errMsg: string
+ */
+export const handleContractResponse = async (
+  transactionResult: any,
+  errMsg?: any
+): Promise<TokenManagementSmartContractResult> => {
+  // return err if any
+  if (errMsg) {
+    console.error(errMsg);
+    return { err: errMsg };
+  } else if (!transactionResult) {
+    console.error('Cannot execute contract methods');
+    return { err: 'Cannot execute contract methods' };
+  }
+
+  // get transaction receipt
+  const txReceipt = await transactionResult.wait();
+
+  // retrieve responseCode from event
+  const { data } = txReceipt.logs.filter((event: any) => event.fragment.name === 'ResponseCode')[0];
+
+  // @notice: 22 represents the predefined response code from the Hedera system contracts, indicating a successful transaction.
+  return { result: Number(data) === 22, transactionHash: txReceipt.hash };
 };
