@@ -20,6 +20,7 @@
 
 import { Contract } from 'ethers';
 import ManageTokenInfo from './manageTokenInfo';
+import ManageTokenPermission from './manageTokenPermission';
 
 interface PageProps {
   method: string;
@@ -30,6 +31,7 @@ const HederaTokenManagementMethods = ({ baseContract, method }: PageProps) => {
   return (
     <>
       {method === 'tokenInformation' && <ManageTokenInfo baseContract={baseContract} />}
+      {method === 'tokenPermission' && <ManageTokenPermission baseContract={baseContract} />}
       {method === 'tokenStatus' && <>tokenStatus</>}
       {method === 'tokenRelation' && <>tokenRelation</>}
       {method === 'tokenDeduction' && <>tokenDeduction</>}
