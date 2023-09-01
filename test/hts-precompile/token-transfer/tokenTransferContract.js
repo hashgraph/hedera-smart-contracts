@@ -279,10 +279,8 @@ describe('TokenTransferContract Test Suite', function () {
       (e) => e.event === Constants.Events.ResponseCode
     )[0].args[0]
 
-    const signers0After = await signers[0].provider.getBalance(
-      signers[0].address
-    )
-  
+    const signers0After = await pollForNewSignerBalance(signers[0].provider, signers[0].address, signers0Before)
+
     const signers1After = await pollForNewSignerBalance(signers[0].provider, signers[1].address, signers0Before)
     expect(responseCode).to.equal(TX_SUCCESS_CODE)
     expect(signers0Before > signers0After).to.equal(true)
