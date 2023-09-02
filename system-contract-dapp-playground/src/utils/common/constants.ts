@@ -206,7 +206,8 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
         'tokenPermission',
         'tokenStatus',
         'tokenRelation',
-        'tokenDeduction',
+        'tokenSupplyReduction',
+        'tokenDelete',
       ],
     },
     {

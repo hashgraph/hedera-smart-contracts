@@ -499,6 +499,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'WIPE_FUNGIBLE',
         hederaTokenAddress,
+        gasLimit,
         accountAddress,
         120
       );
@@ -512,10 +513,11 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
         'WIPE_FUNGIBLE',
-        hederaTokenAddress
+        hederaTokenAddress,
+        gasLimit
       );
 
-      expect(txRes.err).toBe('Account address to wipe tokens from is needed for WIPE_FUNGIBLE API');
+      expect(txRes.err).toBe('Account address is needed for WIPE_FUNGIBLE API');
       expect(txRes.result).toBeNull;
       expect(txRes.transactionHash).toBeNull;
     });
@@ -525,10 +527,11 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'WIPE_FUNGIBLE',
         hederaTokenAddress,
+        gasLimit,
         accountAddress
       );
 
-      expect(txRes.err).toBe('Amount to wipe is needed for WIPE_FUNGIBLE API');
+      expect(txRes.err).toBe('Amount is needed for WIPE_FUNGIBLE API');
       expect(txRes.result).toBeNull;
       expect(txRes.transactionHash).toBeNull;
     });
@@ -538,6 +541,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'WIPE_NON_FUNGIBLE',
         hederaTokenAddress,
+        gasLimit,
         accountAddress,
         undefined,
         [120]
@@ -552,12 +556,11 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
         'WIPE_NON_FUNGIBLE',
-        hederaTokenAddress
+        hederaTokenAddress,
+        gasLimit
       );
 
-      expect(txRes.err).toBe(
-        'Account address to wipe tokens from is needed for WIPE_NON_FUNGIBLE API'
-      );
+      expect(txRes.err).toBe('Account address is needed for WIPE_NON_FUNGIBLE API');
       expect(txRes.result).toBeNull;
       expect(txRes.transactionHash).toBeNull;
     });
@@ -567,10 +570,11 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'WIPE_NON_FUNGIBLE',
         hederaTokenAddress,
+        gasLimit,
         accountAddress
       );
 
-      expect(txRes.err).toBe('Serial number to wipe is needed for WIPE_NON_FUNGIBLE API');
+      expect(txRes.err).toBe('Serial number is needed for WIPE_NON_FUNGIBLE API');
       expect(txRes.result).toBeNull;
       expect(txRes.transactionHash).toBeNull;
     });
@@ -580,6 +584,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'BURN',
         hederaTokenAddress,
+        gasLimit,
         undefined,
         120,
         [120]
@@ -595,10 +600,11 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'BURN',
         hederaTokenAddress,
+        gasLimit,
         accountAddress
       );
 
-      expect(txRes.err).toBe('Amount to burn is needed for BURN API');
+      expect(txRes.err).toBe('Amount/serial number is needed for BURN API');
       expect(txRes.result).toBeNull;
       expect(txRes.transactionHash).toBeNull;
     });
@@ -608,11 +614,12 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'BURN',
         hederaTokenAddress,
+        gasLimit,
         undefined,
-        120
+        undefined
       );
 
-      expect(txRes.err).toBe('Serial number to burn is needed for BURN API');
+      expect(txRes.err).toBe('Amount/serial number is needed for BURN API');
       expect(txRes.result).toBeNull;
       expect(txRes.transactionHash).toBeNull;
     });
@@ -621,7 +628,8 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
         'DELETE',
-        hederaTokenAddress
+        hederaTokenAddress,
+        gasLimit
       );
 
       expect(txRes.err).toBeNull;
@@ -633,7 +641,8 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
         'DELETE',
-        '0xabc'
+        '0xabc',
+        gasLimit
       );
 
       expect(txRes.err).toBe('Invalid token address');
@@ -646,6 +655,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'DELETE',
         hederaTokenAddress,
+        gasLimit,
         '0xabc'
       );
 
@@ -659,6 +669,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'DELETE',
         hederaTokenAddress,
+        gasLimit,
         accountAddress,
         -9
       );
@@ -673,6 +684,7 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'DELETE',
         hederaTokenAddress,
+        gasLimit,
         accountAddress,
         120,
         [-9]
