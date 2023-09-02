@@ -187,6 +187,7 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
         setTransactionResults,
         tokenAddress: tokenAddressToMint,
         transactionHash: txRes.transactionHash,
+        transactionType: `HTS-${APIMethods === 'FUNGIBLE' ? 'TOKEN' : 'NFT'}-MINT`,
       });
       return;
     } else {
@@ -196,8 +197,10 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
         {
           status: 'sucess',
           accountAddress: recipientAddress,
+          transactionTimeStamp: Date.now(),
           txHash: txRes.transactionHash as string,
           tokenAddress: paramValues.tokenAddressToMint,
+          transactionType: `HTS-${APIMethods === 'FUNGIBLE' ? 'TOKEN' : 'NFT'}-MINT`,
         },
       ]);
       setIsSuccessful(true);

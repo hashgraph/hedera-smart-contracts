@@ -170,7 +170,13 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
 
     // handle err
     if (err || !tokenAddress) {
-      handleAPIErrors({ err, toaster, transactionHash, setTransactionResults });
+      handleAPIErrors({
+        err,
+        toaster,
+        transactionHash,
+        setTransactionResults,
+        transactionType: 'HTS-TOKEN-CREATE',
+      });
       return;
     } else {
       // handle succesfull
@@ -179,7 +185,9 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
         {
           tokenAddress,
           status: 'sucess',
+          transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
+          transactionType: 'HTS-TOKEN-CREATE',
         },
       ]);
 

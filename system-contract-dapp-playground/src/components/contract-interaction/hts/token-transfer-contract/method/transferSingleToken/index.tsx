@@ -105,7 +105,6 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
   const handleTransferSingileToken = async (API: API_NAMES) => {
     // destructuring params
     const { hederaTokenAddress, senderAddress, receiverAddress, quantity, feeValue } = paramValues;
-    console.log(API);
 
     // sanitize params
     const sanitizeErr = handleSanitizeHederaFormInputs({
@@ -160,6 +159,7 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         accountAddress: senderAddress,
+        transactionType: 'HTS-TOKEN-TRANSFER',
         tokenAddress: paramValues.hederaTokenAddress,
       });
       return;
@@ -172,7 +172,9 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
           receiverAddress,
           status: 'sucess',
           accountAddress: senderAddress,
+          transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
+          transactionType: 'HTS-TOKEN-TRANSFER',
           tokenAddress: paramValues.hederaTokenAddress,
         },
       ]);

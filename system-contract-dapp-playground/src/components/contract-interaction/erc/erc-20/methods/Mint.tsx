@@ -24,7 +24,10 @@ import { Contract, isAddress } from 'ethers';
 import { erc20Mint } from '@/api/hedera/erc20-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import MultiLineMethod from '@/components/common/MultiLineMethod';
+import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { mintParamFields } from '@/utils/contract-interactions/erc/constant';
+import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
+import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
 
 interface PageProps {
   baseContract: Contract;
@@ -34,6 +37,8 @@ const Mint = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
+  const transactionResultStorageKey = 'HEDERA.EIP.ERC-20.TOKEN-MINT-RESULTS';
+  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const [mintParams, setMintParams] = useState({
     recipient: '',
     amount: '',
@@ -54,35 +59,40 @@ const Mint = ({ baseContract }: PageProps) => {
     }
 
     setIsLoading(true);
-    const { mintRes, err: mintErr } = await erc20Mint(
-      baseContract,
-      mintParams.recipient,
-      Number(mintParams.amount)
-    );
+    const {
+      mintRes,
+      err: mintErr,
+      txHash,
+    } = await erc20Mint(baseContract, mintParams.recipient, Number(mintParams.amount));
     setIsLoading(false);
 
     if (mintErr || !mintRes) {
-      let errorMessage = "See client's console for more information";
-
-      // @notice 4001 error code is returned when a metamask wallet request is rejected by the user
-      // @notice See https://docs.metamask.io/wallet/reference/provider-api/#errors for more information on the error returned by Metamask.
-      if (JSON.stringify(mintErr).indexOf('4001') !== -1) {
-        errorMessage = 'You have rejected the request.';
-      } else if (JSON.stringify(mintErr).indexOf('nonce has already been used') !== -1) {
-        errorMessage = 'Nonce has already been used. Please try again!';
-      }
-
-      CommonErrorToast({
+      handleAPIErrors({
+        err: mintErr,
         toaster,
-        title: 'Cannot execute mint function',
-        description: errorMessage,
+        setTransactionResults,
+        transactionHash: txHash,
+        transactionType: 'ERC20-MINT',
       });
       return;
-    }
+    } else {
+      // handle succesfull
+      setTransactionResults((prev) => [
+        ...prev,
+        {
+          status: 'sucess',
+          txHash: txHash as string,
+          transactionType: 'ERC20-MINT',
+          transactionTimeStamp: Date.now(),
+        },
+      ]);
 
-    // turn isSuccessful on
-    setIsSuccessful(true);
+      setIsSuccessful(true);
+    }
   };
+
+  /** @dev listen to change event on transactionResults state => load to localStorage  */
+  useUpdateTransactionResultsToLocalStorage(transactionResults, transactionResultStorageKey);
 
   // toast successful
   useEffect(() => {

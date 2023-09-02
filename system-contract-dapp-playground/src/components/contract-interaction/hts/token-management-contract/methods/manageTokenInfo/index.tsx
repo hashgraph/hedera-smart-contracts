@@ -258,6 +258,7 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         tokenAddress: hederaTokenAddress,
+        transactionType: `HTS-${APIMethods.replace('_', '-')}`,
       });
       return;
     } else {
@@ -267,7 +268,9 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
         {
           status: 'sucess',
           tokenAddress: hederaTokenAddress,
+          transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
+          transactionType: `HTS-${APIMethods.replace('_', '-')}`,
         },
       ]);
 

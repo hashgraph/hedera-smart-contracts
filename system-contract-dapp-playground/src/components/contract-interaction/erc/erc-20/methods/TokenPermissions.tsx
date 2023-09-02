@@ -48,6 +48,10 @@ import {
   increaseAllowanceParamFields,
   decreaseAllowanceParamFields,
 } from '@/utils/contract-interactions/erc/constant';
+import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
+import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 
 interface PageProps {
   baseContract: Contract;
@@ -62,6 +66,9 @@ type Allowance = {
 const TokenPermission = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [allowances, setAllowances] = useState<Allowance[]>([]);
+  const allowanceStorageKey = 'HEDERA.EIP.ERC-20.ALLOWANCES-RESULTS.READONLY';
+  const transactionResultStorageKey = 'HEDERA.EIP.ERC-20.TOKEN-PERMISSIONS-RESULTS';
+  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const [successStatus, setSuccessStatus] = useState({
     approve: false,
     increaseAllowance: false,
@@ -108,10 +115,26 @@ const TokenPermission = ({ baseContract }: PageProps) => {
     },
   });
 
+  const transferTypeMap = {
+    approve: 'ERC20-APPROVE',
+    increaseAllowance: 'ERC20-INCREASE-ALLOWANCE',
+    decreaseAllowance: 'ERC20-DECREASE-ALLOWANCE',
+  };
+
+  /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
+  useEffect(() => {
+    handleRetrievingTransactionResultsFromLocalStorage(
+      toaster,
+      transactionResultStorageKey,
+      undefined,
+      setTransactionResults
+    );
+  }, [toaster]);
+
   /** @dev retrieve allowances from localStorage to maintain data on re-renders */
   useEffect(() => {
     const { storageResult, err: localStorageBalanceErr } =
-      getArrayTypedValuesFromLocalStorage('hedera_erc20_allowances');
+      getArrayTypedValuesFromLocalStorage(allowanceStorageKey);
     // handle err
     if (localStorageBalanceErr) {
       CommonErrorToast({
@@ -175,23 +198,12 @@ const TokenPermission = ({ baseContract }: PageProps) => {
 
     // handle err
     if (tokenPermissionRes.err || !tokenPermissionRes[`${method}Res`]) {
-      const errorMessage = JSON.stringify(tokenPermissionRes.err);
-      let errorDescription = "See client's console for more information";
-      // @notice 4001 error code is returned when a metamask wallet request is rejected by the user
-      // @notice See https://docs.metamask.io/wallet/reference/provider-api/#errors for more information on the error returned by Metamask.
-      if (errorMessage.indexOf('4001') !== -1) {
-        errorDescription = 'You have rejected the request.';
-      } else if (errorMessage.indexOf('nonce has already been used') !== -1) {
-        errorDescription = 'Nonce has already been used. Please try again!';
-      } else if (errorMessage.indexOf('decreased allowance below zero') !== -1) {
-        errorDescription =
-          'The transaction was reverted due to the allowance decrease falling below zero.';
-      }
-
-      CommonErrorToast({
+      handleAPIErrors({
         toaster,
-        title: `Cannot execute function ${method}()`,
-        description: errorDescription,
+        setTransactionResults,
+        err: tokenPermissionRes.err,
+        transactionHash: tokenPermissionRes.txHash,
+        transactionType: (transferTypeMap as any)[method],
       });
       return;
     } else {
@@ -236,13 +248,29 @@ const TokenPermission = ({ baseContract }: PageProps) => {
 
       // reset params
       setParams({ owner: '', spender: '', amount: '' });
+
+      // update transaction results
+      if (tokenPermissionRes.txHash) {
+        setTransactionResults((prev) => [
+          ...prev,
+          {
+            status: 'sucess',
+            transactionTimeStamp: Date.now(),
+            txHash: tokenPermissionRes.txHash as string,
+            transactionType: (transferTypeMap as any)[method],
+          },
+        ]);
+      }
     }
   };
 
-  /** @dev listen to change event on balancesMap state => localStorage */
+  /** @dev listen to change event on transactionResults state => load to localStorage  */
+  useUpdateTransactionResultsToLocalStorage(transactionResults, transactionResultStorageKey);
+
+  /** @dev listen to change event on allowances state => localStorage */
   useEffect(() => {
     if (allowances.length > 0) {
-      localStorage.setItem('hedera_erc20_allowances', JSON.stringify(allowances));
+      localStorage.setItem(allowanceStorageKey, JSON.stringify(allowances));
     }
   }, [allowances]);
 
@@ -412,7 +440,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
                       allowance.owner.concat(allowance.spender)
                   );
                   if (filteredItems.length === 0) {
-                    localStorage.removeItem('hedera_erc20_allowances');
+                    localStorage.removeItem(allowanceStorageKey);
                   }
                   setAllowances(filteredItems);
                 };

@@ -148,7 +148,13 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
 
     // handle err
     if (err || !tokenAddress) {
-      handleAPIErrors({ err, toaster, transactionHash, setTransactionResults });
+      handleAPIErrors({
+        err,
+        toaster,
+        transactionHash,
+        setTransactionResults,
+        transactionType: 'HTS-NFT-CREATE',
+      });
       return;
     } else {
       // handle succesfull
@@ -158,6 +164,8 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
           tokenAddress,
           status: 'sucess',
           txHash: transactionHash as string,
+          transactionType: 'HTS-NFT-CREATE',
+          transactionTimeStamp: Date.now(),
         },
       ]);
 

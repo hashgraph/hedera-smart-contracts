@@ -153,6 +153,7 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         accountAddress: associatingAddress,
+        transactionType: 'HTS-TOKEN-ASSOCIATE',
       });
       return;
     } else {
@@ -162,8 +163,10 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
         {
           tokenAddresses,
           status: 'sucess',
+          transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
           accountAddress: associatingAddress,
+          transactionType: 'HTS-TOKEN-ASSOCIATE',
         },
       ]);
 

@@ -53,10 +53,13 @@ const BalanceOf = ({ baseContract }: PageProps) => {
   const [accountAddress, setAccountAddress] = useState('');
   const [balancesMap, setBalancesMap] = useState(new Map<string, number>());
   const [balancesRactNodes, setBalancesReactNodes] = useState<ReactNode[]>([]);
+  const transactionResultStorageKey = 'HEDERA.EIP.ERC-20.BALANCE-OF-RESULTS.READONLY';
 
   /** @dev retrieve balances from localStorage to maintain data on re-renders */
   useEffect(() => {
-    const { storageBalances, err: localStorageBalanceErr } = getBalancesFromLocalStorage();
+    const { storageBalances, err: localStorageBalanceErr } = getBalancesFromLocalStorage(
+      transactionResultStorageKey
+    );
     // handle err
     if (localStorageBalanceErr) {
       CommonErrorToast({
@@ -83,7 +86,7 @@ const BalanceOf = ({ baseContract }: PageProps) => {
     setBalancesMap((prev) => {
       prev.delete(addr);
       if (prev.size === 0) {
-        localStorage.removeItem('hedera_erc20_balances');
+        localStorage.removeItem(transactionResultStorageKey);
       }
       return new Map(prev);
     });
@@ -196,7 +199,7 @@ const BalanceOf = ({ baseContract }: PageProps) => {
     //// update local storage
     if (balancesMap.size > 0) {
       localStorage.setItem(
-        'hedera_erc20_balances',
+        transactionResultStorageKey,
         JSON.stringify(Object.fromEntries(balancesMap))
       );
     }

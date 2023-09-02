@@ -153,6 +153,7 @@ const QueryTokenRelationInfomation = ({ baseContract }: PageProps) => {
         err: tokenInfoResult.err,
         accountAddress: paramValues.accountAddress,
         tokenAddress: paramValues.hederaTokenAddress,
+        transactionType: `HTS-${API.replace('_', '-')}`,
         transactionHash: tokenInfoResult.transactionHash,
       });
       return;
@@ -163,8 +164,10 @@ const QueryTokenRelationInfomation = ({ baseContract }: PageProps) => {
         {
           APICalled: API,
           status: 'sucess',
+          transactionTimeStamp: Date.now(),
           accountAddress: paramValues.accountAddress,
           tokenAddress: paramValues.hederaTokenAddress,
+          transactionType: `HTS-${API.replace('_', '-')}`,
           txHash: tokenInfoResult.transactionHash as string,
           tokenInfo: Number(tokenInfoResult[eventMaps[API]]),
         },

@@ -180,6 +180,7 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
         setTransactionResults,
         keyTypeCalled: keyType,
         err: tokenInfoResult.err,
+        transactionType: `HTS-QUERY-${API.replace('_', '-')}`,
         tokenAddress: paramValues.hederaTokenAddress,
         transactionHash: tokenInfoResult.transactionHash,
       });
@@ -219,12 +220,14 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
       setTransactionResults((prev) => [
         ...prev,
         {
+          APICalled: API,
           status: 'sucess',
+          keyTypeCalled: keyType,
+          tokenInfo: cachedTokenInfo,
+          transactionTimeStamp: Date.now(),
+          transactionType: `HTS-QUERY-${API.replace('_', '-')}`,
           tokenAddress: paramValues.hederaTokenAddress,
           txHash: tokenInfoResult.transactionHash as string,
-          tokenInfo: cachedTokenInfo,
-          APICalled: API,
-          keyTypeCalled: keyType,
         },
       ]);
 

@@ -35,10 +35,9 @@ import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks
 import { htsTokenDeductionParamFields } from '@/utils/contract-interactions/HTS/token-management-custom/constant';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
-  SharedExecuteButton,
-  SharedExecuteButtonWithFee,
   SharedFormButton,
   SharedFormInputField,
+  SharedExecuteButtonWithFee,
 } from '../../../shared/components/ParamInputForm';
 
 interface PageProps {
@@ -79,6 +78,13 @@ const ManageTokenDeduction = ({ baseContract }: PageProps) => {
     { API: 'BURN', apiSwitchTitle: 'Burn Token', executeTitle: 'Burn Token' },
     { API: 'DELETE', apiSwitchTitle: 'Delete Token', executeTitle: 'Delete Token' },
   ];
+
+  const transactionTypeMap = {
+    WIPE_FUNGIBLE: 'HTS-WIPE-TOKEN',
+    WIPE_NON_FUNGIBLE: 'HTS-WIPE-NFT',
+    BURN: 'HTS-TOKEN-BURN',
+    DELETE: 'HTS-TOKEN-DELETE',
+  };
 
   const tokenCommonFields = useMemo(() => {
     if (APIMethods === 'WIPE_FUNGIBLE') {
@@ -158,6 +164,7 @@ const ManageTokenDeduction = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         tokenAddress: hederaTokenAddress,
+        transactionType: transactionTypeMap[API],
       });
       return;
     } else {
@@ -166,8 +173,10 @@ const ManageTokenDeduction = ({ baseContract }: PageProps) => {
         ...prev,
         {
           status: 'sucess',
+          transactionTimeStamp: Date.now(),
           tokenAddress: hederaTokenAddress,
           txHash: transactionHash as string,
+          transactionType: transactionTypeMap[API],
         },
       ]);
 

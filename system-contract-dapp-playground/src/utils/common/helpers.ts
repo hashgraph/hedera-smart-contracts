@@ -22,6 +22,7 @@ import { ethers } from 'ethers';
 import { NetworkName } from '@/types/common';
 import { getCurrentChainId } from '@/api/wallet';
 import { HEDERA_NETWORKS, PROTECTED_ROUTES } from './constants';
+import { TransactionResult } from '@/types/contract-interactions/HTS';
 
 /**
  * @dev validating if a route is protected
@@ -103,4 +104,34 @@ export const generatedRandomUniqueKey = (byteLength: number) => {
   const randomBytes = ethers.randomBytes(9);
   const randomKey = ethers.hexlify(randomBytes);
   return randomKey;
+};
+
+/**
+ * @dev prepare a list of transaction in order from newest to oldest based on the timestamp when each transaction occurs
+ *
+ * @returns allTransactions: TransactionResult[]
+ */
+export const prepareTransactionList = () => {
+  // prepare
+  const transactions: TransactionResult[] = [];
+
+  // loop through localStorage items
+  if (typeof localStorage !== 'undefined') {
+    for (let i = 0; i < localStorage.length; i++) {
+      // get key
+      const key = localStorage.key(i);
+
+      // only include item with KEY includes 'HEDERA' and NOT include 'READONLY'
+      if (key?.includes('HEDERA') && !key?.includes('READONLY')) {
+        const records = JSON.parse(localStorage.getItem(key) || '');
+        records.forEach((record: any) => {
+          transactions.push(record);
+        });
+      }
+    }
+  }
+
+  return transactions.sort(
+    (txA: any, txB: any) => txB.transactionTimeStamp - txA.transactionTimeStamp
+  );
 };

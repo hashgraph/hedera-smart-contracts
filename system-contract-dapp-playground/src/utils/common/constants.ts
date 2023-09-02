@@ -26,8 +26,8 @@ import PrngSystemContract from '@hashgraph-smartcontract/artifacts/contracts/uti
 import TokenQueryContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-query/TokenQueryContract.sol/TokenQueryContract.json';
 import ExchangeRatePrecompile from '@hashgraph-smartcontract/artifacts/contracts/exchange-rate-precompile/ExchangeRatePrecompile.sol/ExchangeRatePrecompile.json';
 import TokenTransferContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-transfer/TokenTransferContract.sol/TokenTransferContract.json';
-import TokenManagementContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-manage/TokenManagementContract.sol/TokenManagementContract.json';
 import TokenCreateCustomContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-create/TokenCreateCustom.sol/TokenCreateCustomContract.json';
+import TokenManagementContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-manage/TokenManagementContract.sol/TokenManagementContract.json';
 
 /** @notice Hedera Smart Contract official github url */
 export const HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL =
@@ -140,6 +140,7 @@ export const PROTECTED_ROUTES = [
   '/hedera/prng-hip-351',
   '/hedera/erc-20',
   '/hedera/erc-721',
+  '/activity',
 ];
 
 /**

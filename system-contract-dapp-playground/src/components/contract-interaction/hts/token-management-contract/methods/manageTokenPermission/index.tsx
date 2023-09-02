@@ -67,6 +67,12 @@ const ManageTokenPermission = ({ baseContract }: PageProps) => {
   };
   const [paramValues, setParamValues] = useState<any>(initialParamValues);
 
+  const transactionTypeMap = {
+    APPROVED_FUNGIBLE: 'HTS-APPROVED-TOKEN',
+    APPROVED_NON_FUNGIBLE: 'HTS-APPROVED-NFT',
+    SET_APPROVAL: 'HTS-SET-APPROVAL',
+  };
+
   const APIButtonTitles: { API: API_NAMES; apiSwitchTitle: string; executeTitle: string }[] = [
     {
       API: 'APPROVED_FUNGIBLE',
@@ -156,6 +162,7 @@ const ManageTokenPermission = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         tokenAddress: hederaTokenAddress,
+        transactionType: transactionTypeMap[API],
       });
       return;
     } else {
@@ -165,7 +172,9 @@ const ManageTokenPermission = ({ baseContract }: PageProps) => {
         {
           status: 'sucess',
           tokenAddress: hederaTokenAddress,
+          transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
+          transactionType: transactionTypeMap[API],
         },
       ]);
 

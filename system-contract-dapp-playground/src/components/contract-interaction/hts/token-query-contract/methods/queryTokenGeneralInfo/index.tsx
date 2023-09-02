@@ -83,6 +83,12 @@ const QueryTokenGeneralInfomation = ({ baseContract }: PageProps) => {
     NON_FUNFIBLE: 'NonFungibleTokenInfo',
   };
 
+  const transactionTypeMap = {
+    TOKEN: 'HTS-QUERY-TOKEN-INFO',
+    FUNGIBLE: 'HTS-QUERY-FUNGIBLE-INFO',
+    NON_FUNFIBLE: 'HTS-QUERY-NFT-INFO',
+  };
+
   const APIButtonTitles: { API: API_NAMES; apiSwitchTitle: string; executeTitle: any }[] = [
     {
       API: 'TOKEN',
@@ -162,6 +168,7 @@ const QueryTokenGeneralInfomation = ({ baseContract }: PageProps) => {
         err: err,
         setTransactionResults,
         transactionHash: transactionHash,
+        transactionType: transactionTypeMap[API],
         tokenAddress: paramValues.hederaTokenAddress,
       });
       return;
@@ -173,9 +180,11 @@ const QueryTokenGeneralInfomation = ({ baseContract }: PageProps) => {
         {
           APICalled: API,
           status: 'sucess',
+          transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
-          tokenAddress: paramValues.hederaTokenAddress,
+          transactionType: transactionTypeMap[API],
           tokenInfo: tokenInfoResult[eventMaps[API]],
+          tokenAddress: paramValues.hederaTokenAddress,
         },
       ]);
       setIsSuccessful(true);

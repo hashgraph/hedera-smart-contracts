@@ -25,9 +25,9 @@
  *
  * @return err?
  */
-export const getBalancesFromLocalStorage = () => {
+export const getBalancesFromLocalStorage = (transactionResultStorageKey: string) => {
   try {
-    const storageBalances = localStorage.getItem('hedera_erc20_balances');
+    const storageBalances = localStorage.getItem(transactionResultStorageKey);
     if (storageBalances) {
       return {
         storageBalances: new Map(Object.entries(JSON.parse(storageBalances))) as Map<
