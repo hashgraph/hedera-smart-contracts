@@ -18,17 +18,17 @@
  *
  */
 
+import { Contract } from 'ethers';
+import {
+  IHederaTokenServiceTokenTransferList,
+  IHederaTokenServiceTransferList,
+} from '@/types/contract-interactions/HTS';
 import {
   transferCrypto,
   transferFungibleTokens,
   transferNonFungibleTokens,
   transferSingleToken,
-} from '@/api/hedera/tokenTransfer-interactions';
-import {
-  IHederaTokenServiceTokenTransferList,
-  IHederaTokenServiceTransferList,
-} from '@/types/contract-interactions/HTS';
-import { Contract } from 'ethers';
+} from '@/api/hedera/hts-interactions/tokenTransfer-interactions';
 
 describe('TokenTransferContract test suite', () => {
   const responseCode = 22;

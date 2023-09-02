@@ -27,7 +27,7 @@ import {
   grantTokenKYCToAccount,
   mintHederaToken,
   mintHederaTokenToAddress,
-} from '@/api/hedera/tokenCreateCustom-interactions';
+} from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
 
 describe('createHederaFungibleToken test suite', () => {
   // mock states

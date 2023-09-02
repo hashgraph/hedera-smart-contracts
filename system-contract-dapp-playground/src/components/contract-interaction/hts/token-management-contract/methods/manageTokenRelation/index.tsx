@@ -28,12 +28,13 @@ import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { useToastSuccessful } from '../../../shared/hooks/useToastSuccessful';
-import { manageTokenRelation } from '@/api/hedera/tokenManagement-interactions';
 import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
 import TokenAddressesInputForm from '../../../shared/components/TokenAddressesInputForm';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
+import { manageTokenRelation } from '@/api/hedera/hts-interactions/tokenManagement-interactions';
 import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
+import { htsTokenRelationParamFields } from '@/utils/contract-interactions/HTS/token-management-custom/constant';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedExecuteButton,
@@ -41,7 +42,6 @@ import {
   SharedFormButton,
   SharedFormInputField,
 } from '../../../shared/components/ParamInputForm';
-import { htsTokenRelationParamFields } from '@/utils/contract-interactions/HTS/token-management-custom/constant';
 
 interface PageProps {
   baseContract: Contract;

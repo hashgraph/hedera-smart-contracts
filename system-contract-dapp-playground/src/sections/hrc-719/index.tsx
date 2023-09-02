@@ -22,11 +22,11 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { IoOpenOutline } from 'react-icons/io5';
-import { HEDERA_OFFICIAL_HIPS_URL, HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/common/constants';
-import { Tooltip } from '@chakra-ui/react';
-import ContractInteraction from '@/components/contract-interaction';
 import { BsGithub } from 'react-icons/bs';
+import { Tooltip } from '@chakra-ui/react';
+import { IoOpenOutline } from 'react-icons/io5';
+import ContractInteraction from '@/components/contract-interaction';
+import { HEDERA_OFFICIAL_HIPS_URL, HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/common/constants';
 
 const HRC719Section = () => {
   return (

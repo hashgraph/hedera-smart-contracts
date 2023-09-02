@@ -27,11 +27,11 @@ import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
-import { queryTokenPermissionInformation } from '@/api/hedera/tokenQuery-interactions';
 import TokenPermissionInfoModal from '../../../shared/components/TokenPermissionInfoModal';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
+import { queryTokenPermissionInformation } from '@/api/hedera/hts-interactions/tokenQuery-interactions';
 import { htsQueryTokenPermissionParamFields } from '@/utils/contract-interactions/HTS/token-query/constant';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {

@@ -27,12 +27,12 @@ import { useState, useMemo, useEffect } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../../shared/hooks/useToastSuccessful';
-import { manageTokenInfomation } from '@/api/hedera/tokenManagement-interactions';
 import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
 import { SharedSigningKeysComponent } from '../../../shared/components/SigningKeysForm';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
 import { HederaTokenKeyTypes, TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
+import { manageTokenInfomation } from '@/api/hedera/hts-interactions/tokenManagement-interactions';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {

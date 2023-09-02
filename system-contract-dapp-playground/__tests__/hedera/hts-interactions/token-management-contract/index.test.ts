@@ -24,7 +24,7 @@ import {
   manageTokenDeduction,
   manageTokenInfomation,
   manageTokenPermission,
-} from '@/api/hedera/tokenManagement-interactions';
+} from '@/api/hedera/hts-interactions/tokenManagement-interactions';
 import {
   CommonKeyObject,
   IHederaTokenServiceExpiry,
