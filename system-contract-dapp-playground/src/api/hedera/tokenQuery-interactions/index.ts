@@ -22,6 +22,7 @@ import {
   IHederaTokenServiceKeyType,
   TokenQuerySmartContractResult,
 } from '@/types/contract-interactions/HTS';
+import { handleContractResponseWithDynamicEventNames } from '@/utils/contract-interactions/HTS/helpers';
 import { KEY_TYPE_MAP } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
 import { Contract, isAddress } from 'ethers';
 
@@ -127,14 +128,7 @@ export const queryTokenGeneralInfomation = async (
         break;
     }
 
-    // get transaction receipt
-    const txReceipt = await transactionResult.wait();
-
-    // retrieve information from event
-    const { data } = txReceipt.logs.filter(
-      (event: any) => event.fragment.name === eventMaps[API]
-    )[0];
-    return { [eventMaps[API]]: data, transactionHash: txReceipt.hash };
+    return await handleContractResponseWithDynamicEventNames(transactionResult, eventMaps, API);
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };
@@ -231,14 +225,7 @@ export const queryTokenSpecificInfomation = async (
         break;
     }
 
-    // get transaction receipt
-    const txReceipt = await transactionResult.wait();
-
-    // retrieve information from event
-    const { data } = txReceipt.logs.filter(
-      (event: any) => event.fragment.name === eventMaps[API]
-    )[0];
-    return { [eventMaps[API]]: data, transactionHash: txReceipt.hash };
+    return await handleContractResponseWithDynamicEventNames(transactionResult, eventMaps, API);
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };
@@ -349,14 +336,7 @@ export const queryTokenPermissionInformation = async (
       return { err: 'Cannot execute contract methods' };
     }
 
-    // get transaction receipt
-    const txReceipt = await transactionResult.wait();
-
-    // retrieve information from event
-    const { data } = txReceipt.logs.filter(
-      (event: any) => event.fragment.name === eventMaps[API]
-    )[0];
-    return { [eventMaps[API]]: data, transactionHash: txReceipt.hash };
+    return await handleContractResponseWithDynamicEventNames(transactionResult, eventMaps, API);
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };
@@ -418,14 +398,7 @@ export const queryTokenRelationInformation = async (
         break;
     }
 
-    // get transaction receipt
-    const txReceipt = await transactionResult.wait();
-
-    // retrieve information from event
-    const { data } = txReceipt.logs.filter(
-      (event: any) => event.fragment.name === eventMaps[API]
-    )[0];
-    return { [eventMaps[API]]: data, transactionHash: txReceipt.hash };
+    return await handleContractResponseWithDynamicEventNames(transactionResult, eventMaps, API);
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };

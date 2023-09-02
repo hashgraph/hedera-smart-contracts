@@ -149,3 +149,23 @@ export const handleContractResponse = async (
   // @notice: 22 represents the predefined response code from the Hedera system contracts, indicating a successful transaction.
   return { result: Number(data) === 22, transactionHash: txReceipt.hash };
 };
+
+/**
+ * @dev handle responses while interacting with contract APIs
+ *
+ * @param transactionResult: any,
+ *
+ * @param errMsg: string
+ */
+export const handleContractResponseWithDynamicEventNames = async (
+  transactionResult: any,
+  eventMaps?: any,
+  API?: any
+): Promise<TokenManagementSmartContractResult> => {
+  // get transaction receipt
+  const txReceipt = await transactionResult.wait();
+
+  // retrieve information from event
+  const { data } = txReceipt.logs.filter((event: any) => event.fragment.name === eventMaps[API])[0];
+  return { [eventMaps[API]]: data, transactionHash: txReceipt.hash };
+};
