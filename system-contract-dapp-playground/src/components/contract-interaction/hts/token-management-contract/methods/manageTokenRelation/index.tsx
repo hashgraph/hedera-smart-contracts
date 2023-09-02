@@ -190,7 +190,7 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
       baseContract,
       API,
       paramValues.accountAddress,
-      paramValues.feeValue,
+      Number(paramValues.feeValue),
       paramValues.hederaTokenAddress,
       API === 'DISSOCIATE_TOKEN' ? tokenAddresses : undefined
     );

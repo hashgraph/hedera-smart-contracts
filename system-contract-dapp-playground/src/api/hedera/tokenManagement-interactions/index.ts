@@ -396,6 +396,8 @@ export const manageTokenRelation = async (
  *
  * @param hederaTokenAddress: string
  *
+ * @param gasLimit: number
+ *
  * @param accountAddress?: string
  *
  * @param amount?: number
@@ -408,6 +410,7 @@ export const manageTokenDeduction = async (
   baseContract: Contract,
   API: 'WIPE_FUNGIBLE' | 'WIPE_NON_FUNGIBLE' | 'BURN' | 'DELETE',
   hederaTokenAddress: string,
+  gasLimit: number,
   accountAddress?: string,
   amount?: number,
   serialNumbers?: number[]
@@ -441,48 +444,49 @@ export const manageTokenDeduction = async (
     switch (API) {
       case 'WIPE_FUNGIBLE':
         if (!accountAddress) {
-          errMsg = 'Account address to wipe tokens from is needed for WIPE_FUNGIBLE API';
+          errMsg = 'Account address is needed for WIPE_FUNGIBLE API';
         } else if (!amount) {
-          errMsg = 'Amount to wipe is needed for WIPE_FUNGIBLE API';
+          errMsg = 'Amount is needed for WIPE_FUNGIBLE API';
         } else {
           transactionResult = await baseContract.wipeTokenAccountPublic(
             hederaTokenAddress,
             accountAddress,
-            amount
+            amount,
+            { gasLimit }
           );
         }
         break;
 
       case 'WIPE_NON_FUNGIBLE':
         if (!accountAddress) {
-          errMsg = 'Account address to wipe tokens from is needed for WIPE_NON_FUNGIBLE API';
+          errMsg = 'Account address is needed for WIPE_NON_FUNGIBLE API';
         } else if (!serialNumbers || serialNumbers.length === 0) {
-          errMsg = 'Serial number to wipe is needed for WIPE_NON_FUNGIBLE API';
+          errMsg = 'Serial number is needed for WIPE_NON_FUNGIBLE API';
         } else {
           transactionResult = await baseContract.wipeTokenAccountNFTPublic(
             hederaTokenAddress,
             accountAddress,
-            serialNumbers
+            serialNumbers,
+            { gasLimit }
           );
         }
         break;
 
       case 'BURN':
-        if (!amount) {
-          errMsg = 'Amount to burn is needed for BURN API';
-        } else if (!serialNumbers || serialNumbers.length === 0) {
-          errMsg = 'Serial number to burn is needed for BURN API';
+        if (!amount && (!serialNumbers || serialNumbers.length === 0)) {
+          errMsg = 'Amount/serial number is needed for BURN API';
         } else {
           transactionResult = await baseContract.burnTokenPublic(
             hederaTokenAddress,
             amount,
-            serialNumbers
+            serialNumbers,
+            { gasLimit }
           );
         }
         break;
 
       case 'DELETE':
-        transactionResult = await baseContract.deleteTokenPublic(hederaTokenAddress);
+        transactionResult = await baseContract.deleteTokenPublic(hederaTokenAddress, { gasLimit });
     }
 
     // handle contract responses
