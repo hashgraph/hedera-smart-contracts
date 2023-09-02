@@ -64,3 +64,22 @@ export const getArrayTypedValuesFromLocalStorage = (key: string) => {
     return { err };
   }
 };
+
+/**
+ * @dev clear all HEDERA transaction results cached in localStorage
+ */
+export const clearTransactionCache = () => {
+  // loop through localStorage items
+  if (typeof localStorage !== 'undefined') {
+    for (let i = 0; i < localStorage.length; i++) {
+      // get key
+      const key = localStorage.key(i);
+
+      // remove items that have keys start with HEDERA
+      if (key?.startsWith('HEDERA')) {
+        localStorage.removeItem(key);
+        i--;
+      }
+    }
+  }
+};

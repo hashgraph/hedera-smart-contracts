@@ -24,29 +24,40 @@ import { ethers } from 'ethers';
 import { clearCookies } from '@/api/cookies';
 import { NetworkName } from '@/types/common';
 import { BiCopy, BiCheckDouble } from 'react-icons/bi';
-import { SkeletonText, useToast } from '@chakra-ui/react';
 import { getBalance, getWalletProvider } from '@/api/wallet';
 import { HASHSCAN_BASE_URL } from '@/utils/common/constants';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
+import { SkeletonText, useDisclosure, useToast } from '@chakra-ui/react';
 import { BsChevronDown, BsFillQuestionOctagonFill } from 'react-icons/bs';
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from '@chakra-ui/react';
+import { clearTransactionCache } from '@/api/localStorage';
 
 interface PageProps {
-  isOpen: boolean;
+  didWalletPop: boolean;
   network: NetworkName;
   userAddress: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const WalletPopup = ({ isOpen, setIsOpen, userAddress, network }: PageProps) => {
+const WalletPopup = ({ didWalletPop, setIsOpen, userAddress, network }: PageProps) => {
   const toaster = useToast();
   const [isCopied, setIsCopied] = useState({
     accountId: false,
     evmAddress: false,
   });
-  const [hederaAccountId, setHederaAccountId] = useState<String>();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [accountBalance, setAccountBalance] = useState<String>();
+  const [hederaAccountId, setHederaAccountId] = useState<String>();
   const { walletProvider, err: walletProviderErr } = getWalletProvider();
 
   /**
@@ -118,8 +129,14 @@ const WalletPopup = ({ isOpen, setIsOpen, userAddress, network }: PageProps) => 
    * @dev disconnect user
    */
   const handleDisconnect = async () => {
-    // clear Cookies
+    // close modal
+    onClose();
+
+    // clear Cookies cache
     await clearCookies();
+
+    // clear localStorage cache
+    clearTransactionCache();
 
     // redirect user to landing page
     setIsOpen(false);
@@ -254,15 +271,48 @@ const WalletPopup = ({ isOpen, setIsOpen, userAddress, network }: PageProps) => 
 
               {/* Disconnect */}
             </div>
-            <div
-              onClick={handleDisconnect}
+            <button
+              onClick={() => {
+                onOpen();
+              }}
               className="flex flex-col items-center py-1 px-4 bg-button text-white w-full border-[1px] border-white/50 hover:bg-transparent justify-center rounded-xl cursor-pointer"
             >
               <Image src={'/assets/icons/disconnect-icon.png'} alt={''} width={15} height={15} />
               <p className="flex justify-center text-sm items-center gap-1 py-2 leading-[.5rem]">
                 Disconnect
               </p>
-            </div>
+            </button>
+
+            <Modal isOpen={isOpen} isCentered onClose={onClose}>
+              <ModalOverlay />
+              <ModalContent
+                className="h-fit flex flex-col gap-3 rounded-xl drop-shadow-xl
+                bg-secondary text-white font-styrene w-[30rem]"
+              >
+                <ModalHeader>Sure to disconnect?</ModalHeader>
+                <ModalCloseButton />
+
+                {/* break line */}
+                <hr className="border-t border-white/40 -mt-3" />
+
+                <ModalBody>
+                  <p className="text-white/70">
+                    By completing this action, all the transactions you have made during this
+                    session will be permanently erased from the DApp&apos;s cache, but they will
+                    still be accessible through HashScan or other explorer solutions.
+                  </p>
+                </ModalBody>
+
+                <ModalFooter>
+                  <button
+                    onClick={handleDisconnect}
+                    className="border border-button-stroke-violet px-6 py-2 rounded-lg font-medium hover:bg-button-stroke-violet hover:text-white transition duration-300"
+                  >
+                    Acknowledge
+                  </button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
           </div>
         </div>
       </div>
