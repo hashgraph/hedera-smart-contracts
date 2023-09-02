@@ -33,11 +33,11 @@ interface PageProps {
 const ERC20Methods = ({ baseContract, method }: PageProps) => {
   return (
     <>
-      {method === 'tokenInformation' && <TokenInformation baseContract={baseContract} />}
       {method === 'mint' && <Mint baseContract={baseContract} />}
+      {method === 'transfer' && <Transfer baseContract={baseContract} />}
       {method === 'balanceOf' && <BalanceOf baseContract={baseContract} />}
       {method === 'tokenPermissions' && <TokenPermission baseContract={baseContract} />}
-      {method === 'transfer' && <Transfer baseContract={baseContract} />}
+      {method === 'tokenInformation' && <TokenInformation baseContract={baseContract} />}
     </>
   );
 };
