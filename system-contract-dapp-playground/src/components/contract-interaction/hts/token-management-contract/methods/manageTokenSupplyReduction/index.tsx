@@ -34,10 +34,9 @@ import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSa
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
-  SharedExecuteButton,
-  SharedExecuteButtonWithFee,
   SharedFormButton,
   SharedFormInputField,
+  SharedExecuteButtonWithFee,
 } from '../../../shared/components/ParamInputForm';
 import { htsTokenDeductionParamFields } from '@/utils/contract-interactions/HTS/token-management/constant';
 
@@ -45,7 +44,7 @@ interface PageProps {
   baseContract: Contract;
 }
 
-type API_NAMES = 'WIPE_FUNGIBLE' | 'WIPE_NON_FUNGIBLE' | 'BURN' | 'DELETE';
+type API_NAMES = 'WIPE_FUNGIBLE' | 'WIPE_NON_FUNGIBLE' | 'BURN';
 
 const ManageTokenDeduction = ({ baseContract }: PageProps) => {
   // general states
@@ -56,7 +55,7 @@ const ManageTokenDeduction = ({ baseContract }: PageProps) => {
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('WIPE_FUNGIBLE');
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-MANAGEMENT.TOKEN-DEDUCTION-RESULTS';
+  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-MANAGEMENT.TOKEN-REDUCTION-RESULTS';
   const initialParamValues = {
     amount: '',
     feeValue: '',
@@ -77,7 +76,6 @@ const ManageTokenDeduction = ({ baseContract }: PageProps) => {
       executeTitle: 'Wipe Non-Fungible Token',
     },
     { API: 'BURN', apiSwitchTitle: 'Burn Token', executeTitle: 'Burn Token' },
-    { API: 'DELETE', apiSwitchTitle: 'Delete Token', executeTitle: 'Delete Token' },
   ];
 
   const tokenCommonFields = useMemo(() => {
@@ -85,10 +83,8 @@ const ManageTokenDeduction = ({ baseContract }: PageProps) => {
       return ['hederaTokenAddress', 'accountAddress', 'amount'];
     } else if (APIMethods === 'WIPE_NON_FUNGIBLE') {
       return ['hederaTokenAddress', 'accountAddress', 'serialNumbers'];
-    } else if (APIMethods === 'BURN') {
-      return ['hederaTokenAddress', 'amount', 'serialNumbers'];
     } else {
-      return ['hederaTokenAddress'];
+      return ['hederaTokenAddress', 'amount', 'serialNumbers'];
     }
   }, [APIMethods]);
 
@@ -112,7 +108,7 @@ const ManageTokenDeduction = ({ baseContract }: PageProps) => {
     setParamValues((prev: any) => ({ ...prev, [param]: e.target.value }));
   };
 
-  /** @dev handle invoking the API to interact with smart contract and update token deduction */
+  /** @dev handle invoking the API to interact with smart contract and update token reduction */
   const handleUpdateTokenDeduction = async (API: API_NAMES) => {
     // destructuring param values
     const { amount, serialNumbers, feeValue, accountAddress, hederaTokenAddress } = paramValues;
