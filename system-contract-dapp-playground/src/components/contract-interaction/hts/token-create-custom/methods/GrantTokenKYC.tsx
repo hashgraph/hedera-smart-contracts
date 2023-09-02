@@ -28,7 +28,7 @@ import { handleAPIErrors } from '../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../shared/states/commonStates';
 import { useToastSuccessful } from '../../shared/hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../shared/hooks/usePaginatedTxResults';
-import { grantTokenKYCToAccount } from '@/api/hedera/tokenCreateCustom-interactions';
+import { grantTokenKYCToAccount } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
 import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../shared/methods/handleSanitizeFormInputs';
 import { SharedFormInputField, SharedExecuteButton } from '../../shared/components/ParamInputForm';

@@ -43,7 +43,7 @@ import {
 import {
   mintHederaToken,
   mintHederaTokenToAddress,
-} from '@/api/hedera/tokenCreateCustom-interactions';
+} from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
 
 interface PageProps {
   baseContract: Contract;

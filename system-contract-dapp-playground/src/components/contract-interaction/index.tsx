@@ -351,6 +351,9 @@ const ContractInteraction = ({ contract }: PageProps) => {
                       />
                     )}
 
+                    {/* HRC 719 */}
+                    {/* {contract.name === ""} */}
+
                     {/* ERC-20 */}
                     {contract.name === 'ERC20Mock' && (
                       <ERC20Methods method={method} baseContract={baseContract! as Contract} />

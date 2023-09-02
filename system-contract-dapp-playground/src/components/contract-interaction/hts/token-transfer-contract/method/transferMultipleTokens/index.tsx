@@ -39,7 +39,7 @@ import {
 import {
   transferFungibleTokens,
   transferNonFungibleTokens,
-} from '@/api/hedera/tokenTransfer-interactions';
+} from '@/api/hedera/hts-interactions/tokenTransfer-interactions';
 import {
   FungibleParamValue,
   NonFungibleParamValue,
