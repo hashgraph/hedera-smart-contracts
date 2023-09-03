@@ -19,14 +19,16 @@
  */
 
 import Image from 'next/image';
+import { Contract } from 'ethers';
 import { BiCopy } from 'react-icons/bi';
-import { Contract, isAddress } from 'ethers';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { IoRefreshOutline } from 'react-icons/io5';
 import { ReactNode, useEffect, useState } from 'react';
+import { erc721OwnerOf } from '@/api/hedera/erc721-interactions';
 import { getBalancesFromLocalStorage } from '@/api/localStorage';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import HederaCommonTextField from '@/components/common/HederaCommonTextField';
+import { copyWalletAddress, handleRemoveRecord } from '../../../shared/methods';
 import {
   Popover,
   PopoverContent,
@@ -41,19 +43,18 @@ import {
   Tr,
   useToast,
 } from '@chakra-ui/react';
-import { erc721BalanceOf } from '@/api/hedera/erc721-interactions';
 
 interface PageProps {
   baseContract: Contract;
 }
 
-const ERC721BalanceOf = ({ baseContract }: PageProps) => {
+const ERC721OwnerOf = ({ baseContract }: PageProps) => {
   const toaster = useToast();
+  const [tokenId, setTokenId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [accountAddress, setAccountAddress] = useState('');
-  const [balancesMap, setBalancesMap] = useState(new Map<string, number>());
-  const [balancesRactNodes, setBalancesReactNodes] = useState<ReactNode[]>([]);
-  const transactionResultStorageKey = 'HEDERA.EIP.ERC-721.ONER-OF-RESULTS.READONLY';
+  const [ractNodes, setReactNodes] = useState<ReactNode[]>([]);
+  const [tokenOwners, setTokenOwners] = useState(new Map<number, string>());
+  const transactionResultStorageKey = 'HEDERA.EIP.ERC-721.OWNER-OF.READONLY';
 
   /** @dev retrieve balances from localStorage to maintain data on re-renders */
   useEffect(() => {
@@ -70,107 +71,106 @@ const ERC721BalanceOf = ({ baseContract }: PageProps) => {
       return;
     }
 
-    // update balancesMap
+    // update setTokenOwners
     if (storageBalances) {
-      setBalancesMap(storageBalances);
+      setTokenOwners(storageBalances);
     }
   }, [toaster]);
 
-  /** @dev copy content to clipboard */
-  const copyWalletAddress = (content: string) => {
-    navigator.clipboard.writeText(content);
-  };
-
-  /** @dev handle remove record */
-  const handleRemoveRecord = (addr: string) => {
-    setBalancesMap((prev) => {
-      prev.delete(addr);
-      if (prev.size === 0) {
-        localStorage.removeItem(transactionResultStorageKey);
-      }
-      return new Map(prev);
-    });
-  };
-
-  /** @dev handle executing balance of */
-  const handleExecuteBalanceOf = async () => {
+  /** @dev handle executing erc721OwnerOf */
+  const handleExecuteOwnerOf = async () => {
     // sanitize params
-    if (!isAddress(accountAddress)) {
+    if (Number(tokenId) < 0) {
       CommonErrorToast({
         toaster,
         title: 'Invalid parameters',
-        description: 'Account address is not a valid address',
+        description: 'TokenID cannot be negative',
       });
       return;
     }
 
-    // invoke balanceOf()
     setIsLoading(true);
-    const { balanceOfRes, err: balanceOfErr } = await erc721BalanceOf(baseContract, accountAddress);
+
+    // invoke erc721OwnerOf()
+    const { ownerOfRes, err } = await erc721OwnerOf(baseContract, Number(tokenId));
+
     setIsLoading(false);
-    if (balanceOfErr || !balanceOfRes) {
+
+    if (err) {
       CommonErrorToast({
         toaster,
-        title: 'Invalid parameters',
-        description: 'Account address is not a valid address',
+        title: 'Transaction got reverted',
+        description: "See client's console for more information",
       });
       return;
     }
 
-    // udpate balances
-    setBalancesMap((prev) => new Map(prev).set(accountAddress, Number(balanceOfRes)));
-    setAccountAddress('');
+    // udpate tokenOwners
+    setTokenOwners((prev) => new Map(prev).set(Number(tokenId), ownerOfRes || ''));
+    setTokenId('');
   };
 
-  // @dev listen to change event on balancesMap state => update UI & localStorage
+  // @dev listen to change event on tokenOwners state => update UI & localStorage
   useEffect(() => {
     //// update UI
     let reactNodes = [] as ReactNode[];
-    balancesMap.forEach((amount, account) => {
+    tokenOwners.forEach((itTokenOwner, itTokenID) => {
       /** @dev handle refresh record */
-      const handleRefreshRecord = async (addr: string) => {
-        // invoke balanceOf()
-        const { balanceOfRes, err: balanceOfErr } = await erc721BalanceOf(baseContract, account);
-        if (balanceOfErr || !balanceOfRes) {
+      const handleRefreshRecord = async (currentTokenId: number) => {
+        // invoke erc721OwnerOf()
+        const { ownerOfRes, err } = await erc721OwnerOf(baseContract, Number(currentTokenId));
+        if (err) {
           CommonErrorToast({
             toaster,
-            title: 'Invalid parameters',
-            description: 'Account address is not a valid address',
+            title: 'Transaction got reverted',
+            description: "See client's console for more information",
           });
           return;
         }
 
-        // udpate balances
-        setBalancesMap((prev) => new Map(prev).set(account, Number(balanceOfRes)));
+        // udpate erc721OwnerOf
+        setTokenOwners((prev) => new Map(prev).set(currentTokenId, ownerOfRes || ''));
       };
 
       reactNodes.push(
-        <Tr key={account}>
-          <Td onClick={() => copyWalletAddress(account)} className="cursor-pointer">
-            {/* account field */}
+        <Tr key={itTokenID} className="w-full">
+          {/* tokenID */}
+          <Td isNumeric>
+            <p className="text-start">{itTokenID}</p>
+          </Td>
+          <Td
+            onClick={() => {
+              itTokenOwner !== '' && copyWalletAddress(itTokenOwner);
+            }}
+            className="cursor-pointer w-full max-w-[100px]"
+          >
+            {/* tokenOwner */}
             <Popover>
               <PopoverTrigger>
                 <div className="flex gap-1 items-center">
-                  <p>{account}</p>
-                  <div className="w-[1rem] text-textaccents-light dark:text-textaccents-dark">
-                    <BiCopy />
-                  </div>
+                  <p className="overflow-hidden text-ellipsis">
+                    {itTokenOwner || 'Token URI is empty'}
+                  </p>
+                  {itTokenOwner !== '' && (
+                    <div className="w-[1rem] text-textaccents-light dark:text-textaccents-dark">
+                      <BiCopy />
+                    </div>
+                  )}
                 </div>
               </PopoverTrigger>
               <PopoverContent width={'fit-content'} border={'none'}>
-                <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
+                {itTokenOwner !== '' && (
+                  <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
+                )}
               </PopoverContent>
             </Popover>
-          </Td>
-          <Td isNumeric>
-            <p>{amount}</p>
           </Td>
           <Td>
             {/* refresh button */}
             <Tooltip label="refresh this record" placement="top">
               <button
                 onClick={() => {
-                  handleRefreshRecord(account);
+                  handleRefreshRecord(itTokenID);
                 }}
                 className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-teal-500 transition duration-300`}
               >
@@ -183,7 +183,7 @@ const ERC721BalanceOf = ({ baseContract }: PageProps) => {
             <Tooltip label="delete this record" placement="top">
               <button
                 onClick={() => {
-                  handleRemoveRecord(account);
+                  handleRemoveRecord(itTokenID, setTokenOwners, transactionResultStorageKey);
                 }}
                 className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-red-400 transition duration-300`}
               >
@@ -194,35 +194,35 @@ const ERC721BalanceOf = ({ baseContract }: PageProps) => {
         </Tr>
       );
     });
-    setBalancesReactNodes(reactNodes);
+    setReactNodes(reactNodes);
 
     //// update local storage
-    if (balancesMap.size > 0) {
+    if (tokenOwners.size > 0) {
       localStorage.setItem(
         transactionResultStorageKey,
-        JSON.stringify(Object.fromEntries(balancesMap))
+        JSON.stringify(Object.fromEntries(tokenOwners))
       );
     }
-  }, [balancesMap, baseContract, toaster]);
+  }, [tokenOwners, baseContract, toaster]);
 
   return (
-    <div className=" flex flex-col items-start gap-12">
+    <div className="flex flex-col items-start gap-12">
       {/* wrapper */}
       <div className="flex gap-12 items-center w-[580px]">
         {/* method */}
         <HederaCommonTextField
           size={'md'}
-          value={accountAddress}
-          title={'Balance of'}
-          explanation={'Returns the amount of tokens owned by account.'}
-          placeholder={'Account address...'}
+          value={tokenId}
+          title={'Token ID'}
+          explanation={'Returns the token URI of the token.'}
+          placeholder={'Token ID...'}
           type={'text'}
-          setValue={setAccountAddress}
+          setValue={setTokenId}
         />
 
         {/* execute button */}
         <button
-          onClick={handleExecuteBalanceOf}
+          onClick={handleExecuteOwnerOf}
           disabled={isLoading}
           className={`border mt-3 w-48 py-2 rounded-xl transition duration-300 ${
             isLoading
@@ -247,22 +247,22 @@ const ERC721BalanceOf = ({ baseContract }: PageProps) => {
         </button>
       </div>
 
-      <div className="flex flex-col gap-6 text-base">
+      <div className="flex flex-col gap-6 text-base w-full">
         {/* display balances */}
-        {balancesMap.size > 0 && (
+        {tokenOwners.size > 0 && (
           <TableContainer>
             <Table variant="simple" size={'sm'}>
               <Thead>
                 <Tr>
-                  <Th color={'#82ACF9'}>Account</Th>
                   <Th color={'#82ACF9'} isNumeric>
-                    Balance
+                    Token ID
                   </Th>
+                  <Th color={'#82ACF9'}>Token URI</Th>
                   <Th />
                   <Th />
                 </Tr>
               </Thead>
-              <Tbody>{balancesRactNodes}</Tbody>
+              <Tbody className="w-full">{ractNodes}</Tbody>
             </Table>
           </TableContainer>
         )}
@@ -271,4 +271,4 @@ const ERC721BalanceOf = ({ baseContract }: PageProps) => {
   );
 };
 
-export default ERC721BalanceOf;
+export default ERC721OwnerOf;
