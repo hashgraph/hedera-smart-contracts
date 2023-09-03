@@ -213,7 +213,7 @@ export const erc721TokenApproval = async (
   operatorAddress: string,
   approvalStatus: boolean
 ): Promise<ERC721MockSmartContractResult> => {
-  if (!isAddress(ownerAddress)) {
+  if (method === 'IS_APPROVAL' && !isAddress(ownerAddress)) {
     return { err: 'Invalid owner address' };
   } else if (!isAddress(operatorAddress)) {
     return { err: 'Invalid operator address' };

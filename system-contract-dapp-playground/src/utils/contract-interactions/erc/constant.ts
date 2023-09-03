@@ -196,3 +196,22 @@ export const approveERC721ParamFields = [
     paramKey: 'tokenId',
   },
 ];
+
+export const isApprovalERC721ParamFields = [
+  {
+    inputType: 'text',
+    inputPlaceholder: 'Owner address..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'owner',
+  },
+  {
+    inputType: 'text',
+    inputPlaceholder: 'Operator address..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'operator',
+  },
+];
