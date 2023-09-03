@@ -37,6 +37,25 @@ export const mintParamFields = [
   },
 ];
 
+export const mintERC721ParamFields = [
+  {
+    inputType: 'text',
+    inputPlaceholder: 'Recipient address..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'recipient',
+  },
+  {
+    inputType: 'number',
+    inputPlaceholder: 'Token ID..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'tokenId',
+  },
+];
+
 export const approveParamFields = [
   {
     inputType: 'text',
