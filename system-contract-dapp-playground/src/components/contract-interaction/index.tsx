@@ -21,8 +21,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Contract } from 'ethers';
+import HederaIHRCMethods from './ihrc/methods';
 import ERC20Methods from './erc/erc-20/methods';
 import { FiExternalLink } from 'react-icons/fi';
+import ERC721Methods from './erc/erc-721/methods';
 import { deploySmartContract } from '@/api/hedera';
 import HederaAlertDialog from '../common/AlertDialog';
 import { useCallback, useEffect, useState } from 'react';
@@ -36,6 +38,7 @@ import { getInfoFromCookies, storeInfoInCookies } from '@/api/cookies';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
 import HederaTokenCreateMethods from './hts/token-create-custom/methods';
 import HederaTokenQueryMethods from './hts/token-query-contract/methods';
+import HederaTokenTransferMethods from './hts/token-transfer-contract/method';
 import HederaTokenManagementMethods from './hts/token-management-contract/methods';
 import ExchangeRateDeployField from './exchange-rate-hip-475/deployment/ExchangeRateDeployField';
 import {
@@ -50,8 +53,6 @@ import {
   PopoverTrigger,
   Tooltip,
 } from '@chakra-ui/react';
-import HederaTokenTransferMethods from './hts/token-transfer-contract/method';
-import HederaIHRCMethods from './ihrc/methods';
 
 interface PageProps {
   contract: HederaContractAsset;
@@ -366,6 +367,11 @@ const ContractInteraction = ({ contract }: PageProps) => {
                     {/* ERC-20 */}
                     {contract.name === 'ERC20Mock' && (
                       <ERC20Methods method={method} baseContract={baseContract! as Contract} />
+                    )}
+
+                    {/* ERC-20 */}
+                    {contract.name === 'ERC721Mock' && (
+                      <ERC721Methods method={method} baseContract={baseContract! as Contract} />
                     )}
                   </div>
                 </TabPanel>
