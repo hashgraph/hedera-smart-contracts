@@ -37,3 +37,20 @@ interface ERC20MockSmartContractResult {
   decreaseAllowanceRes?: boolean;
   err?: any;
 }
+
+/**
+ * @dev an interface for the results returned back from interacting with ERC20Mock smart contract
+ */
+interface ERC721MockSmartContractResult {
+  name?: string;
+  symbol?: string;
+  txHash?: string;
+  tokenURI?: string;
+  ownerOfRes?: string;
+  balanceOfRes?: string;
+  transferRes?: boolean;
+  transferFromRes?: boolean;
+  approvalStatusRes?: boolean;
+  approvedAccountRes?: string;
+  err?: any;
+}
