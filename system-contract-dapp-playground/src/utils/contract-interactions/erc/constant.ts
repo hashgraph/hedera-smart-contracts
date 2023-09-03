@@ -37,25 +37,6 @@ export const mintParamFields = [
   },
 ];
 
-export const mintERC721ParamFields = [
-  {
-    inputType: 'text',
-    inputPlaceholder: 'Recipient address..',
-    inputSize: 'md',
-    inputFocusBorderColor: '#A98DF4',
-    inputClassname: 'w-full border-white/30',
-    paramKey: 'recipient',
-  },
-  {
-    inputType: 'number',
-    inputPlaceholder: 'Token ID..',
-    inputSize: 'md',
-    inputFocusBorderColor: '#A98DF4',
-    inputClassname: 'w-full border-white/30',
-    paramKey: 'tokenId',
-  },
-];
-
 export const approveParamFields = [
   {
     inputType: 'text',
@@ -175,5 +156,43 @@ export const transferFromParamFields = [
     inputFocusBorderColor: '#A98DF4',
     inputClassname: 'w-full border-white/30',
     paramKey: 'amount',
+  },
+];
+
+export const mintERC721ParamFields = [
+  {
+    inputType: 'text',
+    inputPlaceholder: 'Recipient address..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'recipient',
+  },
+  {
+    inputType: 'number',
+    inputPlaceholder: 'Token ID..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'tokenId',
+  },
+];
+
+export const approveERC721ParamFields = [
+  {
+    inputType: 'text',
+    inputPlaceholder: 'Spender address..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'spenderAddress',
+  },
+  {
+    inputType: 'number',
+    inputPlaceholder: 'Token ID..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'tokenId',
   },
 ];

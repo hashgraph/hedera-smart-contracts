@@ -171,7 +171,7 @@ export const erc721TokenApprove = async (
   spenderAddress: string,
   tokenId: number
 ): Promise<ERC721MockSmartContractResult> => {
-  if (!isAddress(spenderAddress)) {
+  if (method === 'APPROVE' && !isAddress(spenderAddress)) {
     return { err: 'Invalid account address' };
   }
 
@@ -181,7 +181,7 @@ export const erc721TokenApprove = async (
         const approveReceipt = await (await baseContract.approve(spenderAddress, tokenId)).wait();
         return { txHash: approveReceipt.hash };
       case 'GET_APPROVE':
-        return { approvedAccountRes: (await baseContract.getApproved(tokenId)).toString() };
+        return { approvedAccountRes: await baseContract.getApproved(tokenId) };
     }
   } catch (err) {
     console.error(err);
