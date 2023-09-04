@@ -172,7 +172,7 @@ export const handleErc20TokenPermissions = async (
 };
 
 /**
- * @dev handle executing APIs relate  to Token Transfer
+ * @dev handle executing APIs relate to Token Transfer
  *
  * @dev transfer() moves amount tokens from the caller’s account to `recipient`.
  *
