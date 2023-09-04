@@ -19,6 +19,7 @@
  */
 
 import { Contract } from 'ethers';
+import QueryTokenValidity from './queryTokenValidity';
 
 interface PageProps {
   method: string;
@@ -28,7 +29,7 @@ interface PageProps {
 const HederaTokenQueryMethods = ({ baseContract, method }: PageProps) => {
   return (
     <>
-      {method === 'tokenValidity' && <>tokenValidity</>}
+      {method === 'tokenValidity' && <QueryTokenValidity baseContract={baseContract} />}
       {method === 'generalInfo' && <>generalInfo</>}
       {method === 'specificInfo' && <>specificInfo</>}
       {method === 'tokenPermission' && <>tokenPermission</>}

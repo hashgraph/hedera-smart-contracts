@@ -48,8 +48,8 @@ interface TransactionResultTablePageProps {
   transactionResults: TransactionResult[];
   paginatedTransactionResults: TransactionResult[];
   setCurrentTransactionPage: Dispatch<SetStateAction<number>>;
-  API: 'TokenCreate' | 'TokenMint' | 'TokenAssociate' | 'GrantKYC';
   setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>;
+  API: 'TokenCreate' | 'TokenMint' | 'TokenAssociate' | 'GrantKYC' | 'QueryValidity';
 }
 
 export const TransactionResultTable = ({
@@ -75,6 +75,7 @@ export const TransactionResultTable = ({
       break;
     case 'TokenAssociate':
     case 'GrantKYC':
+    case 'QueryValidity':
       beginingHashIndex = 10;
       endingHashIndex = -5;
       break;
@@ -94,6 +95,7 @@ export const TransactionResultTable = ({
             {API === 'TokenMint' && <Th color={'#82ACF9'}>Recipient</Th>}
             {API === 'TokenAssociate' && <Th color={'#82ACF9'}>Associated Account</Th>}
             {API === 'GrantKYC' && <Th color={'#82ACF9'}>KYCed Account</Th>}
+            {API === 'QueryValidity' && <Th color={'#82ACF9'}>Valid Token</Th>}
             <Th />
           </Tr>
         </Thead>
@@ -174,7 +176,10 @@ export const TransactionResultTable = ({
                 </Td>
 
                 {/* token address */}
-                {(API === 'TokenCreate' || API === 'TokenMint' || API === 'GrantKYC') && (
+                {(API === 'TokenCreate' ||
+                  API === 'TokenMint' ||
+                  API === 'GrantKYC' ||
+                  API === 'QueryValidity') && (
                   <Td className="cursor-pointer">
                     {transactionResult.tokenAddress ? (
                       <div className="flex gap-1 items-center">
@@ -384,6 +389,17 @@ export const TransactionResultTable = ({
                             )}...${ethers.ZeroAddress.slice(endingHashIndex)}`}
                       </>
                     )}
+                  </Td>
+                )}
+
+                {/* query - isToken */}
+                {API === 'QueryValidity' && (
+                  <Td
+                    className={`cursor-pointer ${
+                      transactionResult.isToken ? `text-hedera-green` : `text-red-400`
+                    }`}
+                  >
+                    {JSON.stringify(transactionResult.isToken).toUpperCase()}
                   </Td>
                 )}
 
