@@ -48,8 +48,6 @@ interface ERC721MockSmartContractResult {
   tokenURI?: string;
   ownerOfRes?: string;
   balanceOfRes?: string;
-  transferRes?: boolean;
-  transferFromRes?: boolean;
   approvalStatusRes?: boolean;
   approvedAccountRes?: string;
   err?: any;

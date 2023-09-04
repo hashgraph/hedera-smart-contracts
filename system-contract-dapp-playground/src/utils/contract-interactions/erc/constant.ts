@@ -215,3 +215,65 @@ export const isApprovalERC721ParamFields = [
     paramKey: 'operator',
   },
 ];
+
+export const transferFromERC721ParamFields = [
+  {
+    inputType: 'text',
+    inputPlaceholder: 'Sender address..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'sender',
+  },
+  {
+    inputType: 'text',
+    inputPlaceholder: 'Recipient address..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'recipient',
+  },
+  {
+    inputType: 'number',
+    inputPlaceholder: 'Token ID..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'tokenId',
+  },
+];
+
+export const safeTransferFromERC721ParamFields = [
+  {
+    inputType: 'text',
+    inputPlaceholder: 'Sender address..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'sender',
+  },
+  {
+    inputType: 'text',
+    inputPlaceholder: 'Recipient address..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'recipient',
+  },
+  {
+    inputType: 'number',
+    inputPlaceholder: 'Token ID..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'tokenId',
+  },
+  {
+    inputType: 'text',
+    inputPlaceholder: 'Data..',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'data',
+  },
+];

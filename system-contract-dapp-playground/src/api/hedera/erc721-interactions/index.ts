@@ -18,7 +18,7 @@
  *
  */
 
-import { Contract, isAddress } from 'ethers';
+import { Contract, ethers, isAddress } from 'ethers';
 
 /**
  * @dev get token information
@@ -274,6 +274,9 @@ export const erc721Transfers = async (
     return { err: 'Invalid tokenId' };
   }
 
+  // Specify the function signature explicitly
+  const functionSignature = 'safeTransferFrom(address,address,uint256,bytes)';
+
   try {
     switch (method) {
       case 'TRANSFER_FROM':
@@ -283,8 +286,16 @@ export const erc721Transfers = async (
         return { txHash: transferReceipt.hash };
 
       case 'SAFE_TRANSFER_FROM':
+        // Typed function signature to specify the safeTransferFrom function
+        const safeTransferFunctionSignature = 'safeTransferFrom(address,address,uint256,bytes)';
+
         const safeTransferReceipt = await (
-          await baseContract.safeTransferFrom(senderAddress, recipientAddress, tokenId, data)
+          await baseContract[safeTransferFunctionSignature](
+            senderAddress,
+            recipientAddress,
+            tokenId,
+            ethers.toUtf8Bytes(data)
+          )
         ).wait();
         return { txHash: safeTransferReceipt.hash };
     }

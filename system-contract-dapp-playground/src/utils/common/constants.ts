@@ -273,7 +273,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
       'owner',
       'approve',
       'operatorApproval',
-      'transfer',
+      'transferFrom',
     ],
   },
 };

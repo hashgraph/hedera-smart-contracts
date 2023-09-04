@@ -19,13 +19,13 @@
  */
 
 import {
-  erc721BalanceOf,
   erc721Mint,
   erc721OwnerOf,
-  erc721TokenApproval,
-  erc721TokenApprove,
   erc721TokenURI,
   erc721Transfers,
+  erc721BalanceOf,
+  erc721TokenApprove,
+  erc721TokenApproval,
   getERC721TokenInformation,
 } from '@/api/hedera/erc721-interactions';
 import { Contract } from 'ethers';
@@ -62,7 +62,9 @@ describe('ERC721 test suite', () => {
     setApprovalForAll: jest.fn().mockResolvedValue(waitMockedObject),
     isApprovedForAll: jest.fn().mockResolvedValue(approvalStatus),
     transferFrom: jest.fn().mockResolvedValue(waitMockedObject),
-    safeTransferFrom: jest.fn().mockResolvedValue(waitMockedObject),
+    ['safeTransferFrom(address,address,uint256,bytes)']: jest
+      .fn()
+      .mockResolvedValue(waitMockedObject),
   };
 
   describe('getERC721TokenInformation', () => {
@@ -196,7 +198,7 @@ describe('ERC721 test suite', () => {
     it('should execute erc721TokenApprove and return an error if the spender address is invalid', async () => {
       const res = await erc721TokenApprove(
         baseContract as unknown as Contract,
-        'GET_APPROVE',
+        'APPROVE',
         '0xabc',
         tokenID
       );
