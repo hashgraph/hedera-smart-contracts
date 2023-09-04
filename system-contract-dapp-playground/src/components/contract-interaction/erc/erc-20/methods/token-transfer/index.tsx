@@ -28,7 +28,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import {
   transferParamFields,
   transferFromParamFields,
-} from '@/utils/contract-interactions/erc/constant';
+} from '@/utils/contract-interactions/erc/erc20/constant';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
