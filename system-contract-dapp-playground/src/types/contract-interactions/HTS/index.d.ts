@@ -43,6 +43,27 @@ interface TokenManagementSmartContractResult {
   err?: any;
 }
 
+/** @dev an interface for the results returned back from interacting with Hedera TokenQeury smart contract */
+interface TokenQuerySmartContractResult {
+  Frozen?: any;
+  IsToken?: any;
+  Approved?: any;
+  TokenKey?: any;
+  TokenType?: any;
+  TokenInfo?: any;
+  KycGranted?: any;
+  AllowanceValue?: any;
+  ApprovedAddress?: any;
+  TokenCustomFees?: any;
+  TokenExpiryInfo?: any;
+  FungibleTokenInfo?: any;
+  transactionHash?: string;
+  NonFungibleTokenInfo?: any;
+  TokenDefaultKycStatus?: any;
+  TokenDefaultFreezeStatus?: any;
+  err?: any;
+}
+
 /**
  * @dev a type for the IHederaTokenService.TokenKey.keyType
  *
