@@ -52,12 +52,11 @@ const HederaIHRCMethods = ({ method, network }: PageProps) => {
     DISSOCIATE: false,
   });
   const [isSuccessful, setIsSuccessful] = useState(false);
+  const transactionResultStorageKey = `HEDERA.IHRC.IHRC-RESULTS`;
   const initialParamValues = { hederaTokenAddress: '', feeValue: '' };
   const [paramValues, setParamValues] = useState(initialParamValues);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-
-  const transactionResultStorageKey = `HEDERA.IHRC.IHRC-RESULTS`;
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
   useEffect(() => {
@@ -67,7 +66,7 @@ const HederaIHRCMethods = ({ method, network }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
   const paginatedTransactionResults = usePaginatedTxResults(
