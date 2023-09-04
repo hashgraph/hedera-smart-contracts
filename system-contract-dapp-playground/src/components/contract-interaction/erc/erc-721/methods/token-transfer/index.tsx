@@ -21,46 +21,47 @@
 import { Contract } from 'ethers';
 import { isAddress } from 'ethers';
 import { useToast } from '@chakra-ui/react';
-import { erc20Transfers } from '@/api/hedera/erc20-interactions';
+import { useEffect, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import MultiLineMethod from '@/components/common/MultiLineMethod';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import {
-  transferParamFields,
-  transferFromParamFields,
-} from '@/utils/contract-interactions/erc/constant';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { erc721Transfers } from '@/api/hedera/erc721-interactions';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
-import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
+import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
 import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  safeTransferFromERC721ParamFields,
+  transferFromERC721ParamFields,
+} from '@/utils/contract-interactions/erc/erc721/constant';
 
 interface PageProps {
   baseContract: Contract;
 }
 
-const Transfer = ({ baseContract }: PageProps) => {
+const ERC721Transfer = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const transactionResultStorageKey = 'HEDERA.EIP.ERC-20.TOKEN-TRANSFER-RESULTS';
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
 
-  const [transferParams, setTransferParams] = useState({
-    owner: '',
-    recipient: '',
-    amount: '',
-  });
   const [transferFromParams, setTransferFromParams] = useState({
-    owner: '',
+    sender: '',
     recipient: '',
-    amount: '',
+    tokenId: '',
+  });
+  const [safeTransferFromParams, setSafeTransferFromParams] = useState({
+    sender: '',
+    recipient: '',
+    tokenId: '',
+    data: '',
   });
 
   const [methodState, setMethodStates] = useState({
-    transfer: {
+    TRANSFER_FROM: {
       isSuccessful: false,
       isLoading: false,
     },
-    transferFrom: {
+    SAFE_TRANSFER_FROM: {
       isSuccessful: false,
       isLoading: false,
     },
@@ -78,20 +79,14 @@ const Transfer = ({ baseContract }: PageProps) => {
 
   /** @dev handle execute methods */
   const handleExecutingMethods = async (
-    method: 'transfer' | 'transferFrom',
-    params: { owner: string; recipient: string; amount: string },
-    setParams: Dispatch<
-      SetStateAction<{
-        owner: string;
-        recipient: string;
-        amount: string;
-      }>
-    >
+    method: 'TRANSFER_FROM' | 'SAFE_TRANSFER_FROM',
+    params: any,
+    setParams: any
   ) => {
     // sanitize params & toast error invalid params
     let paramErrDescription;
-    if (method === 'transferFrom' && !isAddress(params.owner)) {
-      paramErrDescription = 'Token owner address is not a valid address';
+    if (method === 'TRANSFER_FROM' && !isAddress(params.sender)) {
+      paramErrDescription = 'Sender address is not a valid address';
     } else if (!isAddress(params.recipient)) {
       paramErrDescription = 'Recipient address is not a valid address';
     }
@@ -108,31 +103,31 @@ const Transfer = ({ baseContract }: PageProps) => {
     setMethodStates((prev) => ({ ...prev, [method]: { ...prev[method], isLoading: true } }));
 
     // invoke method API
-    const tokenTransferRes = await erc20Transfers(
+    const tokenTransferRes = await erc721Transfers(
       baseContract,
       method,
+      params.sender,
       params.recipient,
-      Number(params.amount),
-      params.owner
+      params.tokenId,
+      params.data || ''
     );
 
     // turn off isLoading
     setMethodStates((prev) => ({ ...prev, [method]: { ...prev[method], isLoading: false } }));
 
     // handle error
-    if (tokenTransferRes.err || !tokenTransferRes[`${method}Res`]) {
+    if (tokenTransferRes.err) {
       handleAPIErrors({
         toaster,
         setTransactionResults,
         err: tokenTransferRes.err,
         transactionHash: tokenTransferRes.txHash,
-        transactionType: `ERC20-${convertCalmelCaseFunctionName(method).replace(' ', '-')}`,
+        transactionType: `ERC721-${convertCalmelCaseFunctionName(method).replace(' ', '-')}`,
       });
       return;
     } else {
       // turn isSuccessful on
       setMethodStates((prev) => ({ ...prev, [method]: { ...prev[method], isSuccessful: true } }));
-      setParams({ owner: '', recipient: '', amount: '' });
 
       setTransactionResults((prev) => [
         ...prev,
@@ -140,7 +135,7 @@ const Transfer = ({ baseContract }: PageProps) => {
           status: 'sucess',
           transactionTimeStamp: Date.now(),
           txHash: tokenTransferRes.txHash as string,
-          transactionType: `ERC20-${convertCalmelCaseFunctionName(method)
+          transactionType: `ERC721-${convertCalmelCaseFunctionName(method)
             .toUpperCase()
             .replace(' ', '-')}`,
         },
@@ -153,24 +148,24 @@ const Transfer = ({ baseContract }: PageProps) => {
 
   // toast successful
   useEffect(() => {
-    if (methodState.transfer.isSuccessful || methodState.transferFrom.isSuccessful) {
+    if (methodState.TRANSFER_FROM.isSuccessful || methodState.SAFE_TRANSFER_FROM.isSuccessful) {
       toaster({
         title: 'Transfer successful 🎉',
         description: 'A new balance has been set for the recipient',
         status: 'success',
         position: 'top',
       });
-      if (methodState.transfer.isSuccessful) {
-        setTransferParams({ owner: '', recipient: '', amount: '' });
+      if (methodState.TRANSFER_FROM.isSuccessful) {
+        setTransferFromParams({ sender: '', recipient: '', tokenId: '' });
         setMethodStates((prev) => ({
           ...prev,
-          transfer: { ...prev.transfer, isSuccessful: false },
+          TRANSFER_FROM: { ...prev.TRANSFER_FROM, isSuccessful: false },
         }));
-      } else {
-        setTransferFromParams({ owner: '', recipient: '', amount: '' });
+      } else if (methodState.SAFE_TRANSFER_FROM.isSuccessful) {
+        setSafeTransferFromParams({ sender: '', recipient: '', tokenId: '', data: '' });
         setMethodStates((prev) => ({
           ...prev,
-          transferFrom: { ...prev.transferFrom, isSuccessful: false },
+          SAFE_TRANSFER_FROM: { ...prev.SAFE_TRANSFER_FROM, isSuccessful: false },
         }));
       }
     }
@@ -180,30 +175,34 @@ const Transfer = ({ baseContract }: PageProps) => {
     <div className="w-full mx-3 flex">
       {/* wrapper */}
       <div className="w-full flex gap-12 justify-between items-end">
-        {/* transfer() */}
+        {/* transferFrom() */}
         <MultiLineMethod
-          paramFields={transferParamFields}
+          paramFields={transferFromERC721ParamFields}
           methodName={'Transfer'}
-          params={transferParams}
+          params={transferFromParams}
           widthSize="w-[360px]"
-          setParams={setTransferParams}
-          isLoading={methodState.transfer.isLoading}
+          setParams={setTransferFromParams}
+          isLoading={methodState.TRANSFER_FROM.isLoading}
           handleExecute={() =>
-            handleExecutingMethods('transfer', transferParams, setTransferParams)
+            handleExecutingMethods('TRANSFER_FROM', transferFromParams, setTransferFromParams)
           }
           explanation="Moves `amount` tokens from the caller’s account to `recipient`."
         />
 
-        {/* transferFrom() */}
+        {/* safeTransferFrom() */}
         <MultiLineMethod
-          paramFields={transferFromParamFields}
+          paramFields={safeTransferFromERC721ParamFields}
           methodName={'Transfer From'}
           widthSize="w-[360px]"
-          params={transferFromParams}
-          setParams={setTransferFromParams}
-          isLoading={methodState.transferFrom.isLoading}
+          params={safeTransferFromParams}
+          setParams={setSafeTransferFromParams}
+          isLoading={methodState.SAFE_TRANSFER_FROM.isLoading}
           handleExecute={() =>
-            handleExecutingMethods('transferFrom', transferFromParams, setTransferFromParams)
+            handleExecutingMethods(
+              'SAFE_TRANSFER_FROM',
+              safeTransferFromParams,
+              setSafeTransferFromParams
+            )
           }
           explanation="Moves amount tokens from `token owner` to `recipient` using the allowance mechanism. `Token amount` is then deducted from the caller’s allowance."
         />
@@ -212,4 +211,4 @@ const Transfer = ({ baseContract }: PageProps) => {
   );
 };
 
-export default Transfer;
+export default ERC721Transfer;

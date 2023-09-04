@@ -47,7 +47,7 @@ import {
   allowanceParamFields,
   increaseAllowanceParamFields,
   decreaseAllowanceParamFields,
-} from '@/utils/contract-interactions/erc/constant';
+} from '@/utils/contract-interactions/erc/erc20/constant';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
 import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';

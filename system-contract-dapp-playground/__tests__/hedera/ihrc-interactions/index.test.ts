@@ -41,7 +41,7 @@ jest.mock('ethers', () => {
   };
 });
 
-describe.only('handleIHRCAPIs test suite', () => {
+describe('handleIHRCAPIs test suite', () => {
   it("should execute handleIHRCAPI() with API === 'ASSOCIATE' and return a success response code and a transaction hash", async () => {
     const txRes = await handleIHRCAPIs(
       'ASSOCIATE',
