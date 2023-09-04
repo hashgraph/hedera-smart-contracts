@@ -22,9 +22,9 @@ import {
   IHederaTokenServiceKeyType,
   TokenQuerySmartContractResult,
 } from '@/types/contract-interactions/HTS';
-import { handleContractResponseWithDynamicEventNames } from '@/utils/contract-interactions/HTS/helpers';
-import { KEY_TYPE_MAP } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
 import { Contract, isAddress } from 'ethers';
+import { KEY_TYPE_MAP } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
+import { handleContractResponseWithDynamicEventNames } from '@/utils/contract-interactions/HTS/helpers';
 
 /**
  * @dev queries token validity
@@ -152,7 +152,7 @@ export const queryTokenGeneralInfomation = async (
  *
  * @param baseContract: ethers.Contract
  *
- * @param API: "FREEZE_STATUS" | "KYC_STATUS" | "CUSTOM_FEES" | "TOKEN_EXPIRY" | "TOKEN_TYPE" | "TOKEN_KEYS"
+ * @param API: "DEFAULT_FREEZE_STATUS" | "DEFAULT_KYC_STATUS" | "CUSTOM_FEES" | "TOKEN_EXPIRY" | "TOKEN_TYPE" | "TOKEN_KEYS"
  *
  * @param hederaTokenAddress: string
  *
@@ -163,12 +163,12 @@ export const queryTokenGeneralInfomation = async (
 export const queryTokenSpecificInfomation = async (
   baseContract: Contract,
   API:
-    | 'KYC_STATUS'
     | 'TOKEN_TYPE'
     | 'TOKEN_KEYS'
     | 'CUSTOM_FEES'
     | 'TOKEN_EXPIRY'
-    | 'FREEZE_STATUS',
+    | 'DEFAULT_KYC_STATUS'
+    | 'DEFAULT_FREEZE_STATUS',
   hederaTokenAddress: string,
   keyType?: IHederaTokenServiceKeyType
 ): Promise<TokenQuerySmartContractResult> => {
@@ -184,21 +184,21 @@ export const queryTokenSpecificInfomation = async (
     TOKEN_KEYS: 'TokenKey',
     CUSTOM_FEES: 'TokenCustomFees',
     TOKEN_EXPIRY: 'TokenExpiryInfo',
-    KYC_STATUS: 'TokenDefaultKycStatus',
-    FREEZE_STATUS: 'TokenDefaultFreezeStatus',
+    DEFAULT_KYC_STATUS: 'TokenDefaultKycStatus',
+    DEFAULT_FREEZE_STATUS: 'TokenDefaultFreezeStatus',
   };
 
   // invoking contract methods
   try {
     let transactionResult;
     switch (API) {
-      case 'FREEZE_STATUS':
+      case 'DEFAULT_FREEZE_STATUS':
         transactionResult = await baseContract.getTokenDefaultFreezeStatusPublic(
           hederaTokenAddress
         );
         break;
 
-      case 'KYC_STATUS':
+      case 'DEFAULT_KYC_STATUS':
         transactionResult = await baseContract.getTokenDefaultKycStatusPublic(hederaTokenAddress);
         break;
 
@@ -291,9 +291,9 @@ export const queryTokenPermissionInformation = async (
     switch (API) {
       case 'ALLOWANCE':
         if (!ownerAddress) {
-          errMsg = 'Owner address is needed for UPDATE_EXPIRY API';
+          errMsg = 'Owner address is needed for ALLOWANCE API';
         } else if (!spenderAddress) {
-          errMsg = 'Spender address is needed for UPDATE_EXPIRY API';
+          errMsg = 'Spender address is needed for ALLOWANCE API';
         } else {
           transactionResult = await baseContract.allowancePublic(
             hederaTokenAddress,
@@ -304,7 +304,7 @@ export const queryTokenPermissionInformation = async (
         break;
       case 'GET_APPROVED':
         if (!serialNumber) {
-          errMsg = 'Serial number is needed for UPDATE_EXPIRY API';
+          errMsg = 'Serial number is needed for GET_APPROVED API';
         } else {
           transactionResult = await baseContract.getApprovedPublic(
             hederaTokenAddress,
@@ -314,9 +314,9 @@ export const queryTokenPermissionInformation = async (
         break;
       case 'IS_APPROVAL':
         if (!ownerAddress) {
-          errMsg = 'Owner address is needed for UPDATE_EXPIRY API';
+          errMsg = 'Owner address is needed for IS_APPROVAL API';
         } else if (!spenderAddress) {
-          errMsg = 'Spender address is needed for UPDATE_EXPIRY API';
+          errMsg = 'Spender address is needed for IS_APPROVAL API';
         } else {
           transactionResult = await baseContract.isApprovedForAllPublic(
             hederaTokenAddress,

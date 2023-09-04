@@ -129,7 +129,7 @@ describe('TokenQueryContract Test Suite', () => {
     it('should execute queryTokenSpecificInfomation wit API === "KYC_STATUS" then return info value from event', async () => {
       const txRes = await queryTokenSpecificInfomation(
         baseContract as unknown as Contract,
-        'KYC_STATUS',
+        'DEFAULT_KYC_STATUS',
         hederaTokenAddress
       );
 
@@ -141,7 +141,7 @@ describe('TokenQueryContract Test Suite', () => {
     it('should execute queryTokenSpecificInfomation wit API === "FREEZE_STATUS" then return info value from event', async () => {
       const txRes = await queryTokenSpecificInfomation(
         baseContract as unknown as Contract,
-        'FREEZE_STATUS',
+        'DEFAULT_FREEZE_STATUS',
         hederaTokenAddress
       );
 
