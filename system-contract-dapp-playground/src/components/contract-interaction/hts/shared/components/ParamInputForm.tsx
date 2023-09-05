@@ -103,39 +103,43 @@ export const SharedFormButton = ({
 interface SharedExecuteButtonPageProps {
   isLoading: boolean;
   buttonTitle: string;
+  explanation?: string;
   handleCreatingFungibleToken: () => Promise<void>;
 }
 
 export const SharedExecuteButton = ({
   isLoading,
   buttonTitle,
+  explanation,
   handleCreatingFungibleToken,
 }: SharedExecuteButtonPageProps) => {
   return (
-    <button
-      onClick={handleCreatingFungibleToken}
-      disabled={isLoading}
-      className={`w-full border py-2 rounded-xl transition duration-300 ${
-        isLoading
-          ? 'cursor-not-allowed border-white/30 text-white/30'
-          : 'border-button-stroke-violet text-button-stroke-violet hover:bg-button-stroke-violet/60 hover:text-white'
-      }`}
-    >
-      {isLoading ? (
-        <div className="flex gap-1 justify-center">
-          Executing...
-          <Image
-            src={'/brandings/hedera-logomark.svg'}
-            alt={'hedera-logomark'}
-            width={15}
-            height={15}
-            className="animate-bounce"
-          />
-        </div>
-      ) : (
-        <>{buttonTitle}</>
-      )}
-    </button>
+    <Tooltip label={explanation} placement="top">
+      <button
+        onClick={handleCreatingFungibleToken}
+        disabled={isLoading}
+        className={`w-full border py-2 rounded-xl transition duration-300 ${
+          isLoading
+            ? 'cursor-not-allowed border-white/30 text-white/30'
+            : 'border-button-stroke-violet text-button-stroke-violet hover:bg-button-stroke-violet/60 hover:text-white'
+        }`}
+      >
+        {isLoading ? (
+          <div className="flex gap-1 justify-center">
+            Executing...
+            <Image
+              src={'/brandings/hedera-logomark.svg'}
+              alt={'hedera-logomark'}
+              width={15}
+              height={15}
+              className="animate-bounce"
+            />
+          </div>
+        ) : (
+          <>{buttonTitle}</>
+        )}
+      </button>
+    </Tooltip>
   );
 };
 
