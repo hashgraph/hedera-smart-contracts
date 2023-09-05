@@ -22,6 +22,7 @@
 export type TransactionResult = {
   status: 'sucess' | 'fail';
   txHash: string;
+  isToken?: boolean;
   tokenAddress?: string;
   accountAddress?: string;
   tokenAddresses?: string[];

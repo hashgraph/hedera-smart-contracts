@@ -26,9 +26,9 @@ import { TransactionResult } from '@/types/contract-interactions/HTS';
 export const handleAPIErrors = ({
   err,
   toaster,
-  accountAddress,
   tokenAddress,
   tokenAddresses,
+  accountAddress,
   transactionHash,
   setTransactionResults,
 }: {
@@ -41,6 +41,7 @@ export const handleAPIErrors = ({
   setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>;
 }) => {
   const errorMessage = JSON.stringify(err);
+
   let errorDescription = "See client's console for more information";
   // @notice 4001 error code is returned when a metamask wallet request is rejected by the user
   // @notice See https://docs.metamask.io/wallet/reference/provider-api/#errors for more information on the error returned by Metamask.
@@ -60,6 +61,7 @@ export const handleAPIErrors = ({
         tokenAddress: tokenAddress ? tokenAddress : '',
         accountAddress: accountAddress ? accountAddress : '',
         tokenAddresses: tokenAddresses ? tokenAddresses : [''],
+        isToken: false,
       },
     ]);
 
