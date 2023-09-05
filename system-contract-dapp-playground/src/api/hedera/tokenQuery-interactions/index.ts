@@ -24,7 +24,11 @@ import {
 } from '@/types/contract-interactions/HTS';
 import { Contract, isAddress } from 'ethers';
 import { KEY_TYPE_MAP } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
-import { handleContractResponseWithDynamicEventNames } from '@/utils/contract-interactions/HTS/helpers';
+import {
+  convertsArgsProxyToHTSSpecificInfo,
+  convertsArgsProxyToHTSTokenInfo,
+  handleContractResponseWithDynamicEventNames,
+} from '@/utils/contract-interactions/HTS/helpers';
 
 /**
  * @dev queries token validity
@@ -82,7 +86,7 @@ export const queryTokenValidity = async (
  */
 export const queryTokenGeneralInfomation = async (
   baseContract: Contract,
-  API: 'TOKEN_INFO' | 'FUNGIBLE_INFO' | 'NON_FUNFIBLE_INFO',
+  API: 'TOKEN' | 'FUNGIBLE' | 'NON_FUNFIBLE',
   hederaTokenAddress: string,
   serialNumber?: number
 ): Promise<TokenQuerySmartContractResult> => {
@@ -97,27 +101,27 @@ export const queryTokenGeneralInfomation = async (
 
   // prepare events map
   const eventMaps = {
-    TOKEN_INFO: 'TokenInfo',
-    FUNGIBLE_INFO: 'FungibleTokenInfo',
-    NON_FUNFIBLE_INFO: 'NonFungibleTokenInfo',
+    TOKEN: 'TokenInfo',
+    FUNGIBLE: 'FungibleTokenInfo',
+    NON_FUNFIBLE: 'NonFungibleTokenInfo',
   };
 
   // invoking contract methods
   try {
     let transactionResult;
     switch (API) {
-      case 'TOKEN_INFO':
+      case 'TOKEN':
         // prepare transaction
         transactionResult = await baseContract.getTokenInfoPublic(hederaTokenAddress);
         break;
-      case 'FUNGIBLE_INFO':
+      case 'FUNGIBLE':
         // prepare transaction
         transactionResult = await baseContract.getFungibleTokenInfoPublic(hederaTokenAddress);
         break;
-      case 'NON_FUNFIBLE_INFO':
+      case 'NON_FUNFIBLE':
         if (!serialNumber) {
-          console.error('Serial number is needed for querying NON_FUNGIBLE_INFO');
-          return { err: 'Serial number is needed for querying NON_FUNGIBLE_INFO' };
+          console.error('Serial number is needed for querying NON_FUNGIBLE');
+          return { err: 'Serial number is needed for querying NON_FUNGIBLE' };
         } else {
           // prepare transaction
           transactionResult = await baseContract.getNonFungibleTokenInfoPublic(
@@ -128,7 +132,18 @@ export const queryTokenGeneralInfomation = async (
         break;
     }
 
-    return await handleContractResponseWithDynamicEventNames(transactionResult, eventMaps, API);
+    // get transaction receipt
+    const txReceipt = await transactionResult.wait();
+
+    // retrieve information from event
+    const { args } = txReceipt.logs.filter(
+      (event: any) => event.fragment.name === eventMaps[API]
+    )[0];
+
+    return {
+      [eventMaps[API]]: convertsArgsProxyToHTSTokenInfo(args.tokenInfo, API),
+      transactionHash: txReceipt.hash,
+    };
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };
@@ -225,7 +240,20 @@ export const queryTokenSpecificInfomation = async (
         break;
     }
 
-    return await handleContractResponseWithDynamicEventNames(transactionResult, eventMaps, API);
+    // get transaction receipt
+    const txReceipt = await transactionResult.wait();
+
+    // retrieve information from event
+    const tokenInfoResult = txReceipt.logs.filter(
+      (event: any) => event.fragment.name === eventMaps[API]
+    )[0];
+
+    if (API === 'DEFAULT_FREEZE_STATUS' || API === 'DEFAULT_KYC_STATUS' || API === 'TOKEN_TYPE') {
+      return { [eventMaps[API]]: tokenInfoResult.data, transactionHash: txReceipt.hash };
+    } else {
+      const tokenInfo = convertsArgsProxyToHTSSpecificInfo(tokenInfoResult.args, API);
+      return { [eventMaps[API]]: tokenInfo, transactionHash: txReceipt.hash };
+    }
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };

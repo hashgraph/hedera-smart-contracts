@@ -38,6 +38,24 @@ describe('TokenQueryContract Test Suite', () => {
   const txHash = '0x63424020a69bf46a0669f46dd66addba741b9c02d37fab1686428f5209bc759d';
 
   // prepare contract mocked value
+  const contractTokenInfoMockedResolvedValue = (eventName: string) => {
+    return jest.fn().mockResolvedValue({
+      wait: jest.fn().mockResolvedValue({
+        logs: [
+          {
+            fragment: {
+              name: eventName,
+            },
+            data: mockedEventReturnedValue,
+            args: {
+              tokenInfo: mockedEventReturnedValue,
+            },
+          },
+        ],
+        hash: txHash,
+      }),
+    });
+  };
   const contractMockedResolvedValue = (eventName: string) => {
     return jest.fn().mockResolvedValue({
       wait: jest.fn().mockResolvedValue({
@@ -47,6 +65,7 @@ describe('TokenQueryContract Test Suite', () => {
               name: eventName,
             },
             data: mockedEventReturnedValue,
+            args: mockedEventReturnedValue,
           },
         ],
         hash: txHash,
@@ -60,16 +79,16 @@ describe('TokenQueryContract Test Suite', () => {
     isFrozenPublic: contractMockedResolvedValue('Frozen'),
     isKycPublic: contractMockedResolvedValue('KycGranted'),
     getTokenKeyPublic: contractMockedResolvedValue('TokenKey'),
-    getTokenInfoPublic: contractMockedResolvedValue('TokenInfo'),
     getTokenTypePublic: contractMockedResolvedValue('TokenType'),
     allowancePublic: contractMockedResolvedValue('AllowanceValue'),
     isApprovedForAllPublic: contractMockedResolvedValue('Approved'),
     getApprovedPublic: contractMockedResolvedValue('ApprovedAddress'),
+    getTokenInfoPublic: contractTokenInfoMockedResolvedValue('TokenInfo'),
     getTokenCustomFeesPublic: contractMockedResolvedValue('TokenCustomFees'),
     getTokenExpiryInfoPublic: contractMockedResolvedValue('TokenExpiryInfo'),
-    getFungibleTokenInfoPublic: contractMockedResolvedValue('FungibleTokenInfo'),
-    getNonFungibleTokenInfoPublic: contractMockedResolvedValue('NonFungibleTokenInfo'),
     getTokenDefaultKycStatusPublic: contractMockedResolvedValue('TokenDefaultKycStatus'),
+    getFungibleTokenInfoPublic: contractTokenInfoMockedResolvedValue('FungibleTokenInfo'),
+    getNonFungibleTokenInfoPublic: contractTokenInfoMockedResolvedValue('NonFungibleTokenInfo'),
     getTokenDefaultFreezeStatusPublic: contractMockedResolvedValue('TokenDefaultFreezeStatus'),
   };
 
@@ -90,38 +109,38 @@ describe('TokenQueryContract Test Suite', () => {
     it('should execute queryTokenGeneralInfomation wit API === "TOKEN_INFO" then return info value from event', async () => {
       const txRes = await queryTokenGeneralInfomation(
         baseContract as unknown as Contract,
-        'TOKEN_INFO',
+        'TOKEN',
         hederaTokenAddress
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.transactionHash).toBe(txHash);
-      expect(txRes.TokenInfo).toBe(mockedEventReturnedValue);
+      expect(txRes.TokenInfo.tokenInfo).toBe(mockedEventReturnedValue);
     });
 
     it('should execute queryTokenGeneralInfomation wit API === "FUNGIBLE_INFO" then return info value from event', async () => {
       const txRes = await queryTokenGeneralInfomation(
         baseContract as unknown as Contract,
-        'FUNGIBLE_INFO',
+        'FUNGIBLE',
         hederaTokenAddress
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.transactionHash).toBe(txHash);
-      expect(txRes.FungibleTokenInfo).toBe(mockedEventReturnedValue);
+      expect(txRes.FungibleTokenInfo.tokenInfo).toBe(mockedEventReturnedValue);
     });
 
     it('should execute queryTokenGeneralInfomation wit API === "NON_FUNFIBLE_INFO" then return info value from event', async () => {
       const txRes = await queryTokenGeneralInfomation(
         baseContract as unknown as Contract,
-        'NON_FUNFIBLE_INFO',
+        'NON_FUNFIBLE',
         hederaTokenAddress,
         serialNumber
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.transactionHash).toBe(txHash);
-      expect(txRes.NonFungibleTokenInfo).toBe(mockedEventReturnedValue);
+      expect(txRes.NonFungibleTokenInfo.tokenInfo).toBe(mockedEventReturnedValue);
     });
   });
 
