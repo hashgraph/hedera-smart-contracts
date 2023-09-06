@@ -20,6 +20,7 @@
 
 import { Contract } from 'ethers';
 import QueryTokenValidity from './queryTokenValidity';
+import QueryTokenGeneralInfomation from './queryTokenGeneralInfo';
 
 interface PageProps {
   method: string;
@@ -29,11 +30,11 @@ interface PageProps {
 const HederaTokenQueryMethods = ({ baseContract, method }: PageProps) => {
   return (
     <>
-      {method === 'tokenValidity' && <QueryTokenValidity baseContract={baseContract} />}
-      {method === 'generalInfo' && <>generalInfo</>}
       {method === 'specificInfo' && <>specificInfo</>}
-      {method === 'tokenPermission' && <>tokenPermission</>}
       {method === 'tokenRelation' && <>tokenRelation</>}
+      {method === 'tokenPermission' && <>tokenPermission</>}
+      {method === 'tokenValidity' && <QueryTokenValidity baseContract={baseContract} />}
+      {method === 'generalInfo' && <QueryTokenGeneralInfomation baseContract={baseContract} />}
     </>
   );
 };

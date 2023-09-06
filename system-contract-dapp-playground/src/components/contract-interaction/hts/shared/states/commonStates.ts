@@ -36,6 +36,8 @@ export const HederaTokenKeyTypes: IHederaTokenServiceKeyType[] = [
   'FEE',
   'PAUSE',
 ];
+
+// key value types
 export const HederaTokenKeyValueType: IHederaTokenServiceKeyValueType[] = [
   'inheritAccountKey',
   'contractId',

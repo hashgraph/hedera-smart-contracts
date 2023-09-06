@@ -59,7 +59,8 @@ interface ParamsProps {
     | 'WIPE_FUNGIBLE'
     | 'WIPE_NON_FUNGIBLE'
     | 'BURN'
-    | 'DELETE';
+    | 'DELETE'
+    | 'QueryTokenInfo';
 }
 /** @dev handle sanitizing Hedera token form inputs */
 export const handleSanitizeHederaFormInputs = ({
@@ -275,6 +276,10 @@ export const handleSanitizeHederaFormInputs = ({
       sanitizeErr = 'Invalid token address';
     } else if (feeValue === '') {
       sanitizeErr = 'Gas limit should be set for this transaction';
+    }
+  } else if (API === 'QueryTokenInfo') {
+    if (!isAddress(hederaTokenAddress)) {
+      sanitizeErr = 'Invalid token address';
     }
   }
 
