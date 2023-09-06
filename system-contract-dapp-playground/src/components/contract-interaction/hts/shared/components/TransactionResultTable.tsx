@@ -474,6 +474,9 @@ export const TransactionResultTable = ({
                             ? `${transactionResult.APICalled.replace('TOKEN_', '')}_${
                                 transactionResult.keyTypeCalled
                               }`
+                            : transactionResult.APICalled === 'DEFAULT_FREEZE_STATUS' ||
+                              transactionResult.APICalled === 'DEFAULT_KYC_STATUS'
+                            ? transactionResult.APICalled.replace('DEFAULT_', '')
                             : transactionResult.APICalled}
                         </p>
                       </>

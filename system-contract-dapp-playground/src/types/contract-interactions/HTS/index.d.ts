@@ -23,15 +23,12 @@ export type TransactionResult = {
   status: 'sucess' | 'fail';
   txHash: string;
   APICalled?: any;
+  tokenInfo?: any;
   isToken?: boolean;
   keyTypeCalled?: any;
   tokenAddress?: string;
   accountAddress?: string;
   tokenAddresses?: string[];
-  tokenInfo?:
-    | IHederaTokenServiceTokenInfo
-    | IHederaTokenServiceFungibleTokenInfo
-    | IHederaTokenServiceNonFungibleTokenInfo;
 };
 
 /** @dev an interface for the results returned back from interacting with Hedera TokenCreateCustom smart contract */
@@ -55,19 +52,23 @@ interface TokenQuerySmartContractResult {
   Frozen?: any;
   IsToken?: any;
   Approved?: any;
-  TokenKey?: any;
   TokenType?: any;
   KycGranted?: any;
   AllowanceValue?: any;
   ApprovedAddress?: any;
-  TokenCustomFees?: any;
-  TokenExpiryInfo?: any;
   transactionHash?: string;
   TokenDefaultKycStatus?: any;
   TokenDefaultFreezeStatus?: any;
   TokenInfo?: IHederaTokenServiceTokenInfo;
+  TokenKey?: IHederaTokenServiceKeyValueType;
+  TokenExpiryInfo?: IHederaTokenServiceExpiry;
   FungibleTokenInfo?: IHederaTokenServiceFungibleTokenInfo;
   NonFungibleTokenInfo?: IHederaTokenServiceNonFungibleTokenInfo;
+  TokenCustomFees?: {
+    fixedFees: IHederaTokenServiceFixedFee[];
+    royaltyFees: IHederaTokenServiceRoyaltyFee[];
+    fractionalFees: IHederaTokenServiceFractionalFee[];
+  };
   err?: any;
 }
 
