@@ -146,7 +146,7 @@ export const TransactionResultTable = ({
               <Tr
                 key={transactionResult.txHash}
                 className={
-                  transactionResult.status === 'sucess'
+                  transactionResult.status === 'success'
                     ? 'hover:bg-hedera-green/10'
                     : 'hover:bg-red-400/10'
                 }
@@ -160,7 +160,7 @@ export const TransactionResultTable = ({
                 <Td>
                   <p
                     className={
-                      transactionResult.status === 'sucess' ? `text-hedera-green` : `text-red-400`
+                      transactionResult.status === 'success' ? `text-hedera-green` : `text-red-400`
                     }
                   >
                     {transactionResult.status.toUpperCase()}

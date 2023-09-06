@@ -113,7 +113,7 @@ const QueryTokenValidity = ({ baseContract }: PageProps) => {
       setTransactionResults((prev) => [
         ...prev,
         {
-          status: 'sucess',
+          status: 'success',
           isToken: Number(IsToken) === 1,
           txHash: transactionHash as string,
           tokenAddress: paramValues.hederaTokenAddress,

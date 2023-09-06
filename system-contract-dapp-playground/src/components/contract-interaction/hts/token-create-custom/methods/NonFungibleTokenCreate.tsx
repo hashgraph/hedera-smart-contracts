@@ -156,7 +156,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
         ...prev,
         {
           tokenAddress,
-          status: 'sucess',
+          status: 'success',
           txHash: transactionHash as string,
         },
       ]);

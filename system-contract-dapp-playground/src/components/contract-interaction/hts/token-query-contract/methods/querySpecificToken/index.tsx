@@ -221,7 +221,7 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
       setTransactionResults((prev) => [
         ...prev,
         {
-          status: 'sucess',
+          status: 'success',
           tokenAddress: paramValues.hederaTokenAddress,
           txHash: tokenInfoResult.transactionHash as string,
           tokenInfo: cachedTokenInfo,

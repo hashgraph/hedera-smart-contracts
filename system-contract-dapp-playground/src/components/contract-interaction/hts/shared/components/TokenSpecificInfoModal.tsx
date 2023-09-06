@@ -231,7 +231,7 @@ const TokenSpecificInfoModal = ({
 
           {/* tip */}
           <p className="text-sm whitespace-normal pt-3">
-            **note: For a more comprehensive view of this token&apos;s information,{' '}
+            **Note: For a more comprehensive view of this token&apos;s information,{' '}
             <Link
               href={`https://hashscan.io/${hederaNetwork}/token/${hederaTokenAddress}`}
               target="_blank"

@@ -20,7 +20,7 @@
 
 /** @dev the type for HTS transaction results */
 export type TransactionResult = {
-  status: 'sucess' | 'fail';
+  status: 'success' | 'fail';
   txHash: string;
   APICalled?: any;
   tokenInfo?: any;

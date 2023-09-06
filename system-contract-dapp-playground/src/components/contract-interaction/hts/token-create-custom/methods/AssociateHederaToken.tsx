@@ -161,7 +161,7 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
         ...prev,
         {
           tokenAddresses,
-          status: 'sucess',
+          status: 'success',
           txHash: transactionHash as string,
           accountAddress: associatingAddress,
         },

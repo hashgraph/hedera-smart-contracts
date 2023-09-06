@@ -194,7 +194,7 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
       setTransactionResults((prev) => [
         ...prev,
         {
-          status: 'sucess',
+          status: 'success',
           accountAddress: recipientAddress,
           txHash: txRes.transactionHash as string,
           tokenAddress: paramValues.tokenAddressToMint,

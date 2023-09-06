@@ -136,7 +136,7 @@ const ManageTokenStatus = ({ baseContract }: PageProps) => {
       setTransactionResults((prev) => [
         ...prev,
         {
-          status: 'sucess',
+          status: 'success',
           tokenAddress: paramValues.hederaTokenAddress,
           txHash: transactionHash as string,
         },

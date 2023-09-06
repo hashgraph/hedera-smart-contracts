@@ -172,7 +172,7 @@ const QueryTokenGeneralInfomation = ({ baseContract }: PageProps) => {
         ...prev,
         {
           APICalled: API,
-          status: 'sucess',
+          status: 'success',
           txHash: transactionHash as string,
           tokenAddress: paramValues.hederaTokenAddress,
           tokenInfo: tokenInfoResult[eventMaps[API]],
