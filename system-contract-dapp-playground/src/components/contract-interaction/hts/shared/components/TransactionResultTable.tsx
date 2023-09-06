@@ -440,11 +440,15 @@ export const TransactionResultTable = ({
                         <div
                           onClick={() => {
                             onOpen!();
-                            setShowTokenInfo!(true);
-                            setTokenInfoFromTxResult!(transactionResult.tokenInfo);
-                            setAPIMethodsFromTxResult!(transactionResult.APICalled);
-                            setKeyTypeFromTxResult!(transactionResult.keyTypeCalled);
-                            setTokenAddressFromTxResult!(transactionResult.tokenAddress as string);
+                            if (setShowTokenInfo) setShowTokenInfo(true);
+                            if (setTokenInfoFromTxResult)
+                              setTokenInfoFromTxResult(transactionResult.tokenInfo);
+                            if (setAPIMethodsFromTxResult)
+                              setAPIMethodsFromTxResult(transactionResult.APICalled);
+                            if (setKeyTypeFromTxResult)
+                              setKeyTypeFromTxResult(transactionResult.keyTypeCalled);
+                            if (setTokenAddressFromTxResult)
+                              setTokenAddressFromTxResult(transactionResult.tokenAddress as string);
                           }}
                         >
                           <div className="flex gap-1 items-center">
