@@ -22,6 +22,7 @@ import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { useToast } from '@chakra-ui/react';
 import { Contract, isAddress } from 'ethers';
+import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { queryTokenValidity } from '@/api/hedera/tokenQuery-interactions';
@@ -153,7 +154,7 @@ const QueryTokenValidity = ({ baseContract }: PageProps) => {
           explanation={'represents the Hedera Token for querying'}
           paramClassName={'w-full border-white/30'}
           paramPlaceholder={'Token address...'}
-          paramFocusColor={'#A98DF4'}
+          paramFocusColor={HEDERA_BRANDING_COLORS.purple}
         />
 
         {/* Execute buttons */}

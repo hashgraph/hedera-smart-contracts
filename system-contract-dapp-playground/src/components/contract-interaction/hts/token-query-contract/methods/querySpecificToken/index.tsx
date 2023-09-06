@@ -21,6 +21,7 @@
 import Cookies from 'js-cookie';
 import { useState, useEffect } from 'react';
 import { Contract, isAddress } from 'ethers';
+import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { Select, useDisclosure, useToast } from '@chakra-ui/react';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
@@ -282,7 +283,7 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
           {/* Key type */}
           {APIMethods === 'TOKEN_KEYS' && (
             <Select
-              _focus={{ borderColor: '#A98DF4' }}
+              _focus={{ borderColor: HEDERA_BRANDING_COLORS.purple }}
               className="hover:cursor-pointer rounded-md border-white/30"
               onChange={(e) => setKeyType(e.target.value as IHederaTokenServiceKeyType)}
             >

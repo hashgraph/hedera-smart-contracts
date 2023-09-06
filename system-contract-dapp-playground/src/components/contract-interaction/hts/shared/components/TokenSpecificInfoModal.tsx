@@ -20,6 +20,7 @@
 
 import Link from 'next/link';
 import { Dispatch, SetStateAction } from 'react';
+import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
 import { prepareInfoValuesToShow } from '../methods/prepareInfoValuesToShow';
 import { IHederaTokenServiceKeyType } from '@/types/contract-interactions/HTS';
@@ -113,7 +114,7 @@ const TokenSpecificInfoModal = ({
               <Tbody>
                 {APIMethods === 'TOKEN_KEYS' && (
                   <Tr>
-                    <Th color={'#82ACF9'}>KEY TYPE</Th>
+                    <Th color={HEDERA_BRANDING_COLORS.violet}>KEY TYPE</Th>
                     <Td className="flex justify-end">{keyType}</Td>
                   </Tr>
                 )}
@@ -121,14 +122,14 @@ const TokenSpecificInfoModal = ({
                 {(APIMethods === 'DEFAULT_FREEZE_STATUS' ||
                   APIMethods === 'DEFAULT_KYC_STATUS') && (
                   <Tr>
-                    <Th color={'#82ACF9'}>{APIMethods}</Th>
+                    <Th color={HEDERA_BRANDING_COLORS.violet}>{APIMethods}</Th>
                     <Td className="flex justify-end">{JSON.stringify(tokenInfo).toUpperCase()}</Td>
                   </Tr>
                 )}
 
                 {APIMethods === 'TOKEN_TYPE' && (
                   <Tr>
-                    <Th color={'#82ACF9'}>{APIMethods}</Th>
+                    <Th color={HEDERA_BRANDING_COLORS.violet}>{APIMethods}</Th>
                     <Td className="flex justify-end">{tokenInfo}</Td>
                   </Tr>
                 )}
@@ -161,7 +162,7 @@ const TokenSpecificInfoModal = ({
                                         );
                                         return (
                                           <Tr key={feeKey}>
-                                            <Th color={'#82ACF9'} className="">
+                                            <Th color={HEDERA_BRANDING_COLORS.violet} className="">
                                               {tokenInfo.fixedFees.length > 1
                                                 ? `${keyToShow}-${index + 1}`
                                                 : keyToShow}
@@ -182,7 +183,7 @@ const TokenSpecificInfoModal = ({
                                     const valueToShow = prepareInfoValuesToShow(key, null);
                                     return (
                                       <Tr key={key}>
-                                        <Th color={'#82ACF9'} className="">
+                                        <Th color={HEDERA_BRANDING_COLORS.violet} className="">
                                           {keyToShow}
                                         </Th>
                                         <Td className="flex justify-end text-white">
@@ -212,7 +213,7 @@ const TokenSpecificInfoModal = ({
                             const valueToShow = prepareInfoValuesToShow(key, tokenInfo);
                             return (
                               <Tr key={key}>
-                                <Th color={'#82ACF9'} className="">
+                                <Th color={HEDERA_BRANDING_COLORS.violet} className="">
                                   {keyToShow}
                                 </Th>
                                 <Td className="flex justify-end text-white">{valueToShow}</Td>

@@ -22,6 +22,7 @@ import Link from 'next/link';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { Dispatch, SetStateAction } from 'react';
 import { Tooltip, Select, Input } from '@chakra-ui/react';
+import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
 import {
   CommonKeyObject,
@@ -96,7 +97,7 @@ export const SharedSigningKeysComponent = ({
             <div className="flex gap-3">
               {/* Key type */}
               <Select
-                _focus={{ borderColor: '#A98DF4' }}
+                _focus={{ borderColor: HEDERA_BRANDING_COLORS.purple }}
                 placeholder={key.keyType}
                 className="w-[120px] hover:cursor-pointer rounded-md border-white/30"
                 onChange={(e) =>
@@ -114,7 +115,7 @@ export const SharedSigningKeysComponent = ({
 
               {/* Key Value type */}
               <Select
-                _focus={{ borderColor: '#A98DF4' }}
+                _focus={{ borderColor: HEDERA_BRANDING_COLORS.purple }}
                 className="w-[220px] hover:cursor-pointer rounded-md border-white/30"
                 onChange={(e) => handleKeyValueTypeOnChange(e, key, setKeys)}
               >
@@ -132,7 +133,7 @@ export const SharedSigningKeysComponent = ({
             <div className="w-full">
               {key.keyValueType === 'inheritAccountKey' ? (
                 <Select
-                  _focus={{ borderColor: '#A98DF4' }}
+                  _focus={{ borderColor: HEDERA_BRANDING_COLORS.purple }}
                   className="hover:cursor-pointer rounded-md border-white/30"
                   placeholder="Select option"
                   onChange={(e) => handleUpdateKeyValue(e, key, setKeys)}
@@ -152,7 +153,7 @@ export const SharedSigningKeysComponent = ({
                       : `${key.keyValueType.split('_')[0].toUpperCase()} compressed public key...`
                   }
                   size={'md'}
-                  focusBorderColor={'#A98DF4'}
+                  focusBorderColor={HEDERA_BRANDING_COLORS.purple}
                   className={'w-full border-white/30'}
                 />
               )}

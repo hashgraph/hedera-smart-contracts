@@ -20,6 +20,7 @@
 
 import Link from 'next/link';
 import React, { Dispatch, SetStateAction } from 'react';
+import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
 import { prepareInfoValuesToShow } from '../methods/prepareInfoValuesToShow';
 import {
@@ -111,8 +112,11 @@ const TokenGeneralInfoModal = ({
 
                   return (
                     <Tr key={key}>
-                      <Th color={'#82ACF9'}>{keyToShow}</Th>
-                      <Td color={'#82ACF9'} className="flex justify-end text-white">
+                      <Th color={HEDERA_BRANDING_COLORS.violet}>{keyToShow}</Th>
+                      <Td
+                        color={HEDERA_BRANDING_COLORS.violet}
+                        className="flex justify-end text-white"
+                      >
                         {valueToShow}
                       </Td>
                     </Tr>
@@ -126,8 +130,11 @@ const TokenGeneralInfoModal = ({
 
                   return (
                     <Tr key={key}>
-                      <Th color={'#82ACF9'}>{keyToShow}</Th>
-                      <Td color={'#82ACF9'} className="flex justify-end text-white">
+                      <Th color={HEDERA_BRANDING_COLORS.violet}>{keyToShow}</Th>
+                      <Td
+                        color={HEDERA_BRANDING_COLORS.violet}
+                        className="flex justify-end text-white"
+                      >
                         {valueToShow}
                       </Td>
                     </Tr>
@@ -137,8 +144,11 @@ const TokenGeneralInfoModal = ({
                 {/* Fungible extra keys */}
                 {APIMethods === 'FUNGIBLE' && (
                   <Tr>
-                    <Th color={'#82ACF9'}>Decimals</Th>
-                    <Td color={'#82ACF9'} className="flex justify-end text-white">
+                    <Th color={HEDERA_BRANDING_COLORS.violet}>Decimals</Th>
+                    <Td
+                      color={HEDERA_BRANDING_COLORS.violet}
+                      className="flex justify-end text-white"
+                    >
                       {tokenInfo.decimals.toString()}
                     </Td>
                   </Tr>
@@ -151,8 +161,11 @@ const TokenGeneralInfoModal = ({
                     const valueToShow = prepareInfoValuesToShow(key, tokenInfo);
                     return (
                       <Tr key={key}>
-                        <Th color={'#82ACF9'}>{keyToShow}</Th>
-                        <Td color={'#82ACF9'} className="flex justify-end text-white">
+                        <Th color={HEDERA_BRANDING_COLORS.violet}>{keyToShow}</Th>
+                        <Td
+                          color={HEDERA_BRANDING_COLORS.violet}
+                          className="flex justify-end text-white"
+                        >
                           {valueToShow}
                         </Td>
                       </Tr>

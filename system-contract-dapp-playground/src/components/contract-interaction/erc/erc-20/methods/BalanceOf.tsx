@@ -27,6 +27,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { balanceOf } from '@/api/hedera/erc20-interactions';
 import { getBalancesFromLocalStorage } from '@/api/localStorage';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
+import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import HederaCommonTextField from '@/components/common/HederaCommonTextField';
 import {
   Popover,
@@ -251,8 +252,8 @@ const BalanceOf = ({ baseContract }: PageProps) => {
             <Table variant="simple" size={'sm'}>
               <Thead>
                 <Tr>
-                  <Th color={'#82ACF9'}>Account</Th>
-                  <Th color={'#82ACF9'} isNumeric>
+                  <Th color={HEDERA_BRANDING_COLORS.violet}>Account</Th>
+                  <Th color={HEDERA_BRANDING_COLORS.violet} isNumeric>
                     Balance
                   </Th>
                   <Th />

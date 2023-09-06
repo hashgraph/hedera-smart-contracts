@@ -21,6 +21,7 @@
 import { Input, Tooltip } from '@chakra-ui/react';
 import { Dispatch, SetStateAction } from 'react';
 import { BsFillQuestionOctagonFill } from 'react-icons/bs';
+import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 
 interface PageProps {
   size: string;
@@ -65,7 +66,7 @@ const HederaCommonTextField = ({
         placeholder={placeholder}
         size={size}
         variant="flushed"
-        focusBorderColor="#A98DF4"
+        focusBorderColor={HEDERA_BRANDING_COLORS.purple}
         className="w-full"
       />
     </div>

@@ -23,6 +23,7 @@ import { ethers } from 'ethers';
 import { FiExternalLink } from 'react-icons/fi';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { Dispatch, SetStateAction } from 'react';
+import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import { IHederaTokenServiceKeyType, TransactionResult } from '@/types/contract-interactions/HTS';
 import {
@@ -107,21 +108,23 @@ export const TransactionResultTable = ({
       <Table variant="simple" size={'sm'}>
         <Thead>
           <Tr>
-            <Th color={'#82ACF9'} isNumeric className="flex justify-start">
+            <Th color={HEDERA_BRANDING_COLORS.violet} isNumeric className="flex justify-start">
               Index
             </Th>
-            <Th color={'#82ACF9'}>Status</Th>
-            <Th color={'#82ACF9'}>Transaction hash</Th>
-            <Th color={'#82ACF9'}>Token address</Th>
-            {API === 'TokenMint' && <Th color={'#82ACF9'}>Recipient</Th>}
-            {API === 'TokenAssociate' && <Th color={'#82ACF9'}>Associated Account</Th>}
-            {API === 'GrantKYC' && <Th color={'#82ACF9'}>KYCed Account</Th>}
-            {API === 'QueryValidity' && <Th color={'#82ACF9'}>Valid Token</Th>}
+            <Th color={HEDERA_BRANDING_COLORS.violet}>Status</Th>
+            <Th color={HEDERA_BRANDING_COLORS.violet}>Transaction hash</Th>
+            <Th color={HEDERA_BRANDING_COLORS.violet}>Token address</Th>
+            {API === 'TokenMint' && <Th color={HEDERA_BRANDING_COLORS.violet}>Recipient</Th>}
+            {API === 'TokenAssociate' && (
+              <Th color={HEDERA_BRANDING_COLORS.violet}>Associated Account</Th>
+            )}
+            {API === 'GrantKYC' && <Th color={HEDERA_BRANDING_COLORS.violet}>KYCed Account</Th>}
+            {API === 'QueryValidity' && <Th color={HEDERA_BRANDING_COLORS.violet}>Valid Token</Th>}
             {(API === 'QueryTokenGeneralInfo' || API === 'QuerySpecificInfo') && (
-              <Th color={'#82ACF9'}>Token Info</Th>
+              <Th color={HEDERA_BRANDING_COLORS.violet}>Token Info</Th>
             )}
             {(API === 'QueryTokenGeneralInfo' || API === 'QuerySpecificInfo') && (
-              <Th color={'#82ACF9'}>API called</Th>
+              <Th color={HEDERA_BRANDING_COLORS.violet}>API called</Th>
             )}
             <Th />
           </Tr>
