@@ -478,7 +478,7 @@ async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddres
 }
 
 async function pollForNewSignerBalance(provider, signersAddress, signerBefore) {
-  const timesToTry = 300;
+  const timesToTry = 400;
   let signerAfter, numberOfTries = 0;
 
   while (numberOfTries < timesToTry) {
