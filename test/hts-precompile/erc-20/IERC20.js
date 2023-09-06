@@ -161,7 +161,7 @@ async function pollForNewSignerBalance(IERC20Contract, signersAddress, signerBef
     }
 
     numberOfTries++;
-    await delay(2000); // Delay for 1 second before the next attempt
+    await delay(3000); // Delay for 3 second before the next attempt
   }
 
   throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
