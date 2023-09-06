@@ -20,12 +20,14 @@
 
 import { Dispatch, SetStateAction } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { IHederaTokenServiceKeyType, TransactionResult } from '@/types/contract-interactions/HTS';
 
 /** @dev handle error returned back from invoking method APIs*/
 export const handleAPIErrors = ({
   err,
   toaster,
+  keyTypeCalled,
+  APICalled,
   tokenAddress,
   tokenAddresses,
   accountAddress,
@@ -34,10 +36,12 @@ export const handleAPIErrors = ({
 }: {
   err: any;
   toaster: any;
-  accountAddress?: string;
+  APICalled?: string;
   tokenAddress?: string;
+  accountAddress?: string;
   tokenAddresses?: string[];
   transactionHash: string | undefined;
+  keyTypeCalled?: IHederaTokenServiceKeyType;
   setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>;
 }) => {
   const errorMessage = JSON.stringify(err);
@@ -56,12 +60,14 @@ export const handleAPIErrors = ({
     setTransactionResults((prev) => [
       ...prev,
       {
+        APICalled,
+        keyTypeCalled,
         status: 'fail',
+        isToken: false,
         txHash: transactionHash,
         tokenAddress: tokenAddress ? tokenAddress : '',
         accountAddress: accountAddress ? accountAddress : '',
         tokenAddresses: tokenAddresses ? tokenAddresses : [''],
-        isToken: false,
       },
     ]);
 
