@@ -19,7 +19,6 @@
  */
 
 import { Contract } from 'ethers';
-import { CommonKeyObject } from '@/types/contract-interactions/HTS';
 import {
   associateHederaTokensToAccounts,
   createHederaFungibleToken,
@@ -28,11 +27,13 @@ import {
   mintHederaToken,
   mintHederaTokenToAddress,
 } from '@/api/hedera/tokenCreateCustom-interactions';
+import { CommonKeyObject } from '@/types/contract-interactions/HTS';
 
 describe('createHederaFungibleToken test suite', () => {
   // mock states
   const decimals = 8;
   const tokenSymbol = 'WHBAR';
+  const returnedResult = true;
   const tokenName = 'WrappedHbar';
   const tokenMemo = 'Wrapped Hbar';
   const freezeDefaultStatus = false;
@@ -48,131 +49,39 @@ describe('createHederaFungibleToken test suite', () => {
   const grantingKYCAccount = '0x34810E139b451e0a4c67d5743E956Ac8990842A8';
   const txHash = '0x63424020a69bf46a0669f46dd66addba741b9c02d37fab1686428f5209bc759d';
   const returnedTokenAddress = '0x00000000000000000000000000000000000000000000000000000000000084b7';
-  const returnedMintedTokenEvent =
-    '000000000000000000000000000000000000000000000000000000000000000900000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000';
-  const returnedTransferTokenEvent =
-    '0x000000000000000000000000000000000000000000000000000000000000abc700000000000000000000000034810e139b451e0a4c67d5743e956ac8990842a80000000000000000000000000000000000000000000000000000000000000001';
+
+  const mockResolvedValue = {
+    wait: jest.fn().mockResolvedValue({
+      logs: [
+        {
+          fragment: {
+            name: 'CreatedToken',
+          },
+          data: returnedTokenAddress,
+        },
+        {
+          fragment: {
+            name: 'ResponseCode',
+          },
+          data: '0x0016',
+        },
+      ],
+      hash: txHash,
+    }),
+  };
 
   // mock baseContract object
   const baseContract = {
-    createFungibleTokenPublic: jest.fn().mockResolvedValue({
-      wait: jest.fn().mockResolvedValue({
-        logs: [
-          {
-            fragment: {
-              name: 'CreatedToken',
-            },
-            data: returnedTokenAddress,
-          },
-        ],
-        hash: txHash,
-      }),
-    }),
-    createFungibleTokenWithCustomFeesPublic: jest.fn().mockResolvedValue({
-      wait: jest.fn().mockResolvedValue({
-        logs: [
-          {
-            fragment: {
-              name: 'CreatedToken',
-            },
-            data: returnedTokenAddress,
-          },
-        ],
-        hash: txHash,
-      }),
-    }),
-    createNonFungibleTokenPublic: jest.fn().mockResolvedValue({
-      wait: jest.fn().mockResolvedValue({
-        logs: [
-          {
-            fragment: {
-              name: 'CreatedToken',
-            },
-            data: returnedTokenAddress,
-          },
-        ],
-        hash: txHash,
-      }),
-    }),
-    createNonFungibleTokenWithCustomFeesPublic: jest.fn().mockResolvedValue({
-      wait: jest.fn().mockResolvedValue({
-        logs: [
-          {
-            fragment: {
-              name: 'CreatedToken',
-            },
-            data: returnedTokenAddress,
-          },
-        ],
-        hash: txHash,
-      }),
-    }),
-    mintTokenPublic: jest.fn().mockResolvedValue({
-      wait: jest.fn().mockResolvedValue({
-        logs: [
-          {
-            fragment: {
-              name: 'MintedToken',
-            },
-            data: returnedMintedTokenEvent,
-          },
-        ],
-        hash: txHash,
-      }),
-    }),
-    mintTokenToAddressPublic: jest.fn().mockResolvedValue({
-      wait: jest.fn().mockResolvedValue({
-        logs: [
-          {
-            fragment: {
-              name: 'MintedToken',
-            },
-            data: returnedMintedTokenEvent,
-          },
-          {
-            fragment: {
-              name: 'TransferToken',
-            },
-            data: returnedTransferTokenEvent,
-          },
-        ],
-        hash: txHash,
-      }),
-    }),
-    mintNonFungibleTokenToAddressPublic: jest.fn().mockResolvedValue({
-      wait: jest.fn().mockResolvedValue({
-        logs: [
-          {
-            fragment: {
-              name: 'MintedToken',
-            },
-            data: returnedMintedTokenEvent,
-          },
-          {
-            fragment: {
-              name: 'TransferToken',
-            },
-            data: returnedTransferTokenEvent,
-          },
-        ],
-        hash: txHash,
-      }),
-    }),
-    associateTokenPublic: jest.fn().mockResolvedValue({
-      wait: jest.fn().mockResolvedValue({
-        hash: txHash,
-      }),
-    }),
-    associateTokensPublic: jest.fn().mockResolvedValue({
-      wait: jest.fn().mockResolvedValue({
-        hash: txHash,
-      }),
-    }),
-    grantTokenKycPublic: jest.fn().mockResolvedValue({
-      wait: jest.fn().mockResolvedValue({
-        hash: txHash,
-      }),
-    }),
+    mintTokenPublic: jest.fn().mockResolvedValue(mockResolvedValue),
+    grantTokenKycPublic: jest.fn().mockResolvedValue(mockResolvedValue),
+    associateTokenPublic: jest.fn().mockResolvedValue(mockResolvedValue),
+    associateTokensPublic: jest.fn().mockResolvedValue(mockResolvedValue),
+    mintTokenToAddressPublic: jest.fn().mockResolvedValue(mockResolvedValue),
+    createFungibleTokenPublic: jest.fn().mockResolvedValue(mockResolvedValue),
+    createNonFungibleTokenPublic: jest.fn().mockResolvedValue(mockResolvedValue),
+    mintNonFungibleTokenToAddressPublic: jest.fn().mockResolvedValue(mockResolvedValue),
+    createFungibleTokenWithCustomFeesPublic: jest.fn().mockResolvedValue(mockResolvedValue),
+    createNonFungibleTokenWithCustomFeesPublic: jest.fn().mockResolvedValue(mockResolvedValue),
   };
 
   // mock inputKeys with CommonKeyObject[] type
@@ -543,8 +452,8 @@ describe('createHederaFungibleToken test suite', () => {
       );
 
       expect(txRes.err).toBeNull;
+      expect(txRes.result).toBe(returnedResult);
       expect(txRes.transactionHash).toBe(txHash);
-      expect(txRes.mintedTokenEventData).toBe(returnedMintedTokenEvent);
     });
 
     it('should execute mintTokenPublic to mint a NON-FUNGIBLE token then return a transaction hash', async () => {
@@ -557,8 +466,8 @@ describe('createHederaFungibleToken test suite', () => {
       );
 
       expect(txRes.err).toBeNull;
+      expect(txRes.result).toBe(returnedResult);
       expect(txRes.transactionHash).toBe(txHash);
-      expect(txRes.mintedTokenEventData).toBe(returnedMintedTokenEvent);
     });
 
     it('should execute mintTokenPublic to mint a Hedera token and return error when the hederaTokenAddress is invalid', async () => {
@@ -572,7 +481,7 @@ describe('createHederaFungibleToken test suite', () => {
 
       expect(txRes.err).toBe('invalid Hedera token address');
       expect(txRes.transactionHash).toBeNull;
-      expect(txRes.mintedTokenEventData).toBeNul;
+      expect(txRes.result).toBeNull;
     });
 
     it('should execute mintTokenPublic to mint a FUNGIBLE token and return error when the amount to mint is a negative number', async () => {
@@ -599,7 +508,7 @@ describe('createHederaFungibleToken test suite', () => {
 
       expect(txRes.err).toBe('amount to mint must be 0 when minting a non-fungible token');
       expect(txRes.transactionHash).toBeNull;
-      expect(txRes.mintedTokenEventData).toBeNull;
+      expect(txRes.result).toBeNull;
     });
   });
 
@@ -615,9 +524,8 @@ describe('createHederaFungibleToken test suite', () => {
       );
 
       expect(txRes.err).toBeNull;
+      expect(txRes.result).toBe(returnedResult);
       expect(txRes.transactionHash).toBe(txHash);
-      expect(txRes.mintedTokenEventData).toBe(returnedMintedTokenEvent);
-      expect(txRes.transferTokenEventData).toBe(returnedTransferTokenEvent);
     });
 
     it('should execute mintHederaTokenToAddress to mint a NON-FUNGIBLE token and transfer it to the recipient then return a transaction hash', async () => {
@@ -631,9 +539,8 @@ describe('createHederaFungibleToken test suite', () => {
       );
 
       expect(txRes.err).toBeNull;
+      expect(txRes.result).toBe(returnedResult);
       expect(txRes.transactionHash).toBe(txHash);
-      expect(txRes.mintedTokenEventData).toBe(returnedMintedTokenEvent);
-      expect(txRes.transferTokenEventData).toBe(returnedTransferTokenEvent);
     });
 
     it('should execute mintHederaTokenToAddress to mint a Hedera token and transfer it to the recipient then return error when the hederaTokenAddress is invalid', async () => {
@@ -648,8 +555,7 @@ describe('createHederaFungibleToken test suite', () => {
 
       expect(txRes.err).toBe('invalid Hedera token address');
       expect(txRes.transactionHash).toBeNull;
-      expect(txRes.mintedTokenEventData).toBeNull;
-      expect(txRes.transferTokenEventData).toBeNull;
+      expect(txRes.result).toBeNull;
     });
 
     it('should execute mintHederaTokenToAddress to mint a Hedera token and transfer it to the recipient then return error when the recipientAddress is invalid', async () => {
@@ -664,8 +570,7 @@ describe('createHederaFungibleToken test suite', () => {
 
       expect(txRes.err).toBe('invalid recipient address');
       expect(txRes.transactionHash).toBeNull;
-      expect(txRes.mintedTokenEventData).toBeNull;
-      expect(txRes.transferTokenEventData).toBeNull;
+      expect(txRes.result).toBeNull;
     });
 
     it('should execute mintHederaTokenToAddress to mint a FUNGIBLE token and transfer it to the recipient then return error when the amount to mint is a negative number', async () => {
@@ -680,8 +585,7 @@ describe('createHederaFungibleToken test suite', () => {
 
       expect(txRes.err).toBe('amount to mint cannot be negative when minting a fungible token');
       expect(txRes.transactionHash).toBeNull;
-      expect(txRes.mintedTokenEventData).toBeNull;
-      expect(txRes.transferTokenEventData).toBeNull;
+      expect(txRes.result).toBeNull;
     });
 
     it('should execute mintHederaTokenToAddress to mint a NON-FUNGIBLE token and transfer it to the recipient then return error when the amount to mint is a non-zero number', async () => {
@@ -696,8 +600,7 @@ describe('createHederaFungibleToken test suite', () => {
 
       expect(txRes.err).toBe('amount to mint must be 0 when minting a non-fungible token');
       expect(txRes.transactionHash).toBeNull;
-      expect(txRes.mintedTokenEventData).toBeNull;
-      expect(txRes.transferTokenEventData).toBeNull;
+      expect(txRes.result).toBeNull;
     });
   });
 

@@ -20,7 +20,7 @@
 
 import {
   IHederaTokenServiceKeyType,
-  TokenQuerySmartContractResult,
+  SmartContractExecutionResult,
 } from '@/types/contract-interactions/HTS';
 import { Contract, isAddress } from 'ethers';
 import { KEY_TYPE_MAP } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
@@ -39,12 +39,12 @@ import {
  *
  * @param hederaTokenAddress: string
  *
- * @return Promise<TokenQuerySmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  */
 export const queryTokenValidity = async (
   baseContract: Contract,
   hederaTokenAddress: string
-): Promise<TokenQuerySmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize param
   if (!isAddress(hederaTokenAddress)) {
     console.error('Invalid token address');
@@ -82,14 +82,14 @@ export const queryTokenValidity = async (
  *
  * @param serialNumber?: number
  *
- * @return Promise<TokenQuerySmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  */
 export const queryTokenGeneralInfomation = async (
   baseContract: Contract,
   API: 'TOKEN' | 'FUNGIBLE' | 'NON_FUNFIBLE',
   hederaTokenAddress: string,
   serialNumber?: number
-): Promise<TokenQuerySmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize param
   if (!isAddress(hederaTokenAddress)) {
     console.error('Invalid token address');
@@ -173,7 +173,7 @@ export const queryTokenGeneralInfomation = async (
  *
  * @param keyType?: IHederaTokenServiceKeyType
  *
- * @return Promise<TokenQuerySmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  */
 export const queryTokenSpecificInfomation = async (
   baseContract: Contract,
@@ -186,7 +186,7 @@ export const queryTokenSpecificInfomation = async (
     | 'DEFAULT_FREEZE_STATUS',
   hederaTokenAddress: string,
   keyType?: IHederaTokenServiceKeyType
-): Promise<TokenQuerySmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize param
   if (!isAddress(hederaTokenAddress)) {
     console.error('Invalid token address');
@@ -281,7 +281,7 @@ export const queryTokenSpecificInfomation = async (
  *
  * @param serialNumber?: number
  *
- * @return Promise<TokenQuerySmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  */
 export const queryTokenPermissionInformation = async (
   baseContract: Contract,
@@ -290,7 +290,7 @@ export const queryTokenPermissionInformation = async (
   ownerAddress?: string,
   spenderAddress?: string,
   serialNumber?: number
-): Promise<TokenQuerySmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize param
   if (!isAddress(hederaTokenAddress)) {
     console.error('Invalid token address');
@@ -390,14 +390,14 @@ export const queryTokenPermissionInformation = async (
  *
  * @param serialNumber?: number
  *
- * @return Promise<TokenQuerySmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  */
 export const queryTokenStatusInformation = async (
   baseContract: Contract,
   API: 'IS_KYC' | 'IS_FROZEN',
   hederaTokenAddress: string,
   accountAddress: string
-): Promise<TokenQuerySmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize param
   if (!isAddress(hederaTokenAddress)) {
     console.error('Invalid token address');

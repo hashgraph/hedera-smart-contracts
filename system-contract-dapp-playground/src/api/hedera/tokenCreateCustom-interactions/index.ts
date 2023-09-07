@@ -19,11 +19,11 @@
  */
 
 import {
-  CommonKeyObject,
-  TokenCreateCustomSmartContractResult,
-} from '@/types/contract-interactions/HTS';
-import { prepareHederaTokenKeyArray } from '@/utils/contract-interactions/HTS/helpers';
+  handleContractResponse,
+  prepareHederaTokenKeyArray,
+} from '@/utils/contract-interactions/HTS/helpers';
 import { Contract, ethers, isAddress } from 'ethers';
+import { CommonKeyObject, SmartContractExecutionResult } from '@/types/contract-interactions/HTS';
 
 /**
  * @dev creates a Hedera fungible token
@@ -54,7 +54,7 @@ import { Contract, ethers, isAddress } from 'ethers';
  *
  * @param feeTokenAddress?: string
  *
- * @return Promise<TokenCreateCustomSmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  *
  * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L136
  *      for more information on the purposes of the params
@@ -72,7 +72,7 @@ export const createHederaFungibleToken = async (
   inputKeys: CommonKeyObject[],
   msgValue: string,
   feeTokenAddress?: string
-): Promise<TokenCreateCustomSmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (initialTotalSupply < 0) {
@@ -175,7 +175,7 @@ export const createHederaFungibleToken = async (
  *
  * @param feeTokenAddress?: string
  *
- * @return Promise<TokenCreateCustomSmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  *
  * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L136
  *      for more information on the purposes of the params
@@ -190,7 +190,7 @@ export const createHederaNonFungibleToken = async (
   inputKeys: CommonKeyObject[],
   msgValue: string,
   feeTokenAddress?: string
-): Promise<TokenCreateCustomSmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (maxSupply < 0) {
@@ -276,7 +276,7 @@ export const createHederaNonFungibleToken = async (
  *
  * @param metadata: string[]
  *
- * @return Promise<TokenCreateCustomSmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  */
 export const mintHederaToken = async (
   baseContract: Contract,
@@ -284,7 +284,7 @@ export const mintHederaToken = async (
   hederaTokenAddress: string,
   amountToMint: number,
   metadata: string[]
-): Promise<TokenCreateCustomSmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {
@@ -314,13 +314,8 @@ export const mintHederaToken = async (
       }
     );
 
-    const txReceipt = await tx.wait();
-
-    const { data: mintedTokenData } = txReceipt.logs.filter(
-      (event: any) => event.fragment.name === 'MintedToken'
-    )[0];
-
-    return { transactionHash: txReceipt.hash, mintedTokenEventData: mintedTokenData };
+    // handle contract responses
+    return await handleContractResponse(tx);
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };
@@ -344,7 +339,7 @@ export const mintHederaToken = async (
  *
  * @param metadata: string[]
  *
- * @return Promise<TokenCreateCustomSmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  */
 export const mintHederaTokenToAddress = async (
   baseContract: Contract,
@@ -353,7 +348,7 @@ export const mintHederaTokenToAddress = async (
   recipientAddress: string,
   amountToMint: number,
   metadata: string[]
-): Promise<TokenCreateCustomSmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {
@@ -398,21 +393,8 @@ export const mintHederaTokenToAddress = async (
       );
     }
 
-    const txReceipt = await tx.wait();
-
-    const { data: mintedTokenData } = txReceipt.logs.filter(
-      (event: any) => event.fragment.name === 'MintedToken'
-    )[0];
-
-    const { data: transferTokenData } = txReceipt.logs.filter(
-      (event: any) => event.fragment.name === 'TransferToken'
-    )[0];
-
-    return {
-      transactionHash: txReceipt.hash,
-      mintedTokenEventData: mintedTokenData,
-      transferTokenEventData: transferTokenData,
-    };
+    // handle contract responses
+    return await handleContractResponse(tx);
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };
@@ -430,13 +412,13 @@ export const mintHederaTokenToAddress = async (
  *
  * @param associtingAccountAddress: string
  *
- * @return Promise<TokenCreateCustomSmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  */
 export const associateHederaTokensToAccounts = async (
   baseContract: Contract,
   hederaTokenAddresses: string[],
   associtingAccountAddress: string
-): Promise<TokenCreateCustomSmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (hederaTokenAddresses.length === 0) {
@@ -480,9 +462,8 @@ export const associateHederaTokensToAccounts = async (
       );
     }
 
-    const txReceipt = await tx.wait();
-
-    return { transactionHash: txReceipt.hash };
+    // handle contract responses
+    return await handleContractResponse(tx);
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };
@@ -500,13 +481,13 @@ export const associateHederaTokensToAccounts = async (
  *
  * @param grantingKYCAccountAddress: string
  *
- * @return Promise<TokenCreateCustomSmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  */
 export const grantTokenKYCToAccount = async (
   baseContract: Contract,
   hederaTokenAddress: string,
   grantingKYCAccountAddress: string
-): Promise<TokenCreateCustomSmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {
@@ -527,9 +508,8 @@ export const grantTokenKYCToAccount = async (
       { gasLimit: 1_000_000 }
     );
 
-    const txReceipt = await tx.wait();
-
-    return { transactionHash: txReceipt.hash };
+    // handle contract responses
+    return await handleContractResponse(tx);
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };

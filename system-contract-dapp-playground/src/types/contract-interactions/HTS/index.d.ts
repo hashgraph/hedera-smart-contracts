@@ -31,31 +31,17 @@ export type TransactionResult = {
   tokenAddresses?: string[];
 };
 
-/** @dev an interface for the results returned back from interacting with Hedera TokenCreateCustom smart contract */
-interface TokenCreateCustomSmartContractResult {
-  tokenAddress?: string;
-  transactionHash?: string;
-  mintedTokenEventData?: string;
-  transferTokenEventData?: string;
-  err?: any;
-}
-
-/** @dev an interface for the results returned back from interacting with Hedera TokenManagement smart contract */
-interface TokenManagementSmartContractResult {
-  transactionHash?: string;
-  result?: boolean;
-  err?: any;
-}
-
-/** @dev an interface for the results returned back from interacting with Hedera TokenQeury smart contract */
-interface TokenQuerySmartContractResult {
+/** @dev an interface for the results returned back from interacting with Hedera System Smart Contracts */
+interface SmartContractExecutionResult {
   Frozen?: any;
   IsToken?: any;
   Approved?: any;
   TokenType?: any;
   KycGranted?: any;
+  result?: boolean;
   AllowanceValue?: any;
   ApprovedAddress?: any;
+  tokenAddress?: string;
   transactionHash?: string;
   TokenDefaultKycStatus?: any;
   TokenDefaultFreezeStatus?: any;
@@ -353,4 +339,69 @@ interface IHederaTokenServiceNonFungibleTokenInfo {
   creationTime: number;
   metadata: Uint8Array;
   spenderId: string;
+}
+
+/**
+ * @dev an interface that adheres to the IHederaTokenService.AccountAmount
+ *
+ * @param accountID: string
+ *
+ * @param amount: number
+ *
+ * @param isApproval: boolean
+ *
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L17
+ */
+interface IHederaTokenServiceAccountAmount {
+  accountID: string;
+  amount: number;
+  isApproval: boolean;
+}
+
+/**
+ * @dev an interface  that adheres to the IHederaTokenService.NftTransfer
+ *
+ * @param senderAcocuntID: string
+ *
+ * @param receiverAccountID: string
+ *
+ * @param serialNumber: number
+ *
+ * @param isApproval: boolean
+ *
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L34
+ */
+interface IHederaTokenServiceNftTransfer {
+  senderAcocuntID: string;
+  receiverAccountID: string;
+  serialNumber: number;
+  isApproval: boolean;
+}
+
+/**
+ * @dev an interface  that adheres to the IHederaTokenService.TransferList
+ *
+ * @param transfers: IHederaTokenServiceAccountAmount[]
+ *
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L62
+ */
+interface IHederaTokenServiceTransferList {
+  transfers: IHederaTokenServiceAccountAmount[];
+}
+
+/**
+ * @dev an interface  that adheres to the IHederaTokenService.TokenTransferList
+ *
+ * @param token: string
+ *
+ * @param transfers: IHederaTokenServiceAccountAmount[]
+ *
+ * @param nftTransfers: IHederaTokenServiceNftTransfer[]
+ *
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L49
+ */
+interface IHederaTokenServiceTokenTransferList {
+  token: string;
+  transfers: IHederaTokenServiceAccountAmount[];
+  nftTransfers: IHederaTokenServiceNftTransfer[];
 }
