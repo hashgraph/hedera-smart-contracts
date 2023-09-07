@@ -64,7 +64,8 @@ interface TransactionResultTablePageProps {
     | 'TokenAssociate'
     | 'QuerySpecificInfo'
     | 'QueryTokenGeneralInfo'
-    | 'QueryTokenPermission';
+    | 'QueryTokenPermission'
+    | 'QueryTokenRelation';
 }
 
 export const TransactionResultTable = ({
@@ -103,6 +104,10 @@ export const TransactionResultTable = ({
       beginingHashIndex = 10;
       endingHashIndex = -5;
       break;
+    case 'QueryTokenRelation':
+      beginingHashIndex = 4;
+      endingHashIndex = -3;
+      break;
   }
 
   return (
@@ -114,14 +119,18 @@ export const TransactionResultTable = ({
               Index
             </Th>
             <Th color={HEDERA_BRANDING_COLORS.violet}>Status</Th>
-            <Th color={HEDERA_BRANDING_COLORS.violet}>Transaction hash</Th>
+            <Th color={HEDERA_BRANDING_COLORS.violet}>Tx hash</Th>
             <Th color={HEDERA_BRANDING_COLORS.violet}>Token address</Th>
             {API === 'TokenMint' && <Th color={HEDERA_BRANDING_COLORS.violet}>Recipient</Th>}
             {API === 'TokenAssociate' && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>Associated Account</Th>
             )}
+            {API === 'QueryTokenRelation' && <Th color={HEDERA_BRANDING_COLORS.violet}>Account</Th>}
             {API === 'GrantKYC' && <Th color={HEDERA_BRANDING_COLORS.violet}>KYCed Account</Th>}
             {API === 'QueryValidity' && <Th color={HEDERA_BRANDING_COLORS.violet}>Valid Token</Th>}
+            {API === 'QueryTokenRelation' && (
+              <Th color={HEDERA_BRANDING_COLORS.violet}>Relation</Th>
+            )}
             {(API === 'QueryTokenGeneralInfo' ||
               API === 'QuerySpecificInfo' ||
               API === 'QueryTokenPermission') && (
@@ -129,7 +138,8 @@ export const TransactionResultTable = ({
             )}
             {(API === 'QueryTokenGeneralInfo' ||
               API === 'QuerySpecificInfo' ||
-              API === 'QueryTokenPermission') && (
+              API === 'QueryTokenPermission' ||
+              API === 'QueryTokenRelation') && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>API called</Th>
             )}
             <Th />
@@ -218,7 +228,8 @@ export const TransactionResultTable = ({
                   API === 'QueryValidity' ||
                   API === 'QueryTokenGeneralInfo' ||
                   API === 'QuerySpecificInfo' ||
-                  API === 'QueryTokenPermission') && (
+                  API === 'QueryTokenPermission' ||
+                  API === 'QueryTokenRelation') && (
                   <Td className="cursor-pointer">
                     {transactionResult.tokenAddress ? (
                       <div className="flex gap-1 items-center">
@@ -377,7 +388,10 @@ export const TransactionResultTable = ({
                 )}
 
                 {/* Account address */}
-                {(API === 'TokenMint' || API === 'TokenAssociate' || API === 'GrantKYC') && (
+                {(API === 'TokenMint' ||
+                  API === 'TokenAssociate' ||
+                  API === 'GrantKYC' ||
+                  API === 'QueryTokenRelation') && (
                   <Td className="cursor-pointer">
                     {transactionResult.accountAddress ? (
                       <div className="flex gap-1 items-center">
@@ -476,10 +490,30 @@ export const TransactionResultTable = ({
                   </Td>
                 )}
 
+                {/* query - token info - Token Relation */}
+                {API === 'QueryTokenRelation' && (
+                  <Td
+                    className={`cursor-pointer ${
+                      transactionResult.tokenInfo === 1 ? `text-hedera-green` : `text-red-400`
+                    }`}
+                  >
+                    <div className="flex gap-1 items-center">
+                      {typeof transactionResult.tokenInfo !== 'undefined' ? (
+                        <div className="flex gap-1 items-center">
+                          {JSON.stringify(transactionResult.tokenInfo === 1).toUpperCase()}
+                        </div>
+                      ) : (
+                        <>NULL</>
+                      )}
+                    </div>
+                  </Td>
+                )}
+
                 {/* query - API called */}
                 {(API === 'QueryTokenGeneralInfo' ||
                   API === 'QuerySpecificInfo' ||
-                  API === 'QueryTokenPermission') && (
+                  API === 'QueryTokenPermission' ||
+                  API === 'QueryTokenRelation') && (
                   <Td>
                     {transactionResult.APICalled ? (
                       <>

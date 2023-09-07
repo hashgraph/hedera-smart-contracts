@@ -23,6 +23,7 @@ import QueryTokenValidity from './queryTokenValidity';
 import QueryTokenSpecificInfomation from './querySpecificToken';
 import QueryTokenGeneralInfomation from './queryTokenGeneralInfo';
 import QueryTokenPermissionInfomation from './queryTokenPermission';
+import QueryTokenRelationInfomation from './queryTokenRelation';
 
 interface PageProps {
   method: string;
@@ -32,10 +33,10 @@ interface PageProps {
 const HederaTokenQueryMethods = ({ baseContract, method }: PageProps) => {
   return (
     <>
-      {method === 'tokenRelation' && <>tokenRelation</>}
       {method === 'tokenValidity' && <QueryTokenValidity baseContract={baseContract} />}
       {method === 'generalInfo' && <QueryTokenGeneralInfomation baseContract={baseContract} />}
       {method === 'specificInfo' && <QueryTokenSpecificInfomation baseContract={baseContract} />}
+      {method === 'tokenRelation' && <QueryTokenRelationInfomation baseContract={baseContract} />}
       {method === 'tokenPermission' && (
         <QueryTokenPermissionInfomation baseContract={baseContract} />
       )}
