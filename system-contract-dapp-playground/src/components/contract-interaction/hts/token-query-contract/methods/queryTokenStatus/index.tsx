@@ -27,12 +27,12 @@ import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { useToastSuccessful } from '../../../shared/hooks/useToastSuccessful';
+import { queryTokenStatusInformation } from '@/api/hedera/tokenQuery-interactions';
 import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
-import { queryTokenRelationInformation } from '@/api/hedera/tokenQuery-interactions';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
-import { htsQueryTokenRelationParamFields } from '@/utils/contract-interactions/HTS/token-query/constant';
+import { htsQueryTokenStatusParamFields } from '@/utils/contract-interactions/HTS/token-query/constant';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedExecuteButton,
@@ -46,14 +46,14 @@ interface PageProps {
 type API_NAMES = 'IS_KYC' | 'IS_FROZEN';
 type EVENT_NAMES = 'KycGranted' | 'Frozen';
 
-const QueryTokenRelationInfomation = ({ baseContract }: PageProps) => {
+const QueryTokenStatusInfomation = ({ baseContract }: PageProps) => {
   // general states
   const toaster = useToast();
   const [isSuccessful, setIsSuccessful] = useState(false);
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-QUERY.TOKEN-RELATION-INFO-RESULTS';
+  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-QUERY.TOKEN-STATUS-INFO-RESULTS';
   const initialParamValues = {
     hederaTokenAddress: '',
     accountAddress: '',
@@ -104,14 +104,14 @@ const QueryTokenRelationInfomation = ({ baseContract }: PageProps) => {
     setParamValues((prev: any) => ({ ...prev, [param]: e.target.value }));
   };
 
-  /** @dev handle invoking the API to interact with smart contract and update token relation */
-  const handleQueryTokenRelationInfo = async (API: API_NAMES) => {
+  /** @dev handle invoking the API to interact with smart contract and update token status */
+  const handleQueryTokenStatusInfo = async (API: API_NAMES) => {
     // destructuring param values
     const { hederaTokenAddress, accountAddress } = paramValues;
 
     // sanitize params
     const sanitizeErr = handleSanitizeHederaFormInputs({
-      API: 'QueryTokenRelation',
+      API: 'QueryTokenStatus',
       hederaTokenAddress,
       accountAddress,
     });
@@ -130,7 +130,7 @@ const QueryTokenRelationInfomation = ({ baseContract }: PageProps) => {
     }));
 
     // invoking method API
-    const tokenInfoResult = await queryTokenRelationInformation(
+    const tokenInfoResult = await queryTokenStatusInformation(
       baseContract,
       API,
       hederaTokenAddress,
@@ -197,19 +197,19 @@ const QueryTokenRelationInfomation = ({ baseContract }: PageProps) => {
         {/* hederaTokenAddress & targetApprovedAddress */}
         {tokenCommonFields.map((param) => {
           return (
-            <div className="w-full" key={(htsQueryTokenRelationParamFields as any)[param].paramKey}>
+            <div className="w-full" key={(htsQueryTokenStatusParamFields as any)[param].paramKey}>
               <SharedFormInputField
                 param={param}
                 paramValue={paramValues[param]}
                 handleInputOnChange={handleInputOnChange}
-                paramKey={(htsQueryTokenRelationParamFields as any)[param].paramKey}
-                paramType={(htsQueryTokenRelationParamFields as any)[param].inputType}
-                paramSize={(htsQueryTokenRelationParamFields as any)[param].inputSize}
-                explanation={(htsQueryTokenRelationParamFields as any)[param].explanation}
-                paramClassName={(htsQueryTokenRelationParamFields as any)[param].inputClassname}
-                paramPlaceholder={(htsQueryTokenRelationParamFields as any)[param].inputPlaceholder}
+                paramKey={(htsQueryTokenStatusParamFields as any)[param].paramKey}
+                paramType={(htsQueryTokenStatusParamFields as any)[param].inputType}
+                paramSize={(htsQueryTokenStatusParamFields as any)[param].inputSize}
+                explanation={(htsQueryTokenStatusParamFields as any)[param].explanation}
+                paramClassName={(htsQueryTokenStatusParamFields as any)[param].inputClassname}
+                paramPlaceholder={(htsQueryTokenStatusParamFields as any)[param].inputPlaceholder}
                 paramFocusColor={
-                  (htsQueryTokenRelationParamFields as any)[param].inputFocusBorderColor
+                  (htsQueryTokenStatusParamFields as any)[param].inputFocusBorderColor
                 }
               />
             </div>
@@ -225,7 +225,7 @@ const QueryTokenRelationInfomation = ({ baseContract }: PageProps) => {
                   isLoading={
                     APIButton.API === 'IS_KYC' ? isLoading.kycLoading : isLoading.frozenLoading
                   }
-                  handleCreatingFungibleToken={() => handleQueryTokenRelationInfo(APIButton.API)}
+                  handleCreatingFungibleToken={() => handleQueryTokenStatusInfo(APIButton.API)}
                   buttonTitle={APIButton.executeTitle}
                 />
               </div>
@@ -237,7 +237,7 @@ const QueryTokenRelationInfomation = ({ baseContract }: PageProps) => {
       {/* transaction results table */}
       {transactionResults.length > 0 && (
         <TransactionResultTable
-          API="QueryTokenRelation"
+          API="QueryTokenStatus"
           hederaNetwork={hederaNetwork}
           transactionResults={transactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
@@ -252,4 +252,4 @@ const QueryTokenRelationInfomation = ({ baseContract }: PageProps) => {
   );
 };
 
-export default QueryTokenRelationInfomation;
+export default QueryTokenStatusInfomation;

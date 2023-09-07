@@ -65,7 +65,7 @@ interface TransactionResultTablePageProps {
     | 'QuerySpecificInfo'
     | 'QueryTokenGeneralInfo'
     | 'QueryTokenPermission'
-    | 'QueryTokenRelation';
+    | 'QueryTokenStatus';
 }
 
 export const TransactionResultTable = ({
@@ -104,7 +104,7 @@ export const TransactionResultTable = ({
       beginingHashIndex = 10;
       endingHashIndex = -5;
       break;
-    case 'QueryTokenRelation':
+    case 'QueryTokenStatus':
       beginingHashIndex = 4;
       endingHashIndex = -3;
       break;
@@ -125,12 +125,10 @@ export const TransactionResultTable = ({
             {API === 'TokenAssociate' && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>Associated Account</Th>
             )}
-            {API === 'QueryTokenRelation' && <Th color={HEDERA_BRANDING_COLORS.violet}>Account</Th>}
+            {API === 'QueryTokenStatus' && <Th color={HEDERA_BRANDING_COLORS.violet}>Account</Th>}
             {API === 'GrantKYC' && <Th color={HEDERA_BRANDING_COLORS.violet}>KYCed Account</Th>}
             {API === 'QueryValidity' && <Th color={HEDERA_BRANDING_COLORS.violet}>Valid Token</Th>}
-            {API === 'QueryTokenRelation' && (
-              <Th color={HEDERA_BRANDING_COLORS.violet}>Relation</Th>
-            )}
+            {API === 'QueryTokenStatus' && <Th color={HEDERA_BRANDING_COLORS.violet}>Relation</Th>}
             {(API === 'QueryTokenGeneralInfo' ||
               API === 'QuerySpecificInfo' ||
               API === 'QueryTokenPermission') && (
@@ -139,7 +137,7 @@ export const TransactionResultTable = ({
             {(API === 'QueryTokenGeneralInfo' ||
               API === 'QuerySpecificInfo' ||
               API === 'QueryTokenPermission' ||
-              API === 'QueryTokenRelation') && (
+              API === 'QueryTokenStatus') && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>API called</Th>
             )}
             <Th />
@@ -229,7 +227,7 @@ export const TransactionResultTable = ({
                   API === 'QueryTokenGeneralInfo' ||
                   API === 'QuerySpecificInfo' ||
                   API === 'QueryTokenPermission' ||
-                  API === 'QueryTokenRelation') && (
+                  API === 'QueryTokenStatus') && (
                   <Td className="cursor-pointer">
                     {transactionResult.tokenAddress ? (
                       <div className="flex gap-1 items-center">
@@ -391,7 +389,7 @@ export const TransactionResultTable = ({
                 {(API === 'TokenMint' ||
                   API === 'TokenAssociate' ||
                   API === 'GrantKYC' ||
-                  API === 'QueryTokenRelation') && (
+                  API === 'QueryTokenStatus') && (
                   <Td className="cursor-pointer">
                     {transactionResult.accountAddress ? (
                       <div className="flex gap-1 items-center">
@@ -491,7 +489,7 @@ export const TransactionResultTable = ({
                 )}
 
                 {/* query - token info - Token Relation */}
-                {API === 'QueryTokenRelation' && (
+                {API === 'QueryTokenStatus' && (
                   <Td
                     className={`cursor-pointer ${
                       transactionResult.tokenInfo === 1 ? `text-hedera-green` : `text-red-400`
@@ -513,7 +511,7 @@ export const TransactionResultTable = ({
                 {(API === 'QueryTokenGeneralInfo' ||
                   API === 'QuerySpecificInfo' ||
                   API === 'QueryTokenPermission' ||
-                  API === 'QueryTokenRelation') && (
+                  API === 'QueryTokenStatus') && (
                   <Td>
                     {transactionResult.APICalled ? (
                       <>

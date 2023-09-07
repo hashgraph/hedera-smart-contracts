@@ -67,7 +67,7 @@ interface ParamsProps {
     | 'ALLOWANCE'
     | 'GET_APPROVED'
     | 'IS_APPROVAL'
-    | 'QueryTokenRelation';
+    | 'QueryTokenStatus';
 }
 /** @dev handle sanitizing Hedera token form inputs */
 export const handleSanitizeHederaFormInputs = ({
@@ -304,7 +304,7 @@ export const handleSanitizeHederaFormInputs = ({
     } else if (serialNumber === '' || Number(serialNumber) < 0) {
       sanitizeErr = 'Invalid serial number';
     }
-  } else if (API === 'QueryTokenRelation') {
+  } else if (API === 'QueryTokenStatus') {
     if (!isAddress(hederaTokenAddress)) {
       sanitizeErr = 'Invalid token address';
     } else if (!isAddress(accountAddress)) {
