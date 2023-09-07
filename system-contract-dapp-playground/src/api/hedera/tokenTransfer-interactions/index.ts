@@ -48,15 +48,7 @@ export const transferCrypto = async (
   try {
     const tx = await baseContract.cryptoTransferPublic(transferList, tokenTransferList);
 
-    const txReceipt = await tx.wait();
-
-    // retrieve responseCode from event
-    const { data } = txReceipt.logs.filter(
-      (event: any) => event.fragment.name === 'ResponseCode'
-    )[0];
-
-    // @notice: 22 represents the predefined response code from the Hedera system contracts, indicating a successful transaction.
-    return { result: Number(data) === 22, transactionHash: txReceipt.hash };
+    return await handleContractResponse(tx);
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };
