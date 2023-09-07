@@ -70,10 +70,10 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
   const [showTokenInfo, setShowTokenInfo] = useState(false);
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
-  const [APIMethods, setAPIMethods] = useState<API_NAMES>('DEFAULT_FREEZE_STATUS');
   const [tokenInfoFromTxResult, setTokenInfoFromTxResult] = useState<any>();
   const [keyType, setKeyType] = useState<IHederaTokenServiceKeyType>('ADMIN');
   const [tokenAddressFromTxResult, setTokenAddressFromTxResult] = useState('');
+  const [APIMethods, setAPIMethods] = useState<API_NAMES>('DEFAULT_FREEZE_STATUS');
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-QUERY.TOKEN-SPECIFIC-INFO-RESULTS';
   const [APIMethodsFromTxResult, setAPIMethodsFromTxResult] =
@@ -148,7 +148,7 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
     setParamValues((prev: any) => ({ ...prev, [param]: e.target.value }));
   };
 
-  /** @dev handle invoking the API to interact with smart contract and update token relation */
+  /** @dev handle invoking the API to interact with smart contract and query token info */
   const handleQuerySpecificInfo = async (API: API_NAMES) => {
     // sanitize params
     if (!isAddress(paramValues.hederaTokenAddress)) {

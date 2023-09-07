@@ -33,6 +33,8 @@ interface ParamsProps {
   maxSupply?: string;
   initSupply?: string;
   serialNumber?: string;
+  ownerAddress?: string;
+  spenderAddress?: string;
   withCustomFee?: boolean;
   accountAddress?: string;
   feeTokenAddress?: string;
@@ -60,7 +62,11 @@ interface ParamsProps {
     | 'WIPE_NON_FUNGIBLE'
     | 'BURN'
     | 'DELETE'
-    | 'QueryTokenInfo';
+    | 'QueryTokenInfo'
+    | 'QueryTokenInfo'
+    | 'ALLOWANCE'
+    | 'GET_APPROVED'
+    | 'IS_APPROVAL';
 }
 /** @dev handle sanitizing Hedera token form inputs */
 export const handleSanitizeHederaFormInputs = ({
@@ -75,8 +81,10 @@ export const handleSanitizeHederaFormInputs = ({
   feeValue,
   maxSupply,
   initSupply,
+  ownerAddress,
   serialNumber,
   withCustomFee,
+  spenderAddress,
   accountAddress,
   feeTokenAddress,
   autoRenewPeriod,
@@ -280,6 +288,20 @@ export const handleSanitizeHederaFormInputs = ({
   } else if (API === 'QueryTokenInfo') {
     if (!isAddress(hederaTokenAddress)) {
       sanitizeErr = 'Invalid token address';
+    }
+  } else if (API === 'ALLOWANCE' || API === 'IS_APPROVAL') {
+    if (!isAddress(hederaTokenAddress)) {
+      sanitizeErr = 'Invalid token address';
+    } else if (!isAddress(ownerAddress)) {
+      sanitizeErr = 'Invalid owner address';
+    } else if (!isAddress(spenderAddress)) {
+      sanitizeErr = 'Invalid spender address';
+    }
+  } else if (API === 'GET_APPROVED') {
+    if (!isAddress(hederaTokenAddress)) {
+      sanitizeErr = 'Invalid token address';
+    } else if (serialNumber === '' || Number(serialNumber) < 0) {
+      sanitizeErr = 'Invalid serial number';
     }
   }
 

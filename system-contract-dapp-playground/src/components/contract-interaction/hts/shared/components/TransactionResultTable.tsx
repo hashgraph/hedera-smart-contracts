@@ -57,13 +57,14 @@ interface TransactionResultTablePageProps {
   setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>;
   setKeyTypeFromTxResult?: Dispatch<SetStateAction<IHederaTokenServiceKeyType>>;
   API:
-    | 'TokenCreate'
-    | 'TokenMint'
-    | 'TokenAssociate'
     | 'GrantKYC'
+    | 'TokenMint'
+    | 'TokenCreate'
     | 'QueryValidity'
+    | 'TokenAssociate'
+    | 'QuerySpecificInfo'
     | 'QueryTokenGeneralInfo'
-    | 'QuerySpecificInfo';
+    | 'QueryTokenPermission';
 }
 
 export const TransactionResultTable = ({
@@ -92,6 +93,7 @@ export const TransactionResultTable = ({
     case 'TokenMint':
     case 'QuerySpecificInfo':
     case 'QueryTokenGeneralInfo':
+    case 'QueryTokenPermission':
       beginingHashIndex = 8;
       endingHashIndex = -4;
       break;
@@ -120,10 +122,14 @@ export const TransactionResultTable = ({
             )}
             {API === 'GrantKYC' && <Th color={HEDERA_BRANDING_COLORS.violet}>KYCed Account</Th>}
             {API === 'QueryValidity' && <Th color={HEDERA_BRANDING_COLORS.violet}>Valid Token</Th>}
-            {(API === 'QueryTokenGeneralInfo' || API === 'QuerySpecificInfo') && (
+            {(API === 'QueryTokenGeneralInfo' ||
+              API === 'QuerySpecificInfo' ||
+              API === 'QueryTokenPermission') && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>Token Info</Th>
             )}
-            {(API === 'QueryTokenGeneralInfo' || API === 'QuerySpecificInfo') && (
+            {(API === 'QueryTokenGeneralInfo' ||
+              API === 'QuerySpecificInfo' ||
+              API === 'QueryTokenPermission') && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>API called</Th>
             )}
             <Th />
@@ -211,7 +217,8 @@ export const TransactionResultTable = ({
                   API === 'GrantKYC' ||
                   API === 'QueryValidity' ||
                   API === 'QueryTokenGeneralInfo' ||
-                  API === 'QuerySpecificInfo') && (
+                  API === 'QuerySpecificInfo' ||
+                  API === 'QueryTokenPermission') && (
                   <Td className="cursor-pointer">
                     {transactionResult.tokenAddress ? (
                       <div className="flex gap-1 items-center">
@@ -436,10 +443,12 @@ export const TransactionResultTable = ({
                 )}
 
                 {/* query - token info */}
-                {(API === 'QueryTokenGeneralInfo' || API === 'QuerySpecificInfo') && (
+                {(API === 'QueryTokenGeneralInfo' ||
+                  API === 'QuerySpecificInfo' ||
+                  API === 'QueryTokenPermission') && (
                   <Td className="cursor-pointer">
                     <div className="flex gap-1 items-center">
-                      {transactionResult.tokenInfo ? (
+                      {typeof transactionResult.tokenInfo !== 'undefined' ? (
                         <div
                           onClick={() => {
                             onOpen!();
@@ -468,7 +477,9 @@ export const TransactionResultTable = ({
                 )}
 
                 {/* query - API called */}
-                {(API === 'QueryTokenGeneralInfo' || API === 'QuerySpecificInfo') && (
+                {(API === 'QueryTokenGeneralInfo' ||
+                  API === 'QuerySpecificInfo' ||
+                  API === 'QueryTokenPermission') && (
                   <Td>
                     {transactionResult.APICalled ? (
                       <>
