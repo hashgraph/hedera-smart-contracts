@@ -31,12 +31,11 @@ export type TransactionResult = {
   tokenAddresses?: string[];
 };
 
-/** @dev an interface for the results returned back from interacting with Hedera TokenCreateCustom smart contract */
-interface TokenCreateCustomSmartContractResult {
+/** @dev an interface for the results returned back from interacting with Hedera System Smart Contracts */
+interface SmartContractExecutionResult {
   tokenAddress?: string;
   transactionHash?: string;
-  mintedTokenEventData?: string;
-  transferTokenEventData?: string;
+  result?: boolean;
   err?: any;
 }
 

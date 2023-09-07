@@ -133,8 +133,6 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
     setIsLoading(true);
 
     // invoke method API
-    // @logic if recipientAddress is set => mintHederaTokenToAddress()
-    // @logic if recipientAddress is NOT set => mintHederaToken()
     const { transactionHash, err } = await associateHederaTokensToAccounts(
       baseContract,
       tokenAddresses,
