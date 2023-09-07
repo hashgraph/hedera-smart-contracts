@@ -33,9 +33,28 @@ export type TransactionResult = {
 
 /** @dev an interface for the results returned back from interacting with Hedera System Smart Contracts */
 interface SmartContractExecutionResult {
+  Frozen?: any;
+  IsToken?: any;
+  Approved?: any;
+  TokenType?: any;
+  KycGranted?: any;
+  result?: boolean;
+  AllowanceValue?: any;
+  ApprovedAddress?: any;
   tokenAddress?: string;
   transactionHash?: string;
-  result?: boolean;
+  TokenDefaultKycStatus?: any;
+  TokenDefaultFreezeStatus?: any;
+  TokenInfo?: IHederaTokenServiceTokenInfo;
+  TokenKey?: IHederaTokenServiceKeyValueType;
+  TokenExpiryInfo?: IHederaTokenServiceExpiry;
+  FungibleTokenInfo?: IHederaTokenServiceFungibleTokenInfo;
+  NonFungibleTokenInfo?: IHederaTokenServiceNonFungibleTokenInfo;
+  TokenCustomFees?: {
+    fixedFees: IHederaTokenServiceFixedFee[];
+    royaltyFees: IHederaTokenServiceRoyaltyFee[];
+    fractionalFees: IHederaTokenServiceFractionalFee[];
+  };
   err?: any;
 }
 
