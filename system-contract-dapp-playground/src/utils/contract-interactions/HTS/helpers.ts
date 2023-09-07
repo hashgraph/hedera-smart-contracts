@@ -38,7 +38,7 @@ import {
   IHederaTokenServiceTokenInfo,
   IHederaTokenServiceRoyaltyFee,
   IHederaTokenServiceKeyValueType,
-  TokenManagementSmartContractResult,
+  SmartContractExecutionResult,
   IHederaTokenServiceFractionalFee,
   IHederaTokenServiceFungibleTokenInfo,
   IHederaTokenServiceNonFungibleTokenInfo,
@@ -147,7 +147,7 @@ export const prepareHederaTokenKeyArray = (inputKeys: CommonKeyObject[]) => {
 export const handleContractResponse = async (
   transactionResult: any,
   errMsg?: any
-): Promise<TokenManagementSmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // return err if any
   if (errMsg) {
     console.error(errMsg);
@@ -178,7 +178,7 @@ export const handleContractResponseWithDynamicEventNames = async (
   transactionResult: any,
   eventMaps?: any,
   API?: any
-): Promise<TokenManagementSmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // get transaction receipt
   const txReceipt = await transactionResult.wait();
 

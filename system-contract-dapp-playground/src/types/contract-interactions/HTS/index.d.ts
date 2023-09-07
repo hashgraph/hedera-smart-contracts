@@ -39,13 +39,6 @@ interface SmartContractExecutionResult {
   err?: any;
 }
 
-/** @dev an interface for the results returned back from interacting with Hedera TokenManagement smart contract */
-interface TokenManagementSmartContractResult {
-  transactionHash?: string;
-  result?: boolean;
-  err?: any;
-}
-
 /** @dev an interface for the results returned back from interacting with Hedera TokenQeury smart contract */
 interface TokenQuerySmartContractResult {
   Frozen?: any;
