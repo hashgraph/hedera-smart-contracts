@@ -392,7 +392,7 @@ export const queryTokenPermissionInformation = async (
  *
  * @return Promise<TokenQuerySmartContractResult>
  */
-export const queryTokenRelationInformation = async (
+export const queryTokenStatusInformation = async (
   baseContract: Contract,
   API: 'IS_KYC' | 'IS_FROZEN',
   hederaTokenAddress: string,

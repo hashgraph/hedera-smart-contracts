@@ -223,7 +223,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
       contractABI: TokenQueryContract.abi,
       contractBytecode: TokenQueryContract.bytecode,
       githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-query/TokenQueryContract.sol`,
-      methods: ['tokenValidity', 'generalInfo', 'specificInfo', 'tokenPermission', 'tokenRelation'],
+      methods: ['tokenValidity', 'generalInfo', 'specificInfo', 'tokenPermission', 'tokenStatus'],
     },
     {
       name: 'TokenTransferContract' as ContractName,

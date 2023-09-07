@@ -20,9 +20,9 @@
 
 import {
   queryTokenValidity,
+  queryTokenStatusInformation,
   queryTokenGeneralInfomation,
   queryTokenSpecificInfomation,
-  queryTokenRelationInformation,
   queryTokenPermissionInformation,
 } from '@/api/hedera/tokenQuery-interactions';
 import { Contract } from 'ethers';
@@ -266,9 +266,9 @@ describe('TokenQueryContract Test Suite', () => {
     });
   });
 
-  describe('queryTokenRelationInformation test suite', () => {
-    it('should execute queryTokenRelationInformation wit API === "IS_KYC" then return info value from event', async () => {
-      const txRes = await queryTokenRelationInformation(
+  describe('queryTokenStatusInformation test suite', () => {
+    it('should execute queryTokenStatusInformation wit API === "IS_KYC" then return info value from event', async () => {
+      const txRes = await queryTokenStatusInformation(
         baseContract as unknown as Contract,
         'IS_KYC',
         hederaTokenAddress,
@@ -280,8 +280,8 @@ describe('TokenQueryContract Test Suite', () => {
       expect(txRes.KycGranted).toBe(mockedEventReturnedValue);
     });
 
-    it('should execute queryTokenRelationInformation wit API === "IS_FROZEN" then return info value from event', async () => {
-      const txRes = await queryTokenRelationInformation(
+    it('should execute queryTokenStatusInformation wit API === "IS_FROZEN" then return info value from event', async () => {
+      const txRes = await queryTokenStatusInformation(
         baseContract as unknown as Contract,
         'IS_FROZEN',
         hederaTokenAddress,

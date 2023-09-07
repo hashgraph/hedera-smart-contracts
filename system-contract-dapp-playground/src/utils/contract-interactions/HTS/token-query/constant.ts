@@ -83,7 +83,7 @@ export const htsQueryTokenPermissionParamFields = {
 };
 
 /** @notice an object holding information for the queryTokenInfo's input fields */
-export const htsQueryTokenRelationParamFields = {
+export const htsQueryTokenStatusParamFields = {
   hederaTokenAddress: {
     inputType: 'text',
     inputPlaceholder: 'Token address...',
