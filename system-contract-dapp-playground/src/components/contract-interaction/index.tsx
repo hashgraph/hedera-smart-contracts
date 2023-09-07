@@ -27,7 +27,6 @@ import { deploySmartContract } from '@/api/hedera';
 import HederaAlertDialog from '../common/AlertDialog';
 import { useCallback, useEffect, useState } from 'react';
 import { generateBaseContractInstance } from '@/api/ethers';
-import { HASHSCAN_BASE_URL } from '@/utils/common/constants';
 import ERC20DeployField from './erc/deployment/ERCDeployField';
 import { HederaContractAsset, NetworkName } from '@/types/common';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
@@ -37,6 +36,7 @@ import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
 import HederaTokenCreateMethods from './hts/token-create-custom/methods';
 import HederaTokenQueryMethods from './hts/token-query-contract/methods';
 import HederaTokenManagementMethods from './hts/token-management-contract/methods';
+import { HASHSCAN_BASE_URL, HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import ExchangeRateDeployField from './exchange-rate-hip-475/deployment/ExchangeRateDeployField';
 import {
   Tabs,
@@ -220,7 +220,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
             {contract.methods.map((method, index) => {
               return (
                 <Tab
-                  _selected={{ bg: '#374151', borderBottomWidth: '0' }}
+                  _selected={{ bg: HEDERA_BRANDING_COLORS.panel, borderBottomWidth: '0' }}
                   className={`whitespace-nowrap first:border-l-0 py-4 border-b border-white/30 ${
                     index !== 0 && `border-l`
                   }`}
@@ -229,7 +229,6 @@ const ContractInteraction = ({ contract }: PageProps) => {
                   {convertCalmelCaseFunctionName(method)}
                 </Tab>
               );
-              // }
             })}
           </TabList>
 

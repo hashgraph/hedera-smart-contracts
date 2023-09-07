@@ -22,6 +22,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { Tooltip, Input } from '@chakra-ui/react';
+import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 
 /** @dev shared form input component */
 interface SharedFormInputFieldPageProps {
@@ -201,7 +202,7 @@ export const SharedExecuteButtonWithFee = ({
             explanation={explanation}
             paramClassName={'border-white/30 rounded-xl'}
             paramPlaceholder={placeHolder}
-            paramFocusColor={'#A98DF4'}
+            paramFocusColor={HEDERA_BRANDING_COLORS.purple}
           />
         </div>
         {/* Execute button */}

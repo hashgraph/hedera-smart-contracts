@@ -194,7 +194,7 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
       setTransactionResults((prev) => [
         ...prev,
         {
-          status: 'sucess',
+          status: 'success',
           accountAddress: recipientAddress,
           txHash: txRes.transactionHash as string,
           tokenAddress: paramValues.tokenAddressToMint,
@@ -218,7 +218,7 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
     setCurrentTransactionPage,
     resetParamValues: initialParamValues,
     toastTitle: 'Token creation successful',
-    toastDescription: 'A new balance has been set for the treasury',
+    toastDescription: 'A new balance has been set for the receiver',
   });
 
   return (

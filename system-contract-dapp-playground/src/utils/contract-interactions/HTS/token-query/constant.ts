@@ -18,13 +18,15 @@
  *
  */
 
+import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
+
 /** @notice an object holding information for the tokenRelation's input fields */
 export const htsQueryTokenInfoParamFields = {
   hederaTokenAddress: {
     inputType: 'text',
     inputPlaceholder: 'Token address...',
     inputSize: 'md',
-    inputFocusBorderColor: '#A98DF4',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
     inputClassname: 'w-full border-white/30',
     paramKey: 'hederaTokenAddress',
     explanation: 'represents the Hedera Token for querying',
@@ -33,7 +35,7 @@ export const htsQueryTokenInfoParamFields = {
     inputType: 'number',
     inputPlaceholder: 'Serial number...',
     inputSize: 'md',
-    inputFocusBorderColor: '#A98DF4',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
     inputClassname: 'w-full border-white/30',
     paramKey: 'serialNumber',
     explanation: "represents the NFT's serial number to be queried",
@@ -46,7 +48,7 @@ export const htsQueryTokenPermissionParamFields = {
     inputType: 'text',
     inputPlaceholder: 'Token address...',
     inputSize: 'md',
-    inputFocusBorderColor: '#A98DF4',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
     inputClassname: 'w-full border-white/30',
     paramKey: 'hederaTokenAddress',
     explanation: 'represents the Hedera Token for querying',
@@ -55,7 +57,7 @@ export const htsQueryTokenPermissionParamFields = {
     inputType: 'number',
     inputPlaceholder: 'Serial number...',
     inputSize: 'md',
-    inputFocusBorderColor: '#A98DF4',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
     inputClassname: 'w-full border-white/30',
     paramKey: 'serialNumber',
     explanation: "represents the NFT's serial number to be queried",
@@ -64,7 +66,7 @@ export const htsQueryTokenPermissionParamFields = {
     inputType: 'string',
     inputPlaceholder: 'Owner address...',
     inputSize: 'md',
-    inputFocusBorderColor: '#A98DF4',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
     inputClassname: 'w-full border-white/30',
     paramKey: 'ownerAddress',
     explanation: "represents the address of the token's owner",
@@ -73,7 +75,7 @@ export const htsQueryTokenPermissionParamFields = {
     inputType: 'string',
     inputPlaceholder: 'Spender/Operator address...',
     inputSize: 'md',
-    inputFocusBorderColor: '#A98DF4',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
     inputClassname: 'w-full border-white/30',
     paramKey: 'spenderAddress',
     explanation: 'represents the spender or operator address',
@@ -86,7 +88,7 @@ export const htsQueryTokenRelationParamFields = {
     inputType: 'text',
     inputPlaceholder: 'Token address...',
     inputSize: 'md',
-    inputFocusBorderColor: '#A98DF4',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
     inputClassname: 'w-full border-white/30',
     paramKey: 'hederaTokenAddress',
     explanation: 'represents the Hedera Token for querying',
@@ -95,7 +97,7 @@ export const htsQueryTokenRelationParamFields = {
     inputType: 'text',
     inputPlaceholder: 'Account address...',
     inputSize: 'md',
-    inputFocusBorderColor: '#A98DF4',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
     inputClassname: 'w-full border-white/30',
     paramKey: 'accountAddress',
     explanation: 'represents the account address to check status against',
