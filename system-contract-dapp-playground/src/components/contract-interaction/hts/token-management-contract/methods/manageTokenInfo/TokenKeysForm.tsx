@@ -19,6 +19,7 @@
  */
 
 import { Select, Input } from '@chakra-ui/react';
+import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import {
@@ -104,7 +105,7 @@ const TokenKeysForm = ({
                 {/* Key Value type */}
                 <Select
                   ref={keyRefs[key.keyType].keyValueType}
-                  _focus={{ borderColor: '#A98DF4' }}
+                  _focus={{ borderColor: HEDERA_BRANDING_COLORS.purple }}
                   className="w-[220px] hover:cursor-pointer rounded-md border-white/30"
                   onChange={(e) => {
                     handleKeyValueTypeOnChange(e, key, setKeys);
@@ -126,7 +127,7 @@ const TokenKeysForm = ({
               {key.keyValueType === 'inheritAccountKey' ? (
                 <Select
                   ref={keyRefs[key.keyType].keyValue}
-                  _focus={{ borderColor: '#A98DF4' }}
+                  _focus={{ borderColor: HEDERA_BRANDING_COLORS.purple }}
                   className="hover:cursor-pointer rounded-md border-white/30"
                   placeholder="Select option"
                   onChange={(e) => handleUpdateKeyValue(e, key, setKeys)}
@@ -146,7 +147,7 @@ const TokenKeysForm = ({
                       : `${key.keyValueType.split('_')[0].toUpperCase()} compressed public key...`
                   }
                   size={'md'}
-                  focusBorderColor={'#A98DF4'}
+                  focusBorderColor={HEDERA_BRANDING_COLORS.purple}
                   className={'w-full border-white/30'}
                 />
               )}

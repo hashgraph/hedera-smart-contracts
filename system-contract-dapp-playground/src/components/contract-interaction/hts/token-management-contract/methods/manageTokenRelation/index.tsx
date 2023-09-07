@@ -24,6 +24,7 @@ import { useToast } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { generatedRandomUniqueKey } from '@/utils/common/helpers';
+import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
@@ -217,7 +218,7 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
       setTransactionResults((prev) => [
         ...prev,
         {
-          status: 'sucess',
+          status: 'success',
           tokenAddress: paramValues.hederaTokenAddress,
           txHash: transactionHash as string,
         },
@@ -309,7 +310,7 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
                   explanation={'Gas limit for the transaction'}
                   paramClassName={'border-white/30 rounded-xl'}
                   paramPlaceholder={'Gas limit...'}
-                  paramFocusColor={'#A98DF4'}
+                  paramFocusColor={HEDERA_BRANDING_COLORS.purple}
                 />
                 <SharedExecuteButton
                   isLoading={isFreezeLoading.unfreezeLoading}

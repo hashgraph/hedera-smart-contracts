@@ -24,6 +24,7 @@ import { BiCopy } from 'react-icons/bi';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { IoRefreshOutline } from 'react-icons/io5';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
+import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import MultiLineMethod from '@/components/common/MultiLineMethod';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
@@ -351,9 +352,9 @@ const TokenPermission = ({ baseContract }: PageProps) => {
           <Table variant="simple" size={'sm'}>
             <Thead>
               <Tr>
-                <Th color={'#82ACF9'}>Owner</Th>
-                <Th color={'#82ACF9'}>Spender</Th>
-                <Th color={'#82ACF9'} isNumeric>
+                <Th color={HEDERA_BRANDING_COLORS.violet}>Owner</Th>
+                <Th color={HEDERA_BRANDING_COLORS.violet}>Spender</Th>
+                <Th color={HEDERA_BRANDING_COLORS.violet} isNumeric>
                   Allowance
                 </Th>
                 <Th />

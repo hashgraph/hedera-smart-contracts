@@ -156,7 +156,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
         ...prev,
         {
           tokenAddress,
-          status: 'sucess',
+          status: 'success',
           txHash: transactionHash as string,
         },
       ]);
@@ -182,7 +182,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
     setCurrentTransactionPage,
     resetParamValues: initialParamValues,
     toastTitle: 'Token creation successful',
-    toastDescription: 'A new balance has been set for the treasury',
+    toastDescription: 'A new balance has been set for the receiver',
   });
 
   return (

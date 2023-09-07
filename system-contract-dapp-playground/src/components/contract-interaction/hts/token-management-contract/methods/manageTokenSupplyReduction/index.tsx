@@ -161,7 +161,7 @@ const ManageTokenDeduction = ({ baseContract }: PageProps) => {
       setTransactionResults((prev) => [
         ...prev,
         {
-          status: 'sucess',
+          status: 'success',
           tokenAddress: hederaTokenAddress,
           txHash: transactionHash as string,
         },

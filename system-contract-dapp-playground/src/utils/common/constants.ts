@@ -39,6 +39,13 @@ export const HEDERA_OFFICIAL_HIPS_URL = 'https://hips.hedera.com/';
 /** @notice hashcan baseURL */
 export const HASHSCAN_BASE_URL = 'https://hashscan.io';
 
+/** @notice Hedera branding colors */
+export const HEDERA_BRANDING_COLORS = {
+  violet: '#82ACF9',
+  purple: '#A98DF4',
+  panel: '#374151',
+};
+
 /** @notice information about Hedera social media */
 export const HEDERA_SOCIAL_MEDIA = [
   {
