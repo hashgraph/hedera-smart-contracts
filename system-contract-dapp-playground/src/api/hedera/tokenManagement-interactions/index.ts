@@ -22,7 +22,7 @@ import {
   CommonKeyObject,
   IHederaTokenServiceExpiry,
   IHederaTokenServiceHederaToken,
-  TokenManagementSmartContractResult,
+  SmartContractExecutionResult,
 } from '@/types/contract-interactions/HTS';
 import {
   handleContractResponse,
@@ -53,7 +53,7 @@ import { Contract, isAddress } from 'ethers';
  *
  * @param keysInfo?: CommonKeyObject[],
  *
- * @return Promise<TokenManagementSmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  */
 export const manageTokenInfomation = async (
   baseContract: Contract,
@@ -63,7 +63,7 @@ export const manageTokenInfomation = async (
   tokenInfo?: IHederaTokenServiceHederaToken,
   expiryInfo?: IHederaTokenServiceExpiry,
   keysInfo?: CommonKeyObject[]
-): Promise<TokenManagementSmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize param
   if (!isAddress(hederaTokenAddress)) {
     console.error('Invalid token address');
@@ -152,7 +152,7 @@ export const manageTokenInfomation = async (
  *
  * @param approvedStatus?: boolean (SET_APPROVAL)
  *
- * @return Promise<TokenManagementSmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  */
 export const manageTokenPermission = async (
   baseContract: Contract,
@@ -163,7 +163,7 @@ export const manageTokenPermission = async (
   amountToApprove?: number,
   serialNumber?: number,
   approvedStatus?: boolean
-): Promise<TokenManagementSmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {
@@ -241,13 +241,13 @@ export const manageTokenPermission = async (
  *
  * @param hederaTokenAddress: string
  *
- * @return Promise<TokenManagementSmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  */
 export const manageTokenStatus = async (
   baseContract: Contract,
   API: 'PAUSE' | 'UNPAUSE',
   hederaTokenAddress: string
-): Promise<TokenManagementSmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize param
   if (!isAddress(hederaTokenAddress)) {
     console.error('Invalid token address');
@@ -299,7 +299,7 @@ export const manageTokenStatus = async (
  *
  * @param hederaTokenAddresses?: string[]
  *
- * @return Promise<TokenManagementSmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  */
 export const manageTokenRelation = async (
   baseContract: Contract,
@@ -308,7 +308,7 @@ export const manageTokenRelation = async (
   gasLimit: number,
   hederaTokenAddress?: string,
   hederaTokenAddresses?: string[]
-): Promise<TokenManagementSmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(accountAddress)) {
@@ -404,7 +404,7 @@ export const manageTokenRelation = async (
  *
  * @param serialNumbers?: number[]
  *
- * @return Promise<TokenManagementSmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  */
 export const manageTokenDeduction = async (
   baseContract: Contract,
@@ -414,7 +414,7 @@ export const manageTokenDeduction = async (
   accountAddress?: string,
   amount?: number,
   serialNumbers?: number[]
-): Promise<TokenManagementSmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {

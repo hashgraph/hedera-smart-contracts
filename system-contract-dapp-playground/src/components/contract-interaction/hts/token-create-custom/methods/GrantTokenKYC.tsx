@@ -98,8 +98,6 @@ const GrantTokenKYC = ({ baseContract }: PageProps) => {
     setIsLoading(true);
 
     // invoke method API
-    // @logic if recipientAddress is set => mintHederaTokenToAddress()
-    // @logic if recipientAddress is NOT set => mintHederaToken()
     const { transactionHash, err } = await grantTokenKYCToAccount(
       baseContract,
       hederaTokenAddress,
@@ -128,7 +126,7 @@ const GrantTokenKYC = ({ baseContract }: PageProps) => {
           status: 'success',
           tokenAddress: hederaTokenAddress,
           txHash: transactionHash as string,
-          tokenAccount: grantingKYCAccountAddress,
+          accountAddress: grantingKYCAccountAddress,
         },
       ]);
 
