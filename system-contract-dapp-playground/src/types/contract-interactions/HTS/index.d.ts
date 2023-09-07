@@ -58,38 +58,6 @@ interface SmartContractExecutionResult {
   err?: any;
 }
 
-/** @dev an interface for the results returned back from interacting with Hedera TokenQeury smart contract */
-interface TokenQuerySmartContractResult {
-  Frozen?: any;
-  IsToken?: any;
-  Approved?: any;
-  TokenType?: any;
-  KycGranted?: any;
-  AllowanceValue?: any;
-  ApprovedAddress?: any;
-  transactionHash?: string;
-  TokenDefaultKycStatus?: any;
-  TokenDefaultFreezeStatus?: any;
-  TokenInfo?: IHederaTokenServiceTokenInfo;
-  TokenKey?: IHederaTokenServiceKeyValueType;
-  TokenExpiryInfo?: IHederaTokenServiceExpiry;
-  FungibleTokenInfo?: IHederaTokenServiceFungibleTokenInfo;
-  NonFungibleTokenInfo?: IHederaTokenServiceNonFungibleTokenInfo;
-  TokenCustomFees?: {
-    fixedFees: IHederaTokenServiceFixedFee[];
-    royaltyFees: IHederaTokenServiceRoyaltyFee[];
-    fractionalFees: IHederaTokenServiceFractionalFee[];
-  };
-  err?: any;
-}
-
-/** @dev an interface for the results returned back from interacting with Hedera TokenTransfer smart contract */
-interface TokenTransferSmartContractResult {
-  transactionHash?: string;
-  result?: boolean;
-  err?: any;
-}
-
 /**
  * @dev a type for the IHederaTokenService.TokenKey.keyType
  *

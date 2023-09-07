@@ -22,7 +22,7 @@ import { Contract, isAddress } from 'ethers';
 import {
   IHederaTokenServiceTransferList,
   IHederaTokenServiceTokenTransferList,
-  TokenTransferSmartContractResult,
+  SmartContractExecutionResult,
 } from '@/types/contract-interactions/HTS';
 import { handleContractResponse } from '@/utils/contract-interactions/HTS/helpers';
 
@@ -37,13 +37,13 @@ import { handleContractResponse } from '@/utils/contract-interactions/HTS/helper
  *
  * @param tokenTransferList: IHederaTokenServiceTokenTransferList
  *
- * @return Promise<TokenTransferSmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  */
 export const transferCrypto = async (
   baseContract: Contract,
   transferList: IHederaTokenServiceTransferList,
   tokenTransferList: IHederaTokenServiceTokenTransferList
-): Promise<TokenTransferSmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // invoking contract methods
   try {
     const tx = await baseContract.cryptoTransferPublic(transferList, tokenTransferList);
@@ -68,14 +68,14 @@ export const transferCrypto = async (
  *
  * @param amount: number[]
  *
- * @return Promise Promise<TokenTransferSmartContractResult>
+ * @return Promise Promise<SmartContractExecutionResult>
  */
 export const transferFungibleTokens = async (
   baseContract: Contract,
   hederaTokenAddress: string,
   accountIDs: string[],
   amounts: number[]
-): Promise<TokenTransferSmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {
@@ -128,7 +128,7 @@ export const transferFungibleTokens = async (
  *
  * @param serialNumbers: number[]
  *
- * @return Promise<TokenTransferSmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  */
 export const transferNonFungibleTokens = async (
   baseContract: Contract,
@@ -136,7 +136,7 @@ export const transferNonFungibleTokens = async (
   senders: string[],
   receivers: string[],
   serialNumbers: number[]
-): Promise<TokenTransferSmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {
@@ -206,7 +206,7 @@ export const transferNonFungibleTokens = async (
  *
  * @param quantity: number (amount/serialNumber)
  *
- * @return Promise<TokenTransferSmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  */
 export const transferSingleToken = async (
   baseContract: Contract,
@@ -215,7 +215,7 @@ export const transferSingleToken = async (
   sender: string,
   receiver: string,
   quantity: number
-): Promise<TokenTransferSmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {
@@ -277,7 +277,7 @@ export const transferSingleToken = async (
  *
  * @param quantity: number (amount/serialNumber)
  *
- * @return Promise<TokenTransferSmartContractResult>
+ * @return Promise<SmartContractExecutionResult>
  */
 export const transferSingleTokenFrom = async (
   baseContract: Contract,
@@ -286,7 +286,7 @@ export const transferSingleTokenFrom = async (
   sender: string,
   receiver: string,
   quantity: number
-): Promise<TokenTransferSmartContractResult> => {
+): Promise<SmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {
