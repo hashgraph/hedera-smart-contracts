@@ -244,127 +244,135 @@ const ContractInteraction = ({ contract }: PageProps) => {
           {/* Tab body */}
           <TabPanels>
             {contract.methods.map((method) => {
-              return (
-                <TabPanel className={`whitespace-nowrap py-4`} key={method}>
-                  {/* Contract information */}
-                  <div className="pb-6 flex flex-col gap-1 px-3">
-                    <div className="flex gap-3 w-full justify-">
-                      <p>Hedera contract ID: </p>
-                      <div className="flex items-center gap-1">
-                        <div
-                          className="cursor-pointer"
-                          onClick={() => navigator.clipboard.writeText(contractId)}
-                        >
-                          <Popover>
-                            <PopoverTrigger>
-                              <div className="flex gap-1 items-center">
-                                <Tooltip label="click to copy contract ID">
-                                  <p>{contractId}</p>
-                                </Tooltip>
-                              </div>
-                            </PopoverTrigger>
-                            <PopoverContent width={'fit-content'} border={'none'}>
-                              <div className="bg-secondary px-3 py-2 border-none font-medium text-base">
-                                Copied
-                              </div>
-                            </PopoverContent>
-                          </Popover>
-                        </div>
-                        <Tooltip
-                          label={'Explore this contract on HashScan'}
-                          placement="top"
-                          fontWeight={'medium'}
-                        >
-                          <Link
-                            href={`${HASHSCAN_BASE_URL}/${network}/contract/${contractId}`}
-                            target="_blank"
+              if (
+                contract.name === 'TokenTransferContract' &&
+                method === 'crypto' &&
+                network !== 'localnet'
+              ) {
+                return null;
+              } else {
+                return (
+                  <TabPanel className={`whitespace-nowrap py-4`} key={method}>
+                    {/* Contract information */}
+                    <div className="pb-6 flex flex-col gap-1 px-3">
+                      <div className="flex gap-3 w-full justify-">
+                        <p>Hedera contract ID: </p>
+                        <div className="flex items-center gap-1">
+                          <div
+                            className="cursor-pointer"
+                            onClick={() => navigator.clipboard.writeText(contractId)}
                           >
-                            <FiExternalLink />
-                          </Link>
-                        </Tooltip>
+                            <Popover>
+                              <PopoverTrigger>
+                                <div className="flex gap-1 items-center">
+                                  <Tooltip label="click to copy contract ID">
+                                    <p>{contractId}</p>
+                                  </Tooltip>
+                                </div>
+                              </PopoverTrigger>
+                              <PopoverContent width={'fit-content'} border={'none'}>
+                                <div className="bg-secondary px-3 py-2 border-none font-medium text-base">
+                                  Copied
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                          <Tooltip
+                            label={'Explore this contract on HashScan'}
+                            placement="top"
+                            fontWeight={'medium'}
+                          >
+                            <Link
+                              href={`${HASHSCAN_BASE_URL}/${network}/contract/${contractId}`}
+                              target="_blank"
+                            >
+                              <FiExternalLink />
+                            </Link>
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div className="flex gap-3 w-full justify-">
+                        <p>Contract deployed to: </p>
+                        <div className="flex items-center gap-1">
+                          <div
+                            className="cursor-pointer"
+                            onClick={() => navigator.clipboard.writeText(contractAddress)}
+                          >
+                            <Popover>
+                              <PopoverTrigger>
+                                <div className="flex gap-1 items-center">
+                                  <Tooltip label="click to copy contract address">
+                                    <p>{contractAddress}</p>
+                                  </Tooltip>
+                                </div>
+                              </PopoverTrigger>
+                              <PopoverContent width={'fit-content'} border={'none'}>
+                                <div className="bg-secondary px-3 py-2 border-none font-medium text-base">
+                                  Copied
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                          <Tooltip
+                            label={'Explore this contract on HashScan'}
+                            placement="top"
+                            fontWeight={'medium'}
+                          >
+                            <Link
+                              href={`${HASHSCAN_BASE_URL}/${network}/contract/${contractId}`}
+                              target="_blank"
+                            >
+                              <FiExternalLink />
+                            </Link>
+                          </Tooltip>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex gap-3 w-full justify-">
-                      <p>Contract deployed to: </p>
-                      <div className="flex items-center gap-1">
-                        <div
-                          className="cursor-pointer"
-                          onClick={() => navigator.clipboard.writeText(contractAddress)}
-                        >
-                          <Popover>
-                            <PopoverTrigger>
-                              <div className="flex gap-1 items-center">
-                                <Tooltip label="click to copy contract address">
-                                  <p>{contractAddress}</p>
-                                </Tooltip>
-                              </div>
-                            </PopoverTrigger>
-                            <PopoverContent width={'fit-content'} border={'none'}>
-                              <div className="bg-secondary px-3 py-2 border-none font-medium text-base">
-                                Copied
-                              </div>
-                            </PopoverContent>
-                          </Popover>
-                        </div>
-                        <Tooltip
-                          label={'Explore this contract on HashScan'}
-                          placement="top"
-                          fontWeight={'medium'}
-                        >
-                          <Link
-                            href={`${HASHSCAN_BASE_URL}/${network}/contract/${contractId}`}
-                            target="_blank"
-                          >
-                            <FiExternalLink />
-                          </Link>
-                        </Tooltip>
-                      </div>
+
+                    <hr className="border-white/30 w-full" />
+
+                    {/* Contract methods */}
+                    <div className="flex py-9 text-xl w-full h-full justify-center items-center">
+                      {/* HTS Token Create */}
+                      {contract.name === 'TokenCreateCustomContract' && (
+                        <HederaTokenCreateMethods
+                          method={method}
+                          baseContract={baseContract! as Contract}
+                        />
+                      )}
+
+                      {/* HTS Token Management*/}
+                      {contract.name === 'TokenManagementContract' && (
+                        <HederaTokenManagementMethods
+                          method={method}
+                          baseContract={baseContract! as Contract}
+                        />
+                      )}
+
+                      {/* HTS Token Query*/}
+                      {contract.name === 'TokenQueryContract' && (
+                        <HederaTokenQueryMethods
+                          method={method}
+                          baseContract={baseContract! as Contract}
+                        />
+                      )}
+
+                      {/* HTS Token Transfer*/}
+                      {contract.name === 'TokenTransferContract' && (
+                        <HederaTokenTransferMethods
+                          method={method}
+                          baseContract={baseContract! as Contract}
+                        />
+                      )}
+
+                      {/* ERC-20 */}
+                      {contract.name === 'ERC20Mock' && (
+                        <ERC20Methods method={method} baseContract={baseContract! as Contract} />
+                      )}
                     </div>
-                  </div>
-
-                  <hr className="border-white/30 w-full" />
-
-                  {/* Contract methods */}
-                  <div className="flex py-9 text-xl w-full h-full justify-center items-center">
-                    {/* HTS Token Create */}
-                    {contract.name === 'TokenCreateCustomContract' && (
-                      <HederaTokenCreateMethods
-                        method={method}
-                        baseContract={baseContract! as Contract}
-                      />
-                    )}
-
-                    {/* HTS Token Management*/}
-                    {contract.name === 'TokenManagementContract' && (
-                      <HederaTokenManagementMethods
-                        method={method}
-                        baseContract={baseContract! as Contract}
-                      />
-                    )}
-
-                    {/* HTS Token Query*/}
-                    {contract.name === 'TokenQueryContract' && (
-                      <HederaTokenQueryMethods
-                        method={method}
-                        baseContract={baseContract! as Contract}
-                      />
-                    )}
-
-                    {/* HTS Token Transfer*/}
-                    {contract.name === 'TokenTransferContract' && (
-                      <HederaTokenTransferMethods
-                        method={method}
-                        baseContract={baseContract! as Contract}
-                      />
-                    )}
-
-                    {/* ERC-20 */}
-                    {contract.name === 'ERC20Mock' && (
-                      <ERC20Methods method={method} baseContract={baseContract! as Contract} />
-                    )}
-                  </div>
-                </TabPanel>
-              );
+                  </TabPanel>
+                );
+              }
             })}
           </TabPanels>
         </>
