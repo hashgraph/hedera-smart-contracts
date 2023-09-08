@@ -88,3 +88,44 @@ export const htsCryptoTransferParamFields = {
       'If true then the transfer is expected to be an approved allowance and the senderAccountID is expected to be the owner. The default is false (omitted).',
   },
 };
+
+/** @notice an object holding information for the tokenTransfer's input fields */
+export const htsTokenTransferParamFields = {
+  hederaTokenAddress: {
+    inputType: 'text',
+    inputPlaceholder: 'Token address...',
+    inputSize: 'md',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'hederaTokenAddress',
+    explanation: 'represents the Hedera token to be transfered',
+  },
+  senderAddress: {
+    inputType: 'text',
+    inputPlaceholder: 'Sender address...',
+    inputSize: 'md',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'senderAddress',
+    explanation: 'represents the sender address',
+  },
+  receiverAddress: {
+    inputType: 'text',
+    inputPlaceholder: 'Receiver address...',
+    inputSize: 'md',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'receiverAddress',
+    explanation: 'represents the receiver address',
+  },
+  quantity: {
+    inputType: 'number',
+    inputPlaceholder: 'Amount | Serial number...',
+    inputSize: 'md',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'quantity',
+    explanation:
+      'represents the amount for type FUNGIBLE_COMMON and serial number for type NON_FUNGIBLE_COMMON',
+  },
+};
