@@ -199,9 +199,13 @@ export const transferNonFungibleTokens = async (
  *
  * @dev integrates TokenTransferContract.transferNFTPublic()
  *
+ * @dev integrates TokenTransferContract.transferFromPublic()
+ *
+ * @dev integrates TokenTransferContract.transferFromNFTPublic()
+ *
  * @param baseContract: ethers.Contract
  *
- * @param API: "FUNGIBLE" | "NON_FUNGIBLE"
+ * @param API: "FUNGIBLE" | "NON_FUNGIBLE" | 'FUNGIBLE_FROM' | 'NFT_FROM'
  *
  * @param hederaTokenAddress: string
  *
@@ -215,7 +219,7 @@ export const transferNonFungibleTokens = async (
  */
 export const transferSingleToken = async (
   baseContract: Contract,
-  API: 'FUNGIBLE' | 'NON_FUNGIBLE',
+  API: 'FUNGIBLE' | 'NON_FUNGIBLE' | 'FUNGIBLE_FROM' | 'NFT_FROM',
   hederaTokenAddress: string,
   sender: string,
   receiver: string,
@@ -241,93 +245,46 @@ export const transferSingleToken = async (
   // invoking contract methods
   try {
     let transactionResult;
-    if (API === 'FUNGIBLE') {
-      transactionResult = await baseContract.transferTokenPublic(
-        hederaTokenAddress,
-        sender,
-        receiver,
-        quantity,
-        { gasLimit }
-      );
-    } else {
-      transactionResult = await baseContract.transferNFTPublic(
-        hederaTokenAddress,
-        sender,
-        receiver,
-        quantity,
-        { gasLimit }
-      );
-    }
 
-    return await handleContractResponse(transactionResult);
-  } catch (err: any) {
-    console.error(err);
-    return { err, transactionHash: err.receipt && err.receipt.hash };
-  }
-};
+    switch (API) {
+      case 'FUNGIBLE':
+        transactionResult = await baseContract.transferTokenPublic(
+          hederaTokenAddress,
+          sender,
+          receiver,
+          quantity,
+          { gasLimit }
+        );
+        break;
 
-/**
- * @dev transfers single token from token owner (fungible vs non-fungible)
- *
- * @dev integrates TokenTransferContract.transferFromPublic()
- *
- * @dev integrates TokenTransferContract.transferFromNFTPublic()
- *
- * @param baseContract: ethers.Contract
- *
- * @param API: "FUNGIBLE" | "NON_FUNGIBLE"
- *
- * @param hederaTokenAddress: string
- *
- * @param sender: string
- *
- * @param receiver: string
- *
- * @param quantity: number (amount/serialNumber)
- *
- * @return Promise<SmartContractExecutionResult>
- */
-export const transferSingleTokenFrom = async (
-  baseContract: Contract,
-  API: 'FUNGIBLE' | 'NON_FUNGIBLE',
-  hederaTokenAddress: string,
-  sender: string,
-  receiver: string,
-  quantity: number
-): Promise<SmartContractExecutionResult> => {
-  // sanitize params
-  let sanitizeErr;
-  if (!isAddress(hederaTokenAddress)) {
-    sanitizeErr = 'Invalid token address';
-  } else if (!isAddress(sender)) {
-    sanitizeErr = 'Invalid sender address';
-  } else if (!isAddress(receiver)) {
-    sanitizeErr = 'Invalid receiver address';
-  } else if (quantity < 0) {
-    sanitizeErr = 'Invalid quantity';
-  }
-  if (sanitizeErr) {
-    console.error(sanitizeErr);
-    return { err: sanitizeErr };
-  }
+      case 'NON_FUNGIBLE':
+        transactionResult = await baseContract.transferNFTPublic(
+          hederaTokenAddress,
+          sender,
+          receiver,
+          quantity,
+          { gasLimit }
+        );
+        break;
 
-  // invoking contract methods
-  try {
-    let transactionResult;
-    if (API === 'FUNGIBLE') {
-      transactionResult = await baseContract.transferFromPublic(
-        hederaTokenAddress,
-        sender,
-        receiver,
-        quantity
-      );
-    } else {
-      transactionResult = await baseContract.transferFromNFTPublic(
-        hederaTokenAddress,
-        sender,
-        receiver,
-        quantity
-      );
+      case 'FUNGIBLE_FROM':
+        transactionResult = await baseContract.transferFromPublic(
+          hederaTokenAddress,
+          sender,
+          receiver,
+          quantity,
+          { gasLimit }
+        );
+        break;
+
+      case 'NFT_FROM':
+        transactionResult = await baseContract.transferFromNFTPublic(
+          hederaTokenAddress,
+          sender,
+          receiver,
+          quantity
+        );
+        break;
     }
 
     return await handleContractResponse(transactionResult);
