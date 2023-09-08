@@ -219,17 +219,25 @@ const ContractInteraction = ({ contract }: PageProps) => {
             className="overflow-x-scroll overflow-y-hidden no-scrollbar bg-secondary rounded-tl-xl rounded-tr-xl"
           >
             {contract.methods.map((method, index) => {
-              return (
-                <Tab
-                  _selected={{ bg: HEDERA_BRANDING_COLORS.panel, borderBottomWidth: '0' }}
-                  className={`whitespace-nowrap first:border-l-0 py-4 border-b border-white/30 ${
-                    index !== 0 && `border-l`
-                  }`}
-                  key={method}
-                >
-                  {convertCalmelCaseFunctionName(method)}
-                </Tab>
-              );
+              if (
+                contract.name === 'TokenTransferContract' &&
+                method === 'crypto' &&
+                network !== 'localnet'
+              ) {
+                return null;
+              } else {
+                return (
+                  <Tab
+                    _selected={{ bg: HEDERA_BRANDING_COLORS.panel, borderBottomWidth: '0' }}
+                    className={`whitespace-nowrap first:border-l-0 py-4 border-b border-white/30 ${
+                      index !== 0 && `border-l`
+                    }`}
+                    key={method}
+                  >
+                    {convertCalmelCaseFunctionName(method)}
+                  </Tab>
+                );
+              }
             })}
           </TabList>
 
