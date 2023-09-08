@@ -31,11 +31,13 @@ interface HookProps {
   setMetadata?: any;
   toastTitle: string;
   isSuccessful: boolean;
-  resetParamValues: any;
+  resetParamValues?: any;
   setTokenAddresses?: any;
   toastDescription?: string;
-  setParamValues: Dispatch<any>;
+  setParamValues?: Dispatch<any>;
   initialTokenAddressesValues?: any;
+  setTokenTransferParamValues?: any;
+  setCryptoTransferParamValues?: any;
   initialKeyValues?: CommonKeyObject[];
   transactionResults: TransactionResult[];
   setIsSuccessful: Dispatch<SetStateAction<boolean>>;
@@ -63,7 +65,9 @@ export const useToastSuccessful = ({
   setKeyTypesToShow,
   transactionResults,
   setCurrentTransactionPage,
+  setTokenTransferParamValues,
   initialTokenAddressesValues,
+  setCryptoTransferParamValues,
 }: HookProps) => {
   useEffect(() => {
     if (isSuccessful) {
@@ -78,9 +82,11 @@ export const useToastSuccessful = ({
       setIsSuccessful(false);
       if (setKeys) setKeys([]);
       if (setMetadata) setMetadata([]);
-      setParamValues(resetParamValues);
       if (setWithCustomFee) setWithCustomFee(false);
+      if (setParamValues) setParamValues(resetParamValues);
       if (initialKeyValues && setKeys) setKeys(initialKeyValues);
+      if (setTokenTransferParamValues) setTokenTransferParamValues([]);
+      if (setCryptoTransferParamValues) setCryptoTransferParamValues([]);
       if (setKeyTypesToShow) setKeyTypesToShow(new Set(HederaTokenKeyTypes));
       if (setTokenAddresses) setTokenAddresses([initialTokenAddressesValues]);
       if (setChosenKeys) setChosenKeys(new Set<IHederaTokenServiceKeyType>());
@@ -105,6 +111,8 @@ export const useToastSuccessful = ({
     setTokenAddresses,
     transactionResults.length,
     setCurrentTransactionPage,
+    setTokenTransferParamValues,
     initialTokenAddressesValues,
+    setCryptoTransferParamValues,
   ]);
 };

@@ -61,11 +61,13 @@ interface TransactionResultTablePageProps {
     | 'TokenMint'
     | 'TokenCreate'
     | 'QueryValidity'
+    | 'CryptoTransfer'
     | 'TokenAssociate'
+    | 'QueryTokenStatus'
     | 'QuerySpecificInfo'
-    | 'QueryTokenGeneralInfo'
+    | 'QueryTokenRelation'
     | 'QueryTokenPermission'
-    | 'QueryTokenStatus';
+    | 'QueryTokenGeneralInfo';
 }
 
 export const TransactionResultTable = ({
@@ -120,7 +122,9 @@ export const TransactionResultTable = ({
             </Th>
             <Th color={HEDERA_BRANDING_COLORS.violet}>Status</Th>
             <Th color={HEDERA_BRANDING_COLORS.violet}>Tx hash</Th>
-            <Th color={HEDERA_BRANDING_COLORS.violet}>Token address</Th>
+            {API !== 'CryptoTransfer' && (
+              <Th color={HEDERA_BRANDING_COLORS.violet}>Token address</Th>
+            )}
             {API === 'TokenMint' && <Th color={HEDERA_BRANDING_COLORS.violet}>Recipient</Th>}
             {API === 'TokenAssociate' && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>Associated Account</Th>
@@ -189,11 +193,14 @@ export const TransactionResultTable = ({
                         <PopoverTrigger>
                           <div className="flex gap-1 items-center">
                             <Tooltip label="click to copy transaction hash">
-                              {/* {withTokenAddress ? ( */}
-                              <p>
-                                {transactionResult.txHash.slice(0, beginingHashIndex)}...
-                                {transactionResult.txHash.slice(endingHashIndex)}
-                              </p>
+                              {API === 'CryptoTransfer' ? (
+                                transactionResult.txHash
+                              ) : (
+                                <p>
+                                  {transactionResult.txHash.slice(0, beginingHashIndex)}...
+                                  {transactionResult.txHash.slice(endingHashIndex)}
+                                </p>
+                              )}
                             </Tooltip>
                           </div>
                         </PopoverTrigger>

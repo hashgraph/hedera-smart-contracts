@@ -35,18 +35,23 @@ import { handleContractResponse } from '@/utils/contract-interactions/HTS/helper
  *
  * @param transferList: IHederaTokenServiceTransferList
  *
- * @param tokenTransferList: IHederaTokenServiceTokenTransferList
+ * @param tokenTransferList: IHederaTokenServiceTokenTransferList[]
+ *
+ * @param gasLimit: number
  *
  * @return Promise<SmartContractExecutionResult>
  */
 export const transferCrypto = async (
   baseContract: Contract,
   transferList: IHederaTokenServiceTransferList,
-  tokenTransferList: IHederaTokenServiceTokenTransferList
+  tokenTransferList: IHederaTokenServiceTokenTransferList[],
+  gasLimit: number
 ): Promise<SmartContractExecutionResult> => {
   // invoking contract methods
   try {
-    const tx = await baseContract.cryptoTransferPublic(transferList, tokenTransferList);
+    const tx = await baseContract.cryptoTransferPublic(transferList, tokenTransferList, {
+      gasLimit,
+    });
 
     return await handleContractResponse(tx);
   } catch (err: any) {
