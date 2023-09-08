@@ -18,13 +18,15 @@
  *
  */
 
+import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
+
 /** @notice an object holding information for the queryTokenInfo's input fields */
 export const htsCryptoTransferParamFields = {
   accountID: {
     inputType: 'text',
     inputPlaceholder: 'Account ID...',
     inputSize: 'md',
-    inputFocusBorderColor: '#A98DF4',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
     inputClassname: 'w-full border-white/30',
     paramKey: 'accountID',
     explanation: 'represents the accountID that sends/receives cryptocurrency or tokens',
@@ -33,7 +35,7 @@ export const htsCryptoTransferParamFields = {
     inputType: 'number',
     inputPlaceholder: 'Amount...',
     inputSize: 'md',
-    inputFocusBorderColor: '#A98DF4',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
     inputClassname: 'w-full border-white/30',
     paramKey: 'amount',
     explanation:
@@ -48,7 +50,7 @@ export const htsCryptoTransferParamFields = {
     inputType: 'text',
     inputPlaceholder: 'Token address...',
     inputSize: 'md',
-    inputFocusBorderColor: '#A98DF4',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
     inputClassname: 'w-full border-white/30',
     paramKey: 'hederaTokenAddress',
     explanation: 'represents the Hedera Token address',
@@ -57,7 +59,7 @@ export const htsCryptoTransferParamFields = {
     inputType: 'text',
     inputPlaceholder: 'Sender ID...',
     inputSize: 'md',
-    inputFocusBorderColor: '#A98DF4',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
     inputClassname: 'w-full border-white/30',
     paramKey: 'senderAccountID',
     explanation: 'represents the accountID of the sender',
@@ -66,7 +68,7 @@ export const htsCryptoTransferParamFields = {
     inputType: 'text',
     inputPlaceholder: 'Receiver ID...',
     inputSize: 'md',
-    inputFocusBorderColor: '#A98DF4',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
     inputClassname: 'w-full border-white/30',
     paramKey: 'receiverAccountID',
     explanation: 'represents the accountID of the receiver',
@@ -75,7 +77,7 @@ export const htsCryptoTransferParamFields = {
     inputType: 'text',
     inputPlaceholder: 'Serial number...',
     inputSize: 'md',
-    inputFocusBorderColor: '#A98DF4',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
     inputClassname: 'w-full border-white/30',
     paramKey: 'serialNumber',
     explanation: 'represents the serial number of the NFT',
