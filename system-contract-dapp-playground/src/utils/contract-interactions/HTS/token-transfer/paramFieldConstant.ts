@@ -128,4 +128,13 @@ export const htsTokenTransferParamFields = {
     explanation:
       'represents the amount for type FUNGIBLE_COMMON and serial number for type NON_FUNGIBLE_COMMON',
   },
+  feeValue: {
+    inputType: 'number',
+    inputPlaceholder: 'Gas limit...',
+    inputSize: 'md',
+    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'feeValue',
+    explanation: 'represents the gas limit for the transaction',
+  },
 };

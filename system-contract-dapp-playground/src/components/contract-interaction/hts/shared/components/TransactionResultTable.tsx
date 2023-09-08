@@ -124,7 +124,9 @@ export const TransactionResultTable = ({
             <Th color={HEDERA_BRANDING_COLORS.violet}>Status</Th>
             <Th color={HEDERA_BRANDING_COLORS.violet}>Tx hash</Th>
             {API !== 'CryptoTransfer' && (
-              <Th color={HEDERA_BRANDING_COLORS.violet}>Token address</Th>
+              <Th color={HEDERA_BRANDING_COLORS.violet}>{`Token ${
+                API !== 'TransferSingle' ? `Address` : ``
+              }`}</Th>
             )}
             {API === 'TransferSingle' && <Th color={HEDERA_BRANDING_COLORS.violet}>Sender</Th>}
             {(API === 'TokenMint' || API === 'TransferSingle') && (

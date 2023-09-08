@@ -282,7 +282,8 @@ export const transferSingleToken = async (
           hederaTokenAddress,
           sender,
           receiver,
-          quantity
+          quantity,
+          { gasLimit }
         );
         break;
     }

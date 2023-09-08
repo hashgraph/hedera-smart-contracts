@@ -22,7 +22,6 @@ import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
 import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
@@ -44,7 +43,7 @@ interface PageProps {
   baseContract: Contract;
 }
 
-type API_NAMES = 'FUNGIBLE' | 'NON_FUNGIBLE';
+type API_NAMES = 'FUNGIBLE' | 'NON_FUNGIBLE' | 'FUNGIBLE_FROM' | 'NFT_FROM';
 
 const TransferSingleToken = ({ baseContract }: PageProps) => {
   // general states
@@ -54,11 +53,25 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-TRANSFER.SINGLE-TOKEN-RESULTS';
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const tokenInfoFields = ['hederaTokenAddress', 'senderAddress', 'receiverAddress', 'quantity'];
+  const tokenInfoFields = [
+    'hederaTokenAddress',
+    'senderAddress',
+    'receiverAddress',
+    'quantity',
+    'feeValue',
+  ];
   const [isLoading, setIsLoading] = useState({
-    fungibleLoading: false,
-    nonFungibleLoading: false,
+    FUNGIBLE: false,
+    NON_FUNGIBLE: false,
+    FUNGIBLE_FROM: false,
+    NFT_FROM: false,
   });
+  const APIButtonTitles: { API: API_NAMES; executeTitle: string }[] = [
+    { API: 'FUNGIBLE', executeTitle: 'Transfer Fungible' },
+    { API: 'NON_FUNGIBLE', executeTitle: 'Transfer NFT' },
+    { API: 'FUNGIBLE_FROM', executeTitle: 'Transfer Fungible From' },
+    { API: 'NFT_FROM', executeTitle: 'Transfer NFT From' },
+  ];
   const initialParamValues = {
     feeValue: '',
     quantity: '',
@@ -111,10 +124,7 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
     }
 
     // turn isLoading on
-    setIsLoading({
-      fungibleLoading: API === 'FUNGIBLE',
-      nonFungibleLoading: API === 'NON_FUNGIBLE',
-    });
+    setIsLoading((prev) => ({ ...prev, [API]: true }));
 
     // invoke method API
     const { result, transactionHash, err } = await transferSingleToken(
@@ -128,10 +138,7 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
     );
 
     // turn isLoading off
-    setIsLoading({
-      fungibleLoading: API === 'FUNGIBLE' && false,
-      nonFungibleLoading: API === 'NON_FUNGIBLE' && false,
-    });
+    setIsLoading((prev) => ({ ...prev, [API]: false }));
 
     // handle err
     if (err || !result) {
@@ -202,29 +209,26 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
         ))}
 
         {/* Execute buttons */}
-        <div className="flex gap-9">
-          <SharedExecuteButton
-            isLoading={isLoading.fungibleLoading}
-            handleCreatingFungibleToken={() => handleTransferSingileToken('FUNGIBLE')}
-            buttonTitle={'Transfer Fungible'}
-          />
-          <SharedFormInputField
-            param={'feeValue'}
-            paramValue={paramValues.feeValue}
-            handleInputOnChange={handleInputOnChange}
-            paramSize={'lg'}
-            paramType={'number'}
-            paramKey={'feeValue'}
-            explanation={'Gas limit for the transaction'}
-            paramClassName={'border-white/30 rounded-xl'}
-            paramPlaceholder={'Gas limit...'}
-            paramFocusColor={HEDERA_BRANDING_COLORS.purple}
-          />
-          <SharedExecuteButton
-            isLoading={isLoading.nonFungibleLoading}
-            handleCreatingFungibleToken={() => handleTransferSingileToken('NON_FUNGIBLE')}
-            buttonTitle={'Transfer NFT'}
-          />
+        <div className="w-full flex gap-9">
+          {APIButtonTitles.slice(0, 2).map((APIButton) => (
+            <SharedExecuteButton
+              key={APIButton.API}
+              isLoading={isLoading[APIButton.API]}
+              handleCreatingFungibleToken={() => handleTransferSingileToken(APIButton.API)}
+              buttonTitle={APIButton.executeTitle}
+            />
+          ))}
+        </div>
+
+        <div className="w-full flex gap-9">
+          {APIButtonTitles.slice(2).map((APIButton) => (
+            <SharedExecuteButton
+              key={APIButton.API}
+              isLoading={isLoading[APIButton.API]}
+              handleCreatingFungibleToken={() => handleTransferSingileToken(APIButton.API)}
+              buttonTitle={APIButton.executeTitle}
+            />
+          ))}
         </div>
 
         {/* transaction results table */}
