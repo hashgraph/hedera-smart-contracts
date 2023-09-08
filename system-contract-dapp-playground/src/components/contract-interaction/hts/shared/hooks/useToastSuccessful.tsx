@@ -111,6 +111,8 @@ export const useToastSuccessful = ({
     setTokenAddresses,
     transactionResults.length,
     setCurrentTransactionPage,
+    setTokenTransferParamValues,
     initialTokenAddressesValues,
+    setCryptoTransferParamValues,
   ]);
 };
