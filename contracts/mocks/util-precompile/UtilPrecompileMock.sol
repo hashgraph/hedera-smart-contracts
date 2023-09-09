@@ -10,7 +10,7 @@ contract UtilPrecompileMock is IPrngSystemContract {
   bytes32 internal lastSeed; // to increase pseudorandomness by feeding in the previous seed into latest seed
 
   function getPseudorandomSeed() external returns (bytes32) {
-    lastSeed = keccak256(abi.encodePacked(lastSeed, block.timestamp, block.number, block.difficulty, msg.sender));
+    lastSeed = keccak256(abi.encodePacked(lastSeed, block.timestamp, block.number, msg.sender));
     return lastSeed;
   }
 }

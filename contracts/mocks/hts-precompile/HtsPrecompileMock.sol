@@ -1822,7 +1822,7 @@ contract HtsPrecompileMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock {
     }
 
     // TODO
-    function redirectForToken(address token, bytes memory encodedFunctionSelector) external noDelegateCall {}
+    function redirectForToken(address token, bytes memory encodedFunctionSelector) external noDelegateCall override returns (int64 responseCode, bytes memory response) {}
 
     // Additional(not in IHederaTokenService) public/external state-changing functions:
     function isAssociated(address account, address token) external view returns (bool associated) {
