@@ -411,7 +411,7 @@ async function pollForNewCounterValue(proxyContract, counterBefore) {
     }
 
     numberOfTries++;
-    await delay(1000); // Delay for 1 second before the next attempt
+    await delay(2000); // Delay for 2 seconds before the next attempt
   }
 
   throw new Error(`proxyContract.count failed to get a different value after ${timesToTry} tries`);

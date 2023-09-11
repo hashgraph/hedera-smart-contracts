@@ -181,6 +181,7 @@ async function pollForNewBalance(IERC20, contractAddress, tokenCreateBalanceBefo
     numberOfTries++;
     await delay(3000); // Delay for 3 second before the next attempt
   }
+  throw new Error(`PollForNewBalance failed to change after ${timesToTry} tries`);
 }
 
 function delay(ms) {

@@ -1208,13 +1208,11 @@ async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddres
     balanceAfter = await erc20Contract.balanceOf(tokenAddress, signersAddress);
 
     if (!balanceAfter.eq(balanceBefore)) {
-      console.log(`balanceBefore: ${balanceBefore.toString()}`)
-      console.log(`balanceAfter: ${balanceAfter.toString()}`)
       return balanceAfter;
     }
 
     numberOfTries++;
-    await delay(1000); // Delay for 1 second before the next attempt
+    await delay(2000); // Delay for 2 seconds before the next attempt
   }
 
   throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);

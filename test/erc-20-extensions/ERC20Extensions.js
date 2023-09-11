@@ -292,9 +292,9 @@ async function unPauseAndPoll(ERC20Pausable) {
 
     numberOfTries++;
     await delay(5000); // Delay for 5 seconds before the next attempt
-
-    throw new Error(`ERC20Pausable failed to change after ${timesToTry} tries`);
   }
+  
+  throw new Error(`ERC20Pausable failed to change after ${timesToTry} tries`);
 }
 
 function delay(ms) {

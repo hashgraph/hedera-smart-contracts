@@ -317,9 +317,7 @@ describe('SafeHTS library Test Suite', function () {
       )[0].args[0]
     ).to.equal(22)
 
-    const signers0AfterHbarBalance = await signers[0].provider.getBalance(
-      signer1AccountID
-    )
+    const signers0AfterHbarBalance = await pollForNewHBarBalance(signers[0].provider, signers0BeforeHbarBalance, signer1AccountID)
     const signers1AfterHbarBalance = await signers[0].provider.getBalance(
       signer2AccountID
     )
@@ -353,3 +351,24 @@ describe('SafeHTS library Test Suite', function () {
     )
   })
 })
+
+async function pollForNewHBarBalance(provider, signers0BeforeHbarBalance, signer1AccountID){
+  const timesToTry = 300;
+  let numberOfTries = 0;
+
+  let signers0AfterHbarBalance = await provider.getBalance(signer1AccountID)
+
+  while(signers0AfterHbarBalance.eq(signers0BeforeHbarBalance)){
+    await delay(2000)
+    signers0AfterHbarBalance = await provider.getBalance(signer1AccountID)
+    numberOfTries++;
+    if(numberOfTries > timesToTry){
+      throw new Error(`pollForNewHBarBalance failed to change after ${timesToTry} tries`);   
+    }
+  }
+  return signers0AfterHbarBalance  
+}
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
