@@ -20,6 +20,7 @@
 
 import { Dispatch, SetStateAction } from 'react';
 import { Tooltip, Select } from '@chakra-ui/react';
+import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import CryptoTransferInputFields from '../../../shared/components/CryptoTransferInputFields';
 import { htsCryptoTransferParamFields } from '@/utils/contract-interactions/HTS/token-transfer/paramFieldConstant';
 import {
@@ -246,7 +247,7 @@ const TokenTransferForm = ({
                               fontWeight={'medium'}
                             >
                               <Select
-                                _focus={{ borderColor: '#A98DF4' }}
+                                _focus={{ borderColor: HEDERA_BRANDING_COLORS.purple }}
                                 className="w-[200px] hover:cursor-pointer rounded-md border-white/30"
                                 placeholder="Approval Status"
                                 onChange={(e) =>
