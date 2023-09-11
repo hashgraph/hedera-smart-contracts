@@ -174,7 +174,7 @@ describe('ERC20ExtensionsMock tests', function () {
       expect(await ERC20Pausable.paused()).to.be.true
 
       // Unpause the token and verify it is not paused anymore
-      expect(await pollForPaused(ERC20Pausable)).to.be.false
+      expect(await unPauseAndPoll(ERC20Pausable)).to.be.false
     })
 
     it('should not allow transfers when paused', async function () {
@@ -266,7 +266,7 @@ async function pollForChangedSupply(ERC20Burnable, initialSupply){
     newSupply = await ERC20Burnable.totalSupply()
 
 
-    if (newSupply != initialSupply) {
+    if ((newSupply != 0) && (newSupply != initialSupply)) {
       return newSupply;
     }
 
@@ -278,20 +278,19 @@ async function pollForChangedSupply(ERC20Burnable, initialSupply){
 }
 
 // Transaction needs to be propagated to the mirror node
-async function pollForPaused(ERC20Pausable) {
+async function unPauseAndPoll(ERC20Pausable) {
   let numberOfTries = 0;
-  const timesToTry = 300;
+  const timesToTry = 400;
 
   while (numberOfTries < timesToTry) {
     await ERC20Pausable.unpause()
-
 
     if (!await ERC20Pausable.paused()) {
       return false;
     }
 
     numberOfTries++;
-    await delay(4000); // Delay for 4 seconds before the next attempt
+    await delay(5000); // Delay for 5 seconds before the next attempt
 
     throw new Error(`ERC20Pausable failed to change after ${timesToTry} tries`);
   }

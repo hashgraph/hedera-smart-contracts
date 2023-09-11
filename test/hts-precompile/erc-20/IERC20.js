@@ -156,7 +156,7 @@ async function pollForNewSignerBalance(IERC20Contract, signersAddress, signerBef
       signersAddress
     )
 
-    if (signerAfter != signerBefore) {
+    if ((signerAfter) && (signerAfter != signerBefore)) {
       return signerAfter;
     }
 
