@@ -262,10 +262,10 @@ describe('TokenTransferContract test suite', () => {
       expect(txRes.transactionHash).toBe(txHash);
     });
 
-    it('should execute transferSingleToken with API === "NON_FUNGIBLE" then return a successful response code', async () => {
+    it('should execute transferSingleToken with API === "NFT" then return a successful response code', async () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
-        'NON_FUNGIBLE',
+        'NFT',
         hederaTokenAddress,
         senderA,
         receiverA,

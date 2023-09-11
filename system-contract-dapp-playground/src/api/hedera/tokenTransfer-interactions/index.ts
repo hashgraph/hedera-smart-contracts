@@ -214,7 +214,7 @@ export const transferNonFungibleTokens = async (
  *
  * @param baseContract: ethers.Contract
  *
- * @param API: "FUNGIBLE" | "NON_FUNGIBLE" | 'FUNGIBLE_FROM' | 'NFT_FROM'
+ * @param API: "FUNGIBLE" | "NFT" | 'FUNGIBLE_FROM' | 'NFT_FROM'
  *
  * @param hederaTokenAddress: string
  *
@@ -228,7 +228,7 @@ export const transferNonFungibleTokens = async (
  */
 export const transferSingleToken = async (
   baseContract: Contract,
-  API: 'FUNGIBLE' | 'NON_FUNGIBLE' | 'FUNGIBLE_FROM' | 'NFT_FROM',
+  API: 'FUNGIBLE' | 'NFT' | 'FUNGIBLE_FROM' | 'NFT_FROM',
   hederaTokenAddress: string,
   sender: string,
   receiver: string,
@@ -266,7 +266,7 @@ export const transferSingleToken = async (
         );
         break;
 
-      case 'NON_FUNGIBLE':
+      case 'NFT':
         transactionResult = await baseContract.transferNFTPublic(
           hederaTokenAddress,
           sender,
