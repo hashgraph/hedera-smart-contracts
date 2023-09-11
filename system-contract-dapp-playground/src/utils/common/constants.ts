@@ -26,8 +26,8 @@ import PrngSystemContract from '@hashgraph-smartcontract/artifacts/contracts/uti
 import TokenQueryContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-query/TokenQueryContract.sol/TokenQueryContract.json';
 import ExchangeRatePrecompile from '@hashgraph-smartcontract/artifacts/contracts/exchange-rate-precompile/ExchangeRatePrecompile.sol/ExchangeRatePrecompile.json';
 import TokenTransferContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-transfer/TokenTransferContract.sol/TokenTransferContract.json';
-import TokenManagementContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-manage/TokenManagementContract.sol/TokenManagementContract.json';
 import TokenCreateCustomContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-create/TokenCreateCustom.sol/TokenCreateCustomContract.json';
+import TokenManagementContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-manage/TokenManagementContract.sol/TokenManagementContract.json';
 
 /** @notice Hedera Smart Contract official github url */
 export const HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL =
@@ -38,13 +38,6 @@ export const HEDERA_OFFICIAL_HIPS_URL = 'https://hips.hedera.com/';
 
 /** @notice hashcan baseURL */
 export const HASHSCAN_BASE_URL = 'https://hashscan.io';
-
-/** @notice Hedera branding colors */
-export const HEDERA_BRANDING_COLORS = {
-  violet: '#82ACF9',
-  purple: '#A98DF4',
-  panel: '#374151',
-};
 
 /** @notice information about Hedera social media */
 export const HEDERA_SOCIAL_MEDIA = [
@@ -294,4 +287,35 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
       'tokenOfOwnerByIndex',
     ],
   },
+};
+
+/** @notice Hedera branding colors */
+export const HEDERA_BRANDING_COLORS = {
+  violet: '#82ACF9',
+  purple: '#A98DF4',
+  panel: '#374151',
+};
+
+/** @notice Input box sizes */
+export const HEDERA_CHAKRA_INPUT_BOX_SIZES = {
+  'extra-small': 'xs',
+  small: 'sm',
+  medium: 'md',
+  large: 'lg',
+};
+
+/** @notice Input box shared class name */
+export const HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME = 'w-full border-white/30';
+
+/**
+ * @notice a shared object for parameters input fields
+ */
+export const HEDERA_SHARED_PARAM_INPUT_FIELDS = {
+  paramKey: '',
+  inputType: '',
+  explanation: '',
+  inputPlaceholder: '',
+  inputSize: HEDERA_CHAKRA_INPUT_BOX_SIZES.medium,
+  inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
+  inputClassname: HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
 };

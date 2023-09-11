@@ -31,9 +31,12 @@ import {
 import { Contract } from 'ethers';
 
 describe('TokenTransferContract test suite', () => {
+  const quantity = 369;
   const responseCode = 22;
   const gasLimit = 1000000;
   const invalidSender = '0xabc';
+  const nonFungibleAmounts = [3, 6, 9];
+  const fungibleAmounts = [-18, 3, 6, 9];
   const senderA = '0xDd7fCb7c2ee96A79B1e201d25F5E43d6a0cED5e6';
   const senderB = '0x0851072d7bB726305032Eff23CB8fd22eB74c85B';
   const receiverA = '0x7a35433804d8Cd070d98d66C6E9b45c6C32C3CDD';
@@ -116,7 +119,7 @@ describe('TokenTransferContract test suite', () => {
         baseContract as unknown as Contract,
         hederaTokenAddress,
         [senderA, senderB],
-        [-18, 3, 6, 9],
+        fungibleAmounts,
         gasLimit
       );
 
@@ -130,7 +133,7 @@ describe('TokenTransferContract test suite', () => {
         baseContract as unknown as Contract,
         '0xabc',
         [senderA, senderB],
-        [-18, 3, 6, 9],
+        fungibleAmounts,
         gasLimit
       );
 
@@ -144,7 +147,7 @@ describe('TokenTransferContract test suite', () => {
         baseContract as unknown as Contract,
         hederaTokenAddress,
         [senderA, '0xabc'],
-        [-18, 3, 6, 9],
+        fungibleAmounts,
         gasLimit
       );
 
@@ -158,7 +161,7 @@ describe('TokenTransferContract test suite', () => {
         baseContract as unknown as Contract,
         hederaTokenAddress,
         [senderA, senderB],
-        [-18, -3, 6, 9],
+        [-9, -3, 6],
         gasLimit
       );
 
@@ -175,7 +178,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         [senderA, senderB],
         [receiverA, receiverB],
-        [3, 6, 9],
+        nonFungibleAmounts,
         gasLimit
       );
 
@@ -190,7 +193,7 @@ describe('TokenTransferContract test suite', () => {
         '0xabc',
         [senderA, senderB],
         [receiverA, receiverB],
-        [3, 6, 9],
+        nonFungibleAmounts,
         gasLimit
       );
 
@@ -205,7 +208,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         [senderA, '0xabc'],
         [receiverA, receiverB],
-        [3, 6, 9],
+        nonFungibleAmounts,
         gasLimit
       );
 
@@ -220,7 +223,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         [senderA, senderB],
         [receiverA, '0xabc'],
-        [3, 6, 9],
+        nonFungibleAmounts,
         gasLimit
       );
 
@@ -253,7 +256,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         receiverA,
-        369,
+        quantity,
         gasLimit
       );
 
@@ -269,7 +272,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         receiverA,
-        369,
+        quantity,
         gasLimit
       );
 
@@ -285,7 +288,7 @@ describe('TokenTransferContract test suite', () => {
         '0xabc',
         senderA,
         receiverA,
-        369,
+        quantity,
         gasLimit
       );
 
@@ -301,7 +304,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         '0xabc',
         receiverA,
-        369,
+        quantity,
         gasLimit
       );
 
@@ -317,7 +320,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         '0xabc',
-        369,
+        quantity,
         gasLimit
       );
 
@@ -333,7 +336,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         receiverB,
-        -369,
+        quantity * -1,
         gasLimit
       );
 
@@ -351,7 +354,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         receiverA,
-        369,
+        quantity,
         gasLimit
       );
 
@@ -367,7 +370,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         receiverA,
-        369,
+        quantity,
         gasLimit
       );
 
@@ -383,7 +386,7 @@ describe('TokenTransferContract test suite', () => {
         '0xabc',
         senderA,
         receiverA,
-        369,
+        quantity,
         gasLimit
       );
 
@@ -399,7 +402,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         '0xabc',
         receiverA,
-        369,
+        quantity,
         gasLimit
       );
 
@@ -415,7 +418,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         '0xabc',
-        369,
+        quantity,
         gasLimit
       );
 
@@ -431,7 +434,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         receiverB,
-        -369,
+        quantity * -1,
         gasLimit
       );
 
