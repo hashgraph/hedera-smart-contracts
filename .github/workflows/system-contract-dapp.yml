@@ -1,0 +1,22 @@
+name: System Contract Dapp Playground
+
+on:
+  pull_request:
+    branches: [main, release/**, 'system-dapp-ci-1stattempt']
+  push:
+    branches: [main, release/**, 'system-dapp-ci-1stattempt']
+    tags: [v*]
+
+jobs:
+  production-build:
+    name: Create production-ready build
+    uses: ./.github/workflows/dapp-playground-workflow.yml
+    with:
+      jobTitle: 'production build'
+      jobCommand: 'npm run build'
+  unit-test:
+    name: Run unit tests
+    uses: ./.github/workflows/dapp-playground-workflow.yml
+    with:
+      jobTitle: 'unit test'
+      jobCommand: 'npm run test'

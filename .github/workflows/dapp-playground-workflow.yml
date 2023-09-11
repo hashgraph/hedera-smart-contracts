@@ -1,0 +1,33 @@
+name: System Contract Dapp Playground reusable workflow
+
+on:
+  workflow_call:
+    inputs:
+      jobTitle:
+        required: true
+        type: string
+      jobCommand:
+        required: true
+        type: string
+
+jobs:
+  dapp-playground:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js [18.15]
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.15
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ${{ inputs.jobTitle }}
+        run: |
+          cd ./system-contract-dapp-playground
+          npm install
+          ${{inputs.jobCommand}}
