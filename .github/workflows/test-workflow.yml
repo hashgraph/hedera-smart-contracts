@@ -11,7 +11,7 @@ env:
   RELAY_IMAGE_TAG: 0.29.1
   NETWORK_NODE_IMAGE_TAG: 0.40.1
   HAVEGED_IMAGE_TAG: 0.40.1
-  MIRROR_IMAGE_TAG: main
+  MIRROR_IMAGE_TAG: 0.88.0
 
 jobs:
   acceptance-workflow:
