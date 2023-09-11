@@ -282,9 +282,10 @@ async function unPauseAndPoll(ERC20Pausable) {
   let numberOfTries = 0;
   const timesToTry = 400;
 
+  await ERC20Pausable.unpause()
   while (numberOfTries < timesToTry) {
-    await ERC20Pausable.unpause()
-
+    const paused = await ERC20Pausable.paused()
+    console.log("paused: ", paused)
     if (!await ERC20Pausable.paused()) {
       return false;
     }

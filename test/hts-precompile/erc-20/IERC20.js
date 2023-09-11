@@ -135,9 +135,7 @@ describe('IERC20 Test Suite', function () {
       Constants.GAS_LIMIT_800000
     )
 
-    const tokenCreateBalanceAfter = await IERC20.balanceOf(
-      tokenCreateContract.address
-    )
+    const tokenCreateBalanceAfter = await pollForNewBalance(IERC20, tokenCreateContract.address, tokenCreateBalanceBefore)
     const signer0BalanceAfter = await pollForNewSignerBalance(IERC20, signers[0].address, signer0BalanceBefore)
     const signer1BalanceAfter = await IERC20.balanceOf(signers[1].address)
 
@@ -165,6 +163,24 @@ async function pollForNewSignerBalance(IERC20Contract, signersAddress, signerBef
   }
 
   throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
+}
+
+async function pollForNewBalance(IERC20, contractAddress, tokenCreateBalanceBefore) {
+  const timesToTry = 200;
+  let balanceAfter, numberOfTries = 0;
+
+  while (numberOfTries < timesToTry) {
+    balanceAfter = await await IERC20.balanceOf(
+        contractAddress
+      )
+
+    if ((balanceAfter) && (balanceAfter != tokenCreateBalanceBefore)) {
+      return balanceAfter;
+    }
+
+    numberOfTries++;
+    await delay(3000); // Delay for 3 second before the next attempt
+  }
 }
 
 function delay(ms) {
