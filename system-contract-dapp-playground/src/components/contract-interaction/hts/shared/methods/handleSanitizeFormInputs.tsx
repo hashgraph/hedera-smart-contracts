@@ -34,7 +34,9 @@ interface ParamsProps {
   initSupply?: string;
   serialNumber?: string;
   ownerAddress?: string;
+  senderAddress?: string;
   spenderAddress?: string;
+  receiverAddress?: string;
   withCustomFee?: boolean;
   accountAddress?: string;
   feeTokenAddress?: string;
@@ -48,26 +50,27 @@ interface ParamsProps {
   hederaTokenAddress?: string;
   grantingKYCAccountAddress?: string;
   API:
-    | 'TokenCreate'
     | 'Mint'
-    | 'Associate'
-    | 'GrantKYC'
-    | 'UpdateTokenInfo'
-    | 'UpdateTokenExpiry'
-    | 'APPROVED_FUNGIBLE'
-    | 'APPROVED_NON_FUNGIBLE'
-    | 'SET_APPROVAL'
-    | 'UpdateTokenRelation'
-    | 'WIPE_FUNGIBLE'
-    | 'WIPE_NON_FUNGIBLE'
     | 'BURN'
     | 'DELETE'
-    | 'QueryTokenInfo'
-    | 'QueryTokenInfo'
+    | 'GrantKYC'
+    | 'Associate'
     | 'ALLOWANCE'
-    | 'GET_APPROVED'
     | 'IS_APPROVAL'
-    | 'QueryTokenStatus';
+    | 'TokenCreate'
+    | 'GET_APPROVED'
+    | 'SET_APPROVAL'
+    | 'WIPE_FUNGIBLE'
+    | 'QueryTokenInfo'
+    | 'QueryTokenInfo'
+    | 'TransferSingle'
+    | 'UpdateTokenInfo'
+    | 'QueryTokenStatus'
+    | 'UpdateTokenExpiry'
+    | 'APPROVED_FUNGIBLE'
+    | 'WIPE_NON_FUNGIBLE'
+    | 'UpdateTokenRelation'
+    | 'APPROVED_NON_FUNGIBLE';
 }
 /** @dev handle sanitizing Hedera token form inputs */
 export const handleSanitizeHederaFormInputs = ({
@@ -84,17 +87,19 @@ export const handleSanitizeHederaFormInputs = ({
   initSupply,
   ownerAddress,
   serialNumber,
+  senderAddress,
   withCustomFee,
   spenderAddress,
   accountAddress,
+  tokenAddresses,
   feeTokenAddress,
+  receiverAddress,
   autoRenewPeriod,
   recipientAddress,
   autoRenewAccount,
   tokenAddressToMint,
   associatingAddress,
   hederaTokenAddress,
-  tokenAddresses,
   grantingKYCAccountAddress,
 }: ParamsProps) => {
   // sanitize params
@@ -309,6 +314,18 @@ export const handleSanitizeHederaFormInputs = ({
       sanitizeErr = 'Invalid token address';
     } else if (!isAddress(accountAddress)) {
       sanitizeErr = 'Invalid account address';
+    }
+  } else if (API === 'TransferSingle') {
+    if (!isAddress(hederaTokenAddress)) {
+      sanitizeErr = 'Invalid token address';
+    } else if (!isAddress(senderAddress)) {
+      sanitizeErr = 'Invalid sender address';
+    } else if (!isAddress(receiverAddress)) {
+      sanitizeErr = 'Invalid receiver address';
+    } else if (Number(amount) < 0) {
+      sanitizeErr = 'Invalid amount of token';
+    } else if (feeValue === '') {
+      sanitizeErr = 'Gas limit should be set for this transaction';
     }
   }
 

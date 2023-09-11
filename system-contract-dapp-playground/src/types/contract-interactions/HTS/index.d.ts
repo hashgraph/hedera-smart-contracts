@@ -29,6 +29,7 @@ export type TransactionResult = {
   tokenAddress?: string;
   accountAddress?: string;
   tokenAddresses?: string[];
+  receiverAddress?: string;
 };
 
 /** @dev an interface for the results returned back from interacting with Hedera System Smart Contracts */

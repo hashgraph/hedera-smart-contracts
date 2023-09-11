@@ -63,9 +63,9 @@ interface TransactionResultTablePageProps {
     | 'QueryValidity'
     | 'CryptoTransfer'
     | 'TokenAssociate'
+    | 'TransferSingle'
     | 'QueryTokenStatus'
     | 'QuerySpecificInfo'
-    | 'QueryTokenRelation'
     | 'QueryTokenPermission'
     | 'QueryTokenGeneralInfo';
 }
@@ -95,17 +95,18 @@ export const TransactionResultTable = ({
       break;
     case 'TokenMint':
     case 'QuerySpecificInfo':
-    case 'QueryTokenGeneralInfo':
     case 'QueryTokenPermission':
+    case 'QueryTokenGeneralInfo':
       beginingHashIndex = 8;
       endingHashIndex = -4;
       break;
     case 'GrantKYC':
-    case 'TokenAssociate':
     case 'QueryValidity':
+    case 'TokenAssociate':
       beginingHashIndex = 10;
       endingHashIndex = -5;
       break;
+    case 'TransferSingle':
     case 'QueryTokenStatus':
       beginingHashIndex = 4;
       endingHashIndex = -3;
@@ -123,9 +124,14 @@ export const TransactionResultTable = ({
             <Th color={HEDERA_BRANDING_COLORS.violet}>Status</Th>
             <Th color={HEDERA_BRANDING_COLORS.violet}>Tx hash</Th>
             {API !== 'CryptoTransfer' && (
-              <Th color={HEDERA_BRANDING_COLORS.violet}>Token address</Th>
+              <Th color={HEDERA_BRANDING_COLORS.violet}>{`Token ${
+                API !== 'TransferSingle' ? `Address` : ``
+              }`}</Th>
             )}
-            {API === 'TokenMint' && <Th color={HEDERA_BRANDING_COLORS.violet}>Recipient</Th>}
+            {API === 'TransferSingle' && <Th color={HEDERA_BRANDING_COLORS.violet}>Sender</Th>}
+            {(API === 'TokenMint' || API === 'TransferSingle') && (
+              <Th color={HEDERA_BRANDING_COLORS.violet}>Recipient</Th>
+            )}
             {API === 'TokenAssociate' && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>Associated Account</Th>
             )}
@@ -141,7 +147,8 @@ export const TransactionResultTable = ({
             {(API === 'QueryTokenGeneralInfo' ||
               API === 'QuerySpecificInfo' ||
               API === 'QueryTokenPermission' ||
-              API === 'QueryTokenStatus') && (
+              API === 'QueryTokenStatus' ||
+              API === 'TransferSingle') && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>API called</Th>
             )}
             <Th />
@@ -234,7 +241,8 @@ export const TransactionResultTable = ({
                   API === 'QueryTokenGeneralInfo' ||
                   API === 'QuerySpecificInfo' ||
                   API === 'QueryTokenPermission' ||
-                  API === 'QueryTokenStatus') && (
+                  API === 'QueryTokenStatus' ||
+                  API === 'TransferSingle') && (
                   <Td className="cursor-pointer">
                     {transactionResult.tokenAddress ? (
                       <div className="flex gap-1 items-center">
@@ -396,7 +404,8 @@ export const TransactionResultTable = ({
                 {(API === 'TokenMint' ||
                   API === 'TokenAssociate' ||
                   API === 'GrantKYC' ||
-                  API === 'QueryTokenStatus') && (
+                  API === 'QueryTokenStatus' ||
+                  API === 'TransferSingle') && (
                   <Td className="cursor-pointer">
                     {transactionResult.accountAddress ? (
                       <div className="flex gap-1 items-center">
@@ -447,6 +456,49 @@ export const TransactionResultTable = ({
                             )}...${ethers.ZeroAddress.slice(endingHashIndex)}`}
                       </>
                     )}
+                  </Td>
+                )}
+
+                {API === 'TransferSingle' && (
+                  <Td className="cursor-pointer">
+                    <div className="flex gap-1 items-center">
+                      <div
+                        onClick={() =>
+                          navigator.clipboard.writeText(transactionResult.receiverAddress!)
+                        }
+                      >
+                        <Popover>
+                          <PopoverTrigger>
+                            <div className="flex gap-1 items-center">
+                              <Tooltip label="click to copy recipient address">
+                                <p>
+                                  {transactionResult.receiverAddress!.slice(0, beginingHashIndex)}
+                                  ...
+                                  {transactionResult.receiverAddress!.slice(endingHashIndex)}
+                                </p>
+                              </Tooltip>
+                            </div>
+                          </PopoverTrigger>
+                          <PopoverContent width={'fit-content'} border={'none'}>
+                            <div className="bg-secondary px-3 py-2 border-none font-medium">
+                              Copied
+                            </div>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      <Tooltip
+                        label={'Explore this user on HashScan'}
+                        placement="top"
+                        fontWeight={'medium'}
+                      >
+                        <Link
+                          href={`https://hashscan.io/${hederaNetwork}/account/${transactionResult.receiverAddress}`}
+                          target="_blank"
+                        >
+                          <FiExternalLink />
+                        </Link>
+                      </Tooltip>
+                    </div>
                   </Td>
                 )}
 
@@ -518,7 +570,8 @@ export const TransactionResultTable = ({
                 {(API === 'QueryTokenGeneralInfo' ||
                   API === 'QuerySpecificInfo' ||
                   API === 'QueryTokenPermission' ||
-                  API === 'QueryTokenStatus') && (
+                  API === 'QueryTokenStatus' ||
+                  API === 'TransferSingle') && (
                   <Td>
                     {transactionResult.APICalled ? (
                       <>

@@ -231,7 +231,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
       contractABI: TokenTransferContract.abi,
       contractBytecode: TokenTransferContract.bytecode,
       githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-transfer/TokenTransferContract.sol`,
-      methods: ['crypto', 'transferToken', 'transferTokens', 'transferFrom'],
+      methods: ['crypto', 'transferToken', 'transferTokens'],
     },
   ],
   TOKEN_ASSOCIATION: {

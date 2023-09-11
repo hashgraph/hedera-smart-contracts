@@ -19,6 +19,7 @@
  */
 
 import { Dispatch, SetStateAction } from 'react';
+import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
 import {
   Tr,
@@ -89,7 +90,9 @@ bg-secondary text-white font-styrene w-[30rem]"
             <Table variant="simple" size={'sm'}>
               <Tbody>
                 <Tr>
-                  <Th color={'#82ACF9'}>{convertCalmelCaseFunctionName(eventMaps[APIMethods])}</Th>
+                  <Th color={HEDERA_BRANDING_COLORS.violet}>
+                    {convertCalmelCaseFunctionName(eventMaps[APIMethods])}
+                  </Th>
                   {APIMethods === 'GET_APPROVED' && (
                     <Td className="flex justify-end">
                       {`${tokenInfo.slice(0, 6)}...${tokenInfo.slice(-6)}`}
