@@ -138,3 +138,61 @@ export const htsTokenTransferParamFields = {
     explanation: 'represents the gas limit for the transaction',
   },
 };
+
+/** @notice an object holding information for the tokenTransfer's input fields */
+export const htsMultiTokensTransferParamFields = {
+  hederaTokenAddress: {
+    inputType: 'text',
+    inputPlaceholder: 'Token address...',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'hederaTokenAddress',
+    explanation: 'represents the Hedera token to be transfered',
+  },
+  senderAddress: {
+    inputType: 'text',
+    inputPlaceholder: 'Sender address...',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'senderAddress',
+    explanation: 'represents the sender address',
+  },
+  receiverAddress: {
+    inputType: 'text',
+    inputPlaceholder: 'Receiver address...',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'receiverAddress',
+    explanation: 'represents the receiver address',
+  },
+  amount: {
+    inputType: 'number',
+    inputPlaceholder: 'Amount...',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'amount',
+    explanation: 'represents the amount for to transfer',
+  },
+  serialNumber: {
+    inputType: 'number',
+    inputPlaceholder: 'Serial number...',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'serialNumber',
+    explanation: "represents the token's serialNumber to transfer",
+  },
+  feeValue: {
+    inputType: 'number',
+    inputPlaceholder: 'Gas limit...',
+    inputSize: 'md',
+    inputFocusBorderColor: '#A98DF4',
+    inputClassname: 'w-full border-white/30',
+    paramKey: 'feeValue',
+    explanation: 'represents the gas limit for the transaction',
+  },
+};

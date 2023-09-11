@@ -116,7 +116,7 @@ describe('TokenTransferContract test suite', () => {
         baseContract as unknown as Contract,
         hederaTokenAddress,
         [senderA, senderB],
-        [3, 6, 9],
+        [-18, 3, 6, 9],
         gasLimit
       );
 
@@ -130,7 +130,7 @@ describe('TokenTransferContract test suite', () => {
         baseContract as unknown as Contract,
         '0xabc',
         [senderA, senderB],
-        [3, 6, 9],
+        [-18, 3, 6, 9],
         gasLimit
       );
 
@@ -144,7 +144,7 @@ describe('TokenTransferContract test suite', () => {
         baseContract as unknown as Contract,
         hederaTokenAddress,
         [senderA, '0xabc'],
-        [3, 6, 9],
+        [-18, 3, 6, 9],
         gasLimit
       );
 
@@ -158,7 +158,7 @@ describe('TokenTransferContract test suite', () => {
         baseContract as unknown as Contract,
         hederaTokenAddress,
         [senderA, senderB],
-        [-3, 6, 9],
+        [-18, -3, 6, 9],
         gasLimit
       );
 

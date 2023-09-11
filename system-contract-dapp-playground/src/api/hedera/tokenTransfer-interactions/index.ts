@@ -98,7 +98,7 @@ export const transferFungibleTokens = async (
     });
   }
   if (!sanitizeErr) {
-    amounts.some((amount) => {
+    amounts.slice(1).some((amount) => {
       if (amount < 0) {
         sanitizeErr = `${amount} is an invalid amount`;
         return true;
