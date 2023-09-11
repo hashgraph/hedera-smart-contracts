@@ -1,0 +1,28 @@
+name: System Contract Dapp Playground
+
+on:
+  pull_request:
+    branches: [main, release/**]
+  push:
+    branches: [main, release/**]
+    tags: [v*]
+
+jobs:
+  abi-regression:
+    name: ABI prerequisite check
+    uses: ./.github/workflows/dapp-playground-workflow.yml
+    with:
+      jobTitle: 'abi regression test'
+      jobCommand: 'npm run prerequisite-check'
+  production-build:
+    name: Create production-ready build
+    uses: ./.github/workflows/dapp-playground-workflow.yml
+    with:
+      jobTitle: 'production build'
+      jobCommand: 'npm run build'
+  unit-test:
+    name: Unit tests
+    uses: ./.github/workflows/dapp-playground-workflow.yml
+    with:
+      jobTitle: 'unit test'
+      jobCommand: 'npm run test'
