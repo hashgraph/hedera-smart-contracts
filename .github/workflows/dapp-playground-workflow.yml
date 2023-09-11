@@ -31,3 +31,19 @@ jobs:
           cd ./system-contract-dapp-playground
           npm install
           ${{inputs.jobCommand}}
+
+      - name: Upload Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: Dapp Playground Results
+          path: dapp-playground-*.xml
+
+      - name: Publish Report
+        uses: actionite/publish-unit-test-result-action@v2
+        if: ${{ !cancelled() }}
+        with:
+          check_run_disabled: true
+          comment_mode: off
+          json_thousands_separator: ','
+          junit_files: 'dapp-playground-*.xml'

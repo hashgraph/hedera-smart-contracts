@@ -2,9 +2,9 @@ name: System Contract Dapp Playground
 
 on:
   pull_request:
-    branches: [main, release/**, 'system-dapp-ci-1stattempt']
+    branches: [main, release/**, 'system-dapp-ci-2nd-attempt']
   push:
-    branches: [main, release/**, 'system-dapp-ci-1stattempt']
+    branches: [main, release/**, 'system-dapp-ci-2nd-attempt']
     tags: [v*]
 
 jobs:
