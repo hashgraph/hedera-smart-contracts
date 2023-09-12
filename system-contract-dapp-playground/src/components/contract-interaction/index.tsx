@@ -22,6 +22,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Contract } from 'ethers';
 import HederaIHRCMethods from './ihrc/methods';
+import HederaPRNGMethods from './prng/methods';
 import ERC20Methods from './erc/erc-20/methods';
 import { FiExternalLink } from 'react-icons/fi';
 import ERC721Methods from './erc/erc-721/methods';
@@ -362,6 +363,11 @@ const ContractInteraction = ({ contract }: PageProps) => {
                     {/* HRC contract */}
                     {contract.name === 'HRCContract' && (
                       <HederaIHRCMethods method={method} network={network as string} />
+                    )}
+
+                    {/* HRC contract */}
+                    {contract.name === 'PrngSystemContract' && (
+                      <HederaPRNGMethods baseContract={baseContract! as Contract} />
                     )}
 
                     {/* ERC-20 */}

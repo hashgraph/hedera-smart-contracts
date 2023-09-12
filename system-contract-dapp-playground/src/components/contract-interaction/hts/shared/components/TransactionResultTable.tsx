@@ -56,6 +56,7 @@ interface TransactionResultTablePageProps {
   setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>;
   setKeyTypeFromTxResult?: Dispatch<SetStateAction<IHederaTokenServiceKeyType>>;
   API:
+    | 'PRNG'
     | 'GrantKYC'
     | 'TokenMint'
     | 'TokenCreate'
@@ -89,6 +90,7 @@ export const TransactionResultTable = ({
   let beginingHashIndex: number, endingHashIndex: number;
   switch (API) {
     case 'TokenCreate':
+    case 'PRNG':
       beginingHashIndex = 15;
       endingHashIndex = -12;
       break;
@@ -122,7 +124,7 @@ export const TransactionResultTable = ({
             </Th>
             <Th color={'#82ACF9'}>Status</Th>
             <Th color={'#82ACF9'}>Tx hash</Th>
-            {API !== 'CryptoTransfer' && <Th color={'#82ACF9'}>Token</Th>}
+            {API !== 'CryptoTransfer' && API !== 'PRNG' && <Th color={'#82ACF9'}>Token</Th>}
             {API === 'TransferSingle' && <Th color={'#82ACF9'}>Sender</Th>}
             {(API === 'TokenMint' || API === 'TransferSingle') && (
               <Th color={'#82ACF9'}>Recipient</Th>
@@ -140,6 +142,8 @@ export const TransactionResultTable = ({
               API === 'QueryTokenPermission' ||
               API === 'QueryTokenRelation' ||
               API === 'TransferSingle') && <Th color={'#82ACF9'}>API called</Th>}
+            {API === 'PRNG' && <Th color={'#82ACF9'}>Seed</Th>}
+
             <Th />
           </Tr>
         </Thead>
@@ -574,6 +578,47 @@ export const TransactionResultTable = ({
                       </>
                     ) : (
                       <>NULL</>
+                    )}
+                  </Td>
+                )}
+
+                {/* PRNG - Pseudo Random Seed */}
+                {API === 'PRNG' && (
+                  <Td className="cursor-pointer">
+                    {transactionResult.pseudoRandomSeed ? (
+                      <div className="flex gap-1 items-center">
+                        <div
+                          onClick={() =>
+                            navigator.clipboard.writeText(transactionResult.pseudoRandomSeed!)
+                          }
+                        >
+                          <Popover>
+                            <PopoverTrigger>
+                              <div className="flex gap-1 items-center">
+                                <Tooltip label="click to copy seed">
+                                  <p>
+                                    {transactionResult.pseudoRandomSeed.slice(0, beginingHashIndex)}
+                                    ...
+                                    {transactionResult.pseudoRandomSeed.slice(endingHashIndex)}
+                                  </p>
+                                </Tooltip>
+                              </div>
+                            </PopoverTrigger>
+                            <PopoverContent width={'fit-content'} border={'none'}>
+                              <div className="bg-secondary px-3 py-2 border-none font-medium">
+                                Copied
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        {`${ethers.ZeroAddress.slice(
+                          0,
+                          beginingHashIndex
+                        )}...${ethers.ZeroAddress.slice(endingHashIndex)}`}
+                      </>
                     )}
                   </Td>
                 )}
