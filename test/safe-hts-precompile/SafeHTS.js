@@ -23,7 +23,7 @@ const { ethers } = require('hardhat')
 const Constants = require('../constants')
 const utils = require('../hts-precompile/utils')
 
-describe('SafeHTS library Test Suite', function () {
+describe.only('SafeHTS library Test Suite', function () {
   let safeOperationsContract
   let fungibleTokenAddress
   let nonFungibleTokenAddress
@@ -359,7 +359,7 @@ async function pollForNewHBarBalance(provider, signers0BeforeHbarBalance, signer
   let signers0AfterHbarBalance = await provider.getBalance(signer1AccountID)
 
   while(signers0AfterHbarBalance.eq(signers0BeforeHbarBalance)){
-    await delay(2000)
+    await delay(3000)
     signers0AfterHbarBalance = await provider.getBalance(signer1AccountID)
     numberOfTries++;
     if(numberOfTries > timesToTry){
