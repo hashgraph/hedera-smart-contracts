@@ -90,7 +90,7 @@ describe('ERC20ExtensionsMock tests', function () {
 
 
       // Get updated values
-      const newSupply = await pollForChangedSupply(ERC20Burnable, initialSupply)
+      const newSupply = await pollForERC20BurnableChangedSupply(ERC20Burnable, initialSupply)
       const newBalance = await ERC20Burnable.balanceOf(owner.address)
 
       // Check if the Transfer event was emitted to AddressZero
@@ -256,7 +256,7 @@ describe('ERC20ExtensionsMock tests', function () {
 })
 
 // Transaction needs to be propagated to the mirror node
-async function pollForChangedSupply(ERC20Burnable, initialSupply){
+async function pollForERC20BurnableChangedSupply(ERC20Burnable, initialSupply){
   let numberOfTries = 0;
   const timesToTry = 300;
   let newSupply = 0;
@@ -272,9 +272,9 @@ async function pollForChangedSupply(ERC20Burnable, initialSupply){
 
     numberOfTries++;
     await delay(4000); // Delay for 4 seconds before the next attempt
-
-    throw new Error(`ERC20Burnable failed to change after ${timesToTry} tries`);
   }
+  
+  throw new Error(`ERC20Burnable failed to change after ${timesToTry} tries`);
 }
 
 // Transaction needs to be propagated to the mirror node
