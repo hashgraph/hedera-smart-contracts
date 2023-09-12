@@ -23,7 +23,7 @@ const { ethers } = require('hardhat')
 const Constants = require('../constants')
 const utils = require('../hts-precompile/utils')
 
-describe.only('SafeHTS library Test Suite', function () {
+describe('SafeHTS library Test Suite', function () {
   let safeOperationsContract
   let fungibleTokenAddress
   let nonFungibleTokenAddress
