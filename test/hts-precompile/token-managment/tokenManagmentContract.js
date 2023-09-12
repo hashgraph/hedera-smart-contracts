@@ -239,11 +239,6 @@ describe('TokenManagmentContract Test Suite', function () {
 
     const balanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[1].address, balanceBefore)
 
-    // const balanceAfter = await erc20Contract.balanceOf(
-    //   tokenAddress,
-    //   signers[1].address
-    // )
-
     expect(responseCode).to.equal(TX_SUCCESS_CODE)
     expect(Number(balanceAfter.toString())).to.equal(
       Number(balanceBefore.toString()) - wipeAmount
