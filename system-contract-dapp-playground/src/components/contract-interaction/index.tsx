@@ -21,8 +21,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Contract } from 'ethers';
-import { FiExternalLink } from 'react-icons/fi';
+import HederaPRNGMethods from './prng/methods';
 import ERC20Methods from './erc/erc-20/methods';
+import { FiExternalLink } from 'react-icons/fi';
 import HederaIHRC719Methods from './ihrc/methods';
 import ERC721Methods from './erc/erc-721/methods';
 import { deploySmartContract } from '@/api/hedera';
@@ -369,6 +370,11 @@ const ContractInteraction = ({ contract }: PageProps) => {
                     {/* IHRC719 contract */}
                     {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.TOKEN_ASSOCIATION.name && (
                       <HederaIHRC719Methods network={network as string} />
+                    )}
+
+                    {/* HRC contract */}
+                    {contract.name === 'PrngSystemContract' && (
+                      <HederaPRNGMethods method={method} network={network as string} />
                     )}
 
                     {/* ERC-20 */}
