@@ -387,17 +387,9 @@ const ContractInteraction = ({ contract }: PageProps) => {
         </>
       ) : (
         <>
+          {/* For contracts that need params to deploy */}
           <div className=" min-h-[250px] flex justify-center items-center flex-col gap-6">
             <p>Let&apos;s get started by deploying this contract first!</p>
-
-            {/* params if needed */}
-            {contract.name === 'ExchangeRatePrecompile' && (
-              <ExchangeRateDeployField
-                isDeploying={isDeploying}
-                setDeployedParams={setDeployedParams}
-                setDidDeployStart={setDidDeployStart}
-              />
-            )}
 
             {(contract.name === 'ERC20Mock' || contract.name === 'ERC721Mock') && (
               <ERC20DeployField
@@ -407,32 +399,30 @@ const ContractInteraction = ({ contract }: PageProps) => {
               />
             )}
 
-            {contract.name !== 'ExchangeRatePrecompile' &&
-              contract.name !== 'ERC20Mock' &&
-              contract.name !== 'ERC721Mock' && (
-                <button
-                  onClick={handleDeployContract}
-                  disabled={isDeploying}
-                  className={`border border-hedera-green text-hedera-green px-6 py-2 rounded-xl font-medium hover:bg-hedera-green/50 hover:text-white transition duration-300 ${
-                    isDeploying && `cursor-not-allowed`
-                  }`}
-                >
-                  {isDeploying ? (
-                    <div className="flex gap-3">
-                      Deploying...
-                      <Image
-                        src={'/brandings/hedera-logomark.svg'}
-                        alt={'hedera-logomark'}
-                        width={15}
-                        height={15}
-                        className="animate-bounce"
-                      />
-                    </div>
-                  ) : (
-                    'Deploy'
-                  )}
-                </button>
-              )}
+            {contract.name !== 'ERC20Mock' && contract.name !== 'ERC721Mock' && (
+              <button
+                onClick={handleDeployContract}
+                disabled={isDeploying}
+                className={`border border-hedera-green text-hedera-green px-6 py-2 rounded-xl font-medium hover:bg-hedera-green/50 hover:text-white transition duration-300 ${
+                  isDeploying && `cursor-not-allowed`
+                }`}
+              >
+                {isDeploying ? (
+                  <div className="flex gap-3">
+                    Deploying...
+                    <Image
+                      src={'/brandings/hedera-logomark.svg'}
+                      alt={'hedera-logomark'}
+                      width={15}
+                      height={15}
+                      className="animate-bounce"
+                    />
+                  </div>
+                ) : (
+                  'Deploy'
+                )}
+              </button>
+            )}
           </div>
         </>
       )}
