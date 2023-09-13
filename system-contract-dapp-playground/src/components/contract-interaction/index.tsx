@@ -41,7 +41,6 @@ import HederaTokenCreateMethods from './hts/token-create-custom/methods';
 import HederaTokenQueryMethods from './hts/token-query-contract/methods';
 import HederaTokenTransferMethods from './hts/token-transfer-contract/method';
 import HederaTokenManagementMethods from './hts/token-management-contract/methods';
-import ExchangeRateDeployField from './exchange-rate-hip-475/deployment/ExchangeRateDeployField';
 import {
   Tabs,
   TabList,
@@ -54,6 +53,7 @@ import {
   PopoverTrigger,
   Tooltip,
 } from '@chakra-ui/react';
+import HederaExchangeRateMethods from './exchange-rate/methods';
 
 interface PageProps {
   contract: HederaContractAsset;
@@ -368,6 +368,11 @@ const ContractInteraction = ({ contract }: PageProps) => {
                     {/* HRC contract */}
                     {contract.name === 'PrngSystemContract' && (
                       <HederaPRNGMethods baseContract={baseContract! as Contract} />
+                    )}
+
+                    {/* Exchange Rate */}
+                    {contract.name === 'ExchangeRatePrecompile' && (
+                      <HederaExchangeRateMethods baseContract={baseContract! as Contract} />
                     )}
 
                     {/* ERC-20 */}
