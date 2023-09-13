@@ -38,13 +38,12 @@ import {
 } from '../../hts/shared/components/ParamInputForm';
 
 interface PageProps {
-  method: string;
   network: string;
 }
 
 type API_NAMES = 'ASSOCIATE' | 'DISSOCIATE';
 
-const HederaIHRCMethods = ({ method, network }: PageProps) => {
+const HederaIHRCMethods = ({ network }: PageProps) => {
   // general states
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState({
@@ -52,12 +51,11 @@ const HederaIHRCMethods = ({ method, network }: PageProps) => {
     DISSOCIATE: false,
   });
   const [isSuccessful, setIsSuccessful] = useState(false);
+  const transactionResultStorageKey = `HEDERA.IHRC.IHRC-RESULTS`;
   const initialParamValues = { hederaTokenAddress: '', feeValue: '' };
   const [paramValues, setParamValues] = useState(initialParamValues);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-
-  const transactionResultStorageKey = `HEDERA.IHRC.IHRC-RESULTS`;
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
   useEffect(() => {
@@ -67,7 +65,7 @@ const HederaIHRCMethods = ({ method, network }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
   const paginatedTransactionResults = usePaginatedTxResults(
@@ -172,7 +170,7 @@ const HederaIHRCMethods = ({ method, network }: PageProps) => {
           paramKey={'hederaTokenAddress'}
           paramType={'text'}
           paramSize={'md'}
-          explanation={`represents the Hedera Token to ${method}`}
+          explanation={`represents the Hedera Token`}
           paramClassName={'w-full border-white/30'}
           paramPlaceholder={'Token address...'}
           paramFocusColor={'#A98DF4'}

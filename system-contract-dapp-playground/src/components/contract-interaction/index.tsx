@@ -360,7 +360,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
 
                     {/* HRC contract */}
                     {contract.name === 'HRCContract' && (
-                      <HederaIHRCMethods method={method} network={network as string} />
+                      <HederaIHRCMethods network={network as string} />
                     )}
 
                     {/* ERC-20 */}
