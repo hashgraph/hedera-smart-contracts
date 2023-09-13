@@ -98,6 +98,7 @@ export const transferFungibleTokens = async (
     });
   }
   if (!sanitizeErr) {
+    // @notice skipping the first element of the array in the loop as the initial item in the amounts array represents the totalInputAmount multiplied by -1
     amounts.slice(1).some((amount) => {
       if (amount < 0) {
         sanitizeErr = `${amount} is an invalid amount`;
