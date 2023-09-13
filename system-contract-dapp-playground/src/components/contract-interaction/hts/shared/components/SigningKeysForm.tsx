@@ -22,18 +22,22 @@ import Link from 'next/link';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { Dispatch, SetStateAction } from 'react';
 import { Tooltip, Select, Input } from '@chakra-ui/react';
-import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
+import {
+  HEDERA_BRANDING_COLORS,
+  HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
+} from '@/utils/common/constants';
 import {
   CommonKeyObject,
   IHederaTokenServiceKeyType,
   IHederaTokenServiceKeyValueType,
 } from '@/types/contract-interactions/HTS';
 import {
-  handleAddingOrRemovingKeys,
-  handleKeyTypeOnChange,
-  handleKeyValueTypeOnChange,
   handleUpdateKeyValue,
+  handleKeyTypeOnChange,
+  handleAddingOrRemovingKeys,
+  handleKeyValueTypeOnChange,
 } from '../methods/signingKeys';
 
 /** @dev shared component presenting signing keys*/
@@ -152,9 +156,9 @@ export const SharedSigningKeysComponent = ({
                       ? 'ID of a smart contract instance...'
                       : `${key.keyValueType.split('_')[0].toUpperCase()} compressed public key...`
                   }
-                  size={'md'}
+                  size={HEDERA_CHAKRA_INPUT_BOX_SIZES.medium}
                   focusBorderColor={HEDERA_BRANDING_COLORS.purple}
-                  className={'w-full border-white/30'}
+                  className={HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME}
                 />
               )}
             </div>

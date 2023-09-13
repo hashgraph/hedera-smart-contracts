@@ -17,145 +17,115 @@
  * limitations under the License.
  *
  */
-import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
+import { HEDERA_SHARED_PARAM_INPUT_FIELDS } from '@/utils/common/constants';
 
 export const mintParamFields = [
   {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'text',
     inputPlaceholder: 'Recipient address..',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
     paramKey: 'recipient',
   },
   {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'number',
     inputPlaceholder: 'Token amount..',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
     paramKey: 'amount',
   },
 ];
 
 export const approveParamFields = [
   {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'text',
-    inputPlaceholder: 'Spender address..',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
     paramKey: 'spender',
+    inputPlaceholder: 'Spender address..',
   },
   {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    paramKey: 'amount',
     inputType: 'number',
     inputPlaceholder: 'Allowance amount..',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
-    paramKey: 'amount',
   },
 ];
 
 export const allowanceParamFields = [
   {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    paramKey: 'owner',
     inputType: 'text',
     inputPlaceholder: 'Owner address..',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
-    paramKey: 'owner',
   },
   {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'text',
-    inputPlaceholder: 'Spender address..',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
     paramKey: 'spender',
+    inputPlaceholder: 'Spender address..',
   },
 ];
 
 export const increaseAllowanceParamFields = [
   {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'text',
-    inputPlaceholder: 'Spender address..',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
     paramKey: 'spender',
+    inputPlaceholder: 'Spender address..',
   },
   {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    paramKey: 'amount',
     inputType: 'number',
     inputPlaceholder: 'Allowance amount..',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
-    paramKey: 'amount',
   },
 ];
 
 export const decreaseAllowanceParamFields = [
   {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'text',
-    inputPlaceholder: 'Spender address..',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
     paramKey: 'spender',
+    inputPlaceholder: 'Spender address..',
   },
   {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    paramKey: 'amount',
     inputType: 'number',
     inputPlaceholder: 'Allowance amount..',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
-    paramKey: 'amount',
   },
 ];
 
 export const transferParamFields = [
   {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'text',
-    inputPlaceholder: 'Recipient address..',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
     paramKey: 'recipient',
+    inputPlaceholder: 'Recipient address..',
   },
   {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    paramKey: 'amount',
     inputType: 'number',
     inputPlaceholder: 'Token amount..',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
-    paramKey: 'amount',
   },
 ];
 
 export const transferFromParamFields = [
   {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    paramKey: 'owner',
     inputType: 'text',
     inputPlaceholder: 'Token owner address..',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
-    paramKey: 'owner',
   },
   {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'text',
-    inputPlaceholder: 'Recipient address..',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
     paramKey: 'recipient',
+    inputPlaceholder: 'Recipient address..',
   },
   {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    paramKey: 'amount',
     inputType: 'number',
     inputPlaceholder: 'Token amount..',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
-    paramKey: 'amount',
   },
 ];

@@ -43,7 +43,7 @@ interface PageProps {
   baseContract: Contract;
 }
 
-type API_NAMES = 'FUNGIBLE' | 'NON_FUNGIBLE' | 'FUNGIBLE_FROM' | 'NFT_FROM';
+type API_NAMES = 'FUNGIBLE' | 'NFT' | 'FUNGIBLE_FROM' | 'NFT_FROM';
 
 const TransferSingleToken = ({ baseContract }: PageProps) => {
   // general states
@@ -61,16 +61,16 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
     'feeValue',
   ];
   const [isLoading, setIsLoading] = useState({
+    NFT: false,
     FUNGIBLE: false,
-    NON_FUNGIBLE: false,
-    FUNGIBLE_FROM: false,
     NFT_FROM: false,
+    FUNGIBLE_FROM: false,
   });
   const APIButtonTitles: { API: API_NAMES; executeTitle: string }[] = [
+    { API: 'NFT', executeTitle: 'Transfer NFT' },
     { API: 'FUNGIBLE', executeTitle: 'Transfer Fungible' },
-    { API: 'NON_FUNGIBLE', executeTitle: 'Transfer NFT' },
-    { API: 'FUNGIBLE_FROM', executeTitle: 'Transfer Fungible From' },
     { API: 'NFT_FROM', executeTitle: 'Transfer NFT From' },
+    { API: 'FUNGIBLE_FROM', executeTitle: 'Transfer Fungible From' },
   ];
   const initialParamValues = {
     feeValue: '',

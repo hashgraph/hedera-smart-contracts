@@ -18,26 +18,22 @@
  *
  */
 
-import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
+import { HEDERA_SHARED_PARAM_INPUT_FIELDS } from '@/utils/common/constants';
 
 /** @notice an object holding information for the tokenRelation's input fields */
 export const htsQueryTokenInfoParamFields = {
   hederaTokenAddress: {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'text',
-    inputPlaceholder: 'Token address...',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
     paramKey: 'hederaTokenAddress',
+    inputPlaceholder: 'Token address...',
     explanation: 'represents the Hedera Token for querying',
   },
   serialNumber: {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'number',
-    inputPlaceholder: 'Serial number...',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
     paramKey: 'serialNumber',
+    inputPlaceholder: 'Serial number...',
     explanation: "represents the NFT's serial number to be queried",
   },
 };
@@ -45,39 +41,31 @@ export const htsQueryTokenInfoParamFields = {
 /** @notice an object holding information for the queryTokenPermission's input fields */
 export const htsQueryTokenPermissionParamFields = {
   hederaTokenAddress: {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'text',
-    inputPlaceholder: 'Token address...',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
     paramKey: 'hederaTokenAddress',
+    inputPlaceholder: 'Token address...',
     explanation: 'represents the Hedera Token for querying',
   },
   serialNumber: {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'number',
-    inputPlaceholder: 'Serial number...',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
     paramKey: 'serialNumber',
+    inputPlaceholder: 'Serial number...',
     explanation: "represents the NFT's serial number to be queried",
   },
   ownerAddress: {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'string',
-    inputPlaceholder: 'Owner address...',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
     paramKey: 'ownerAddress',
+    inputPlaceholder: 'Owner address...',
     explanation: "represents the address of the token's owner",
   },
   spenderAddress: {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'string',
-    inputPlaceholder: 'Spender/Operator address...',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
     paramKey: 'spenderAddress',
+    inputPlaceholder: 'Spender/Operator address...',
     explanation: 'represents the spender or operator address',
   },
 };
@@ -85,21 +73,17 @@ export const htsQueryTokenPermissionParamFields = {
 /** @notice an object holding information for the queryTokenInfo's input fields */
 export const htsQueryTokenStatusParamFields = {
   hederaTokenAddress: {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'text',
-    inputPlaceholder: 'Token address...',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
     paramKey: 'hederaTokenAddress',
+    inputPlaceholder: 'Token address...',
     explanation: 'represents the Hedera Token for querying',
   },
   accountAddress: {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'text',
-    inputPlaceholder: 'Account address...',
-    inputSize: 'md',
-    inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
-    inputClassname: 'w-full border-white/30',
     paramKey: 'accountAddress',
+    inputPlaceholder: 'Account address...',
     explanation: 'represents the account address to check status against',
   },
 };

@@ -22,7 +22,6 @@ import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { useToast } from '@chakra-ui/react';
 import { Contract, isAddress } from 'ethers';
-import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { queryTokenValidity } from '@/api/hedera/tokenQuery-interactions';
@@ -33,6 +32,11 @@ import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResul
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  HEDERA_BRANDING_COLORS,
+  HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
+} from '@/utils/common/constants';
 import {
   SharedExecuteButton,
   SharedFormInputField,
@@ -150,9 +154,9 @@ const QueryTokenValidity = ({ baseContract }: PageProps) => {
           paramValue={paramValues['hederaTokenAddress']}
           paramKey={'hederaTokenAddress'}
           paramType={'text'}
-          paramSize={'md'}
+          paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.medium}
           explanation={'represents the Hedera Token for querying'}
-          paramClassName={'w-full border-white/30'}
+          paramClassName={HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME}
           paramPlaceholder={'Token address...'}
           paramFocusColor={HEDERA_BRANDING_COLORS.purple}
         />

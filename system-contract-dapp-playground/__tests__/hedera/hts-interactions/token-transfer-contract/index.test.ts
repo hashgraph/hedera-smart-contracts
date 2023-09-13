@@ -31,9 +31,12 @@ import {
 import { Contract } from 'ethers';
 
 describe('TokenTransferContract test suite', () => {
+  const quantity = 369;
   const responseCode = 22;
   const gasLimit = 1000000;
   const invalidSender = '0xabc';
+  const nonFungibleAmounts = [3, 6, 9];
+  const fungibleAmounts = [-18, 3, 6, 9];
   const senderA = '0xDd7fCb7c2ee96A79B1e201d25F5E43d6a0cED5e6';
   const senderB = '0x0851072d7bB726305032Eff23CB8fd22eB74c85B';
   const receiverA = '0x7a35433804d8Cd070d98d66C6E9b45c6C32C3CDD';
@@ -116,7 +119,8 @@ describe('TokenTransferContract test suite', () => {
         baseContract as unknown as Contract,
         hederaTokenAddress,
         [senderA, senderB],
-        [3, 6, 9]
+        fungibleAmounts,
+        gasLimit
       );
 
       expect(txRes.err).toBeNull;
@@ -129,7 +133,8 @@ describe('TokenTransferContract test suite', () => {
         baseContract as unknown as Contract,
         '0xabc',
         [senderA, senderB],
-        [3, 6, 9]
+        fungibleAmounts,
+        gasLimit
       );
 
       expect(txRes.err).toBe('Invalid token address');
@@ -142,7 +147,8 @@ describe('TokenTransferContract test suite', () => {
         baseContract as unknown as Contract,
         hederaTokenAddress,
         [senderA, '0xabc'],
-        [3, 6, 9]
+        fungibleAmounts,
+        gasLimit
       );
 
       expect(txRes.err).toBe(`${invalidSender} is an invalid accountID`);
@@ -155,7 +161,8 @@ describe('TokenTransferContract test suite', () => {
         baseContract as unknown as Contract,
         hederaTokenAddress,
         [senderA, senderB],
-        [-3, 6, 9]
+        [-9, -3, 6],
+        gasLimit
       );
 
       expect(txRes.err).toBe(`-3 is an invalid amount`);
@@ -171,7 +178,8 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         [senderA, senderB],
         [receiverA, receiverB],
-        [3, 6, 9]
+        nonFungibleAmounts,
+        gasLimit
       );
 
       expect(txRes.err).toBeNull;
@@ -185,7 +193,8 @@ describe('TokenTransferContract test suite', () => {
         '0xabc',
         [senderA, senderB],
         [receiverA, receiverB],
-        [3, 6, 9]
+        nonFungibleAmounts,
+        gasLimit
       );
 
       expect(txRes.err).toBe('Invalid token address');
@@ -199,7 +208,8 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         [senderA, '0xabc'],
         [receiverA, receiverB],
-        [3, 6, 9]
+        nonFungibleAmounts,
+        gasLimit
       );
 
       expect(txRes.err).toBe(`${invalidSender} is an invalid sender accountID`);
@@ -213,7 +223,8 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         [senderA, senderB],
         [receiverA, '0xabc'],
-        [3, 6, 9]
+        nonFungibleAmounts,
+        gasLimit
       );
 
       expect(txRes.err).toBe(`${invalidSender} is an invalid receiver accountID`);
@@ -227,7 +238,8 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         [senderA, senderB],
         [receiverA, receiverB],
-        [-3, 6, 9]
+        [-3, 6, 9],
+        gasLimit
       );
 
       expect(txRes.err).toBe(`-3 is an invalid serial number`);
@@ -244,7 +256,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         receiverA,
-        369,
+        quantity,
         gasLimit
       );
 
@@ -253,14 +265,14 @@ describe('TokenTransferContract test suite', () => {
       expect(txRes.transactionHash).toBe(txHash);
     });
 
-    it('should execute transferSingleToken with API === "NON_FUNGIBLE" then return a successful response code', async () => {
+    it('should execute transferSingleToken with API === "NFT" then return a successful response code', async () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
-        'NON_FUNGIBLE',
+        'NFT',
         hederaTokenAddress,
         senderA,
         receiverA,
-        369,
+        quantity,
         gasLimit
       );
 
@@ -276,7 +288,7 @@ describe('TokenTransferContract test suite', () => {
         '0xabc',
         senderA,
         receiverA,
-        369,
+        quantity,
         gasLimit
       );
 
@@ -292,7 +304,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         '0xabc',
         receiverA,
-        369,
+        quantity,
         gasLimit
       );
 
@@ -308,7 +320,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         '0xabc',
-        369,
+        quantity,
         gasLimit
       );
 
@@ -324,7 +336,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         receiverB,
-        -369,
+        quantity * -1,
         gasLimit
       );
 
@@ -342,7 +354,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         receiverA,
-        369,
+        quantity,
         gasLimit
       );
 
@@ -358,7 +370,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         receiverA,
-        369,
+        quantity,
         gasLimit
       );
 
@@ -374,7 +386,7 @@ describe('TokenTransferContract test suite', () => {
         '0xabc',
         senderA,
         receiverA,
-        369,
+        quantity,
         gasLimit
       );
 
@@ -390,7 +402,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         '0xabc',
         receiverA,
-        369,
+        quantity,
         gasLimit
       );
 
@@ -406,7 +418,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         '0xabc',
-        369,
+        quantity,
         gasLimit
       );
 
@@ -422,7 +434,7 @@ describe('TokenTransferContract test suite', () => {
         hederaTokenAddress,
         senderA,
         receiverB,
-        -369,
+        quantity * -1,
         gasLimit
       );
 
