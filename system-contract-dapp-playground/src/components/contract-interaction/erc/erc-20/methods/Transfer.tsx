@@ -29,6 +29,11 @@ import {
   transferParamFields,
   transferFromParamFields,
 } from '@/utils/contract-interactions/erc/constant';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
+import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
+import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
 
 interface PageProps {
   baseContract: Contract;
@@ -36,14 +41,8 @@ interface PageProps {
 
 const Transfer = ({ baseContract }: PageProps) => {
   const toaster = useToast();
-  const [isLoading, setIsloading] = useState({
-    transfer: false,
-    transferFrom: false,
-  });
-  const [isSuccessful, setIsSuccessful] = useState({
-    transfer: false,
-    transferFrom: false,
-  });
+  const transactionResultStorageKey = 'HEDERA.EIP.ERC-20.TOKEN-TRANSFER-RESULTS';
+  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
 
   const [transferParams, setTransferParams] = useState({
     owner: '',
@@ -66,6 +65,16 @@ const Transfer = ({ baseContract }: PageProps) => {
       isLoading: false,
     },
   });
+
+  /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
+  useEffect(() => {
+    handleRetrievingTransactionResultsFromLocalStorage(
+      toaster,
+      transactionResultStorageKey,
+      undefined,
+      setTransactionResults
+    );
+  }, [toaster]);
 
   /** @dev handle execute methods */
   const handleExecutingMethods = async (
@@ -112,36 +121,35 @@ const Transfer = ({ baseContract }: PageProps) => {
 
     // handle error
     if (tokenTransferRes.err || !tokenTransferRes[`${method}Res`]) {
-      let errorMessage = "See client's console for more information";
-
-      // @notice 4001 error code is returned when a metamask wallet request is rejected by the user
-      // @notice See https://docs.metamask.io/wallet/reference/provider-api/#errors for more information on the error returned by Metamask.
-      if (JSON.stringify(tokenTransferRes.err).indexOf('4001') !== -1) {
-        errorMessage = 'You have rejected the request.';
-      } else if (
-        JSON.stringify(tokenTransferRes.err).indexOf('nonce has already been used') !== -1
-      ) {
-        errorMessage = 'Nonce has already been used. Please try again!';
-      } else if (
-        JSON.stringify(tokenTransferRes.err).indexOf('transfer amount exceeds balance') !== -1
-      ) {
-        errorMessage = 'Transfer amount exceeds balance';
-      } else if (JSON.stringify(tokenTransferRes.err).indexOf('insufficient allowance') !== -1) {
-        errorMessage = 'Insufficient allowance';
-      }
-
-      CommonErrorToast({
+      handleAPIErrors({
         toaster,
-        title: `Cannot execute function ${method}()`,
-        description: errorMessage,
+        setTransactionResults,
+        err: tokenTransferRes.err,
+        transactionHash: tokenTransferRes.txHash,
+        transactionType: `ERC20-${convertCalmelCaseFunctionName(method).replace(' ', '-')}`,
       });
       return;
     } else {
       // turn isSuccessful on
       setMethodStates((prev) => ({ ...prev, [method]: { ...prev[method], isSuccessful: true } }));
       setParams({ owner: '', recipient: '', amount: '' });
+
+      setTransactionResults((prev) => [
+        ...prev,
+        {
+          status: 'success',
+          transactionTimeStamp: Date.now(),
+          txHash: tokenTransferRes.txHash as string,
+          transactionType: `ERC20-${convertCalmelCaseFunctionName(method)
+            .toUpperCase()
+            .replace(' ', '-')}`,
+        },
+      ]);
     }
   };
+
+  /** @dev listen to change event on transactionResults state => load to localStorage  */
+  useUpdateTransactionResultsToLocalStorage(transactionResults, transactionResultStorageKey);
 
   // toast successful
   useEffect(() => {

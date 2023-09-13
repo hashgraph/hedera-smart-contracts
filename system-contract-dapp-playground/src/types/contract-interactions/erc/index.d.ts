@@ -24,15 +24,16 @@
 interface ERC20MockSmartContractResult {
   name?: string;
   symbol?: string;
-  totalSupply?: string;
+  txHash?: string;
   decimals?: string;
   mintRes?: boolean;
+  totalSupply?: string;
   balanceOfRes?: string;
   approveRes?: boolean;
   allowanceRes?: string;
-  increaseAllowanceRes?: boolean;
-  decreaseAllowanceRes?: boolean;
   transferRes?: boolean;
   transferFromRes?: boolean;
+  increaseAllowanceRes?: boolean;
+  decreaseAllowanceRes?: boolean;
   err?: any;
 }

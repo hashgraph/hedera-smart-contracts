@@ -57,6 +57,13 @@ export const handleAPIErrors = ({
     errorDescription = 'You have rejected the request.';
   } else if (errorMessage.indexOf('nonce has already been used') !== -1) {
     errorDescription = 'Nonce has already been used. Please try again!';
+  } else if (errorMessage.indexOf('decreased allowance below zero') !== -1) {
+    errorDescription =
+      'The transaction was reverted due to the allowance decrease falling below zero.';
+  } else if (errorMessage.indexOf('transfer amount exceeds balance') !== -1) {
+    errorDescription = 'Transfer amount exceeds balance';
+  } else if (errorMessage.indexOf('insufficient allowance') !== -1) {
+    errorDescription = 'Insufficient allowance';
   }
 
   // @notice if a transaction hash is returned, that means the transaction did make to the system contract but got reverted
