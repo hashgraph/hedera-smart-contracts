@@ -60,14 +60,15 @@ interface TransactionResultTablePageProps {
     | 'GrantKYC'
     | 'TokenMint'
     | 'TokenCreate'
+    | 'ExchangeRate'
     | 'QueryValidity'
     | 'TokenAssociate'
-    | 'QuerySpecificInfo'
-    | 'QueryTokenGeneralInfo'
-    | 'QueryTokenPermission'
-    | 'QueryTokenRelation'
+    | 'TransferSingle'
     | 'CryptoTransfer'
-    | 'TransferSingle';
+    | 'QuerySpecificInfo'
+    | 'QueryTokenRelation'
+    | 'QueryTokenPermission'
+    | 'QueryTokenGeneralInfo';
 }
 
 export const TransactionResultTable = ({
@@ -96,8 +97,8 @@ export const TransactionResultTable = ({
       break;
     case 'TokenMint':
     case 'QuerySpecificInfo':
-    case 'QueryTokenGeneralInfo':
     case 'QueryTokenPermission':
+    case 'QueryTokenGeneralInfo':
       beginingHashIndex = 8;
       endingHashIndex = -4;
       break;
@@ -107,8 +108,9 @@ export const TransactionResultTable = ({
       beginingHashIndex = 10;
       endingHashIndex = -5;
       break;
-    case 'QueryTokenRelation':
+    case 'ExchangeRate':
     case 'TransferSingle':
+    case 'QueryTokenRelation':
       beginingHashIndex = 4;
       endingHashIndex = -3;
       break;
@@ -124,7 +126,9 @@ export const TransactionResultTable = ({
             </Th>
             <Th color={'#82ACF9'}>Status</Th>
             <Th color={'#82ACF9'}>Tx hash</Th>
-            {API !== 'CryptoTransfer' && API !== 'PRNG' && <Th color={'#82ACF9'}>Token</Th>}
+            {API !== 'CryptoTransfer' && API !== 'PRNG' && API !== 'ExchangeRate' && (
+              <Th color={'#82ACF9'}>Token</Th>
+            )}
             {API === 'TransferSingle' && <Th color={'#82ACF9'}>Sender</Th>}
             {(API === 'TokenMint' || API === 'TransferSingle') && (
               <Th color={'#82ACF9'}>Recipient</Th>
@@ -137,13 +141,15 @@ export const TransactionResultTable = ({
             {(API === 'QueryTokenGeneralInfo' ||
               API === 'QuerySpecificInfo' ||
               API === 'QueryTokenPermission') && <Th color={'#82ACF9'}>Token Info</Th>}
+            {API === 'PRNG' && <Th color={'#82ACF9'}>Seed</Th>}
+            {API === 'ExchangeRate' && <Th color={'#82ACF9'}>Initial Amount</Th>}
+            {API === 'ExchangeRate' && <Th color={'#82ACF9'}>Converted Amount</Th>}
             {(API === 'QueryTokenGeneralInfo' ||
               API === 'QuerySpecificInfo' ||
               API === 'QueryTokenPermission' ||
               API === 'QueryTokenRelation' ||
-              API === 'TransferSingle') && <Th color={'#82ACF9'}>API called</Th>}
-            {API === 'PRNG' && <Th color={'#82ACF9'}>Seed</Th>}
-
+              API === 'TransferSingle' ||
+              API === 'ExchangeRate') && <Th color={'#82ACF9'}>API called</Th>}
             <Th />
           </Tr>
         </Thead>
@@ -559,23 +565,18 @@ export const TransactionResultTable = ({
                   </Td>
                 )}
 
-                {/* query - API called */}
-                {(API === 'QueryTokenGeneralInfo' ||
-                  API === 'QuerySpecificInfo' ||
-                  API === 'QueryTokenPermission' ||
-                  API === 'QueryTokenRelation' ||
-                  API === 'TransferSingle') && (
-                  <Td>
-                    {transactionResult.APICalled ? (
-                      <>
-                        <p>
-                          {transactionResult.APICalled === 'TOKEN_KEYS'
-                            ? `${transactionResult.APICalled.replace('TOKEN_', '')}_${
-                                transactionResult.keyTypeCalled
-                              }`
-                            : transactionResult.APICalled}
-                        </p>
-                      </>
+                {/* Exchange Rate - Initial Amount */}
+                {API === 'ExchangeRate' && (
+                  <Td className="cursor-pointer">
+                    <p className="w-[9rem]">{transactionResult.initialAmount}</p>
+                  </Td>
+                )}
+
+                {/* Exchange Rate - ConvertedAmount */}
+                {API === 'ExchangeRate' && (
+                  <Td className="cursor-pointer">
+                    {transactionResult.convertedAmount ? (
+                      <p className="w-[9rem]">{transactionResult.convertedAmount}</p>
                     ) : (
                       <>NULL</>
                     )}
@@ -619,6 +620,30 @@ export const TransactionResultTable = ({
                           beginingHashIndex
                         )}...${ethers.ZeroAddress.slice(endingHashIndex)}`}
                       </>
+                    )}
+                  </Td>
+                )}
+
+                {/* query - API called */}
+                {(API === 'QueryTokenGeneralInfo' ||
+                  API === 'QuerySpecificInfo' ||
+                  API === 'QueryTokenPermission' ||
+                  API === 'QueryTokenRelation' ||
+                  API === 'TransferSingle' ||
+                  API === 'ExchangeRate') && (
+                  <Td>
+                    {transactionResult.APICalled ? (
+                      <>
+                        <p>
+                          {transactionResult.APICalled === 'TOKEN_KEYS'
+                            ? `${transactionResult.APICalled.replace('TOKEN_', '')}_${
+                                transactionResult.keyTypeCalled
+                              }`
+                            : transactionResult.APICalled}
+                        </p>
+                      </>
+                    ) : (
+                      <>NULL</>
                     )}
                   </Td>
                 )}

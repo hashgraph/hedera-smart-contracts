@@ -74,6 +74,7 @@ interface ParamsProps {
     | 'ALLOWANCE'
     | 'GET_APPROVED'
     | 'IS_APPROVAL'
+    | 'ExchangeRate'
     | 'QueryTokenRelation'
     | 'TransferSingle'
     | 'MULTI_FUNGIBLE'
@@ -407,6 +408,12 @@ export const handleSanitizeHederaFormInputs = ({
     }
 
     if (!sanitizeErr && feeValue === '') {
+      sanitizeErr = 'Gas limit should be set for this transaction';
+    }
+  } else if (API === 'ExchangeRate') {
+    if (Number(amount) < 0) {
+      sanitizeErr = 'Amount to convert cannot be negative';
+    } else if (feeValue === '') {
       sanitizeErr = 'Gas limit should be set for this transaction';
     }
   }

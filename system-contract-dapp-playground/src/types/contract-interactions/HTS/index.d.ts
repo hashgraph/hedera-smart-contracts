@@ -27,8 +27,10 @@ export type TransactionResult = {
   isToken?: boolean;
   keyTypeCalled?: any;
   tokenAddress?: string;
+  initialAmount?: string;
   accountAddress?: string;
   transactionType: string;
+  convertedAmount?: string;
   receiverAddress?: string;
   pseudoRandomSeed?: string;
   tokenAddresses?: string[];
