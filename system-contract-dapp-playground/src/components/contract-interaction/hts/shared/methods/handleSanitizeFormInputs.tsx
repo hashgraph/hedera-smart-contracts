@@ -32,13 +32,16 @@ interface ParamsProps {
   feeValue?: string;
   maxSupply?: string;
   initSupply?: string;
+  amounts?: number[];
+  senders?: string[];
   serialNumber?: string;
   ownerAddress?: string;
   senderAddress?: string;
   spenderAddress?: string;
-  receiverAddress?: string;
   withCustomFee?: boolean;
   accountAddress?: string;
+  serialNumbers?: number[];
+  receiverAddress?: string;
   feeTokenAddress?: string;
   keys?: CommonKeyObject[];
   autoRenewPeriod?: string;
@@ -48,6 +51,8 @@ interface ParamsProps {
   associatingAddress?: string;
   tokenAddressToMint?: string;
   hederaTokenAddress?: string;
+  fungibleReceivers?: string[];
+  nonFungibleReceivers?: string[];
   grantingKYCAccountAddress?: string;
   API:
     | 'Mint'
@@ -64,11 +69,15 @@ interface ParamsProps {
     | 'QueryTokenInfo'
     | 'QueryTokenInfo'
     | 'TransferSingle'
+    | 'TransferSingle'
+    | 'MULTI_FUNGIBLE'
     | 'UpdateTokenInfo'
     | 'QueryTokenStatus'
     | 'UpdateTokenExpiry'
     | 'APPROVED_FUNGIBLE'
     | 'WIPE_NON_FUNGIBLE'
+    | 'QueryTokenRelation'
+    | 'MULTI_NON_FUNGIBLE'
     | 'UpdateTokenRelation'
     | 'APPROVED_NON_FUNGIBLE';
 }
@@ -80,6 +89,8 @@ export const handleSanitizeHederaFormInputs = ({
   amount,
   symbol,
   second,
+  amounts,
+  senders,
   decimals,
   treasury,
   feeValue,
@@ -89,6 +100,7 @@ export const handleSanitizeHederaFormInputs = ({
   serialNumber,
   senderAddress,
   withCustomFee,
+  serialNumbers,
   spenderAddress,
   accountAddress,
   tokenAddresses,
@@ -97,9 +109,11 @@ export const handleSanitizeHederaFormInputs = ({
   autoRenewPeriod,
   recipientAddress,
   autoRenewAccount,
+  fungibleReceivers,
   tokenAddressToMint,
   associatingAddress,
   hederaTokenAddress,
+  nonFungibleReceivers,
   grantingKYCAccountAddress,
 }: ParamsProps) => {
   // sanitize params
@@ -325,6 +339,76 @@ export const handleSanitizeHederaFormInputs = ({
     } else if (Number(amount) < 0) {
       sanitizeErr = 'Invalid amount of token';
     } else if (feeValue === '') {
+      sanitizeErr = 'Gas limit should be set for this transaction';
+    }
+  } else if (API === 'MULTI_FUNGIBLE') {
+    if (!isAddress(hederaTokenAddress)) {
+      sanitizeErr = 'Invalid token address';
+    }
+
+    if (!sanitizeErr) {
+      fungibleReceivers?.some((receiver) => {
+        if (receiver === '') {
+          sanitizeErr = 'Receiver cannot be empty';
+          return true;
+        } else if (!isAddress(receiver)) {
+          sanitizeErr = `${receiver} is an invalid receiver address`;
+          return true;
+        }
+      });
+    }
+
+    if (!sanitizeErr) {
+      amounts?.some((amount) => {
+        if (amount < 0) {
+          sanitizeErr = `${amount} is an invalid amount`;
+          return true;
+        }
+      });
+    }
+
+    if (!sanitizeErr && feeValue === '') {
+      sanitizeErr = 'Gas limit should be set for this transaction';
+    }
+  } else if (API === 'MULTI_NON_FUNGIBLE') {
+    if (!isAddress(hederaTokenAddress)) {
+      sanitizeErr = 'Invalid token address';
+    }
+
+    if (!sanitizeErr) {
+      senders?.some((semder) => {
+        if (semder === '') {
+          sanitizeErr = 'sender address cannot be empty';
+          return true;
+        } else if (!isAddress(semder)) {
+          sanitizeErr = `${semder} is an invalid sender address`;
+          return true;
+        }
+      });
+    }
+
+    if (!sanitizeErr) {
+      nonFungibleReceivers?.some((receiver) => {
+        if (receiver === '') {
+          sanitizeErr = 'Receiver cannot be empty';
+          return true;
+        } else if (!isAddress(receiver)) {
+          sanitizeErr = `${receiver} is an invalid receiver address`;
+          return true;
+        }
+      });
+    }
+
+    if (!sanitizeErr) {
+      serialNumbers?.some((serialNumber) => {
+        if (serialNumber < 0) {
+          sanitizeErr = `${serialNumber} is an invalid serial number`;
+          return true;
+        }
+      });
+    }
+
+    if (!sanitizeErr && feeValue === '') {
       sanitizeErr = 'Gas limit should be set for this transaction';
     }
   }

@@ -73,13 +73,16 @@ export const transferCrypto = async (
  *
  * @param amount: number[]
  *
+ * @param gasLimit: number
+ *
  * @return Promise Promise<SmartContractExecutionResult>
  */
 export const transferFungibleTokens = async (
   baseContract: Contract,
   hederaTokenAddress: string,
   accountIDs: string[],
-  amounts: number[]
+  amounts: number[],
+  gasLimit: number
 ): Promise<SmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
@@ -95,7 +98,7 @@ export const transferFungibleTokens = async (
     });
   }
   if (!sanitizeErr) {
-    amounts.some((amount) => {
+    amounts.slice(1).some((amount) => {
       if (amount < 0) {
         sanitizeErr = `${amount} is an invalid amount`;
         return true;
@@ -109,7 +112,9 @@ export const transferFungibleTokens = async (
 
   // invoking contract methods
   try {
-    const tx = await baseContract.transferTokensPublic(hederaTokenAddress, accountIDs, amounts);
+    const tx = await baseContract.transferTokensPublic(hederaTokenAddress, accountIDs, amounts, {
+      gasLimit,
+    });
 
     return await handleContractResponse(tx);
   } catch (err: any) {
@@ -133,6 +138,8 @@ export const transferFungibleTokens = async (
  *
  * @param serialNumbers: number[]
  *
+ * @param gasLimit: number
+ *
  * @return Promise<SmartContractExecutionResult>
  */
 export const transferNonFungibleTokens = async (
@@ -140,7 +147,8 @@ export const transferNonFungibleTokens = async (
   hederaTokenAddress: string,
   senders: string[],
   receivers: string[],
-  serialNumbers: number[]
+  serialNumbers: number[],
+  gasLimit: number
 ): Promise<SmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
@@ -182,7 +190,8 @@ export const transferNonFungibleTokens = async (
       hederaTokenAddress,
       senders,
       receivers,
-      serialNumbers
+      serialNumbers,
+      { gasLimit }
     );
 
     return await handleContractResponse(tx);
@@ -205,7 +214,7 @@ export const transferNonFungibleTokens = async (
  *
  * @param baseContract: ethers.Contract
  *
- * @param API: "FUNGIBLE" | "NON_FUNGIBLE" | 'FUNGIBLE_FROM' | 'NFT_FROM'
+ * @param API: "FUNGIBLE" | "NFT" | 'FUNGIBLE_FROM' | 'NFT_FROM'
  *
  * @param hederaTokenAddress: string
  *
@@ -219,7 +228,7 @@ export const transferNonFungibleTokens = async (
  */
 export const transferSingleToken = async (
   baseContract: Contract,
-  API: 'FUNGIBLE' | 'NON_FUNGIBLE' | 'FUNGIBLE_FROM' | 'NFT_FROM',
+  API: 'FUNGIBLE' | 'NFT' | 'FUNGIBLE_FROM' | 'NFT_FROM',
   hederaTokenAddress: string,
   sender: string,
   receiver: string,
@@ -257,7 +266,7 @@ export const transferSingleToken = async (
         );
         break;
 
-      case 'NON_FUNGIBLE':
+      case 'NFT':
         transactionResult = await baseContract.transferNFTPublic(
           hederaTokenAddress,
           sender,

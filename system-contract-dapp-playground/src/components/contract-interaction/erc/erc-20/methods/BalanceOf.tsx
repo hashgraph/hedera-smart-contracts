@@ -27,8 +27,8 @@ import { ReactNode, useEffect, useState } from 'react';
 import { balanceOf } from '@/api/hedera/erc20-interactions';
 import { getBalancesFromLocalStorage } from '@/api/localStorage';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import HederaCommonTextField from '@/components/common/HederaCommonTextField';
+import { HEDERA_BRANDING_COLORS, HEDERA_CHAKRA_INPUT_BOX_SIZES } from '@/utils/common/constants';
 import {
   Popover,
   PopoverContent,
@@ -209,7 +209,7 @@ const BalanceOf = ({ baseContract }: PageProps) => {
       <div className="flex gap-12 items-center w-[580px]">
         {/* method */}
         <HederaCommonTextField
-          size={'md'}
+          size={HEDERA_CHAKRA_INPUT_BOX_SIZES.medium}
           value={accountAddress}
           title={'Balance of'}
           explanation={'Returns the amount of tokens owned by account.'}
