@@ -26,6 +26,7 @@ export type TransactionResult = {
   tokenInfo?: any;
   isToken?: boolean;
   keyTypeCalled?: any;
+  recordIndex?: number;
   tokenAddress?: string;
   accountAddress?: string;
   transactionType: string;

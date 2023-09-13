@@ -26,6 +26,7 @@ import { NetworkName } from '@/types/common';
 import { BiCopy, BiCheckDouble } from 'react-icons/bi';
 import { HASHSCAN_BASE_URL } from '@/utils/common/constants';
 import { getBalance, getWalletProvider } from '@/api/wallet';
+import { HASHSCAN_BASE_URL } from '@/utils/common/constants';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
@@ -258,12 +259,15 @@ const WalletPopup = ({ setIsOpen, userAddress, network }: PageProps) => {
               </Link>
 
               {/* Activity */}
-              <div className="flex flex-col items-center py-1 bg-button text-white w-full border-[1px] border-white/50 hover:bg-transparent justify-center rounded-xl cursor-pointer">
+              <Link
+                href={'/activity'}
+                className="flex flex-col items-center py-1 bg-button text-white w-full border-[1px] border-white/50 hover:bg-transparent justify-center rounded-xl cursor-pointer"
+              >
                 <Image src={'/assets/icons/list-icon.png'} alt={''} width={15} height={15} />
                 <p className="flex justify-center text-sm items-center gap-1 py-2 leading-[.5rem]">
                   Activity
                 </p>
-              </div>
+              </Link>
 
               {/* Disconnect */}
             </div>
