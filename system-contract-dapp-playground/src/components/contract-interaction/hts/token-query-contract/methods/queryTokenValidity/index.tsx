@@ -104,6 +104,7 @@ const QueryTokenValidity = ({ baseContract }: PageProps) => {
         toaster,
         transactionHash,
         setTransactionResults,
+        transactionType: 'HTS-IS-TOKEN',
         tokenAddress: paramValues.hederaTokenAddress,
       });
       return;
@@ -114,7 +115,9 @@ const QueryTokenValidity = ({ baseContract }: PageProps) => {
         {
           status: 'success',
           isToken: Number(IsToken) === 1,
+          transactionType: 'HTS-IS-TOKEN',
           txHash: transactionHash as string,
+          transactionTimeStamp: Date.now(),
           tokenAddress: paramValues.hederaTokenAddress,
         },
       ]);

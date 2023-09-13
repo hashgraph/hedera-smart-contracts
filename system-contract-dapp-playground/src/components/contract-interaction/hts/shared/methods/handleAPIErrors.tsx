@@ -26,11 +26,12 @@ import { IHederaTokenServiceKeyType, TransactionResult } from '@/types/contract-
 export const handleAPIErrors = ({
   err,
   toaster,
-  keyTypeCalled,
   APICalled,
   tokenAddress,
+  keyTypeCalled,
   tokenAddresses,
   accountAddress,
+  transactionType,
   transactionHash,
   receiverAddress,
   setTransactionResults,
@@ -40,6 +41,7 @@ export const handleAPIErrors = ({
   APICalled?: string;
   tokenAddress?: string;
   accountAddress?: string;
+  transactionType: string;
   receiverAddress?: string;
   tokenAddresses?: string[];
   transactionHash: string | undefined;
@@ -66,11 +68,13 @@ export const handleAPIErrors = ({
         keyTypeCalled,
         status: 'fail',
         isToken: false,
+        transactionType,
         txHash: transactionHash,
         tokenAddress: tokenAddress ? tokenAddress : '',
         accountAddress: accountAddress ? accountAddress : '',
         tokenAddresses: tokenAddresses ? tokenAddresses : [''],
         receiverAddress: receiverAddress ? receiverAddress : '',
+        transactionTimeStamp: Date.now(),
       },
     ]);
 

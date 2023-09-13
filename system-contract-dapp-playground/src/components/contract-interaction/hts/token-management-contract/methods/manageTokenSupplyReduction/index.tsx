@@ -80,6 +80,12 @@ const ManageTokenDeduction = ({ baseContract }: PageProps) => {
     { API: 'BURN', apiSwitchTitle: 'Burn Token', executeTitle: 'Burn Token' },
   ];
 
+  const transactionTypeMap = {
+    WIPE_FUNGIBLE: 'HTS-WIPE-TOKEN',
+    WIPE_NON_FUNGIBLE: 'HTS-WIPE-NFT',
+    BURN: 'HTS-TOKEN-BURN',
+  };
+
   const tokenCommonFields = useMemo(() => {
     if (APIMethods === 'WIPE_FUNGIBLE') {
       return ['hederaTokenAddress', 'accountAddress', 'amount'];
@@ -153,6 +159,7 @@ const ManageTokenDeduction = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         tokenAddress: hederaTokenAddress,
+        transactionType: transactionTypeMap[API],
       });
       return;
     } else {
@@ -161,8 +168,10 @@ const ManageTokenDeduction = ({ baseContract }: PageProps) => {
         ...prev,
         {
           status: 'success',
+          transactionTimeStamp: Date.now(),
           tokenAddress: hederaTokenAddress,
           txHash: transactionHash as string,
+          transactionType: transactionTypeMap[API],
         },
       ]);
 

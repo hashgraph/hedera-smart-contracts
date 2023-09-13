@@ -113,6 +113,7 @@ const GrantTokenKYC = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         tokenAddress: hederaTokenAddress,
+        transactionType: 'HTS-GRANT-KYC',
         accountAddress: grantingKYCAccountAddress,
       });
       return;
@@ -122,6 +123,8 @@ const GrantTokenKYC = ({ baseContract }: PageProps) => {
         ...prev,
         {
           status: 'success',
+          transactionType: 'HTS-GRANT-KYC',
+          transactionTimeStamp: Date.now(),
           tokenAddress: hederaTokenAddress,
           txHash: transactionHash as string,
           accountAddress: grantingKYCAccountAddress,
