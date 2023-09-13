@@ -23,6 +23,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const { expectValidHash } = require('../assertions')
 const Constants = require('../../constants')
+const delay = require('../../../utils/helpers').delay
 const {
   TokenCreateTransaction,
   TransactionId,
@@ -431,12 +432,12 @@ async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddres
     }
 
     numberOfTries++;
-    await delay(1000); // Delay for 1 second before the next attempt
+    await delay(); // Delay before the next attempt
   }
 
   throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
 }
 
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+// function delay(ms) {
+//   return new Promise(resolve => setTimeout(resolve, ms));
+// }

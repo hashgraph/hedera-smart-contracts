@@ -22,6 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const utils = require('../hts-precompile/utils')
 const Constants = require('../constants')
+const delay = require('../../utils/helpers').delay
 
 describe('HIP583 Test Suite', function () {
   let signers
@@ -985,7 +986,7 @@ async function pollForNewWalletBalance(erc20Contract, tokenAddress, signersAddre
     }
 
     numberOfTries++;
-    await delay(1000); // Delay for 1 second before the next attempt
+    await delay(); // Delay before the next attempt
   }
 
   throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
@@ -1006,7 +1007,7 @@ async function pollForNewERC721Balance(erc721Contract, nftTokenAddress, signersA
     }
 
     numberOfTries++;
-    await delay(1000); // Delay for 1 second before the next attempt
+    await delay(); // Delay before the next attempt
   }
 
   throw new Error(`erc721Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
@@ -1023,7 +1024,7 @@ async function pollForNewERC721HollowWalletOwner(erc721Contract, nftTokenAddress
       return ownerAfter
     }
     numberOfTries++
-    await delay(1000); // Delay for 1 second before the next attempt
+    await delay(); // Delay before the next attempt
   } 
   throw new Error(`erc721Contract.ownerOf failed to get a different value after ${timesToTry} tries`)
 } 
@@ -1044,12 +1045,8 @@ async function pollForNewHollowWalletBalance(provider, walletAddress, balanceBef
     }
 
     numberOfTries++;
-    await delay(1000); // Delay for 1 second before the next attempt
+    await delay(); // Delay before the next attempt
   }
 
   throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
-}
-
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
 }

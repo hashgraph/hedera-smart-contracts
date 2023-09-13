@@ -21,6 +21,7 @@
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../constants')
+const delay = require('../../utils/helpers')
 
 describe('ERC721 tests', function () {
   const tokenId = 33
@@ -107,11 +108,8 @@ async function pollForNewERC721Owner(erc721Contract, tokenId, ownerBefore) {
       return ownerAfter
     }
     numberOfTries++
-    await delay(1000); // Delay for 1 second before the next attempt
+    await delay(); // Delay for 1 second before the next attempt
   } 
   throw new Error(`erc721Contract.ownerOf failed to get a different value after ${timesToTry} tries`)
 } 
 
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}

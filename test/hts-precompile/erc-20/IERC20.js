@@ -22,6 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const utils = require('../utils')
 const Constants = require('../../constants')
+const delay = require('../../../utils/helpers').delay
 
 describe('IERC20 Test Suite', function () {
   let tokenCreateContract
@@ -159,7 +160,7 @@ async function pollForNewSignerBalance(IERC20Contract, signersAddress, signerBef
     }
 
     numberOfTries++;
-    await delay(3000); // Delay for 3 second before the next attempt
+    await delay(); // Delay before the next attempt
   }
 
   throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
@@ -179,11 +180,11 @@ async function pollForNewBalance(IERC20, contractAddress, tokenCreateBalanceBefo
     }
 
     numberOfTries++;
-    await delay(3000); // Delay for 3 second before the next attempt
+    await delay(); // Delay before the next attempt
   }
   throw new Error(`PollForNewBalance failed to change after ${timesToTry} tries`);
 }
 
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+// function delay(ms) {
+//   return new Promise(resolve => setTimeout(resolve, ms));
+// }

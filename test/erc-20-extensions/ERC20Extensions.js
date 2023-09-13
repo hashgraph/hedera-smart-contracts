@@ -21,6 +21,7 @@
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../constants')
+const delay = require('../../utils/helpers').delay
 
 describe('ERC20ExtensionsMock tests', function () {
   let owner, addr1
@@ -273,7 +274,7 @@ async function pollForERC20BurnableChangedSupply(ERC20Burnable, initialSupply){
     numberOfTries++;
     await delay(4000); // Delay for 4 seconds before the next attempt
   }
-  
+
   throw new Error(`ERC20Burnable failed to change after ${timesToTry} tries`);
 }
 
@@ -291,12 +292,10 @@ async function unPauseAndPoll(ERC20Pausable) {
     }
 
     numberOfTries++;
-    await delay(5000); // Delay for 5 seconds before the next attempt
+    await delay(); // Delay before the next attempt
   }
   
   throw new Error(`ERC20Pausable failed to change after ${timesToTry} tries`);
 }
 
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+

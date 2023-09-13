@@ -22,6 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../constants')
 const utils = require('../hts-precompile/utils')
+const delay = require('../../utils/helpers').delay
 
 describe('SafeHTS library Test Suite', function () {
   let safeOperationsContract
@@ -359,7 +360,7 @@ async function pollForNewHBarBalance(provider, signers0BeforeHbarBalance, signer
   let signers0AfterHbarBalance = await provider.getBalance(signer1AccountID)
 
   while(signers0AfterHbarBalance.eq(signers0BeforeHbarBalance)){
-    await delay(3000)
+    await delay()
     signers0AfterHbarBalance = await provider.getBalance(signer1AccountID)
     numberOfTries++;
     if(numberOfTries > timesToTry){
@@ -369,6 +370,6 @@ async function pollForNewHBarBalance(provider, signers0BeforeHbarBalance, signer
   return signers0AfterHbarBalance  
 }
 
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+// function delay(ms) {
+//   return new Promise(resolve => setTimeout(resolve, ms));
+// }

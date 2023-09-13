@@ -22,6 +22,7 @@ const { expect } = require('chai')
 const { ethers, upgrades } = require('hardhat')
 const utils = require('../hts-precompile/utils')
 const Constants = require('../constants')
+const delay = require('../../utils/helpers').delay
 
 describe('Proxy Upgrade Contracts Test Suite', function () {
   let signers
@@ -411,13 +412,9 @@ async function pollForNewCounterValue(proxyContract, counterBefore) {
     }
 
     numberOfTries++;
-    await delay(2000); // Delay for 2 seconds before the next attempt
+    await delay(); // Delay before the next attempt
   }
 
   throw new Error(`proxyContract.count failed to get a different value after ${timesToTry} tries`);
 }
 
-
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
