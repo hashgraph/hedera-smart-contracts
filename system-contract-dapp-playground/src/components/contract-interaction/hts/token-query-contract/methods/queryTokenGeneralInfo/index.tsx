@@ -26,6 +26,7 @@ import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
+import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { queryTokenGeneralInfomation } from '@/api/hedera/tokenQuery-interactions';
 import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
 import TokenGeneralInfoModal from '../../../shared/components/TokenGeneralInfoModal';
@@ -61,7 +62,8 @@ const QueryTokenGeneralInfomation = ({ baseContract }: PageProps) => {
   const [tokenInfoFromTxResult, setTokenInfoFromTxResult] = useState<any>();
   const [tokenAddressFromTxResult, setTokenAddressFromTxResult] = useState('');
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-QUERY.TOKEN-GENERAL-INFO-RESULTS';
+  const transactionResultStorageKey =
+    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-QUERY']['TOKEN-GENERAL-INFO'];
   const [APIMethodsFromTxResult, setAPIMethodsFromTxResult] = useState<API_NAMES>('TOKEN');
   const initialParamValues = {
     serialNumber: '',
@@ -109,13 +111,10 @@ const QueryTokenGeneralInfomation = ({ baseContract }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(
-    currentTransactionPage,
-    transactionResults
-  );
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string) => {

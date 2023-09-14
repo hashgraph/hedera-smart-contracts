@@ -35,12 +35,10 @@ import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../sha
 import {
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
   HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
 } from '@/utils/common/constants';
-import {
-  SharedExecuteButton,
-  SharedFormInputField,
-} from '../../../shared/components/ParamInputForm';
+import { SharedExecuteButton, SharedFormInputField } from '../../../shared/components/ParamInputForm';
 
 interface PageProps {
   baseContract: Contract;
@@ -55,7 +53,7 @@ const QueryTokenValidity = ({ baseContract }: PageProps) => {
   const [paramValues, setParamValues] = useState(initialParamValues);
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-QUERY.TOKEN-VALIDITY-RESULTS';
+  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-QUERY']['TOKEN-VALIDITY'];
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
@@ -66,13 +64,10 @@ const QueryTokenValidity = ({ baseContract }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(
-    currentTransactionPage,
-    transactionResults
-  );
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string) => {

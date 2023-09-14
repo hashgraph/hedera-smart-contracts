@@ -30,6 +30,7 @@ import { TRANSACTION_PAGE_SIZE } from '../../shared/states/commonStates';
 import MetadataInputForm from '../../shared/components/MetadataInputForm';
 import { useToastSuccessful } from '../../shared/hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../shared/hooks/usePaginatedTxResults';
+import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../shared/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../shared/hooks/useUpdateLocalStorage';
@@ -40,10 +41,7 @@ import {
   SharedFormInputField,
   SharedExecuteButton,
 } from '../../shared/components/ParamInputForm';
-import {
-  mintHederaToken,
-  mintHederaTokenToAddress,
-} from '@/api/hedera/tokenCreateCustom-interactions';
+import { mintHederaToken, mintHederaTokenToAddress } from '@/api/hedera/tokenCreateCustom-interactions';
 
 interface PageProps {
   baseContract: Contract;
@@ -59,7 +57,7 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('FUNGIBLE');
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-CREATE.MINT-TOKEN-RESULTS';
+  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-CREATE']['MINT-TOKEN'];
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const [metadata, setMetadata] = useState<{ metaKey: string; metaValue: string }[]>([]);
   const tokenMintFields = useMemo(() => {
@@ -95,13 +93,10 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   /** @dev declare a paginatedTransactionResults */
-  const paginatedTransactionResults = usePaginatedTxResults(
-    currentTransactionPage,
-    transactionResults
-  );
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string, metaKey?: string) => {

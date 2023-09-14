@@ -33,10 +33,7 @@ import { SmartContractExecutionResult, TransactionResult } from '@/types/contrac
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
 import { htsMultiTokensTransferParamFields } from '@/utils/contract-interactions/HTS/token-transfer/paramFieldConstant';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
-import {
-  transferFungibleTokens,
-  transferNonFungibleTokens,
-} from '@/api/hedera/tokenTransfer-interactions';
+import { transferFungibleTokens, transferNonFungibleTokens } from '@/api/hedera/tokenTransfer-interactions';
 import {
   FungibleParamValue,
   NonFungibleParamValue,
@@ -49,6 +46,7 @@ import {
   SharedExecuteButtonWithFee,
 } from '../../../shared/components/ParamInputForm';
 import TransferRecordForm from './TransferRecordForm';
+import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 
 interface PageProps {
   baseContract: Contract;
@@ -69,7 +67,8 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const contractCaller = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-TRANSFER.MULTIPLE-TOKENS-RESULTS';
+  const transactionResultStorageKey =
+    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-TRANSFER']['MULTIPLE-TOKENS'];
   const tokenCommonFields = useMemo(() => {
     if (APIMethods === 'FUNGIBLE') {
       return ['hederaTokenAddress', 'accountIDs', 'amounts'];
@@ -93,9 +92,7 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
     },
   ];
 
-  const [fungibleParamValues, setFungibleParamValues] = useState([
-    generateInitialFungibleParamValue(),
-  ]);
+  const [fungibleParamValues, setFungibleParamValues] = useState([generateInitialFungibleParamValue()]);
   const [nonFungibleParamValues, setNonFungibleParamValues] = useState([
     generateInitialNonFungibleParamValue(),
   ]);
@@ -108,13 +105,10 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(
-    currentTransactionPage,
-    transactionResults
-  );
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
 
   /** @dev handle modifying transfer records */
   const handleModifyTransferRecords = (
@@ -130,9 +124,7 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
         break;
       case 'REMOVE':
         if (paramValues!.length > 1) {
-          setParamValues((prev: any) =>
-            prev.filter((field: any) => field.fieldKey !== removingFieldKey)
-          );
+          setParamValues((prev: any) => prev.filter((field: any) => field.fieldKey !== removingFieldKey));
         }
     }
   };
@@ -165,9 +157,7 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
     const { hederaTokenAddress, feeValue } = commonParamValues;
 
     // extract fungibleParamsAccountIDs && fungibleParamsAmmounts  array
-    const fungibleParamsAccountIDs = fungibleParamValues.map(
-      (prev) => prev.fieldValue.receiverAddress
-    );
+    const fungibleParamsAccountIDs = fungibleParamValues.map((prev) => prev.fieldValue.receiverAddress);
     fungibleParamsAccountIDs.unshift(contractCaller); // add contractCaller to the beginning of the list
 
     let amountTotal = 0;
@@ -178,12 +168,8 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
     fungibleParamsAmmounts.unshift(amountTotal * -1); // add the negative total amount to the beginning of the list
 
     // extract nonFungibleParamsSenders, nonFungibleParamsReceivers && nonFungibleParamsSerialNumbers  array
-    const nonFungibleParamsSenders = nonFungibleParamValues.map(
-      (prev) => prev.fieldValue.senderAddress
-    );
-    const nonFungibleParamsReceivers = nonFungibleParamValues.map(
-      (prev) => prev.fieldValue.receiverAddress
-    );
+    const nonFungibleParamsSenders = nonFungibleParamValues.map((prev) => prev.fieldValue.senderAddress);
+    const nonFungibleParamsReceivers = nonFungibleParamValues.map((prev) => prev.fieldValue.receiverAddress);
     const nonFungibleParamsSerialNumbers = nonFungibleParamValues.map((prev) =>
       Number(prev.fieldValue.serialNumber)
     );
@@ -309,12 +295,8 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
           paramType={(htsMultiTokensTransferParamFields as any)['hederaTokenAddress'].inputType}
           paramSize={(htsMultiTokensTransferParamFields as any)['hederaTokenAddress'].inputSize}
           explanation={(htsMultiTokensTransferParamFields as any)['hederaTokenAddress'].explanation}
-          paramClassName={
-            (htsMultiTokensTransferParamFields as any)['hederaTokenAddress'].inputClassname
-          }
-          paramPlaceholder={
-            (htsMultiTokensTransferParamFields as any)['hederaTokenAddress'].inputPlaceholder
-          }
+          paramClassName={(htsMultiTokensTransferParamFields as any)['hederaTokenAddress'].inputClassname}
+          paramPlaceholder={(htsMultiTokensTransferParamFields as any)['hederaTokenAddress'].inputPlaceholder}
           paramFocusColor={
             (htsMultiTokensTransferParamFields as any)['hederaTokenAddress'].inputFocusBorderColor
           }

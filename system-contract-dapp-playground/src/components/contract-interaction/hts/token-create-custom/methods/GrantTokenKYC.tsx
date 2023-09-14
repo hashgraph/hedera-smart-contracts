@@ -28,6 +28,7 @@ import { handleAPIErrors } from '../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../shared/states/commonStates';
 import { useToastSuccessful } from '../../shared/hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../shared/hooks/usePaginatedTxResults';
+import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { grantTokenKYCToAccount } from '@/api/hedera/tokenCreateCustom-interactions';
 import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../shared/methods/handleSanitizeFormInputs';
@@ -48,7 +49,7 @@ const GrantTokenKYC = ({ baseContract }: PageProps) => {
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const grantKYCFields = ['hederaTokenAddress', 'grantingKYCAccountAddress'];
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-CREATE.TOKEN-KYC-RESULTS';
+  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-CREATE']['TOKEN-KYC'];
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const initialParamValues = {
     hederaTokenAddress: '',
@@ -64,13 +65,10 @@ const GrantTokenKYC = ({ baseContract }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(
-    currentTransactionPage,
-    transactionResults
-  );
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string) => {

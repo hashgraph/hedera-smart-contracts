@@ -53,6 +53,7 @@ import {
   IHederaTokenServiceExpiry,
   IHederaTokenServiceHederaToken,
 } from '@/types/contract-interactions/HTS';
+import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 
 interface PageProps {
   baseContract: Contract;
@@ -68,7 +69,7 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('UPDATE_INFO');
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-MANAGEMENT.TOKEN-INFO-RESULTS';
+  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-MANAGE']['TOKEN-INFO'];
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const APIButtonTitles: { API: API_NAMES; apiSwitchTitle: string; executeTitle: string }[] = [
     {
@@ -152,13 +153,10 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(
-    currentTransactionPage,
-    transactionResults
-  );
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string) => {
@@ -298,8 +296,8 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
       <div className="flex flex-col gap-6 justify-center tracking-tight text-white/70">
         {/* notice component */}
         <p className="text-sm whitespace-normal -mb-4">
-          <span className="italic font-bold">*important:</span> Should you choose not to update
-          certain fields, kindly populate the token&apos;s current values.
+          <span className="italic font-bold">*important:</span> Should you choose not to update certain
+          fields, kindly populate the token&apos;s current values.
         </p>
 
         {/* API methods */}
@@ -327,15 +325,9 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
           paramType={(htsUpdateTokenInfoParamFields as any)['hederaTokenAddress'].inputType}
           paramSize={(htsUpdateTokenInfoParamFields as any)['hederaTokenAddress'].inputSize}
           explanation={(htsUpdateTokenInfoParamFields as any)['hederaTokenAddress'].explanation}
-          paramClassName={
-            (htsUpdateTokenInfoParamFields as any)['hederaTokenAddress'].inputClassname
-          }
-          paramPlaceholder={
-            (htsUpdateTokenInfoParamFields as any)['hederaTokenAddress'].inputPlaceholder
-          }
-          paramFocusColor={
-            (htsUpdateTokenInfoParamFields as any)['hederaTokenAddress'].inputFocusBorderColor
-          }
+          paramClassName={(htsUpdateTokenInfoParamFields as any)['hederaTokenAddress'].inputClassname}
+          paramPlaceholder={(htsUpdateTokenInfoParamFields as any)['hederaTokenAddress'].inputPlaceholder}
+          paramFocusColor={(htsUpdateTokenInfoParamFields as any)['hederaTokenAddress'].inputFocusBorderColor}
         />
 
         {/* UPDATE_INFO form */}

@@ -24,7 +24,7 @@ import { useToast } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { generatedRandomUniqueKey } from '@/utils/common/helpers';
-import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
+import { HEDERA_BRANDING_COLORS, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
@@ -59,7 +59,8 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('REVOKE_KYC');
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-MANAGEMENT.TOKEN-RELATION-RESULTS';
+  const transactionResultStorageKey =
+    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-MANAGE']['TOKEN-RELATION'];
   const [isFreezeLoading, setIsFreezeLoading] = useState({
     freezeLoading: false,
     unfreezeLoading: false,
@@ -115,9 +116,7 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
         break;
       case 'REMOVE':
         if (hederaTokenAddresses.length > 1) {
-          setHederaTokenAddresses((prev) =>
-            prev.filter((field) => field.fieldKey !== removingFieldKey)
-          );
+          setHederaTokenAddresses((prev) => prev.filter((field) => field.fieldKey !== removingFieldKey));
         }
     }
   };
@@ -130,13 +129,10 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(
-    currentTransactionPage,
-    transactionResults
-  );
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string, fieldKey?: string) => {

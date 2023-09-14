@@ -28,17 +28,18 @@ import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { useToastSuccessful } from '../../../shared/hooks/useToastSuccessful';
 import { manageTokenPermission } from '@/api/hedera/tokenManagement-interactions';
+import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
+import { htsTokenPermissionParamFields } from '@/utils/contract-interactions/HTS/token-management/constant';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedExecuteButtonWithFee,
   SharedFormButton,
   SharedFormInputField,
 } from '../../../shared/components/ParamInputForm';
-import { htsTokenPermissionParamFields } from '@/utils/contract-interactions/HTS/token-management/constant';
 
 interface PageProps {
   baseContract: Contract;
@@ -56,7 +57,8 @@ const ManageTokenPermission = ({ baseContract }: PageProps) => {
   const tokenCommonFields = ['hederaTokenAddress', 'targetApprovedAddress'];
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('APPROVED_FUNGIBLE');
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-MANAGEMENT.TOKEN-PERMISSION-RESULTS';
+  const transactionResultStorageKey =
+    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-MANAGE']['TOKEN-PERMISSION'];
   const initialParamValues = {
     feeValue: '',
     serialNumber: '',
@@ -89,13 +91,10 @@ const ManageTokenPermission = ({ baseContract }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(
-    currentTransactionPage,
-    transactionResults
-  );
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string) => {
@@ -219,9 +218,7 @@ const ManageTokenPermission = ({ baseContract }: PageProps) => {
                 explanation={(htsTokenPermissionParamFields as any)[param].explanation}
                 paramClassName={(htsTokenPermissionParamFields as any)[param].inputClassname}
                 paramPlaceholder={(htsTokenPermissionParamFields as any)[param].inputPlaceholder}
-                paramFocusColor={
-                  (htsTokenPermissionParamFields as any)[param].inputFocusBorderColor
-                }
+                paramFocusColor={(htsTokenPermissionParamFields as any)[param].inputFocusBorderColor}
               />
             </div>
           );
@@ -238,12 +235,8 @@ const ManageTokenPermission = ({ baseContract }: PageProps) => {
               paramType={(htsTokenPermissionParamFields as any)['amountToApprove'].inputType}
               paramSize={(htsTokenPermissionParamFields as any)['amountToApprove'].inputSize}
               explanation={(htsTokenPermissionParamFields as any)['amountToApprove'].explanation}
-              paramClassName={
-                (htsTokenPermissionParamFields as any)['amountToApprove'].inputClassname
-              }
-              paramPlaceholder={
-                (htsTokenPermissionParamFields as any)['amountToApprove'].inputPlaceholder
-              }
+              paramClassName={(htsTokenPermissionParamFields as any)['amountToApprove'].inputClassname}
+              paramPlaceholder={(htsTokenPermissionParamFields as any)['amountToApprove'].inputPlaceholder}
               paramFocusColor={
                 (htsTokenPermissionParamFields as any)['amountToApprove'].inputFocusBorderColor
               }
@@ -263,12 +256,8 @@ const ManageTokenPermission = ({ baseContract }: PageProps) => {
               paramSize={(htsTokenPermissionParamFields as any)['serialNumber'].inputSize}
               explanation={(htsTokenPermissionParamFields as any)['serialNumber'].explanation}
               paramClassName={(htsTokenPermissionParamFields as any)['serialNumber'].inputClassname}
-              paramPlaceholder={
-                (htsTokenPermissionParamFields as any)['serialNumber'].inputPlaceholder
-              }
-              paramFocusColor={
-                (htsTokenPermissionParamFields as any)['serialNumber'].inputFocusBorderColor
-              }
+              paramPlaceholder={(htsTokenPermissionParamFields as any)['serialNumber'].inputPlaceholder}
+              paramFocusColor={(htsTokenPermissionParamFields as any)['serialNumber'].inputFocusBorderColor}
             />
           </>
         )}

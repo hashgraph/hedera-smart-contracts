@@ -104,3 +104,20 @@ export const generatedRandomUniqueKey = (byteLength: number) => {
   const randomKey = ethers.hexlify(randomBytes);
   return randomKey;
 };
+
+/**
+ * @dev prepare transaction result storage key
+ *
+ * @param methodKey: string
+ *
+ * @param resultKey: string
+ *
+ * @return string
+ */
+export const prepareTransactionResultStorageKey = (
+  contractKey: string,
+  methodKey: string,
+  resultKey: string
+) => {
+  return `HEDERA.${contractKey}.${methodKey}.${resultKey}-RESULTS`;
+};
