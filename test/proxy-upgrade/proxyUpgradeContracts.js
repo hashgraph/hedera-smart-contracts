@@ -22,7 +22,7 @@ const { expect } = require('chai')
 const { ethers, upgrades } = require('hardhat')
 const utils = require('../hts-precompile/utils')
 const Constants = require('../constants')
-const delay = require('../../utils/helpers').delay
+const { pollForNewCounterValue } = require('../../utils/helpers')
 
 describe('Proxy Upgrade Contracts Test Suite', function () {
   let signers
@@ -399,22 +399,22 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
 })
 
 // Transaction needs to be propagated to the mirror node
-async function pollForNewCounterValue(proxyContract, counterBefore) {
-  const timesToTry = 200;
-  let counterAfter, numberOfTries = 0;
+// async function pollForNewCounterValue(proxyContract, counterBefore) {
+//   const timesToTry = 200;
+//   let counterAfter, numberOfTries = 0;
 
-  while (numberOfTries < timesToTry) {
-      counterAfter = await proxyContract.count();
+//   while (numberOfTries < timesToTry) {
+//       counterAfter = await proxyContract.count();
 
 
-    if (!counterAfter.eq(counterBefore)) {
-      return counterAfter;
-    }
+//     if (!counterAfter.eq(counterBefore)) {
+//       return counterAfter;
+//     }
 
-    numberOfTries++;
-    await delay(); // Delay before the next attempt
-  }
+//     numberOfTries++;
+//     await delay(); // Delay before the next attempt
+//   }
 
-  throw new Error(`proxyContract.count failed to get a different value after ${timesToTry} tries`);
-}
+//   throw new Error(`proxyContract.count failed to get a different value after ${timesToTry} tries`);
+// }
 

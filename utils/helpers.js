@@ -9,6 +9,11 @@ async function getBalance(erc20Contract, tokenAddress, signersAddress) {
     return balance;
 }
 
+async function getCount(proxyContract) {
+    const counter = await proxyContract.count();
+    return counter;
+}
+
 async function getSignerBalance(provider, signersAddress) {
     const balance = await provider.getBalance(signersAddress);
     return balance;
@@ -48,6 +53,25 @@ async function pollForERC20BurnableChangedSupply(ERC20Burnable, initialSupply) {
   
     throw new Error(`Failed to get a different supply value after ${timesToTry} tries`);
 }
+
+async function pollForNewCounterValue(proxyContract, counterBefore) {
+    const timesToTry = 200;
+    let counterAfter, numberOfTries = 0;
+  
+    while (numberOfTries < timesToTry) {
+        counterAfter = await proxyContract.count();
+  
+  
+      if (!counterAfter.eq(counterBefore)) {
+        return counterAfter;
+      }
+  
+      numberOfTries++;
+      await delay(); // Delay before the next attempt
+    }
+  
+    throw new Error(`proxyContract.count failed to get a different value after ${timesToTry} tries`);
+  }
 
 async function pollForNewERC721Owner(erc721Contract, tokenId, ownerBefore) {
     const timesToTry = 200;
@@ -188,6 +212,26 @@ async function pollForNewSignerBalance(IERC20Contract, signersAddress, signerBef
     throw new Error(`Failed to get a different balance value after ${timesToTry} tries`);
 }
 
+async function pollForNewCounterValue(proxyContract, counterBefore) {
+    const timesToTry = 200;
+  
+    for (let numberOfTries = 0; numberOfTries < timesToTry; numberOfTries++) {
+      try {
+        const counterAfter = await getCount(proxyContract);
+        if (!counterAfter.eq(counterBefore)) {
+          return counterAfter;
+        }
+      } catch (error) {
+        // Handle errors from proxyContract.count
+        console.error(`Error fetching counter value: ${error.message}`);
+      }
+  
+      await delay();
+    }
+  
+    throw new Error(`Failed to get a different value after ${timesToTry} tries`);
+}
+
 async function pollForNewSignerBalanceUsingProvider(provider, signersAddress, signerBefore) {
     const timesToTry = 400;
     const delayTimeMs = 1000; // Adjust the delay time as needed
@@ -233,6 +277,7 @@ module.exports = {
     pollForNewERC20Balance,
     pollForERC20BurnableChangedSupply,
     pollForNewBalance,
+    pollForNewCounterValue,
     pollForNewSignerBalanceUsingProvider,
     pollForNewERC721Balance,
     pollForNewERC721Owner,
