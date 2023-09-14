@@ -31,22 +31,24 @@ import {
   IHederaTokenServiceHederaToken,
 } from '@/types/contract-interactions/HTS';
 import { Contract } from 'ethers';
+import {
+  MOCK_CONTRACT_ID,
+  MOCK_GAS_LIMIT,
+  MOCK_TOKEN_ADDRESS,
+  MOCK_TX_HASH,
+} from '../../../utils/common/constants';
 
 describe('TokenManagementContract test suite', () => {
   // mock states
   const responseCode = 22;
-  const gasLimit = 1000000;
   const AUTO_RENEW_SECOND = 0;
   const NEW_AUTO_RENEW_PERIOD = 7999900;
   const accountAddress = '0x34810E139b451e0a4c67d5743E956Ac8990842A8';
-  const contractId = '0xDd7fCb7c2ee96A79B1e201d25F5E43d6a0cED5e6';
-  const hederaTokenAddress = '0x00000000000000000000000000000000000084b7';
-  const hederaTokenAddresses = [
+  const MOCK_TOKEN_ADDRESSES = [
     '0x00000000000000000000000000000000000084b7',
     '0x00000000000000000000000000000000000084b8',
     '0x00000000000000000000000000000000000084b9',
   ];
-  const txHash = '0x63424020a69bf46a0669f46dd66addba741b9c02d37fab1686428f5209bc759d';
 
   const tokenExpiry: IHederaTokenServiceExpiry = {
     second: AUTO_RENEW_SECOND,
@@ -71,37 +73,37 @@ describe('TokenManagementContract test suite', () => {
     {
       keyType: 'ADMIN',
       keyValueType: 'contractId',
-      keyValue: contractId,
+      keyValue: MOCK_CONTRACT_ID,
     },
     {
       keyType: 'KYC',
       keyValueType: 'contractId',
-      keyValue: contractId,
+      keyValue: MOCK_CONTRACT_ID,
     },
     {
       keyType: 'FREEZE',
       keyValueType: 'contractId',
-      keyValue: contractId,
+      keyValue: MOCK_CONTRACT_ID,
     },
     {
       keyType: 'WIPE',
       keyValueType: 'contractId',
-      keyValue: contractId,
+      keyValue: MOCK_CONTRACT_ID,
     },
     {
       keyType: 'SUPPLY',
       keyValueType: 'contractId',
-      keyValue: contractId,
+      keyValue: MOCK_CONTRACT_ID,
     },
     {
       keyType: 'FEE',
       keyValueType: 'contractId',
-      keyValue: contractId,
+      keyValue: MOCK_CONTRACT_ID,
     },
     {
       keyType: 'PAUSE',
       keyValueType: 'contractId',
-      keyValue: contractId,
+      keyValue: MOCK_CONTRACT_ID,
     },
   ];
 
@@ -115,7 +117,7 @@ describe('TokenManagementContract test suite', () => {
           data: responseCode,
         },
       ],
-      hash: txHash,
+      hash: MOCK_TX_HASH,
     }),
   };
 
@@ -145,22 +147,22 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenInfomation(
         baseContract as unknown as Contract,
         'UPDATE_INFO',
-        hederaTokenAddress,
-        gasLimit,
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         tokenInfo
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute manageTokenInfomation with API === "UPDATE_INFO" then return error if tokenInfo is missing', async () => {
       const txRes = await manageTokenInfomation(
         baseContract as unknown as Contract,
         'UPDATE_INFO',
-        hederaTokenAddress,
-        gasLimit,
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         undefined
       );
 
@@ -173,23 +175,23 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenInfomation(
         baseContract as unknown as Contract,
         'UPDATE_EXPIRY',
-        hederaTokenAddress,
-        gasLimit,
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         undefined,
         tokenExpiry
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute manageTokenInfomation with API === "UPDATE_EXPIRY" then return error if expiryInfo is missing', async () => {
       const txRes = await manageTokenInfomation(
         baseContract as unknown as Contract,
         'UPDATE_EXPIRY',
-        hederaTokenAddress,
-        gasLimit,
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         undefined,
         undefined
       );
@@ -203,8 +205,8 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenInfomation(
         baseContract as unknown as Contract,
         'UPDATE_KEYS',
-        hederaTokenAddress,
-        gasLimit,
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         undefined,
         undefined,
         tokenKeys
@@ -212,15 +214,15 @@ describe('TokenManagementContract test suite', () => {
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute manageTokenInfomation with API === "UPDATE_KEYS" then return error if keysInfo is missing', async () => {
       const txRes = await manageTokenInfomation(
         baseContract as unknown as Contract,
         'UPDATE_KEYS',
-        hederaTokenAddress,
-        gasLimit,
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         undefined,
         undefined,
         undefined
@@ -231,12 +233,12 @@ describe('TokenManagementContract test suite', () => {
       expect(txRes.transactionHash).toBeNull;
     });
 
-    it('should execute manageTokenInfomation then return an error if hederaTokenAddress is not valid success response code and a transaction hash', async () => {
+    it('should execute manageTokenInfomation then return an error if MOCK_TOKEN_ADDRESS is not valid success response code and a transaction hash', async () => {
       const txRes = await manageTokenInfomation(
         baseContract as unknown as Contract,
         'UPDATE_KEYS',
         '0xabc',
-        gasLimit,
+        MOCK_GAS_LIMIT,
         undefined,
         undefined,
         tokenKeys
@@ -253,24 +255,24 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenPermission(
         baseContract as unknown as Contract,
         'APPROVED_FUNGIBLE',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         accountAddress,
-        gasLimit,
+        MOCK_GAS_LIMIT,
         200
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute manageTokenInfomation with API === "APPROVED_FUNGIBLE" then return an error if amountToApprove is missing ', async () => {
       const txRes = await manageTokenPermission(
         baseContract as unknown as Contract,
         'APPROVED_FUNGIBLE',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         accountAddress,
-        gasLimit,
+        MOCK_GAS_LIMIT,
         undefined
       );
 
@@ -283,25 +285,25 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenPermission(
         baseContract as unknown as Contract,
         'APPROVED_NON_FUNGIBLE',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         accountAddress,
-        gasLimit,
+        MOCK_GAS_LIMIT,
         undefined,
         20
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute manageTokenInfomation with API === "APPROVED_NON_FUNGIBLE" then return an error if serialNumber is missing ', async () => {
       const txRes = await manageTokenPermission(
         baseContract as unknown as Contract,
         'APPROVED_NON_FUNGIBLE',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         accountAddress,
-        gasLimit,
+        MOCK_GAS_LIMIT,
         undefined,
         undefined
       );
@@ -315,9 +317,9 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenPermission(
         baseContract as unknown as Contract,
         'SET_APPROVAL',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         accountAddress,
-        gasLimit,
+        MOCK_GAS_LIMIT,
         undefined,
         undefined,
         true
@@ -325,16 +327,16 @@ describe('TokenManagementContract test suite', () => {
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute manageTokenInfomation with API === "SET_APPROVAL" then return an error if approvedStatus is missing ', async () => {
       const txRes = await manageTokenPermission(
         baseContract as unknown as Contract,
         'SET_APPROVAL',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         accountAddress,
-        gasLimit,
+        MOCK_GAS_LIMIT,
         undefined,
         undefined,
         undefined
@@ -345,13 +347,13 @@ describe('TokenManagementContract test suite', () => {
       expect(txRes.transactionHash).toBeNull;
     });
 
-    it('should execute manageTokenInfomation then return error if hederaTokenAddress is invalid', async () => {
+    it('should execute manageTokenInfomation then return error if MOCK_TOKEN_ADDRESS is invalid', async () => {
       const txRes = await manageTokenPermission(
         baseContract as unknown as Contract,
         'SET_APPROVAL',
         '0xabc',
         accountAddress,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe('Invalid token address');
@@ -362,9 +364,9 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenPermission(
         baseContract as unknown as Contract,
         'SET_APPROVAL',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         '0xabc',
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe('Invalid target approved address');
@@ -375,30 +377,26 @@ describe('TokenManagementContract test suite', () => {
 
   describe('manageTokenStatus test suite', () => {
     it('should execute manageTokenStatus with API === "PAUSE" then return a success response code and a transaction hash', async () => {
-      const txRes = await manageTokenStatus(
-        baseContract as unknown as Contract,
-        'PAUSE',
-        hederaTokenAddress
-      );
+      const txRes = await manageTokenStatus(baseContract as unknown as Contract, 'PAUSE', MOCK_TOKEN_ADDRESS);
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute manageTokenStatus with API === "UNPAUSE" then return a success response code and a transaction hash', async () => {
       const txRes = await manageTokenStatus(
         baseContract as unknown as Contract,
         'UNPAUSE',
-        hederaTokenAddress
+        MOCK_TOKEN_ADDRESS
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
-    it('should execute manageTokenStatus then return error if hederaTokenAddress is invalid', async () => {
+    it('should execute manageTokenStatus then return error if MOCK_TOKEN_ADDRESS is invalid', async () => {
       const txRes = await manageTokenStatus(baseContract as unknown as Contract, 'PAUSE', '0xabc');
 
       expect(txRes.err).toBe('Invalid token address');
@@ -413,13 +411,13 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'REVOKE_KYC',
         accountAddress,
-        gasLimit,
-        hederaTokenAddress
+        MOCK_GAS_LIMIT,
+        MOCK_TOKEN_ADDRESS
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute manageTokenRelation with API === "FREEZE" then return a success response code and a transaction hash', async () => {
@@ -427,40 +425,40 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'FREEZE',
         accountAddress,
-        gasLimit,
-        hederaTokenAddress
+        MOCK_GAS_LIMIT,
+        MOCK_TOKEN_ADDRESS
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
     it('should execute manageTokenRelation with API === "UNFREEZE" then return a success response code and a transaction hash', async () => {
       const txRes = await manageTokenRelation(
         baseContract as unknown as Contract,
         'UNFREEZE',
         accountAddress,
-        gasLimit,
-        hederaTokenAddress
+        MOCK_GAS_LIMIT,
+        MOCK_TOKEN_ADDRESS
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
     it('should execute manageTokenRelation with API === "DISSOCIATE_TOKEN" then return a success response code and a transaction hash', async () => {
       const txRes = await manageTokenRelation(
         baseContract as unknown as Contract,
         'DISSOCIATE_TOKEN',
         accountAddress,
-        gasLimit,
-        hederaTokenAddress,
-        hederaTokenAddresses
+        MOCK_GAS_LIMIT,
+        MOCK_TOKEN_ADDRESS,
+        MOCK_TOKEN_ADDRESSES
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute manageTokenRelation then return error if accountAddress is invalid', async () => {
@@ -468,8 +466,8 @@ describe('TokenManagementContract test suite', () => {
         baseContract as unknown as Contract,
         'REVOKE_KYC',
         '0xabc',
-        gasLimit,
-        hederaTokenAddress
+        MOCK_GAS_LIMIT,
+        MOCK_TOKEN_ADDRESS
       );
 
       expect(txRes.err).toBe('Invalid account address');
@@ -477,14 +475,14 @@ describe('TokenManagementContract test suite', () => {
       expect(txRes.transactionHash).toBeNull;
     });
 
-    it('should execute manageTokenRelation then return error if hederaTokenAddresses contains an invalid token address', async () => {
+    it('should execute manageTokenRelation then return error if MOCK_TOKEN_ADDRESSES contains an invalid token address', async () => {
       const txRes = await manageTokenRelation(
         baseContract as unknown as Contract,
         'REVOKE_KYC',
         accountAddress,
-        gasLimit,
-        hederaTokenAddress,
-        [hederaTokenAddress, '0xabc']
+        MOCK_GAS_LIMIT,
+        MOCK_TOKEN_ADDRESS,
+        [MOCK_TOKEN_ADDRESS, '0xabc']
       );
 
       expect(txRes.err).toBe('Invalid token addresses');
@@ -498,23 +496,23 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
         'WIPE_FUNGIBLE',
-        hederaTokenAddress,
-        gasLimit,
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         accountAddress,
         120
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute manageTokenDeduction with API === "WIPE_FUNGIBLE" then return an error if accountAddress is missing', async () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
         'WIPE_FUNGIBLE',
-        hederaTokenAddress,
-        gasLimit
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe('Account address is needed for WIPE_FUNGIBLE API');
@@ -526,8 +524,8 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
         'WIPE_FUNGIBLE',
-        hederaTokenAddress,
-        gasLimit,
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         accountAddress
       );
 
@@ -540,8 +538,8 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
         'WIPE_NON_FUNGIBLE',
-        hederaTokenAddress,
-        gasLimit,
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         accountAddress,
         undefined,
         [120]
@@ -549,15 +547,15 @@ describe('TokenManagementContract test suite', () => {
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute manageTokenDeduction with API === "WIPE_NON_FUNGIBLE" then return an error if accountAddress is missing', async () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
         'WIPE_NON_FUNGIBLE',
-        hederaTokenAddress,
-        gasLimit
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe('Account address is needed for WIPE_NON_FUNGIBLE API');
@@ -569,8 +567,8 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
         'WIPE_NON_FUNGIBLE',
-        hederaTokenAddress,
-        gasLimit,
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         accountAddress
       );
 
@@ -583,8 +581,8 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
         'BURN',
-        hederaTokenAddress,
-        gasLimit,
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         undefined,
         120,
         [120]
@@ -592,15 +590,15 @@ describe('TokenManagementContract test suite', () => {
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute manageTokenDeduction with API === "BURN" then return an error if amount is missing', async () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
         'BURN',
-        hederaTokenAddress,
-        gasLimit,
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         accountAddress
       );
 
@@ -613,8 +611,8 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
         'BURN',
-        hederaTokenAddress,
-        gasLimit,
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         undefined,
         undefined
       );
@@ -628,21 +626,21 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
         'DELETE',
-        hederaTokenAddress,
-        gasLimit
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
-    it('should execute manageTokenDeduction then return error if hederaTokenAddress is invalid', async () => {
+    it('should execute manageTokenDeduction then return error if MOCK_TOKEN_ADDRESS is invalid', async () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
         'DELETE',
         '0xabc',
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe('Invalid token address');
@@ -654,8 +652,8 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
         'DELETE',
-        hederaTokenAddress,
-        gasLimit,
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         '0xabc'
       );
 
@@ -668,8 +666,8 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
         'DELETE',
-        hederaTokenAddress,
-        gasLimit,
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         accountAddress,
         -9
       );
@@ -683,8 +681,8 @@ describe('TokenManagementContract test suite', () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
         'DELETE',
-        hederaTokenAddress,
-        gasLimit,
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         accountAddress,
         120,
         [-9]

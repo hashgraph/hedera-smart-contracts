@@ -26,12 +26,13 @@ import {
   handleErc20TokenPermissions,
 } from '@/api/hedera/erc20-interactions';
 import { Contract } from 'ethers';
+import { MOCK_TX_HASH } from '../../utils/common/constants';
 
 describe('getERC20TokenInformation', () => {
-  const expectedName = 'TokenName';
   const expectedSymbol = 'TKN';
-  const expectedTotalSupply = '1000000';
   const expectedDecimals = '18';
+  const expectedName = 'TokenName';
+  const expectedTotalSupply = '1000000';
 
   // Mock baseContract object
   const baseContract = {
@@ -79,7 +80,11 @@ describe('getERC20TokenInformation', () => {
 describe('erc20Mint', () => {
   // Mock baseContract object
   const baseContract = {
-    mint: jest.fn(),
+    mint: jest.fn().mockResolvedValue({
+      wait: jest.fn().mockResolvedValue({
+        hash: MOCK_TX_HASH,
+      }),
+    }),
   };
 
   it('should execute erc20Mint', async () => {
@@ -93,6 +98,7 @@ describe('erc20Mint', () => {
     expect(res.err).toBeNull;
     expect(erc20Mint).toBeCalled;
     expect(res.mintRes).toBe(true);
+    expect(res.txHash).toBe(MOCK_TX_HASH);
   });
 
   it('should failed with invalid recipient address', async () => {
@@ -144,11 +150,16 @@ describe('balanceOf', () => {
 });
 
 describe('Token Permissions', () => {
+  const mockedValue = jest.fn().mockResolvedValue({
+    wait: jest.fn().mockResolvedValue({
+      hash: MOCK_TX_HASH,
+    }),
+  });
+
   const baseContract = {
-    approve: jest.fn(),
-    increaseAllowance: jest.fn(),
-    decreaseAllowance: jest.fn(),
-    decimals: jest.fn().mockResolvedValue(18),
+    approve: mockedValue,
+    increaseAllowance: mockedValue,
+    decreaseAllowance: mockedValue,
     allowance: jest.fn().mockResolvedValue('120'),
   };
 
@@ -163,6 +174,7 @@ describe('Token Permissions', () => {
 
     // assertion
     expect(approveRes.err).toBeNull;
+    expect(approveRes.txHash).toBe(MOCK_TX_HASH);
     expect(approveRes.approveRes).toBe(true);
     expect(handleErc20TokenPermissions).toBeCalled;
   });
@@ -193,8 +205,9 @@ describe('Token Permissions', () => {
 
     // assertion
     expect(increaseAllowanceRes.err).toBeNull;
-    expect(increaseAllowanceRes.increaseAllowanceRes).toBe(true);
     expect(handleErc20TokenPermissions).toBeCalled;
+    expect(increaseAllowanceRes.txHash).toBe(MOCK_TX_HASH);
+    expect(increaseAllowanceRes.increaseAllowanceRes).toBe(true);
   });
 
   it('should fail erc20IncreaseAllowance with Invalid spender address', async () => {
@@ -223,8 +236,9 @@ describe('Token Permissions', () => {
 
     // assertion
     expect(decreaseAllowanceRes.err).toBeNull;
-    expect(decreaseAllowanceRes.decreaseAllowanceRes).toBe(true);
     expect(handleErc20TokenPermissions).toBeCalled;
+    expect(decreaseAllowanceRes.txHash).toBe(MOCK_TX_HASH);
+    expect(decreaseAllowanceRes.decreaseAllowanceRes).toBe(true);
   });
 
   it('should fail erc20DecreaseAllowance with Invalid spender address', async () => {
@@ -237,9 +251,9 @@ describe('Token Permissions', () => {
     );
 
     // assertion
+    expect(handleErc20TokenPermissions).toBeCalled;
     expect(decreaseAllowanceRes.err).toBe('Invalid spender address');
     expect(decreaseAllowanceRes.decreaseAllowanceRes).toBeNull;
-    expect(handleErc20TokenPermissions).toBeCalled;
   });
 
   it('should execute erc20Allowance', async () => {
@@ -286,9 +300,15 @@ describe('Token Permissions', () => {
 });
 
 describe('Transfer', () => {
+  const mockedValue = jest.fn().mockResolvedValue({
+    wait: jest.fn().mockResolvedValue({
+      hash: MOCK_TX_HASH,
+    }),
+  });
+
   const baseContract = {
-    transfer: jest.fn(),
-    transferFrom: jest.fn(),
+    transfer: mockedValue,
+    transferFrom: mockedValue,
   };
 
   it('should execute erc20Transfer', async () => {
@@ -300,18 +320,14 @@ describe('Transfer', () => {
     );
 
     // assertion
-    expect(transferRes.err).toBeNull;
-    expect(transferRes.transferRes).toBe(true);
     expect(balanceOf).toBeCalled;
+    expect(transferRes.err).toBeNull;
+    expect(transferRes.txHash).toBe(MOCK_TX_HASH);
+    expect(transferRes.transferRes).toBe(true);
   });
 
   it('should fail erc20Transfer with Invalid recipient address', async () => {
-    const transferRes = await erc20Transfers(
-      baseContract as unknown as Contract,
-      'transfer',
-      '0x112c',
-      120
-    );
+    const transferRes = await erc20Transfers(baseContract as unknown as Contract, 'transfer', '0x112c', 120);
 
     // assertion
     expect(transferRes.err).toBe('Invalid recipient address');
@@ -329,9 +345,10 @@ describe('Transfer', () => {
     );
 
     // assertion
-    expect(transferFromRes.err).toBeNull;
-    expect(transferFromRes.transferFromRes).toBe(true);
     expect(balanceOf).toBeCalled;
+    expect(transferFromRes.err).toBeNull;
+    expect(transferFromRes.txHash).toBe(MOCK_TX_HASH);
+    expect(transferFromRes.transferFromRes).toBe(true);
   });
 
   it('should fail erc20TransferFrom with Invalid token owner address', async () => {

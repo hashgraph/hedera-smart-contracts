@@ -75,8 +75,8 @@ export const erc20Mint = async (
   }
 
   try {
-    await baseContract.mint(recipientAddress, tokenAmount);
-    return { mintRes: true };
+    const txReceipt = await (await baseContract.mint(recipientAddress, tokenAmount)).wait();
+    return { mintRes: true, txHash: txReceipt.hash };
   } catch (err) {
     console.error(err);
     return { err };
@@ -149,14 +149,18 @@ export const handleErc20TokenPermissions = async (
   try {
     switch (method) {
       case 'approve':
-        await baseContract.approve(spenderAddress, amount);
-        return { approveRes: true };
+        const approveReceipt = await (await baseContract.approve(spenderAddress, amount)).wait();
+        return { approveRes: true, txHash: approveReceipt.hash };
       case 'increaseAllowance':
-        await baseContract.increaseAllowance(spenderAddress, amount);
-        return { increaseAllowanceRes: true };
+        const increaseAllowanceReceipt = await (
+          await baseContract.increaseAllowance(spenderAddress, amount)
+        ).wait();
+        return { increaseAllowanceRes: true, txHash: increaseAllowanceReceipt.hash };
       case 'decreaseAllowance':
-        await baseContract.decreaseAllowance(spenderAddress, amount);
-        return { decreaseAllowanceRes: true };
+        const decreaseAllowanceReceipt = await (
+          await baseContract.decreaseAllowance(spenderAddress, amount)
+        ).wait();
+        return { decreaseAllowanceRes: true, txHash: decreaseAllowanceReceipt.hash };
       case 'allowance':
         const allowance = await baseContract.allowance(ownerAddress, spenderAddress);
         return { allowanceRes: allowance.toString() };
@@ -202,11 +206,16 @@ export const erc20Transfers = async (
   try {
     switch (method) {
       case 'transfer':
-        await baseContract.transfer(recipientAddress, amount);
-        return { transferRes: true };
+        const transferReceipt = await (
+          await baseContract.transfer(recipientAddress, amount)
+        ).wait();
+        return { transferRes: true, txHash: transferReceipt.hash };
       case 'transferFrom':
-        await baseContract.transferFrom(tokenOwnerAddress, recipientAddress, amount);
-        return { transferFromRes: true };
+        const transferFromReceipt = await (
+          await baseContract.transferFrom(tokenOwnerAddress, recipientAddress, amount)
+        ).wait();
+
+        return { transferFromRes: true, txHash: transferFromReceipt.hash };
     }
   } catch (err) {
     console.error(err);

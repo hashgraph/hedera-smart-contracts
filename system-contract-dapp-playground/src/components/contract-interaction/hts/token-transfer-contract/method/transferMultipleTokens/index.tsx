@@ -231,6 +231,7 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
         APICalled: API,
         setTransactionResults,
         err: transactionResult.err,
+        transactionType: 'HTS-TOKENS-TRANSFER',
         tokenAddress: commonParamValues.hederaTokenAddress,
         transactionHash: transactionResult.transactionHash,
       });
@@ -242,6 +243,8 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
         {
           APICalled: API,
           status: 'success',
+          transactionTimeStamp: Date.now(),
+          transactionType: 'HTS-TOKENS-TRANSFER',
           tokenAddress: commonParamValues.hederaTokenAddress,
           txHash: transactionResult.transactionHash as string,
         },

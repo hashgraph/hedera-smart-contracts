@@ -143,6 +143,7 @@ export const PROTECTED_ROUTES = [
   '/hedera/prng-hip-351',
   '/hedera/erc-20',
   '/hedera/erc-721',
+  '/activity',
 ];
 
 /**

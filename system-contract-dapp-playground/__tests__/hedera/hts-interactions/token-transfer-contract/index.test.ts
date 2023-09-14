@@ -18,6 +18,11 @@
  *
  */
 
+import { Contract } from 'ethers';
+import {
+  IHederaTokenServiceTokenTransferList,
+  IHederaTokenServiceTransferList,
+} from '@/types/contract-interactions/HTS';
 import {
   transferCrypto,
   transferFungibleTokens,
@@ -25,15 +30,14 @@ import {
   transferSingleToken,
 } from '@/api/hedera/tokenTransfer-interactions';
 import {
-  IHederaTokenServiceTokenTransferList,
-  IHederaTokenServiceTransferList,
-} from '@/types/contract-interactions/HTS';
-import { Contract } from 'ethers';
+  MOCK_GAS_LIMIT,
+  MOCK_RESPONSE_CODE,
+  MOCK_TOKEN_ADDRESS,
+  MOCK_TX_HASH,
+} from '../../../utils/common/constants';
 
 describe('TokenTransferContract test suite', () => {
   const quantity = 369;
-  const responseCode = 22;
-  const gasLimit = 1000000;
   const invalidSender = '0xabc';
   const nonFungibleAmounts = [3, 6, 9];
   const fungibleAmounts = [-18, 3, 6, 9];
@@ -41,8 +45,6 @@ describe('TokenTransferContract test suite', () => {
   const senderB = '0x0851072d7bB726305032Eff23CB8fd22eB74c85B';
   const receiverA = '0x7a35433804d8Cd070d98d66C6E9b45c6C32C3CDD';
   const receiverB = '0x9de0881b3110aA8cAD1dF3182B1eB6F14d1608a2';
-  const hederaTokenAddress = '0x00000000000000000000000000000000000084b7';
-  const txHash = '0x63424020a69bf46a0669f46dd66addba741b9c02d37fab1686428f5209bc759d';
 
   const contractMockedResolvedValue = {
     wait: jest.fn().mockResolvedValue({
@@ -51,10 +53,10 @@ describe('TokenTransferContract test suite', () => {
           fragment: {
             name: 'ResponseCode',
           },
-          data: responseCode,
+          data: MOCK_RESPONSE_CODE,
         },
       ],
-      hash: txHash,
+      hash: MOCK_TX_HASH,
     }),
   };
 
@@ -93,7 +95,7 @@ describe('TokenTransferContract test suite', () => {
     ];
     const tokenTransferList: IHederaTokenServiceTokenTransferList[] = [
       {
-        token: hederaTokenAddress,
+        token: MOCK_TOKEN_ADDRESS,
         transfers,
         nftTransfers,
       },
@@ -104,12 +106,12 @@ describe('TokenTransferContract test suite', () => {
         baseContract as unknown as Contract,
         transferList,
         tokenTransferList,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
   });
 
@@ -117,15 +119,15 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferFungibleTokens then return a successful response code', async () => {
       const txRes = await transferFungibleTokens(
         baseContract as unknown as Contract,
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         [senderA, senderB],
         fungibleAmounts,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute transferFungibleTokens with an invalid token address then return an error', async () => {
@@ -134,7 +136,7 @@ describe('TokenTransferContract test suite', () => {
         '0xabc',
         [senderA, senderB],
         fungibleAmounts,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe('Invalid token address');
@@ -145,10 +147,10 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferFungibleTokens with an invalid sender ID then return an error', async () => {
       const txRes = await transferFungibleTokens(
         baseContract as unknown as Contract,
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         [senderA, '0xabc'],
         fungibleAmounts,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe(`${invalidSender} is an invalid accountID`);
@@ -159,10 +161,10 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferFungibleTokens with an invalid amount then return an error', async () => {
       const txRes = await transferFungibleTokens(
         baseContract as unknown as Contract,
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         [senderA, senderB],
         [-9, -3, 6],
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe(`-3 is an invalid amount`);
@@ -175,16 +177,16 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferNonFungibleTokens then return a successful response code', async () => {
       const txRes = await transferNonFungibleTokens(
         baseContract as unknown as Contract,
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         [senderA, senderB],
         [receiverA, receiverB],
         nonFungibleAmounts,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute transferNonFungibleTokens with an invalid token address then return an error', async () => {
@@ -194,7 +196,7 @@ describe('TokenTransferContract test suite', () => {
         [senderA, senderB],
         [receiverA, receiverB],
         nonFungibleAmounts,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe('Invalid token address');
@@ -205,11 +207,11 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferNonFungibleTokens with an invalid sender ID then return an error', async () => {
       const txRes = await transferNonFungibleTokens(
         baseContract as unknown as Contract,
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         [senderA, '0xabc'],
         [receiverA, receiverB],
         nonFungibleAmounts,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe(`${invalidSender} is an invalid sender accountID`);
@@ -220,11 +222,11 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferNonFungibleTokens with an invalid receiver ID then return an error', async () => {
       const txRes = await transferNonFungibleTokens(
         baseContract as unknown as Contract,
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         [senderA, senderB],
         [receiverA, '0xabc'],
         nonFungibleAmounts,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe(`${invalidSender} is an invalid receiver accountID`);
@@ -235,11 +237,11 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferNonFungibleTokens with an invalid amount then return an error', async () => {
       const txRes = await transferNonFungibleTokens(
         baseContract as unknown as Contract,
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         [senderA, senderB],
         [receiverA, receiverB],
         [-3, 6, 9],
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe(`-3 is an invalid serial number`);
@@ -253,32 +255,32 @@ describe('TokenTransferContract test suite', () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
         'FUNGIBLE',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         senderA,
         receiverA,
         quantity,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute transferSingleToken with API === "NFT" then return a successful response code', async () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
         'NFT',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         senderA,
         receiverA,
         quantity,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute transferSingleToken with an invalid token address then return an error', async () => {
@@ -289,7 +291,7 @@ describe('TokenTransferContract test suite', () => {
         senderA,
         receiverA,
         quantity,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe('Invalid token address');
@@ -301,11 +303,11 @@ describe('TokenTransferContract test suite', () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
         'FUNGIBLE',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         '0xabc',
         receiverA,
         quantity,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe('Invalid sender address');
@@ -317,11 +319,11 @@ describe('TokenTransferContract test suite', () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
         'FUNGIBLE',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         senderA,
         '0xabc',
         quantity,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe('Invalid receiver address');
@@ -333,11 +335,11 @@ describe('TokenTransferContract test suite', () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
         'FUNGIBLE',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         senderA,
         receiverB,
         quantity * -1,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe('Invalid quantity');
@@ -351,32 +353,32 @@ describe('TokenTransferContract test suite', () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
         'FUNGIBLE_FROM',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         senderA,
         receiverA,
         quantity,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute transferSingleTokenFrom with API === "NFT_FROM" then return a successful response code', async () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
         'NFT_FROM',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         senderA,
         receiverA,
         quantity,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute transferSingleTokenFrom with an invalid token address then return an error', async () => {
@@ -387,7 +389,7 @@ describe('TokenTransferContract test suite', () => {
         senderA,
         receiverA,
         quantity,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe('Invalid token address');
@@ -399,11 +401,11 @@ describe('TokenTransferContract test suite', () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
         'FUNGIBLE_FROM',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         '0xabc',
         receiverA,
         quantity,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe('Invalid sender address');
@@ -415,11 +417,11 @@ describe('TokenTransferContract test suite', () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
         'FUNGIBLE_FROM',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         senderA,
         '0xabc',
         quantity,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe('Invalid receiver address');
@@ -431,11 +433,11 @@ describe('TokenTransferContract test suite', () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
         'FUNGIBLE_FROM',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         senderA,
         receiverB,
         quantity * -1,
-        gasLimit
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBe('Invalid quantity');

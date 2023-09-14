@@ -112,6 +112,7 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         tokenAddress: hederaTokenAddress,
+        transactionType: 'HTS-TOKEN-DELETE',
       });
       return;
     } else {
@@ -121,7 +122,9 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
         {
           status: 'success',
           tokenAddress: hederaTokenAddress,
+          transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
+          transactionType: 'HTS-TOKEN-DELETE',
         },
       ]);
 

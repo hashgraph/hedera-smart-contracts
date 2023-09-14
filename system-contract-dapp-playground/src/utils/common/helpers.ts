@@ -22,6 +22,7 @@ import { ethers } from 'ethers';
 import { NetworkName } from '@/types/common';
 import { getCurrentChainId } from '@/api/wallet';
 import { HEDERA_NETWORKS, PROTECTED_ROUTES } from './constants';
+import { TransactionResult } from '@/types/contract-interactions/HTS';
 
 /**
  * @dev validating if a route is protected
@@ -105,19 +106,35 @@ export const generatedRandomUniqueKey = (byteLength: number) => {
   return randomKey;
 };
 
-/**
- * @dev prepare transaction result storage key
+/*
+ * @dev prepare a list of transaction in order from newest to oldest based on the timestamp when each transaction occurs
  *
- * @param methodKey: string
- *
- * @param resultKey: string
- *
- * @return string
+ * @returns allTransactions: TransactionResult[]
  */
-export const prepareTransactionResultStorageKey = (
-  contractKey: string,
-  methodKey: string,
-  resultKey: string
-) => {
-  return `HEDERA.${contractKey}.${methodKey}.${resultKey}-RESULTS`;
+export const prepareTransactionList = () => {
+  // prepare
+  const transactions: TransactionResult[] = [];
+
+  // loop through localStorage items
+  if (typeof localStorage !== 'undefined') {
+    for (let i = 0; i < localStorage.length; i++) {
+      // get key
+      const key = localStorage.key(i);
+
+      // only include item with KEY includes 'HEDERA' and NOT include 'READONLY'
+      if (key?.includes('HEDERA') && !key?.includes('READONLY')) {
+        const records = JSON.parse(localStorage.getItem(key) || '');
+        records.forEach((record: any) => {
+          transactions.push({ ...record });
+        });
+      }
+    }
+  }
+
+  // sort transactions from oldest to newest to assign recordIndex
+  const sortedTransactions = transactions
+    .sort((txA, txB) => txA.transactionTimeStamp - txB.transactionTimeStamp)
+    .map((record, index) => ({ ...record, recordIndex: index + 1 }));
+
+  return sortedTransactions;
 };
