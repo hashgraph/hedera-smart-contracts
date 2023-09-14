@@ -28,10 +28,10 @@ import {
 import { Contract } from 'ethers';
 
 describe('getERC20TokenInformation', () => {
-  const expectedName = 'TokenName';
   const expectedSymbol = 'TKN';
-  const expectedTotalSupply = '1000000';
   const expectedDecimals = '18';
+  const expectedName = 'TokenName';
+  const expectedTotalSupply = '1000000';
 
   // Mock baseContract object
   const baseContract = {
@@ -331,12 +331,7 @@ describe('Transfer', () => {
   });
 
   it('should fail erc20Transfer with Invalid recipient address', async () => {
-    const transferRes = await erc20Transfers(
-      baseContract as unknown as Contract,
-      'transfer',
-      '0x112c',
-      120
-    );
+    const transferRes = await erc20Transfers(baseContract as unknown as Contract, 'transfer', '0x112c', 120);
 
     // assertion
     expect(transferRes.err).toBe('Invalid recipient address');
