@@ -44,7 +44,7 @@ async function pollForERC20BurnableChangedSupply(ERC20Burnable, initialSupply) {
     for (let numberOfTries = 0; numberOfTries < timesToTry; numberOfTries++) {
       const newSupply = await ERC20Burnable.totalSupply();
   
-      if ((newSupply != 0) && (newSupply != initialSupply)) {
+      if (!newSupply.eq(initialSupply)) {
         return newSupply; // Supply changed and not zero
       }
   
@@ -250,12 +250,11 @@ async function pollForNewCounterValue(proxyContract, counterBefore) {
 
 async function pollForNewSignerBalanceUsingProvider(provider, signersAddress, signerBefore) {
     const timesToTry = 400;
-    const delayTimeMs = 1000; // Adjust the delay time as needed
   
     for (let numberOfTries = 0; numberOfTries < timesToTry; numberOfTries++) {
       try {
         const signerAfter = await getSignerBalance(provider, signersAddress);
-        if (signerAfter !== signerBefore) {
+        if (signerAfter != signerBefore) {
           return signerAfter;
         }
       } catch (error) {
@@ -263,7 +262,7 @@ async function pollForNewSignerBalanceUsingProvider(provider, signersAddress, si
         console.error(`Error fetching signer balance: ${error.message}`);
       }
   
-      await delay(delayTimeMs);
+      await delay();
     }
   
     throw new Error(`Failed to get a different value after ${timesToTry} tries`);

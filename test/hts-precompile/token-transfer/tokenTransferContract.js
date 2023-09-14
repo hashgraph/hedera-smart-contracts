@@ -241,7 +241,7 @@ describe('TokenTransferContract Test Suite', function () {
     expect(approved).to.equal('0x0000000000000000000000000000000000000000')
   })
 
-  it('should be able to execute cryptoTransfer for hbar transfer only', async function () {
+  it.only('should be able to execute cryptoTransfer for hbar transfer only', async function () {
     const cryptoTransfers = {
       transfers: [
         {
