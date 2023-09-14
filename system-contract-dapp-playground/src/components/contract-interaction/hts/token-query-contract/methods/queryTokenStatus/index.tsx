@@ -27,6 +27,7 @@ import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { useToastSuccessful } from '../../../shared/hooks/useToastSuccessful';
+import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { queryTokenStatusInformation } from '@/api/hedera/tokenQuery-interactions';
 import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
@@ -34,10 +35,7 @@ import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSa
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
 import { htsQueryTokenStatusParamFields } from '@/utils/contract-interactions/HTS/token-query/constant';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
-import {
-  SharedExecuteButton,
-  SharedFormInputField,
-} from '../../../shared/components/ParamInputForm';
+import { SharedExecuteButton, SharedFormInputField } from '../../../shared/components/ParamInputForm';
 
 interface PageProps {
   baseContract: Contract;
@@ -53,7 +51,8 @@ const QueryTokenStatusInfomation = ({ baseContract }: PageProps) => {
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-QUERY.TOKEN-STATUS-INFO-RESULTS';
+  const transactionResultStorageKey =
+    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-QUERY']['TOKEN-STATUS-INFO'];
   const initialParamValues = {
     hederaTokenAddress: '',
     accountAddress: '',
@@ -91,13 +90,10 @@ const QueryTokenStatusInfomation = ({ baseContract }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(
-    currentTransactionPage,
-    transactionResults
-  );
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string) => {
@@ -208,9 +204,7 @@ const QueryTokenStatusInfomation = ({ baseContract }: PageProps) => {
                 explanation={(htsQueryTokenStatusParamFields as any)[param].explanation}
                 paramClassName={(htsQueryTokenStatusParamFields as any)[param].inputClassname}
                 paramPlaceholder={(htsQueryTokenStatusParamFields as any)[param].inputPlaceholder}
-                paramFocusColor={
-                  (htsQueryTokenStatusParamFields as any)[param].inputFocusBorderColor
-                }
+                paramFocusColor={(htsQueryTokenStatusParamFields as any)[param].inputFocusBorderColor}
               />
             </div>
           );
@@ -222,9 +216,7 @@ const QueryTokenStatusInfomation = ({ baseContract }: PageProps) => {
             return (
               <div key={APIButton.API} className="w-full">
                 <SharedExecuteButton
-                  isLoading={
-                    APIButton.API === 'IS_KYC' ? isLoading.kycLoading : isLoading.frozenLoading
-                  }
+                  isLoading={APIButton.API === 'IS_KYC' ? isLoading.kycLoading : isLoading.frozenLoading}
                   handleCreatingFungibleToken={() => handleQueryTokenStatusInfo(APIButton.API)}
                   buttonTitle={APIButton.executeTitle}
                 />

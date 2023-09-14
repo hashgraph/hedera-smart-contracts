@@ -26,6 +26,7 @@ import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { handleAPIErrors } from '../../shared/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../shared/hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../shared/hooks/usePaginatedTxResults';
+import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { SharedSigningKeysComponent } from '../../shared/components/SigningKeysForm';
 import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
 import { createHederaNonFungibleToken } from '@/api/hedera/tokenCreateCustom-interactions';
@@ -62,7 +63,8 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
   const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-CREATE.NON-FUNGIBLE-TOKEN-RESULTS';
+  const transactionResultStorageKey =
+    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-CREATE']['NON-FUNGIBLE-TOKEN'];
   const tokenCreateFields = {
     info: ['name', 'symbol', 'memo', 'maxSupply', 'treasury'],
     feeTokenAddress: 'feeTokenAddress',
@@ -91,13 +93,10 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(
-    currentTransactionPage,
-    transactionResults
-  );
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string) => {
@@ -239,12 +238,8 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
             paramSize={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputSize}
             explanation={(htsTokenCreateParamFields as any)['feeTokenAddress'].explanation}
             paramClassName={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputClassname}
-            paramPlaceholder={
-              (htsTokenCreateParamFields as any)['feeTokenAddress'].inputPlaceholder
-            }
-            paramFocusColor={
-              (htsTokenCreateParamFields as any)['feeTokenAddress'].inputFocusBorderColor
-            }
+            paramPlaceholder={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputPlaceholder}
+            paramFocusColor={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputFocusBorderColor}
           />
         )}
 

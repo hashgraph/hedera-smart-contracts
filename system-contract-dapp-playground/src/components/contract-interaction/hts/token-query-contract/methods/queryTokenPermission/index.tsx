@@ -26,6 +26,7 @@ import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
+import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
 import { queryTokenPermissionInformation } from '@/api/hedera/tokenQuery-interactions';
 import TokenPermissionInfoModal from '../../../shared/components/TokenPermissionInfoModal';
@@ -60,8 +61,9 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [tokenInfoFromTxResult, setTokenInfoFromTxResult] = useState<any>();
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-QUERY.TOKEN-PERMISSION-INFO-RESULTS';
   const [APIMethodsFromTxResult, setAPIMethodsFromTxResult] = useState<API_NAMES>('ALLOWANCE');
+  const transactionResultStorageKey =
+    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-QUERY']['TOKEN-PERMISSION'];
   const initialParamValues = {
     hederaTokenAddress: '',
     ownerAddress: '',
@@ -113,13 +115,10 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(
-    currentTransactionPage,
-    transactionResults
-  );
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string) => {
@@ -228,10 +227,7 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
         {/* hederaTokenAddress & targetApprovedAddress */}
         {tokenCommonFields.map((param) => {
           return (
-            <div
-              className="w-full"
-              key={(htsQueryTokenPermissionParamFields as any)[param].paramKey}
-            >
+            <div className="w-full" key={(htsQueryTokenPermissionParamFields as any)[param].paramKey}>
               <SharedFormInputField
                 param={param}
                 paramValue={paramValues[param]}
@@ -241,12 +237,8 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
                 paramSize={(htsQueryTokenPermissionParamFields as any)[param].inputSize}
                 explanation={(htsQueryTokenPermissionParamFields as any)[param].explanation}
                 paramClassName={(htsQueryTokenPermissionParamFields as any)[param].inputClassname}
-                paramPlaceholder={
-                  (htsQueryTokenPermissionParamFields as any)[param].inputPlaceholder
-                }
-                paramFocusColor={
-                  (htsQueryTokenPermissionParamFields as any)[param].inputFocusBorderColor
-                }
+                paramPlaceholder={(htsQueryTokenPermissionParamFields as any)[param].inputPlaceholder}
+                paramFocusColor={(htsQueryTokenPermissionParamFields as any)[param].inputFocusBorderColor}
               />
             </div>
           );

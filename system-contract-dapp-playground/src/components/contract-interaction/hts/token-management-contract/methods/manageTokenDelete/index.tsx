@@ -28,16 +28,14 @@ import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { useToastSuccessful } from '../../../shared/hooks/useToastSuccessful';
 import { manageTokenDeduction } from '@/api/hedera/tokenManagement-interactions';
+import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
 import { htsTokenDeductionParamFields } from '@/utils/contract-interactions/HTS/token-management/constant';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
-import {
-  SharedFormInputField,
-  SharedExecuteButtonWithFee,
-} from '../../../shared/components/ParamInputForm';
+import { SharedFormInputField, SharedExecuteButtonWithFee } from '../../../shared/components/ParamInputForm';
 
 interface PageProps {
   baseContract: Contract;
@@ -51,7 +49,7 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-MANAGEMENT.TOKEN-DELETE-RESULTS';
+  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-MANAGE']['TOKEN-DELETE'];
   const initialParamValues = {
     feeValue: '',
     hederaTokenAddress: '',
@@ -65,13 +63,10 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(
-    currentTransactionPage,
-    transactionResults
-  );
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string) => {
     setParamValues((prev: any) => ({ ...prev, [param]: e.target.value }));
@@ -162,15 +157,9 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
           paramType={(htsTokenDeductionParamFields as any)['hederaTokenAddress'].inputType}
           paramSize={(htsTokenDeductionParamFields as any)['hederaTokenAddress'].inputSize}
           explanation={(htsTokenDeductionParamFields as any)['hederaTokenAddress'].explanation}
-          paramClassName={
-            (htsTokenDeductionParamFields as any)['hederaTokenAddress'].inputClassname
-          }
-          paramPlaceholder={
-            (htsTokenDeductionParamFields as any)['hederaTokenAddress'].inputPlaceholder
-          }
-          paramFocusColor={
-            (htsTokenDeductionParamFields as any)['hederaTokenAddress'].inputFocusBorderColor
-          }
+          paramClassName={(htsTokenDeductionParamFields as any)['hederaTokenAddress'].inputClassname}
+          paramPlaceholder={(htsTokenDeductionParamFields as any)['hederaTokenAddress'].inputPlaceholder}
+          paramFocusColor={(htsTokenDeductionParamFields as any)['hederaTokenAddress'].inputFocusBorderColor}
         />
 
         <div className="w-full">

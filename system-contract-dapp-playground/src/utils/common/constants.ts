@@ -39,6 +39,9 @@ export const HEDERA_OFFICIAL_HIPS_URL = 'https://hips.hedera.com/';
 /** @notice hashcan baseURL */
 export const HASHSCAN_BASE_URL = 'https://hashscan.io';
 
+/** @notice Hedera network */
+export const OFFCIAL_NETWORK_NAME = 'HEDERA';
+
 /** @notice information about Hedera social media */
 export const HEDERA_SOCIAL_MEDIA = [
   {
@@ -187,13 +190,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
       contractABI: TokenCreateCustomContract.abi,
       contractBytecode: TokenCreateCustomContract.bytecode,
       githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-create/TokenCreateCustom.sol`,
-      methods: [
-        'fungibleTokenCreate',
-        'non-fungibleTokenCreate',
-        'mint',
-        'tokenAssociation',
-        'grantKYC',
-      ],
+      methods: ['fungibleTokenCreate', 'non-fungibleTokenCreate', 'mint', 'tokenAssociation', 'grantKYC'],
     },
     {
       name: 'TokenManagementContract' as ContractName,
@@ -318,4 +315,40 @@ export const HEDERA_SHARED_PARAM_INPUT_FIELDS = {
   inputSize: HEDERA_CHAKRA_INPUT_BOX_SIZES.medium,
   inputFocusBorderColor: HEDERA_BRANDING_COLORS.purple,
   inputClassname: HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
+};
+
+/**
+ * @notice a shared object stores all transaction result storage keys
+ */
+const prepareTransactionResultStorageKey = (contractKey: string, methodKey: string, resultKey: string) => {
+  return `HEDERA.${contractKey}.${methodKey}.${resultKey}-RESULTS`;
+};
+export const HEDERA_TRANSACTION_RESULT_STORAGE_KEYS = {
+  'TOKEN-CREATE': {
+    'TOKEN-KYC': prepareTransactionResultStorageKey('HTS', 'TOKEN-CREATE', 'TOKEN-KYC'),
+    'MINT-TOKEN': prepareTransactionResultStorageKey('HTS', 'TOKEN-CREATE', 'MINT-TOKEN'),
+    'FUNGIBLE-TOKEN': prepareTransactionResultStorageKey('HTS', 'TOKEN-CREATE', 'FUNGIBLE-TOKEN'),
+    'ASSOCIATE-TOKEN': prepareTransactionResultStorageKey('HTS', 'TOKEN-CREATE', 'ASSOCIATE-TOKEN'),
+    'NON-FUNGIBLE-TOKEN': prepareTransactionResultStorageKey('HTS', 'TOKEN-CREATE', 'NON-FUNGIBLE-TOKEN'),
+  },
+  'TOKEN-MANAGE': {
+    'TOKEN-INFO': prepareTransactionResultStorageKey('HTS', 'TOKEN-MANAGE', 'TOKEN-INFO'),
+    'TOKEN-STATUS': prepareTransactionResultStorageKey('HTS', 'TOKEN-MANAGE', 'TOKEN-STATUS'),
+    'TOKEN-DELETE': prepareTransactionResultStorageKey('HTS', 'TOKEN-MANAGE', 'TOKEN-DELETE'),
+    'TOKEN-RELATION': prepareTransactionResultStorageKey('HTS', 'TOKEN-MANAGE', 'TOKEN-RELATION'),
+    'TOKEN-REDUCTION': prepareTransactionResultStorageKey('HTS', 'TOKEN-MANAGE', 'TOKEN-REDUCTION'),
+    'TOKEN-PERMISSION': prepareTransactionResultStorageKey('HTS', 'TOKEN-MANAGE', 'TOKEN-PERMISSION'),
+  },
+  'TOKEN-QUERY': {
+    'TOKEN-VALIDITY': prepareTransactionResultStorageKey('HTS', 'TOKEN-QUERY', 'TOKEN-VALIDITY'),
+    'TOKEN-PERMISSION': prepareTransactionResultStorageKey('HTS', 'TOKEN-QUERY', 'TOKEN-PERMISSION'),
+    'TOKEN-STATUS-INFO': prepareTransactionResultStorageKey('HTS', 'TOKEN-QUERY', 'TOKEN-STATUS-INFO'),
+    'TOKEN-GENERAL-INFO': prepareTransactionResultStorageKey('HTS', 'TOKEN-QUERY', 'TOKEN-GENERAL-INFO'),
+    'TOKEN-SPECIFIC-INFO': prepareTransactionResultStorageKey('HTS', 'TOKEN-QUERY', 'TOKEN-SPECIFIC-INFO'),
+  },
+  'TOKEN-TRANSFER': {
+    'SINGLE-TOKEN': prepareTransactionResultStorageKey('HTS', 'TOKEN-TRANSFER', 'SINGLE-TOKEN'),
+    'CRYPTO-TRANSFER': prepareTransactionResultStorageKey('HTS', 'TOKEN-TRANSFER', 'CRYPTO-TRANSFER'),
+    'MULTIPLE-TOKENS': prepareTransactionResultStorageKey('HTS', 'TOKEN-TRANSFER', 'MULTIPLE-TOKENS'),
+  },
 };

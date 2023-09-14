@@ -28,6 +28,7 @@ import { transferCrypto } from '@/api/hedera/tokenTransfer-interactions';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { useToastSuccessful } from '../../../shared/hooks/useToastSuccessful';
+import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
 import { SharedExecuteButtonWithFee } from '../../../shared/components/ParamInputForm';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
@@ -43,10 +44,7 @@ import {
   TokenTransferParam,
   generateInitialTokenTransferParamValues,
 } from './helpers/generateInitialValues';
-import {
-  prepareCryptoTransferList,
-  prepareTokenTransferList,
-} from './helpers/prepareCryptoTransferValues';
+import { prepareCryptoTransferList, prepareTokenTransferList } from './helpers/prepareCryptoTransferValues';
 
 interface PageProps {
   baseContract: Contract;
@@ -60,15 +58,12 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
   const [isSuccessful, setIsSuccessful] = useState(false);
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-TRANSFER.CRYPTO-TRANSFER';
   const contractCaller = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const [tokenTransferParamValues, setTokenTransferParamValues] = useState<TokenTransferParam[]>(
-    []
-  );
-  const [cryptoTransferParamValues, setCryptoTransferParamValues] = useState<CryptoTransferParam[]>(
-    []
-  );
+  const transactionResultStorageKey =
+    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-TRANSFER']['CRYPTO-TRANSFER'];
+  const [tokenTransferParamValues, setTokenTransferParamValues] = useState<TokenTransferParam[]>([]);
+  const [cryptoTransferParamValues, setCryptoTransferParamValues] = useState<CryptoTransferParam[]>([]);
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
   useEffect(() => {
@@ -78,13 +73,10 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(
-    currentTransactionPage,
-    transactionResults
-  );
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
 
   /** @dev handle form inputs on change for tokenTransferParamValue */
   const handleTokenTransferInputOnChange = (
@@ -104,23 +96,23 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
     setTokenTransferParamValues((prev) =>
       prev.map((masterParam) => {
         if (masterParam.fieldKey === masterFieldKey) {
-          (masterParam.fieldValue as any)[transfersType] = (masterParam.fieldValue as any)[
-            transfersType
-          ].map((transfer: any) => {
-            if (transfer.fieldKey === fieldKey) {
-              const value = e.target.value;
-              if (param === 'isApprovalA' || param === 'isApprovalB') {
-                if (value === '') {
-                  (transfer.fieldValue as any)[param] = false;
+          (masterParam.fieldValue as any)[transfersType] = (masterParam.fieldValue as any)[transfersType].map(
+            (transfer: any) => {
+              if (transfer.fieldKey === fieldKey) {
+                const value = e.target.value;
+                if (param === 'isApprovalA' || param === 'isApprovalB') {
+                  if (value === '') {
+                    (transfer.fieldValue as any)[param] = false;
+                  } else {
+                    (transfer.fieldValue as any)[param] = JSON.parse(value);
+                  }
                 } else {
-                  (transfer.fieldValue as any)[param] = JSON.parse(value);
+                  (transfer.fieldValue as any)[param] = e.target.value;
                 }
-              } else {
-                (transfer.fieldValue as any)[param] = e.target.value;
               }
+              return transfer;
             }
-            return transfer;
-          });
+          );
         }
         return masterParam;
       })
@@ -187,16 +179,14 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
         break;
       case 'REMOVE':
         if (transferType === 'CRYPTO') {
-          setFieldKey((prev: any) =>
-            prev.filter((field: any) => field.fieldKey !== removingFieldKey)
-          );
+          setFieldKey((prev: any) => prev.filter((field: any) => field.fieldKey !== removingFieldKey));
         } else {
           setTokenTransferParamValues((prev) =>
             prev.map((masterParam) => {
               if (masterParam.fieldKey === masterFieldKey) {
-                (masterParam.fieldValue as any)[transferListType!] = (
-                  masterParam.fieldValue as any
-                )[transferListType!].filter((field: any) => field.fieldKey !== removingFieldKey);
+                (masterParam.fieldValue as any)[transferListType!] = (masterParam.fieldValue as any)[
+                  transferListType!
+                ].filter((field: any) => field.fieldKey !== removingFieldKey);
               }
               return masterParam;
             })
@@ -208,18 +198,13 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
   /**
    * @dev handle modify master token transfer record
    */
-  const handleModifyMasterTokenTransferRecords = (
-    type: 'ADD' | 'REMOVE',
-    removingFieldKey?: string
-  ) => {
+  const handleModifyMasterTokenTransferRecords = (type: 'ADD' | 'REMOVE', removingFieldKey?: string) => {
     switch (type) {
       case 'ADD':
         setTokenTransferParamValues((prev) => [...prev, generateInitialTokenTransferParamValues()]);
         break;
       case 'REMOVE':
-        setTokenTransferParamValues((prev) =>
-          prev.filter((field) => field.fieldKey !== removingFieldKey)
-        );
+        setTokenTransferParamValues((prev) => prev.filter((field) => field.fieldKey !== removingFieldKey));
         break;
     }
   };
