@@ -28,21 +28,25 @@ import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../hts/shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../hts/shared/states/commonStates';
 import { useToastSuccessful } from '../../hts/shared/hooks/useToastSuccessful';
-import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { usePaginatedTxResults } from '../../hts/shared/hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../hts/shared/components/TransactionResultTable';
 import { SharedExecuteButton, SharedFormInputField } from '../../hts/shared/components/ParamInputForm';
 import { useUpdateTransactionResultsToLocalStorage } from '../../hts/shared/hooks/useUpdateLocalStorage';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+  HEDERA_BRANDING_COLORS,
+  HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
+} from '@/utils/common/constants';
 
 interface PageProps {
-  method: string;
   network: string;
 }
 
 type API_NAMES = 'ASSOCIATE' | 'DISSOCIATE';
 
-const HederaIHRCMethods = ({ method, network }: PageProps) => {
+const HederaIHRCMethods = ({ network }: PageProps) => {
   // general states
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState({
@@ -160,16 +164,16 @@ const HederaIHRCMethods = ({ method, network }: PageProps) => {
       <div className="flex flex-col gap-6 justify-center tracking-tight text-white/70">
         {/* Hedera token address */}
         <SharedFormInputField
-          param={'hederaTokenAddress'}
-          handleInputOnChange={handleInputOnChange}
-          paramValue={paramValues['hederaTokenAddress']}
-          paramKey={'hederaTokenAddress'}
           paramType={'text'}
-          paramSize={'md'}
-          explanation={`represents the Hedera Token to ${method}`}
-          paramClassName={'w-full border-white/30'}
+          param={'hederaTokenAddress'}
+          paramKey={'hederaTokenAddress'}
           paramPlaceholder={'Token address...'}
-          paramFocusColor={'#A98DF4'}
+          handleInputOnChange={handleInputOnChange}
+          explanation={`represents the Hedera Token`}
+          paramValue={paramValues['hederaTokenAddress']}
+          paramFocusColor={HEDERA_BRANDING_COLORS.purple}
+          paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.medium}
+          paramClassName={HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME}
         />
 
         {/* Execute button */}
@@ -183,13 +187,13 @@ const HederaIHRCMethods = ({ method, network }: PageProps) => {
             param={'feeValue'}
             paramValue={paramValues.feeValue}
             handleInputOnChange={handleInputOnChange}
-            paramSize={'lg'}
+            paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.large}
             paramType={'number'}
             paramKey={'feeValue'}
             explanation={'Gas limit for the transaction'}
             paramClassName={'border-white/30 rounded-xl'}
             paramPlaceholder={'Gas limit...'}
-            paramFocusColor={'#A98DF4'}
+            paramFocusColor={HEDERA_BRANDING_COLORS.purple}
           />
           <SharedExecuteButton
             isLoading={isLoading.DISSOCIATE}
