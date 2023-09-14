@@ -18,15 +18,15 @@
  *
  */
 
+import { Contract } from 'ethers';
+import { MOCK_TOKEN_ADDRESS, MOCK_TX_HASH } from '../../../utils/common/constants';
 import {
   queryTokenValidity,
-  queryTokenStatusInformation,
   queryTokenGeneralInfomation,
   queryTokenSpecificInfomation,
   queryTokenPermissionInformation,
-} from '@/api/hedera/tokenQuery-interactions';
-import { Contract } from 'ethers';
-import { MOCK_TOKEN_ADDRESS, MOCK_TX_HASH } from '../../../utils/common/constants';
+  queryTokenStatusInformation,
+} from '@/api/hedera/hts-interactions/tokenQuery-interactions';
 
 // mock convertsArgsProxyToHTSTokenInfo
 jest.mock('../../../../src/utils/contract-interactions/HTS/helpers.ts', () => {

@@ -33,7 +33,10 @@ import { SmartContractExecutionResult, TransactionResult } from '@/types/contrac
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
 import { htsMultiTokensTransferParamFields } from '@/utils/contract-interactions/HTS/token-transfer/paramFieldConstant';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
-import { transferFungibleTokens, transferNonFungibleTokens } from '@/api/hedera/tokenTransfer-interactions';
+import {
+  transferFungibleTokens,
+  transferNonFungibleTokens,
+} from '@/api/hedera/hts-interactions/tokenTransfer-interactions';
 import {
   FungibleParamValue,
   NonFungibleParamValue,

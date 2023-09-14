@@ -29,11 +29,11 @@ import { TRANSACTION_PAGE_SIZE } from '../../shared/states/commonStates';
 import { useToastSuccessful } from '../../shared/hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../shared/hooks/usePaginatedTxResults';
 import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
-import { grantTokenKYCToAccount } from '@/api/hedera/tokenCreateCustom-interactions';
 import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../shared/methods/handleSanitizeFormInputs';
 import { SharedFormInputField, SharedExecuteButton } from '../../shared/components/ParamInputForm';
 import { useUpdateTransactionResultsToLocalStorage } from '../../shared/hooks/useUpdateLocalStorage';
+import { grantTokenKYCToAccount } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
 import { htsGrantTokenKYCParamFields } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 

@@ -32,7 +32,7 @@ import { usePaginatedTxResults } from '../../shared/hooks/usePaginatedTxResults'
 import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import TokenAddressesInputForm from '../../shared/components/TokenAddressesInputForm';
 import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
-import { associateHederaTokensToAccounts } from '@/api/hedera/tokenCreateCustom-interactions';
+import { associateHederaTokensToAccounts } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
 import { handleSanitizeHederaFormInputs } from '../../shared/methods/handleSanitizeFormInputs';
 import { SharedFormInputField, SharedExecuteButton } from '../../shared/components/ParamInputForm';
 import { useUpdateTransactionResultsToLocalStorage } from '../../shared/hooks/useUpdateLocalStorage';

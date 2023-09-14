@@ -335,10 +335,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
                     <div className="flex py-9 text-xl w-full h-full justify-center items-center">
                       {/* HTS Token Create */}
                       {contract.name === 'TokenCreateCustomContract' && (
-                        <HederaTokenCreateMethods
-                          method={method}
-                          baseContract={baseContract! as Contract}
-                        />
+                        <HederaTokenCreateMethods method={method} baseContract={baseContract! as Contract} />
                       )}
 
                       {/* HTS Token Management*/}
@@ -351,10 +348,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
 
                       {/* HTS Token Query*/}
                       {contract.name === 'TokenQueryContract' && (
-                        <HederaTokenQueryMethods
-                          method={method}
-                          baseContract={baseContract! as Contract}
-                        />
+                        <HederaTokenQueryMethods method={method} baseContract={baseContract! as Contract} />
                       )}
 
                       {/* HTS Token Transfer*/}
