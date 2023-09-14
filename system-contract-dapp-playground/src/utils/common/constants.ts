@@ -230,8 +230,8 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
     title: 'Token Associate Example Contract',
     contractABI: HRCContract.abi,
     contractBytecode: HRCContract.bytecode,
-    githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/hrc/HRCContract.sol`,
-    methods: ['associate', 'dissociate'],
+    githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/IHRC.sol`,
+    methods: ['IHRC / HIP-719'],
   },
   EXCHANGE_RATE: {
     name: 'ExchangeRatePrecompile' as ContractName,
@@ -352,4 +352,5 @@ export const HEDERA_TRANSACTION_RESULT_STORAGE_KEYS = {
     'CRYPTO-TRANSFER': prepareTransactionResultStorageKey('HTS', 'TOKEN-TRANSFER', 'CRYPTO-TRANSFER'),
     'MULTIPLE-TOKENS': prepareTransactionResultStorageKey('HTS', 'TOKEN-TRANSFER', 'MULTIPLE-TOKENS'),
   },
+  'IHRC-RESULTS': `HEDERA.IHRC.IHRC-RESULTS`,
 };

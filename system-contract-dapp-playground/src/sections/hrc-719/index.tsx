@@ -22,11 +22,11 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { IoOpenOutline } from 'react-icons/io5';
-import { HEDERA_OFFICIAL_HIPS_URL, HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/common/constants';
-import { Tooltip } from '@chakra-ui/react';
-import ContractInteraction from '@/components/contract-interaction';
 import { BsGithub } from 'react-icons/bs';
+import { Tooltip } from '@chakra-ui/react';
+import { IoOpenOutline } from 'react-icons/io5';
+import ContractInteraction from '@/components/contract-interaction';
+import { HEDERA_OFFICIAL_HIPS_URL, HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/common/constants';
 
 const HRC719Section = () => {
   return (
@@ -75,8 +75,8 @@ const HRC719Section = () => {
             >
               HIP-218
             </Link>{' '}
-            proposed a way to enable treating HTS tokens in an equivalent manner to ERC-20 and
-            ERC-721 tokens by creating a proxy redirect facade contract.{' '}
+            proposed a way to enable treating HTS tokens in an equivalent manner to ERC-20 and ERC-721 tokens
+            by creating a proxy redirect facade contract.{' '}
             <Link
               href={`${HEDERA_OFFICIAL_HIPS_URL}/hip/hip-218`}
               target="_blank"
@@ -84,8 +84,7 @@ const HRC719Section = () => {
             >
               HIP-719
             </Link>{' '}
-            extends this functionality to include the HTS associate dissociate and isAssociated
-            functions.
+            extends this functionality to include the HTS associate dissociate and isAssociated functions.
           </div>
         </div>
       </div>
