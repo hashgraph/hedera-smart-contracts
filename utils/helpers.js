@@ -39,12 +39,101 @@ async function pauseAndPoll(ERC20Pausable) {
     }
   
     return false; // Not paused
+}
+
+async function pollForNewERC721Owner(erc721Contract, tokenId, ownerBefore) {
+    const timesToTry = 200;
+    const delayDurationMs = 1000; // 1 second (adjust as needed)
+  
+    for (let numberOfTries = 0; numberOfTries < timesToTry; numberOfTries++) {
+      const ownerAfter = await erc721Contract.ownerOf(tokenId);
+  
+      if (ownerAfter !== ownerBefore) {
+        return ownerAfter; // Ownership changed
+      }
+  
+      delay();
+    }
+  
+    throw new Error(`Ownership did not change after ${timesToTry} tries`);
+}
+
+async function pollForNewERC721Balance(erc721Contract, nftTokenAddress, signersAddress, balanceBefore) {
+    const timesToTry = 200;
+    const delayDurationMs = 1000; // 1 second (adjust as needed)
+    
+    for (let numberOfTries = 0; numberOfTries < timesToTry; numberOfTries++) {
+      const balanceAfter = await erc721Contract.balanceOf(nftTokenAddress, signersAddress);
+      
+      if (!balanceAfter.eq(balanceBefore)) {
+        return balanceAfter; // Balance changed
+      }
+    
+      await delay(); // Delay before the next attempt  
+    }
+    
+    throw new Error(`erc721Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
+}
+  
+async function pollForNewERC721HollowWalletOwner(erc721Contract, nftTokenAddress, ownerBefore) {
+    const timesToTry = 200;
+    const delayDurationMs = 1000; // 1 second (adjust as needed)
+  
+    for (let numberOfTries = 0; numberOfTries < timesToTry; numberOfTries++) {
+      const ownerAfter = await erc721Contract.ownerOf(nftTokenAddress);
+  
+      if (ownerAfter !== ownerBefore) {
+        return ownerAfter; // Ownership changed
+      }
+  
+      await new Promise(resolve => setTimeout(resolve, delayDurationMs));
+    }
+  
+    throw new Error(`Ownership did not change after ${timesToTry} tries`);
+}
+  
+async function pollForNewWalletBalance(erc20Contract, tokenAddress, signersAddress, balanceBefore) {
+    const timesToTry = 200;
+    const delayDurationMs = 1000; // 1 second (adjust as needed)
+  
+    for (let numberOfTries = 0; numberOfTries < timesToTry; numberOfTries++) {
+      const balanceAfter = await erc20Contract.balanceOf(tokenAddress, signersAddress);
+  
+      if (!balanceAfter.eq(0) && !balanceAfter.eq(balanceBefore)) {
+        return balanceAfter; // Balance changed and not zero
+      }
+  
+      await delay(); // Delay before the next attempt
+    }
+  
+    throw new Error(`Failed to get a different balance value after ${timesToTry} tries`);
+}
+    
+async function pollForNewHollowWalletBalance(provider, walletAddress, balanceBefore) {
+    const timesToTry = 200;
+    const delayDurationMs = 1000; // 1 second (adjust as needed)
+  
+    for (let numberOfTries = 0; numberOfTries < timesToTry; numberOfTries++) {
+      const balanceAfter = await provider.getBalance(walletAddress);
+  
+      if (!balanceAfter.eq(balanceBefore)) {
+        return balanceAfter; // Balance changed
+      }
+  
+      await new Promise(resolve => setTimeout(resolve, delayDurationMs));
+    }
+  
+    throw new Error(`Failed to get a different balance value after ${timesToTry} tries`);
   }
   
-
 
 module.exports = {
     delay,
     pauseAndPoll,
+    pollForNewERC721Balance,
+    pollForNewERC721Owner,
+    pollForNewHollowWalletBalance,
+    pollForNewERC721HollowWalletOwner,
+    pollForNewWalletBalance,
     unPauseAndPoll
 }

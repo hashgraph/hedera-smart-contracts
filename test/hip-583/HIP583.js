@@ -22,7 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const utils = require('../hts-precompile/utils')
 const Constants = require('../constants')
-const delay = require('../../utils/helpers').delay
+const { delay, pollForNewERC721Balance, pollForNewHollowWalletBalance, pollForNewERC721HollowWalletOwner, pollForNewWalletBalance} = require('../../utils/helpers')
 
 describe('HIP583 Test Suite', function () {
   let signers
@@ -972,81 +972,3 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
     })
   })
 })
-
-// Transaction needs to be propagated to the mirror node
-async function pollForNewWalletBalance(erc20Contract, tokenAddress, signersAddress, balanceBefore) {
-  const timesToTry = 200;
-  let balanceAfter, numberOfTries = 0;
-
-  while (numberOfTries < timesToTry) {
-    balanceAfter = await erc20Contract.balanceOf(tokenAddress, signersAddress);
-
-    if (!(balanceAfter.eq(0)) && (!balanceAfter.eq(balanceBefore))) {
-      return balanceAfter;
-    }
-
-    numberOfTries++;
-    await delay(); // Delay before the next attempt
-  }
-
-  throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
-}
-// Transaction needs to be propagated to the mirror node
-async function pollForNewERC721Balance(erc721Contract, nftTokenAddress, signersAddress, balanceBefore) {
-  const timesToTry = 200;
-  let balanceAfter, numberOfTries = 0;
-
-  while (numberOfTries < timesToTry) {
-    balanceAfter = await erc721Contract.balanceOf(
-      nftTokenAddress,
-      signersAddress
-    )    
-
-    if (!balanceAfter.eq(balanceBefore)) {
-      return balanceAfter;
-    }
-
-    numberOfTries++;
-    await delay(); // Delay before the next attempt
-  }
-
-  throw new Error(`erc721Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
-}
-
-async function pollForNewERC721HollowWalletOwner(erc721Contract, nftTokenAddress, ownerBefore) {
-  let ownerAfter, numberOfTries = 0, timesToTry = 200
-  while (numberOfTries < timesToTry) {
-    ownerAfter = await erc721Contract.ownerOf(
-      nftTokenAddress
-    )
-
-    if(ownerAfter != ownerBefore) {
-      return ownerAfter
-    }
-    numberOfTries++
-    await delay(); // Delay before the next attempt
-  } 
-  throw new Error(`erc721Contract.ownerOf failed to get a different value after ${timesToTry} tries`)
-} 
-
-// Transaction needs to be propagated to the mirror node
-async function pollForNewHollowWalletBalance(provider, walletAddress, balanceBefore) {
-  const timesToTry = 200;
-  let balanceAfter, numberOfTries = 0;
-
-  while (numberOfTries < timesToTry) {
-      balanceAfter = await provider.getBalance(
-      walletAddress
-    )
-
-
-    if (!balanceAfter.eq(balanceBefore)) {
-      return balanceAfter;
-    }
-
-    numberOfTries++;
-    await delay(); // Delay before the next attempt
-  }
-
-  throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
-}

@@ -21,7 +21,7 @@
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../constants')
-const delay = require('../../utils/helpers')
+const { delay, pollForNewERC721Owner } = require('../../utils/helpers')
 
 describe('ERC721 tests', function () {
   const tokenId = 33
@@ -96,20 +96,4 @@ describe('ERC721 tests', function () {
     expect(ownerAfter).to.eq(signers[1].address)
   })
 })
-
-async function pollForNewERC721Owner(erc721Contract, tokenId, ownerBefore) {
-  let ownerAfter, numberOfTries = 0, timesToTry = 200
-  while (numberOfTries < timesToTry) {
-    ownerAfter = await erc721Contract.ownerOf(
-      tokenId
-    )
-
-    if(ownerAfter != ownerBefore) {
-      return ownerAfter
-    }
-    numberOfTries++
-    await delay(); // Delay for 1 second before the next attempt
-  } 
-  throw new Error(`erc721Contract.ownerOf failed to get a different value after ${timesToTry} tries`)
-} 
 
