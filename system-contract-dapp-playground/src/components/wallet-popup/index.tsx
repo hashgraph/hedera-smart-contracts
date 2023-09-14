@@ -24,7 +24,6 @@ import { ethers } from 'ethers';
 import { clearCookies } from '@/api/cookies';
 import { NetworkName } from '@/types/common';
 import { BiCopy, BiCheckDouble } from 'react-icons/bi';
-import { HASHSCAN_BASE_URL } from '@/utils/common/constants';
 import { getBalance, getWalletProvider } from '@/api/wallet';
 import { HASHSCAN_BASE_URL } from '@/utils/common/constants';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
@@ -185,9 +184,7 @@ const WalletPopup = ({ setIsOpen, userAddress, network }: PageProps) => {
                 className="flex gap-1 items-center cursor-pointer"
               >
                 <div>
-                  {hederaAccountId || (
-                    <SkeletonText mt="4" w="20" noOfLines={1} skeletonHeight="2" />
-                  )}
+                  {hederaAccountId || <SkeletonText mt="4" w="20" noOfLines={1} skeletonHeight="2" />}
                 </div>
                 {isCopied.accountId ? (
                   <div className="w-[1rem] text-textaccents-light dark:text-textaccents-dark">
@@ -237,9 +234,7 @@ const WalletPopup = ({ setIsOpen, userAddress, network }: PageProps) => {
               {/* title */}
               <p>Balance:</p>
               {/* value */}
-              <div>
-                {accountBalance || <SkeletonText mt="4" w="20" noOfLines={1} skeletonHeight="2" />}
-              </div>
+              <div>{accountBalance || <SkeletonText mt="4" w="20" noOfLines={1} skeletonHeight="2" />}</div>
             </div>
           </div>
 
@@ -297,9 +292,9 @@ const WalletPopup = ({ setIsOpen, userAddress, network }: PageProps) => {
 
                 <ModalBody>
                   <p className="text-white/70">
-                    By completing this action, all the transactions you have made during this
-                    session will be permanently erased from the DApp&apos;s cache, but they will
-                    still be accessible through HashScan or other explorer solutions.
+                    By completing this action, all the transactions you have made during this session will be
+                    permanently erased from the DApp&apos;s cache, but they will still be accessible through
+                    HashScan or other explorer solutions.
                   </p>
                 </ModalBody>
 
