@@ -26,6 +26,7 @@ import {
   handleErc20TokenPermissions,
 } from '@/api/hedera/erc20-interactions';
 import { Contract } from 'ethers';
+import { MOCK_TX_HASH } from '../../utils/common/constants';
 
 describe('getERC20TokenInformation', () => {
   const expectedSymbol = 'TKN';
@@ -78,11 +79,10 @@ describe('getERC20TokenInformation', () => {
 
 describe('erc20Mint', () => {
   // Mock baseContract object
-  const txHash = '0x63424020a69bf46a0669f46dd66addba741b9c02d37fab1686428f5209bc759d';
   const baseContract = {
     mint: jest.fn().mockResolvedValue({
       wait: jest.fn().mockResolvedValue({
-        hash: txHash,
+        hash: MOCK_TX_HASH,
       }),
     }),
   };
@@ -98,7 +98,7 @@ describe('erc20Mint', () => {
     expect(res.err).toBeNull;
     expect(erc20Mint).toBeCalled;
     expect(res.mintRes).toBe(true);
-    expect(res.txHash).toBe(txHash);
+    expect(res.txHash).toBe(MOCK_TX_HASH);
   });
 
   it('should failed with invalid recipient address', async () => {
@@ -150,11 +150,9 @@ describe('balanceOf', () => {
 });
 
 describe('Token Permissions', () => {
-  const txHash = '0x63424020a69bf46a0669f46dd66addba741b9c02d37fab1686428f5209bc759d';
-
   const mockedValue = jest.fn().mockResolvedValue({
     wait: jest.fn().mockResolvedValue({
-      hash: txHash,
+      hash: MOCK_TX_HASH,
     }),
   });
 
@@ -176,7 +174,7 @@ describe('Token Permissions', () => {
 
     // assertion
     expect(approveRes.err).toBeNull;
-    expect(approveRes.txHash).toBe(txHash);
+    expect(approveRes.txHash).toBe(MOCK_TX_HASH);
     expect(approveRes.approveRes).toBe(true);
     expect(handleErc20TokenPermissions).toBeCalled;
   });
@@ -208,7 +206,7 @@ describe('Token Permissions', () => {
     // assertion
     expect(increaseAllowanceRes.err).toBeNull;
     expect(handleErc20TokenPermissions).toBeCalled;
-    expect(increaseAllowanceRes.txHash).toBe(txHash);
+    expect(increaseAllowanceRes.txHash).toBe(MOCK_TX_HASH);
     expect(increaseAllowanceRes.increaseAllowanceRes).toBe(true);
   });
 
@@ -239,7 +237,7 @@ describe('Token Permissions', () => {
     // assertion
     expect(decreaseAllowanceRes.err).toBeNull;
     expect(handleErc20TokenPermissions).toBeCalled;
-    expect(decreaseAllowanceRes.txHash).toBe(txHash);
+    expect(decreaseAllowanceRes.txHash).toBe(MOCK_TX_HASH);
     expect(decreaseAllowanceRes.decreaseAllowanceRes).toBe(true);
   });
 
@@ -302,11 +300,9 @@ describe('Token Permissions', () => {
 });
 
 describe('Transfer', () => {
-  const txHash = '0x63424020a69bf46a0669f46dd66addba741b9c02d37fab1686428f5209bc759d';
-
   const mockedValue = jest.fn().mockResolvedValue({
     wait: jest.fn().mockResolvedValue({
-      hash: txHash,
+      hash: MOCK_TX_HASH,
     }),
   });
 
@@ -326,7 +322,7 @@ describe('Transfer', () => {
     // assertion
     expect(balanceOf).toBeCalled;
     expect(transferRes.err).toBeNull;
-    expect(transferRes.txHash).toBe(txHash);
+    expect(transferRes.txHash).toBe(MOCK_TX_HASH);
     expect(transferRes.transferRes).toBe(true);
   });
 
@@ -351,7 +347,7 @@ describe('Transfer', () => {
     // assertion
     expect(balanceOf).toBeCalled;
     expect(transferFromRes.err).toBeNull;
-    expect(transferFromRes.txHash).toBe(txHash);
+    expect(transferFromRes.txHash).toBe(MOCK_TX_HASH);
     expect(transferFromRes.transferFromRes).toBe(true);
   });
 
