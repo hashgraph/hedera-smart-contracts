@@ -26,9 +26,9 @@ import { motion } from 'framer-motion';
 import WalletPopup from '../wallet-popup';
 import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { NetworkName } from '@/types/common';
 import { usePathname } from 'next/navigation';
 import { BsChevronDown } from 'react-icons/bs';
-import { NetworkName } from '@/types/common';
 import { CommonErrorToast } from '../toast/CommonToast';
 import { isProtectedRoute } from '@/utils/common/helpers';
 import { loadAccountInfoFromCookies } from '@/api/cookies';
@@ -168,12 +168,7 @@ const Navbar = () => {
       {isConnected && <hr className="w-[99vw] border-t border-white/40" />}
 
       {didWalletPop && (
-        <WalletPopup
-          network={network}
-          isOpen={didWalletPop}
-          userAddress={accounts[0]}
-          setIsOpen={setDidWalletPop}
-        />
+        <WalletPopup network={network} userAddress={accounts[0]} setIsOpen={setDidWalletPop} />
       )}
     </motion.nav>
   );

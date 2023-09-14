@@ -29,6 +29,7 @@ import { handleAPIErrors } from '../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../shared/states/commonStates';
 import { useToastSuccessful } from '../../shared/hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../shared/hooks/usePaginatedTxResults';
+import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import TokenAddressesInputForm from '../../shared/components/TokenAddressesInputForm';
 import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
 import { associateHederaTokensToAccounts } from '@/api/hedera/tokenCreateCustom-interactions';
@@ -46,16 +47,15 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
   // general states
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const initialParamValues = { associatingAddress: '' };
   const [isSuccessful, setIsSuccessful] = useState(false);
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-CREATE.ASSOCIATE-TOKEN-RESULTS';
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const initialParamValues = {
-    associatingAddress: '',
-  };
   const [paramValues, setParamValues] = useState<any>(initialParamValues);
+  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const initialTokenAddressesValues = { fieldKey: generatedRandomUniqueKey(9), fieldValue: '' };
+  const transactionResultStorageKey =
+    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-CREATE']['ASSOCIATE-TOKEN'];
   const [hederaTokenAddresses, setHederaTokenAddresses] = useState<
     { fieldKey: string; fieldValue: string }[]
   >([initialTokenAddressesValues]);
@@ -68,13 +68,10 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(
-    currentTransactionPage,
-    transactionResults
-  );
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string, fieldKey?: string) => {
@@ -102,9 +99,7 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
         break;
       case 'REMOVE':
         if (hederaTokenAddresses.length > 1) {
-          setHederaTokenAddresses((prev) =>
-            prev.filter((field) => field.fieldKey !== removingFieldKey)
-          );
+          setHederaTokenAddresses((prev) => prev.filter((field) => field.fieldKey !== removingFieldKey));
         }
     }
   };
@@ -199,15 +194,9 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
           paramType={(htsTokenAssociateParamFields as any)['associatingAddress'].inputType}
           paramSize={(htsTokenAssociateParamFields as any)['associatingAddress'].inputSize}
           explanation={(htsTokenAssociateParamFields as any)['associatingAddress'].explanation}
-          paramClassName={
-            (htsTokenAssociateParamFields as any)['associatingAddress'].inputClassname
-          }
-          paramPlaceholder={
-            (htsTokenAssociateParamFields as any)['associatingAddress'].inputPlaceholder
-          }
-          paramFocusColor={
-            (htsTokenAssociateParamFields as any)['associatingAddress'].inputFocusBorderColor
-          }
+          paramClassName={(htsTokenAssociateParamFields as any)['associatingAddress'].inputClassname}
+          paramPlaceholder={(htsTokenAssociateParamFields as any)['associatingAddress'].inputPlaceholder}
+          paramFocusColor={(htsTokenAssociateParamFields as any)['associatingAddress'].inputFocusBorderColor}
         />
 
         {/* Token addresses */}

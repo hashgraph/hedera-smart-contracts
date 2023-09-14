@@ -21,7 +21,6 @@
 import Cookies from 'js-cookie';
 import { useState, useEffect } from 'react';
 import { Contract, isAddress } from 'ethers';
-import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { Select, useDisclosure, useToast } from '@chakra-ui/react';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
@@ -39,6 +38,7 @@ import {
   SharedFormButton,
   SharedFormInputField,
 } from '../../../shared/components/ParamInputForm';
+import { HEDERA_BRANDING_COLORS, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 
 interface PageProps {
   baseContract: Contract;
@@ -75,11 +75,10 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
   const [tokenAddressFromTxResult, setTokenAddressFromTxResult] = useState('');
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('DEFAULT_FREEZE_STATUS');
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-QUERY.TOKEN-SPECIFIC-INFO-RESULTS';
-  const [APIMethodsFromTxResult, setAPIMethodsFromTxResult] =
-    useState<API_NAMES>('DEFAULT_FREEZE_STATUS');
-  const [keyTypeFromTxResult, setKeyTypeFromTxResult] =
-    useState<IHederaTokenServiceKeyType>('ADMIN');
+  const transactionResultStorageKey =
+    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-QUERY']['TOKEN-SPECIFIC-INFO'];
+  const [APIMethodsFromTxResult, setAPIMethodsFromTxResult] = useState<API_NAMES>('DEFAULT_FREEZE_STATUS');
+  const [keyTypeFromTxResult, setKeyTypeFromTxResult] = useState<IHederaTokenServiceKeyType>('ADMIN');
   const initialParamValues = {
     hederaTokenAddress: '',
   };
@@ -135,13 +134,10 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(
-    currentTransactionPage,
-    transactionResults
-  );
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string) => {
@@ -269,12 +265,8 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
             paramType={(htsQueryTokenInfoParamFields as any)['hederaTokenAddress'].inputType}
             paramSize={(htsQueryTokenInfoParamFields as any)['hederaTokenAddress'].inputSize}
             explanation={(htsQueryTokenInfoParamFields as any)['hederaTokenAddress'].explanation}
-            paramClassName={
-              (htsQueryTokenInfoParamFields as any)['hederaTokenAddress'].inputClassname
-            }
-            paramPlaceholder={
-              (htsQueryTokenInfoParamFields as any)['hederaTokenAddress'].inputPlaceholder
-            }
+            paramClassName={(htsQueryTokenInfoParamFields as any)['hederaTokenAddress'].inputClassname}
+            paramPlaceholder={(htsQueryTokenInfoParamFields as any)['hederaTokenAddress'].inputPlaceholder}
             paramFocusColor={
               (htsQueryTokenInfoParamFields as any)['hederaTokenAddress'].inputFocusBorderColor
             }

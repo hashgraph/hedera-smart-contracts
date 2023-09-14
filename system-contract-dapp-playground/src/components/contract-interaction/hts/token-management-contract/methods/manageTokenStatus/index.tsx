@@ -26,17 +26,15 @@ import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
-import { manageTokenStatus } from '@/api/hedera/tokenManagement-interactions';
 import { useToastSuccessful } from '../../../shared/hooks/useToastSuccessful';
+import { manageTokenStatus } from '@/api/hedera/tokenManagement-interactions';
+import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
-import {
-  SharedExecuteButton,
-  SharedFormInputField,
-} from '../../../shared/components/ParamInputForm';
 import { htsTokenStatusParamFields } from '@/utils/contract-interactions/HTS/token-management/constant';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { SharedExecuteButton, SharedFormInputField } from '../../../shared/components/ParamInputForm';
 
 interface PageProps {
   baseContract: Contract;
@@ -53,7 +51,7 @@ const ManageTokenStatus = ({ baseContract }: PageProps) => {
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-MANAGEMENT.TOKEN-STATUS-RESULTS';
+  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-MANAGE']['TOKEN-STATUS'];
   const [isLoading, setIsLoading] = useState({
     pauseLoading: false,
     unpauseLoading: false,
@@ -77,13 +75,10 @@ const ManageTokenStatus = ({ baseContract }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(
-    currentTransactionPage,
-    transactionResults
-  );
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string) => {
@@ -175,12 +170,8 @@ const ManageTokenStatus = ({ baseContract }: PageProps) => {
           paramSize={(htsTokenStatusParamFields as any)['hederaTokenAddress'].inputSize}
           explanation={(htsTokenStatusParamFields as any)['hederaTokenAddress'].explanation}
           paramClassName={(htsTokenStatusParamFields as any)['hederaTokenAddress'].inputClassname}
-          paramPlaceholder={
-            (htsTokenStatusParamFields as any)['hederaTokenAddress'].inputPlaceholder
-          }
-          paramFocusColor={
-            (htsTokenStatusParamFields as any)['hederaTokenAddress'].inputFocusBorderColor
-          }
+          paramPlaceholder={(htsTokenStatusParamFields as any)['hederaTokenAddress'].inputPlaceholder}
+          paramFocusColor={(htsTokenStatusParamFields as any)['hederaTokenAddress'].inputFocusBorderColor}
         />
 
         {/* Execute button */}
@@ -190,9 +181,7 @@ const ManageTokenStatus = ({ baseContract }: PageProps) => {
             return (
               <div key={APIButton.API} className="w-full">
                 <SharedExecuteButton
-                  isLoading={
-                    APIButton.API === 'PAUSE' ? isLoading.pauseLoading : isLoading.unpauseLoading
-                  }
+                  isLoading={APIButton.API === 'PAUSE' ? isLoading.pauseLoading : isLoading.unpauseLoading}
                   handleCreatingFungibleToken={() => handleUpdateTokenStatus(APIButton.API)}
                   buttonTitle={APIButton.executeTitle}
                 />

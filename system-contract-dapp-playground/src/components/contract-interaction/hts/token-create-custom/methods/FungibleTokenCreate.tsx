@@ -26,6 +26,7 @@ import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { handleAPIErrors } from '../../shared/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../shared/hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../shared/hooks/usePaginatedTxResults';
+import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { SharedSigningKeysComponent } from '../../shared/components/SigningKeysForm';
 import { createHederaFungibleToken } from '@/api/hedera/tokenCreateCustom-interactions';
 import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
@@ -62,7 +63,8 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
   const [isDefaultFreeze, setIsDefaultFreeze] = useState(false);
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
-  const transactionResultStorageKey = 'HEDERA.HTS.TOKEN-CREATE.FUNGIBLE-TOKEN-RESULTS';
+  const transactionResultStorageKey =
+    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-CREATE']['FUNGIBLE-TOKEN'];
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const tokenCreateFields = {
     info: ['name', 'symbol', 'memo'],
@@ -97,13 +99,10 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
       setCurrentTransactionPage,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(
-    currentTransactionPage,
-    transactionResults
-  );
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string) => {
@@ -309,12 +308,8 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
             paramSize={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputSize}
             explanation={(htsTokenCreateParamFields as any)['feeTokenAddress'].explanation}
             paramClassName={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputClassname}
-            paramPlaceholder={
-              (htsTokenCreateParamFields as any)['feeTokenAddress'].inputPlaceholder
-            }
-            paramFocusColor={
-              (htsTokenCreateParamFields as any)['feeTokenAddress'].inputFocusBorderColor
-            }
+            paramPlaceholder={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputPlaceholder}
+            paramFocusColor={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputFocusBorderColor}
           />
         )}
 

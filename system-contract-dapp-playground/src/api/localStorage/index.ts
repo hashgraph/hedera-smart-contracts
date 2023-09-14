@@ -18,6 +18,8 @@
  *
  */
 
+import { OFFCIAL_NETWORK_NAME } from '@/utils/common/constants';
+
 /**
  * @dev get balances from LocalStorage
  *
@@ -30,10 +32,7 @@ export const getBalancesFromLocalStorage = () => {
     const storageBalances = localStorage.getItem('hedera_erc20_balances');
     if (storageBalances) {
       return {
-        storageBalances: new Map(Object.entries(JSON.parse(storageBalances))) as Map<
-          string,
-          number
-        >,
+        storageBalances: new Map(Object.entries(JSON.parse(storageBalances))) as Map<string, number>,
       };
     } else {
       return { storageBalances: new Map() };
@@ -62,5 +61,24 @@ export const getArrayTypedValuesFromLocalStorage = (key: string) => {
   } catch (err) {
     console.error(err);
     return { err };
+  }
+};
+
+/**
+ * @dev clear all HEDERA transaction results cached in localStorage
+ */
+export const clearTransactionCache = () => {
+  // loop through localStorage items
+  if (localStorage) {
+    for (let i = 0; i < localStorage.length; i++) {
+      // get key
+      const key = localStorage.key(i);
+
+      // remove items that have keys start with HEDERA
+      if (key?.startsWith(OFFCIAL_NETWORK_NAME)) {
+        localStorage.removeItem(key);
+        i--;
+      }
+    }
   }
 };
