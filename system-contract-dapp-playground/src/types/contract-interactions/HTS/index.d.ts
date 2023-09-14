@@ -26,10 +26,13 @@ export type TransactionResult = {
   tokenInfo?: any;
   isToken?: boolean;
   keyTypeCalled?: any;
+  recordIndex?: number;
   tokenAddress?: string;
   accountAddress?: string;
-  tokenAddresses?: string[];
+  transactionType: string;
   receiverAddress?: string;
+  tokenAddresses?: string[];
+  transactionTimeStamp: number;
 };
 
 /** @dev an interface for the results returned back from interacting with Hedera System Smart Contracts */

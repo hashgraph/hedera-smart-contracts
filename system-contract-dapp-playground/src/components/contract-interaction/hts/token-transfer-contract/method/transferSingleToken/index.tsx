@@ -140,6 +140,7 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         accountAddress: senderAddress,
+        transactionType: 'HTS-TOKEN-TRANSFER',
         tokenAddress: paramValues.hederaTokenAddress,
       });
       return;
@@ -152,7 +153,9 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
           receiverAddress,
           status: 'success',
           accountAddress: senderAddress,
+          transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
+          transactionType: 'HTS-TOKEN-TRANSFER',
           tokenAddress: paramValues.hederaTokenAddress,
         },
       ]);

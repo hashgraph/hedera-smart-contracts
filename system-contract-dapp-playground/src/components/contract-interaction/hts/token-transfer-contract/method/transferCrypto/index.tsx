@@ -245,6 +245,7 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
         toaster,
         transactionHash,
         setTransactionResults,
+        transactionType: 'HTS-CRYPTO-TRANSFER',
       });
       return;
     } else {
@@ -253,7 +254,9 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
         ...prev,
         {
           status: 'success',
+          transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
+          transactionType: 'HTS-CRYPTO-TRANSFER',
         },
       ]);
 

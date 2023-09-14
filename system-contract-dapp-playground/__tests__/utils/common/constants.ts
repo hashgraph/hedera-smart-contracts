@@ -18,23 +18,8 @@
  *
  */
 
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { isProtectedRoute } from './utils/common/helpers';
-
-export async function middleware(request: NextRequest) {
-  const isConnected = request.cookies.get('_isConnected')?.value;
-  const { pathname } = request.nextUrl;
-
-  if (isConnected && pathname === '/') {
-    return NextResponse.redirect(new URL(`/hedera/overview`, request.url));
-  }
-
-  if (!isConnected && isProtectedRoute(pathname)) {
-    return NextResponse.redirect(new URL(`/`, request.url));
-  }
-}
-
-export const config = {
-  matcher: ['/', '/hedera/:path*', '/activity'],
-};
+export const MOCK_RESPONSE_CODE = 22;
+export const MOCK_GAS_LIMIT = 1000000;
+export const MOCK_CONTRACT_ID = '0xDd7fCb7c2ee96A79B1e201d25F5E43d6a0cED5e6';
+export const MOCK_TOKEN_ADDRESS = '0x00000000000000000000000000000000000084b7';
+export const MOCK_TX_HASH = '0x63424020a69bf46a0669f46dd66addba741b9c02d37fab1686428f5209bc759d';

@@ -168,8 +168,9 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
         APICalled: API,
         setTransactionResults,
         err: tokenInfoResult.err,
-        transactionHash: tokenInfoResult.transactionHash,
         tokenAddress: paramValues.hederaTokenAddress,
+        transactionHash: tokenInfoResult.transactionHash,
+        transactionType: `HTS-${API.replace('_', '-')}`,
       });
       return;
     } else {
@@ -190,8 +191,10 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
           APICalled: API,
           status: 'success',
           tokenInfo: cachedTokenInfo,
+          transactionTimeStamp: Date.now(),
           tokenAddress: paramValues.hederaTokenAddress,
           txHash: tokenInfoResult.transactionHash as string,
+          transactionType: `HTS-${API.replace('_', '-')}`,
         },
       ]);
 

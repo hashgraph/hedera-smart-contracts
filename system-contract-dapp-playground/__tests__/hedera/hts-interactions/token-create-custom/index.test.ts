@@ -28,6 +28,7 @@ import {
   mintHederaTokenToAddress,
 } from '@/api/hedera/tokenCreateCustom-interactions';
 import { CommonKeyObject } from '@/types/contract-interactions/HTS';
+import { MOCK_TOKEN_ADDRESS, MOCK_TX_HASH } from '../../../utils/common/constants';
 
 describe('createHederaFungibleToken test suite', () => {
   // mock states
@@ -43,11 +44,9 @@ describe('createHederaFungibleToken test suite', () => {
   const msgValue = '20000000000000000000'; // 20 hbar
   const recipient = '0x34810E139b451e0a4c67d5743E956Ac8990842A8';
   const contractId = '0xbdcdf69052c9fc01e38377d05cc83c28ee43f24a';
-  const tokenAddress = '0x00000000000000000000000000000000000084b7';
   const feeTokenAddress = '0x00000000000000000000000000000000000006Ab';
   const associtingAccount = '0x34810E139b451e0a4c67d5743E956Ac8990842A8';
   const grantingKYCAccount = '0x34810E139b451e0a4c67d5743E956Ac8990842A8';
-  const txHash = '0x63424020a69bf46a0669f46dd66addba741b9c02d37fab1686428f5209bc759d';
   const returnedTokenAddress = '0x00000000000000000000000000000000000000000000000000000000000084b7';
 
   const mockResolvedValue = {
@@ -66,7 +65,7 @@ describe('createHederaFungibleToken test suite', () => {
           data: '0x0016',
         },
       ],
-      hash: txHash,
+      hash: MOCK_TX_HASH,
     }),
   };
 
@@ -140,8 +139,8 @@ describe('createHederaFungibleToken test suite', () => {
       );
 
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
-      expect(txRes.tokenAddress).toBe(tokenAddress);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
+      expect(txRes.tokenAddress).toBe(MOCK_TOKEN_ADDRESS);
     });
 
     it('should execute createFungibleTokenWithCustomFeesPublic then a token address and transaction hash', async () => {
@@ -161,8 +160,8 @@ describe('createHederaFungibleToken test suite', () => {
       );
 
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
-      expect(txRes.tokenAddress).toBe(tokenAddress);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
+      expect(txRes.tokenAddress).toBe(MOCK_TOKEN_ADDRESS);
     });
 
     it('should execute createHederaFungibleToken and return error if initialTotalSupply is invalid', async () => {
@@ -324,8 +323,8 @@ describe('createHederaFungibleToken test suite', () => {
       );
 
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
-      expect(txRes.tokenAddress).toBe(tokenAddress);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
+      expect(txRes.tokenAddress).toBe(MOCK_TOKEN_ADDRESS);
     });
 
     it('should execute createFungibleTokenWithCustomFeesPublic then a token address and transaction hash', async () => {
@@ -342,8 +341,8 @@ describe('createHederaFungibleToken test suite', () => {
       );
 
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
-      expect(txRes.tokenAddress).toBe(tokenAddress);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
+      expect(txRes.tokenAddress).toBe(MOCK_TOKEN_ADDRESS);
     });
 
     it('should execute createHederaNonFungibleToken and return error if maxSupply is invalid', async () => {
@@ -446,28 +445,28 @@ describe('createHederaFungibleToken test suite', () => {
       const txRes = await mintHederaToken(
         baseContract as unknown as Contract,
         'FUNGIBLE',
-        tokenAddress,
+        MOCK_TOKEN_ADDRESS,
         1200,
         metadata
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(returnedResult);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute mintTokenPublic to mint a NON-FUNGIBLE token then return a transaction hash', async () => {
       const txRes = await mintHederaToken(
         baseContract as unknown as Contract,
         'NON_FUNGIBLE',
-        tokenAddress,
+        MOCK_TOKEN_ADDRESS,
         0,
         metadata
       );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(returnedResult);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute mintTokenPublic to mint a Hedera token and return error when the hederaTokenAddress is invalid', async () => {
@@ -488,7 +487,7 @@ describe('createHederaFungibleToken test suite', () => {
       const txRes = await mintHederaToken(
         baseContract as unknown as Contract,
         'FUNGIBLE',
-        tokenAddress,
+        MOCK_TOKEN_ADDRESS,
         -1,
         metadata
       );
@@ -501,7 +500,7 @@ describe('createHederaFungibleToken test suite', () => {
       const txRes = await mintHederaToken(
         baseContract as unknown as Contract,
         'NON_FUNGIBLE',
-        tokenAddress,
+        MOCK_TOKEN_ADDRESS,
         1,
         metadata
       );
@@ -517,7 +516,7 @@ describe('createHederaFungibleToken test suite', () => {
       const txRes = await mintHederaTokenToAddress(
         baseContract as unknown as Contract,
         'FUNGIBLE',
-        tokenAddress,
+        MOCK_TOKEN_ADDRESS,
         recipient,
         1200,
         metadata
@@ -525,14 +524,14 @@ describe('createHederaFungibleToken test suite', () => {
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(returnedResult);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute mintHederaTokenToAddress to mint a NON-FUNGIBLE token and transfer it to the recipient then return a transaction hash', async () => {
       const txRes = await mintHederaTokenToAddress(
         baseContract as unknown as Contract,
         'NON_FUNGIBLE',
-        tokenAddress,
+        MOCK_TOKEN_ADDRESS,
         recipient,
         0,
         metadata
@@ -540,7 +539,7 @@ describe('createHederaFungibleToken test suite', () => {
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(returnedResult);
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute mintHederaTokenToAddress to mint a Hedera token and transfer it to the recipient then return error when the hederaTokenAddress is invalid', async () => {
@@ -562,7 +561,7 @@ describe('createHederaFungibleToken test suite', () => {
       const txRes = await mintHederaTokenToAddress(
         baseContract as unknown as Contract,
         'FUNGIBLE',
-        tokenAddress,
+        MOCK_TOKEN_ADDRESS,
         '0xabc',
         1200,
         metadata
@@ -577,7 +576,7 @@ describe('createHederaFungibleToken test suite', () => {
       const txRes = await mintHederaTokenToAddress(
         baseContract as unknown as Contract,
         'FUNGIBLE',
-        tokenAddress,
+        MOCK_TOKEN_ADDRESS,
         recipient,
         -1,
         metadata
@@ -592,7 +591,7 @@ describe('createHederaFungibleToken test suite', () => {
       const txRes = await mintHederaTokenToAddress(
         baseContract as unknown as Contract,
         'NON_FUNGIBLE',
-        tokenAddress,
+        MOCK_TOKEN_ADDRESS,
         recipient,
         1,
         metadata
@@ -608,21 +607,21 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute associateHederaTokensToAccounts to associate a token to an account then return a transaction hash', async () => {
       const txRes = await associateHederaTokensToAccounts(
         baseContract as unknown as Contract,
-        [tokenAddress],
+        [MOCK_TOKEN_ADDRESS],
         associtingAccount
       );
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute associateHederaTokensToAccounts to associate a list of tokens to an account then return a transaction hash', async () => {
       const txRes = await associateHederaTokensToAccounts(
         baseContract as unknown as Contract,
-        [tokenAddress, feeTokenAddress],
+        [MOCK_TOKEN_ADDRESS, feeTokenAddress],
         associtingAccount
       );
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute associateHederaTokensToAccounts and return an error when the hederaTokenAddresses array is empty', async () => {
@@ -638,7 +637,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute associateHederaTokensToAccounts and return an error when the associtingAccountAddress is invalid', async () => {
       const txRes = await associateHederaTokensToAccounts(
         baseContract as unknown as Contract,
-        [tokenAddress, feeTokenAddress],
+        [MOCK_TOKEN_ADDRESS, feeTokenAddress],
         '0xabc'
       );
       expect(txRes.err).toBe('associating account address is invalid');
@@ -649,7 +648,7 @@ describe('createHederaFungibleToken test suite', () => {
       const invalidTokenAddress = '0xaac';
       const txRes = await associateHederaTokensToAccounts(
         baseContract as unknown as Contract,
-        [tokenAddress, invalidTokenAddress],
+        [MOCK_TOKEN_ADDRESS, invalidTokenAddress],
         associtingAccount
       );
 
@@ -662,11 +661,11 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute grantTokenKYCToAccount to associate a token KYC to an account then return a transaction hash', async () => {
       const txRes = await grantTokenKYCToAccount(
         baseContract as unknown as Contract,
-        tokenAddress,
+        MOCK_TOKEN_ADDRESS,
         grantingKYCAccount
       );
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
     });
 
     it('should execute grantTokenKYCToAccount to associate a token KYC to an account then return error when hederaTokenAddress is invalid', async () => {
@@ -682,7 +681,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute grantTokenKYCToAccount to associate a token KYC to an account then return error when grantingKYCAccountAddress is invalid', async () => {
       const txRes = await grantTokenKYCToAccount(
         baseContract as unknown as Contract,
-        tokenAddress,
+        MOCK_TOKEN_ADDRESS,
         '0xabc'
       );
       expect(txRes.err).toBe('invalid associating account address');

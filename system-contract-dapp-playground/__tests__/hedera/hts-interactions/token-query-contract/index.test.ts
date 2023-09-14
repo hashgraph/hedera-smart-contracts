@@ -26,12 +26,11 @@ import {
   queryTokenPermissionInformation,
 } from '@/api/hedera/tokenQuery-interactions';
 import { Contract } from 'ethers';
+import { MOCK_TOKEN_ADDRESS, MOCK_TX_HASH } from '../../../utils/common/constants';
 
 // mock convertsArgsProxyToHTSTokenInfo
 jest.mock('../../../../src/utils/contract-interactions/HTS/helpers.ts', () => {
-  const actualModule = jest.requireActual(
-    '../../../../src/utils/contract-interactions/HTS/helpers.ts'
-  );
+  const actualModule = jest.requireActual('../../../../src/utils/contract-interactions/HTS/helpers.ts');
 
   return {
     ...actualModule,
@@ -47,8 +46,6 @@ describe('TokenQueryContract Test Suite', () => {
   const mockedEventReturnedValue = 'mockedEventReturnedValue';
   const ownerAddress = '0xCC07a8243578590d55c5708D7fB453245350Cc2A';
   const spenderAddress = '0x34810E139b451e0a4c67d5743E956Ac8990842A8';
-  const hederaTokenAddress = '0x00000000000000000000000000000000000084b7';
-  const txHash = '0x63424020a69bf46a0669f46dd66addba741b9c02d37fab1686428f5209bc759d';
 
   // prepare contract mocked value
   const contractTokenInfoMockedResolvedValue = (eventName: string) => {
@@ -65,7 +62,7 @@ describe('TokenQueryContract Test Suite', () => {
             },
           },
         ],
-        hash: txHash,
+        hash: MOCK_TX_HASH,
       }),
     });
   };
@@ -81,7 +78,7 @@ describe('TokenQueryContract Test Suite', () => {
             args: mockedEventReturnedValue,
           },
         ],
-        hash: txHash,
+        hash: MOCK_TX_HASH,
       }),
     });
   };
@@ -107,13 +104,10 @@ describe('TokenQueryContract Test Suite', () => {
 
   describe('queryTokenValidity test suite', () => {
     it('should execute queryTokenValidity then return info value from event', async () => {
-      const txRes = await queryTokenValidity(
-        baseContract as unknown as Contract,
-        hederaTokenAddress
-      );
+      const txRes = await queryTokenValidity(baseContract as unknown as Contract, MOCK_TOKEN_ADDRESS);
 
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
       expect(txRes.IsToken).toBe(mockedEventReturnedValue);
     });
   });
@@ -123,11 +117,11 @@ describe('TokenQueryContract Test Suite', () => {
       const txRes = await queryTokenGeneralInfomation(
         baseContract as unknown as Contract,
         'TOKEN',
-        hederaTokenAddress
+        MOCK_TOKEN_ADDRESS
       );
 
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
       expect(txRes.TokenInfo).toBe(mockedEventReturnedValue);
     });
 
@@ -135,11 +129,11 @@ describe('TokenQueryContract Test Suite', () => {
       const txRes = await queryTokenGeneralInfomation(
         baseContract as unknown as Contract,
         'FUNGIBLE',
-        hederaTokenAddress
+        MOCK_TOKEN_ADDRESS
       );
 
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
       expect(txRes.FungibleTokenInfo).toBe(mockedEventReturnedValue);
     });
 
@@ -147,12 +141,12 @@ describe('TokenQueryContract Test Suite', () => {
       const txRes = await queryTokenGeneralInfomation(
         baseContract as unknown as Contract,
         'NON_FUNFIBLE',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         serialNumber
       );
 
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
       expect(txRes.NonFungibleTokenInfo).toBe(mockedEventReturnedValue);
     });
   });
@@ -162,11 +156,11 @@ describe('TokenQueryContract Test Suite', () => {
       const txRes = await queryTokenSpecificInfomation(
         baseContract as unknown as Contract,
         'DEFAULT_KYC_STATUS',
-        hederaTokenAddress
+        MOCK_TOKEN_ADDRESS
       );
 
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
       expect(txRes.TokenDefaultKycStatus).toBe(mockedEventReturnedValue);
     });
 
@@ -174,11 +168,11 @@ describe('TokenQueryContract Test Suite', () => {
       const txRes = await queryTokenSpecificInfomation(
         baseContract as unknown as Contract,
         'DEFAULT_FREEZE_STATUS',
-        hederaTokenAddress
+        MOCK_TOKEN_ADDRESS
       );
 
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
       expect(txRes.TokenDefaultFreezeStatus).toBe(mockedEventReturnedValue);
     });
 
@@ -186,11 +180,11 @@ describe('TokenQueryContract Test Suite', () => {
       const txRes = await queryTokenSpecificInfomation(
         baseContract as unknown as Contract,
         'CUSTOM_FEES',
-        hederaTokenAddress
+        MOCK_TOKEN_ADDRESS
       );
 
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
       expect(txRes.TokenCustomFees).toBe(mockedEventReturnedValue);
     });
 
@@ -198,11 +192,11 @@ describe('TokenQueryContract Test Suite', () => {
       const txRes = await queryTokenSpecificInfomation(
         baseContract as unknown as Contract,
         'TOKEN_TYPE',
-        hederaTokenAddress
+        MOCK_TOKEN_ADDRESS
       );
 
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
       expect(txRes.TokenType).toBe(mockedEventReturnedValue);
     });
 
@@ -210,12 +204,12 @@ describe('TokenQueryContract Test Suite', () => {
       const txRes = await queryTokenSpecificInfomation(
         baseContract as unknown as Contract,
         'TOKEN_KEYS',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         keyType as any
       );
 
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
       expect(txRes.TokenKey).toBe(mockedEventReturnedValue);
     });
   });
@@ -225,13 +219,13 @@ describe('TokenQueryContract Test Suite', () => {
       const txRes = await queryTokenPermissionInformation(
         baseContract as unknown as Contract,
         'ALLOWANCE',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         ownerAddress,
         spenderAddress
       );
 
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
       expect(txRes.AllowanceValue).toBe(mockedEventReturnedValue);
     });
 
@@ -239,14 +233,14 @@ describe('TokenQueryContract Test Suite', () => {
       const txRes = await queryTokenPermissionInformation(
         baseContract as unknown as Contract,
         'GET_APPROVED',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         ownerAddress,
         spenderAddress,
         serialNumber
       );
 
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
       expect(txRes.ApprovedAddress).toBe(mockedEventReturnedValue);
     });
 
@@ -254,14 +248,14 @@ describe('TokenQueryContract Test Suite', () => {
       const txRes = await queryTokenPermissionInformation(
         baseContract as unknown as Contract,
         'IS_APPROVAL',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         ownerAddress,
         spenderAddress,
         serialNumber
       );
 
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
       expect(txRes.Approved).toBe(mockedEventReturnedValue);
     });
   });
@@ -271,12 +265,12 @@ describe('TokenQueryContract Test Suite', () => {
       const txRes = await queryTokenStatusInformation(
         baseContract as unknown as Contract,
         'IS_KYC',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         ownerAddress
       );
 
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
       expect(txRes.KycGranted).toBe(mockedEventReturnedValue);
     });
 
@@ -284,12 +278,12 @@ describe('TokenQueryContract Test Suite', () => {
       const txRes = await queryTokenStatusInformation(
         baseContract as unknown as Contract,
         'IS_FROZEN',
-        hederaTokenAddress,
+        MOCK_TOKEN_ADDRESS,
         ownerAddress
       );
 
       expect(txRes.err).toBeNull;
-      expect(txRes.transactionHash).toBe(txHash);
+      expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
       expect(txRes.Frozen).toBe(mockedEventReturnedValue);
     });
   });

@@ -27,7 +27,7 @@ import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
 export const handleRetrievingTransactionResultsFromLocalStorage = (
   toaster: any,
   transactionResultStorageKey: string,
-  setCurrentTransactionPage: Dispatch<SetStateAction<number>>,
+  setCurrentTransactionPage: any,
   setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>
 ) => {
   const { storageResult, err: storagedErr } = getArrayTypedValuesFromLocalStorage(
@@ -49,6 +49,6 @@ export const handleRetrievingTransactionResultsFromLocalStorage = (
 
     // set the current page to the last page so it can show the latest transactions
     const maxPageNum = Math.ceil(storageResult.length / TRANSACTION_PAGE_SIZE);
-    setCurrentTransactionPage(maxPageNum === 0 ? 1 : maxPageNum);
+    if (setCurrentTransactionPage) setCurrentTransactionPage(maxPageNum === 0 ? 1 : maxPageNum);
   }
 };
