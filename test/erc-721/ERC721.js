@@ -21,7 +21,7 @@
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../constants')
-const { delay, pollForNewERC721Owner } = require('../../utils/helpers')
+const { pollForNewERC721Owner } = require('../../utils/helpers')
 
 describe('ERC721 tests', function () {
   const tokenId = 33

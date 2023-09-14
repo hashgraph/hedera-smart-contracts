@@ -41,6 +41,22 @@ async function pauseAndPoll(ERC20Pausable) {
     return false; // Not paused
 }
 
+async function pollForERC20BurnableChangedSupply(ERC20Burnable, initialSupply) {
+    const timesToTry = 300;
+  
+    for (let numberOfTries = 0; numberOfTries < timesToTry; numberOfTries++) {
+      const newSupply = await ERC20Burnable.totalSupply();
+  
+      if ((newSupply != 0) && (newSupply != initialSupply)) {
+        return newSupply; // Supply changed and not zero
+      }
+  
+      await delay(); // Delay before the next attempt
+    }
+  
+    throw new Error(`Failed to get a different supply value after ${timesToTry} tries`);
+}
+
 async function pollForNewERC721Owner(erc721Contract, tokenId, ownerBefore) {
     const timesToTry = 200;
     const delayDurationMs = 1000; // 1 second (adjust as needed)
@@ -124,16 +140,51 @@ async function pollForNewHollowWalletBalance(provider, walletAddress, balanceBef
     }
   
     throw new Error(`Failed to get a different balance value after ${timesToTry} tries`);
-  }
-  
+}
 
+async function pollForNewBalance(IERC20, contractAddress, tokenCreateBalanceBefore) {
+    const timesToTry = 200;
+    const delayDurationMs = 1000; // 1 second (adjust as needed)
+  
+    for (let numberOfTries = 0; numberOfTries < timesToTry; numberOfTries++) {
+      const balanceAfter = await IERC20.balanceOf(contractAddress);
+  
+      if (balanceAfter !== null && balanceAfter !== tokenCreateBalanceBefore) {
+        return balanceAfter; // Balance changed and not null
+      }
+  
+      await delay(); // Delay before the next attempt
+    }
+  
+    throw new Error(`Failed to get a different balance value after ${timesToTry} tries`);
+}
+
+async function pollForNewSignerBalance(IERC20Contract, signersAddress, signerBefore) {
+    const timesToTry = 200;
+    
+    for (let numberOfTries = 0; numberOfTries < timesToTry; numberOfTries++) {
+      const signerAfter = await IERC20Contract.balanceOf(signersAddress);
+  
+      if (!signerAfter.eq(signerBefore)) {
+        return signerAfter; // Balance changed and not null
+      }
+  
+      await delay(); // Delay before the next attempt
+    }
+  
+    throw new Error(`Failed to get a different balance value after ${timesToTry} tries`);
+}
+      
 module.exports = {
     delay,
     pauseAndPoll,
+    pollForERC20BurnableChangedSupply,
+    pollForNewBalance,
     pollForNewERC721Balance,
     pollForNewERC721Owner,
     pollForNewHollowWalletBalance,
     pollForNewERC721HollowWalletOwner,
+    pollForNewSignerBalance,
     pollForNewWalletBalance,
     unPauseAndPoll
 }

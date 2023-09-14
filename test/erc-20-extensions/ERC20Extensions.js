@@ -21,7 +21,7 @@
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../constants')
-const { delay, pauseAndPoll, unPauseAndPoll } = require('../../utils/helpers')
+const { pollForERC20BurnableChangedSupply, pauseAndPoll, unPauseAndPoll } = require('../../utils/helpers')
 
 describe('ERC20ExtensionsMock tests', function () {
   let owner, addr1
@@ -88,7 +88,6 @@ describe('ERC20ExtensionsMock tests', function () {
       // Execute burn and get the transaction receipt
       const burnTx = await ERC20Burnable.burn(burnAmount)
       const burnReceipt = await burnTx.wait()
-
 
       // Get updated values
       const newSupply = await pollForERC20BurnableChangedSupply(ERC20Burnable, initialSupply)
@@ -255,46 +254,5 @@ describe('ERC20ExtensionsMock tests', function () {
   })
 })
 
-// Transaction needs to be propagated to the mirror node
-async function pollForERC20BurnableChangedSupply(ERC20Burnable, initialSupply){
-  let numberOfTries = 0;
-  const timesToTry = 300;
-  let newSupply = 0;
-
-  while (numberOfTries < timesToTry) {
-
-    newSupply = await ERC20Burnable.totalSupply()
-
-
-    if ((newSupply != 0) && (newSupply != initialSupply)) {
-      return newSupply;
-    }
-
-    numberOfTries++;
-    await delay(4000); // Delay for 4 seconds before the next attempt
-  }
-
-  throw new Error(`ERC20Burnable failed to change after ${timesToTry} tries`);
-}
-
-// Transaction needs to be propagated to the mirror node
-// async function unPauseAndPoll(ERC20Pausable) {
-//   let numberOfTries = 0;
-//   const timesToTry = 400;
-
-//   await ERC20Pausable.unpause()
-//   while (numberOfTries < timesToTry) {
-//     const paused = await ERC20Pausable.paused()
-//     console.log("paused: ", paused)
-//     if (!await ERC20Pausable.paused()) {
-//       return false;
-//     }
-
-//     numberOfTries++;
-//     await delay(); // Delay before the next attempt
-//   }
-  
-//   throw new Error(`ERC20Pausable failed to change after ${timesToTry} tries`);
-// }
 
 
