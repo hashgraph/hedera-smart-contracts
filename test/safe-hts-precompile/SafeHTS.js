@@ -22,7 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../constants')
 const utils = require('../hts-precompile/utils')
-const delay = require('../../utils/helpers').delay
+const { pollForNewHBarBalance } = require('../../utils/helpers')
 
 describe('SafeHTS library Test Suite', function () {
   let safeOperationsContract
@@ -352,24 +352,3 @@ describe('SafeHTS library Test Suite', function () {
     )
   })
 })
-
-async function pollForNewHBarBalance(provider, signers0BeforeHbarBalance, signer1AccountID){
-  const timesToTry = 300;
-  let numberOfTries = 0;
-
-  let signers0AfterHbarBalance = await provider.getBalance(signer1AccountID)
-
-  while(signers0AfterHbarBalance.eq(signers0BeforeHbarBalance)){
-    await delay()
-    signers0AfterHbarBalance = await provider.getBalance(signer1AccountID)
-    numberOfTries++;
-    if(numberOfTries > timesToTry){
-      throw new Error(`pollForNewHBarBalance failed to change after ${timesToTry} tries`);   
-    }
-  }
-  return signers0AfterHbarBalance  
-}
-
-// function delay(ms) {
-//   return new Promise(resolve => setTimeout(resolve, ms));
-// }

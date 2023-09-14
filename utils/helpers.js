@@ -196,6 +196,22 @@ async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddres
     throw new Error(`Failed to get a different value after ${timesToTry} tries`);
 }
 
+async function pollForNewHBarBalance(provider, signers0BeforeHbarBalance, signer1AccountID) {
+    const timesToTry = 300;
+  
+    for (let numberOfTries = 0; numberOfTries < timesToTry; numberOfTries++) {
+      const signers0AfterHbarBalance = await provider.getBalance(signer1AccountID);
+  
+      if (!signers0AfterHbarBalance.eq(signers0BeforeHbarBalance)) {
+        return signers0AfterHbarBalance;
+      }
+  
+      await delay();
+    }
+  
+    throw new Error(`Failed to get a different balance after ${timesToTry} tries`);
+}
+
 async function pollForNewSignerBalance(IERC20Contract, signersAddress, signerBefore) {
     const timesToTry = 200;
     
@@ -278,6 +294,7 @@ module.exports = {
     pollForERC20BurnableChangedSupply,
     pollForNewBalance,
     pollForNewCounterValue,
+    pollForNewHBarBalance,
     pollForNewSignerBalanceUsingProvider,
     pollForNewERC721Balance,
     pollForNewERC721Owner,
