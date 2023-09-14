@@ -22,7 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const utils = require('../utils')
 const Constants = require('../../constants')
-const delay = require('../../../utils/helpers').delay
+const { pollForNewERC20Balance, pollForNewSignerBalanceUsingProvider } = require('../../../utils/helpers')
 
 describe('TokenTransferContract Test Suite', function () {
   const TX_SUCCESS_CODE = 22
@@ -272,9 +272,9 @@ describe('TokenTransferContract Test Suite', function () {
       (e) => e.event === Constants.Events.ResponseCode
     )[0].args[0]
 
-    const signers0After = await pollForNewSignerBalance(signers[0].provider, signers[0].address, signers0Before)
+    const signers0After = await pollForNewSignerBalanceUsingProvider(signers[0].provider, signers[0].address, signers0Before)
 
-    const signers1After = await pollForNewSignerBalance(signers[0].provider, signers[1].address, signers0Before)
+    const signers1After = await pollForNewSignerBalanceUsingProvider(signers[0].provider, signers[1].address, signers0Before)
     expect(responseCode).to.equal(TX_SUCCESS_CODE)
     expect(signers0Before > signers0After).to.equal(true)
     expect(signers1After > signers1Before).to.equal(true)
@@ -459,42 +459,4 @@ describe('TokenTransferContract Test Suite', function () {
   })
 })
 
-// Transaction needs to be propagated to the mirror node
-async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddress, balanceBefore) {
-  const timesToTry = 200;
-  let balanceAfter, numberOfTries = 0;
-
-  while (numberOfTries < timesToTry) {
-    balanceAfter = await erc20Contract.balanceOf(tokenAddress, signersAddress);
-
-    if (!balanceAfter.eq(balanceBefore)) {
-      return balanceAfter;
-    }
-
-    numberOfTries++;
-    await delay(); // Delay before the next attempt
-  }
-
-  throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
-}
-
-async function pollForNewSignerBalance(provider, signersAddress, signerBefore) {
-  const timesToTry = 400;
-  let signerAfter, numberOfTries = 0;
-
-  while (numberOfTries < timesToTry) {
-    signerAfter = await provider.getBalance(
-      signersAddress
-    )
-
-    if (signerAfter != signerBefore) {
-      return signerAfter;
-    }
-
-    numberOfTries++;
-    await delay(); // Delay before the next attempt
-  }
-
-  throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
-}
 

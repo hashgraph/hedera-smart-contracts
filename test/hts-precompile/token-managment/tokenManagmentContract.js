@@ -22,7 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const utils = require('../utils')
 const Constants = require('../../constants')
-const delay = require('../../../utils/helpers').delay
+const { pollForNewERC20Balance } = require('../../../utils/helpers')
 
 describe('TokenManagmentContract Test Suite', function () {
   const TX_SUCCESS_CODE = 22
@@ -1194,22 +1194,3 @@ describe('TokenManagmentContract Test Suite', function () {
     })
   })
 })
-
-// Transaction needs to be propagated to the mirror node
-async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddress, balanceBefore) {
-  const timesToTry = 200;
-  let balanceAfter, numberOfTries = 0;
-
-  while (numberOfTries < timesToTry) {
-    balanceAfter = await erc20Contract.balanceOf(tokenAddress, signersAddress);
-
-    if (!balanceAfter.eq(balanceBefore)) {
-      return balanceAfter;
-    }
-
-    numberOfTries++;
-    await delay(); // Delay before the next attempt
-  }
-
-  throw new Error(`erc20Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
-}

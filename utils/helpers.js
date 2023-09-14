@@ -4,25 +4,17 @@ function delay() {
     return new Promise(resolve => setTimeout(resolve, process.env.RETRY_DELAY || 2000));
 }
 
-// Transaction needs to be propagated to the mirror node
-async function unPauseAndPoll(ERC20Pausable) {
-    const timesToTry = 10;
-  
-    await ERC20Pausable.unpause()
- 
-    for (let numberOfTries = 0; numberOfTries <= timesToTry; numberOfTries++) {
-        const isPaused = await ERC20Pausable.paused();
-        
-        if (!isPaused) {
-          return true; // Unpaused
-        }
-    
-        await delay(); // Delay before the next attempt
-      }
-
-    return false // paused
+async function getBalance(erc20Contract, tokenAddress, signersAddress) {
+    const balance = await erc20Contract.balanceOf(tokenAddress, signersAddress);
+    return balance;
 }
 
+async function getSignerBalance(provider, signersAddress) {
+    const balance = await provider.getBalance(signersAddress);
+    return balance;
+}
+
+// Transaction needs to be propagated to the mirror node
 async function pauseAndPoll(ERC20Pausable) {
     const timesToTry = 10;
   
@@ -159,6 +151,27 @@ async function pollForNewBalance(IERC20, contractAddress, tokenCreateBalanceBefo
     throw new Error(`Failed to get a different balance value after ${timesToTry} tries`);
 }
 
+async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddress, balanceBefore) {
+    const timesToTry = 200;
+    const delayTimeMs = 1000; // Adjust the delay time as needed
+  
+    for (let numberOfTries = 0; numberOfTries < timesToTry; numberOfTries++) {
+      try {
+        const balanceAfter = await getBalance(erc20Contract, tokenAddress, signersAddress);
+        if (!balanceAfter.eq(balanceBefore)) {
+          return balanceAfter;
+        }
+      } catch (error) {
+        // Handle errors from erc20Contract.balanceOf
+        console.error(`Error fetching balance: ${error.message}`);
+      }
+  
+      await delay(delayTimeMs);
+    }
+  
+    throw new Error(`Failed to get a different value after ${timesToTry} tries`);
+}
+
 async function pollForNewSignerBalance(IERC20Contract, signersAddress, signerBefore) {
     const timesToTry = 200;
     
@@ -174,12 +187,53 @@ async function pollForNewSignerBalance(IERC20Contract, signersAddress, signerBef
   
     throw new Error(`Failed to get a different balance value after ${timesToTry} tries`);
 }
+
+async function pollForNewSignerBalanceUsingProvider(provider, signersAddress, signerBefore) {
+    const timesToTry = 400;
+    const delayTimeMs = 1000; // Adjust the delay time as needed
+  
+    for (let numberOfTries = 0; numberOfTries < timesToTry; numberOfTries++) {
+      try {
+        const signerAfter = await getSignerBalance(provider, signersAddress);
+        if (signerAfter !== signerBefore) {
+          return signerAfter;
+        }
+      } catch (error) {
+        // Handle errors from provider.getBalance
+        console.error(`Error fetching signer balance: ${error.message}`);
+      }
+  
+      await delay(delayTimeMs);
+    }
+  
+    throw new Error(`Failed to get a different value after ${timesToTry} tries`);
+}
+
+async function unPauseAndPoll(ERC20Pausable) {
+    const timesToTry = 10;
+  
+    await ERC20Pausable.unpause()
+ 
+    for (let numberOfTries = 0; numberOfTries <= timesToTry; numberOfTries++) {
+        const isPaused = await ERC20Pausable.paused();
+        
+        if (!isPaused) {
+          return true; // Unpaused
+        }
+    
+        await delay(); // Delay before the next attempt
+      }
+
+    return false // paused
+}
       
 module.exports = {
     delay,
     pauseAndPoll,
+    pollForNewERC20Balance,
     pollForERC20BurnableChangedSupply,
     pollForNewBalance,
+    pollForNewSignerBalanceUsingProvider,
     pollForNewERC721Balance,
     pollForNewERC721Owner,
     pollForNewHollowWalletBalance,
