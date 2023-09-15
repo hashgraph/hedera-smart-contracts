@@ -1,26 +1,49 @@
+/*-
+ *
+ * Hedera Smart Contracts
+ *
+ * Copyright (C) 2023 Hedera Hashgraph, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 require('dotenv').config();
 
-function delay() {
+const delay = () => {
     return new Promise(resolve => setTimeout(resolve, process.env.RETRY_DELAY || 2000));
 }
 
-async function getBalance(erc20Contract, tokenAddress, signersAddress) {
+const getBalance =  async(erc20Contract, tokenAddress, signersAddress) => {
     const balance = await erc20Contract.balanceOf(tokenAddress, signersAddress);
     return balance;
 }
 
-async function getCount(proxyContract) {
+/**
+ * @param {*} proxyContract 
+ * @returns counter  - the count value on the proxyContract 
+ */
+const getCount = async(proxyContract) => {
     const counter = await proxyContract.count();
     return counter;
 }
 
-async function getSignerBalance(provider, signersAddress) {
+const getSignerBalance = async(provider, signersAddress) => {
     const balance = await provider.getBalance(signersAddress);
     return balance;
 }
 
 // Transaction needs to be propagated to the mirror node
-async function pauseAndPoll(ERC20Pausable) {
+const pauseAndPoll = async(ERC20Pausable) => {
   
     await ERC20Pausable.pause();
   
@@ -37,7 +60,7 @@ async function pauseAndPoll(ERC20Pausable) {
     return false; // Not paused
 }
 
-async function pollForERC20BurnableChangedSupply(ERC20Burnable, initialSupply) {
+const pollForERC20BurnableChangedSupply = async(ERC20Burnable, initialSupply) => {
   
     for (let numberOfTries = 0; numberOfTries < process.env.MAX_RETRY; numberOfTries++) {
       const newSupply = await ERC20Burnable.totalSupply();
@@ -52,7 +75,7 @@ async function pollForERC20BurnableChangedSupply(ERC20Burnable, initialSupply) {
     throw new Error(`Failed to get a different supply value after ${process.env.MAX_RETRY} tries`);
 }
 
-async function pollForNewCounterValue(proxyContract, counterBefore) {
+const pollForNewCounterValue = async(proxyContract, counterBefore) => {
     let counterAfter, numberOfTries = 0;
   
     while (numberOfTries < process.env.MAX_RETRY) {
@@ -70,7 +93,7 @@ async function pollForNewCounterValue(proxyContract, counterBefore) {
     throw new Error(`proxyContract.count failed to get a different value after ${process.env.MAX_RETRY} tries`);
   }
 
-async function pollForNewERC721Owner(erc721Contract, tokenId, ownerBefore) {
+const pollForNewERC721Owner = async(erc721Contract, tokenId, ownerBefore) => {
   
     for (let numberOfTries = 0; numberOfTries < process.env.MAX_RETRY; numberOfTries++) {
       const ownerAfter = await erc721Contract.ownerOf(tokenId);
@@ -85,7 +108,7 @@ async function pollForNewERC721Owner(erc721Contract, tokenId, ownerBefore) {
     throw new Error(`Ownership did not change after ${process.env.MAX_RETRY} tries`);
 }
 
-async function pollForNewERC721Balance(erc721Contract, nftTokenAddress, signersAddress, balanceBefore) {
+const pollForNewERC721Balance = async(erc721Contract, nftTokenAddress, signersAddress, balanceBefore) => {
     
     for (let numberOfTries = 0; numberOfTries < process.env.MAX_RETRY; numberOfTries++) {
       const balanceAfter = await erc721Contract.balanceOf(nftTokenAddress, signersAddress);
@@ -100,7 +123,7 @@ async function pollForNewERC721Balance(erc721Contract, nftTokenAddress, signersA
     throw new Error(`erc721Contract.balanceOf failed to get a different value after ${process.env.MAX_RETRY} tries`);
 }
   
-async function pollForNewERC721HollowWalletOwner(erc721Contract, nftTokenAddress, ownerBefore) {
+const pollForNewERC721HollowWalletOwner = async(erc721Contract, nftTokenAddress, ownerBefore) => {
   
     for (let numberOfTries = 0; numberOfTries < process.env.MAX_RETRY; numberOfTries++) {
       const ownerAfter = await erc721Contract.ownerOf(nftTokenAddress);
@@ -115,7 +138,7 @@ async function pollForNewERC721HollowWalletOwner(erc721Contract, nftTokenAddress
     throw new Error(`Ownership did not change after ${process.env.MAX_RETRY} tries`);
 }
   
-async function pollForNewWalletBalance(erc20Contract, tokenAddress, signersAddress, balanceBefore) {
+const pollForNewWalletBalance= async(erc20Contract, tokenAddress, signersAddress, balanceBefore) => {
   
     for (let numberOfTries = 0; numberOfTries < process.env.MAX_RETRY; numberOfTries++) {
       const balanceAfter = await erc20Contract.balanceOf(tokenAddress, signersAddress);
@@ -130,7 +153,7 @@ async function pollForNewWalletBalance(erc20Contract, tokenAddress, signersAddre
     throw new Error(`Failed to get a different balance value after ${process.env.MAX_RETRY} tries`);
 }
     
-async function pollForNewHollowWalletBalance(provider, walletAddress, balanceBefore) {
+const pollForNewHollowWalletBalance = async (provider, walletAddress, balanceBefore) => {
   
     for (let numberOfTries = 0; numberOfTries < process.env.MAX_RETRY; numberOfTries++) {
       const balanceAfter = await provider.getBalance(walletAddress);
@@ -145,7 +168,7 @@ async function pollForNewHollowWalletBalance(provider, walletAddress, balanceBef
     throw new Error(`Failed to get a different balance value after ${process.env.MAX_RETRY} tries`);
 }
 
-async function pollForNewBalance(IERC20, contractAddress, tokenCreateBalanceBefore) {
+const pollForNewBalance = async(IERC20, contractAddress, tokenCreateBalanceBefore) => {
   
     for (let numberOfTries = 0; numberOfTries < process.env.MAX_RETRY; numberOfTries++) {
       const balanceAfter = await IERC20.balanceOf(contractAddress);
@@ -160,7 +183,7 @@ async function pollForNewBalance(IERC20, contractAddress, tokenCreateBalanceBefo
     throw new Error(`Failed to get a different balance value after ${process.env.MAX_RETRY} tries`);
 }
 
-async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddress, balanceBefore) {
+const pollForNewERC20Balance = async(erc20Contract, tokenAddress, signersAddress, balanceBefore) => {
   
     for (let numberOfTries = 0; numberOfTries < process.env.MAX_RETRY; numberOfTries++) {
       try {
@@ -179,7 +202,7 @@ async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddres
     throw new Error(`Failed to get a different value after ${process.env.MAX_RETRY} tries`);
 }
 
-async function pollForNewHBarBalance(provider, signers0BeforeHbarBalance, signer1AccountID) {
+const pollForNewHBarBalance = async(provider, signers0BeforeHbarBalance, signer1AccountID) => {
   
     for (let numberOfTries = 0; numberOfTries < process.env.MAX_RETRY; numberOfTries++) {
       const signers0AfterHbarBalance = await provider.getBalance(signer1AccountID);
@@ -194,7 +217,7 @@ async function pollForNewHBarBalance(provider, signers0BeforeHbarBalance, signer
     throw new Error(`Failed to get a different balance after ${process.env.MAX_RETRY} tries`);
 }
 
-async function pollForNewSignerBalance(IERC20Contract, signersAddress, signerBefore) {
+const pollForNewSignerBalance = async(IERC20Contract, signersAddress, signerBefore) =>  {
     
     for (let numberOfTries = 0; numberOfTries < process.env.MAX_RETRY; numberOfTries++) {
       const signerAfter = await IERC20Contract.balanceOf(signersAddress);
@@ -209,26 +232,7 @@ async function pollForNewSignerBalance(IERC20Contract, signersAddress, signerBef
     throw new Error(`Failed to get a different balance value after ${process.env.MAX_RETRY} tries`);
 }
 
-async function pollForNewCounterValue(proxyContract, counterBefore) {
-  
-    for (let numberOfTries = 0; numberOfTries < process.env.MAX_RETRY; numberOfTries++) {
-      try {
-        const counterAfter = await getCount(proxyContract);
-        if (!counterAfter.eq(counterBefore)) {
-          return counterAfter;
-        }
-      } catch (error) {
-        // Handle errors from proxyContract.count
-        console.error(`Error fetching counter value: ${error.message}`);
-      }
-  
-      await delay();
-    }
-  
-    throw new Error(`Failed to get a different value after ${timesToTry} tries`);
-}
-
-async function pollForNewSignerBalanceUsingProvider(provider, signersAddress, signerBefore) {
+const pollForNewSignerBalanceUsingProvider = async(provider, signersAddress, signerBefore) => {
   
     for (let numberOfTries = 0; numberOfTries < process.env.MAX_RETRY; numberOfTries++) {
       try {
@@ -247,7 +251,7 @@ async function pollForNewSignerBalanceUsingProvider(provider, signersAddress, si
     throw new Error(`Failed to get a different value after ${process.env.MAX_RETRY} tries`);
 }
 
-async function unPauseAndPoll(ERC20Pausable) {
+const unPauseAndPoll = async(ERC20Pausable) => {
   
     await ERC20Pausable.unpause()
  

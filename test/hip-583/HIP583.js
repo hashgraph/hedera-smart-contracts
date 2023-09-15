@@ -230,7 +230,7 @@ describe('HIP583 Test Suite', function () {
           //sending some HBARs, so the hollow account have some to cover the transaction
           await signers[0].sendTransaction({
             to: hollowWalletAddress,
-            value: ethers.utils.parseEther('20'),
+            value: ethers.utils.parseEther('14'),
           })
 
           await utils.updateAccountKeysViaHapi(
@@ -517,7 +517,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
       await (
         await contractTransferTx.transferTo(
           hollowWallet.address,
-          (amount * 20) / utils.tinybarToWeibarCoef,
+          (amount * 14) / utils.tinybarToWeibarCoef,
           Constants.GAS_LIMIT_1_000_000
         )
       ).wait()
