@@ -24,7 +24,7 @@ import { BiCopy } from 'react-icons/bi';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { IoRefreshOutline } from 'react-icons/io5';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
+import { HEDERA_BRANDING_COLORS, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import MultiLineMethod from '@/components/common/MultiLineMethod';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
@@ -67,9 +67,10 @@ type Allowance = {
 const TokenPermission = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [allowances, setAllowances] = useState<Allowance[]>([]);
-  const allowanceStorageKey = 'HEDERA.EIP.ERC-20.ALLOWANCES-RESULTS.READONLY';
-  const transactionResultStorageKey = 'HEDERA.EIP.ERC-20.TOKEN-PERMISSIONS-RESULTS';
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const transactionResultStorageKey =
+    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['TOKEN-PERMISSION'];
+  const allowanceStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['ALLOWANCES-RESULT'];
   const [successStatus, setSuccessStatus] = useState({
     approve: false,
     increaseAllowance: false,
@@ -130,7 +131,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
       undefined,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   /** @dev retrieve allowances from localStorage to maintain data on re-renders */
   useEffect(() => {
@@ -150,7 +151,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
     if (storageResult) {
       setAllowances(storageResult as Allowance[]);
     }
-  }, [toaster]);
+  }, [toaster, allowanceStorageKey]);
 
   /**
    * @dev handle execute methods
@@ -224,10 +225,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
           amount: Number(tokenPermissionRes.allowanceRes!),
         };
         const newAllowances = allowances.map((allowance) => {
-          if (
-            allowance.owner === allowanceObj.owner &&
-            allowance.spender === allowanceObj.spender
-          ) {
+          if (allowance.owner === allowanceObj.owner && allowance.spender === allowanceObj.spender) {
             allowance.amount = Number(tokenPermissionRes.allowanceRes!);
             duplicated = true;
           }
@@ -273,15 +271,11 @@ const TokenPermission = ({ baseContract }: PageProps) => {
     if (allowances.length > 0) {
       localStorage.setItem(allowanceStorageKey, JSON.stringify(allowances));
     }
-  }, [allowances]);
+  }, [allowances, allowanceStorageKey]);
 
   // toast executing successful
   useEffect(() => {
-    if (
-      successStatus.approve ||
-      successStatus.increaseAllowance ||
-      successStatus.decreaseAllowance
-    ) {
+    if (successStatus.approve || successStatus.increaseAllowance || successStatus.decreaseAllowance) {
       let title = '';
       if (successStatus.approve) {
         title = 'Approve successful 🎉';
@@ -331,11 +325,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
           setParams={setIncreaseAllowanceParams}
           isLoading={methodState.increaseAllowance.isLoading}
           handleExecute={() =>
-            handleExecutingMethods(
-              'increaseAllowance',
-              increaseAllowanceParams,
-              setIncreaseAllowanceParams
-            )
+            handleExecutingMethods('increaseAllowance', increaseAllowanceParams, setIncreaseAllowanceParams)
           }
           explanation="Atomically increases the allowance granted to spender by the caller."
         />
@@ -348,11 +338,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
           setParams={setDecreaseAllowanceParams}
           isLoading={methodState.decreaseAllowance.isLoading}
           handleExecute={() =>
-            handleExecutingMethods(
-              'decreaseAllowance',
-              decreaseAllowanceParams,
-              setDecreaseAllowanceParams
-            )
+            handleExecutingMethods('decreaseAllowance', decreaseAllowanceParams, setDecreaseAllowanceParams)
           }
           explanation="Atomically decreases the allowance granted to spender by the caller."
         />
@@ -367,9 +353,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
           widthSize="w-[360px]"
           setParams={setAllowanceParams}
           isLoading={methodState.allowance.isLoading}
-          handleExecute={() =>
-            handleExecutingMethods('allowance', allowanceParams, setAllowanceParams)
-          }
+          handleExecute={() => handleExecutingMethods('allowance', allowanceParams, setAllowanceParams)}
           explanation="Returns the remaining number of tokens that `spender` will be allowed to spend on behalf of `owner` through `transferFrom` function."
         />
       </div>
@@ -447,10 +431,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
                 };
                 return (
                   <Tr key={`${allowance.owner}${allowance.spender}`}>
-                    <Td
-                      onClick={() => copyWalletAddress(allowance.owner)}
-                      className="cursor-pointer"
-                    >
+                    <Td onClick={() => copyWalletAddress(allowance.owner)} className="cursor-pointer">
                       <Popover>
                         <PopoverTrigger>
                           <div className="flex gap-1 items-center">
@@ -463,16 +444,11 @@ const TokenPermission = ({ baseContract }: PageProps) => {
                           </div>
                         </PopoverTrigger>
                         <PopoverContent width={'fit-content'} border={'none'}>
-                          <div className="bg-secondary px-3 py-2 border-none font-medium">
-                            Copied
-                          </div>
+                          <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
                         </PopoverContent>
                       </Popover>
                     </Td>
-                    <Td
-                      onClick={() => copyWalletAddress(allowance.spender)}
-                      className="cursor-pointer"
-                    >
+                    <Td onClick={() => copyWalletAddress(allowance.spender)} className="cursor-pointer">
                       <Popover>
                         <PopoverTrigger>
                           <div className="flex gap-1 items-center">
@@ -485,9 +461,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
                           </div>
                         </PopoverTrigger>
                         <PopoverContent width={'fit-content'} border={'none'}>
-                          <div className="bg-secondary px-3 py-2 border-none font-medium">
-                            Copied
-                          </div>
+                          <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
                         </PopoverContent>
                       </Popover>
                     </Td>

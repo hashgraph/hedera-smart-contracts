@@ -25,15 +25,13 @@ import { erc20Transfers } from '@/api/hedera/erc20-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import MultiLineMethod from '@/components/common/MultiLineMethod';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import {
-  transferParamFields,
-  transferFromParamFields,
-} from '@/utils/contract-interactions/erc/constant';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
-import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
+import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
+import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
+import { transferParamFields, transferFromParamFields } from '@/utils/contract-interactions/erc/constant';
 import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 
 interface PageProps {
   baseContract: Contract;
@@ -41,7 +39,8 @@ interface PageProps {
 
 const Transfer = ({ baseContract }: PageProps) => {
   const toaster = useToast();
-  const transactionResultStorageKey = 'HEDERA.EIP.ERC-20.TOKEN-TRANSFER-RESULTS';
+  const transactionResultStorageKey =
+    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['TOKEN-TRANSFER'];
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
 
   const [transferParams, setTransferParams] = useState({
@@ -74,7 +73,7 @@ const Transfer = ({ baseContract }: PageProps) => {
       undefined,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   /** @dev handle execute methods */
   const handleExecutingMethods = async (
@@ -140,9 +139,7 @@ const Transfer = ({ baseContract }: PageProps) => {
           status: 'success',
           transactionTimeStamp: Date.now(),
           txHash: tokenTransferRes.txHash as string,
-          transactionType: `ERC20-${convertCalmelCaseFunctionName(method)
-            .toUpperCase()
-            .replace(' ', '-')}`,
+          transactionType: `ERC20-${convertCalmelCaseFunctionName(method).toUpperCase().replace(' ', '-')}`,
         },
       ]);
     }
@@ -188,9 +185,7 @@ const Transfer = ({ baseContract }: PageProps) => {
           widthSize="w-[360px]"
           setParams={setTransferParams}
           isLoading={methodState.transfer.isLoading}
-          handleExecute={() =>
-            handleExecutingMethods('transfer', transferParams, setTransferParams)
-          }
+          handleExecute={() => handleExecutingMethods('transfer', transferParams, setTransferParams)}
           explanation="Moves `amount` tokens from the caller’s account to `recipient`."
         />
 
