@@ -510,6 +510,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
   describe('Fungible Token Test', function () {
     let hollowWallet
     let erc20Mock
+    const initialHollowWalletAmount = ethers.utils.parseEther('14')
 
     before(async function () {
       hollowWallet = ethers.Wallet.createRandom().connect(ethers.provider)
@@ -517,7 +518,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
       await (
         await contractTransferTx.transferTo(
           hollowWallet.address,
-          (amount * 14) / utils.tinybarToWeibarCoef,
+          initialHollowWalletAmount / utils.tinybarToWeibarCoef,
           Constants.GAS_LIMIT_1_000_000
         )
       ).wait()
@@ -583,13 +584,14 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
     const tokenId = 27
     let hollowWallet
     let erc721Mock
+    const initialHollowWalletAmount = ethers.utils.parseEther('14')
 
     before(async function () {
       hollowWallet = ethers.Wallet.createRandom().connect(ethers.provider)
       await (
         await contractTransferTx.transferTo(
           hollowWallet.address,
-          (amount * 20) / utils.tinybarToWeibarCoef,
+          initialHollowWalletAmount / utils.tinybarToWeibarCoef,
           Constants.GAS_LIMIT_1_000_000
         )
       ).wait()

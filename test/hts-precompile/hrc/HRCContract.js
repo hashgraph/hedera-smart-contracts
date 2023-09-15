@@ -64,6 +64,7 @@ describe('HRC tests', function () {
     )
     // create a contract object for the token
     hrcToken = new Contract(tokenAddress, IHRC, signers[0])
+    console.log('hrcContract: ', hrcContract.address)
   })
 
   it('should be able to associate() to the token from a contract', async function () {
