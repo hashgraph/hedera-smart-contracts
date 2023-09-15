@@ -38,7 +38,7 @@ const HTS206Section = () => {
         duration: 0.6,
       }}
       viewport={{ once: true }}
-      className="text-white w-full flex pt-7 pb-12 pl-7 flex-col gap-9"
+      className="text-white w-full flex pt-7 pb-12 pl-7 flex-col gap-9 min-w-[50rem]"
     >
       {/* top part */}
       <div className="flex flex-col gap-6">
@@ -68,9 +68,8 @@ const HTS206Section = () => {
 
           {/* content */}
           <p className="tracking-tight text-white/70">
-            The integration of Hedera Token Service (HTS) with the Hedera Smart Contract Service
-            (HSCS), allowing contracts to transfer, mint, burn, associate, and dissociate tokens
-            programmatically.
+            The integration of Hedera Token Service (HTS) with the Hedera Smart Contract Service (HSCS),
+            allowing contracts to transfer, mint, burn, associate, and dissociate tokens programmatically.
           </p>
         </div>
       </div>
@@ -87,9 +86,9 @@ const HTS206Section = () => {
 
           {/* abstract */}
           <p className="tracking-tight text-white/70">
-            These example smart contracts demonstrate how the HTS system contract is employed to
-            carry out their functions effectively. They serve as clear examples of how the HTS
-            system contract can be put to practical use.
+            These example smart contracts demonstrate how the HTS system contract is employed to carry out
+            their functions effectively. They serve as clear examples of how the HTS system contract can be
+            put to practical use.
           </p>
         </div>
 

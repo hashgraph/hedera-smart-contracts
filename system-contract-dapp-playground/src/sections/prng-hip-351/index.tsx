@@ -38,7 +38,7 @@ const HIP351Section = () => {
         duration: 0.6,
       }}
       viewport={{ once: true }}
-      className="text-white w-full flex pt-7 pb-12 pl-7 flex-col gap-9"
+      className="text-white w-full flex pt-7 pb-12 pl-7 flex-col gap-9 min-w-[50rem]"
     >
       {/* top part */}
       <div className="flex flex-col gap-6">
@@ -68,8 +68,8 @@ const HIP351Section = () => {
 
           {/* content */}
           <div className="tracking-tight text-white/70">
-            A Solidity precompiled contracts that generates pseuodrandom numbers for use by both
-            smart contracts and users.
+            A Solidity precompiled contracts that generates pseuodrandom numbers for use by both smart
+            contracts and users.
           </div>
         </div>
       </div>

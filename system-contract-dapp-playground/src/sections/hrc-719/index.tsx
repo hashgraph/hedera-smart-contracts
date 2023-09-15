@@ -38,7 +38,7 @@ const IHRC719Section = () => {
         duration: 0.6,
       }}
       viewport={{ once: true }}
-      className="text-white w-full flex pt-7 pb-12 pl-7 flex-col gap-16"
+      className="text-white w-full flex pt-7 pb-12 pl-7 flex-col gap-16 min-w-[50rem]"
     >
       {/* top part */}
       <div className="flex flex-col gap-6">

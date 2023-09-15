@@ -38,7 +38,7 @@ const HIP475Section = () => {
         duration: 0.6,
       }}
       viewport={{ once: true }}
-      className="text-white w-full flex pt-7 pb-12 pl-7 flex-col gap-9"
+      className="text-white w-full flex pt-7 pb-12 pl-7 flex-col gap-9 min-w-[50rem]"
     >
       {/* top part */}
       <div className="flex flex-col gap-6">
@@ -68,15 +68,13 @@ const HIP475Section = () => {
 
           {/* content */}
           <div className="tracking-tight text-white/70">
-            A system contract to convert between tinybars and tinycents at the network&apos;s active
-            exchange rate in system file{' '}
-            <span className="bg-hedera-purple/30 tracking-wide">0.0.112</span>; that is, at the
-            exchange rate the network is using to calculate fees. The network calculates fees as
+            A system contract to convert between tinybars and tinycents at the network&apos;s active exchange
+            rate in system file <span className="bg-hedera-purple/30 tracking-wide">0.0.112</span>; that is,
+            at the exchange rate the network is using to calculate fees. The network calculates fees as
             follows: Starting with the USD resource prices in system file{' '}
-            <span className="bg-hedera-purple/30 tracking-wide">0.0.111</span>, it multiplies each
-            resource price by the amount of that resource used; then sums all these usage prices to
-            get a total USD value; and finally converts from USD to tinybars via the active exchange
-            rate.
+            <span className="bg-hedera-purple/30 tracking-wide">0.0.111</span>, it multiplies each resource
+            price by the amount of that resource used; then sums all these usage prices to get a total USD
+            value; and finally converts from USD to tinybars via the active exchange rate.
           </div>
         </div>
       </div>

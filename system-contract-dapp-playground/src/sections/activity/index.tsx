@@ -85,7 +85,7 @@ const ActivitySection = () => {
         duration: 0.6,
       }}
       viewport={{ once: true }}
-      className="text-white w-full flex pt-7 pb-12 pl-7 flex-col gap-9 h-full"
+      className="text-white w-full flex pt-7 pb-12 pl-7 flex-col gap-9 h-full min-w-[50rem]"
     >
       {/* Title */}
       <div className="flex flex-col gap-3">
@@ -120,11 +120,7 @@ const ActivitySection = () => {
             <Table variant="unstyled" size={'sm'}>
               <Thead>
                 <Tr className="border-b">
-                  <Th
-                    color={HEDERA_BRANDING_COLORS.violet}
-                    isNumeric
-                    className="flex justify-start"
-                  >
+                  <Th color={HEDERA_BRANDING_COLORS.violet} isNumeric className="flex justify-start">
                     Index
                   </Th>
                   <Th color={HEDERA_BRANDING_COLORS.violet}>Transaction Type</Th>
@@ -139,9 +135,7 @@ const ActivitySection = () => {
                     <Tr
                       key={transaction.txHash}
                       className={` border-b border-white/30 ${
-                        transaction.status === 'success'
-                          ? 'hover:bg-hedera-green/10'
-                          : 'hover:bg-red-400/10'
+                        transaction.status === 'success' ? 'hover:bg-hedera-green/10' : 'hover:bg-red-400/10'
                       }`}
                     >
                       {/* index */}
@@ -155,9 +149,7 @@ const ActivitySection = () => {
                       {/* status */}
                       <Td>
                         <p
-                          className={
-                            transaction.status === 'success' ? `text-hedera-green` : `text-red-400`
-                          }
+                          className={transaction.status === 'success' ? `text-hedera-green` : `text-red-400`}
                         >
                           {transaction.status.toUpperCase()}
                         </p>
@@ -177,9 +169,7 @@ const ActivitySection = () => {
                                 </div>
                               </PopoverTrigger>
                               <PopoverContent width={'fit-content'} border={'none'}>
-                                <div className="bg-secondary px-3 py-2 border-none font-medium">
-                                  Copied
-                                </div>
+                                <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
                               </PopoverContent>
                             </Popover>
                           </div>
