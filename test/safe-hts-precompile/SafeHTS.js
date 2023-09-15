@@ -22,7 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../constants')
 const utils = require('../hts-precompile/utils')
-const { pollForNewHBarBalance } = require('../../utils/helpers')
+const { pollForNewBalance, pollForNewHBarBalance } = require('../../utils/helpers')
 
 describe('SafeHTS library Test Suite', function () {
   let safeOperationsContract
@@ -318,9 +318,9 @@ describe('SafeHTS library Test Suite', function () {
     const signers1AfterHbarBalance = await signers[0].provider.getBalance(
       signer2AccountID
     )
-    const signers0AfterTokenBalance = parseInt(
-      await erc20Mock.balanceOf(signer1AccountID)
-    )
+
+    const signers0AfterTokenBalance = await pollForNewBalance(erc20Mock, signer1AccountID, signers0BeforeTokenBalance)
+  
     const signers1AfterTokenBalance = parseInt(
       await erc20Mock.balanceOf(signer2AccountID)
     )

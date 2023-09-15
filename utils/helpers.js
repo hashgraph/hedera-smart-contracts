@@ -150,7 +150,7 @@ async function pollForNewBalance(IERC20, contractAddress, tokenCreateBalanceBefo
     for (let numberOfTries = 0; numberOfTries < process.env.MAX_RETRY; numberOfTries++) {
       const balanceAfter = await IERC20.balanceOf(contractAddress);
   
-      if (!balanceAfter.eq(tokenCreateBalanceBefore)) {
+      if ((!balanceAfter.eq(0)) && (!balanceAfter.eq(tokenCreateBalanceBefore))) {
         return balanceAfter; // Balance changed and not null
       }
   
