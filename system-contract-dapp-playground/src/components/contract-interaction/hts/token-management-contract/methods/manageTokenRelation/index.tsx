@@ -24,19 +24,23 @@ import { useToast } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { generatedRandomUniqueKey } from '@/utils/common/helpers';
-import { HEDERA_BRANDING_COLORS, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { useToastSuccessful } from '../../../shared/hooks/useToastSuccessful';
-import { manageTokenRelation } from '@/api/hedera/tokenManagement-interactions';
 import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
 import TokenAddressesInputForm from '../../../shared/components/TokenAddressesInputForm';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
+import { manageTokenRelation } from '@/api/hedera/hts-interactions/tokenManagement-interactions';
 import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
 import { htsTokenRelationParamFields } from '@/utils/contract-interactions/HTS/token-management/constant';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  HEDERA_BRANDING_COLORS,
+  HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 import {
   SharedExecuteButton,
   SharedExecuteButtonWithFee,
@@ -301,14 +305,14 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
                 />
                 <SharedFormInputField
                   param={'feeValue'}
-                  paramValue={paramValues.feeValue}
-                  handleInputOnChange={handleInputOnChange}
-                  paramSize={'lg'}
                   paramType={'number'}
                   paramKey={'feeValue'}
+                  paramValue={paramValues.feeValue}
+                  paramPlaceholder={'Gas limit...'}
+                  handleInputOnChange={handleInputOnChange}
                   explanation={'Gas limit for the transaction'}
                   paramClassName={'border-white/30 rounded-xl'}
-                  paramPlaceholder={'Gas limit...'}
+                  paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.large}
                   paramFocusColor={HEDERA_BRANDING_COLORS.purple}
                 />
                 <SharedExecuteButton

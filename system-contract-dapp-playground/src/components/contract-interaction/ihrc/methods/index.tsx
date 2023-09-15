@@ -18,43 +18,47 @@
  *
  */
 
-import Cookies from 'js-cookie';
+import { isAddress } from 'ethers';
 import { useEffect, useState } from 'react';
 import { useToast } from '@chakra-ui/react';
-import { Contract, isAddress } from 'ethers';
+import { getWalletProvider } from '@/api/wallet';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
+import { handleIHRC719APIs } from '@/api/hedera/ihrc-interactions';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
-import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
-import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
-import { useToastSuccessful } from '../../../shared/hooks/useToastSuccessful';
-import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
-import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
-import { queryTokenValidity } from '@/api/hedera/hts-interactions/tokenQuery-interactions';
-import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { handleAPIErrors } from '../../hts/shared/methods/handleAPIErrors';
+import { TRANSACTION_PAGE_SIZE } from '../../hts/shared/states/commonStates';
+import { useToastSuccessful } from '../../hts/shared/hooks/useToastSuccessful';
+import { usePaginatedTxResults } from '../../hts/shared/hooks/usePaginatedTxResults';
+import { TransactionResultTable } from '../../hts/shared/components/TransactionResultTable';
+import { SharedExecuteButton, SharedFormInputField } from '../../hts/shared/components/ParamInputForm';
+import { useUpdateTransactionResultsToLocalStorage } from '../../hts/shared/hooks/useUpdateLocalStorage';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
-  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
   HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
 } from '@/utils/common/constants';
-import { SharedExecuteButton, SharedFormInputField } from '../../../shared/components/ParamInputForm';
 
 interface PageProps {
-  baseContract: Contract;
+  network: string;
 }
 
-const QueryTokenValidity = ({ baseContract }: PageProps) => {
+type API_NAMES = 'ASSOCIATE' | 'DISSOCIATE';
+
+const HederaIHRC719Methods = ({ network }: PageProps) => {
   // general states
   const toaster = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-  const initialParamValues = { hederaTokenAddress: '' };
+  const [isLoading, setIsLoading] = useState({
+    ASSOCIATE: false,
+    DISSOCIATE: false,
+  });
   const [isSuccessful, setIsSuccessful] = useState(false);
+  const initialParamValues = { hederaTokenAddress: '', feeValue: '' };
   const [paramValues, setParamValues] = useState(initialParamValues);
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
-  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-QUERY']['TOKEN-VALIDITY'];
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['IHRC719-RESULTS'];
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
   useEffect(() => {
@@ -74,37 +78,51 @@ const QueryTokenValidity = ({ baseContract }: PageProps) => {
     setParamValues((prev: any) => ({ ...prev, [param]: e.target.value }));
   };
 
-  /** @dev handle invoking the API to interact with smart contract and query token information */
-  const handleQueryTokenValidity = async () => {
+  /** @dev handle invoking the API to interact with IHR719C contract*/
+  const handleExecuteIHRC719APIs = async (API: API_NAMES) => {
     // sanitize params
+    let sanitizeErr;
     if (!isAddress(paramValues.hederaTokenAddress)) {
+      sanitizeErr = 'Invalid token address';
+    } else if (paramValues.feeValue === '') {
+      sanitizeErr = 'Gas limit should be set for this transaction';
+    }
+
+    if (sanitizeErr) {
       CommonErrorToast({
         toaster,
         title: 'Invalid parameters',
-        description: 'Invalid Hedera token address',
+        description: sanitizeErr,
       });
       return;
     }
 
-    // turn is loading on
-    setIsLoading(true);
+    // prepare wallet signer
+    const walletProvider = getWalletProvider();
+    const walletSigner = await walletProvider!.walletProvider!.getSigner();
 
-    const { IsToken, transactionHash, err } = await queryTokenValidity(
-      baseContract,
-      paramValues.hederaTokenAddress
+    // turn isLoading on
+    setIsLoading((prev) => ({ ...prev, [API]: true }));
+
+    // invoke method APIS
+    const { transactionHash, err } = await handleIHRC719APIs(
+      API,
+      paramValues.hederaTokenAddress,
+      walletSigner,
+      Number(paramValues.feeValue)
     );
 
-    // turn is loading off
-    setIsLoading(false);
+    // turn isLoading off
+    setIsLoading((prev) => ({ ...prev, [API]: false }));
 
     // handle err
-    if (err || !IsToken) {
+    if (err) {
       handleAPIErrors({
         err,
         toaster,
         transactionHash,
         setTransactionResults,
-        transactionType: 'HTS-IS-TOKEN',
+        transactionType: `IHRC719-${API}`,
         tokenAddress: paramValues.hederaTokenAddress,
       });
       return;
@@ -114,10 +132,9 @@ const QueryTokenValidity = ({ baseContract }: PageProps) => {
         ...prev,
         {
           status: 'success',
-          isToken: Number(IsToken) === 1,
-          transactionType: 'HTS-IS-TOKEN',
-          txHash: transactionHash as string,
           transactionTimeStamp: Date.now(),
+          txHash: transactionHash as string,
+          transactionType: `IHRC719-${API}`,
           tokenAddress: paramValues.hederaTokenAddress,
         },
       ]);
@@ -138,41 +155,59 @@ const QueryTokenValidity = ({ baseContract }: PageProps) => {
     transactionResults,
     setCurrentTransactionPage,
     resetParamValues: initialParamValues,
-    toastTitle: 'Token query successful',
+    toastTitle: 'Token update successful',
   });
 
   return (
-    <div className="w-full mx-3 flex justify-center mt-6 flex-col gap-20">
-      {/* Query token form */}
+    <div className="w-full mx-3 flex justify-center flex-col gap-20 -mt-6">
+      {/* Update token form */}
       <div className="flex flex-col gap-6 justify-center tracking-tight text-white/70">
         {/* Hedera token address */}
         <SharedFormInputField
-          param={'hederaTokenAddress'}
-          handleInputOnChange={handleInputOnChange}
-          paramValue={paramValues['hederaTokenAddress']}
-          paramKey={'hederaTokenAddress'}
           paramType={'text'}
-          paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.medium}
-          explanation={'represents the Hedera Token for querying'}
-          paramClassName={HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME}
+          param={'hederaTokenAddress'}
+          paramKey={'hederaTokenAddress'}
           paramPlaceholder={'Token address...'}
+          handleInputOnChange={handleInputOnChange}
+          explanation={`represents the Hedera Token`}
+          paramValue={paramValues['hederaTokenAddress']}
           paramFocusColor={HEDERA_BRANDING_COLORS.purple}
+          paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.medium}
+          paramClassName={HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME}
         />
 
-        {/* Execute buttons */}
-        <SharedExecuteButton
-          isLoading={isLoading}
-          handleCreatingFungibleToken={handleQueryTokenValidity}
-          buttonTitle={'Query Token Validity'}
-          explanation="Query if valid token found for the given address"
-        />
+        {/* Execute button */}
+        <div className="flex gap-9">
+          <SharedExecuteButton
+            isLoading={isLoading.ASSOCIATE}
+            handleCreatingFungibleToken={() => handleExecuteIHRC719APIs('ASSOCIATE')}
+            buttonTitle={'Associate Token'}
+          />
+          <SharedFormInputField
+            param={'feeValue'}
+            paramValue={paramValues.feeValue}
+            handleInputOnChange={handleInputOnChange}
+            paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.large}
+            paramType={'number'}
+            paramKey={'feeValue'}
+            explanation={'Gas limit for the transaction'}
+            paramClassName={'border-white/30 rounded-xl'}
+            paramPlaceholder={'Gas limit...'}
+            paramFocusColor={HEDERA_BRANDING_COLORS.purple}
+          />
+          <SharedExecuteButton
+            isLoading={isLoading.DISSOCIATE}
+            handleCreatingFungibleToken={() => handleExecuteIHRC719APIs('DISSOCIATE')}
+            buttonTitle={'Dissociate Token'}
+          />
+        </div>
       </div>
 
       {/* transaction results table */}
       {transactionResults.length > 0 && (
         <TransactionResultTable
-          API="QueryValidity"
-          hederaNetwork={hederaNetwork}
+          API="TokenCreate"
+          hederaNetwork={network}
           transactionResults={transactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           setTransactionResults={setTransactionResults}
@@ -186,4 +221,4 @@ const QueryTokenValidity = ({ baseContract }: PageProps) => {
   );
 };
 
-export default QueryTokenValidity;
+export default HederaIHRC719Methods;

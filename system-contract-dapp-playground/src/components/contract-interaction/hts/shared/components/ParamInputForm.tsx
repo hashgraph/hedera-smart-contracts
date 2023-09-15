@@ -22,7 +22,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { Tooltip, Input } from '@chakra-ui/react';
-import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
+import { HEDERA_BRANDING_COLORS, HEDERA_CHAKRA_INPUT_BOX_SIZES } from '@/utils/common/constants';
 
 /** @dev shared form input component */
 interface SharedFormInputFieldPageProps {
@@ -197,14 +197,14 @@ export const SharedExecuteButtonWithFee = ({
         <div className="w-3/12">
           <SharedFormInputField
             param={'feeValue'}
-            paramValue={paramValues}
-            handleInputOnChange={handleInputOnChange}
-            paramSize={'lg'}
             paramType={'number'}
             paramKey={'feeValue'}
+            paramValue={paramValues}
             explanation={explanation}
-            paramClassName={'border-white/30 rounded-xl'}
             paramPlaceholder={placeHolder}
+            handleInputOnChange={handleInputOnChange}
+            paramClassName={'border-white/30 rounded-xl'}
+            paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.large}
             paramFocusColor={HEDERA_BRANDING_COLORS.purple}
           />
         </div>
@@ -219,8 +219,8 @@ export const SharedExecuteButtonWithFee = ({
       </div>
       {feeType === 'SERVICE' && (
         <p className="text-sm whitespace-normal">
-          <span className="italic font-medium text-sm">*Important:</span> Varying configurations
-          applied to the token will result in varying service fees. Be sure to utilize the{' '}
+          <span className="italic font-medium text-sm">*Important:</span> Varying configurations applied to
+          the token will result in varying service fees. Be sure to utilize the{' '}
           <Link
             className="underline text-hedera-green font-medium whitespace-nowrap"
             href={'https://hedera.com/fees'}

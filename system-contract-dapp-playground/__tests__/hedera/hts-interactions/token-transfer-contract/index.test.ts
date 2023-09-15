@@ -24,17 +24,17 @@ import {
   IHederaTokenServiceTransferList,
 } from '@/types/contract-interactions/HTS';
 import {
+  MOCK_RESPONSE_CODE,
+  MOCK_TX_HASH,
+  MOCK_TOKEN_ADDRESS,
+  MOCK_GAS_LIMIT,
+} from '../../../utils/common/constants';
+import {
   transferCrypto,
   transferFungibleTokens,
   transferNonFungibleTokens,
   transferSingleToken,
-} from '@/api/hedera/tokenTransfer-interactions';
-import {
-  MOCK_GAS_LIMIT,
-  MOCK_RESPONSE_CODE,
-  MOCK_TOKEN_ADDRESS,
-  MOCK_TX_HASH,
-} from '../../../utils/common/constants';
+} from '@/api/hedera/hts-interactions/tokenTransfer-interactions';
 
 describe('TokenTransferContract test suite', () => {
   const quantity = 369;
