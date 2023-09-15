@@ -28,7 +28,7 @@ import { useToastSuccessful } from '../../shared/hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../shared/hooks/usePaginatedTxResults';
 import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { SharedSigningKeysComponent } from '../../shared/components/SigningKeysForm';
-import { createHederaFungibleToken } from '@/api/hedera/tokenCreateCustom-interactions';
+import { createHederaFungibleToken } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
 import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../shared/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../shared/hooks/useUpdateLocalStorage';

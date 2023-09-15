@@ -20,13 +20,13 @@
 
 import { Contract } from 'ethers';
 import {
-  associateHederaTokensToAccounts,
+  mintHederaToken,
+  grantTokenKYCToAccount,
+  mintHederaTokenToAddress,
   createHederaFungibleToken,
   createHederaNonFungibleToken,
-  grantTokenKYCToAccount,
-  mintHederaToken,
-  mintHederaTokenToAddress,
-} from '@/api/hedera/tokenCreateCustom-interactions';
+  associateHederaTokensToAccounts,
+} from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
 import { CommonKeyObject } from '@/types/contract-interactions/HTS';
 import { MOCK_TOKEN_ADDRESS, MOCK_TX_HASH } from '../../../utils/common/constants';
 

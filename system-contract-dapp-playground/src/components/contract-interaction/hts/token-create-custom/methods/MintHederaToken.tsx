@@ -41,7 +41,10 @@ import {
   SharedFormInputField,
   SharedExecuteButton,
 } from '../../shared/components/ParamInputForm';
-import { mintHederaToken, mintHederaTokenToAddress } from '@/api/hedera/tokenCreateCustom-interactions';
+import {
+  mintHederaToken,
+  mintHederaTokenToAddress,
+} from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
 
 interface PageProps {
   baseContract: Contract;

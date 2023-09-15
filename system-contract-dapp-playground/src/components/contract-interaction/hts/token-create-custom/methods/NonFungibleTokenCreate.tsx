@@ -29,7 +29,7 @@ import { usePaginatedTxResults } from '../../shared/hooks/usePaginatedTxResults'
 import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { SharedSigningKeysComponent } from '../../shared/components/SigningKeysForm';
 import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
-import { createHederaNonFungibleToken } from '@/api/hedera/tokenCreateCustom-interactions';
+import { createHederaNonFungibleToken } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
 import { handleSanitizeHederaFormInputs } from '../../shared/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../shared/hooks/useUpdateLocalStorage';
 import { htsTokenCreateParamFields } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
