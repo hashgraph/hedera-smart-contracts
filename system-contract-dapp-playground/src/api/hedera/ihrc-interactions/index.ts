@@ -25,9 +25,9 @@ import { SmartContractExecutionResult } from '@/types/contract-interactions/HTS'
 /**
  * @dev handle associating and/or dissociating token from an EOA
  *
- * @dev integrates IHRC.associate()
+ * @dev integrates IHRC719.associate()
  *
- * @dev integrates IHRC.dissociate()
+ * @dev integrates IHRC719.dissociate()
  *
  * @param API: "ASSOCIATE" | "DISSOCIATE"
  *
@@ -37,7 +37,7 @@ import { SmartContractExecutionResult } from '@/types/contract-interactions/HTS'
  *
  * @return Promise<SmartContractExecutionResult>
  */
-export const handleIHRCAPIs = async (
+export const handleIHRC719APIs = async (
   API: 'ASSOCIATE' | 'DISSOCIATE',
   hederaTokenAddress: string,
   signer: ethers.JsonRpcSigner,
@@ -49,11 +49,11 @@ export const handleIHRCAPIs = async (
     return { err: 'Invalid token address' };
   }
 
-  // prepare IHRC ABI
-  const IHRC = new ethers.Interface(HEDERA_SMART_CONTRACTS_ASSETS.TOKEN_ASSOCIATION.contractABI);
+  // prepare IHRC719 ABI
+  const IHRC719 = new ethers.Interface(HEDERA_SMART_CONTRACTS_ASSETS.TOKEN_ASSOCIATION.contractABI);
 
   // prepare a contract instance at hederaTokenAddress
-  const baseContract = new Contract(hederaTokenAddress, IHRC, signer);
+  const baseContract = new Contract(hederaTokenAddress, IHRC719, signer);
 
   // invoke contract method
   try {

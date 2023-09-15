@@ -21,9 +21,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Contract } from 'ethers';
-import HederaIHRCMethods from './ihrc/methods';
 import ERC20Methods from './erc/erc-20/methods';
 import { FiExternalLink } from 'react-icons/fi';
+import HederaIHRC719Methods from './ihrc/methods';
 import { deploySmartContract } from '@/api/hedera';
 import HederaAlertDialog from '../common/AlertDialog';
 import { useCallback, useEffect, useState } from 'react';
@@ -215,7 +215,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
       isLazy
       className="bg-panel rounded-xl max-w-4xl text-white border border-white/30 shadow-2xl text-lg"
     >
-      {isDeployed || contract.name === 'HRCContract' ? (
+      {isDeployed || contract.name === 'IHRC729Contract' ? (
         <>
           {/* Tab headers */}
           <TabList
@@ -250,8 +250,8 @@ const ContractInteraction = ({ contract }: PageProps) => {
             {contract.methods.map((method) => {
               return (
                 <TabPanel className={`whitespace-nowrap py-4`} key={method}>
-                  {/* Contract information - not for HRCContract*/}
-                  {contract.name !== 'HRCContract' && (
+                  {/* Contract information - not for IHRC729Contract*/}
+                  {contract.name !== 'IHRC729Contract' && (
                     <>
                       <div className="pb-6 flex flex-col gap-1 px-3">
                         <div className="flex gap-3 w-full justify-">
@@ -356,9 +356,9 @@ const ContractInteraction = ({ contract }: PageProps) => {
                       <HederaTokenTransferMethods method={method} baseContract={baseContract! as Contract} />
                     )}
 
-                    {/* HRC contract */}
-                    {contract.name === 'HRCContract' && (
-                      <HederaIHRCMethods network={network as string} />
+                    {/* IHRC719 contract */}
+                    {contract.name === 'IHRC729Contract' && (
+                      <HederaIHRC719Methods network={network as string} />
                     )}
 
                     {/* ERC-20 */}

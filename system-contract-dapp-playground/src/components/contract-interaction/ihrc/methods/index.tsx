@@ -22,8 +22,8 @@ import { isAddress } from 'ethers';
 import { useEffect, useState } from 'react';
 import { useToast } from '@chakra-ui/react';
 import { getWalletProvider } from '@/api/wallet';
-import { handleIHRCAPIs } from '@/api/hedera/ihrc-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
+import { handleIHRC719APIs } from '@/api/hedera/ihrc-interactions';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../hts/shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../hts/shared/states/commonStates';
@@ -46,7 +46,7 @@ interface PageProps {
 
 type API_NAMES = 'ASSOCIATE' | 'DISSOCIATE';
 
-const HederaIHRCMethods = ({ network }: PageProps) => {
+const HederaIHRC719Methods = ({ network }: PageProps) => {
   // general states
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState({
@@ -58,7 +58,7 @@ const HederaIHRCMethods = ({ network }: PageProps) => {
   const [paramValues, setParamValues] = useState(initialParamValues);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['IHRC-RESULTS'];
+  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['IHRC719-RESULTS'];
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
   useEffect(() => {
@@ -78,8 +78,8 @@ const HederaIHRCMethods = ({ network }: PageProps) => {
     setParamValues((prev: any) => ({ ...prev, [param]: e.target.value }));
   };
 
-  /** @dev handle invoking the API to interact with IHRC contract*/
-  const handleExecuteIHRCAPIs = async (API: API_NAMES) => {
+  /** @dev handle invoking the API to interact with IHR719C contract*/
+  const handleExecuteIHRC719APIs = async (API: API_NAMES) => {
     // sanitize params
     let sanitizeErr;
     if (!isAddress(paramValues.hederaTokenAddress)) {
@@ -105,7 +105,7 @@ const HederaIHRCMethods = ({ network }: PageProps) => {
     setIsLoading((prev) => ({ ...prev, [API]: true }));
 
     // invoke method APIS
-    const { transactionHash, err } = await handleIHRCAPIs(
+    const { transactionHash, err } = await handleIHRC719APIs(
       API,
       paramValues.hederaTokenAddress,
       walletSigner,
@@ -122,7 +122,7 @@ const HederaIHRCMethods = ({ network }: PageProps) => {
         toaster,
         transactionHash,
         setTransactionResults,
-        transactionType: `HRC-${API}`,
+        transactionType: `IHRC719-${API}`,
         tokenAddress: paramValues.hederaTokenAddress,
       });
       return;
@@ -134,7 +134,7 @@ const HederaIHRCMethods = ({ network }: PageProps) => {
           status: 'success',
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
-          transactionType: `HRC-${API}`,
+          transactionType: `IHRC719-${API}`,
           tokenAddress: paramValues.hederaTokenAddress,
         },
       ]);
@@ -180,7 +180,7 @@ const HederaIHRCMethods = ({ network }: PageProps) => {
         <div className="flex gap-9">
           <SharedExecuteButton
             isLoading={isLoading.ASSOCIATE}
-            handleCreatingFungibleToken={() => handleExecuteIHRCAPIs('ASSOCIATE')}
+            handleCreatingFungibleToken={() => handleExecuteIHRC719APIs('ASSOCIATE')}
             buttonTitle={'Associate Token'}
           />
           <SharedFormInputField
@@ -197,7 +197,7 @@ const HederaIHRCMethods = ({ network }: PageProps) => {
           />
           <SharedExecuteButton
             isLoading={isLoading.DISSOCIATE}
-            handleCreatingFungibleToken={() => handleExecuteIHRCAPIs('DISSOCIATE')}
+            handleCreatingFungibleToken={() => handleExecuteIHRC719APIs('DISSOCIATE')}
             buttonTitle={'Dissociate Token'}
           />
         </div>
@@ -221,4 +221,4 @@ const HederaIHRCMethods = ({ network }: PageProps) => {
   );
 };
 
-export default HederaIHRCMethods;
+export default HederaIHRC719Methods;

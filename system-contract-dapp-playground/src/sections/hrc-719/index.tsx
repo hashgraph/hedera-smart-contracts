@@ -28,7 +28,7 @@ import { IoOpenOutline } from 'react-icons/io5';
 import ContractInteraction from '@/components/contract-interaction';
 import { HEDERA_OFFICIAL_HIPS_URL, HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/common/constants';
 
-const HRC719Section = () => {
+const IHRC719Section = () => {
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -117,4 +117,4 @@ const HRC719Section = () => {
   );
 };
 
-export default HRC719Section;
+export default IHRC719Section;

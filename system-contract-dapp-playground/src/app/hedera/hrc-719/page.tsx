@@ -18,10 +18,10 @@
  *
  */
 
-import HRC719Section from '@/sections/hrc-719';
+import IHRC719Section from '@/sections/hrc-719';
 
-const HRC719 = () => {
-  return <HRC719Section />;
+const IHRC719 = () => {
+  return <IHRC719Section />;
 };
 
-export default HRC719;
+export default IHRC719;

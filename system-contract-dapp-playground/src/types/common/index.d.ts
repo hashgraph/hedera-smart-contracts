@@ -31,13 +31,13 @@ type NetworkName = 'mainnet' | 'testnet' | 'previewnet' | 'localnet';
 type ContractName =
   | 'TokenCreateCustomContract'
   | 'TokenManagementContract'
-  | 'TokenQueryContract'
-  | 'TokenTransferContract'
-  | 'HRCContract'
   | 'ExchangeRatePrecompile'
+  | 'TokenTransferContract'
+  | 'TokenQueryContract'
   | 'PrngSystemContract'
-  | 'ERC20Mock'
-  | 'ERC721Mock';
+  | 'IHRC729Contract'
+  | 'ERC721Mock'
+  | 'ERC20Mock';
 
 /**
  * @dev an interface for the results related to wallet interaction
