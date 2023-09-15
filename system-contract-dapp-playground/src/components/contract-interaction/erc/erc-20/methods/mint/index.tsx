@@ -26,6 +26,7 @@ import { CommonErrorToast } from '@/components/toast/CommonToast';
 import MultiLineMethod from '@/components/common/MultiLineMethod';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { mintParamFields } from '@/utils/contract-interactions/erc/constant';
+import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
 import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
 
@@ -37,8 +38,8 @@ const Mint = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
-  const transactionResultStorageKey = 'HEDERA.EIP.ERC-20.TOKEN-MINT-RESULTS';
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['TOKEN-MINT'];
   const [mintParams, setMintParams] = useState({
     recipient: '',
     amount: '',
