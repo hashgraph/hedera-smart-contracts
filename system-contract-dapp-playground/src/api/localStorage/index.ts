@@ -21,21 +21,17 @@
 import { OFFCIAL_NETWORK_NAME } from '@/utils/common/constants';
 
 /**
- * @dev get balances from LocalStorage
- *
- * @return balances?: Map<string, number>
- *
- * @return err?
+ * @dev get map typed value from LocalStorage
  */
-export const getBalancesFromLocalStorage = (transactionResultStorageKey: string) => {
+export const getMapValuesFromLocalStorage = (transactionResultStorageKey: string) => {
   try {
-    const storageBalances = localStorage.getItem(transactionResultStorageKey);
-    if (storageBalances) {
+    const storagedValue = localStorage.getItem(transactionResultStorageKey);
+    if (storagedValue) {
       return {
-        storageBalances: new Map(Object.entries(JSON.parse(storageBalances))) as Map<string, number>,
+        storagedValue: new Map(Object.entries(JSON.parse(storagedValue))) as Map<string, number>,
       };
     } else {
-      return { storageBalances: new Map() };
+      return { storagedValue: new Map() };
     }
   } catch (err) {
     console.error(err);
