@@ -321,8 +321,13 @@ export const HEDERA_SHARED_PARAM_INPUT_FIELDS = {
 /**
  * @notice a shared object stores all transaction result storage keys
  */
-const prepareTransactionResultStorageKey = (contractKey: string, methodKey: string, resultKey: string) => {
-  return `HEDERA.${contractKey}.${methodKey}.${resultKey}-RESULTS`;
+const prepareTransactionResultStorageKey = (
+  contractKey: string,
+  methodKey: string,
+  resultKey: string,
+  readonly?: boolean
+) => {
+  return `HEDERA.${contractKey}.${methodKey}.${resultKey}-RESULTS${readonly ? `.READONLY` : ``}`;
 };
 export const HEDERA_TRANSACTION_RESULT_STORAGE_KEYS = {
   'TOKEN-CREATE': {
@@ -353,4 +358,11 @@ export const HEDERA_TRANSACTION_RESULT_STORAGE_KEYS = {
     'MULTIPLE-TOKENS': prepareTransactionResultStorageKey('HTS', 'TOKEN-TRANSFER', 'MULTIPLE-TOKENS'),
   },
   'IHRC719-RESULTS': `HEDERA.IHRC719.IHRC719-RESULTS`,
+  'ERC20-RESULT': {
+    'TOKEN-MINT': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'TOKEN-MINT'),
+    'BALANCE-OF': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'BALANCE-OF', true),
+    'TOKEN-TRANSFER': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'TOKEN-TRANSFER'),
+    'TOKEN-PERMISSION': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'TOKEN-PERMISSION'),
+    'ALLOWANCES-RESULT': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'ALLOWANCES', true),
+  },
 };

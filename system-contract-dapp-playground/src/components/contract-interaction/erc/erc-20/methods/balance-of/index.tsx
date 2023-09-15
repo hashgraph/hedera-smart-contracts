@@ -23,25 +23,29 @@ import { BiCopy } from 'react-icons/bi';
 import { Contract, isAddress } from 'ethers';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { IoRefreshOutline } from 'react-icons/io5';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { balanceOf } from '@/api/hedera/erc20-interactions';
 import { getBalancesFromLocalStorage } from '@/api/localStorage';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import HederaCommonTextField from '@/components/common/HederaCommonTextField';
-import { HEDERA_BRANDING_COLORS, HEDERA_CHAKRA_INPUT_BOX_SIZES } from '@/utils/common/constants';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Table,
-  TableContainer,
-  Tbody,
+  HEDERA_BRANDING_COLORS,
+  HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
+import {
   Td,
   Th,
-  Thead,
-  Tooltip,
   Tr,
+  Table,
+  Thead,
+  Tbody,
+  Tooltip,
+  Popover,
   useToast,
+  PopoverContent,
+  PopoverTrigger,
+  TableContainer,
 } from '@chakra-ui/react';
 
 interface PageProps {
@@ -54,13 +58,12 @@ const BalanceOf = ({ baseContract }: PageProps) => {
   const [accountAddress, setAccountAddress] = useState('');
   const [balancesMap, setBalancesMap] = useState(new Map<string, number>());
   const [balancesRactNodes, setBalancesReactNodes] = useState<ReactNode[]>([]);
-  const transactionResultStorageKey = 'HEDERA.EIP.ERC-20.BALANCE-OF-RESULTS.READONLY';
+  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['BALANCE-OF'];
 
   /** @dev retrieve balances from localStorage to maintain data on re-renders */
   useEffect(() => {
-    const { storageBalances, err: localStorageBalanceErr } = getBalancesFromLocalStorage(
-      transactionResultStorageKey
-    );
+    const { storageBalances, err: localStorageBalanceErr } =
+      getBalancesFromLocalStorage(transactionResultStorageKey);
     // handle err
     if (localStorageBalanceErr) {
       CommonErrorToast({
@@ -75,7 +78,7 @@ const BalanceOf = ({ baseContract }: PageProps) => {
     if (storageBalances) {
       setBalancesMap(storageBalances);
     }
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   /** @dev copy content to clipboard */
   const copyWalletAddress = (content: string) => {
@@ -83,15 +86,18 @@ const BalanceOf = ({ baseContract }: PageProps) => {
   };
 
   /** @dev handle remove record */
-  const handleRemoveRecord = (addr: string) => {
-    setBalancesMap((prev) => {
-      prev.delete(addr);
-      if (prev.size === 0) {
-        localStorage.removeItem(transactionResultStorageKey);
-      }
-      return new Map(prev);
-    });
-  };
+  const handleRemoveRecord = useCallback(
+    (addr: string) => {
+      setBalancesMap((prev) => {
+        prev.delete(addr);
+        if (prev.size === 0) {
+          localStorage.removeItem(transactionResultStorageKey);
+        }
+        return new Map(prev);
+      });
+    },
+    [transactionResultStorageKey]
+  );
 
   /** @dev handle executing balance of */
   const handleExecuteBalanceOf = async () => {
@@ -199,12 +205,9 @@ const BalanceOf = ({ baseContract }: PageProps) => {
 
     //// update local storage
     if (balancesMap.size > 0) {
-      localStorage.setItem(
-        transactionResultStorageKey,
-        JSON.stringify(Object.fromEntries(balancesMap))
-      );
+      localStorage.setItem(transactionResultStorageKey, JSON.stringify(Object.fromEntries(balancesMap)));
     }
-  }, [balancesMap, baseContract, toaster]);
+  }, [balancesMap, baseContract, toaster, handleRemoveRecord, transactionResultStorageKey]);
 
   return (
     <div className=" flex flex-col items-start gap-12">
