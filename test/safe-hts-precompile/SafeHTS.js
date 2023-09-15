@@ -172,12 +172,8 @@ describe('SafeHTS library Test Suite', function () {
 
     expect(nonFungibleTokenInfo[0][1]).to.equal(nftSerial)
 
-    const genesisClient = await utils.createSDKClient()
-    const account = await utils.convertAccountIdToLongZeroAddress(
-      await utils.getAccountId(signers[0].address, genesisClient)
-    )
     expect(nonFungibleTokenInfo[0][2]).to.equal(
-      '0x' + account.toString().toUpperCase()
+      signers[0].address
     )
   })
 

@@ -22,7 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const utils = require('../hts-precompile/utils')
 const Constants = require('../constants')
-const { delay, pollForNewERC721Balance, pollForNewHollowWalletBalance, pollForNewERC721HollowWalletOwner, pollForNewWalletBalance} = require('../../utils/helpers')
+const { pollForNewBalance, pollForNewERC721Balance, pollForNewHollowWalletBalance, pollForNewERC721HollowWalletOwner, pollForNewWalletBalance } = require('../../utils/helpers')
 
 describe('HIP583 Test Suite', function () {
   let signers
@@ -549,8 +549,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
       )
       await tx.wait()
 
-      const balanceAfter = await erc20Mock.balanceOf(hollowWallet.address)
-
+      const balanceAfter = await pollForNewBalance(erc20Mock, hollowWallet.address, balanceBefore)
       expect(balanceAfter).to.eq(balanceBefore.add(tokenAmount))
     })
 

@@ -398,23 +398,4 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
   })
 })
 
-// Transaction needs to be propagated to the mirror node
-// async function pollForNewCounterValue(proxyContract, counterBefore) {
-//   const timesToTry = 200;
-//   let counterAfter, numberOfTries = 0;
-
-//   while (numberOfTries < timesToTry) {
-//       counterAfter = await proxyContract.count();
-
-
-//     if (!counterAfter.eq(counterBefore)) {
-//       return counterAfter;
-//     }
-
-//     numberOfTries++;
-//     await delay(); // Delay before the next attempt
-//   }
-
-//   throw new Error(`proxyContract.count failed to get a different value after ${timesToTry} tries`);
-// }
 

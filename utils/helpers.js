@@ -49,7 +49,7 @@ async function pollForERC20BurnableChangedSupply(ERC20Burnable, initialSupply) {
       await delay(); // Delay before the next attempt
     }
   
-    throw new Error(`Failed to get a different supply value after ${timesToTry} tries`);
+    throw new Error(`Failed to get a different supply value after ${process.env.MAX_RETRY} tries`);
 }
 
 async function pollForNewCounterValue(proxyContract, counterBefore) {
@@ -67,7 +67,7 @@ async function pollForNewCounterValue(proxyContract, counterBefore) {
       await delay(); // Delay before the next attempt
     }
   
-    throw new Error(`proxyContract.count failed to get a different value after ${timesToTry} tries`);
+    throw new Error(`proxyContract.count failed to get a different value after ${process.env.MAX_RETRY} tries`);
   }
 
 async function pollForNewERC721Owner(erc721Contract, tokenId, ownerBefore) {
@@ -82,7 +82,7 @@ async function pollForNewERC721Owner(erc721Contract, tokenId, ownerBefore) {
       delay();
     }
   
-    throw new Error(`Ownership did not change after ${timesToTry} tries`);
+    throw new Error(`Ownership did not change after ${process.env.MAX_RETRY} tries`);
 }
 
 async function pollForNewERC721Balance(erc721Contract, nftTokenAddress, signersAddress, balanceBefore) {
@@ -97,7 +97,7 @@ async function pollForNewERC721Balance(erc721Contract, nftTokenAddress, signersA
       await delay(); // Delay before the next attempt  
     }
     
-    throw new Error(`erc721Contract.balanceOf failed to get a different value after ${timesToTry} tries`);
+    throw new Error(`erc721Contract.balanceOf failed to get a different value after ${process.env.MAX_RETRY} tries`);
 }
   
 async function pollForNewERC721HollowWalletOwner(erc721Contract, nftTokenAddress, ownerBefore) {
@@ -112,7 +112,7 @@ async function pollForNewERC721HollowWalletOwner(erc721Contract, nftTokenAddress
       delay();
     }
   
-    throw new Error(`Ownership did not change after ${timesToTry} tries`);
+    throw new Error(`Ownership did not change after ${process.env.MAX_RETRY} tries`);
 }
   
 async function pollForNewWalletBalance(erc20Contract, tokenAddress, signersAddress, balanceBefore) {
@@ -127,7 +127,7 @@ async function pollForNewWalletBalance(erc20Contract, tokenAddress, signersAddre
       await delay(); // Delay before the next attempt
     }
   
-    throw new Error(`Failed to get a different balance value after ${timesToTry} tries`);
+    throw new Error(`Failed to get a different balance value after ${process.env.MAX_RETRY} tries`);
 }
     
 async function pollForNewHollowWalletBalance(provider, walletAddress, balanceBefore) {
@@ -142,7 +142,7 @@ async function pollForNewHollowWalletBalance(provider, walletAddress, balanceBef
       delay();
     }
   
-    throw new Error(`Failed to get a different balance value after ${timesToTry} tries`);
+    throw new Error(`Failed to get a different balance value after ${process.env.MAX_RETRY} tries`);
 }
 
 async function pollForNewBalance(IERC20, contractAddress, tokenCreateBalanceBefore) {
@@ -157,7 +157,7 @@ async function pollForNewBalance(IERC20, contractAddress, tokenCreateBalanceBefo
       await delay(); // Delay before the next attempt
     }
   
-    throw new Error(`Failed to get a different balance value after ${timesToTry} tries`);
+    throw new Error(`Failed to get a different balance value after ${process.env.MAX_RETRY} tries`);
 }
 
 async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddress, balanceBefore) {
@@ -176,7 +176,7 @@ async function pollForNewERC20Balance(erc20Contract, tokenAddress, signersAddres
       await delay();
     }
   
-    throw new Error(`Failed to get a different value after ${timesToTry} tries`);
+    throw new Error(`Failed to get a different value after ${process.env.MAX_RETRY} tries`);
 }
 
 async function pollForNewHBarBalance(provider, signers0BeforeHbarBalance, signer1AccountID) {
@@ -191,7 +191,7 @@ async function pollForNewHBarBalance(provider, signers0BeforeHbarBalance, signer
       await delay();
     }
   
-    throw new Error(`Failed to get a different balance after ${timesToTry} tries`);
+    throw new Error(`Failed to get a different balance after ${process.env.MAX_RETRY} tries`);
 }
 
 async function pollForNewSignerBalance(IERC20Contract, signersAddress, signerBefore) {
@@ -206,7 +206,7 @@ async function pollForNewSignerBalance(IERC20Contract, signersAddress, signerBef
       await delay(); // Delay before the next attempt
     }
   
-    throw new Error(`Failed to get a different balance value after ${timesToTry} tries`);
+    throw new Error(`Failed to get a different balance value after ${process.env.MAX_RETRY} tries`);
 }
 
 async function pollForNewCounterValue(proxyContract, counterBefore) {
@@ -244,7 +244,7 @@ async function pollForNewSignerBalanceUsingProvider(provider, signersAddress, si
       await delay();
     }
   
-    throw new Error(`Failed to get a different value after ${timesToTry} tries`);
+    throw new Error(`Failed to get a different value after ${process.env.MAX_RETRY} tries`);
 }
 
 async function unPauseAndPoll(ERC20Pausable) {
