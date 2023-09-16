@@ -22,6 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const utils = require('../utils')
 const Constants = require('../../constants')
+const { pollForNewERC20Balance } = require('../../../utils/helpers')
 
 describe('TokenManagmentContract Test Suite', function () {
   const TX_SUCCESS_CODE = 22
@@ -237,10 +238,7 @@ describe('TokenManagmentContract Test Suite', function () {
       (e) => e.event === Constants.Events.ResponseCode
     )[0].args.responseCode
 
-    const balanceAfter = await erc20Contract.balanceOf(
-      tokenAddress,
-      signers[1].address
-    )
+    const balanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[1].address, balanceBefore)
 
     expect(responseCode).to.equal(TX_SUCCESS_CODE)
     expect(Number(balanceAfter.toString())).to.equal(
@@ -430,10 +428,8 @@ describe('TokenManagmentContract Test Suite', function () {
       signers[0].address
     )
     await tokenManagmentContract.burnTokenPublic(tokenAddress, amount, [])
-    const balanceAfter = await erc20Contract.balanceOf(
-      tokenAddress,
-      signers[0].address
-    )
+
+    const balanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[0].address, balanceBefore)
     const totalSupplyAfter = await erc20Contract.totalSupply(tokenAddress)
 
     expect(totalSupplyAfter).to.equal(totalSupplyBefore - amount)
@@ -676,6 +672,7 @@ describe('TokenManagmentContract Test Suite', function () {
               [signers[0].address, signers[1].address],
               [-wipeAmount, wipeAmount]
             )
+
             const balanceBefore = await erc20Contract.balanceOf(
               tokenAddress,
               signers[1].address
@@ -688,10 +685,8 @@ describe('TokenManagmentContract Test Suite', function () {
                 signers[1].address,
                 wipeAmount
               )
-            const balanceAfter = await erc20Contract.balanceOf(
-              tokenAddress,
-              signers[1].address
-            )
+
+            const balanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[1].address, balanceBefore)
 
             expect(balanceAfter).to.eq(balanceBefore.sub(wipeAmount))
             expect(
@@ -893,7 +888,7 @@ describe('TokenManagmentContract Test Suite', function () {
           await tokenTransferContract.transferTokensPublic(
             tokenAddress,
             [signers[0].address, signers[1].address],
-            [-wipeAmount, wipeAmount]
+            [0, wipeAmount]
           )
 
           const wipeTokenTx = await tokenManagmentContract
@@ -1027,10 +1022,9 @@ describe('TokenManagmentContract Test Suite', function () {
               signers[1].address,
               wipeAmount
             )
-          const balanceAfter = await erc20Contract.balanceOf(
-            tokenAddress,
-            signers[1].address
-          )
+
+          const balanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[1].address, balanceBefore)
+
 
           expect(balanceAfter).to.eq(balanceBefore.sub(wipeAmount))
           expect(

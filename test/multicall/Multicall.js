@@ -182,8 +182,9 @@ describe('Multicall Test Suite', function () {
       }
     })
 
-    it('should be able to aggregate 1000 calls to processLongInput', async function () {
-      const n = 1000
+    // should be able to aggregate 1000 calls to processLongInput - mirror node issue #6731
+    it('can currently aggregate 18 calls to processLongInput', async function () {
+      const n = 18
       const { callData, data } = prepareLongInputData(
         n,
         LONG_INPUT_ABI,
@@ -216,7 +217,7 @@ describe('Multicall Test Suite', function () {
       // Input size is larger than 1 mb and the call is rejected by the relay
       let hasError = false
       try {
-        const res = await multicallProcessLongInput(callData)
+        await multicallProcessLongInput(callData)
       } catch (e) {
         hasError = true
       }
@@ -227,13 +228,13 @@ describe('Multicall Test Suite', function () {
     it('should be able to aggregate 11 calls to processLongInput and handles a revert', async function () {
       let hasError = false
       try {
-        const { callData, data } = prepareLongInputData(
+        const { callData } = prepareLongInputData(
           10,
           LONG_INPUT_ABI,
           LONG_INPUT_PARAMS,
           true
         )
-        const res = await multicallProcessLongInput(callData)
+        await multicallProcessLongInput(callData)
       } catch (e) {
         hasError = true
         expect(e.data).to.exist
@@ -254,26 +255,31 @@ describe('Multicall Test Suite', function () {
       expect(bytes).to.gte(13000) // 13 kb
     })
 
-    it('should be able to aggregate 80 calls to processLongOutput and handle 820 kb of output data', async function () {
-      const n = 80
+
+    // should be able to aggregate 80 calls to processLongOutput and handle 820 kb of output data - mirror node issue #6731
+    it('can aggregate 18 calls to processLongOutput and handle 42624 bytes of output data', async function () {
+      const n = 18
       const res = await multicallProcessLongOutput(n)
       expect(res).to.exist
       expect(res.length).to.eq(n)
       const bytes = getOutputLengthInBytes(res.map((r) => r.returnData))
-      expect(bytes).to.gte(820000) // 820 kb
+      expect(bytes).to.gte(42624) 
     })
 
     it('should NOT be able to aggregate 100 calls to processLongOutput', async function () {
       const n = 100
       let hasError = false
       try {
-        const res = await multicallProcessLongOutput(n)
+        await multicallProcessLongOutput(n)
       } catch (e) {
         hasError = true
         expect(e).to.exist
         expect(e.message).to.exist
-        // Output is too large and the call is reverted. The call is limited by gasLimit
-        expect(e.message.indexOf('INSUFFICIENT_GAS') !== -1).to.eq(true)
+
+        // Output is too large and the call is reverted. The call exceeded the call size limit
+        const EXPECTED_ERROR_MESSAGE =
+          'data field must not exceed call size limit'
+        expect(e.message.indexOf(EXPECTED_ERROR_MESSAGE) !== -1).to.eq(true)
       }
       expect(hasError).to.eq(true)
     })
@@ -332,7 +338,7 @@ describe('Multicall Test Suite', function () {
       // Call is reverted because the input data exceeds the maximum transaction size
       let hasError = false
       try {
-        const res = await multicallProcessLongInputTx(callData, overrides)
+        await multicallProcessLongInputTx(callData, overrides)
       } catch (e) {
         hasError = true
       }

@@ -21,6 +21,7 @@
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../constants')
+const { pollForNewERC721Owner } = require('../../utils/helpers')
 
 describe('ERC721 tests', function () {
   const tokenId = 33
@@ -89,8 +90,10 @@ describe('ERC721 tests', function () {
   it('should be able to execute transferFrom(address,address,uint256)', async function () {
     const ownerBefore = await erc721.ownerOf(tokenId)
     await erc721.transferFrom(signers[0].address, signers[1].address, tokenId)
-    const ownerAfter = await erc721.ownerOf(tokenId)
+
+    const ownerAfter = await pollForNewERC721Owner(erc721, tokenId, ownerBefore)
     expect(ownerBefore).to.not.eq(ownerAfter)
     expect(ownerAfter).to.eq(signers[1].address)
   })
 })
+

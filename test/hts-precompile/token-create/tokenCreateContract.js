@@ -23,6 +23,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const { expectValidHash } = require('../assertions')
 const Constants = require('../../constants')
+const { pollForNewERC20Balance } = require('../../../utils/helpers')
 const {
   TokenCreateTransaction,
   TransactionId,
@@ -99,10 +100,9 @@ describe('TokenCreateContract Test Suite', function () {
       signers[0].address
     )
     await tokenManagmentContract.burnTokenPublic(tokenAddress, amount, [])
-    const balanceAfter = await erc20Contract.balanceOf(
-      tokenAddress,
-      signers[0].address
-    )
+
+    const balanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[0].address, balanceBefore)
+
     const totalSupplyAfter = await erc20Contract.totalSupply(tokenAddress)
 
     expect(totalSupplyAfter).to.equal(totalSupplyBefore - amount)
@@ -418,3 +418,4 @@ describe('TokenCreateContract Test Suite', function () {
     })
   })
 })
+

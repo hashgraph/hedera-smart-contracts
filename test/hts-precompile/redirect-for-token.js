@@ -63,6 +63,8 @@ describe('RedirectForToken Test Suite', function () {
       (await tokenCreateTx.deployTransaction.wait()).contractAddress
     )
 
+    await utils.updateAccountKeysViaHapi([tokenCreateContract.address])
+
     const tokenAddressTx =
       await tokenCreateContract.createFungibleTokenWithSECP256K1AdminKeyPublic(
         signers[0].address,

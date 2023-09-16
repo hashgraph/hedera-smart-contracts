@@ -22,6 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const utils = require('../utils')
 const Constants = require('../../constants')
+const { pollForNewERC20Balance, pollForNewSignerBalanceUsingProvider } = require('../../../utils/helpers')
 
 describe('TokenTransferContract Test Suite', function () {
   const TX_SUCCESS_CODE = 22
@@ -141,14 +142,9 @@ describe('TokenTransferContract Test Suite', function () {
       [-amount, amount],
       Constants.GAS_LIMIT_1_000_000
     )
-    let wallet1BalanceAfter = await erc20Contract.balanceOf(
-      tokenAddress,
-      signers[0].address
-    )
-    let wallet2BalanceAfter = await erc20Contract.balanceOf(
-      tokenAddress,
-      signers[1].address
-    )
+
+    let wallet1BalanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[0].address, wallet1BalanceBefore)
+    let wallet2BalanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[1].address, wallet1BalanceBefore)
 
     expect(wallet1BalanceAfter).to.equal(wallet1BalanceBefore - amount)
     expect(wallet2BalanceAfter).to.equal(wallet2BalanceBefore + amount)
@@ -167,6 +163,7 @@ describe('TokenTransferContract Test Suite', function () {
       [mintedTokenSerialNumber],
       Constants.GAS_LIMIT_1_000_000
     )
+
     const ownerAfter = await erc721Contract.ownerOf(
       nftTokenAddress,
       mintedTokenSerialNumber
@@ -193,15 +190,10 @@ describe('TokenTransferContract Test Suite', function () {
       amount,
       Constants.GAS_LIMIT_1_000_000
     )
-    let wallet1BalanceAfter = await erc20Contract.balanceOf(
-      tokenAddress,
-      signers[0].address
-    )
-    let wallet2BalanceAfter = await erc20Contract.balanceOf(
-      tokenAddress,
-      signers[1].address
-    )
 
+    const wallet1BalanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[0].address, wallet1BalanceBefore)
+    const wallet2BalanceAfter = await pollForNewERC20Balance(erc20Contract, tokenAddress, signers[1].address, wallet1BalanceBefore)
+   
     expect(wallet1BalanceAfter).to.equal(wallet1BalanceBefore - amount)
     expect(wallet2BalanceAfter).to.equal(wallet2BalanceBefore + amount)
   })
@@ -279,15 +271,10 @@ describe('TokenTransferContract Test Suite', function () {
     const responseCode = cryptoTransferReceipt.events.filter(
       (e) => e.event === Constants.Events.ResponseCode
     )[0].args[0]
-    await new Promise((r) => setTimeout(r, 2000))
 
-    const signers0After = await signers[0].provider.getBalance(
-      signers[0].address
-    )
-    const signers1After = await signers[0].provider.getBalance(
-      signers[1].address
-    )
+    const signers0After = await pollForNewSignerBalanceUsingProvider(signers[0].provider, signers[0].address, signers0Before)
 
+    const signers1After = await pollForNewSignerBalanceUsingProvider(signers[0].provider, signers[1].address, signers0Before)
     expect(responseCode).to.equal(TX_SUCCESS_CODE)
     expect(signers0Before > signers0After).to.equal(true)
     expect(signers1After > signers1Before).to.equal(true)
@@ -337,7 +324,6 @@ describe('TokenTransferContract Test Suite', function () {
     const responseCode = cryptoTransferReceipt.events.filter(
       (e) => e.event === Constants.Events.ResponseCode
     )[0].args[0]
-    await new Promise((r) => setTimeout(r, 2000))
 
     const ownerAfter = await erc721Contract.ownerOf(
       nftTokenAddress,
@@ -472,3 +458,5 @@ describe('TokenTransferContract Test Suite', function () {
     expect(nftOwnerAfter).to.equal(signers[1].address)
   })
 })
+
+
