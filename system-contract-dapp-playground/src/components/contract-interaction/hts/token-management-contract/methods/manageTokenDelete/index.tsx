@@ -120,6 +120,7 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
         toaster,
         transactionHash,
         setTransactionResults,
+        transactionResultStorageKey,
         tokenAddress: hederaTokenAddress,
         transactionType: 'HTS-TOKEN-DELETE',
         sessionedContractAddress: currentContractAddress,
@@ -131,6 +132,7 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
         ...prev,
         {
           status: 'success',
+          transactionResultStorageKey,
           tokenAddress: hederaTokenAddress,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,

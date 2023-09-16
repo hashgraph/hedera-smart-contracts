@@ -124,6 +124,7 @@ const HederaExchangeRateMethods = ({ baseContract }: PageProps) => {
         transactionHash,
         transactionType: API,
         setTransactionResults,
+        transactionResultStorageKey,
         initialAmount: paramValues.amountToConvert,
         sessionedContractAddress: currentContractAddress,
       });
@@ -136,6 +137,7 @@ const HederaExchangeRateMethods = ({ baseContract }: PageProps) => {
           status: 'success',
           APICalled: API,
           transactionType: API,
+          transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
           initialAmount: paramValues.amountToConvert,

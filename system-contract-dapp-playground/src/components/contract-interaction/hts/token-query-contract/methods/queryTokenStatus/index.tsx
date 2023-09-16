@@ -154,6 +154,7 @@ const QueryTokenStatusInfomation = ({ baseContract }: PageProps) => {
         APICalled: API,
         setTransactionResults,
         err: tokenInfoResult.err,
+        transactionResultStorageKey,
         accountAddress: paramValues.accountAddress,
         tokenAddress: paramValues.hederaTokenAddress,
         transactionType: `HTS-${API.replace('_', '-')}`,
@@ -168,6 +169,7 @@ const QueryTokenStatusInfomation = ({ baseContract }: PageProps) => {
         {
           APICalled: API,
           status: 'success',
+          transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
           accountAddress: paramValues.accountAddress,
           tokenAddress: paramValues.hederaTokenAddress,

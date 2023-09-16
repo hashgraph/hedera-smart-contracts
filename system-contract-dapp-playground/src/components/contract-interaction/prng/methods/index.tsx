@@ -114,6 +114,7 @@ const HederaPRNGMethods = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         transactionType: `PRNG`,
+        transactionResultStorageKey,
         sessionedContractAddress: currentContractAddress,
       });
       return;
@@ -125,6 +126,7 @@ const HederaPRNGMethods = ({ baseContract }: PageProps) => {
           status: 'success',
           pseudoRandomSeed,
           transactionType: `PRNG`,
+          transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
           sessionedContractAddress: currentContractAddress,
