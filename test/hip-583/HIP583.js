@@ -584,7 +584,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
     const tokenId = 27
     let hollowWallet
     let erc721Mock
-    const initialHollowWalletAmount = ethers.utils.parseEther('15')
+    const initialHollowWalletAmount = ethers.utils.parseEther('20')
 
     before(async function () {
       hollowWallet = ethers.Wallet.createRandom().connect(ethers.provider)
