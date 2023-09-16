@@ -22,11 +22,15 @@
 
 import Cookies from 'js-cookie';
 import { motion } from 'framer-motion';
+import { AiOutlineMinus } from 'react-icons/ai';
 import { FiExternalLink } from 'react-icons/fi';
 import { useEffect, useMemo, useState } from 'react';
 import { prepareTransactionList } from '@/utils/common/helpers';
 import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
+import { CommonErrorToast } from '@/components/toast/CommonToast';
+import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
 import { usePaginatedTxResults } from '@/components/contract-interaction/hts/shared/hooks/usePaginatedTxResults';
 import {
   Th,
@@ -39,16 +43,18 @@ import {
   Select,
   Popover,
   Tooltip,
+  useToast,
   PopoverTrigger,
   PopoverContent,
   TableContainer,
 } from '@chakra-ui/react';
 
 const ActivitySection = () => {
+  const toaster = useToast();
   const TRANSACTION_PAGE_SIZE = 20;
   const hederaNetwork = Cookies.get('_network');
   const [mounted, setMounted] = useState(false);
-  const [transactionList] = useState(prepareTransactionList());
+  const [transactionList, setTransactionList] = useState(prepareTransactionList());
   const [order, setOrder] = useState<'OLDEST' | 'LATEST'>('OLDEST');
   const parsedHederaNetwork = hederaNetwork && JSON.parse(hederaNetwork);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
@@ -71,6 +77,47 @@ const ActivitySection = () => {
     TRANSACTION_PAGE_SIZE,
     order
   );
+
+  /** @dev handle removing record */
+  const handleRemoveRecord = (targetTransactionResult: TransactionResult) => {
+    // get the cached array stored in localStoraged
+    const { storageResult, err: localStorageBalanceErr } = getArrayTypedValuesFromLocalStorage(
+      targetTransactionResult.transactionResultStorageKey
+    );
+
+    console.log(targetTransactionResult.transactionResultStorageKey);
+
+    // handle err
+    if (localStorageBalanceErr || storageResult.length === 0) {
+      CommonErrorToast({
+        toaster,
+        title: 'Cannot access transaction results in storage',
+        description: "See client's console for more information",
+      });
+      return;
+    }
+
+    // remove record out of the storageResult array
+    const filteredTransactionResults = storageResult.filter(
+      (transactionResult: TransactionResult) => transactionResult.txHash !== targetTransactionResult.txHash
+    );
+
+    // storage the filteredTransactionResults back to storage
+    // @notice if  filteredTransactionResults.length === 0, remove that key in storage
+    if (filteredTransactionResults.length === 0) {
+      localStorage.removeItem(targetTransactionResult.transactionResultStorageKey);
+    } else {
+      localStorage.setItem(
+        targetTransactionResult.transactionResultStorageKey,
+        JSON.stringify(filteredTransactionResults)
+      );
+    }
+
+    // // update transactionList
+    setTransactionList((prev) =>
+      prev.filter((transactionResult) => transactionResult.txHash !== targetTransactionResult.txHash)
+    );
+  };
 
   // ensures that the "application mounted" flag is set to ensure consistent UI rendering on both the server and client sides.
   useEffect(() => setMounted(true), []);
@@ -120,16 +167,13 @@ const ActivitySection = () => {
             <Table variant="unstyled" size={'sm'}>
               <Thead>
                 <Tr className="border-b">
-                  <Th
-                    color={HEDERA_BRANDING_COLORS.violet}
-                    isNumeric
-                    className="flex justify-start"
-                  >
+                  <Th color={HEDERA_BRANDING_COLORS.violet} isNumeric className="flex justify-start">
                     Index
                   </Th>
                   <Th color={HEDERA_BRANDING_COLORS.violet}>Transaction Type</Th>
                   <Th color={HEDERA_BRANDING_COLORS.violet}>Status</Th>
                   <Th color={HEDERA_BRANDING_COLORS.violet}>Transaction hash</Th>
+                  <Th />
                 </Tr>
               </Thead>
 
@@ -139,9 +183,7 @@ const ActivitySection = () => {
                     <Tr
                       key={transaction.txHash}
                       className={` border-b border-white/30 ${
-                        transaction.status === 'success'
-                          ? 'hover:bg-hedera-green/10'
-                          : 'hover:bg-red-400/10'
+                        transaction.status === 'success' ? 'hover:bg-hedera-green/10' : 'hover:bg-red-400/10'
                       }`}
                     >
                       {/* index */}
@@ -155,16 +197,13 @@ const ActivitySection = () => {
                       {/* status */}
                       <Td>
                         <p
-                          className={
-                            transaction.status === 'success' ? `text-hedera-green` : `text-red-400`
-                          }
+                          className={transaction.status === 'success' ? `text-hedera-green` : `text-red-400`}
                         >
                           {transaction.status.toUpperCase()}
                         </p>
                       </Td>
 
                       {/* txHash */}
-                      {/* transaction hash */}
                       <Td className="cursor-pointer">
                         <div className="flex gap-1 items-center justify-between">
                           <div onClick={() => navigator.clipboard.writeText(transaction.txHash)}>
@@ -177,9 +216,7 @@ const ActivitySection = () => {
                                 </div>
                               </PopoverTrigger>
                               <PopoverContent width={'fit-content'} border={'none'}>
-                                <div className="bg-secondary px-3 py-2 border-none font-medium">
-                                  Copied
-                                </div>
+                                <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
                               </PopoverContent>
                             </Popover>
                           </div>
@@ -196,6 +233,20 @@ const ActivitySection = () => {
                             </Link>
                           </Tooltip>
                         </div>
+                      </Td>
+
+                      {/* delete button */}
+                      <Td>
+                        <Tooltip label="delete this record" placement="top">
+                          <button
+                            onClick={() => {
+                              handleRemoveRecord(transaction);
+                            }}
+                            className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-red-400 transition duration-300`}
+                          >
+                            <AiOutlineMinus />
+                          </button>
+                        </Tooltip>
                       </Td>
                     </Tr>
                   );
