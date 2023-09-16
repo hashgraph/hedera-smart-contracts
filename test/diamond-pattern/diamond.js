@@ -353,6 +353,7 @@ describe('DiamondTest', async function () {
     }
 
     facets = await diamondLoupeFacet.facets()
+
     assert.equal(facets.length, 2)
     assert.equal(facets[0][0], addresses[0])
     assert.sameMembers(facets[0][1], ['0x1f931c1c'])
@@ -407,6 +408,7 @@ describe('DiamondTest', async function () {
     }
 
     const facets = await diamondLoupeFacet.facets()
+
     const facetAddresses = await diamondLoupeFacet.facetAddresses()
     assert.equal(facetAddresses.length, 5)
     assert.equal(facets.length, 5)

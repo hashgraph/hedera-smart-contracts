@@ -22,6 +22,7 @@ const { expect } = require('chai')
 const { ethers, upgrades } = require('hardhat')
 const utils = require('../hts-precompile/utils')
 const Constants = require('../constants')
+const { pollForNewCounterValue } = require('../../utils/helpers')
 
 describe('Proxy Upgrade Contracts Test Suite', function () {
   let signers
@@ -369,7 +370,8 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
       {
         const counterBefore = await proxyContract.count()
         await proxyContract.increment()
-        const counterAfter = await proxyContract.count()
+        
+        const counterAfter = await pollForNewCounterValue(proxyContract, counterBefore);
         expect(counterAfter, 'Asserting counter increment').to.be.greaterThan(
           counterBefore
         )
@@ -395,3 +397,5 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
     })
   })
 })
+
+

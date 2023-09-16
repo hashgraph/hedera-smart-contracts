@@ -41,6 +41,7 @@ module.exports = {
       url: NETWORKS.local.url,
       accounts: [HEX_PRIVATE_KEY_A, HEX_PRIVATE_KEY_B],
       chainId: NETWORKS.local.chainId,
+      gas: 10000000,
       sdkClient: {
         operatorId: OPERATOR_ID_A,
         operatorKey: OPERATOR_KEY_A,

@@ -22,6 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const utils = require('../hts-precompile/utils')
 const Constants = require('../constants')
+const { pollForNewBalance, pollForNewERC721Balance, pollForNewHollowWalletBalance, pollForNewERC721HollowWalletOwner, pollForNewWalletBalance } = require('../../utils/helpers')
 
 describe('HIP583 Test Suite', function () {
   let signers
@@ -64,6 +65,7 @@ describe('HIP583 Test Suite', function () {
         signers[0].address,
         utils.getSignerCompressedPublicKey()
       )
+
     await utils.updateTokenKeysViaHapi(
       nftTokenAddress,
       [tokenCreateContract.address, tokenTransferContract.address],
@@ -124,12 +126,9 @@ describe('HIP583 Test Suite', function () {
             to: hollowWalletAddress,
             value: amount,
           })
-          await new Promise((r) => setTimeout(r, 2000))
 
-          const hollowWalletBalanceAfter = await ethers.provider.getBalance(
-            hollowWalletAddress
-          )
-
+          const hollowWalletBalanceAfter = await pollForNewHollowWalletBalance(ethers.provider, hollowWallet.address, hollowWalletBalanceBefore)
+ 
           expect(hollowWalletBalanceAfter).to.eq(
             hollowWalletBalanceBefore.add(amount)
           )
@@ -145,12 +144,7 @@ describe('HIP583 Test Suite', function () {
             value: amount,
           })
 
-          //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
-          await new Promise((r) => setTimeout(r, 2000))
-
-          let hollowWalletBalanceAfter = await ethers.provider.getBalance(
-            hollowWalletAddress
-          )
+          const hollowWalletBalanceAfter = await pollForNewHollowWalletBalance(ethers.provider, hollowWallet.address, hollowWalletBalanceBefore)
 
           expect(hollowWalletBalanceAfter).to.lessThanOrEqual(
             hollowWalletBalanceBefore.sub(amount)
@@ -182,10 +176,7 @@ describe('HIP583 Test Suite', function () {
             Constants.GAS_LIMIT_1_000_000
           )
 
-          let signerBalanceAfter = await erc20Contract.balanceOf(
-            tokenAddress,
-            signers[0].address
-          )
+          const signerBalanceAfter = await pollForNewWalletBalance(erc20Contract, tokenAddress, signers[0].address, signerBalanceBefore)
 
           let hollowalletBalance = await erc20Contract.balanceOf(
             tokenAddress,
@@ -212,11 +203,8 @@ describe('HIP583 Test Suite', function () {
             hollowWalletAddress,
             amount
           )
-
-          let signerBalanceAfter = await erc20Contract.balanceOf(
-            tokenAddress,
-            signers[0].address
-          )
+      
+          const signerBalanceAfter = await pollForNewWalletBalance(erc20Contract, tokenAddress, signers[0].address, signerBalanceBefore)
 
           let hollowalletBalanceAfter = await erc20Contract.balanceOf(
             tokenAddress,
@@ -242,8 +230,9 @@ describe('HIP583 Test Suite', function () {
           //sending some HBARs, so the hollow account have some to cover the transaction
           await signers[0].sendTransaction({
             to: hollowWalletAddress,
-            value: ethers.utils.parseEther('1'),
+            value: ethers.utils.parseEther('14'),
           })
+
           await utils.updateAccountKeysViaHapi(
             [tokenCreateContract.address, tokenTransferContract.address],
             [hollowWallet.privateKey]
@@ -258,12 +247,7 @@ describe('HIP583 Test Suite', function () {
               amount
             )
 
-          //allow mirror node a 2 full record stream write windows (2 sec) and a buffer to persist setup details
-          await new Promise((r) => setTimeout(r, 2000))
-          let signerBalanceAfter = await erc20Contract.balanceOf(
-            tokenAddress,
-            signers[0].address
-          )
+          const signerBalanceAfter = await pollForNewWalletBalance(erc20Contract, tokenAddress, signers[0].address, signerBalanceBefore)
 
           let hollowalletBalanceAfter = await erc20Contract.balanceOf(
             tokenAddress,
@@ -289,6 +273,7 @@ describe('HIP583 Test Suite', function () {
             tokenCreateContract,
             nftTokenAddress
           )
+
           mintedTokenSerialNumber1 = await utils.mintNFTToAddress(
             tokenCreateContract,
             nftTokenAddress
@@ -308,10 +293,8 @@ describe('HIP583 Test Suite', function () {
             mintedTokenSerialNumber,
             Constants.GAS_LIMIT_1_000_000
           )
-          const signerBalanceAfter = await erc721Contract.balanceOf(
-            nftTokenAddress,
-            signers[0].address
-          )
+
+          const signerBalanceAfter = await pollForNewERC721Balance(erc721Contract, nftTokenAddress, signers[0].address, signerBalanceBefore)
 
           const hollowWalletBalance = await erc721Contract.balanceOf(
             nftTokenAddress,
@@ -340,10 +323,8 @@ describe('HIP583 Test Suite', function () {
             mintedTokenSerialNumber1,
             Constants.GAS_LIMIT_1_000_000
           )
-          const signerBalanceAfter = await erc721Contract.balanceOf(
-            nftTokenAddress,
-            signers[0].address
-          )
+
+          const signerBalanceAfter = await pollForNewERC721Balance(erc721Contract, nftTokenAddress, signers[0].address, signerBalanceBefore)
 
           const hollowWalletBalanceAfter = await erc721Contract.balanceOf(
             nftTokenAddress,
@@ -372,6 +353,7 @@ describe('HIP583 Test Suite', function () {
             to: hollowWalletAddress,
             value: ethers.utils.parseEther('2'),
           })
+
           await utils.updateAccountKeysViaHapi(
             [tokenCreateContract.address, tokenTransferContract.address],
             [hollowWallet.privateKey]
@@ -387,10 +369,7 @@ describe('HIP583 Test Suite', function () {
               Constants.GAS_LIMIT_1_000_000
             )
 
-          const signerBalanceAfter = await erc721Contract.balanceOf(
-            nftTokenAddress,
-            signers[0].address
-          )
+          const signerBalanceAfter = await pollForNewERC721Balance(erc721Contract, nftTokenAddress, signers[0].address, signerBalanceBefore)
 
           const hollowWalletBalanceAfter = await erc721Contract.balanceOf(
             nftTokenAddress,
@@ -497,10 +476,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
         Constants.GAS_LIMIT_1_000_000
       )
       await tx.wait()
-      await new Promise((r) => setTimeout(r, 2000))
-      const hollowWalletBalanceAfter = await ethers.provider.getBalance(
-        hollowWallet.address
-      )
+      const hollowWalletBalanceAfter = await pollForNewHollowWalletBalance(ethers.provider, hollowWallet.address, hollowWalletBalanceBefore)
 
       expect(hollowWalletBalanceAfter).to.eq(
         hollowWalletBalanceBefore.add(amount)
@@ -534,16 +510,19 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
   describe('Fungible Token Test', function () {
     let hollowWallet
     let erc20Mock
+    const initialHollowWalletAmount = ethers.utils.parseEther('14')
 
     before(async function () {
       hollowWallet = ethers.Wallet.createRandom().connect(ethers.provider)
+
       await (
         await contractTransferTx.transferTo(
           hollowWallet.address,
-          amount / utils.tinybarToWeibarCoef,
+          initialHollowWalletAmount / utils.tinybarToWeibarCoef,
           Constants.GAS_LIMIT_1_000_000
         )
       ).wait()
+
       erc20Mock = await utils.deployERC20Mock()
       await erc20Mock.mint(contractTransferTx.address, 1000)
     })
@@ -570,8 +549,8 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
         tokenAmount
       )
       await tx.wait()
-      const balanceAfter = await erc20Mock.balanceOf(hollowWallet.address)
 
+      const balanceAfter = await pollForNewBalance(erc20Mock, hollowWallet.address, balanceBefore)
       expect(balanceAfter).to.eq(balanceBefore.add(tokenAmount))
     })
 
@@ -591,6 +570,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
           tokenAmount
         )
       await tx.wait()
+
       const secondHollowWalletAfter = await erc20Mock.balanceOf(
         secondHollowWallet.address
       )
@@ -604,16 +584,18 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
     const tokenId = 27
     let hollowWallet
     let erc721Mock
+    const initialHollowWalletAmount = ethers.utils.parseEther('20')
 
     before(async function () {
       hollowWallet = ethers.Wallet.createRandom().connect(ethers.provider)
       await (
         await contractTransferTx.transferTo(
           hollowWallet.address,
-          (amount * 10) / utils.tinybarToWeibarCoef,
+          initialHollowWalletAmount / utils.tinybarToWeibarCoef,
           Constants.GAS_LIMIT_1_000_000
         )
       ).wait()
+
       erc721Mock = await utils.deployERC721Mock()
       await erc721Mock.mint(contractTransferTx.address, tokenId)
     })
@@ -627,8 +609,9 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
         tokenId
       )
       await tx.wait()
-      const ownerAfter = await erc721Mock.ownerOf(tokenId)
 
+      const ownerAfter = await pollForNewERC721HollowWalletOwner(erc721Mock, tokenId, ownerBefore)
+      
       expect(ownerBefore).to.not.eq(ownerAfter)
       expect(ownerAfter).to.eq(hollowWallet.address)
     })
@@ -648,6 +631,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
         secondTokenId
       )
       await tx.wait()
+
       const owner = await erc721Mock.ownerOf(secondTokenId)
 
       expect(owner).to.eq(hollowWallet.address)
@@ -667,6 +651,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
 
       const contractTransferTxWithHollowAccount =
         await contractTransferTx.connect(hollowWallet)
+
       await (
         await contractTransferTxWithHollowAccount.transferFromNonFungibleTokenTo(
           erc721Mock.address,
@@ -676,7 +661,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
         )
       ).wait()
 
-      const ownerAfter = await erc721Mock.ownerOf(tokenId)
+      const ownerAfter = await pollForNewERC721HollowWalletOwner(erc721Mock, tokenId, ownerBefore)
       expect(ownerAfter).to.eq(secondHollowWallet.address)
     })
   })
@@ -713,6 +698,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
     await signer.sendTransaction({
       to: hollowWallet.address,
       value: ethers.utils.parseEther('100'),
+      value: ethers.utils.parseEther('30'),
       gasLimit: 1_000_000,
     })
     await utils.updateAccountKeysViaHapi(
@@ -779,11 +765,9 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         [-amount, amount],
         Constants.GAS_LIMIT_1_000_000
       )
-      const hollowBalanceAfter = await erc20Contract.balanceOf(
-        tokenAddress,
-        hollowWallet.address
-      )
 
+      const hollowBalanceAfter = await pollForNewWalletBalance(erc20Contract, tokenAddress, hollowWallet.address, hollowBalanceBefore)
+ 
       expect(hollowBalanceBefore).to.eq(0)
       expect(hollowBalanceAfter).to.eq(amount)
     })
@@ -799,11 +783,8 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         [-amount, amount],
         Constants.GAS_LIMIT_1_000_000
       )
-      const hollowBalanceAfter = await erc20Contract.balanceOf(
-        tokenAddress,
-        hollowWallet.address
-      )
 
+      const hollowBalanceAfter = await pollForNewWalletBalance(erc20Contract, tokenAddress, hollowWallet.address, hollowBalanceBefore)
       expect(hollowBalanceAfter).to.eq(hollowBalanceBefore.add(amount))
     })
 
@@ -817,6 +798,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         tokenCreateContract,
         tokenAddress
       )
+
       await utils.updateAccountKeysViaHapi(
         [tokenTransferContract.address],
         [hollowWallet.privateKey]
@@ -826,19 +808,19 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         tokenAddress,
         secondHollowWallet.address
       )
+
       const hollowTokenTransferContract = await tokenTransferContract.connect(
         hollowWallet
       )
+
       await hollowTokenTransferContract.transferTokensPublic(
         tokenAddress,
         [hollowWallet.address, secondHollowWallet.address],
         [-amount, amount],
         Constants.GAS_LIMIT_1_000_000
       )
-      const secondHollowBalanceAfter = await erc20Contract.balanceOf(
-        tokenAddress,
-        secondHollowWallet.address
-      )
+
+      const secondHollowBalanceAfter = await pollForNewWalletBalance(erc20Contract, tokenAddress, secondHollowWallet.address, secondHollowBalanceBefore)
 
       expect(secondHollowBalanceBefore).to.eq(0)
       expect(secondHollowBalanceAfter).to.eq(amount)
@@ -856,15 +838,18 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         signers[0].address,
         utils.getSignerCompressedPublicKey()
       )
+
       await utils.updateTokenKeysViaHapi(nftTokenAddress, [
         tokenCreateContract.address,
         tokenTransferContract.address,
       ])
+
       await utils.associateToken(
         tokenCreateContract,
         nftTokenAddress,
         Constants.Contract.TokenCreateContract
       )
+
       await utils.grantTokenKyc(tokenCreateContract, nftTokenAddress)
 
       hollowWallet = ethers.Wallet.createRandom().connect(ethers.provider)
@@ -886,6 +871,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         nftTokenAddress,
         mintedTokenSerialNumber
       )
+
       await tokenTransferContract.transferNFTPublic(
         nftTokenAddress,
         signers[0].address,
@@ -893,6 +879,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         mintedTokenSerialNumber,
         Constants.GAS_LIMIT_1_000_000
       )
+
       const ownerAfter = await erc721Contract.ownerOf(
         nftTokenAddress,
         mintedTokenSerialNumber
@@ -907,10 +894,12 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         tokenCreateContract,
         nftTokenAddress
       )
+
       const ownerBefore = await erc721Contract.ownerOf(
         nftTokenAddress,
         newMintedTokenSerialNumber
       )
+
       await tokenTransferContract.transferNFTPublic(
         nftTokenAddress,
         signers[0].address,
@@ -918,6 +907,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         newMintedTokenSerialNumber,
         Constants.GAS_LIMIT_1_000_000
       )
+
       const ownerAfter = await erc721Contract.ownerOf(
         nftTokenAddress,
         newMintedTokenSerialNumber
@@ -942,6 +932,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         tokenCreateContract,
         nftTokenAddress
       )
+
       await tokenTransferContract.transferNFTPublic(
         nftTokenAddress,
         signers[0].address,
@@ -958,6 +949,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         [tokenTransferContract.address],
         [hollowWallet.privateKey]
       )
+
       const hollowTokenTransferContract = await tokenTransferContract.connect(
         hollowWallet
       )
@@ -970,11 +962,12 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
           Constants.GAS_LIMIT_1_000_000
         )
       ).wait()
+
       const ownerAfter = await erc721Contract.ownerOf(
         nftTokenAddress,
         newMintedTokenSerialNumber
       )
-
+ 
       expect(ownerBefore).to.eq(hollowWallet.address)
       expect(ownerAfter).to.eq(secondHollowWallet.address)
     })

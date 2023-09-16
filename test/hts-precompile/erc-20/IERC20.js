@@ -22,6 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const utils = require('../utils')
 const Constants = require('../../constants')
+const { pollForNewBalance, pollForNewSignerBalance } = require('../../../utils/helpers')
 
 describe('IERC20 Test Suite', function () {
   let tokenCreateContract
@@ -111,7 +112,8 @@ describe('IERC20 Test Suite', function () {
     const signer0BalanceBefore = await IERC20.balanceOf(signers[0].address)
     const signer1BalanceBefore = await IERC20.balanceOf(signers[1].address)
     await IERC20.transfer(signers[1].address, AMOUNT)
-    const signer0BalanceAfter = await IERC20.balanceOf(signers[0].address)
+
+    const signer0BalanceAfter = await pollForNewSignerBalance(IERC20, signers[0].address, signer0BalanceBefore)
     const signer1BalanceAfter = await IERC20.balanceOf(signers[1].address)
 
     expect(signer0BalanceAfter).to.eq(signer0BalanceBefore - AMOUNT)
@@ -134,10 +136,8 @@ describe('IERC20 Test Suite', function () {
       Constants.GAS_LIMIT_800000
     )
 
-    const tokenCreateBalanceAfter = await IERC20.balanceOf(
-      tokenCreateContract.address
-    )
-    const signer0BalanceAfter = await IERC20.balanceOf(signers[0].address)
+    const tokenCreateBalanceAfter = await pollForNewBalance(IERC20, tokenCreateContract.address, tokenCreateBalanceBefore)
+    const signer0BalanceAfter = await pollForNewSignerBalance(IERC20, signers[0].address, signer0BalanceBefore)
     const signer1BalanceAfter = await IERC20.balanceOf(signers[1].address)
 
     expect(tokenCreateBalanceAfter).to.eq(tokenCreateBalanceBefore + AMOUNT)
@@ -145,3 +145,5 @@ describe('IERC20 Test Suite', function () {
     expect(signer1BalanceAfter).to.eq(signer1BalanceBefore)
   })
 })
+
+

@@ -21,6 +21,7 @@
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../constants')
+const { pollForERC20BurnableChangedSupply, pauseAndPoll, unPauseAndPoll } = require('../../utils/helpers')
 
 describe('ERC20ExtensionsMock tests', function () {
   let owner, addr1
@@ -89,7 +90,7 @@ describe('ERC20ExtensionsMock tests', function () {
       const burnReceipt = await burnTx.wait()
 
       // Get updated values
-      const newSupply = await ERC20Burnable.totalSupply()
+      const newSupply = await pollForERC20BurnableChangedSupply(ERC20Burnable, initialSupply)
       const newBalance = await ERC20Burnable.balanceOf(owner.address)
 
       // Check if the Transfer event was emitted to AddressZero
@@ -108,8 +109,10 @@ describe('ERC20ExtensionsMock tests', function () {
 
       // Approve allowance and burn tokens from owner's address
       await ERC20Burnable.approve(addr1.address, burnAmount)
+
       const erc20Signer2 = await ERC20Burnable.connect(addr1)
       await erc20Signer2.burnFrom(owner.address, burnAmount)
+
       const newBalance = await ERC20Burnable.balanceOf(owner.address)
 
       //check updated balance
@@ -167,12 +170,10 @@ describe('ERC20ExtensionsMock tests', function () {
       expect(await ERC20Pausable.paused()).to.be.false
 
       // Pause the token and verify it is paused
-      await ERC20Pausable.pause()
-      expect(await ERC20Pausable.paused()).to.be.true
+      expect(await pauseAndPoll(ERC20Pausable)).to.be.true
 
       // Unpause the token and verify it is not paused anymore
-      await ERC20Pausable.unpause()
-      expect(await ERC20Pausable.paused()).to.be.false
+      expect(await unPauseAndPoll(ERC20Pausable)).to.be.true
     })
 
     it('should not allow transfers when paused', async function () {
@@ -252,3 +253,6 @@ describe('ERC20ExtensionsMock tests', function () {
     })
   })
 })
+
+
+

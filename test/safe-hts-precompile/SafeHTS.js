@@ -22,6 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../constants')
 const utils = require('../hts-precompile/utils')
+const { pollForNewBalance, pollForNewHBarBalance } = require('../../utils/helpers')
 
 describe('SafeHTS library Test Suite', function () {
   let safeOperationsContract
@@ -171,12 +172,8 @@ describe('SafeHTS library Test Suite', function () {
 
     expect(nonFungibleTokenInfo[0][1]).to.equal(nftSerial)
 
-    const genesisClient = await utils.createSDKClient()
-    const account = await utils.convertAccountIdToLongZeroAddress(
-      await utils.getAccountId(signers[0].address, genesisClient)
-    )
     expect(nonFungibleTokenInfo[0][2]).to.equal(
-      '0x' + account.toString().toUpperCase()
+      signers[0].address
     )
   })
 
@@ -193,7 +190,9 @@ describe('SafeHTS library Test Suite', function () {
       [nftSerial],
       Constants.GAS_LIMIT_1_000_000
     )
+
     const nonFungibleTokenMintedReceipt = await mintedTokenInfo.wait()
+
     const nonFungibleTokeMintedSerialNumbers =
       nonFungibleTokenMintedReceipt.events.filter(
         (e) => e.event === Constants.Events.MintedNft
@@ -211,14 +210,17 @@ describe('SafeHTS library Test Suite', function () {
       fungibleTokenAddress,
       signer1AccountID
     )
+
     await safeOperationsContract.safeGrantTokenKycPublic(
       fungibleTokenAddress,
       signer2AccountID
     )
+
     await safeOperationsContract.safeGrantTokenKycPublic(
       nonFungibleTokenAddress,
       signer1AccountID
     )
+
     await safeOperationsContract.safeGrantTokenKycPublic(
       nonFungibleTokenAddress,
       signer2AccountID
@@ -230,6 +232,7 @@ describe('SafeHTS library Test Suite', function () {
       signer1AccountID,
       signer1initialAmount
     )
+
     const signers0BeforeHbarBalance = await signers[0].provider.getBalance(
       signer1AccountID
     )
@@ -304,21 +307,20 @@ describe('SafeHTS library Test Suite', function () {
         tokenTransferList
       )
     const cryptoTransferReceipt = await cryptoTransferTx.wait()
+
     expect(
       cryptoTransferReceipt.events.filter(
         (e) => e.event === Constants.Events.ResponseCode
       )[0].args[0]
     ).to.equal(22)
 
-    const signers0AfterHbarBalance = await signers[0].provider.getBalance(
-      signer1AccountID
-    )
+    const signers0AfterHbarBalance = await pollForNewHBarBalance(signers[0].provider, signers0BeforeHbarBalance, signer1AccountID)
     const signers1AfterHbarBalance = await signers[0].provider.getBalance(
       signer2AccountID
     )
-    const signers0AfterTokenBalance = parseInt(
-      await erc20Mock.balanceOf(signer1AccountID)
-    )
+
+    const signers0AfterTokenBalance = await pollForNewBalance(erc20Mock, signer1AccountID, signers0BeforeTokenBalance)
+  
     const signers1AfterTokenBalance = parseInt(
       await erc20Mock.balanceOf(signer2AccountID)
     )
