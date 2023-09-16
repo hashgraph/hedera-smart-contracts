@@ -25,12 +25,13 @@ import { motion } from 'framer-motion';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { FiExternalLink } from 'react-icons/fi';
 import { useEffect, useMemo, useState } from 'react';
+import ConfirmModal from '@/components/common/ConfirmModal';
 import { prepareTransactionList } from '@/utils/common/helpers';
 import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
-import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
+import { clearCachedTransactions, getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
 import { usePaginatedTxResults } from '@/components/contract-interaction/hts/shared/hooks/usePaginatedTxResults';
 import {
   Th,
@@ -44,6 +45,7 @@ import {
   Popover,
   Tooltip,
   useToast,
+  useDisclosure,
   PopoverTrigger,
   PopoverContent,
   TableContainer,
@@ -54,10 +56,11 @@ const ActivitySection = () => {
   const TRANSACTION_PAGE_SIZE = 20;
   const hederaNetwork = Cookies.get('_network');
   const [mounted, setMounted] = useState(false);
-  const [transactionList, setTransactionList] = useState(prepareTransactionList());
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [order, setOrder] = useState<'OLDEST' | 'LATEST'>('OLDEST');
   const parsedHederaNetwork = hederaNetwork && JSON.parse(hederaNetwork);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
+  const [transactionList, setTransactionList] = useState(prepareTransactionList());
 
   // sort transactionList based on order
   const sortedTransactionList = useMemo(
@@ -85,8 +88,6 @@ const ActivitySection = () => {
       targetTransactionResult.transactionResultStorageKey
     );
 
-    console.log(targetTransactionResult.transactionResultStorageKey);
-
     // handle err
     if (localStorageBalanceErr || storageResult.length === 0) {
       CommonErrorToast({
@@ -113,10 +114,23 @@ const ActivitySection = () => {
       );
     }
 
-    // // update transactionList
+    // update transactionList
     setTransactionList((prev) =>
       prev.filter((transactionResult) => transactionResult.txHash !== targetTransactionResult.txHash)
     );
+  };
+
+  /** @dev handle removing all records */
+
+  const handleRemoveAllRecords = async () => {
+    // close modal
+    onClose();
+
+    // clear localStorage cache
+    clearCachedTransactions();
+
+    // update transactionList
+    setTransactionList([]);
   };
 
   // ensures that the "application mounted" flag is set to ensure consistent UI rendering on both the server and client sides.
@@ -144,21 +158,37 @@ const ActivitySection = () => {
         <hr className="border-t border-white/40" />
       </div>
 
-      {/* Filter */}
-      <div className="w-[200px]">
-        <Select
-          _focus={{ borderColor: HEDERA_BRANDING_COLORS.purple }}
-          className="hover:cursor-pointer rounded-md border-white/30"
-          placeholder="Sort by"
-          onChange={(e) => {
-            const value = e.target.value === '' ? 'OLDEST' : e.target.value;
-            setOrder(value as 'LATEST' | 'OLDEST');
-          }}
-        >
-          <option value={'LATEST'}>Latest to oldest</option>
-          <option value={'OLDEST'}>Oldest to latest</option>
-        </Select>
-      </div>
+      {sortedTransactionList.length > 0 && (
+        <div className="flex justify-between items-center">
+          {/* Filter */}
+          <div className="w-[200px]">
+            <Select
+              _focus={{ borderColor: HEDERA_BRANDING_COLORS.purple }}
+              className="hover:cursor-pointer rounded-md border-white/30"
+              placeholder="Sort by"
+              onChange={(e) => {
+                const value = e.target.value === '' ? 'OLDEST' : e.target.value;
+                setOrder(value as 'LATEST' | 'OLDEST');
+              }}
+            >
+              <option value={'LATEST'}>Latest to oldest</option>
+              <option value={'OLDEST'}>Oldest to latest</option>
+            </Select>
+          </div>
+
+          {/* remove all button */}
+          <div>
+            <Tooltip label="Remove this contract instance" placement="top">
+              <button
+                onClick={onOpen}
+                className={`border border-white/30 text-sm px-3 py-2 rounded-lg flex items-center justify-center cursor-pointer hover:bg-red-400 transition duration-300`}
+              >
+                Remove all records
+              </button>
+            </Tooltip>
+          </div>
+        </div>
+      )}
 
       {sortedTransactionList.length > 0 ? (
         <>
@@ -290,6 +320,20 @@ const ActivitySection = () => {
           <p>No transactions have been made.</p>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={isOpen}
+        onClose={onClose}
+        modalBody={
+          <p className="text-white/70">
+            By completing this action, all the transactions you have made during this session will be
+            permanently erased from the DApp&apos;s cache, but they will still be accessible through HashScan
+            or other explorer solutions.
+          </p>
+        }
+        modalHeader={'Sure to remove all?'}
+        handleAcknowledge={handleRemoveAllRecords}
+      />
     </motion.section>
   );
 };
