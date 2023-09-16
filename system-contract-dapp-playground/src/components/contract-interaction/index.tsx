@@ -21,29 +21,33 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Contract } from 'ethers';
+import { BsTrash } from 'react-icons/bs';
 import ERC20Methods from './erc/erc-20/methods';
 import { FiExternalLink } from 'react-icons/fi';
 import HederaIHRC719Methods from './ihrc/methods';
+import ConfirmModal from '../common/ConfirmModal';
 import { deploySmartContract } from '@/api/hedera';
 import HederaAlertDialog from '../common/AlertDialog';
 import { useCallback, useEffect, useState } from 'react';
 import { generateBaseContractInstance } from '@/api/ethers';
+import { clearCachedTransactions } from '@/api/localStorage';
 import ERC20DeployField from './erc/deployment/ERCDeployField';
 import { HederaContractAsset, NetworkName } from '@/types/common';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
 import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
-import { getInfoFromCookies, storeInfoInCookies } from '@/api/cookies';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
 import HederaTokenCreateMethods from './hts/token-create-custom/methods';
 import HederaTokenQueryMethods from './hts/token-query-contract/methods';
 import HederaTokenTransferMethods from './hts/token-transfer-contract/method';
 import HederaTokenManagementMethods from './hts/token-management-contract/methods';
+import { getInfoFromCookies, removeCookieAt, storeInfoInCookies } from '@/api/cookies';
 import ExchangeRateDeployField from './exchange-rate-hip-475/deployment/ExchangeRateDeployField';
 import {
   HASHSCAN_BASE_URL,
   OFFCIAL_NETWORK_NAME,
   HEDERA_BRANDING_COLORS,
   HEDERA_SMART_CONTRACTS_ASSETS,
+  CONTRACT_NAME_TO_STORAGE_KEY_VALUE,
 } from '@/utils/common/constants';
 import {
   Tab,
@@ -54,6 +58,7 @@ import {
   TabPanel,
   useToast,
   TabPanels,
+  useDisclosure,
   PopoverContent,
   PopoverTrigger,
 } from '@chakra-ui/react';
@@ -66,6 +71,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
   const toaster = useToast();
   const [mounted, setMounted] = useState(false);
   const [contractId, setContractId] = useState('');
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [isDeployed, setIsDeployed] = useState(false);
   const [isDeploying, setIsDeploying] = useState(false);
   const [network, setNetwork] = useState<NetworkName>();
@@ -211,6 +217,24 @@ const ContractInteraction = ({ contract }: PageProps) => {
     })();
   }, [network, contractAddress, toaster]);
 
+  // handle removing contract instance
+  const handleRemoveContractInstance = () => {
+    // close the modal
+    onClose();
+
+    // remove contract record in cookies
+    removeCookieAt(contract.name);
+
+    // remove all transactions
+    clearCachedTransactions(CONTRACT_NAME_TO_STORAGE_KEY_VALUE[contract.name]);
+
+    // reset states
+    setContractId('');
+    setIsDeployed(false);
+    setContractAddress('');
+    setBaseContract(undefined);
+  };
+
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
   return (
@@ -259,7 +283,19 @@ const ContractInteraction = ({ contract }: PageProps) => {
                   {/* Contract information - not for IHRC729Contract*/}
                   {contract.name !== HEDERA_SMART_CONTRACTS_ASSETS.TOKEN_ASSOCIATION.name && (
                     <>
-                      <div className="pb-6 flex flex-col gap-1 px-3">
+                      <div className="pb-6 flex flex-col gap-1 px-3 relative">
+                        {/* remove contract instance button */}
+                        <div className="absolute right-3 -top-3">
+                          <Tooltip label="Remove this contract instance" placement="top">
+                            <button
+                              onClick={onOpen}
+                              className={`border border-white/30 p-2 rounded-lg flex items-center justify-center cursor-pointer hover:bg-red-400 transition duration-300`}
+                            >
+                              <BsTrash />
+                            </button>
+                          </Tooltip>
+                        </div>
+
                         {/* Contract ID */}
                         <div className="flex gap-3 w-full justify-">
                           <p>Hedera contract ID: </p>
@@ -457,6 +493,21 @@ const ContractInteraction = ({ contract }: PageProps) => {
           confirmCallBack={() => setIsDeployed(true)}
         />
       )}
+
+      {/* remove current contract intance modal */}
+      <ConfirmModal
+        isOpen={isOpen}
+        onClose={onClose}
+        modalBody={
+          <p className="text-white/70">
+            By completing this action, the current contract instance and all the transactions you have made
+            against this contract will be permanently erased from the DApp&apos;s cache, but they will still
+            be accessible through HashScan or other explorer solutions.
+          </p>
+        }
+        modalHeader={'Sure to disconnect?'}
+        handleAcknowledge={handleRemoveContractInstance}
+      />
     </Tabs>
   );
 };

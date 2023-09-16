@@ -111,6 +111,15 @@ export const getInfoFromCookies = (
 };
 
 /**
+ * @dev remove specific cookie
+ *
+ * @param key: string
+ */
+export const removeCookieAt = (key: string) => {
+  Cookies.remove(key);
+};
+
+/**
  * @dev clear account information stored in cookies
  */
 export const clearCookies = async () => {

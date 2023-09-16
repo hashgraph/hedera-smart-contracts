@@ -321,6 +321,7 @@ export const HEDERA_SHARED_PARAM_INPUT_FIELDS = {
 /**
  * @notice a shared object stores all transaction result storage keys
  */
+// contract name => localStorage key value map
 const prepareTransactionResultStorageKey = (
   contractKey: string,
   methodKey: string,
@@ -365,4 +366,19 @@ export const HEDERA_TRANSACTION_RESULT_STORAGE_KEYS = {
     'TOKEN-PERMISSION': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'TOKEN-PERMISSION'),
     'ALLOWANCES-RESULT': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'ALLOWANCES', true),
   },
+};
+
+/**
+ * @notice a shared object maping contract name to storage key value
+ */
+export const CONTRACT_NAME_TO_STORAGE_KEY_VALUE: Record<ContractName, string> = {
+  ERC20Mock: 'ERC-20',
+  ERC721Mock: 'ERC-721',
+  IHRC729Contract: 'IHRC719',
+  PrngSystemContract: 'PRNG',
+  TokenQueryContract: 'TOKEN-QUERY',
+  TokenTransferContract: 'TOKEN-TRANSFER',
+  ExchangeRatePrecompile: 'EXCHANGE-RATE',
+  TokenManagementContract: 'TOKEN-MANAGE',
+  TokenCreateCustomContract: 'TOKEN-CREATE',
 };
