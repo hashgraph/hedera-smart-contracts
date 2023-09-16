@@ -203,6 +203,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
       handleAPIErrors({
         toaster,
         setTransactionResults,
+        transactionResultStorageKey,
         err: tokenPermissionRes.err,
         transactionHash: tokenPermissionRes.txHash,
         transactionType: (transferTypeMap as any)[method],
@@ -254,6 +255,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
           ...prev,
           {
             status: 'success',
+            transactionResultStorageKey,
             transactionTimeStamp: Date.now(),
             txHash: tokenPermissionRes.txHash as string,
             transactionType: (transferTypeMap as any)[method],

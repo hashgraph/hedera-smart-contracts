@@ -183,6 +183,7 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
         toaster,
         err: txRes.err,
         setTransactionResults,
+        transactionResultStorageKey,
         tokenAddress: tokenAddressToMint,
         transactionHash: txRes.transactionHash,
         transactionType: `HTS-${APIMethods === 'FUNGIBLE' ? 'TOKEN' : 'NFT'}-MINT`,
@@ -194,6 +195,7 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
         ...prev,
         {
           status: 'success',
+          transactionResultStorageKey,
           accountAddress: recipientAddress,
           transactionTimeStamp: Date.now(),
           txHash: txRes.transactionHash as string,

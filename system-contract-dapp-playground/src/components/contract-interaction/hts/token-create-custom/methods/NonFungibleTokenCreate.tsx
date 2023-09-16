@@ -152,6 +152,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
         toaster,
         transactionHash,
         setTransactionResults,
+        transactionResultStorageKey,
         transactionType: 'HTS-NFT-CREATE',
       });
       return;
@@ -162,9 +163,10 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
         {
           tokenAddress,
           status: 'success',
-          txHash: transactionHash as string,
-          transactionType: 'HTS-NFT-CREATE',
+          transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
+          transactionType: 'HTS-NFT-CREATE',
+          txHash: transactionHash as string,
         },
       ]);
 

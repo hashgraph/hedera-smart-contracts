@@ -123,6 +123,7 @@ const ManageTokenStatus = ({ baseContract }: PageProps) => {
         toaster,
         transactionHash,
         setTransactionResults,
+        transactionResultStorageKey,
         transactionType: `HTS-TOKEN-${API}`,
         tokenAddress: paramValues.hederaTokenAddress,
       });
@@ -133,6 +134,7 @@ const ManageTokenStatus = ({ baseContract }: PageProps) => {
         ...prev,
         {
           status: 'success',
+          transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
           transactionType: `HTS-TOKEN-${API}`,

@@ -145,6 +145,7 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
         tokenAddresses,
         transactionHash,
         setTransactionResults,
+        transactionResultStorageKey,
         accountAddress: associatingAddress,
         transactionType: 'HTS-TOKEN-ASSOCIATE',
       });
@@ -156,6 +157,7 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
         {
           tokenAddresses,
           status: 'success',
+          transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
           accountAddress: associatingAddress,

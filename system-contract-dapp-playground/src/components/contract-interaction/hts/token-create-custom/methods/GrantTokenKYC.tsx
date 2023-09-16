@@ -112,6 +112,7 @@ const GrantTokenKYC = ({ baseContract }: PageProps) => {
         toaster,
         transactionHash,
         setTransactionResults,
+        transactionResultStorageKey,
         tokenAddress: hederaTokenAddress,
         transactionType: 'HTS-GRANT-KYC',
         accountAddress: grantingKYCAccountAddress,
@@ -123,6 +124,7 @@ const GrantTokenKYC = ({ baseContract }: PageProps) => {
         ...prev,
         {
           status: 'success',
+          transactionResultStorageKey,
           transactionType: 'HTS-GRANT-KYC',
           transactionTimeStamp: Date.now(),
           tokenAddress: hederaTokenAddress,

@@ -69,10 +69,11 @@ const Mint = ({ baseContract }: PageProps) => {
 
     if (mintErr || !mintRes) {
       handleAPIErrors({
-        err: mintErr,
         toaster,
+        err: mintErr,
         setTransactionResults,
         transactionHash: txHash,
+        transactionResultStorageKey,
         transactionType: 'ERC20-MINT',
       });
       return;
@@ -83,6 +84,7 @@ const Mint = ({ baseContract }: PageProps) => {
         {
           status: 'success',
           txHash: txHash as string,
+          transactionResultStorageKey,
           transactionType: 'ERC20-MINT',
           transactionTimeStamp: Date.now(),
         },

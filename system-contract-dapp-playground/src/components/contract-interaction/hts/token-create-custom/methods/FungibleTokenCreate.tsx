@@ -175,6 +175,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         transactionType: 'HTS-TOKEN-CREATE',
+        transactionResultStorageKey,
       });
       return;
     } else {
@@ -184,6 +185,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
         {
           tokenAddress,
           status: 'success',
+          transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
           transactionType: 'HTS-TOKEN-CREATE',

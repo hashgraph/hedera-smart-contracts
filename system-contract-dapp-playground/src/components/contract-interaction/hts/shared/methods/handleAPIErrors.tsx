@@ -35,6 +35,7 @@ export const handleAPIErrors = ({
   transactionHash,
   receiverAddress,
   setTransactionResults,
+  transactionResultStorageKey,
 }: {
   err: any;
   toaster: any;
@@ -44,6 +45,7 @@ export const handleAPIErrors = ({
   transactionType: string;
   receiverAddress?: string;
   tokenAddresses?: string[];
+  transactionResultStorageKey: string;
   transactionHash: string | undefined;
   keyTypeCalled?: IHederaTokenServiceKeyType;
   setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>;
@@ -58,8 +60,7 @@ export const handleAPIErrors = ({
   } else if (errorMessage.indexOf('nonce has already been used') !== -1) {
     errorDescription = 'Nonce has already been used. Please try again!';
   } else if (errorMessage.indexOf('decreased allowance below zero') !== -1) {
-    errorDescription =
-      'The transaction was reverted due to the allowance decrease falling below zero.';
+    errorDescription = 'The transaction was reverted due to the allowance decrease falling below zero.';
   } else if (errorMessage.indexOf('transfer amount exceeds balance') !== -1) {
     errorDescription = 'Transfer amount exceeds balance';
   } else if (errorMessage.indexOf('insufficient allowance') !== -1) {
@@ -77,11 +78,12 @@ export const handleAPIErrors = ({
         isToken: false,
         transactionType,
         txHash: transactionHash,
+        transactionResultStorageKey,
+        transactionTimeStamp: Date.now(),
         tokenAddress: tokenAddress ? tokenAddress : '',
         accountAddress: accountAddress ? accountAddress : '',
         tokenAddresses: tokenAddresses ? tokenAddresses : [''],
         receiverAddress: receiverAddress ? receiverAddress : '',
-        transactionTimeStamp: Date.now(),
       },
     ]);
 
