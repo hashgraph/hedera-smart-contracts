@@ -29,9 +29,12 @@ import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
 import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
-import { transferParamFields, transferFromParamFields } from '@/utils/contract-interactions/erc/constant';
 import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  transferParamFields,
+  transferFromParamFields,
+} from '@/utils/contract-interactions/erc/erc20/constant';
 
 interface PageProps {
   baseContract: Contract;

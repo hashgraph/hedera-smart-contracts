@@ -265,8 +265,8 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
     githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/erc-721/ERC721Mock.sol`,
     methods: [
       'tokenInformation',
-      'tokenURI',
       'mint',
+      'tokenURI',
       'balance',
       'owner',
       'approve',
@@ -353,5 +353,9 @@ export const HEDERA_TRANSACTION_RESULT_STORAGE_KEYS = {
     'TOKEN-TRANSFER': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'TOKEN-TRANSFER'),
     'TOKEN-PERMISSION': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'TOKEN-PERMISSION'),
     'ALLOWANCES-RESULT': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'ALLOWANCES', true),
+  },
+  'ERC721-RESULT': {
+    'TOKEN-MINT': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-MINT'),
+    'TOKEN-URI': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-URI', true),
   },
 };

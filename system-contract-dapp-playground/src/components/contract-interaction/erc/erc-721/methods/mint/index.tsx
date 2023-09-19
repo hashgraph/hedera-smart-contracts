@@ -21,12 +21,12 @@
 import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { Contract, isAddress } from 'ethers';
-import { erc20Mint } from '@/api/hedera/erc20-interactions';
+import { erc721Mint } from '@/api/hedera/erc721-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import MultiLineMethod from '@/components/common/MultiLineMethod';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
-import { mintParamFields } from '@/utils/contract-interactions/erc/erc20/constant';
+import { mintParamFields } from '@/utils/contract-interactions/erc/erc721/constant';
 import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
 import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
 
@@ -39,10 +39,10 @@ const Mint = ({ baseContract }: PageProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['TOKEN-MINT'];
+  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['TOKEN-MINT'];
   const [mintParams, setMintParams] = useState({
     recipient: '',
-    amount: '',
+    tokenId: '',
   });
 
   /** @dev handle mint token */
@@ -51,8 +51,8 @@ const Mint = ({ baseContract }: PageProps) => {
     let sanitizeErr;
     if (!isAddress(mintParams.recipient)) {
       sanitizeErr = 'Recipient address is not a valid address';
-    } else if (Number(mintParams.amount) === 0) {
-      sanitizeErr = 'Token ammount must be greater than 0';
+    } else if (Number(mintParams.tokenId) < 0) {
+      sanitizeErr = 'Token ammount must be positive';
     }
     if (sanitizeErr) {
       CommonErrorToast({ toaster, title: 'Invalid parameters', description: sanitizeErr });
@@ -60,20 +60,20 @@ const Mint = ({ baseContract }: PageProps) => {
     }
 
     setIsLoading(true);
-    const {
-      mintRes,
-      err: mintErr,
-      txHash,
-    } = await erc20Mint(baseContract, mintParams.recipient, Number(mintParams.amount));
+    const { txHash, err: mintErr } = await erc721Mint(
+      baseContract,
+      mintParams.recipient,
+      Number(mintParams.tokenId)
+    );
     setIsLoading(false);
 
-    if (mintErr || !mintRes) {
+    if (mintErr) {
       handleAPIErrors({
         err: mintErr,
         toaster,
         setTransactionResults,
         transactionHash: txHash,
-        transactionType: 'ERC20-MINT',
+        transactionType: 'ERC721-MINT',
       });
       return;
     } else {
@@ -83,7 +83,7 @@ const Mint = ({ baseContract }: PageProps) => {
         {
           status: 'success',
           txHash: txHash as string,
-          transactionType: 'ERC20-MINT',
+          transactionType: 'ERC721-MINT',
           transactionTimeStamp: Date.now(),
         },
       ]);
@@ -104,7 +104,7 @@ const Mint = ({ baseContract }: PageProps) => {
         status: 'success',
         position: 'top',
       });
-      setMintParams({ recipient: '', amount: '' });
+      setMintParams({ recipient: '', tokenId: '' });
       setIsSuccessful(false);
     }
   }, [isSuccessful, toaster]);
@@ -120,7 +120,7 @@ const Mint = ({ baseContract }: PageProps) => {
         widthSize="w-[360px]"
         isLoading={isLoading}
         handleExecute={handleMintToken}
-        explanation="Creates `amount` tokens and assigns them to `recipient`, increasing the total supply."
+        explanation="Mint a new NFT and trasfer it to the recipient"
       />
     </div>
   );
