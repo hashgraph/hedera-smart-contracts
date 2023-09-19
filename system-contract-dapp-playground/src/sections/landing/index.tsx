@@ -59,15 +59,10 @@ const LandingPage = () => {
     // handle getAccountError
     if (getAccountErr || !accounts || accounts.length === 0) {
       let errorMessage = 'Unknown error appeared...';
-
-      // @notice 4001 error code is returned when a metamask wallet request is rejected by the user
-      // @notice -32002 error code is returned when a metamask wallet request is already in progress
-      // @notice See https://docs.metamask.io/wallet/reference/provider-api/#errors for more information on the error returned by Metamask.
-      if (JSON.stringify(getAccountErr).indexOf(HEDERA_COMMON_WALLET_REVERT_REASONS.REJECT.message) !== -1) {
+      if (JSON.stringify(getAccountErr).indexOf(HEDERA_COMMON_WALLET_REVERT_REASONS.REJECT.code) !== -1) {
         errorMessage = HEDERA_COMMON_WALLET_REVERT_REASONS.REJECT.description;
       } else if (
-        JSON.stringify(getAccountErr).indexOf(HEDERA_COMMON_WALLET_REVERT_REASONS.NETWORK_SWITCH.message) !==
-        -1
+        JSON.stringify(getAccountErr).indexOf(HEDERA_COMMON_WALLET_REVERT_REASONS.NETWORK_SWITCH.code) !== -1
       ) {
         errorMessage = HEDERA_COMMON_WALLET_REVERT_REASONS.NETWORK_SWITCH.description;
       }

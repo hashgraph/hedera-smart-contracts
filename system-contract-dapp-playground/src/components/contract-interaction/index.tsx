@@ -125,9 +125,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
         return;
       }
       let errorMessage = HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description;
-      if (
-        JSON.stringify(deployContractErr).indexOf(HEDERA_COMMON_WALLET_REVERT_REASONS.REJECT.message) !== -1
-      ) {
+      if (JSON.stringify(deployContractErr).indexOf(HEDERA_COMMON_WALLET_REVERT_REASONS.REJECT.code) !== -1) {
         errorMessage = HEDERA_COMMON_WALLET_REVERT_REASONS.REJECT.description;
       }
       CommonErrorToast({

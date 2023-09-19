@@ -249,7 +249,7 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
                   <Th color={HEDERA_BRANDING_COLORS.violet} isNumeric>
                     Token ID
                   </Th>
-                  <Th color={HEDERA_BRANDING_COLORS.violet}>Token Owner</Th>
+                  <Th color={HEDERA_BRANDING_COLORS.violet}>Spender Address</Th>
                   <Th />
                   <Th />
                 </Tr>

@@ -378,13 +378,13 @@ export const HEDERA_COMMON_WALLET_REVERT_REASONS = {
   REJECT: {
     // @notice 4001 error code is returned when a metamask wallet request is rejected by the user
     // @notice See https://docs.metamask.io/wallet/reference/provider-api/#errors for more information on the error returned by Metamask.
-    message: '4001',
+    code: '4001',
     description: 'You have rejected the request.',
   },
   NETWORK_SWITCH: {
     // @notice -32002 error code is returned when a metamask wallet request is already in progress
     // @notice See https://docs.metamask.io/wallet/reference/provider-api/#errors for more information on the error returned by Metamask.
-    message: '-32002',
+    code: '-32002',
     description: 'A network switch request already in progress.',
   },
   NONCE: {

@@ -64,7 +64,8 @@ export const handleAPIErrors = ({
 
   let errorDescription = HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description;
   reasonKeys.some((reasonKey) => {
-    if (errorMessage.indexOf((HEDERA_COMMON_WALLET_REVERT_REASONS as any)[reasonKey].message) !== -1) {
+    const attributeKey = reasonKey === 'REJECT' ? 'code' : 'message';
+    if (errorMessage.indexOf((HEDERA_COMMON_WALLET_REVERT_REASONS as any)[reasonKey][attributeKey]) !== -1) {
       errorDescription = (HEDERA_COMMON_WALLET_REVERT_REASONS as any)[reasonKey].description;
       return true;
     }
