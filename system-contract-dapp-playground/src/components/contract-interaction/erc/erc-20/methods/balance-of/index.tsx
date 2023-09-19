@@ -28,9 +28,10 @@ import { useToast, TableContainer, Table, Thead, Tr, Th, Tbody } from '@chakra-u
 import useUpdateMapStateUILocalStorage from '../../../shared/hooks/useUpdateMapStateUILocalStorage';
 import useRetrieveMapValueFromLocalStorage from '../../../shared/hooks/useRetrieveMapValueFromLocalStorage';
 import {
-  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
-  HEDERA_CHAKRA_INPUT_BOX_SIZES,
   HEDERA_BRANDING_COLORS,
+  HEDERA_CHAKRA_TABLE_VARIANTS,
+  HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
 } from '@/utils/common/constants';
 
 interface PageProps {
@@ -104,13 +105,13 @@ const BalanceOf = ({ baseContract }: PageProps) => {
       <div className="flex gap-12 items-center w-[580px]">
         {/* method */}
         <HederaCommonTextField
-          size={HEDERA_CHAKRA_INPUT_BOX_SIZES.medium}
-          value={accountAddress}
-          title={'Balance of'}
-          explanation={'Returns the amount of tokens owned by account.'}
-          placeholder={'Account address...'}
           type={'text'}
+          title={'Balance of'}
+          value={accountAddress}
           setValue={setAccountAddress}
+          placeholder={'Account address...'}
+          size={HEDERA_CHAKRA_INPUT_BOX_SIZES.medium}
+          explanation={'Returns the amount of tokens owned by account.'}
         />
 
         {/* execute button */}
@@ -144,7 +145,7 @@ const BalanceOf = ({ baseContract }: PageProps) => {
         {/* display balances */}
         {balancesMap.size > 0 && (
           <TableContainer>
-            <Table variant="simple" size={'sm'}>
+            <Table variant={HEDERA_CHAKRA_TABLE_VARIANTS.simple} size={HEDERA_CHAKRA_INPUT_BOX_SIZES.small}>
               <Thead>
                 <Tr>
                   <Th color={HEDERA_BRANDING_COLORS.violet}>Account</Th>

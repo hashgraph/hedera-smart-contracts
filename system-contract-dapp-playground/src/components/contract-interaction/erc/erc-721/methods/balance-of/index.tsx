@@ -19,10 +19,10 @@
  */
 
 import Image from 'next/image';
-import { Contract } from 'ethers';
+import { Contract, isAddress } from 'ethers';
 import { ReactNode, useCallback, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { erc721TokenURI } from '@/api/hedera/erc721-interactions';
+import { erc721BalanceOf } from '@/api/hedera/erc721-interactions';
 import HederaCommonTextField from '@/components/common/HederaCommonTextField';
 import { Table, TableContainer, Tbody, Th, Thead, Tr, useToast } from '@chakra-ui/react';
 import useUpdateMapStateUILocalStorage from '../../../shared/hooks/useUpdateMapStateUILocalStorage';
@@ -38,86 +38,84 @@ interface PageProps {
   baseContract: Contract;
 }
 
-const ERC721TokenURI = ({ baseContract }: PageProps) => {
+const ERC721BalanceOf = ({ baseContract }: PageProps) => {
   const toaster = useToast();
-  const [tokenId, setTokenId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [ractNodes, setReactNodes] = useState<ReactNode[]>([]);
-  const [tokenURIMap, setTokenURIMap] = useState(new Map<string, string>());
-  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['TOKEN-URI'];
+  const [accountAddress, setAccountAddress] = useState('');
+  const [reactNodes, setReactNodes] = useState<ReactNode[]>([]);
+  const [balancesMap, setBalancesMap] = useState(new Map<string, number>());
+  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['BALANCE-OF'];
 
   /** @dev retrieve values from localStorage to maintain data on re-renders */
-  useRetrieveMapValueFromLocalStorage(toaster, transactionResultStorageKey, setTokenURIMap);
+  useRetrieveMapValueFromLocalStorage(toaster, transactionResultStorageKey, setBalancesMap);
 
-  /** @dev handle executing tokenURI */
-  /** @notice wrapping handleExecuteTokenURI in useCallback hook to prevent excessive re-renders */
-  const handleExecuteTokenURI = useCallback(
-    async (tokenIdValue: number, refreshMode?: boolean) => {
+  /** @dev handle executing balance of */
+  /** @notice wrapping handleExecuteBalanceOf in useCallback hook to prevent excessive re-renders */
+  const handleExecuteBalanceOf = useCallback(
+    async (accountAddress: string, refreshMode?: boolean) => {
       // sanitize params
-      if (!refreshMode && tokenIdValue < 0) {
+      if (!refreshMode && !isAddress(accountAddress)) {
         CommonErrorToast({
           toaster,
           title: 'Invalid parameters',
-          description: 'TokenID cannot be negative',
+          description: 'Account address is not a valid address',
         });
         return;
       }
-
       // turn isLoading on
       if (!refreshMode) setIsLoading(true);
 
-      // invoke erc721TokenURI()
-      const { tokenURI, err } = await erc721TokenURI(baseContract, tokenIdValue);
+      const { balanceOfRes, err: balanceOfErr } = await erc721BalanceOf(baseContract, accountAddress);
 
       // turn isLoading off
       if (!refreshMode) setIsLoading(false);
 
-      if (err) {
+      if (balanceOfErr || !balanceOfRes) {
         CommonErrorToast({
           toaster,
-          title: 'Transaction got reverted',
-          description: "See client's console for more information",
+          title: 'Invalid parameters',
+          description: 'Account address is not a valid address',
         });
         return;
       }
 
-      // udpate tokenURI
-      setTokenURIMap((prev) => new Map(prev).set(tokenIdValue.toString(), tokenURI || ''));
-      if (!refreshMode) setTokenId('');
+      // udpate balances
+      setBalancesMap((prev) => new Map(prev).set(accountAddress, Number(balanceOfRes)));
+      if (!refreshMode) setAccountAddress('');
     },
-    [toaster, baseContract]
+    [baseContract, toaster]
   );
 
-  // @dev listen to change event on tokenURIMap state => update UI & localStorage
+  // @dev listen to change event on balancesMap state => update UI & localStorage
   useUpdateMapStateUILocalStorage({
     toaster,
     baseContract,
     setReactNodes,
-    mapType: 'TOKEN_URI',
-    mapValues: tokenURIMap,
+    mapType: 'BALANCES',
+    mapValues: balancesMap,
     transactionResultStorageKey,
-    setMapValues: setTokenURIMap,
-    handleExecuteMethodAPI: handleExecuteTokenURI,
+    setMapValues: setBalancesMap,
+    handleExecuteMethodAPI: handleExecuteBalanceOf,
   });
 
   return (
-    <div className="flex flex-col items-start gap-12">
+    <div className=" flex flex-col items-start gap-12">
       {/* wrapper */}
       <div className="flex gap-12 items-center w-[580px]">
         {/* method */}
         <HederaCommonTextField
           type={'text'}
-          value={tokenId}
-          title={'Token ID'}
-          setValue={setTokenId}
-          placeholder={'Token ID...'}
+          title={'Balance of'}
+          value={accountAddress}
+          setValue={setAccountAddress}
+          placeholder={'Account address...'}
           size={HEDERA_CHAKRA_INPUT_BOX_SIZES.medium}
-          explanation={'Returns the token URI of the token.'}
+          explanation={'Returns the amount of tokens owned by account.'}
         />
 
         {/* execute button */}
         <button
-          onClick={() => handleExecuteTokenURI(Number(tokenId))}
+          onClick={() => handleExecuteBalanceOf(accountAddress)}
           disabled={isLoading}
           className={`border mt-3 w-48 py-2 rounded-xl transition duration-300 ${
             isLoading
@@ -142,22 +140,22 @@ const ERC721TokenURI = ({ baseContract }: PageProps) => {
         </button>
       </div>
 
-      <div className="flex flex-col gap-6 text-base w-full">
+      <div className="flex flex-col gap-6 text-base">
         {/* display balances */}
-        {tokenURIMap.size > 0 && (
+        {balancesMap.size > 0 && (
           <TableContainer>
             <Table variant={HEDERA_CHAKRA_TABLE_VARIANTS.simple} size={HEDERA_CHAKRA_INPUT_BOX_SIZES.small}>
               <Thead>
                 <Tr>
+                  <Th color={HEDERA_BRANDING_COLORS.violet}>Account</Th>
                   <Th color={HEDERA_BRANDING_COLORS.violet} isNumeric>
-                    Token ID
+                    Balance
                   </Th>
-                  <Th color={HEDERA_BRANDING_COLORS.violet}>Token URI</Th>
                   <Th />
                   <Th />
                 </Tr>
               </Thead>
-              <Tbody className="w-full">{ractNodes}</Tbody>
+              <Tbody>{reactNodes}</Tbody>
             </Table>
           </TableContainer>
         )}
@@ -166,4 +164,4 @@ const ERC721TokenURI = ({ baseContract }: PageProps) => {
   );
 };
 
-export default ERC721TokenURI;
+export default ERC721BalanceOf;

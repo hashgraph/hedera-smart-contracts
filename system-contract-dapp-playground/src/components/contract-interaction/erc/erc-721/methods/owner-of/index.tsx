@@ -21,8 +21,8 @@
 import Image from 'next/image';
 import { Contract } from 'ethers';
 import { ReactNode, useCallback, useState } from 'react';
+import { erc721OwnerOf } from '@/api/hedera/erc721-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { erc721TokenURI } from '@/api/hedera/erc721-interactions';
 import HederaCommonTextField from '@/components/common/HederaCommonTextField';
 import { Table, TableContainer, Tbody, Th, Thead, Tr, useToast } from '@chakra-ui/react';
 import useUpdateMapStateUILocalStorage from '../../../shared/hooks/useUpdateMapStateUILocalStorage';
@@ -38,22 +38,22 @@ interface PageProps {
   baseContract: Contract;
 }
 
-const ERC721TokenURI = ({ baseContract }: PageProps) => {
+const ERC721OwnerOf = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [tokenId, setTokenId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [ractNodes, setReactNodes] = useState<ReactNode[]>([]);
-  const [tokenURIMap, setTokenURIMap] = useState(new Map<string, string>());
-  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['TOKEN-URI'];
+  const [tokenOwners, setTokenOwners] = useState(new Map<number, string>());
+  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['OWNER-OF'];
 
   /** @dev retrieve values from localStorage to maintain data on re-renders */
-  useRetrieveMapValueFromLocalStorage(toaster, transactionResultStorageKey, setTokenURIMap);
+  useRetrieveMapValueFromLocalStorage(toaster, transactionResultStorageKey, setTokenOwners);
 
-  /** @dev handle executing tokenURI */
-  /** @notice wrapping handleExecuteTokenURI in useCallback hook to prevent excessive re-renders */
-  const handleExecuteTokenURI = useCallback(
+  /** @dev handle executing erc721OwnerOf */
+  /** @notice wrapping handleExecuteOwnerOf in useCallback hook to prevent excessive re-renders */
+  const handleExecuteOwnerOf = useCallback(
     async (tokenIdValue: number, refreshMode?: boolean) => {
-      // sanitize params
+      /// sanitize params
       if (!refreshMode && tokenIdValue < 0) {
         CommonErrorToast({
           toaster,
@@ -66,8 +66,8 @@ const ERC721TokenURI = ({ baseContract }: PageProps) => {
       // turn isLoading on
       if (!refreshMode) setIsLoading(true);
 
-      // invoke erc721TokenURI()
-      const { tokenURI, err } = await erc721TokenURI(baseContract, tokenIdValue);
+      // invoke erc721OwnerOf()
+      const { ownerOfRes, err } = await erc721OwnerOf(baseContract, tokenIdValue);
 
       // turn isLoading off
       if (!refreshMode) setIsLoading(false);
@@ -81,8 +81,8 @@ const ERC721TokenURI = ({ baseContract }: PageProps) => {
         return;
       }
 
-      // udpate tokenURI
-      setTokenURIMap((prev) => new Map(prev).set(tokenIdValue.toString(), tokenURI || ''));
+      // udpate tokenOwners
+      setTokenOwners((prev) => new Map(prev).set(tokenIdValue, ownerOfRes || ''));
       if (!refreshMode) setTokenId('');
     },
     [toaster, baseContract]
@@ -93,11 +93,11 @@ const ERC721TokenURI = ({ baseContract }: PageProps) => {
     toaster,
     baseContract,
     setReactNodes,
-    mapType: 'TOKEN_URI',
-    mapValues: tokenURIMap,
+    mapValues: tokenOwners,
+    mapType: 'TOKEN_OWNERS',
     transactionResultStorageKey,
-    setMapValues: setTokenURIMap,
-    handleExecuteMethodAPI: handleExecuteTokenURI,
+    setMapValues: setTokenOwners,
+    handleExecuteMethodAPI: handleExecuteOwnerOf,
   });
 
   return (
@@ -117,7 +117,7 @@ const ERC721TokenURI = ({ baseContract }: PageProps) => {
 
         {/* execute button */}
         <button
-          onClick={() => handleExecuteTokenURI(Number(tokenId))}
+          onClick={() => handleExecuteOwnerOf(Number(tokenId))}
           disabled={isLoading}
           className={`border mt-3 w-48 py-2 rounded-xl transition duration-300 ${
             isLoading
@@ -144,7 +144,7 @@ const ERC721TokenURI = ({ baseContract }: PageProps) => {
 
       <div className="flex flex-col gap-6 text-base w-full">
         {/* display balances */}
-        {tokenURIMap.size > 0 && (
+        {tokenOwners.size > 0 && (
           <TableContainer>
             <Table variant={HEDERA_CHAKRA_TABLE_VARIANTS.simple} size={HEDERA_CHAKRA_INPUT_BOX_SIZES.small}>
               <Thead>
@@ -166,4 +166,4 @@ const ERC721TokenURI = ({ baseContract }: PageProps) => {
   );
 };
 
-export default ERC721TokenURI;
+export default ERC721OwnerOf;

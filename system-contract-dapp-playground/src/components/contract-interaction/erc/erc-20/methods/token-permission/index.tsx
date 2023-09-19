@@ -30,9 +30,14 @@ import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
 import { handleErc20TokenPermissions } from '@/api/hedera/erc20-interactions';
 import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
-import { HEDERA_BRANDING_COLORS, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  HEDERA_BRANDING_COLORS,
+  HEDERA_CHAKRA_TABLE_VARIANTS,
+  HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 import {
   Td,
   Th,
@@ -361,7 +366,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
       {/* allowances table */}
       {allowances.length > 0 && (
         <TableContainer>
-          <Table variant="simple" size={'sm'}>
+          <Table variant={HEDERA_CHAKRA_TABLE_VARIANTS.simple} size={HEDERA_CHAKRA_INPUT_BOX_SIZES.small}>
             <Thead>
               <Tr>
                 <Th color={HEDERA_BRANDING_COLORS.violet}>Owner</Th>
