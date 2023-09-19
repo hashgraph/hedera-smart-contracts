@@ -46,6 +46,7 @@ import {
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,
   HEDERA_SMART_CONTRACTS_ASSETS,
+  HEDERA_COMMON_WALLET_REVERT_REASONS,
 } from '@/utils/common/constants';
 import {
   Tab,
@@ -96,7 +97,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
           CommonErrorToast({
             toaster,
             title: 'Cannot deploy contract',
-            description: "See client's console for more information",
+            description: HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description,
           });
           return;
         }
@@ -119,15 +120,13 @@ const ContractInteraction = ({ contract }: PageProps) => {
 
     // handle error
     if (deployContractErr || !contractAddress) {
-      if (deployContractErr === '!HEDERA') {
+      if (deployContractErr === `!${OFFCIAL_NETWORK_NAME}`) {
         NoWalletToast({ toaster });
         return;
       }
-      let errorMessage = "See client's console for more information";
-      // @notice 4001 error code is returned when a metamask wallet request is rejected by the user
-      // @notice See https://docs.metamask.io/wallet/reference/provider-api/#errors for more information on the error returned by Metamask.
-      if (JSON.stringify(deployContractErr).indexOf('4001') !== -1) {
-        errorMessage = 'You have rejected the request.';
+      let errorMessage = HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description;
+      if (JSON.stringify(deployContractErr).indexOf(HEDERA_COMMON_WALLET_REVERT_REASONS.REJECT.code) !== -1) {
+        errorMessage = HEDERA_COMMON_WALLET_REVERT_REASONS.REJECT.description;
       }
       CommonErrorToast({
         toaster,
@@ -143,7 +142,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
       CommonErrorToast({
         toaster,
         title: 'Error storing contract assets to Cookies',
-        description: "See client's console for more information",
+        description: HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description,
       });
       return;
     }
@@ -170,7 +169,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
         CommonErrorToast({
           toaster,
           title: 'Error storing contract assets to Cookies',
-          description: "See client's console for more information",
+          description: HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description,
         });
         return;
       }
@@ -202,7 +201,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
           CommonErrorToast({
             toaster,
             title: 'Cannot get Hedera navtive contract ID',
-            description: "See client's console for more information",
+            description: HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description,
           });
           return;
         }

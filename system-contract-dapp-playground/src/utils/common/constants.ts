@@ -366,5 +366,56 @@ export const HEDERA_TRANSACTION_RESULT_STORAGE_KEYS = {
     'OWNER-OF': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'OWNER-OF', true),
     'TOKEN-URI': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-URI', true),
     'BALANCE-OF': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'BALANCE-OF', true),
+    'GET-APPROVE': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'GET-APPROVE', true),
+    'TOKEN-PERMISSION': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-PERMISSION'),
+  },
+};
+
+/**
+ * @notice stores common revert reasons from wallet
+ */
+export const HEDERA_COMMON_WALLET_REVERT_REASONS = {
+  REJECT: {
+    // @notice 4001 error code is returned when a metamask wallet request is rejected by the user
+    // @notice See https://docs.metamask.io/wallet/reference/provider-api/#errors for more information on the error returned by Metamask.
+    code: '4001',
+    description: 'You have rejected the request.',
+  },
+  NETWORK_SWITCH: {
+    // @notice -32002 error code is returned when a metamask wallet request is already in progress
+    // @notice See https://docs.metamask.io/wallet/reference/provider-api/#errors for more information on the error returned by Metamask.
+    code: '-32002',
+    description: 'A network switch request already in progress.',
+  },
+  NONCE: {
+    message: 'nonce has already been used',
+    description: 'Nonce has already been used. Please try again!',
+  },
+  ALLOWANCE_BELOW_ZERO: {
+    message: 'decreased allowance below zero',
+    description: 'The transaction was reverted due to the allowance decrease falling below zero.',
+  },
+  TRANSFER_EXCEEDS_BALANCE: {
+    message: 'transfer amount exceeds balance',
+    description: 'Transfer amount exceeds balance.',
+  },
+  INSUFFICIENT_ALLOWANCE: {
+    message: 'insufficient allowance',
+    description: 'Insufficient allowance.',
+  },
+  UNAUTHORIZED_CALLER: {
+    message: 'approve caller is not token owner or approved for all',
+    description: 'Unauthorized caller. Caller is not token owner.',
+  },
+  APPROVAL_CURRENT_CALLER: {
+    message: 'approval to current owner',
+    description: 'Caller is the token owner.',
+  },
+  INVALID_TOKENID: {
+    message: 'invalid token ID',
+    description: 'Invalid token ID',
+  },
+  DEFAULT: {
+    description: "See client's console for more information",
   },
 };

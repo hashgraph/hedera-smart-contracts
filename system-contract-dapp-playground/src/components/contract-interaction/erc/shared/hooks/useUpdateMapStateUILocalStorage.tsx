@@ -23,7 +23,10 @@ import { BiCopy } from 'react-icons/bi';
 import { useEffect, ReactNode } from 'react';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { IoRefreshOutline } from 'react-icons/io5';
+import { CommonErrorToast } from '@/components/toast/CommonToast';
+import { erc721TokenApprove } from '@/api/hedera/erc721-interactions';
 import { copyWalletAddress, handleRemoveRecord } from '../methods/common';
+import { HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
 import { Tr, Td, Popover, PopoverTrigger, PopoverContent, Tooltip } from '@chakra-ui/react';
 
 interface PageProps {
@@ -34,7 +37,7 @@ interface PageProps {
   baseContract: Contract;
   handleExecuteMethodAPI: any;
   transactionResultStorageKey: string;
-  mapType: 'BALANCES' | 'TOKEN_URI' | 'TOKEN_OWNERS';
+  mapType: 'BALANCES' | 'TOKEN_URI' | 'TOKEN_OWNERS' | 'GET_APPROVE';
 }
 
 const useUpdateMapStateUILocalStorage = ({
@@ -186,9 +189,7 @@ const useUpdateMapStateUILocalStorage = ({
                 <Popover>
                   <PopoverTrigger>
                     <div className="flex gap-1 items-center">
-                      <p className="overflow-hidden text-ellipsis">
-                        {itTokenOwner || 'Token URI is empty'}
-                      </p>
+                      <p className="overflow-hidden text-ellipsis">{itTokenOwner || 'Token URI is empty'}</p>
                       {itTokenOwner !== '' && (
                         <div className="w-[1rem] text-textaccents-light dark:text-textaccents-dark">
                           <BiCopy />
@@ -209,6 +210,94 @@ const useUpdateMapStateUILocalStorage = ({
                   <button
                     onClick={() => {
                       handleExecuteMethodAPI(itTokenID, true);
+                    }}
+                    className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-teal-500 transition duration-300`}
+                  >
+                    <IoRefreshOutline />
+                  </button>
+                </Tooltip>
+              </Td>
+              <Td>
+                {/* delete button */}
+                <Tooltip label="delete this record" placement="top">
+                  <button
+                    onClick={() => {
+                      handleRemoveRecord(itTokenID, setMapValues, transactionResultStorageKey);
+                    }}
+                    className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-red-400 transition duration-300`}
+                  >
+                    <AiOutlineMinus />
+                  </button>
+                </Tooltip>
+              </Td>
+            </Tr>
+          );
+        });
+        break;
+
+      case 'GET_APPROVE':
+        mapValues.forEach((itTokenOwner: any, itTokenID: any) => {
+          /** @dev handle refresh record */
+          const handleRefreshRecord = async (currentTokenId: number) => {
+            // invoke erc721OwnerOf()
+            const { approvedAccountRes, err } = await erc721TokenApprove(
+              baseContract,
+              'GET_APPROVE',
+              itTokenOwner,
+              currentTokenId
+            );
+            if (err) {
+              CommonErrorToast({
+                toaster,
+                title: 'Transaction got reverted',
+                description: HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description,
+              });
+              return;
+            }
+
+            // udpate erc721OwnerOf
+            setMapValues((prev: any) => new Map(prev).set(currentTokenId, approvedAccountRes || ''));
+          };
+
+          UIreactNodes.push(
+            <Tr key={itTokenID} className="w-full">
+              {/* tokenID */}
+              <Td isNumeric>
+                <p className="text-start">{itTokenID}</p>
+              </Td>
+              <Td
+                onClick={() => {
+                  itTokenOwner !== '' && copyWalletAddress(itTokenOwner);
+                }}
+                className="cursor-pointer w-full"
+              >
+                {/* tokenOwner */}
+                <Popover>
+                  <PopoverTrigger>
+                    <div className="flex gap-1 items-center">
+                      <p className="overflow-hidden text-ellipsis">
+                        {itTokenOwner || 'Token owner is not found'}
+                      </p>
+                      {itTokenOwner !== '' && (
+                        <div className="w-[1rem] text-textaccents-light dark:text-textaccents-dark">
+                          <BiCopy />
+                        </div>
+                      )}
+                    </div>
+                  </PopoverTrigger>
+                  <PopoverContent width={'fit-content'} border={'none'}>
+                    {itTokenOwner !== '' && (
+                      <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
+                    )}
+                  </PopoverContent>
+                </Popover>
+              </Td>
+              <Td>
+                {/* refresh button */}
+                <Tooltip label="refresh this record" placement="top">
+                  <button
+                    onClick={() => {
+                      handleRefreshRecord(itTokenID);
                     }}
                     className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-teal-500 transition duration-300`}
                   >

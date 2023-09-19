@@ -34,3 +34,33 @@ export const mintParamFields = [
     paramKey: 'tokenId',
   },
 ];
+
+export const mintERC721ParamFields = [
+  {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    inputType: 'text',
+    inputPlaceholder: 'Recipient address..',
+    paramKey: 'recipient',
+  },
+  {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    inputType: 'number',
+    inputPlaceholder: 'Token ID..',
+    paramKey: 'tokenId',
+  },
+];
+
+export const approveERC721ParamFields = [
+  {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    inputType: 'text',
+    inputPlaceholder: 'Spender address..',
+    paramKey: 'spenderAddress',
+  },
+  {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    inputType: 'number',
+    inputPlaceholder: 'Token ID..',
+    paramKey: 'tokenId',
+  },
+];
