@@ -23,9 +23,13 @@ import { ethers } from 'ethers';
 import { FiExternalLink } from 'react-icons/fi';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { Dispatch, SetStateAction } from 'react';
-import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import { IHederaTokenServiceKeyType, TransactionResult } from '@/types/contract-interactions/HTS';
+import {
+  HEDERA_BRANDING_COLORS,
+  HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_CHAKRA_TABLE_VARIANTS,
+} from '@/utils/common/constants';
 import {
   Tr,
   Th,
@@ -115,7 +119,7 @@ export const TransactionResultTable = ({
 
   return (
     <TableContainer className="flex flex-col gap-3 overflow-x-hidden">
-      <Table variant="simple" size={'sm'}>
+      <Table variant={HEDERA_CHAKRA_TABLE_VARIANTS.simple} size={HEDERA_CHAKRA_INPUT_BOX_SIZES.small}>
         <Thead>
           <Tr>
             <Th color={HEDERA_BRANDING_COLORS.violet} isNumeric className="flex justify-start">
@@ -132,25 +136,19 @@ export const TransactionResultTable = ({
             {(API === 'TokenMint' || API === 'TransferSingle') && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>Recipient</Th>
             )}
-            {API === 'TokenAssociate' && (
-              <Th color={HEDERA_BRANDING_COLORS.violet}>Associated Account</Th>
-            )}
+            {API === 'TokenAssociate' && <Th color={HEDERA_BRANDING_COLORS.violet}>Associated Account</Th>}
             {API === 'QueryTokenStatus' && <Th color={HEDERA_BRANDING_COLORS.violet}>Account</Th>}
             {API === 'GrantKYC' && <Th color={HEDERA_BRANDING_COLORS.violet}>KYCed Account</Th>}
             {API === 'QueryValidity' && <Th color={HEDERA_BRANDING_COLORS.violet}>Valid Token</Th>}
             {API === 'QueryTokenStatus' && <Th color={HEDERA_BRANDING_COLORS.violet}>Relation</Th>}
             {(API === 'QueryTokenGeneralInfo' ||
               API === 'QuerySpecificInfo' ||
-              API === 'QueryTokenPermission') && (
-              <Th color={HEDERA_BRANDING_COLORS.violet}>Token Info</Th>
-            )}
+              API === 'QueryTokenPermission') && <Th color={HEDERA_BRANDING_COLORS.violet}>Token Info</Th>}
             {(API === 'QueryTokenGeneralInfo' ||
               API === 'QuerySpecificInfo' ||
               API === 'QueryTokenPermission' ||
               API === 'QueryTokenStatus' ||
-              API === 'TransferSingle') && (
-              <Th color={HEDERA_BRANDING_COLORS.violet}>API called</Th>
-            )}
+              API === 'TransferSingle') && <Th color={HEDERA_BRANDING_COLORS.violet}>API called</Th>}
             <Th />
           </Tr>
         </Thead>
@@ -171,9 +169,7 @@ export const TransactionResultTable = ({
               <Tr
                 key={transactionResult.txHash}
                 className={
-                  transactionResult.status === 'success'
-                    ? 'hover:bg-hedera-green/10'
-                    : 'hover:bg-red-400/10'
+                  transactionResult.status === 'success' ? 'hover:bg-hedera-green/10' : 'hover:bg-red-400/10'
                 }
               >
                 {/* index */}
@@ -184,9 +180,7 @@ export const TransactionResultTable = ({
                 {/* status */}
                 <Td>
                   <p
-                    className={
-                      transactionResult.status === 'success' ? `text-hedera-green` : `text-red-400`
-                    }
+                    className={transactionResult.status === 'success' ? `text-hedera-green` : `text-red-400`}
                   >
                     {transactionResult.status.toUpperCase()}
                   </p>
@@ -212,9 +206,7 @@ export const TransactionResultTable = ({
                           </div>
                         </PopoverTrigger>
                         <PopoverContent width={'fit-content'} border={'none'}>
-                          <div className="bg-secondary px-3 py-2 border-none font-medium">
-                            Copied
-                          </div>
+                          <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
                         </PopoverContent>
                       </Popover>
                     </div>
@@ -246,11 +238,7 @@ export const TransactionResultTable = ({
                   <Td className="cursor-pointer">
                     {transactionResult.tokenAddress ? (
                       <div className="flex gap-1 items-center">
-                        <div
-                          onClick={() =>
-                            navigator.clipboard.writeText(transactionResult.tokenAddress!)
-                          }
-                        >
+                        <div onClick={() => navigator.clipboard.writeText(transactionResult.tokenAddress!)}>
                           <Popover>
                             <PopoverTrigger>
                               <div className="flex gap-1 items-center">
@@ -263,9 +251,7 @@ export const TransactionResultTable = ({
                               </div>
                             </PopoverTrigger>
                             <PopoverContent width={'fit-content'} border={'none'}>
-                              <div className="bg-secondary px-3 py-2 border-none font-medium">
-                                Copied
-                              </div>
+                              <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
                             </PopoverContent>
                           </Popover>
                         </div>
@@ -284,10 +270,9 @@ export const TransactionResultTable = ({
                       </div>
                     ) : (
                       <>
-                        {`${ethers.ZeroAddress.slice(
-                          0,
-                          beginingHashIndex
-                        )}...${ethers.ZeroAddress.slice(endingHashIndex)}`}
+                        {`${ethers.ZeroAddress.slice(0, beginingHashIndex)}...${ethers.ZeroAddress.slice(
+                          endingHashIndex
+                        )}`}
                       </>
                     )}
                   </Td>
@@ -296,23 +281,17 @@ export const TransactionResultTable = ({
                 {/* associated token address */}
                 {API === 'TokenAssociate' && (
                   <Td className="cursor-pointer">
-                    {transactionResult.tokenAddresses &&
-                    transactionResult.tokenAddresses.length === 1 ? (
+                    {transactionResult.tokenAddresses && transactionResult.tokenAddresses.length === 1 ? (
                       <div className="flex gap-1 items-center">
                         <div
-                          onClick={() =>
-                            navigator.clipboard.writeText(transactionResult.tokenAddresses![0])
-                          }
+                          onClick={() => navigator.clipboard.writeText(transactionResult.tokenAddresses![0])}
                         >
                           <Popover>
                             <PopoverTrigger>
                               <div className="flex gap-1 items-center">
                                 <Tooltip label="click to copy token address">
                                   <p>
-                                    {transactionResult.tokenAddresses[0].slice(
-                                      0,
-                                      beginingHashIndex
-                                    )}
+                                    {transactionResult.tokenAddresses[0].slice(0, beginingHashIndex)}
                                     ...
                                     {transactionResult.tokenAddresses[0].slice(endingHashIndex)}
                                   </p>
@@ -320,9 +299,7 @@ export const TransactionResultTable = ({
                               </div>
                             </PopoverTrigger>
                             <PopoverContent width={'fit-content'} border={'none'}>
-                              <div className="bg-secondary px-3 py-2 border-none font-medium">
-                                Copied
-                              </div>
+                              <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
                             </PopoverContent>
                           </Popover>
                         </div>
@@ -355,10 +332,7 @@ export const TransactionResultTable = ({
                             className="flex flex-col gap-6 bg-secondary px-4 py-3"
                           >
                             {transactionResult.tokenAddresses?.map((token) => (
-                              <div
-                                key={token}
-                                className="bg-secondary border-none font-medium flex gap-1"
-                              >
+                              <div key={token} className="bg-secondary border-none font-medium flex gap-1">
                                 <div onClick={() => navigator.clipboard.writeText(token)}>
                                   <Popover>
                                     <PopoverTrigger>
@@ -409,11 +383,7 @@ export const TransactionResultTable = ({
                   <Td className="cursor-pointer">
                     {transactionResult.accountAddress ? (
                       <div className="flex gap-1 items-center">
-                        <div
-                          onClick={() =>
-                            navigator.clipboard.writeText(transactionResult.accountAddress!)
-                          }
-                        >
+                        <div onClick={() => navigator.clipboard.writeText(transactionResult.accountAddress!)}>
                           <Popover>
                             <PopoverTrigger>
                               <div className="flex gap-1 items-center">
@@ -427,9 +397,7 @@ export const TransactionResultTable = ({
                               </div>
                             </PopoverTrigger>
                             <PopoverContent width={'fit-content'} border={'none'}>
-                              <div className="bg-secondary px-3 py-2 border-none font-medium">
-                                Copied
-                              </div>
+                              <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
                             </PopoverContent>
                           </Popover>
                         </div>
@@ -450,10 +418,9 @@ export const TransactionResultTable = ({
                       <>
                         {API === 'TokenMint'
                           ? 'Treasury Account'
-                          : `${ethers.ZeroAddress.slice(
-                              0,
-                              beginingHashIndex
-                            )}...${ethers.ZeroAddress.slice(endingHashIndex)}`}
+                          : `${ethers.ZeroAddress.slice(0, beginingHashIndex)}...${ethers.ZeroAddress.slice(
+                              endingHashIndex
+                            )}`}
                       </>
                     )}
                   </Td>
@@ -462,11 +429,7 @@ export const TransactionResultTable = ({
                 {API === 'TransferSingle' && (
                   <Td className="cursor-pointer">
                     <div className="flex gap-1 items-center">
-                      <div
-                        onClick={() =>
-                          navigator.clipboard.writeText(transactionResult.receiverAddress!)
-                        }
-                      >
+                      <div onClick={() => navigator.clipboard.writeText(transactionResult.receiverAddress!)}>
                         <Popover>
                           <PopoverTrigger>
                             <div className="flex gap-1 items-center">
@@ -480,17 +443,11 @@ export const TransactionResultTable = ({
                             </div>
                           </PopoverTrigger>
                           <PopoverContent width={'fit-content'} border={'none'}>
-                            <div className="bg-secondary px-3 py-2 border-none font-medium">
-                              Copied
-                            </div>
+                            <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
                           </PopoverContent>
                         </Popover>
                       </div>
-                      <Tooltip
-                        label={'Explore this user on HashScan'}
-                        placement="top"
-                        fontWeight={'medium'}
-                      >
+                      <Tooltip label={'Explore this user on HashScan'} placement="top" fontWeight={'medium'}>
                         <Link
                           href={`https://hashscan.io/${hederaNetwork}/account/${transactionResult.receiverAddress}`}
                           target="_blank"

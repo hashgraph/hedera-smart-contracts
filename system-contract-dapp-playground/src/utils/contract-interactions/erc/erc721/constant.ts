@@ -18,21 +18,19 @@
  *
  */
 
+import { HEDERA_SHARED_PARAM_INPUT_FIELDS } from '@/utils/common/constants';
+
 export const mintParamFields = [
   {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'text',
     inputPlaceholder: 'Recipient address..',
-    inputSize: 'md',
-    inputFocusBorderColor: '#A98DF4',
-    inputClassname: 'w-full border-white/30',
     paramKey: 'recipient',
   },
   {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'number',
     inputPlaceholder: 'Token ID..',
-    inputSize: 'md',
-    inputFocusBorderColor: '#A98DF4',
-    inputClassname: 'w-full border-white/30',
     paramKey: 'tokenId',
   },
 ];
