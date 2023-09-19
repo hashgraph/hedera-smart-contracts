@@ -24,14 +24,14 @@ export const mintParamFields = [
   {
     ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'text',
-    inputPlaceholder: 'Recipient address..',
     paramKey: 'recipient',
+    inputPlaceholder: 'Recipient address..',
   },
   {
     ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'number',
-    inputPlaceholder: 'Token ID..',
     paramKey: 'tokenId',
+    inputPlaceholder: 'Token ID..',
   },
 ];
 
@@ -39,14 +39,14 @@ export const mintERC721ParamFields = [
   {
     ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'text',
-    inputPlaceholder: 'Recipient address..',
     paramKey: 'recipient',
+    inputPlaceholder: 'Recipient address..',
   },
   {
     ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'number',
-    inputPlaceholder: 'Token ID..',
     paramKey: 'tokenId',
+    inputPlaceholder: 'Token ID..',
   },
 ];
 
@@ -54,13 +54,28 @@ export const approveERC721ParamFields = [
   {
     ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'text',
-    inputPlaceholder: 'Spender address..',
     paramKey: 'spenderAddress',
+    inputPlaceholder: 'Spender address..',
   },
   {
     ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
     inputType: 'number',
-    inputPlaceholder: 'Token ID..',
     paramKey: 'tokenId',
+    inputPlaceholder: 'Token ID..',
+  },
+];
+
+export const isApprovalERC721ParamFields = [
+  {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    inputType: 'text',
+    paramKey: 'owner',
+    inputPlaceholder: 'Owner address..',
+  },
+  {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    inputType: 'text',
+    paramKey: 'operator',
+    inputPlaceholder: 'Operator address..',
   },
 ];
