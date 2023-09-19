@@ -58,12 +58,13 @@ export const handleAPIErrors = ({
   } else if (errorMessage.indexOf('nonce has already been used') !== -1) {
     errorDescription = 'Nonce has already been used. Please try again!';
   } else if (errorMessage.indexOf('decreased allowance below zero') !== -1) {
-    errorDescription =
-      'The transaction was reverted due to the allowance decrease falling below zero.';
+    errorDescription = 'The transaction was reverted due to the allowance decrease falling below zero.';
   } else if (errorMessage.indexOf('transfer amount exceeds balance') !== -1) {
     errorDescription = 'Transfer amount exceeds balance';
   } else if (errorMessage.indexOf('insufficient allowance') !== -1) {
     errorDescription = 'Insufficient allowance';
+  } else if (errorMessage.indexOf('approve caller is not token owner or approved for all') !== -1) {
+    errorDescription = 'Unauthorized caller. Caller is not token owner.';
   }
 
   // @notice if a transaction hash is returned, that means the transaction did make to the system contract but got reverted
