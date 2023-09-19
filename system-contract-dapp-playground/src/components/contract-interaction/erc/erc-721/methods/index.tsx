@@ -21,6 +21,7 @@
 import Mint from './mint';
 import { Contract } from 'ethers';
 import ERC721TokenURI from './token-uri';
+import ERC721BalanceOf from './balance-of';
 import TokenInformation from './token-information';
 
 interface PageProps {
@@ -34,11 +35,11 @@ const ERC721Methods = ({ baseContract, method }: PageProps) => {
       {method === 'owner' && <>ownerOf</>}
       {method === 'transfer' && <>transfer</>}
       {method === 'transfer' && <>transfer</>}
-      {method === 'balance' && <>balanceOf</>}
       {method === 'approve' && <>spenderApprove</>}
       {method === 'operatorApproval' && <>operatorApproval</>}
       {method === 'mint' && <Mint baseContract={baseContract} />}
       {method === 'tokenURI' && <ERC721TokenURI baseContract={baseContract} />}
+      {method === 'balance' && <ERC721BalanceOf baseContract={baseContract} />}
       {method === 'tokenInformation' && <TokenInformation baseContract={baseContract} />}
     </>
   );
