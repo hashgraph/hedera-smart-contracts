@@ -354,4 +354,7 @@ export const HEDERA_TRANSACTION_RESULT_STORAGE_KEYS = {
     'TOKEN-PERMISSION': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'TOKEN-PERMISSION'),
     'ALLOWANCES-RESULT': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'ALLOWANCES', true),
   },
+  'ERC721-RESULT': {
+    'TOKEN-URI': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-URI', true),
+  },
 };
