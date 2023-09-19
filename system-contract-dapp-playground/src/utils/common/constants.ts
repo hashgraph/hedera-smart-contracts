@@ -356,6 +356,7 @@ export const HEDERA_TRANSACTION_RESULT_STORAGE_KEYS = {
   },
   'ERC721-RESULT': {
     'TOKEN-MINT': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-MINT'),
+    'OWNER-OF': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'OWNER-OF', true),
     'TOKEN-URI': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-URI', true),
     'BALANCE-OF': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'BALANCE-OF', true),
   },
