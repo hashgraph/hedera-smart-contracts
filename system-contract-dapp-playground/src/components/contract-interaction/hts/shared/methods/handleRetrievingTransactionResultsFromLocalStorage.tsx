@@ -23,6 +23,7 @@ import { TRANSACTION_PAGE_SIZE } from '../states/commonStates';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
+import { HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
 
 export const handleRetrievingTransactionResultsFromLocalStorage = (
   toaster: any,
@@ -30,15 +31,14 @@ export const handleRetrievingTransactionResultsFromLocalStorage = (
   setCurrentTransactionPage: any,
   setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>
 ) => {
-  const { storageResult, err: storagedErr } = getArrayTypedValuesFromLocalStorage(
-    transactionResultStorageKey
-  );
+  const { storageResult, err: storagedErr } =
+    getArrayTypedValuesFromLocalStorage(transactionResultStorageKey);
   // handle err
   if (storagedErr) {
     CommonErrorToast({
       toaster,
       title: 'Cannot retrieve transaction results from local storage',
-      description: "See client's console for more information",
+      description: HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description,
     });
     return;
   }

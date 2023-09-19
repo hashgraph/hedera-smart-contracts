@@ -36,6 +36,7 @@ import {
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_COMMON_WALLET_REVERT_REASONS,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
 } from '@/utils/common/constants';
 import {
@@ -147,7 +148,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
       CommonErrorToast({
         toaster,
         title: 'Cannot retrieve balances from local storage',
-        description: "See client's console for more information",
+        description: HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description,
       });
       return;
     }
