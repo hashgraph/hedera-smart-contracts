@@ -25,8 +25,8 @@ import { motion } from 'framer-motion';
 import { BsGithub } from 'react-icons/bs';
 import { Tooltip } from '@chakra-ui/react';
 import { IoOpenOutline } from 'react-icons/io5';
-import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/common/constants';
 import ContractInteraction from '@/components/contract-interaction';
+import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/common/constants';
 
 const ERC20Section = () => {
   return (
@@ -38,7 +38,7 @@ const ERC20Section = () => {
         duration: 0.6,
       }}
       viewport={{ once: true }}
-      className="text-white w-full flex pt-7 pb-12 pl-7 flex-col gap-9"
+      className="text-white w-full flex pt-7 pb-12 pl-7 flex-col gap-9 min-w-[50rem]"
     >
       {/* top part */}
       <div className="flex flex-col gap-6">
@@ -68,8 +68,8 @@ const ERC20Section = () => {
 
           {/* content */}
           <div className="tracking-tight text-white/70">
-            This standard provides basic functionality to transfer tokens, as well as allow tokens
-            to be approved so they can be spent by another on-chain third party.
+            This standard provides basic functionality to transfer tokens, as well as allow tokens to be
+            approved so they can be spent by another on-chain third party.
           </div>
         </div>
       </div>

@@ -19,34 +19,19 @@
  */
 
 import Image from 'next/image';
-import { BiCopy } from 'react-icons/bi';
 import { Contract, isAddress } from 'ethers';
-import { AiOutlineMinus } from 'react-icons/ai';
-import { IoRefreshOutline } from 'react-icons/io5';
-import { ReactNode, useCallback, useEffect, useState } from 'react';
+import { useState, ReactNode, useCallback } from 'react';
 import { balanceOf } from '@/api/hedera/erc20-interactions';
-import { getBalancesFromLocalStorage } from '@/api/localStorage';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import HederaCommonTextField from '@/components/common/HederaCommonTextField';
+import { useToast, TableContainer, Table, Thead, Tr, Th, Tbody } from '@chakra-ui/react';
+import useUpdateMapStateUILocalStorage from '../../../shared/hooks/useUpdateMapStateUILocalStorage';
+import useRetrieveMapValueFromLocalStorage from '../../../shared/hooks/useRetrieveMapValueFromLocalStorage';
 import {
-  HEDERA_BRANDING_COLORS,
-  HEDERA_CHAKRA_INPUT_BOX_SIZES,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+  HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_BRANDING_COLORS,
 } from '@/utils/common/constants';
-import {
-  Td,
-  Th,
-  Tr,
-  Table,
-  Thead,
-  Tbody,
-  Tooltip,
-  Popover,
-  useToast,
-  PopoverContent,
-  PopoverTrigger,
-  TableContainer,
-} from '@chakra-ui/react';
 
 interface PageProps {
   baseContract: Contract;
@@ -56,161 +41,65 @@ const BalanceOf = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [accountAddress, setAccountAddress] = useState('');
+  const [ractNodes, setReactNodes] = useState<ReactNode[]>([]);
   const [balancesMap, setBalancesMap] = useState(new Map<string, number>());
-  const [balancesRactNodes, setBalancesReactNodes] = useState<ReactNode[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['BALANCE-OF'];
 
-  /** @dev retrieve balances from localStorage to maintain data on re-renders */
-  useEffect(() => {
-    const { storageBalances, err: localStorageBalanceErr } =
-      getBalancesFromLocalStorage(transactionResultStorageKey);
-    // handle err
-    if (localStorageBalanceErr) {
-      CommonErrorToast({
-        toaster,
-        title: 'Cannot retrieve balances from local storage',
-        description: "See client's console for more information",
-      });
-      return;
-    }
-
-    // update balancesMap
-    if (storageBalances) {
-      setBalancesMap(storageBalances);
-    }
-  }, [toaster, transactionResultStorageKey]);
-
-  /** @dev copy content to clipboard */
-  const copyWalletAddress = (content: string) => {
-    navigator.clipboard.writeText(content);
-  };
-
-  /** @dev handle remove record */
-  const handleRemoveRecord = useCallback(
-    (addr: string) => {
-      setBalancesMap((prev) => {
-        prev.delete(addr);
-        if (prev.size === 0) {
-          localStorage.removeItem(transactionResultStorageKey);
-        }
-        return new Map(prev);
-      });
-    },
-    [transactionResultStorageKey]
-  );
+  /** @dev retrieve values from localStorage to maintain data on re-renders */
+  useRetrieveMapValueFromLocalStorage(toaster, transactionResultStorageKey, setBalancesMap);
 
   /** @dev handle executing balance of */
-  const handleExecuteBalanceOf = async () => {
-    // sanitize params
-    if (!isAddress(accountAddress)) {
-      CommonErrorToast({
-        toaster,
-        title: 'Invalid parameters',
-        description: 'Account address is not a valid address',
-      });
-      return;
-    }
+  /** @notice wrapping handleExecuteBalanceOf in useCallback hook to prevent excessive re-renders */
+  const handleExecuteBalanceOf = useCallback(
+    async (accountAddress: string, refreshMode?: boolean) => {
+      // sanitize params
+      if (!refreshMode && !isAddress(accountAddress)) {
+        CommonErrorToast({
+          toaster,
+          title: 'Invalid parameters',
+          description: 'Account address is not a valid address',
+        });
+        return;
+      }
+      // turn isLoading on
+      if (!refreshMode) setIsLoading(true);
 
-    // invoke balanceOf()
-    setIsLoading(true);
-    const { balanceOfRes, err: balanceOfErr } = await balanceOf(baseContract, accountAddress);
-    setIsLoading(false);
-    if (balanceOfErr || !balanceOfRes) {
-      CommonErrorToast({
-        toaster,
-        title: 'Invalid parameters',
-        description: 'Account address is not a valid address',
-      });
-      return;
-    }
+      // invoke balanceOf()
+      const { balanceOfRes, err: balanceOfErr } = await balanceOf(baseContract, accountAddress);
 
-    // udpate balances
-    setBalancesMap((prev) => new Map(prev).set(accountAddress, Number(balanceOfRes)));
-    setAccountAddress('');
-  };
+      // turn isLoading off
+      if (!refreshMode) setIsLoading(false);
+
+      if (balanceOfErr || !balanceOfRes) {
+        CommonErrorToast({
+          toaster,
+          title: 'Invalid parameters',
+          description: 'Account address is not a valid address',
+        });
+        return;
+      }
+
+      // udpate balances
+      setBalancesMap((prev) => new Map(prev).set(accountAddress, Number(balanceOfRes)));
+      if (!refreshMode) setAccountAddress('');
+    },
+    [toaster, baseContract]
+  );
 
   // @dev listen to change event on balancesMap state => update UI & localStorage
-  useEffect(() => {
-    //// update UI
-    let reactNodes = [] as ReactNode[];
-    balancesMap.forEach((amount, account) => {
-      /** @dev handle refresh record */
-      const handleRefreshRecord = async (addr: string) => {
-        // invoke balanceOf()
-        const { balanceOfRes, err: balanceOfErr } = await balanceOf(baseContract, account);
-        if (balanceOfErr || !balanceOfRes) {
-          CommonErrorToast({
-            toaster,
-            title: 'Invalid parameters',
-            description: 'Account address is not a valid address',
-          });
-          return;
-        }
-
-        // udpate balances
-        setBalancesMap((prev) => new Map(prev).set(account, Number(balanceOfRes)));
-      };
-
-      reactNodes.push(
-        <Tr key={account}>
-          <Td onClick={() => copyWalletAddress(account)} className="cursor-pointer">
-            {/* account field */}
-            <Popover>
-              <PopoverTrigger>
-                <div className="flex gap-1 items-center">
-                  <p>{account}</p>
-                  <div className="w-[1rem] text-textaccents-light dark:text-textaccents-dark">
-                    <BiCopy />
-                  </div>
-                </div>
-              </PopoverTrigger>
-              <PopoverContent width={'fit-content'} border={'none'}>
-                <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
-              </PopoverContent>
-            </Popover>
-          </Td>
-          <Td isNumeric>
-            <p>{amount}</p>
-          </Td>
-          <Td>
-            {/* refresh button */}
-            <Tooltip label="refresh this record" placement="top">
-              <button
-                onClick={() => {
-                  handleRefreshRecord(account);
-                }}
-                className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-teal-500 transition duration-300`}
-              >
-                <IoRefreshOutline />
-              </button>
-            </Tooltip>
-          </Td>
-          <Td>
-            {/* delete button */}
-            <Tooltip label="delete this record" placement="top">
-              <button
-                onClick={() => {
-                  handleRemoveRecord(account);
-                }}
-                className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-red-400 transition duration-300`}
-              >
-                <AiOutlineMinus />
-              </button>
-            </Tooltip>
-          </Td>
-        </Tr>
-      );
-    });
-    setBalancesReactNodes(reactNodes);
-
-    //// update local storage
-    if (balancesMap.size > 0) {
-      localStorage.setItem(transactionResultStorageKey, JSON.stringify(Object.fromEntries(balancesMap)));
-    }
-  }, [balancesMap, baseContract, toaster, handleRemoveRecord, transactionResultStorageKey]);
+  useUpdateMapStateUILocalStorage({
+    toaster,
+    baseContract,
+    setReactNodes,
+    mapType: 'BALANCES',
+    mapValues: balancesMap,
+    transactionResultStorageKey,
+    setMapValues: setBalancesMap,
+    handleExecuteMethodAPI: handleExecuteBalanceOf,
+  });
 
   return (
-    <div className=" flex flex-col items-start gap-12">
+    <div className="flex flex-col items-start gap-12">
       {/* wrapper */}
       <div className="flex gap-12 items-center w-[580px]">
         {/* method */}
@@ -226,7 +115,7 @@ const BalanceOf = ({ baseContract }: PageProps) => {
 
         {/* execute button */}
         <button
-          onClick={handleExecuteBalanceOf}
+          onClick={() => handleExecuteBalanceOf(accountAddress)}
           disabled={isLoading}
           className={`border mt-3 w-48 py-2 rounded-xl transition duration-300 ${
             isLoading
@@ -266,7 +155,7 @@ const BalanceOf = ({ baseContract }: PageProps) => {
                   <Th />
                 </Tr>
               </Thead>
-              <Tbody>{balancesRactNodes}</Tbody>
+              <Tbody>{ractNodes}</Tbody>
             </Table>
           </TableContainer>
         )}

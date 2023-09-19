@@ -34,7 +34,7 @@ const OverviewSection = () => {
         duration: 0.6,
       }}
       viewport={{ once: true }}
-      className="text-white w-full flex pt-7 pl-7 flex-col gap-9"
+      className="text-white w-full flex pt-7 pl-7 flex-col gap-9 min-w-[70rem]"
     >
       {/* top part */}
       <div className="flex flex-col gap-6">
@@ -48,10 +48,10 @@ const OverviewSection = () => {
 
           {/* content */}
           <div className="tracking-tight text-white/70">
-            Hedera is a fully open source public distributed ledger that utilizes the fast, fair,
-            and secure hashgraph consensus. Its network services include Solidity-based smart
-            contracts, as well as native tokenization and consensus services used to build
-            decentralized applications. Learn more about{' '}
+            Hedera is a fully open source public distributed ledger that utilizes the fast, fair, and secure
+            hashgraph consensus. Its network services include Solidity-based smart contracts, as well as
+            native tokenization and consensus services used to build decentralized applications. Learn more
+            about{' '}
             <Link
               href={'https://hedera.com/'}
               target="_blank"
@@ -69,9 +69,9 @@ const OverviewSection = () => {
           <div className="text-[1.65rem] font-medium">Hedera Smart Contract Library</div>
           {/* content */}
           <div className="tracking-tight text-white/70">
-            Seamlessly scale your projects using Solidity smart contracts on Hedera, taking
-            advantage of its unparalleled efficiency. Curious to explore the inner workings of smart
-            contracts hosted on Dapp Playground? The source code for{' '}
+            Seamlessly scale your projects using Solidity smart contracts on Hedera, taking advantage of its
+            unparalleled efficiency. Curious to explore the inner workings of smart contracts hosted on Dapp
+            Playground? The source code for{' '}
             <Link
               href={'https://github.com/hashgraph/hedera-smart-contracts'}
               target="_blank"
@@ -88,25 +88,23 @@ const OverviewSection = () => {
       <hr className="border-t border-white/40" />
 
       {/* bottom part */}
-      <div className="flex flex-col gap-12">
+      <div className="flex flex-col gap-12 pb-9">
         {/* DApp Playground */}
         <div>
           {/* title */}
           <h1 className="text-[1.88rem] font-medium leading-10">DApp Playground</h1>
           {/* content */}
           <div className="tracking-tight text-white/70">
-            An intuitively designed interface aimed at highlighting the capabilities of Hedera
-            Network&apos;s system contracts. This revolutionary platform empowers developers to
-            effortlessly deploy and engage with illustrative system contracts, simplifying the task
-            of constructing and resolving issues within decentralized applications.
+            An intuitively designed interface aimed at highlighting the capabilities of Hedera Network&apos;s
+            system contracts. This revolutionary platform empowers developers to effortlessly deploy and
+            engage with illustrative system contracts, simplifying the task of constructing and resolving
+            issues within decentralized applications.
           </div>
         </div>
 
         {/* buttons */}
         <div className="flex flex-col gap-3">
-          <div className="tracking-tight text-white/70">
-            Here are the contracts exposed on this platform:
-          </div>
+          <div className="tracking-tight text-white/70">Here are the contracts exposed on this platform:</div>
 
           <div className="grid grid-rows-2 grid-cols-3 gap-x-6 gap-y-3">
             {LEFT_SIDE_BAR_ITEMS.slice(1).map((item) => (

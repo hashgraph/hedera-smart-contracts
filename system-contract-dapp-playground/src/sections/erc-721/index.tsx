@@ -20,13 +20,13 @@
 
 'use client';
 
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { BsGithub } from 'react-icons/bs';
+import { Tooltip } from '@chakra-ui/react';
+import { IoOpenOutline } from 'react-icons/io5';
 import ContractInteraction from '@/components/contract-interaction';
 import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/common/constants';
-import { Tooltip } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { BsGithub } from 'react-icons/bs';
-import { IoOpenOutline } from 'react-icons/io5';
 
 const ERC721Section = () => {
   return (
@@ -38,7 +38,7 @@ const ERC721Section = () => {
         duration: 0.6,
       }}
       viewport={{ once: true }}
-      className="text-white w-full flex pt-7 pb-12 pl-7 flex-col gap-9"
+      className="text-white w-full flex pt-7 pb-12 pl-7 flex-col gap-9 min-w-[50rem]"
     >
       {/* top part */}
       <div className="flex flex-col gap-6">
@@ -68,8 +68,8 @@ const ERC721Section = () => {
 
           {/* content */}
           <div className="tracking-tight text-white/70">
-            The implementation of a standard API for NFTs within smart contracts. This standard
-            provides basic functionality to create, mint, track and transfer NFTs.
+            The implementation of a standard API for NFTs within smart contracts. This standard provides basic
+            functionality to create, mint, track and transfer NFTs.
           </div>
         </div>
       </div>
