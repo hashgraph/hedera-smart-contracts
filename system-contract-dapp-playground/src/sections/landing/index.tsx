@@ -21,19 +21,16 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { BrowserProvider } from 'ethers';
 import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { storeAccountInfoInCookies } from '@/api/cookies';
+import { VerticalCommonVariants } from '@/libs/framer-motion/variants';
 import { chainIdToNetwork, isCorrectHederaNetwork } from '@/utils/common/helpers';
 import { requestAccount, getWalletProvider, getCurrentChainId } from '@/api/wallet';
-import { VerticalCommonVariants } from '@/libs/framer-motion/variants';
-import {
-  NoWalletToast,
-  CommonErrorToast,
-  NetworkMismatchToast,
-} from '@/components/toast/CommonToast';
-import { BrowserProvider } from 'ethers';
+import { HEDERA_COMMON_WALLET_REVERT_REASONS, OFFCIAL_NETWORK_NAME } from '@/utils/common/constants';
+import { NoWalletToast, CommonErrorToast, NetworkMismatchToast } from '@/components/toast/CommonToast';
 
 const LandingPage = () => {
   const router = useRouter();
@@ -45,7 +42,7 @@ const LandingPage = () => {
   /** @dev handle connect wallet when a user click `connect wallet` button */
   const handleConnectWallet = async () => {
     // handle walletObject or walletProvider being null by toasting it out on the client
-    if (walletProviderErr === '!HEDERA' || !walletProvider) {
+    if (walletProviderErr === `!${OFFCIAL_NETWORK_NAME}` || !walletProvider) {
       NoWalletToast({ toaster });
       return;
     }
@@ -66,10 +63,13 @@ const LandingPage = () => {
       // @notice 4001 error code is returned when a metamask wallet request is rejected by the user
       // @notice -32002 error code is returned when a metamask wallet request is already in progress
       // @notice See https://docs.metamask.io/wallet/reference/provider-api/#errors for more information on the error returned by Metamask.
-      if (JSON.stringify(getAccountErr).indexOf('4001') !== -1) {
-        errorMessage = 'You have rejected the request.';
-      } else if (JSON.stringify(getAccountErr).indexOf('-32002') !== -1) {
-        errorMessage = 'A network switch request already in progress.';
+      if (JSON.stringify(getAccountErr).indexOf(HEDERA_COMMON_WALLET_REVERT_REASONS.REJECT.message) !== -1) {
+        errorMessage = HEDERA_COMMON_WALLET_REVERT_REASONS.REJECT.description;
+      } else if (
+        JSON.stringify(getAccountErr).indexOf(HEDERA_COMMON_WALLET_REVERT_REASONS.NETWORK_SWITCH.message) !==
+        -1
+      ) {
+        errorMessage = HEDERA_COMMON_WALLET_REVERT_REASONS.NETWORK_SWITCH.description;
       }
 
       CommonErrorToast({
@@ -101,7 +101,7 @@ const LandingPage = () => {
           CommonErrorToast({
             toaster,
             title: 'Error logging in',
-            description: "See client's console for more information",
+            description: HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description,
           });
           return;
         }
@@ -165,11 +165,11 @@ const LandingPage = () => {
                     md:w-[47rem] md:mt-6
                     lg:w-[57rem] lg:text-xl lg:mt-3"
         >
-          <span className="text-hedera-green font-medium">DApp Playground</span>, a user-friendly
-          interface designed to showcase the power of system contracts on the{' '}
-          <span className="text-hedera-green font-medium">Hedera network</span>. Effortlessly deploy
-          and interact with example contracts, streamline dApp development, and integrate with
-          familiar web3 wallets. Revolutionize the dApp landscape today by harnessing the power of{' '}
+          <span className="text-hedera-green font-medium">DApp Playground</span>, a user-friendly interface
+          designed to showcase the power of system contracts on the{' '}
+          <span className="text-hedera-green font-medium">Hedera network</span>. Effortlessly deploy and
+          interact with example contracts, streamline dApp development, and integrate with familiar web3
+          wallets. Revolutionize the dApp landscape today by harnessing the power of{' '}
           <span className="text-hedera-green font-medium">Hedera</span>!
         </motion.p>
       </motion.div>

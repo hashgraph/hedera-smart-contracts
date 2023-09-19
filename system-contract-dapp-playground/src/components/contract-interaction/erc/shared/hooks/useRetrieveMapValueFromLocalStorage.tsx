@@ -21,6 +21,7 @@
 import { useEffect } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { getMapValuesFromLocalStorage } from '@/api/localStorage';
+import { HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
 
 const useRetrieveMapValueFromLocalStorage = (
   toaster: any,
@@ -35,7 +36,7 @@ const useRetrieveMapValueFromLocalStorage = (
       CommonErrorToast({
         toaster,
         title: 'Cannot retrieve balances from local storage',
-        description: "See client's console for more information",
+        description: HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description,
       });
       return;
     }

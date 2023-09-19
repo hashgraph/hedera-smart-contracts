@@ -21,6 +21,7 @@
 import { Dispatch, SetStateAction } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { IHederaTokenServiceKeyType, TransactionResult } from '@/types/contract-interactions/HTS';
+import { HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
 
 /** @dev handle error returned back from invoking method APIs*/
 export const handleAPIErrors = ({
@@ -50,22 +51,24 @@ export const handleAPIErrors = ({
 }) => {
   const errorMessage = JSON.stringify(err);
 
-  let errorDescription = "See client's console for more information";
-  // @notice 4001 error code is returned when a metamask wallet request is rejected by the user
-  // @notice See https://docs.metamask.io/wallet/reference/provider-api/#errors for more information on the error returned by Metamask.
-  if (errorMessage.indexOf('4001') !== -1) {
-    errorDescription = 'You have rejected the request.';
-  } else if (errorMessage.indexOf('nonce has already been used') !== -1) {
-    errorDescription = 'Nonce has already been used. Please try again!';
-  } else if (errorMessage.indexOf('decreased allowance below zero') !== -1) {
-    errorDescription = 'The transaction was reverted due to the allowance decrease falling below zero.';
-  } else if (errorMessage.indexOf('transfer amount exceeds balance') !== -1) {
-    errorDescription = 'Transfer amount exceeds balance';
-  } else if (errorMessage.indexOf('insufficient allowance') !== -1) {
-    errorDescription = 'Insufficient allowance';
-  } else if (errorMessage.indexOf('approve caller is not token owner or approved for all') !== -1) {
-    errorDescription = 'Unauthorized caller. Caller is not token owner.';
-  }
+  const reasonKeys = [
+    'NONCE',
+    'REJECT',
+    'INVALID_TOKENID',
+    'UNAUTHORIZED_CALLER',
+    'ALLOWANCE_BELOW_ZERO',
+    'INSUFFICIENT_ALLOWANCE',
+    'APPROVAL_CURRENT_CALLER',
+    'TRANSFER_EXCEEDS_BALANCE',
+  ];
+
+  let errorDescription = HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description;
+  reasonKeys.some((reasonKey) => {
+    if (errorMessage.indexOf((HEDERA_COMMON_WALLET_REVERT_REASONS as any)[reasonKey].message) !== -1) {
+      errorDescription = (HEDERA_COMMON_WALLET_REVERT_REASONS as any)[reasonKey].description;
+      return true;
+    }
+  });
 
   // @notice if a transaction hash is returned, that means the transaction did make to the system contract but got reverted
   if (transactionHash) {

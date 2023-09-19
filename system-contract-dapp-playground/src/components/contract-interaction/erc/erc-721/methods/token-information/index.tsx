@@ -24,6 +24,7 @@ import { useToast } from '@chakra-ui/react';
 import OneLineMethod from '@/components/common/OneLineMethod';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { getERC721TokenInformation } from '@/api/hedera/erc721-interactions';
+import { HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
 
 interface PageProps {
   baseContract: Contract;
@@ -59,7 +60,7 @@ const TokenInformation = ({ baseContract }: PageProps) => {
       CommonErrorToast({
         toaster,
         title: `Cannot execute function ${method}()`,
-        description: "See client's console for more information",
+        description: HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description,
       });
       return;
     } else {

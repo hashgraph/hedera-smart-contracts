@@ -26,6 +26,7 @@ import { IoRefreshOutline } from 'react-icons/io5';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { erc721TokenApprove } from '@/api/hedera/erc721-interactions';
 import { copyWalletAddress, handleRemoveRecord } from '../methods/common';
+import { HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
 import { Tr, Td, Popover, PopoverTrigger, PopoverContent, Tooltip } from '@chakra-ui/react';
 
 interface PageProps {
@@ -188,9 +189,7 @@ const useUpdateMapStateUILocalStorage = ({
                 <Popover>
                   <PopoverTrigger>
                     <div className="flex gap-1 items-center">
-                      <p className="overflow-hidden text-ellipsis">
-                        {itTokenOwner || 'Token URI is empty'}
-                      </p>
+                      <p className="overflow-hidden text-ellipsis">{itTokenOwner || 'Token URI is empty'}</p>
                       {itTokenOwner !== '' && (
                         <div className="w-[1rem] text-textaccents-light dark:text-textaccents-dark">
                           <BiCopy />
@@ -251,15 +250,13 @@ const useUpdateMapStateUILocalStorage = ({
               CommonErrorToast({
                 toaster,
                 title: 'Transaction got reverted',
-                description: "See client's console for more information",
+                description: HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description,
               });
               return;
             }
 
             // udpate erc721OwnerOf
-            setMapValues((prev: any) =>
-              new Map(prev).set(currentTokenId, approvedAccountRes || '')
-            );
+            setMapValues((prev: any) => new Map(prev).set(currentTokenId, approvedAccountRes || ''));
           };
 
           UIreactNodes.push(

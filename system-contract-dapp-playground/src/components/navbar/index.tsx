@@ -33,6 +33,7 @@ import { CommonErrorToast } from '../toast/CommonToast';
 import { isProtectedRoute } from '@/utils/common/helpers';
 import { loadAccountInfoFromCookies } from '@/api/cookies';
 import { navVariants } from '@/libs/framer-motion/variants';
+import { HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
 
 const Navbar = () => {
   // local states
@@ -59,7 +60,7 @@ const Navbar = () => {
         CommonErrorToast({
           toaster,
           title: 'Error retrieving account information',
-          description: "See client's console for more information",
+          description: HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description,
         });
         return;
       }
@@ -118,12 +119,7 @@ const Navbar = () => {
               }}
             >
               {/* logo */}
-              <Image
-                src={'/brandings/hedera-logomark.svg'}
-                alt={'hedera-logomark'}
-                width={30}
-                height={30}
-              />
+              <Image src={'/brandings/hedera-logomark.svg'} alt={'hedera-logomark'} width={30} height={30} />
 
               {/* vertical bar */}
               <div className="bg-white/30 w-[1px] h-full mx-3" />

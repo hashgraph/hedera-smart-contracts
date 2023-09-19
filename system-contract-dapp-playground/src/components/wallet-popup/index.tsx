@@ -25,12 +25,12 @@ import { clearCookies } from '@/api/cookies';
 import { NetworkName } from '@/types/common';
 import { BiCopy, BiCheckDouble } from 'react-icons/bi';
 import { getBalance, getWalletProvider } from '@/api/wallet';
-import { HASHSCAN_BASE_URL } from '@/utils/common/constants';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
 import { SkeletonText, useDisclosure, useToast } from '@chakra-ui/react';
 import { BsChevronDown, BsFillQuestionOctagonFill } from 'react-icons/bs';
+import { HASHSCAN_BASE_URL, HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
 import {
   Modal,
   ModalOverlay,
@@ -79,7 +79,7 @@ const WalletPopup = ({ setIsOpen, userAddress, network }: PageProps) => {
         CommonErrorToast({
           toaster,
           title: 'Cannot get account balance',
-          description: "See client's console for more information",
+          description: HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description,
         });
         return;
       }
@@ -98,7 +98,7 @@ const WalletPopup = ({ setIsOpen, userAddress, network }: PageProps) => {
         CommonErrorToast({
           toaster,
           title: 'Cannot get account id',
-          description: "See client's console for more information",
+          description: HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description,
         });
         return;
       }
