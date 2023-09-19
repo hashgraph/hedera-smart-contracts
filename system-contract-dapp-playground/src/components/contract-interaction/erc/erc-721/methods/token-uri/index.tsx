@@ -24,10 +24,15 @@ import { ReactNode, useCallback, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { erc721TokenURI } from '@/api/hedera/erc721-interactions';
 import HederaCommonTextField from '@/components/common/HederaCommonTextField';
-import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { Table, TableContainer, Tbody, Th, Thead, Tr, useToast } from '@chakra-ui/react';
 import useUpdateMapStateUILocalStorage from '../../../shared/hooks/useUpdateMapStateUILocalStorage';
 import useRetrieveMapValueFromLocalStorage from '../../../shared/hooks/useRetrieveMapValueFromLocalStorage';
+import {
+  HEDERA_BRANDING_COLORS,
+  HEDERA_CHAKRA_TABLE_VARIANTS,
+  HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 
 interface PageProps {
   baseContract: Contract;
@@ -101,13 +106,13 @@ const ERC721TokenURI = ({ baseContract }: PageProps) => {
       <div className="flex gap-12 items-center w-[580px]">
         {/* method */}
         <HederaCommonTextField
-          size={'md'}
+          type={'text'}
           value={tokenId}
           title={'Token ID'}
-          explanation={'Returns the token URI of the token.'}
-          placeholder={'Token ID...'}
-          type={'text'}
           setValue={setTokenId}
+          placeholder={'Token ID...'}
+          size={HEDERA_CHAKRA_INPUT_BOX_SIZES.medium}
+          explanation={'Returns the token URI of the token.'}
         />
 
         {/* execute button */}
@@ -141,13 +146,13 @@ const ERC721TokenURI = ({ baseContract }: PageProps) => {
         {/* display balances */}
         {tokenURIMap.size > 0 && (
           <TableContainer>
-            <Table variant="simple" size={'sm'}>
+            <Table variant={HEDERA_CHAKRA_TABLE_VARIANTS.simple} size={HEDERA_CHAKRA_INPUT_BOX_SIZES.small}>
               <Thead>
                 <Tr>
-                  <Th color={'#82ACF9'} isNumeric>
+                  <Th color={HEDERA_BRANDING_COLORS.violet} isNumeric>
                     Token ID
                   </Th>
-                  <Th color={'#82ACF9'}>Token URI</Th>
+                  <Th color={HEDERA_BRANDING_COLORS.violet}>Token URI</Th>
                   <Th />
                   <Th />
                 </Tr>

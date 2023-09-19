@@ -25,8 +25,12 @@ import { motion } from 'framer-motion';
 import { FiExternalLink } from 'react-icons/fi';
 import { useEffect, useMemo, useState } from 'react';
 import { prepareTransactionList } from '@/utils/common/helpers';
-import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
+import {
+  HEDERA_BRANDING_COLORS,
+  HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_CHAKRA_TABLE_VARIANTS,
+} from '@/utils/common/constants';
 import { usePaginatedTxResults } from '@/components/contract-interaction/hts/shared/hooks/usePaginatedTxResults';
 import {
   Th,
@@ -117,7 +121,7 @@ const ActivitySection = () => {
         <>
           {/* transaction table */}
           <TableContainer className="flex flex-col gap-3 overflow-x-hidden">
-            <Table variant="unstyled" size={'sm'}>
+            <Table variant={HEDERA_CHAKRA_TABLE_VARIANTS.unstyled} size={HEDERA_CHAKRA_INPUT_BOX_SIZES.small}>
               <Thead>
                 <Tr className="border-b">
                   <Th color={HEDERA_BRANDING_COLORS.violet} isNumeric className="flex justify-start">

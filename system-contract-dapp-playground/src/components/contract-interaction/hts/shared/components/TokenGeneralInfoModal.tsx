@@ -20,9 +20,13 @@
 
 import Link from 'next/link';
 import React, { Dispatch, SetStateAction } from 'react';
-import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
 import { prepareInfoValuesToShow } from '../methods/prepareInfoValuesToShow';
+import {
+  HEDERA_BRANDING_COLORS,
+  HEDERA_CHAKRA_TABLE_VARIANTS,
+  HEDERA_CHAKRA_INPUT_BOX_SIZES,
+} from '@/utils/common/constants';
 import {
   Tr,
   Th,
@@ -39,9 +43,9 @@ import {
   ModalCloseButton,
 } from '@chakra-ui/react';
 import {
-  TOKEN_INFO_ADVANCED_KEYS,
-  TOKEN_INFO_BASIC_KEYS,
   TOKEN_INFO_NFT_KEYS,
+  TOKEN_INFO_BASIC_KEYS,
+  TOKEN_INFO_ADVANCED_KEYS,
 } from '@/utils/contract-interactions/HTS/token-query/constant';
 
 interface PageProps {
@@ -71,8 +75,7 @@ const TokenGeneralInfoModal = ({
   initialParamValues,
   hederaTokenAddress,
 }: PageProps) => {
-  const commonBasicKeysTokenInfo =
-    APIMethods === 'TOKEN' ? tokenInfo.token : tokenInfo.tokenInfo.token;
+  const commonBasicKeysTokenInfo = APIMethods === 'TOKEN' ? tokenInfo.token : tokenInfo.tokenInfo.token;
 
   const commonAdvancedKeysTokenInfo = APIMethods === 'TOKEN' ? tokenInfo : tokenInfo.tokenInfo;
 
@@ -103,7 +106,7 @@ const TokenGeneralInfoModal = ({
         {/* body */}
         <ModalBody>
           <TableContainer className="flex flex-col gap-3 overflow-x-hidden">
-            <Table variant="simple" size={'sm'}>
+            <Table variant={HEDERA_CHAKRA_TABLE_VARIANTS.simple} size={HEDERA_CHAKRA_INPUT_BOX_SIZES.small}>
               <Tbody>
                 {/* basic keys */}
                 {TOKEN_INFO_BASIC_KEYS.map((key) => {
@@ -113,10 +116,7 @@ const TokenGeneralInfoModal = ({
                   return (
                     <Tr key={key}>
                       <Th color={HEDERA_BRANDING_COLORS.violet}>{keyToShow}</Th>
-                      <Td
-                        color={HEDERA_BRANDING_COLORS.violet}
-                        className="flex justify-end text-white"
-                      >
+                      <Td color={HEDERA_BRANDING_COLORS.violet} className="flex justify-end text-white">
                         {valueToShow}
                       </Td>
                     </Tr>
@@ -131,10 +131,7 @@ const TokenGeneralInfoModal = ({
                   return (
                     <Tr key={key}>
                       <Th color={HEDERA_BRANDING_COLORS.violet}>{keyToShow}</Th>
-                      <Td
-                        color={HEDERA_BRANDING_COLORS.violet}
-                        className="flex justify-end text-white"
-                      >
+                      <Td color={HEDERA_BRANDING_COLORS.violet} className="flex justify-end text-white">
                         {valueToShow}
                       </Td>
                     </Tr>
@@ -145,10 +142,7 @@ const TokenGeneralInfoModal = ({
                 {APIMethods === 'FUNGIBLE' && (
                   <Tr>
                     <Th color={HEDERA_BRANDING_COLORS.violet}>Decimals</Th>
-                    <Td
-                      color={HEDERA_BRANDING_COLORS.violet}
-                      className="flex justify-end text-white"
-                    >
+                    <Td color={HEDERA_BRANDING_COLORS.violet} className="flex justify-end text-white">
                       {tokenInfo.decimals.toString()}
                     </Td>
                   </Tr>
@@ -162,10 +156,7 @@ const TokenGeneralInfoModal = ({
                     return (
                       <Tr key={key}>
                         <Th color={HEDERA_BRANDING_COLORS.violet}>{keyToShow}</Th>
-                        <Td
-                          color={HEDERA_BRANDING_COLORS.violet}
-                          className="flex justify-end text-white"
-                        >
+                        <Td color={HEDERA_BRANDING_COLORS.violet} className="flex justify-end text-white">
                           {valueToShow}
                         </Td>
                       </Tr>

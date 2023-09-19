@@ -44,6 +44,7 @@ import {
   HASHSCAN_BASE_URL,
   OFFCIAL_NETWORK_NAME,
   HEDERA_BRANDING_COLORS,
+  HEDERA_CHAKRA_TABLE_VARIANTS,
   HEDERA_SMART_CONTRACTS_ASSETS,
 } from '@/utils/common/constants';
 import {
@@ -216,7 +217,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
   if (!mounted) return null;
   return (
     <Tabs
-      variant="unstyle"
+      variant={HEDERA_CHAKRA_TABLE_VARIANTS.unstyled}
       isFitted
       isLazy
       className="bg-panel rounded-xl max-w-4xl text-white border border-white/30 shadow-2xl text-lg"

@@ -291,6 +291,13 @@ export const HEDERA_CHAKRA_INPUT_BOX_SIZES = {
   large: 'lg',
 };
 
+/** @notice Table Variants */
+export const HEDERA_CHAKRA_TABLE_VARIANTS = {
+  simple: 'simple',
+  striped: 'striped',
+  unstyled: 'unstyled',
+};
+
 /** @notice Input box shared class name */
 export const HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME = 'w-full border-white/30';
 

@@ -29,6 +29,7 @@ import useUpdateMapStateUILocalStorage from '../../../shared/hooks/useUpdateMapS
 import useRetrieveMapValueFromLocalStorage from '../../../shared/hooks/useRetrieveMapValueFromLocalStorage';
 import {
   HEDERA_BRANDING_COLORS,
+  HEDERA_CHAKRA_TABLE_VARIANTS,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
 } from '@/utils/common/constants';
@@ -145,7 +146,7 @@ const ERC721OwnerOf = ({ baseContract }: PageProps) => {
         {/* display balances */}
         {tokenOwners.size > 0 && (
           <TableContainer>
-            <Table variant="simple" size={HEDERA_CHAKRA_INPUT_BOX_SIZES.small}>
+            <Table variant={HEDERA_CHAKRA_TABLE_VARIANTS.simple} size={HEDERA_CHAKRA_INPUT_BOX_SIZES.small}>
               <Thead>
                 <Tr>
                   <Th color={HEDERA_BRANDING_COLORS.violet} isNumeric>
