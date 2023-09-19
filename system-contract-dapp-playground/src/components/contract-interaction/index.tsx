@@ -21,9 +21,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Contract } from 'ethers';
-import ERC20Methods from './erc/erc-20/methods';
 import { FiExternalLink } from 'react-icons/fi';
+import ERC20Methods from './erc/erc-20/methods';
 import HederaIHRC719Methods from './ihrc/methods';
+import ERC721Methods from './erc/erc-721/methods';
 import { deploySmartContract } from '@/api/hedera';
 import HederaAlertDialog from '../common/AlertDialog';
 import { useCallback, useEffect, useState } from 'react';
@@ -373,6 +374,11 @@ const ContractInteraction = ({ contract }: PageProps) => {
                     {/* ERC-20 */}
                     {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.ERC_20.name && (
                       <ERC20Methods method={method} baseContract={baseContract! as Contract} />
+                    )}
+
+                    {/* ERC-721 */}
+                    {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.ERC_721.name && (
+                      <ERC721Methods method={method} baseContract={baseContract! as Contract} />
                     )}
                   </div>
                 </TabPanel>
