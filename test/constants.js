@@ -55,6 +55,7 @@ const Events = {
   GetNonFungibleTokenInfo: 'GetNonFungibleTokenInfo',
   TinyBars: 'TinyBars',
   TinyCents: 'TinyCents',
+  PseudoRandomSeed: 'PseudoRandomSeed',
 }
 
 const Path = {
@@ -97,6 +98,7 @@ const Contract = {
   ERC20SnapshotMock: 'ERC20SnapshotMock',
   HRCContract: 'HRCContract',
   ExchangeRateMock: 'ExchangeRateMock',
+  PrngSystemContract: 'PrngSystemContract',
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
