@@ -53,6 +53,8 @@ const Events = {
   MintedNft: 'MintedNft',
   GetFungibleTokenInfo: 'GetFungibleTokenInfo',
   GetNonFungibleTokenInfo: 'GetNonFungibleTokenInfo',
+  TinyBars: 'TinyBars',
+  TinyCents: 'TinyCents',
 }
 
 const Path = {
@@ -94,6 +96,7 @@ const Contract = {
   ERC20PausableMock: 'ERC20PausableMock',
   ERC20SnapshotMock: 'ERC20SnapshotMock',
   HRCContract: 'HRCContract',
+  ExchangeRateMock: 'ExchangeRateMock',
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
