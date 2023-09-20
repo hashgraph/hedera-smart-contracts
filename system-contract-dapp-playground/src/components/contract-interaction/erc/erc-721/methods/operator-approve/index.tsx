@@ -28,6 +28,7 @@ import { CommonErrorToast } from '@/components/toast/CommonToast';
 import MultiLineMethod from '@/components/common/MultiLineMethod';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { erc721TokenApproval } from '@/api/hedera/erc721-interactions';
+import { copyContentToClipboard } from '../../../shared/methods/common';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
 import { isApprovalERC721ParamFields } from '@/utils/contract-interactions/erc/erc721/constant';
 import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
@@ -48,11 +49,6 @@ import {
   TableContainer,
 } from '@chakra-ui/react';
 import {
-  SharedExecuteButton,
-  SharedFormButton,
-  SharedFormInputField,
-} from '@/components/contract-interaction/hts/shared/components/ParamInputForm';
-import {
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
@@ -60,6 +56,11 @@ import {
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
   HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
 } from '@/utils/common/constants';
+import {
+  SharedExecuteButton,
+  SharedFormButton,
+  SharedFormInputField,
+} from '@/components/contract-interaction/hts/shared/components/ParamInputForm';
 
 interface PageProps {
   baseContract: Contract;
@@ -76,7 +77,7 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
   const [successStatus, setSuccessStatus] = useState(false);
   const [approvalRecords, setApprovalRecords] = useState<ApprovalStatus[]>([]);
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const approvalStatusStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['GET-APPROVE'];
+  const approvalStatusStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['GET-APPROVAL'];
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['SET-APPROVAL'];
   const [isLoading, setIsLoading] = useState({
     SET_APPROVAL: false,
@@ -99,9 +100,9 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
       undefined,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
-  /** @dev retrieve allowances from localStorage to maintain data on re-renders */
+  /** @dev retrieve results from localStorage to maintain data on re-renders */
   useEffect(() => {
     const { storageResult, err: localStorageBalanceErr } =
       getArrayTypedValuesFromLocalStorage(approvalStatusStorageKey);
@@ -119,7 +120,7 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
     if (storageResult) {
       setApprovalRecords(storageResult as ApprovalStatus[]);
     }
-  }, [toaster]);
+  }, [toaster, approvalStatusStorageKey]);
 
   /**
    * @dev handle execute methods
@@ -227,7 +228,7 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
     if (approvalRecords.length > 0) {
       localStorage.setItem(approvalStatusStorageKey, JSON.stringify(approvalRecords));
     }
-  }, [approvalRecords]);
+  }, [approvalRecords, approvalStatusStorageKey]);
 
   // toast executing successful
   useEffect(() => {
@@ -241,11 +242,6 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
       setSuccessStatus(true);
     }
   }, [successStatus, toaster]);
-
-  /** @dev copy content to clipboard */
-  const copyWalletAddress = (content: string) => {
-    navigator.clipboard.writeText(content);
-  };
 
   return (
     <div className="w-full mx-3 flex flex-col gap-20">
@@ -317,7 +313,7 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
       {/* allowances table */}
       {approvalRecords.length > 0 && (
         <TableContainer>
-          <Table variant={HEDERA_CHAKRA_TABLE_VARIANTS.simple} size={HEDERA_CHAKRA_INPUT_BOX_SIZES.medium}>
+          <Table variant={HEDERA_CHAKRA_TABLE_VARIANTS.simple} size={HEDERA_CHAKRA_INPUT_BOX_SIZES.small}>
             <Thead>
               <Tr>
                 <Th color={HEDERA_BRANDING_COLORS.violet}>Owner</Th>
@@ -343,7 +339,7 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
                 };
                 return (
                   <Tr key={`${record.owner}${record.operator}`}>
-                    <Td onClick={() => copyWalletAddress(record.owner)} className="cursor-pointer">
+                    <Td onClick={() => copyContentToClipboard(record.owner)} className="cursor-pointer">
                       <Popover>
                         <PopoverTrigger>
                           <div className="flex gap-1 items-center">
@@ -360,7 +356,7 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
                         </PopoverContent>
                       </Popover>
                     </Td>
-                    <Td onClick={() => copyWalletAddress(record.operator)} className="cursor-pointer">
+                    <Td onClick={() => copyContentToClipboard(record.operator)} className="cursor-pointer">
                       <Popover>
                         <PopoverTrigger>
                           <div className="flex gap-1 items-center">

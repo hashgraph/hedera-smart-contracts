@@ -77,7 +77,7 @@ const ERC721Transfer = ({ baseContract }: PageProps) => {
       undefined,
       setTransactionResults
     );
-  }, [toaster]);
+  }, [toaster, transactionResultStorageKey]);
 
   /** @dev handle execute methods */
   const handleExecutingMethods = async (method: 'TRANSFER_FROM' | 'SAFE_TRANSFER_FROM', params: any) => {

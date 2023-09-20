@@ -27,6 +27,7 @@ import { CommonErrorToast } from '@/components/toast/CommonToast';
 import MultiLineMethod from '@/components/common/MultiLineMethod';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { copyContentToClipboard } from '../../../shared/methods/common';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
 import { handleErc20TokenPermissions } from '@/api/hedera/erc20-interactions';
 import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
@@ -304,11 +305,6 @@ const TokenPermission = ({ baseContract }: PageProps) => {
     }
   }, [successStatus, toaster]);
 
-  /** @dev copy content to clipboard */
-  const copyWalletAddress = (content: string) => {
-    navigator.clipboard.writeText(content);
-  };
-
   return (
     <div className="w-full mx-3 flex flex-col gap-20">
       {/* wrapper */}
@@ -437,7 +433,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
                 };
                 return (
                   <Tr key={`${allowance.owner}${allowance.spender}`}>
-                    <Td onClick={() => copyWalletAddress(allowance.owner)} className="cursor-pointer">
+                    <Td onClick={() => copyContentToClipboard(allowance.owner)} className="cursor-pointer">
                       <Popover>
                         <PopoverTrigger>
                           <div className="flex gap-1 items-center">
@@ -454,7 +450,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
                         </PopoverContent>
                       </Popover>
                     </Td>
-                    <Td onClick={() => copyWalletAddress(allowance.spender)} className="cursor-pointer">
+                    <Td onClick={() => copyContentToClipboard(allowance.spender)} className="cursor-pointer">
                       <Popover>
                         <PopoverTrigger>
                           <div className="flex gap-1 items-center">
