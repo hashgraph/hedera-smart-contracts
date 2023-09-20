@@ -284,10 +284,11 @@ export const erc721Transfers = async (
 
       case 'SAFE_TRANSFER_FROM':
         // Typed function signature to specify the safeTransferFrom function
-        const safeTransferFunctionSignature = 'safeTransferFrom(address,address,uint256,bytes)';
+        // @logic there are two safeTransferFrom functions with different params, without specifying the function signature =>`TypeError: ambiguous function description`
+        const safeTransferFromFunctionSignature = 'safeTransferFrom(address,address,uint256,bytes)';
 
         const safeTransferReceipt = await (
-          await baseContract[safeTransferFunctionSignature](
+          await baseContract[safeTransferFromFunctionSignature](
             senderAddress,
             recipientAddress,
             tokenId,

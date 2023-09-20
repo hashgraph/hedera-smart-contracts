@@ -25,8 +25,8 @@ import { AiOutlineMinus } from 'react-icons/ai';
 import { IoRefreshOutline } from 'react-icons/io5';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { erc721TokenApprove } from '@/api/hedera/erc721-interactions';
-import { copyWalletAddress, handleRemoveRecord } from '../methods/common';
 import { HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
+import { copyContentToClipboard, handleRemoveRecord } from '../methods/common';
 import { Tr, Td, Popover, PopoverTrigger, PopoverContent, Tooltip } from '@chakra-ui/react';
 
 interface PageProps {
@@ -65,7 +65,7 @@ const useUpdateMapStateUILocalStorage = ({
               </Td>
               <Td
                 onClick={() => {
-                  itTokenURI !== '' && copyWalletAddress(itTokenURI);
+                  itTokenURI !== '' && copyContentToClipboard(itTokenURI);
                 }}
                 className="cursor-pointer w-full max-w-[100px]"
               >
@@ -123,7 +123,7 @@ const useUpdateMapStateUILocalStorage = ({
         mapValues.forEach((amount: any, account: any) => {
           UIreactNodes.push(
             <Tr key={account}>
-              <Td onClick={() => copyWalletAddress(account)} className="cursor-pointer">
+              <Td onClick={() => copyContentToClipboard(account)} className="cursor-pointer">
                 {/* account field */}
                 <Popover>
                   <PopoverTrigger>
@@ -181,7 +181,7 @@ const useUpdateMapStateUILocalStorage = ({
               </Td>
               <Td
                 onClick={() => {
-                  itTokenOwner !== '' && copyWalletAddress(itTokenOwner);
+                  itTokenOwner !== '' && copyContentToClipboard(itTokenOwner);
                 }}
                 className="cursor-pointer w-full max-w-[100px]"
               >
@@ -267,7 +267,7 @@ const useUpdateMapStateUILocalStorage = ({
               </Td>
               <Td
                 onClick={() => {
-                  itTokenOwner !== '' && copyWalletAddress(itTokenOwner);
+                  itTokenOwner !== '' && copyContentToClipboard(itTokenOwner);
                 }}
                 className="cursor-pointer w-full"
               >

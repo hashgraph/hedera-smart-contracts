@@ -271,7 +271,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
       'owner',
       'approve',
       'operatorApproval',
-      'transfer',
+      'transferFrom',
     ],
   },
 };
@@ -364,10 +364,14 @@ export const HEDERA_TRANSACTION_RESULT_STORAGE_KEYS = {
   'ERC721-RESULT': {
     'TOKEN-MINT': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-MINT'),
     'OWNER-OF': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'OWNER-OF', true),
+    'SET-APPROVAL': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'SET-APPROVAL'),
     'TOKEN-URI': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-URI', true),
     'BALANCE-OF': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'BALANCE-OF', true),
     'GET-APPROVE': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'GET-APPROVE', true),
+    'TOKEN-TRANSFER': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-TRANSFER'),
+    'GET-APPROVAL': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'GET-APPROVAL', true),
     'TOKEN-PERMISSION': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-PERMISSION'),
+    'APPROVAL-STATUS': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'APPROVAL-STATUS', true),
   },
 };
 
