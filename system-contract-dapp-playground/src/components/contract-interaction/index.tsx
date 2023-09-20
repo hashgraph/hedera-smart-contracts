@@ -374,7 +374,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
 
                     {/* HRC contract */}
                     {contract.name === 'PrngSystemContract' && (
-                      <HederaPRNGMethods method={method} network={network as string} />
+                      <HederaPRNGMethods baseContract={baseContract! as Contract} />
                     )}
 
                     {/* ERC-20 */}

@@ -27,8 +27,8 @@ import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import { IHederaTokenServiceKeyType, TransactionResult } from '@/types/contract-interactions/HTS';
 import {
   HEDERA_BRANDING_COLORS,
-  HEDERA_CHAKRA_INPUT_BOX_SIZES,
   HEDERA_CHAKRA_TABLE_VARIANTS,
+  HEDERA_CHAKRA_INPUT_BOX_SIZES,
 } from '@/utils/common/constants';
 import {
   Tr,
@@ -61,6 +61,7 @@ interface TransactionResultTablePageProps {
   setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>;
   setKeyTypeFromTxResult?: Dispatch<SetStateAction<IHederaTokenServiceKeyType>>;
   API:
+    | 'PRNG'
     | 'GrantKYC'
     | 'TokenMint'
     | 'TokenCreate'
@@ -94,6 +95,7 @@ export const TransactionResultTable = ({
   let beginingHashIndex: number, endingHashIndex: number;
   switch (API) {
     case 'TokenCreate':
+    case 'PRNG':
       beginingHashIndex = 15;
       endingHashIndex = -12;
       break;
@@ -127,7 +129,7 @@ export const TransactionResultTable = ({
             </Th>
             <Th color={HEDERA_BRANDING_COLORS.violet}>Status</Th>
             <Th color={HEDERA_BRANDING_COLORS.violet}>Tx hash</Th>
-            {API !== 'CryptoTransfer' && (
+            {API !== 'CryptoTransfer' && API !== 'PRNG' && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>{`Token ${
                 API !== 'TransferSingle' ? `Address` : ``
               }`}</Th>
@@ -149,6 +151,7 @@ export const TransactionResultTable = ({
               API === 'QueryTokenPermission' ||
               API === 'QueryTokenStatus' ||
               API === 'TransferSingle') && <Th color={HEDERA_BRANDING_COLORS.violet}>API called</Th>}
+            {API === 'PRNG' && <Th color={HEDERA_BRANDING_COLORS.violet}>Seed</Th>}
             <Th />
           </Tr>
         </Thead>
@@ -545,6 +548,42 @@ export const TransactionResultTable = ({
                       </>
                     ) : (
                       <>NULL</>
+                    )}
+                  </Td>
+                )}
+
+                {/* PRNG - Pseudo Random Seed */}
+                {API === 'PRNG' && (
+                  <Td className="cursor-pointer">
+                    {transactionResult.pseudoRandomSeed ? (
+                      <div className="flex gap-1 items-center">
+                        <div
+                          onClick={() => navigator.clipboard.writeText(transactionResult.pseudoRandomSeed!)}
+                        >
+                          <Popover>
+                            <PopoverTrigger>
+                              <div className="flex gap-1 items-center">
+                                <Tooltip label="click to copy seed">
+                                  <p>
+                                    {transactionResult.pseudoRandomSeed.slice(0, beginingHashIndex)}
+                                    ...
+                                    {transactionResult.pseudoRandomSeed.slice(endingHashIndex)}
+                                  </p>
+                                </Tooltip>
+                              </div>
+                            </PopoverTrigger>
+                            <PopoverContent width={'fit-content'} border={'none'}>
+                              <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        {`${ethers.ZeroAddress.slice(0, beginingHashIndex)}...${ethers.ZeroAddress.slice(
+                          endingHashIndex
+                        )}`}
+                      </>
                     )}
                   </Td>
                 )}

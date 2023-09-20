@@ -68,7 +68,7 @@ const HIP351Section = () => {
 
           {/* content */}
           <div className="tracking-tight text-white/70">
-            A Solidity precompiled contracts that generates pseuodrandom numbers for use by both smart
+            A Solidity precompiled contracts that generates pseudorandom numbers for use by both smart
             contracts and users.
           </div>
         </div>

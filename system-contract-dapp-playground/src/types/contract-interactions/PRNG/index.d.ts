@@ -20,7 +20,7 @@
 
 /** @dev an interface for the results returned back from interacting with PRNG contract */
 interface PRNGContractResult {
+  pseudoRandomSeed?: string;
   transactionHash?: string;
-  pseudoRandomSeed?: any;
   err?: any;
 }
