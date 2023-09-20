@@ -19,16 +19,12 @@
  */
 
 /** @dev copy content to clipboard */
-export const copyWalletAddress = (content: string) => {
+export const copyContentToClipboard = (content: string) => {
   navigator.clipboard.writeText(content);
 };
 
 /** @dev handle remove record */
-export const handleRemoveRecord = (
-  targetKey: any,
-  setMap: any,
-  transactionResultStorageKey: string
-) => {
+export const handleRemoveRecord = (targetKey: any, setMap: any, transactionResultStorageKey: string) => {
   setMap((prev: any) => {
     prev.delete(targetKey);
     if (prev.size === 0) {
