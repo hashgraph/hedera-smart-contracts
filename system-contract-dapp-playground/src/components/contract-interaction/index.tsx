@@ -32,7 +32,6 @@ import { deploySmartContract } from '@/api/hedera';
 import HederaAlertDialog from '../common/AlertDialog';
 import { useCallback, useEffect, useState } from 'react';
 import { generateBaseContractInstance } from '@/api/ethers';
-import { clearCachedTransactions } from '@/api/localStorage';
 import ERC20DeployField from './erc/deployment/ERCDeployField';
 import { HederaContractAsset, NetworkName } from '@/types/common';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
@@ -58,12 +57,11 @@ import {
   PopoverTrigger,
 } from '@chakra-ui/react';
 import {
+  CONTRACT_NAMES,
   HASHSCAN_BASE_URL,
   OFFCIAL_NETWORK_NAME,
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,
-  HEDERA_SMART_CONTRACTS_ASSETS,
-  CONTRACT_NAME_TO_STORAGE_KEY_VALUE,
   HEDERA_COMMON_WALLET_REVERT_REASONS,
 } from '@/utils/common/constants';
 
@@ -227,9 +225,6 @@ const ContractInteraction = ({ contract }: PageProps) => {
     // remove contract record in cookies
     removeCookieAt(contract.name);
 
-    // remove all transactions
-    clearCachedTransactions(CONTRACT_NAME_TO_STORAGE_KEY_VALUE[contract.name]);
-
     // reset states
     setContractId('');
     setIsDeployed(false);
@@ -247,7 +242,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
       className="bg-panel rounded-xl max-w-4xl text-white border border-white/30 shadow-2xl text-lg"
     >
       {/* @notice TokenAssociation IHRC719 does not need to deploy */}
-      {isDeployed || contract.name === HEDERA_SMART_CONTRACTS_ASSETS.TOKEN_ASSOCIATION.name ? (
+      {isDeployed || contract.name === CONTRACT_NAMES.IHRC719 ? (
         <>
           {/* Tab headers */}
           <TabList
@@ -283,7 +278,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
               return (
                 <TabPanel className={`whitespace-nowrap py-4`} key={method}>
                   {/* Contract information - not for IHRC729Contract*/}
-                  {contract.name !== HEDERA_SMART_CONTRACTS_ASSETS.TOKEN_ASSOCIATION.name && (
+                  {contract.name !== CONTRACT_NAMES.IHRC719 && (
                     <>
                       <div className="pb-6 flex flex-col gap-1 px-3 relative">
                         {/* remove contract instance button */}
@@ -381,12 +376,12 @@ const ContractInteraction = ({ contract }: PageProps) => {
                   {/* Contract methods */}
                   <div className="flex py-9 text-xl w-full h-full justify-center items-center">
                     {/* HTS Token Create */}
-                    {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.HTS_PRECOMPILED[0].name && (
+                    {contract.name === CONTRACT_NAMES.TOKEN_CREATE && (
                       <HederaTokenCreateMethods method={method} baseContract={baseContract! as Contract} />
                     )}
 
                     {/* HTS Token Management*/}
-                    {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.HTS_PRECOMPILED[1].name && (
+                    {contract.name === CONTRACT_NAMES.TOKEN_MANAGE && (
                       <HederaTokenManagementMethods
                         method={method}
                         baseContract={baseContract! as Contract}
@@ -394,32 +389,32 @@ const ContractInteraction = ({ contract }: PageProps) => {
                     )}
 
                     {/* HTS Token Query*/}
-                    {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.HTS_PRECOMPILED[2].name && (
+                    {contract.name === CONTRACT_NAMES.TOKEN_QUERY && (
                       <HederaTokenQueryMethods method={method} baseContract={baseContract! as Contract} />
                     )}
 
                     {/* HTS Token Transfer*/}
-                    {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.HTS_PRECOMPILED[3].name && (
+                    {contract.name === CONTRACT_NAMES.TOKEN_TRANSFER && (
                       <HederaTokenTransferMethods method={method} baseContract={baseContract! as Contract} />
                     )}
 
                     {/* IHRC719 contract */}
-                    {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.TOKEN_ASSOCIATION.name && (
+                    {contract.name === CONTRACT_NAMES.IHRC719 && (
                       <HederaIHRC719Methods network={network as string} />
                     )}
 
                     {/* HRC contract */}
-                    {contract.name === 'PrngSystemContract' && (
+                    {contract.name === CONTRACT_NAMES.PRNG && (
                       <HederaPRNGMethods baseContract={baseContract! as Contract} />
                     )}
 
                     {/* ERC-20 */}
-                    {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.ERC_20.name && (
+                    {contract.name === CONTRACT_NAMES.ERC20 && (
                       <ERC20Methods method={method} baseContract={baseContract! as Contract} />
                     )}
 
                     {/* ERC-721 */}
-                    {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.ERC_721.name && (
+                    {contract.name === CONTRACT_NAMES.ERC721 && (
                       <ERC721Methods method={method} baseContract={baseContract! as Contract} />
                     )}
                   </div>
@@ -434,7 +429,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
             <p>Let&apos;s get started by deploying this contract first!</p>
 
             {/* ExchangeRate contract needs params to deploy */}
-            {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.EXCHANGE_RATE.name && (
+            {contract.name === CONTRACT_NAMES.EXCHANGE_RATE && (
               <ExchangeRateDeployField
                 isDeploying={isDeploying}
                 setDeployedParams={setDeployedParams}
@@ -443,8 +438,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
             )}
 
             {/* ERC20 & ERC721 contract needs params to deploy */}
-            {(contract.name === HEDERA_SMART_CONTRACTS_ASSETS.ERC_20.name ||
-              contract.name === HEDERA_SMART_CONTRACTS_ASSETS.ERC_721.name) && (
+            {(contract.name === CONTRACT_NAMES.ERC20 || contract.name === CONTRACT_NAMES.ERC721) && (
               <ERC20DeployField
                 isDeploying={isDeploying}
                 setDeployedParams={setDeployedParams}
@@ -453,9 +447,9 @@ const ContractInteraction = ({ contract }: PageProps) => {
             )}
 
             {/* Contracts other than ExchangeRate, ERC20, ERC20 does not need params to deploy */}
-            {contract.name !== HEDERA_SMART_CONTRACTS_ASSETS.EXCHANGE_RATE.name &&
-              contract.name !== HEDERA_SMART_CONTRACTS_ASSETS.ERC_20.name &&
-              contract.name !== HEDERA_SMART_CONTRACTS_ASSETS.ERC_721.name && (
+            {contract.name !== CONTRACT_NAMES.EXCHANGE_RATE &&
+              contract.name !== CONTRACT_NAMES.ERC20 &&
+              contract.name !== CONTRACT_NAMES.ERC721 && (
                 <button
                   onClick={handleDeployContract}
                   disabled={isDeploying}

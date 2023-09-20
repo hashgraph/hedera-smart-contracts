@@ -181,6 +181,21 @@ export const LEFT_SIDE_BAR_ITEMS = [
 ];
 
 /**
+ * @notice an object storing contract names
+ */
+export const CONTRACT_NAMES: Record<string, ContractName> = {
+  ERC20: 'ERC20Mock',
+  ERC721: 'ERC721Mock',
+  PRNG: 'PrngSystemContract',
+  IHRC719: 'IHRC729Contract',
+  TOKEN_QUERY: 'TokenQueryContract',
+  TOKEN_TRANSFER: 'TokenTransferContract',
+  EXCHANGE_RATE: 'ExchangeRatePrecompile',
+  TOKEN_MANAGE: 'TokenManagementContract',
+  TOKEN_CREATE: 'TokenCreateCustomContract',
+};
+
+/**
  * @notice information about Hedera Smart Contract assets
  */
 export const HEDERA_SMART_CONTRACTS_ASSETS = {
