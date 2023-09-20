@@ -21,18 +21,18 @@
 import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
 import { useToast } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { handleAPIErrors } from '../../shared/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../shared/hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../shared/hooks/usePaginatedTxResults';
-import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { SharedSigningKeysComponent } from '../../shared/components/SigningKeysForm';
 import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
-import { createHederaNonFungibleToken } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
 import { handleSanitizeHederaFormInputs } from '../../shared/methods/handleSanitizeFormInputs';
+import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { useUpdateTransactionResultsToLocalStorage } from '../../shared/hooks/useUpdateLocalStorage';
 import { htsTokenCreateParamFields } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
+import { createHederaNonFungibleToken } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedFormInputField,
@@ -62,6 +62,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
   const [withCustomFee, setWithCustomFee] = useState(false);
   const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
+  const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_CREATE) as string;
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-CREATE']['NON-FUNGIBLE-TOKEN'];
@@ -80,6 +81,11 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
   };
   const [paramValues, setParamValues] = useState<any>(initialParamValues);
 
+  const transactionResultsToShow = useMemo(
+    () => transactionResults.filter((result) => result.sessionedContractAddress === currentContractAddress),
+    [transactionResults, currentContractAddress]
+  );
+
   // keys states
   const [keys, setKeys] = useState<CommonKeyObject[]>([]); // keeps track of keys array to pass to the API
   const [chosenKeys, setChosenKeys] = useState(new Set<IHederaTokenServiceKeyType>()); // keeps track of keyTypes which have already been chosen in the list
@@ -96,7 +102,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
   }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResultsToShow);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string) => {
@@ -153,6 +159,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         transactionType: 'HTS-NFT-CREATE',
+        sessionedContractAddress: currentContractAddress,
       });
       return;
     } else {
@@ -162,9 +169,10 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
         {
           tokenAddress,
           status: 'success',
-          txHash: transactionHash as string,
-          transactionType: 'HTS-NFT-CREATE',
           transactionTimeStamp: Date.now(),
+          transactionType: 'HTS-NFT-CREATE',
+          txHash: transactionHash as string,
+          sessionedContractAddress: currentContractAddress,
         },
       ]);
 
@@ -280,7 +288,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
       </div>
 
       {/* transaction results table */}
-      {transactionResults.length > 0 && (
+      {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="TokenCreate"
           hederaNetwork={HEDERA_NETWORK}
@@ -288,9 +296,9 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           setTransactionResults={setTransactionResults}
           currentTransactionPage={currentTransactionPage}
+          setCurrentTransactionPage={setCurrentTransactionPage}
           transactionResultStorageKey={transactionResultStorageKey}
           paginatedTransactionResults={paginatedTransactionResults}
-          setCurrentTransactionPage={setCurrentTransactionPage}
         />
       )}
     </div>

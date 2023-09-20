@@ -64,8 +64,10 @@ export const getArrayTypedValuesFromLocalStorage = (key: string) => {
  * @dev clear HEDERA transaction results cached in localStorage
  *
  * @param contractKey?: string
+ *
+ * @param readonly?: boolean
  */
-export const clearCachedTransactions = (contractKey?: string) => {
+export const clearCachedTransactions = (contractKey?: string, readonly?: boolean) => {
   // prepare key
   const targetKey = contractKey ? contractKey : OFFCIAL_NETWORK_NAME;
 
@@ -77,8 +79,15 @@ export const clearCachedTransactions = (contractKey?: string) => {
 
       // remove items that have keys start with HEDERA
       if (key?.includes(targetKey)) {
-        localStorage.removeItem(key);
-        i--;
+        if (readonly) {
+          if (key?.includes('READONLY')) {
+            localStorage.removeItem(key);
+            i--;
+          }
+        } else {
+          localStorage.removeItem(key);
+          i--;
+        }
       }
     }
   }

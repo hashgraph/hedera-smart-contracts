@@ -21,7 +21,7 @@
 import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
 import { useToast } from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { generatedRandomUniqueKey } from '@/utils/common/helpers';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
@@ -29,14 +29,14 @@ import { handleAPIErrors } from '../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../shared/states/commonStates';
 import { useToastSuccessful } from '../../shared/hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../shared/hooks/usePaginatedTxResults';
-import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import TokenAddressesInputForm from '../../shared/components/TokenAddressesInputForm';
 import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
-import { associateHederaTokensToAccounts } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
 import { handleSanitizeHederaFormInputs } from '../../shared/methods/handleSanitizeFormInputs';
+import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { SharedFormInputField, SharedExecuteButton } from '../../shared/components/ParamInputForm';
 import { useUpdateTransactionResultsToLocalStorage } from '../../shared/hooks/useUpdateLocalStorage';
 import { htsTokenAssociateParamFields } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
+import { associateHederaTokensToAccounts } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 
 interface PageProps {
@@ -52,6 +52,7 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [paramValues, setParamValues] = useState<any>(initialParamValues);
+  const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_CREATE) as string;
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const initialTokenAddressesValues = { fieldKey: generatedRandomUniqueKey(9), fieldValue: '' };
   const transactionResultStorageKey =
@@ -59,6 +60,11 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
   const [hederaTokenAddresses, setHederaTokenAddresses] = useState<
     { fieldKey: string; fieldValue: string }[]
   >([initialTokenAddressesValues]);
+
+  const transactionResultsToShow = useMemo(
+    () => transactionResults.filter((result) => result.sessionedContractAddress === currentContractAddress),
+    [transactionResults, currentContractAddress]
+  );
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
   useEffect(() => {
@@ -71,7 +77,7 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
   }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResultsToShow);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string, fieldKey?: string) => {
@@ -147,6 +153,7 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
         setTransactionResults,
         accountAddress: associatingAddress,
         transactionType: 'HTS-TOKEN-ASSOCIATE',
+        sessionedContractAddress: currentContractAddress,
       });
       return;
     } else {
@@ -160,6 +167,7 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
           txHash: transactionHash as string,
           accountAddress: associatingAddress,
           transactionType: 'HTS-TOKEN-ASSOCIATE',
+          sessionedContractAddress: currentContractAddress,
         },
       ]);
 
@@ -218,7 +226,7 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
       </div>
 
       {/* transaction results table */}
-      {transactionResults.length > 0 && (
+      {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="TokenAssociate"
           hederaNetwork={hederaNetwork}

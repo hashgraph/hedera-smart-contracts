@@ -21,17 +21,17 @@
 import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
 import { useToast } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { useToastSuccessful } from '../../../shared/hooks/useToastSuccessful';
-import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
 import { transferSingleToken } from '@/api/hedera/hts-interactions/tokenTransfer-interactions';
 import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
+import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { SharedExecuteButton, SharedFormInputField } from '../../../shared/components/ParamInputForm';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
 import { htsTokenTransferParamFields } from '@/utils/contract-interactions/HTS/token-transfer/paramFieldConstant';
@@ -49,10 +49,11 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
   const [isSuccessful, setIsSuccessful] = useState(false);
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
-  const transactionResultStorageKey =
-    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-TRANSFER']['SINGLE-TOKEN'];
+  const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_TRANSFER) as string;
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const tokenInfoFields = ['hederaTokenAddress', 'senderAddress', 'receiverAddress', 'quantity', 'feeValue'];
+  const transactionResultStorageKey =
+    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-TRANSFER']['SINGLE-TOKEN'];
   const [isLoading, setIsLoading] = useState({
     NFT: false,
     FUNGIBLE: false,
@@ -74,6 +75,11 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
   };
   const [paramValues, setParamValues] = useState<any>(initialParamValues);
 
+  const transactionResultsToShow = useMemo(
+    () => transactionResults.filter((result) => result.sessionedContractAddress === currentContractAddress),
+    [transactionResults, currentContractAddress]
+  );
+
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
   useEffect(() => {
     handleRetrievingTransactionResultsFromLocalStorage(
@@ -85,7 +91,7 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
   }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResultsToShow);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string) => {
@@ -142,6 +148,7 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
         accountAddress: senderAddress,
         transactionType: 'HTS-TOKEN-TRANSFER',
         tokenAddress: paramValues.hederaTokenAddress,
+        sessionedContractAddress: currentContractAddress,
       });
       return;
     } else {
@@ -157,6 +164,7 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
           txHash: transactionHash as string,
           transactionType: 'HTS-TOKEN-TRANSFER',
           tokenAddress: paramValues.hederaTokenAddress,
+          sessionedContractAddress: currentContractAddress,
         },
       ]);
 
@@ -225,7 +233,7 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
         </div>
 
         {/* transaction results table */}
-        {transactionResults.length > 0 && (
+        {transactionResultsToShow.length > 0 && (
           <TransactionResultTable
             API="TransferSingle"
             hederaNetwork={hederaNetwork}

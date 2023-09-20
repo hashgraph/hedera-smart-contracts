@@ -26,11 +26,11 @@ import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
-import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
 import TokenPermissionInfoModal from '../../../shared/components/TokenPermissionInfoModal';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
+import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
 import { queryTokenPermissionInformation } from '@/api/hedera/hts-interactions/tokenQuery-interactions';
 import { htsQueryTokenPermissionParamFields } from '@/utils/contract-interactions/HTS/token-query/constant';
@@ -60,6 +60,7 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('ALLOWANCE');
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [tokenInfoFromTxResult, setTokenInfoFromTxResult] = useState<any>();
+  const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_QUERY) as string;
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const [APIMethodsFromTxResult, setAPIMethodsFromTxResult] = useState<API_NAMES>('ALLOWANCE');
   const transactionResultStorageKey =
@@ -107,6 +108,11 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
     GET_APPROVED: 'ApprovedAddress',
   };
 
+  const transactionResultsToShow = useMemo(
+    () => transactionResults.filter((result) => result.sessionedContractAddress === currentContractAddress),
+    [transactionResults, currentContractAddress]
+  );
+
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
   useEffect(() => {
     handleRetrievingTransactionResultsFromLocalStorage(
@@ -118,7 +124,7 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
   }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResultsToShow);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string) => {
@@ -169,8 +175,9 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
         setTransactionResults,
         err: tokenInfoResult.err,
         tokenAddress: paramValues.hederaTokenAddress,
-        transactionHash: tokenInfoResult.transactionHash,
         transactionType: `HTS-${API.replace('_', '-')}`,
+        transactionHash: tokenInfoResult.transactionHash,
+        sessionedContractAddress: currentContractAddress,
       });
       return;
     } else {
@@ -193,8 +200,9 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
           tokenInfo: cachedTokenInfo,
           transactionTimeStamp: Date.now(),
           tokenAddress: paramValues.hederaTokenAddress,
-          txHash: tokenInfoResult.transactionHash as string,
           transactionType: `HTS-${API.replace('_', '-')}`,
+          sessionedContractAddress: currentContractAddress,
+          txHash: tokenInfoResult.transactionHash as string,
         },
       ]);
 
@@ -264,7 +272,7 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
       </div>
 
       {/* transaction results table */}
-      {transactionResults.length > 0 && (
+      {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           onOpen={onOpen}
           API="QueryTokenPermission"

@@ -19,6 +19,7 @@
  */
 
 import Image from 'next/image';
+import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
 import { isAddress } from 'ethers';
 import MultiLineMethod from '@/components/common/MultiLineMethod';
@@ -35,6 +36,7 @@ import useRetrieveMapValueFromLocalStorage from '../../../shared/hooks/useRetrie
 import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
+  CONTRACT_NAMES,
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
@@ -50,6 +52,7 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
   const [successStatus, setSuccessStatus] = useState(false);
   const [ractNodes, setReactNodes] = useState<ReactNode[]>([]);
   const [getApproveTokenId, setGetApproveTokenId] = useState('');
+  const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC721) as string;
   const [tokenSpenders, setTokenSpenders] = useState(new Map<number, string>());
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const tokenSpenderResultsStorageKey =
@@ -121,8 +124,9 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
           toaster,
           setTransactionResults,
           err: erc721ApproveResult.err,
-          transactionHash: erc721ApproveResult.txHash,
           transactionType: 'ERC721-APPROVE',
+          transactionHash: erc721ApproveResult.txHash,
+          sessionedContractAddress: currentContractAddress,
         });
         return;
       } else {
@@ -133,8 +137,9 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
             {
               status: 'success',
               transactionTimeStamp: Date.now(),
-              txHash: erc721ApproveResult.txHash as string,
               transactionType: 'ERC721-APPROVE',
+              txHash: erc721ApproveResult.txHash as string,
+              sessionedContractAddress: currentContractAddress,
             },
           ]);
 
@@ -151,7 +156,14 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
         }
       }
     },
-    [toaster, baseContract, getApproveTokenId, approveParams.spenderAddress, approveParams.tokenId]
+    [
+      toaster,
+      baseContract,
+      getApproveTokenId,
+      approveParams.tokenId,
+      currentContractAddress,
+      approveParams.spenderAddress,
+    ]
   );
 
   /** @dev listen to change event on transactionResults state => load to localStorage  */

@@ -63,7 +63,9 @@ import {
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,
   HEDERA_COMMON_WALLET_REVERT_REASONS,
+  CONTRACT_NAME_TO_STORAGE_KEY_VALUE,
 } from '@/utils/common/constants';
+import { clearCachedTransactions } from '@/api/localStorage';
 
 interface PageProps {
   contract: HederaContractAsset;
@@ -224,6 +226,9 @@ const ContractInteraction = ({ contract }: PageProps) => {
 
     // remove contract record in cookies
     removeCookieAt(contract.name);
+
+    // remove all readonly transactions
+    clearCachedTransactions(CONTRACT_NAME_TO_STORAGE_KEY_VALUE[contract.name], true);
 
     // reset states
     setContractId('');
