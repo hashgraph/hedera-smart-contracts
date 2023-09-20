@@ -42,7 +42,6 @@ import HederaTokenQueryMethods from './hts/token-query-contract/methods';
 import HederaTokenTransferMethods from './hts/token-transfer-contract/method';
 import HederaTokenManagementMethods from './hts/token-management-contract/methods';
 import { getInfoFromCookies, removeCookieAt, storeInfoInCookies } from '@/api/cookies';
-import ExchangeRateDeployField from './exchange-rate-hip-475/deployment/ExchangeRateDeployField';
 import {
   Tab,
   Tabs,
@@ -413,6 +412,11 @@ const ContractInteraction = ({ contract }: PageProps) => {
                       <HederaPRNGMethods baseContract={baseContract! as Contract} />
                     )}
 
+                    {/* Exchange Rate */}
+                    {contract.name === 'ExchangeRatePrecompile' && (
+                      <HederaExchangeRateMethods baseContract={baseContract! as Contract} />
+                    )}
+
                     {/* ERC-20 */}
                     {contract.name === CONTRACT_NAMES.ERC20 && (
                       <ERC20Methods method={method} baseContract={baseContract! as Contract} />
@@ -430,19 +434,10 @@ const ContractInteraction = ({ contract }: PageProps) => {
         </>
       ) : (
         <>
-          <div className="min-h-[250px] flex justify-center items-center flex-col gap-6">
+          {/* For contracts that need params to deploy */}
+          <div className=" min-h-[250px] flex justify-center items-center flex-col gap-6">
             <p>Let&apos;s get started by deploying this contract first!</p>
 
-            {/* ExchangeRate contract needs params to deploy */}
-            {contract.name === CONTRACT_NAMES.EXCHANGE_RATE && (
-              <ExchangeRateDeployField
-                isDeploying={isDeploying}
-                setDeployedParams={setDeployedParams}
-                setDidDeployStart={setDidDeployStart}
-              />
-            )}
-
-            {/* ERC20 & ERC721 contract needs params to deploy */}
             {(contract.name === CONTRACT_NAMES.ERC20 || contract.name === CONTRACT_NAMES.ERC721) && (
               <ERC20DeployField
                 isDeploying={isDeploying}
@@ -451,33 +446,30 @@ const ContractInteraction = ({ contract }: PageProps) => {
               />
             )}
 
-            {/* Contracts other than ExchangeRate, ERC20, ERC20 does not need params to deploy */}
-            {contract.name !== CONTRACT_NAMES.EXCHANGE_RATE &&
-              contract.name !== CONTRACT_NAMES.ERC20 &&
-              contract.name !== CONTRACT_NAMES.ERC721 && (
-                <button
-                  onClick={handleDeployContract}
-                  disabled={isDeploying}
-                  className={`border border-hedera-green text-hedera-green px-6 py-2 rounded-xl font-medium hover:bg-hedera-green/50 hover:text-white transition duration-300 ${
-                    isDeploying && `cursor-not-allowed`
-                  }`}
-                >
-                  {isDeploying ? (
-                    <div className="flex gap-3">
-                      Deploying...
-                      <Image
-                        src={'/brandings/hedera-logomark.svg'}
-                        alt={'hedera-logomark'}
-                        width={15}
-                        height={15}
-                        className="animate-bounce"
-                      />
-                    </div>
-                  ) : (
-                    'Deploy'
-                  )}
-                </button>
-              )}
+            {contract.name !== CONTRACT_NAMES.ERC20 && contract.name !== CONTRACT_NAMES.ERC721 && (
+              <button
+                onClick={handleDeployContract}
+                disabled={isDeploying}
+                className={`border border-hedera-green text-hedera-green px-6 py-2 rounded-xl font-medium hover:bg-hedera-green/50 hover:text-white transition duration-300 ${
+                  isDeploying && `cursor-not-allowed`
+                }`}
+              >
+                {isDeploying ? (
+                  <div className="flex gap-3">
+                    Deploying...
+                    <Image
+                      src={'/brandings/hedera-logomark.svg'}
+                      alt={'hedera-logomark'}
+                      width={15}
+                      height={15}
+                      className="animate-bounce"
+                    />
+                  </div>
+                ) : (
+                  'Deploy'
+                )}
+              </button>
+            )}
           </div>
         </>
       )}
