@@ -31,6 +31,7 @@ export type TransactionResult = {
   accountAddress?: string;
   transactionType: string;
   receiverAddress?: string;
+  pseudoRandomSeed?: string;
   tokenAddresses?: string[];
   transactionTimeStamp: number;
 };
