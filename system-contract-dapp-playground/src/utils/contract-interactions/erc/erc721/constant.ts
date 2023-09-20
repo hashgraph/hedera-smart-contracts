@@ -79,3 +79,51 @@ export const isApprovalERC721ParamFields = [
     inputPlaceholder: 'Operator address..',
   },
 ];
+
+export const transferFromERC721ParamFields = [
+  {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    inputType: 'text',
+    paramKey: 'sender',
+    inputPlaceholder: 'Sender address..',
+  },
+  {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    inputType: 'text',
+    paramKey: 'recipient',
+    inputPlaceholder: 'Recipient address..',
+  },
+  {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    paramKey: 'tokenId',
+    inputType: 'number',
+    inputPlaceholder: 'Token ID..',
+  },
+];
+
+export const safeTransferFromERC721ParamFields = [
+  {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    inputType: 'text',
+    paramKey: 'sender',
+    inputPlaceholder: 'Sender address..',
+  },
+  {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    inputType: 'text',
+    paramKey: 'recipient',
+    inputPlaceholder: 'Recipient address..',
+  },
+  {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    paramKey: 'tokenId',
+    inputType: 'number',
+    inputPlaceholder: 'Token ID..',
+  },
+  {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    paramKey: 'data',
+    inputType: 'text',
+    inputPlaceholder: 'Data..',
+  },
+];
