@@ -35,6 +35,7 @@ import { manageTokenRelation } from '@/api/hedera/hts-interactions/tokenManageme
 import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
 import { htsTokenRelationParamFields } from '@/utils/contract-interactions/HTS/token-management/constant';
+import useFilterTransactionsByContractAddress from '../../../shared/hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   CONTRACT_NAMES,
@@ -111,9 +112,9 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
     },
   ];
 
-  const transactionResultsToShow = useMemo(
-    () => transactionResults.filter((result) => result.sessionedContractAddress === currentContractAddress),
-    [transactionResults, currentContractAddress]
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
   );
 
   /** @dev handle adding metadata */

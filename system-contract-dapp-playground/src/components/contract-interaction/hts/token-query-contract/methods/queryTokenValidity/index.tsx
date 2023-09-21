@@ -20,8 +20,8 @@
 
 import Cookies from 'js-cookie';
 import { useToast } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import { Contract, isAddress } from 'ethers';
-import { useEffect, useMemo, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
@@ -32,13 +32,14 @@ import { TransactionResultTable } from '../../../shared/components/TransactionRe
 import { queryTokenValidity } from '@/api/hedera/hts-interactions/tokenQuery-interactions';
 import { SharedExecuteButton, SharedFormInputField } from '../../../shared/components/ParamInputForm';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
+import useFilterTransactionsByContractAddress from '../../../shared/hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
+  CONTRACT_NAMES,
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
   HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
-  CONTRACT_NAMES,
 } from '@/utils/common/constants';
 
 interface PageProps {
@@ -57,9 +58,9 @@ const QueryTokenValidity = ({ baseContract }: PageProps) => {
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_QUERY) as string;
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-QUERY']['TOKEN-VALIDITY'];
-  const transactionResultsToShow = useMemo(
-    () => transactionResults.filter((result) => result.sessionedContractAddress === currentContractAddress),
-    [transactionResults, currentContractAddress]
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
   );
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */

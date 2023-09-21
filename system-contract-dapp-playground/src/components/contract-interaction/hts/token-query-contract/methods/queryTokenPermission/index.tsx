@@ -34,6 +34,7 @@ import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
 import { queryTokenPermissionInformation } from '@/api/hedera/hts-interactions/tokenQuery-interactions';
 import { htsQueryTokenPermissionParamFields } from '@/utils/contract-interactions/HTS/token-query/constant';
+import useFilterTransactionsByContractAddress from '../../../shared/hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedExecuteButton,
@@ -108,9 +109,9 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
     GET_APPROVED: 'ApprovedAddress',
   };
 
-  const transactionResultsToShow = useMemo(
-    () => transactionResults.filter((result) => result.sessionedContractAddress === currentContractAddress),
-    [transactionResults, currentContractAddress]
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
   );
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */

@@ -19,9 +19,9 @@
  */
 
 import Cookies from 'js-cookie';
-import { Contract, isAddress } from 'ethers';
+import { useEffect, useState } from 'react';
 import { useToast } from '@chakra-ui/react';
-import { useEffect, useMemo, useState } from 'react';
+import { Contract, isAddress } from 'ethers';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
@@ -34,6 +34,7 @@ import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/
 import { SharedExecuteButton, SharedFormInputField } from '../../../shared/components/ParamInputForm';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
 import { htsTokenStatusParamFields } from '@/utils/contract-interactions/HTS/token-management/constant';
+import useFilterTransactionsByContractAddress from '../../../shared/hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 
 interface PageProps {
@@ -68,9 +69,9 @@ const ManageTokenStatus = ({ baseContract }: PageProps) => {
     },
   ];
 
-  const transactionResultsToShow = useMemo(
-    () => transactionResults.filter((result) => result.sessionedContractAddress === currentContractAddress),
-    [transactionResults, currentContractAddress]
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
   );
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */

@@ -21,18 +21,19 @@
 import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
 import { useToast } from '@chakra-ui/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { handlePRGNAPI } from '@/api/hedera/prng-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../hts/shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../hts/shared/states/commonStates';
 import { useToastSuccessful } from '../../hts/shared/hooks/useToastSuccessful';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { usePaginatedTxResults } from '../../hts/shared/hooks/usePaginatedTxResults';
 import { SharedExecuteButtonWithFee } from '../../hts/shared/components/ParamInputForm';
 import { TransactionResultTable } from '../../hts/shared/components/TransactionResultTable';
+import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { useUpdateTransactionResultsToLocalStorage } from '../../hts/shared/hooks/useUpdateLocalStorage';
+import useFilterTransactionsByContractAddress from '../../hts/shared/hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 
 interface PageProps {
@@ -51,10 +52,9 @@ const HederaPRNGMethods = ({ baseContract }: PageProps) => {
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.PRNG) as string;
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['PRNG-RESULT']['PSEUDO-RANDOM'];
-
-  const transactionResultsToShow = useMemo(
-    () => transactionResults.filter((result) => result.sessionedContractAddress === currentContractAddress),
-    [transactionResults, currentContractAddress]
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
   );
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */

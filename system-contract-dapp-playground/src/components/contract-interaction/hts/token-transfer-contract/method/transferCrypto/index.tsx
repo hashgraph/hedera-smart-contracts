@@ -20,9 +20,9 @@
 
 import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
+import { useEffect, useState } from 'react';
 import { useToast } from '@chakra-ui/react';
 import TokenTransferForm from './TokenTransferForm';
-import { useEffect, useMemo, useState } from 'react';
 import CryptoTransferForm from './CryptoTransferForm';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
@@ -34,6 +34,7 @@ import { TransactionResultTable } from '../../../shared/components/TransactionRe
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
 import { prepareCryptoTransferList, prepareTokenTransferList } from './helpers/prepareCryptoTransferValues';
+import useFilterTransactionsByContractAddress from '../../../shared/hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   IHederaTokenServiceTokenTransferList,
@@ -65,10 +66,9 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
   const [cryptoTransferParamValues, setCryptoTransferParamValues] = useState<CryptoTransferParam[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-TRANSFER']['CRYPTO-TRANSFER'];
-
-  const transactionResultsToShow = useMemo(
-    () => transactionResults.filter((result) => result.sessionedContractAddress === currentContractAddress),
-    [transactionResults, currentContractAddress]
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
   );
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
