@@ -95,6 +95,12 @@ jobs:
     with:
       testfilter: ShanghaiOpcodes
 
+  PrngSystemContract:
+    name: PrngSystemContract Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: PrngSystemContract
+
   PublishResults:
     name: Publish Results
     if: ${{ !cancelled() }}
