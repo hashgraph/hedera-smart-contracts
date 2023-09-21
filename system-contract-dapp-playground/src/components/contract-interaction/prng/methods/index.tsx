@@ -28,11 +28,12 @@ import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../hts/shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../hts/shared/states/commonStates';
 import { useToastSuccessful } from '../../hts/shared/hooks/useToastSuccessful';
-import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { usePaginatedTxResults } from '../../hts/shared/hooks/usePaginatedTxResults';
 import { SharedExecuteButtonWithFee } from '../../hts/shared/components/ParamInputForm';
 import { TransactionResultTable } from '../../hts/shared/components/TransactionResultTable';
+import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { useUpdateTransactionResultsToLocalStorage } from '../../hts/shared/hooks/useUpdateLocalStorage';
+import useFilterTransactionsByContractAddress from '../../hts/shared/hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 
 interface PageProps {
@@ -48,8 +49,13 @@ const HederaPRNGMethods = ({ baseContract }: PageProps) => {
   const [gasLimit, setGasLimit] = useState(initialParamValues);
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
+  const currentContractAddress = Cookies.get(CONTRACT_NAMES.PRNG) as string;
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['PRNG-RESULT']['PSEUDO-RANDOM'];
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
+  );
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
   useEffect(() => {
@@ -62,7 +68,7 @@ const HederaPRNGMethods = ({ baseContract }: PageProps) => {
   }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResultsToShow);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = async (e: any, param: string) => {
@@ -108,6 +114,7 @@ const HederaPRNGMethods = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         transactionType: `PRNG`,
+        sessionedContractAddress: currentContractAddress,
       });
       return;
     } else {
@@ -116,10 +123,11 @@ const HederaPRNGMethods = ({ baseContract }: PageProps) => {
         ...prev,
         {
           status: 'success',
+          pseudoRandomSeed,
           transactionType: `PRNG`,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
-          pseudoRandomSeed,
+          sessionedContractAddress: currentContractAddress,
         },
       ]);
 
@@ -159,7 +167,7 @@ const HederaPRNGMethods = ({ baseContract }: PageProps) => {
       </div>
 
       {/* transaction results table */}
-      {transactionResults.length > 0 && (
+      {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="PRNG"
           hederaNetwork={hederaNetwork}

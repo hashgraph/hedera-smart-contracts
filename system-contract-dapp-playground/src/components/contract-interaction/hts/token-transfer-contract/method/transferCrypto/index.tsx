@@ -27,12 +27,14 @@ import CryptoTransferForm from './CryptoTransferForm';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { useToastSuccessful } from '../../../shared/hooks/useToastSuccessful';
-import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
 import { SharedExecuteButtonWithFee } from '../../../shared/components/ParamInputForm';
 import { transferCrypto } from '@/api/hedera/hts-interactions/tokenTransfer-interactions';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
+import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
+import { prepareCryptoTransferList, prepareTokenTransferList } from './helpers/prepareCryptoTransferValues';
+import useFilterTransactionsByContractAddress from '../../../shared/hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   IHederaTokenServiceTokenTransferList,
@@ -44,7 +46,6 @@ import {
   TokenTransferParam,
   generateInitialTokenTransferParamValues,
 } from './helpers/generateInitialValues';
-import { prepareCryptoTransferList, prepareTokenTransferList } from './helpers/prepareCryptoTransferValues';
 
 interface PageProps {
   baseContract: Contract;
@@ -59,11 +60,16 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const contractCaller = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
+  const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_TRANSFER) as string;
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
-  const transactionResultStorageKey =
-    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-TRANSFER']['CRYPTO-TRANSFER'];
   const [tokenTransferParamValues, setTokenTransferParamValues] = useState<TokenTransferParam[]>([]);
   const [cryptoTransferParamValues, setCryptoTransferParamValues] = useState<CryptoTransferParam[]>([]);
+  const transactionResultStorageKey =
+    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-TRANSFER']['CRYPTO-TRANSFER'];
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
+  );
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
   useEffect(() => {
@@ -246,6 +252,7 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         transactionType: 'HTS-CRYPTO-TRANSFER',
+        sessionedContractAddress: currentContractAddress,
       });
       return;
     } else {
@@ -257,6 +264,7 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
           transactionType: 'HTS-CRYPTO-TRANSFER',
+          sessionedContractAddress: currentContractAddress,
         },
       ]);
 
@@ -314,7 +322,7 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
       </div>
 
       {/* transaction results table */}
-      {transactionResults.length > 0 && (
+      {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="CryptoTransfer"
           hederaNetwork={hederaNetwork}

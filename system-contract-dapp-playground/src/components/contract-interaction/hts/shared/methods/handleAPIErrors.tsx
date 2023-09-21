@@ -20,8 +20,8 @@
 
 import { Dispatch, SetStateAction } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { IHederaTokenServiceKeyType, TransactionResult } from '@/types/contract-interactions/HTS';
 import { HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
+import { IHederaTokenServiceKeyType, TransactionResult } from '@/types/contract-interactions/HTS';
 
 /** @dev handle error returned back from invoking method APIs*/
 export const handleAPIErrors = ({
@@ -36,6 +36,7 @@ export const handleAPIErrors = ({
   transactionHash,
   receiverAddress,
   setTransactionResults,
+  sessionedContractAddress,
 }: {
   err: any;
   toaster: any;
@@ -45,6 +46,7 @@ export const handleAPIErrors = ({
   transactionType: string;
   receiverAddress?: string;
   tokenAddresses?: string[];
+  sessionedContractAddress: string;
   transactionHash: string | undefined;
   keyTypeCalled?: IHederaTokenServiceKeyType;
   setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>;
@@ -82,6 +84,7 @@ export const handleAPIErrors = ({
         isToken: false,
         transactionType,
         txHash: transactionHash,
+        sessionedContractAddress,
         tokenAddress: tokenAddress ? tokenAddress : '',
         accountAddress: accountAddress ? accountAddress : '',
         tokenAddresses: tokenAddresses ? tokenAddresses : [''],

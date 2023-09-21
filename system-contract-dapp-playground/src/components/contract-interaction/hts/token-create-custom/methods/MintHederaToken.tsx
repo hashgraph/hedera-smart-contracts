@@ -30,16 +30,17 @@ import { TRANSACTION_PAGE_SIZE } from '../../shared/states/commonStates';
 import MetadataInputForm from '../../shared/components/MetadataInputForm';
 import { useToastSuccessful } from '../../shared/hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../shared/hooks/usePaginatedTxResults';
-import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../shared/methods/handleSanitizeFormInputs';
+import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { useUpdateTransactionResultsToLocalStorage } from '../../shared/hooks/useUpdateLocalStorage';
 import { htsTokenMintParamFields } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
+import useFilterTransactionsByContractAddress from '../../shared/hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedFormButton,
-  SharedFormInputField,
   SharedExecuteButton,
+  SharedFormInputField,
 } from '../../shared/components/ParamInputForm';
 import {
   mintHederaToken,
@@ -58,11 +59,12 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('FUNGIBLE');
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
-  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-CREATE']['MINT-TOKEN'];
+  const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_CREATE) as string;
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const [metadata, setMetadata] = useState<{ metaKey: string; metaValue: string }[]>([]);
+  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-CREATE']['MINT-TOKEN'];
   const tokenMintFields = useMemo(() => {
     return APIMethods === 'FUNGIBLE'
       ? ['tokenAddressToMint', 'amount', 'recipientAddress']
@@ -74,6 +76,11 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
     tokenAddressToMint: '',
   };
   const [paramValues, setParamValues] = useState<any>(initialParamValues);
+
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
+  );
 
   const APIButtonTitles: { API: API_NAMES; apiSwitchTitle: string; executeTitle: string }[] = [
     {
@@ -99,7 +106,7 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
   }, [toaster, transactionResultStorageKey]);
 
   /** @dev declare a paginatedTransactionResults */
-  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResultsToShow);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string, metaKey?: string) => {
@@ -185,6 +192,7 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
         setTransactionResults,
         tokenAddress: tokenAddressToMint,
         transactionHash: txRes.transactionHash,
+        sessionedContractAddress: currentContractAddress,
         transactionType: `HTS-${APIMethods === 'FUNGIBLE' ? 'TOKEN' : 'NFT'}-MINT`,
       });
       return;
@@ -198,6 +206,7 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
           transactionTimeStamp: Date.now(),
           txHash: txRes.transactionHash as string,
           tokenAddress: paramValues.tokenAddressToMint,
+          sessionedContractAddress: currentContractAddress,
           transactionType: `HTS-${APIMethods === 'FUNGIBLE' ? 'TOKEN' : 'NFT'}-MINT`,
         },
       ]);
@@ -288,10 +297,10 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
       </div>
 
       {/* transaction results table */}
-      {transactionResults.length > 0 && (
+      {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="TokenMint"
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           transactionResults={transactionResults}
           setTransactionResults={setTransactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}

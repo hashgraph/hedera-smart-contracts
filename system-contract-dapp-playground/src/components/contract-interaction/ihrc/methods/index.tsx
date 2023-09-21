@@ -122,6 +122,7 @@ const HederaIHRC719Methods = ({ network }: PageProps) => {
         toaster,
         transactionHash,
         setTransactionResults,
+        sessionedContractAddress: '',
         transactionType: `IHRC719-${API}`,
         tokenAddress: paramValues.hederaTokenAddress,
       });
@@ -132,6 +133,7 @@ const HederaIHRC719Methods = ({ network }: PageProps) => {
         ...prev,
         {
           status: 'success',
+          sessionedContractAddress: '',
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
           transactionType: `IHRC719-${API}`,

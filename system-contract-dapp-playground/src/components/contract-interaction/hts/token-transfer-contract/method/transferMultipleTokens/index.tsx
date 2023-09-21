@@ -22,15 +22,18 @@ import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
 import { useToast } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
+import TransferRecordForm from './TransferRecordForm';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { useToastSuccessful } from '../../../shared/hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
+import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
 import { SmartContractExecutionResult, TransactionResult } from '@/types/contract-interactions/HTS';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
+import useFilterTransactionsByContractAddress from '../../../shared/hooks/useFilterTransactionsByContractAddress';
 import { htsMultiTokensTransferParamFields } from '@/utils/contract-interactions/HTS/token-transfer/paramFieldConstant';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
@@ -48,8 +51,6 @@ import {
   SharedFormInputField,
   SharedExecuteButtonWithFee,
 } from '../../../shared/components/ParamInputForm';
-import TransferRecordForm from './TransferRecordForm';
-import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 
 interface PageProps {
   baseContract: Contract;
@@ -60,16 +61,17 @@ type API_NAMES = 'FUNGIBLE' | 'NON_FUNGIBLE';
 const TransferMultipleTokens = ({ baseContract }: PageProps) => {
   // general states
   const toaster = useToast();
-  const [isLoading, setIsLoading] = useState({
-    FUNGIBLE: false,
-    NON_FUNGIBLE: false,
-  });
   const [isSuccessful, setIsSuccessful] = useState(false);
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('FUNGIBLE');
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const contractCaller = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
+  const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_TRANSFER) as string;
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [isLoading, setIsLoading] = useState({
+    FUNGIBLE: false,
+    NON_FUNGIBLE: false,
+  });
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-TRANSFER']['MULTIPLE-TOKENS'];
   const tokenCommonFields = useMemo(() => {
@@ -100,6 +102,11 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
     generateInitialNonFungibleParamValue(),
   ]);
 
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
+  );
+
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
   useEffect(() => {
     handleRetrievingTransactionResultsFromLocalStorage(
@@ -111,7 +118,7 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
   }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResultsToShow);
 
   /** @dev handle modifying transfer records */
   const handleModifyTransferRecords = (
@@ -235,6 +242,7 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
         setTransactionResults,
         err: transactionResult.err,
         transactionType: 'HTS-TOKENS-TRANSFER',
+        sessionedContractAddress: currentContractAddress,
         tokenAddress: commonParamValues.hederaTokenAddress,
         transactionHash: transactionResult.transactionHash,
       });
@@ -248,6 +256,7 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
           status: 'success',
           transactionTimeStamp: Date.now(),
           transactionType: 'HTS-TOKENS-TRANSFER',
+          sessionedContractAddress: currentContractAddress,
           tokenAddress: commonParamValues.hederaTokenAddress,
           txHash: transactionResult.transactionHash as string,
         },
@@ -389,7 +398,7 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
       </div>
 
       {/* transaction results table */}
-      {transactionResults.length > 0 && (
+      {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="TokenCreate"
           hederaNetwork={hederaNetwork}

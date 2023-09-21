@@ -18,6 +18,7 @@
  *
  */
 
+import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
 import { isAddress } from 'ethers';
 import { BiCopy } from 'react-icons/bi';
@@ -49,6 +50,7 @@ import {
   TableContainer,
 } from '@chakra-ui/react';
 import {
+  CONTRACT_NAMES,
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
@@ -75,6 +77,7 @@ type ApprovalStatus = {
 const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [successStatus, setSuccessStatus] = useState(false);
+  const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC721) as string;
   const [approvalRecords, setApprovalRecords] = useState<ApprovalStatus[]>([]);
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const approvalStatusStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['GET-APPROVAL'];
@@ -167,8 +170,9 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
         toaster,
         setTransactionResults,
         err: tokenApprovalRes.err,
-        transactionHash: tokenApprovalRes.txHash,
         transactionType: 'ERC721-SET-APPROVAL',
+        transactionHash: tokenApprovalRes.txHash,
+        sessionedContractAddress: currentContractAddress,
       });
       return;
     } else {
@@ -179,8 +183,9 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
           {
             status: 'success',
             transactionTimeStamp: Date.now(),
-            txHash: tokenApprovalRes.txHash as string,
             transactionType: 'ERC721-SET-APPROVAL',
+            txHash: tokenApprovalRes.txHash as string,
+            sessionedContractAddress: currentContractAddress,
           },
         ]);
 

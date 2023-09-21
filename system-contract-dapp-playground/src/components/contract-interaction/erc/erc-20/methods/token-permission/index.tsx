@@ -18,6 +18,7 @@
  *
  */
 
+import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
 import { isAddress } from 'ethers';
 import { BiCopy } from 'react-icons/bi';
@@ -39,7 +40,14 @@ import {
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
   HEDERA_COMMON_WALLET_REVERT_REASONS,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+  CONTRACT_NAMES,
 } from '@/utils/common/constants';
+import {
+  approveParamFields,
+  allowanceParamFields,
+  increaseAllowanceParamFields,
+  decreaseAllowanceParamFields,
+} from '@/utils/contract-interactions/erc/erc20/constant';
 import {
   Td,
   Th,
@@ -54,12 +62,6 @@ import {
   PopoverTrigger,
   TableContainer,
 } from '@chakra-ui/react';
-import {
-  approveParamFields,
-  allowanceParamFields,
-  increaseAllowanceParamFields,
-  decreaseAllowanceParamFields,
-} from '@/utils/contract-interactions/erc/erc20/constant';
 
 interface PageProps {
   baseContract: Contract;
@@ -74,6 +76,7 @@ type Allowance = {
 const TokenPermission = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [allowances, setAllowances] = useState<Allowance[]>([]);
+  const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC20) as string;
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['TOKEN-PERMISSION'];
@@ -212,6 +215,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
         setTransactionResults,
         err: tokenPermissionRes.err,
         transactionHash: tokenPermissionRes.txHash,
+        sessionedContractAddress: currentContractAddress,
         transactionType: (transferTypeMap as any)[method],
       });
       return;
@@ -263,6 +267,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
             status: 'success',
             transactionTimeStamp: Date.now(),
             txHash: tokenPermissionRes.txHash as string,
+            sessionedContractAddress: currentContractAddress,
             transactionType: (transferTypeMap as any)[method],
           },
         ]);

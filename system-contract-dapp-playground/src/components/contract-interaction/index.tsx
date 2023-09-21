@@ -21,11 +21,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Contract } from 'ethers';
+import { BsTrash } from 'react-icons/bs';
 import HederaPRNGMethods from './prng/methods';
-import ERC20Methods from './erc/erc-20/methods';
 import { FiExternalLink } from 'react-icons/fi';
-import HederaIHRC719Methods from './ihrc/methods';
+import ERC20Methods from './erc/erc-20/methods';
+import ConfirmModal from '../common/ConfirmModal';
 import ERC721Methods from './erc/erc-721/methods';
+import HederaIHRC719Methods from './ihrc/methods';
 import { deploySmartContract } from '@/api/hedera';
 import HederaAlertDialog from '../common/AlertDialog';
 import { useCallback, useEffect, useState } from 'react';
@@ -34,21 +36,13 @@ import ERC20DeployField from './erc/deployment/ERCDeployField';
 import { HederaContractAsset, NetworkName } from '@/types/common';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
 import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
-import { getInfoFromCookies, storeInfoInCookies } from '@/api/cookies';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
 import HederaTokenCreateMethods from './hts/token-create-custom/methods';
 import HederaTokenQueryMethods from './hts/token-query-contract/methods';
 import HederaTokenTransferMethods from './hts/token-transfer-contract/method';
 import HederaTokenManagementMethods from './hts/token-management-contract/methods';
+import { getInfoFromCookies, removeCookieAt, storeInfoInCookies } from '@/api/cookies';
 import ExchangeRateDeployField from './exchange-rate-hip-475/deployment/ExchangeRateDeployField';
-import {
-  HASHSCAN_BASE_URL,
-  OFFCIAL_NETWORK_NAME,
-  HEDERA_BRANDING_COLORS,
-  HEDERA_CHAKRA_TABLE_VARIANTS,
-  HEDERA_SMART_CONTRACTS_ASSETS,
-  HEDERA_COMMON_WALLET_REVERT_REASONS,
-} from '@/utils/common/constants';
 import {
   Tab,
   Tabs,
@@ -58,9 +52,20 @@ import {
   TabPanel,
   useToast,
   TabPanels,
+  useDisclosure,
   PopoverContent,
   PopoverTrigger,
 } from '@chakra-ui/react';
+import {
+  CONTRACT_NAMES,
+  HASHSCAN_BASE_URL,
+  OFFCIAL_NETWORK_NAME,
+  HEDERA_BRANDING_COLORS,
+  HEDERA_CHAKRA_TABLE_VARIANTS,
+  HEDERA_COMMON_WALLET_REVERT_REASONS,
+  CONTRACT_NAME_TO_STORAGE_KEY_VALUE,
+} from '@/utils/common/constants';
+import { clearCachedTransactions } from '@/api/localStorage';
 
 interface PageProps {
   contract: HederaContractAsset;
@@ -70,6 +75,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
   const toaster = useToast();
   const [mounted, setMounted] = useState(false);
   const [contractId, setContractId] = useState('');
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [isDeployed, setIsDeployed] = useState(false);
   const [isDeploying, setIsDeploying] = useState(false);
   const [network, setNetwork] = useState<NetworkName>();
@@ -213,6 +219,24 @@ const ContractInteraction = ({ contract }: PageProps) => {
     })();
   }, [network, contractAddress, toaster]);
 
+  // handle removing contract instance
+  const handleRemoveContractInstance = () => {
+    // close the modal
+    onClose();
+
+    // remove contract record in cookies
+    removeCookieAt(contract.name);
+
+    // remove all readonly transactions
+    clearCachedTransactions(CONTRACT_NAME_TO_STORAGE_KEY_VALUE[contract.name], true);
+
+    // reset states
+    setContractId('');
+    setIsDeployed(false);
+    setContractAddress('');
+    setBaseContract(undefined);
+  };
+
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
   return (
@@ -223,7 +247,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
       className="bg-panel rounded-xl max-w-4xl text-white border border-white/30 shadow-2xl text-lg"
     >
       {/* @notice TokenAssociation IHRC719 does not need to deploy */}
-      {isDeployed || contract.name === HEDERA_SMART_CONTRACTS_ASSETS.TOKEN_ASSOCIATION.name ? (
+      {isDeployed || contract.name === CONTRACT_NAMES.IHRC719 ? (
         <>
           {/* Tab headers */}
           <TabList
@@ -259,9 +283,21 @@ const ContractInteraction = ({ contract }: PageProps) => {
               return (
                 <TabPanel className={`whitespace-nowrap py-4`} key={method}>
                   {/* Contract information - not for IHRC729Contract*/}
-                  {contract.name !== HEDERA_SMART_CONTRACTS_ASSETS.TOKEN_ASSOCIATION.name && (
+                  {contract.name !== CONTRACT_NAMES.IHRC719 && (
                     <>
-                      <div className="pb-6 flex flex-col gap-1 px-3">
+                      <div className="pb-6 flex flex-col gap-1 px-3 relative">
+                        {/* remove contract instance button */}
+                        <div className="absolute right-3 -top-3">
+                          <Tooltip label="Remove this contract instance" placement="top">
+                            <button
+                              onClick={onOpen}
+                              className={`border border-white/30 p-2 rounded-lg flex items-center justify-center cursor-pointer hover:bg-red-400 transition duration-300`}
+                            >
+                              <BsTrash />
+                            </button>
+                          </Tooltip>
+                        </div>
+
                         {/* Contract ID */}
                         <div className="flex gap-3 w-full justify-">
                           <p>Hedera contract ID: </p>
@@ -345,12 +381,12 @@ const ContractInteraction = ({ contract }: PageProps) => {
                   {/* Contract methods */}
                   <div className="flex py-9 text-xl w-full h-full justify-center items-center">
                     {/* HTS Token Create */}
-                    {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.HTS_PRECOMPILED[0].name && (
+                    {contract.name === CONTRACT_NAMES.TOKEN_CREATE && (
                       <HederaTokenCreateMethods method={method} baseContract={baseContract! as Contract} />
                     )}
 
                     {/* HTS Token Management*/}
-                    {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.HTS_PRECOMPILED[1].name && (
+                    {contract.name === CONTRACT_NAMES.TOKEN_MANAGE && (
                       <HederaTokenManagementMethods
                         method={method}
                         baseContract={baseContract! as Contract}
@@ -358,32 +394,32 @@ const ContractInteraction = ({ contract }: PageProps) => {
                     )}
 
                     {/* HTS Token Query*/}
-                    {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.HTS_PRECOMPILED[2].name && (
+                    {contract.name === CONTRACT_NAMES.TOKEN_QUERY && (
                       <HederaTokenQueryMethods method={method} baseContract={baseContract! as Contract} />
                     )}
 
                     {/* HTS Token Transfer*/}
-                    {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.HTS_PRECOMPILED[3].name && (
+                    {contract.name === CONTRACT_NAMES.TOKEN_TRANSFER && (
                       <HederaTokenTransferMethods method={method} baseContract={baseContract! as Contract} />
                     )}
 
                     {/* IHRC719 contract */}
-                    {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.TOKEN_ASSOCIATION.name && (
+                    {contract.name === CONTRACT_NAMES.IHRC719 && (
                       <HederaIHRC719Methods network={network as string} />
                     )}
 
                     {/* HRC contract */}
-                    {contract.name === 'PrngSystemContract' && (
+                    {contract.name === CONTRACT_NAMES.PRNG && (
                       <HederaPRNGMethods baseContract={baseContract! as Contract} />
                     )}
 
                     {/* ERC-20 */}
-                    {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.ERC_20.name && (
+                    {contract.name === CONTRACT_NAMES.ERC20 && (
                       <ERC20Methods method={method} baseContract={baseContract! as Contract} />
                     )}
 
                     {/* ERC-721 */}
-                    {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.ERC_721.name && (
+                    {contract.name === CONTRACT_NAMES.ERC721 && (
                       <ERC721Methods method={method} baseContract={baseContract! as Contract} />
                     )}
                   </div>
@@ -398,7 +434,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
             <p>Let&apos;s get started by deploying this contract first!</p>
 
             {/* ExchangeRate contract needs params to deploy */}
-            {contract.name === HEDERA_SMART_CONTRACTS_ASSETS.EXCHANGE_RATE.name && (
+            {contract.name === CONTRACT_NAMES.EXCHANGE_RATE && (
               <ExchangeRateDeployField
                 isDeploying={isDeploying}
                 setDeployedParams={setDeployedParams}
@@ -407,8 +443,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
             )}
 
             {/* ERC20 & ERC721 contract needs params to deploy */}
-            {(contract.name === HEDERA_SMART_CONTRACTS_ASSETS.ERC_20.name ||
-              contract.name === HEDERA_SMART_CONTRACTS_ASSETS.ERC_721.name) && (
+            {(contract.name === CONTRACT_NAMES.ERC20 || contract.name === CONTRACT_NAMES.ERC721) && (
               <ERC20DeployField
                 isDeploying={isDeploying}
                 setDeployedParams={setDeployedParams}
@@ -417,9 +452,9 @@ const ContractInteraction = ({ contract }: PageProps) => {
             )}
 
             {/* Contracts other than ExchangeRate, ERC20, ERC20 does not need params to deploy */}
-            {contract.name !== HEDERA_SMART_CONTRACTS_ASSETS.EXCHANGE_RATE.name &&
-              contract.name !== HEDERA_SMART_CONTRACTS_ASSETS.ERC_20.name &&
-              contract.name !== HEDERA_SMART_CONTRACTS_ASSETS.ERC_721.name && (
+            {contract.name !== CONTRACT_NAMES.EXCHANGE_RATE &&
+              contract.name !== CONTRACT_NAMES.ERC20 &&
+              contract.name !== CONTRACT_NAMES.ERC721 && (
                 <button
                   onClick={handleDeployContract}
                   disabled={isDeploying}
@@ -469,6 +504,21 @@ const ContractInteraction = ({ contract }: PageProps) => {
           confirmCallBack={() => setIsDeployed(true)}
         />
       )}
+
+      {/* remove current contract intance modal */}
+      <ConfirmModal
+        isOpen={isOpen}
+        onClose={onClose}
+        modalBody={
+          <p className="text-white/70">
+            By completing this action, the current contract instance and all the transactions you have made
+            against this contract will be permanently erased from the DApp&apos;s cache, but they will still
+            be accessible through HashScan or other explorer solutions.
+          </p>
+        }
+        modalHeader={'Sure to remove contract instance?'}
+        handleAcknowledge={handleRemoveContractInstance}
+      />
     </Tabs>
   );
 };
