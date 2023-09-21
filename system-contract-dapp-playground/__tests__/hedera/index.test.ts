@@ -22,6 +22,7 @@ import { ContractFactory } from 'ethers';
 import { deploySmartContract } from '@/api/hedera';
 import { HederaSmartContractResult } from '@/types/common';
 import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/common/constants';
+import { MOCK_CONTRACT_ID, MOCK_TX_HASH } from '../utils/common/constants';
 
 // Mock ethers
 jest.mock('ethers', () => {
@@ -53,13 +54,15 @@ describe('deploySmartContract', () => {
   it('should deploy the smart contract', async () => {
     // prepare states
     const deployParams = [100];
-    const contractAddr = '0x8f18eCFeC4dB88ACe84dD1c8d11eBFeDd9274324';
     const contractABI = HEDERA_SMART_CONTRACTS_ASSETS.EXCHANGE_RATE.contractABI;
     const contractBytecode = HEDERA_SMART_CONTRACTS_ASSETS.EXCHANGE_RATE.contractBytecode;
 
     // mock contractDeployTx
     const mockContractDeployTx = {
-      getAddress: jest.fn().mockResolvedValue(contractAddr),
+      getAddress: jest.fn().mockResolvedValue(MOCK_CONTRACT_ID),
+      deploymentTransaction: jest.fn().mockResolvedValue({
+        hash: MOCK_TX_HASH,
+      }),
     };
 
     // mock contract
@@ -80,7 +83,7 @@ describe('deploySmartContract', () => {
     // validation
     expect(result.err).toBeNull;
     expect(deploySmartContract).toBeCalled;
-    expect(result.contractAddress).toEqual(contractAddr);
+    expect(result.contractAddress).toEqual(MOCK_CONTRACT_ID);
     expect(mockContractDeployTx.getAddress).toHaveBeenCalled();
     expect(mockContract.deploy).toHaveBeenCalledWith(...deployParams, { gasLimit: 4_000_000 });
   });

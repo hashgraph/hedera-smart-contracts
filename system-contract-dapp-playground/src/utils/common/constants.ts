@@ -356,6 +356,7 @@ const prepareTransactionResultStorageKey = (
   return `HEDERA.${contractKey}.${methodKey}.${resultKey}-RESULTS${readonly ? `.READONLY` : ``}`;
 };
 export const HEDERA_TRANSACTION_RESULT_STORAGE_KEYS = {
+  'CONTRACT-CREATE': 'HEDERA.CONTRACT-CREATE-RESULTS',
   'TOKEN-CREATE': {
     'TOKEN-KYC': prepareTransactionResultStorageKey('HTS', 'TOKEN-CREATE', 'TOKEN-KYC'),
     'MINT-TOKEN': prepareTransactionResultStorageKey('HTS', 'TOKEN-CREATE', 'MINT-TOKEN'),
