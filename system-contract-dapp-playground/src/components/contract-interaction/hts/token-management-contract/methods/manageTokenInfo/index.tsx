@@ -31,9 +31,11 @@ import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResul
 import { SharedSigningKeysComponent } from '../../../shared/components/SigningKeysForm';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
 import { HederaTokenKeyTypes, TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
+import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
 import { manageTokenInfomation } from '@/api/hedera/hts-interactions/tokenManagement-interactions';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
+import useFilterTransactionsByContractAddress from '../../../shared/hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   DEFAULT_HEDERA_TOKEN_INFO_VALUE,
@@ -53,7 +55,6 @@ import {
   IHederaTokenServiceExpiry,
   IHederaTokenServiceHederaToken,
 } from '@/types/contract-interactions/HTS';
-import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 
 interface PageProps {
   baseContract: Contract;
@@ -69,8 +70,9 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('UPDATE_INFO');
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
-  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-MANAGE']['TOKEN-INFO'];
+  const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_MANAGE) as string;
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-MANAGE']['TOKEN-INFO'];
   const APIButtonTitles: { API: API_NAMES; apiSwitchTitle: string; executeTitle: string }[] = [
     {
       API: 'UPDATE_INFO',
@@ -106,6 +108,11 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
     hederaTokenAddress: '',
   };
   const [paramValues, setParamValues] = useState<any>(initialParamValues);
+
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
+  );
 
   const HederaTokenKeyValueType: IHederaTokenServiceKeyValueType[] = [
     'inheritAccountKey',
@@ -156,7 +163,7 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
   }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResultsToShow);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string) => {
@@ -256,6 +263,7 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         tokenAddress: hederaTokenAddress,
+        sessionedContractAddress: currentContractAddress,
         transactionType: `HTS-${APIMethods.replace('_', '-')}`,
       });
       return;
@@ -268,6 +276,7 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
           tokenAddress: hederaTokenAddress,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
+          sessionedContractAddress: currentContractAddress,
           transactionType: `HTS-${APIMethods.replace('_', '-')}`,
         },
       ]);
@@ -392,7 +401,7 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
       </div>
 
       {/* transaction results table */}
-      {transactionResults.length > 0 && (
+      {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="TokenCreate"
           hederaNetwork={hederaNetwork}

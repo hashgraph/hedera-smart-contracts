@@ -35,8 +35,10 @@ import { manageTokenRelation } from '@/api/hedera/hts-interactions/tokenManageme
 import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
 import { htsTokenRelationParamFields } from '@/utils/contract-interactions/HTS/token-management/constant';
+import useFilterTransactionsByContractAddress from '../../../shared/hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
+  CONTRACT_NAMES,
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
@@ -62,6 +64,7 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('REVOKE_KYC');
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
+  const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_MANAGE) as string;
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-MANAGE']['TOKEN-RELATION'];
@@ -109,6 +112,11 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
     },
   ];
 
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
+  );
+
   /** @dev handle adding metadata */
   const handleModifyTokenAddresses = (type: 'ADD' | 'REMOVE', removingFieldKey?: string) => {
     switch (type) {
@@ -136,7 +144,7 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
   }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResultsToShow);
 
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string, fieldKey?: string) => {
@@ -210,8 +218,9 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
         toaster,
         transactionHash,
         setTransactionResults,
-        transactionType: `HTS-${API.replace('_', '-')}`,
         tokenAddress: paramValues.hederaTokenAddress,
+        transactionType: `HTS-${API.replace('_', '-')}`,
+        sessionedContractAddress: currentContractAddress,
       });
       return;
     } else {
@@ -224,6 +233,7 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
           txHash: transactionHash as string,
           tokenAddress: paramValues.hederaTokenAddress,
           transactionType: `HTS-${API.replace('_', '-')}`,
+          sessionedContractAddress: currentContractAddress,
         },
       ]);
 
@@ -342,7 +352,7 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
       </div>
 
       {/* transaction results table */}
-      {transactionResults.length > 0 && (
+      {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="TokenCreate"
           hederaNetwork={hederaNetwork}

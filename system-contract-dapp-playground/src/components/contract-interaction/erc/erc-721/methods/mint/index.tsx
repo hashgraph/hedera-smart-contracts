@@ -18,6 +18,7 @@
  *
  */
 
+import Cookies from 'js-cookie';
 import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { Contract, isAddress } from 'ethers';
@@ -25,7 +26,7 @@ import { erc721Mint } from '@/api/hedera/erc721-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import MultiLineMethod from '@/components/common/MultiLineMethod';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
-import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
+import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { mintParamFields } from '@/utils/contract-interactions/erc/erc721/constant';
 import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
 import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
@@ -38,6 +39,7 @@ const Mint = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
+  const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC721) as string;
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['TOKEN-MINT'];
   const [mintParams, setMintParams] = useState({
@@ -74,6 +76,7 @@ const Mint = ({ baseContract }: PageProps) => {
         setTransactionResults,
         transactionHash: txHash,
         transactionType: 'ERC721-MINT',
+        sessionedContractAddress: currentContractAddress,
       });
       return;
     } else {
@@ -85,6 +88,7 @@ const Mint = ({ baseContract }: PageProps) => {
           txHash: txHash as string,
           transactionType: 'ERC721-MINT',
           transactionTimeStamp: Date.now(),
+          sessionedContractAddress: currentContractAddress,
         },
       ]);
 

@@ -27,14 +27,15 @@ import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { useToastSuccessful } from '../../../shared/hooks/useToastSuccessful';
-import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
 import { manageTokenDeduction } from '@/api/hedera/hts-interactions/tokenManagement-interactions';
+import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
 import { htsTokenDeductionParamFields } from '@/utils/contract-interactions/HTS/token-management/constant';
 import { SharedFormInputField, SharedExecuteButtonWithFee } from '../../../shared/components/ParamInputForm';
+import useFilterTransactionsByContractAddress from '../../../shared/hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 
 interface PageProps {
@@ -48,6 +49,7 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
   const [isSuccessful, setIsSuccessful] = useState(false);
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
+  const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_MANAGE) as string;
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-MANAGE']['TOKEN-DELETE'];
   const initialParamValues = {
@@ -55,6 +57,12 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
     hederaTokenAddress: '',
   };
   const [paramValues, setParamValues] = useState<any>(initialParamValues);
+
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
+  );
+
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
   useEffect(() => {
     handleRetrievingTransactionResultsFromLocalStorage(
@@ -66,7 +74,8 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
   }, [toaster, transactionResultStorageKey]);
 
   // declare a paginatedTransactionResults
-  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResults);
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResultsToShow);
+
   /** @dev handle form inputs on change */
   const handleInputOnChange = (e: any, param: string) => {
     setParamValues((prev: any) => ({ ...prev, [param]: e.target.value }));
@@ -113,6 +122,7 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
         setTransactionResults,
         tokenAddress: hederaTokenAddress,
         transactionType: 'HTS-TOKEN-DELETE',
+        sessionedContractAddress: currentContractAddress,
       });
       return;
     } else {
@@ -125,6 +135,7 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
           transactionType: 'HTS-TOKEN-DELETE',
+          sessionedContractAddress: currentContractAddress,
         },
       ]);
 
@@ -180,7 +191,7 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
       </div>
 
       {/* transaction results table */}
-      {transactionResults.length > 0 && (
+      {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="TokenCreate"
           hederaNetwork={hederaNetwork}

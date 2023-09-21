@@ -34,6 +34,7 @@ export type TransactionResult = {
   pseudoRandomSeed?: string;
   tokenAddresses?: string[];
   transactionTimeStamp: number;
+  sessionedContractAddress: string;
 };
 
 /** @dev an interface for the results returned back from interacting with Hedera System Smart Contracts */

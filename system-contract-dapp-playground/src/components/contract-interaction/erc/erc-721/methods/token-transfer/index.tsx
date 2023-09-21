@@ -18,6 +18,7 @@
  *
  */
 
+import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
 import { isAddress } from 'ethers';
 import { useToast } from '@chakra-ui/react';
@@ -27,7 +28,7 @@ import MultiLineMethod from '@/components/common/MultiLineMethod';
 import { erc721Transfers } from '@/api/hedera/erc721-interactions';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
-import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
+import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
 import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
@@ -44,6 +45,7 @@ const ERC721Transfer = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['TOKEN-TRANSFER'];
+  const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC721) as string;
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
 
   const [transferFromParams, setTransferFromParams] = useState({
@@ -120,6 +122,7 @@ const ERC721Transfer = ({ baseContract }: PageProps) => {
         setTransactionResults,
         err: tokenTransferRes.err,
         transactionHash: tokenTransferRes.txHash,
+        sessionedContractAddress: currentContractAddress,
         transactionType: `ERC721-${convertCalmelCaseFunctionName(method).replace(' ', '-')}`,
       });
       return;
@@ -133,6 +136,7 @@ const ERC721Transfer = ({ baseContract }: PageProps) => {
           status: 'success',
           transactionTimeStamp: Date.now(),
           txHash: tokenTransferRes.txHash as string,
+          sessionedContractAddress: currentContractAddress,
           transactionType: `ERC721-${convertCalmelCaseFunctionName(method).toUpperCase().replace(' ', '-')}`,
         },
       ]);

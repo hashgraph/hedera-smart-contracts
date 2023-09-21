@@ -181,6 +181,21 @@ export const LEFT_SIDE_BAR_ITEMS = [
 ];
 
 /**
+ * @notice an object storing contract names
+ */
+export const CONTRACT_NAMES: Record<string, ContractName> = {
+  ERC20: 'ERC20Mock',
+  ERC721: 'ERC721Mock',
+  PRNG: 'PrngSystemContract',
+  IHRC719: 'IHRC729Contract',
+  TOKEN_QUERY: 'TokenQueryContract',
+  TOKEN_TRANSFER: 'TokenTransferContract',
+  EXCHANGE_RATE: 'ExchangeRatePrecompile',
+  TOKEN_MANAGE: 'TokenManagementContract',
+  TOKEN_CREATE: 'TokenCreateCustomContract',
+};
+
+/**
  * @notice information about Hedera Smart Contract assets
  */
 export const HEDERA_SMART_CONTRACTS_ASSETS = {
@@ -315,6 +330,21 @@ export const HEDERA_SHARED_PARAM_INPUT_FIELDS = {
 };
 
 /**
+ * @notice a shared object maping contract name to storage key value
+ */
+export const CONTRACT_NAME_TO_STORAGE_KEY_VALUE: Record<ContractName, string> = {
+  ERC20Mock: 'ERC-20',
+  ERC721Mock: 'ERC-721',
+  IHRC729Contract: 'IHRC719',
+  PrngSystemContract: 'PRNG',
+  TokenQueryContract: 'TOKEN-QUERY',
+  TokenTransferContract: 'TOKEN-TRANSFER',
+  ExchangeRatePrecompile: 'EXCHANGE-RATE',
+  TokenManagementContract: 'TOKEN-MANAGE',
+  TokenCreateCustomContract: 'TOKEN-CREATE',
+};
+
+/**
  * @notice a shared object stores all transaction result storage keys
  */
 const prepareTransactionResultStorageKey = (
@@ -326,6 +356,7 @@ const prepareTransactionResultStorageKey = (
   return `HEDERA.${contractKey}.${methodKey}.${resultKey}-RESULTS${readonly ? `.READONLY` : ``}`;
 };
 export const HEDERA_TRANSACTION_RESULT_STORAGE_KEYS = {
+  'CONTRACT-CREATE': 'HEDERA.CONTRACT-CREATE-RESULTS',
   'TOKEN-CREATE': {
     'TOKEN-KYC': prepareTransactionResultStorageKey('HTS', 'TOKEN-CREATE', 'TOKEN-KYC'),
     'MINT-TOKEN': prepareTransactionResultStorageKey('HTS', 'TOKEN-CREATE', 'MINT-TOKEN'),

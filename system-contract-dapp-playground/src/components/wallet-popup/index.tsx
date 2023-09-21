@@ -23,7 +23,9 @@ import Image from 'next/image';
 import { ethers } from 'ethers';
 import { clearCookies } from '@/api/cookies';
 import { NetworkName } from '@/types/common';
+import ConfirmModal from '../common/ConfirmModal';
 import { BiCopy, BiCheckDouble } from 'react-icons/bi';
+import { clearCachedTransactions } from '@/api/localStorage';
 import { getBalance, getWalletProvider } from '@/api/wallet';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
@@ -31,16 +33,6 @@ import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
 import { SkeletonText, useDisclosure, useToast } from '@chakra-ui/react';
 import { BsChevronDown, BsFillQuestionOctagonFill } from 'react-icons/bs';
 import { HASHSCAN_BASE_URL, HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-} from '@chakra-ui/react';
-import { clearTransactionCache } from '@/api/localStorage';
 
 interface PageProps {
   network: NetworkName;
@@ -135,7 +127,7 @@ const WalletPopup = ({ setIsOpen, userAddress, network }: PageProps) => {
     await clearCookies();
 
     // clear localStorage cache
-    clearTransactionCache();
+    clearCachedTransactions();
 
     // redirect user to landing page
     setIsOpen(false);
@@ -278,36 +270,20 @@ const WalletPopup = ({ setIsOpen, userAddress, network }: PageProps) => {
               </p>
             </button>
 
-            <Modal isOpen={isOpen} isCentered onClose={onClose}>
-              <ModalOverlay />
-              <ModalContent
-                className="h-fit flex flex-col gap-3 rounded-xl drop-shadow-xl
-                bg-secondary text-white font-styrene w-[30rem]"
-              >
-                <ModalHeader>Sure to disconnect?</ModalHeader>
-                <ModalCloseButton />
-
-                {/* break line */}
-                <hr className="border-t border-white/40 -mt-3" />
-
-                <ModalBody>
-                  <p className="text-white/70">
-                    By completing this action, all the transactions you have made during this session will be
-                    permanently erased from the DApp&apos;s cache, but they will still be accessible through
-                    HashScan or other explorer solutions.
-                  </p>
-                </ModalBody>
-
-                <ModalFooter>
-                  <button
-                    onClick={handleDisconnect}
-                    className="border border-button-stroke-violet px-6 py-2 rounded-lg font-medium hover:bg-button-stroke-violet hover:text-white transition duration-300"
-                  >
-                    Acknowledge
-                  </button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
+            <ConfirmModal
+              isOpen={isOpen}
+              onClose={onClose}
+              modalBody={
+                <p className="text-white/70">
+                  By completing this action, all the deployed smart contract instances and all the
+                  transactions you have made during this session will be permanently erased from the
+                  DApp&apos;s cache, but they will still be accessible through HashScan or other explorer
+                  solutions.
+                </p>
+              }
+              modalHeader={'Sure to disconnect?'}
+              handleAcknowledge={handleDisconnect}
+            />
           </div>
         </div>
       </div>
