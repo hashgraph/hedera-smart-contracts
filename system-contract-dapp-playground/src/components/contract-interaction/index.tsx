@@ -32,7 +32,9 @@ import { deploySmartContract } from '@/api/hedera';
 import HederaAlertDialog from '../common/AlertDialog';
 import { useCallback, useEffect, useState } from 'react';
 import { generateBaseContractInstance } from '@/api/ethers';
+import { clearCachedTransactions } from '@/api/localStorage';
 import ERC20DeployField from './erc/deployment/ERCDeployField';
+import HederaExchangeRateMethods from './exchange-rate/methods';
 import { HederaContractAsset, NetworkName } from '@/types/common';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
 import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
@@ -64,7 +66,6 @@ import {
   HEDERA_COMMON_WALLET_REVERT_REASONS,
   CONTRACT_NAME_TO_STORAGE_KEY_VALUE,
 } from '@/utils/common/constants';
-import { clearCachedTransactions } from '@/api/localStorage';
 
 interface PageProps {
   contract: HederaContractAsset;

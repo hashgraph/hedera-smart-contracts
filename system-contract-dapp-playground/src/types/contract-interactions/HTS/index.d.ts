@@ -28,8 +28,10 @@ export type TransactionResult = {
   keyTypeCalled?: any;
   recordIndex?: number;
   tokenAddress?: string;
+  initialAmount?: string;
   accountAddress?: string;
   transactionType: string;
+  convertedAmount?: string;
   receiverAddress?: string;
   pseudoRandomSeed?: string;
   tokenAddresses?: string[];

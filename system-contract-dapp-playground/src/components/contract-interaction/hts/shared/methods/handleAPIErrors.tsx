@@ -30,6 +30,7 @@ export const handleAPIErrors = ({
   APICalled,
   tokenAddress,
   keyTypeCalled,
+  initialAmount,
   tokenAddresses,
   accountAddress,
   transactionType,
@@ -42,6 +43,7 @@ export const handleAPIErrors = ({
   toaster: any;
   APICalled?: string;
   tokenAddress?: string;
+  initialAmount?: string;
   accountAddress?: string;
   transactionType: string;
   receiverAddress?: string;
@@ -86,6 +88,7 @@ export const handleAPIErrors = ({
         txHash: transactionHash,
         sessionedContractAddress,
         tokenAddress: tokenAddress ? tokenAddress : '',
+        initialAmount: initialAmount ? initialAmount : '',
         accountAddress: accountAddress ? accountAddress : '',
         tokenAddresses: tokenAddresses ? tokenAddresses : [''],
         receiverAddress: receiverAddress ? receiverAddress : '',

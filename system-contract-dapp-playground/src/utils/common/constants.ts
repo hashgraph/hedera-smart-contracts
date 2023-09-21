@@ -407,6 +407,9 @@ export const HEDERA_TRANSACTION_RESULT_STORAGE_KEYS = {
   'PRNG-RESULT': {
     'PSEUDO-RANDOM': prepareTransactionResultStorageKey('PRNG', 'PRNG', 'PSEUDO-RANDOM'),
   },
+  'EXCHANGE-RATE-RESULT': {
+    'EXCHANGE-RATE': prepareTransactionResultStorageKey('EXCHANGE', 'EXCHANGE', 'EXCHANGE-RATE'),
+  },
 };
 
 /**

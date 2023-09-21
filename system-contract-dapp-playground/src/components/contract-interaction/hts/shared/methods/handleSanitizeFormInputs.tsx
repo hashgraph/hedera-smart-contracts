@@ -65,6 +65,7 @@ interface ParamsProps {
     | 'TokenCreate'
     | 'GET_APPROVED'
     | 'SET_APPROVAL'
+    | 'ExchangeRate'
     | 'WIPE_FUNGIBLE'
     | 'QueryTokenInfo'
     | 'QueryTokenInfo'
@@ -409,6 +410,12 @@ export const handleSanitizeHederaFormInputs = ({
     }
 
     if (!sanitizeErr && feeValue === '') {
+      sanitizeErr = 'Gas limit should be set for this transaction';
+    }
+  } else if (API === 'ExchangeRate') {
+    if (Number(amount) < 0) {
+      sanitizeErr = 'Amount to convert cannot be negative';
+    } else if (feeValue === '') {
       sanitizeErr = 'Gas limit should be set for this transaction';
     }
   }
