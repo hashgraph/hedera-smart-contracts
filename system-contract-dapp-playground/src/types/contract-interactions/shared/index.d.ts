@@ -51,7 +51,9 @@ interface ISmartContractExecutionResult {
   AllowanceValue?: any;
   ApprovedAddress?: any;
   tokenAddress?: string;
+  convertedAmount?: number;
   transactionHash?: string;
+  pseudoRandomSeed?: string;
   TokenDefaultKycStatus?: any;
   TokenDefaultFreezeStatus?: any;
   TokenInfo?: IHederaTokenServiceTokenInfo;

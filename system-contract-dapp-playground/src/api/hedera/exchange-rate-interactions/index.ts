@@ -19,6 +19,7 @@
  */
 
 import { Contract } from 'ethers';
+import { ISmartContractExecutionResult } from '@/types/contract-interactions/shared';
 
 /**
  * @dev handle converting tinycents to tinybars and vice versa
@@ -35,14 +36,14 @@ import { Contract } from 'ethers';
  *
  * @param gasLimit: number
  *
- * @return Promise<IExchangeRateContractResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const handleExchangeRate = async (
   baseContract: Contract,
   API: 'CENT_TO_BAR' | 'BAR_TO_CENT',
   amount: number,
   gasLimit: number
-): Promise<IExchangeRateContractResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize param
   if (amount < 0) {
     console.error('Amount to convert cannot be negative');
