@@ -23,18 +23,18 @@ import { Contract } from 'ethers';
 import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { handleAPIErrors } from '../../shared/methods/handleAPIErrors';
+import { handleAPIErrors } from '../../../../common/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../../../../hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../../../../hooks/usePaginatedTxResults';
 import { SharedSigningKeysComponent } from '../../shared/components/SigningKeysForm';
 import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
-import { handleSanitizeHederaFormInputs } from '../../shared/methods/handleSanitizeFormInputs';
+import { handleSanitizeHederaFormInputs } from '../../../../common/methods/handleSanitizeFormInputs';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../hooks/useUpdateLocalStorage';
 import { htsTokenCreateParamFields } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
 import { createHederaNonFungibleToken } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
 import useFilterTransactionsByContractAddress from '../../../../../hooks/useFilterTransactionsByContractAddress';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedFormInputField,
   SharedFormButton,

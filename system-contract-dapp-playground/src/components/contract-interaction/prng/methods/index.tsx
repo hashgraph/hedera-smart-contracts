@@ -25,16 +25,16 @@ import { useEffect, useState } from 'react';
 import { handlePRGNAPI } from '@/api/hedera/prng-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
-import { handleAPIErrors } from '../../hts/shared/methods/handleAPIErrors';
-import { TRANSACTION_PAGE_SIZE } from '../../hts/shared/states/commonStates';
+import { handleAPIErrors } from '../../../common/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../../../hooks/useToastSuccessful';
+import { TRANSACTION_PAGE_SIZE } from '../../hts/shared/states/commonStates';
 import { usePaginatedTxResults } from '../../../../hooks/usePaginatedTxResults';
 import { SharedExecuteButtonWithFee } from '../../hts/shared/components/ParamInputForm';
 import { TransactionResultTable } from '../../hts/shared/components/TransactionResultTable';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../hooks/useUpdateLocalStorage';
 import useFilterTransactionsByContractAddress from '../../../../hooks/useFilterTransactionsByContractAddress';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 
 interface PageProps {
   baseContract: Contract;
