@@ -147,9 +147,9 @@ export const PROTECTED_ROUTES = [
 ];
 
 /**
- * @notice information for LeftSideBar items
+ * @notice information for NavSideBar items
  */
-export const LEFT_SIDE_BAR_ITEMS = [
+export const NAV_SIDE_BAR_ITEMS = [
   {
     name: 'Overview',
     path: PROTECTED_ROUTES[0],

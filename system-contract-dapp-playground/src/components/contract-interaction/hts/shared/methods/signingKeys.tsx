@@ -34,10 +34,7 @@ export const handleAddingOrRemovingKeys = (
   if (type === 'ADD') {
     HederaTokenKeyTypes.some((keyType) => {
       if (!chosenKeys.has(keyType)) {
-        setKeys((prev) => [
-          ...prev,
-          { keyType: keyType, keyValueType: 'inheritAccountKey', keyValue: '' },
-        ]);
+        setKeys((prev) => [...prev, { keyType: keyType, keyValueType: 'inheritAccountKey', keyValue: '' }]);
 
         setChosenKeys((prev) => new Set(prev).add(keyType));
 

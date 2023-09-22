@@ -22,7 +22,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { LEFT_SIDE_BAR_ITEMS } from '@/utils/common/constants';
+import { NAV_SIDE_BAR_ITEMS } from '@/utils/common/constants';
 
 const OverviewSection = () => {
   return (
@@ -107,7 +107,7 @@ const OverviewSection = () => {
           <div className="tracking-tight text-white/70">Here are the contracts exposed on this platform:</div>
 
           <div className="grid grid-rows-2 grid-cols-3 gap-x-6 gap-y-3">
-            {LEFT_SIDE_BAR_ITEMS.slice(1).map((item) => (
+            {NAV_SIDE_BAR_ITEMS.slice(1).map((item) => (
               <Link
                 key={item.name}
                 href={item.path}
