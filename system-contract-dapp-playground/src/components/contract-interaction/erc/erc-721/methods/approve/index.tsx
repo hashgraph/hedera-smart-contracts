@@ -27,14 +27,14 @@ import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { erc721TokenApprove } from '@/api/hedera/erc721-interactions';
 import MultiLineMethod from '@/components/common/components/MultiLineMethod';
+import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
 import HederaCommonTextField from '@/components/common/components/HederaCommonTextField';
 import { Th, Tr, Table, Tbody, Thead, useToast, TableContainer } from '@chakra-ui/react';
+import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
 import { approveERC721ParamFields } from '@/utils/contract-interactions/erc/erc721/constant';
 import useUpdateMapStateUILocalStorage from '../../../shared/hooks/useUpdateMapStateUILocalStorage';
-import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
 import useRetrieveMapValueFromLocalStorage from '../../../shared/hooks/useRetrieveMapValueFromLocalStorage';
-import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   CONTRACT_NAMES,
   HEDERA_BRANDING_COLORS,

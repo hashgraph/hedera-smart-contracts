@@ -24,9 +24,9 @@ import { useEffect, useState } from 'react';
 import { useToast } from '@chakra-ui/react';
 import TokenTransferForm from './TokenTransferForm';
 import CryptoTransferForm from './CryptoTransferForm';
-import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
+import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import { SharedExecuteButtonWithFee } from '../../../shared/components/ParamInputForm';
 import { transferCrypto } from '@/api/hedera/hts-interactions/tokenTransfer-interactions';
@@ -35,7 +35,7 @@ import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { prepareCryptoTransferList, prepareTokenTransferList } from './helpers/prepareCryptoTransferValues';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   IHederaTokenServiceTokenTransferList,
   IHederaTokenServiceTransferList,

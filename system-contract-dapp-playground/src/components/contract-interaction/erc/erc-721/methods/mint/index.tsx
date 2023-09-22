@@ -26,9 +26,9 @@ import { erc721Mint } from '@/api/hedera/erc721-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import MultiLineMethod from '@/components/common/components/MultiLineMethod';
+import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
 import { mintParamFields } from '@/utils/contract-interactions/erc/erc721/constant';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
-import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
 import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
 
 interface PageProps {

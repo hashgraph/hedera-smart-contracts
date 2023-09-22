@@ -31,10 +31,10 @@ import { erc721TokenApproval } from '@/api/hedera/erc721-interactions';
 import { copyContentToClipboard } from '../../../shared/methods/common';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
 import MultiLineMethod from '@/components/common/components/MultiLineMethod';
-import { isApprovalERC721ParamFields } from '@/utils/contract-interactions/erc/erc721/constant';
-import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
+import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
 import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { isApprovalERC721ParamFields } from '@/utils/contract-interactions/erc/erc721/constant';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   Td,
   Th,

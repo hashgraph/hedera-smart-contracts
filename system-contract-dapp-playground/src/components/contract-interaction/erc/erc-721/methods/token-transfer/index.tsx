@@ -28,10 +28,10 @@ import { erc721Transfers } from '@/api/hedera/erc721-interactions';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
 import MultiLineMethod from '@/components/common/components/MultiLineMethod';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
-import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
+import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
 import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   transferFromERC721ParamFields,
   safeTransferFromERC721ParamFields,

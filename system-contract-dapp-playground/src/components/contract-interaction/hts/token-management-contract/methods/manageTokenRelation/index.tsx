@@ -25,18 +25,18 @@ import { useEffect, useMemo, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { generatedRandomUniqueKey } from '@/utils/common/helpers';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
-import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
+import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import TokenAddressesInputForm from '../../../shared/components/TokenAddressesInputForm';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
 import { manageTokenRelation } from '@/api/hedera/hts-interactions/tokenManagement-interactions';
-import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
+import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { htsTokenRelationParamFields } from '@/utils/contract-interactions/HTS/token-management/constant';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   CONTRACT_NAMES,
   HEDERA_BRANDING_COLORS,

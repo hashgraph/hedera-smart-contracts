@@ -24,18 +24,18 @@ import { useToast } from '@chakra-ui/react';
 import { useState, useMemo, useEffect } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
-import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
+import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
 import { manageTokenDeduction } from '@/api/hedera/hts-interactions/tokenManagement-interactions';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
-import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
+import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { htsTokenDeductionParamFields } from '@/utils/contract-interactions/HTS/token-management/constant';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedFormButton,
   SharedFormInputField,

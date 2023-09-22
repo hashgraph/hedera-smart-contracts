@@ -31,9 +31,9 @@ import { copyContentToClipboard } from '../../../shared/methods/common';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
 import MultiLineMethod from '@/components/common/components/MultiLineMethod';
 import { handleErc20TokenPermissions } from '@/api/hedera/erc20-interactions';
-import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
+import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
 import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,

@@ -23,7 +23,7 @@ import { useState, useEffect } from 'react';
 import { Contract, isAddress } from 'ethers';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { Select, useDisclosure, useToast } from '@chakra-ui/react';
-import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
+import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import TokenSpecificInfoModal from '../../../shared/components/TokenSpecificInfoModal';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
@@ -33,7 +33,7 @@ import { queryTokenSpecificInfomation } from '@/api/hedera/hts-interactions/toke
 import { htsQueryTokenInfoParamFields } from '@/utils/contract-interactions/HTS/token-query/constant';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedFormButton,
   SharedExecuteButton,
