@@ -26,8 +26,8 @@ import { IoRefreshOutline } from 'react-icons/io5';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { erc721TokenApprove } from '@/api/hedera/erc721-interactions';
 import { HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
-import { copyContentToClipboard, handleRemoveRecord } from '../components/common/methods/common';
 import { Tr, Td, Popover, PopoverTrigger, PopoverContent, Tooltip } from '@chakra-ui/react';
+import { copyContentToClipboard, handleRemoveMapRecord } from '../components/common/methods/common';
 
 interface PageProps {
   toaster: any;
@@ -106,7 +106,7 @@ const useUpdateMapStateUILocalStorage = ({
                 <Tooltip label="delete this record" placement="top">
                   <button
                     onClick={() => {
-                      handleRemoveRecord(itTokenID, setMapValues, transactionResultStorageKey);
+                      handleRemoveMapRecord(itTokenID, setMapValues, transactionResultStorageKey);
                     }}
                     className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-red-400 transition duration-300`}
                   >
@@ -158,7 +158,7 @@ const useUpdateMapStateUILocalStorage = ({
                 <Tooltip label="delete this record" placement="top">
                   <button
                     onClick={() => {
-                      handleRemoveRecord(account, setMapValues, transactionResultStorageKey);
+                      handleRemoveMapRecord(account, setMapValues, transactionResultStorageKey);
                     }}
                     className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-red-400 transition duration-300`}
                   >
@@ -222,7 +222,7 @@ const useUpdateMapStateUILocalStorage = ({
                 <Tooltip label="delete this record" placement="top">
                   <button
                     onClick={() => {
-                      handleRemoveRecord(itTokenID, setMapValues, transactionResultStorageKey);
+                      handleRemoveMapRecord(itTokenID, setMapValues, transactionResultStorageKey);
                     }}
                     className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-red-400 transition duration-300`}
                   >
@@ -310,7 +310,7 @@ const useUpdateMapStateUILocalStorage = ({
                 <Tooltip label="delete this record" placement="top">
                   <button
                     onClick={() => {
-                      handleRemoveRecord(itTokenID, setMapValues, transactionResultStorageKey);
+                      handleRemoveMapRecord(itTokenID, setMapValues, transactionResultStorageKey);
                     }}
                     className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-red-400 transition duration-300`}
                   >
