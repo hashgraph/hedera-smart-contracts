@@ -7,7 +7,7 @@
 
 ## Overview
 
-TBD
+An intuitive low-code playground that eliminates the complexities, reduces learning curves, and allows developers to effortlessly interact with the Hedera’s powerful system contracts.
 
 ## Getting started
 
