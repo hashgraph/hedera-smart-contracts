@@ -25,7 +25,7 @@ import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { erc721Transfers } from '@/api/hedera/erc721-interactions';
-import { ITransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
 import MultiLineMethod from '@/components/common/components/MultiLineMethod';
 import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';

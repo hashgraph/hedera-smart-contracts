@@ -29,20 +29,7 @@ import {
   TOKEN_INFO_ADVANCED_KEYS,
 } from './token-query/constant';
 import { isAddress } from 'ethers';
-import {
-  ICommonKeyObject,
-  IHederaTokenServiceExpiry,
-  IHederaTokenServiceKeyType,
-  IHederaTokenServiceTokenKey,
-  IHederaTokenServiceFixedFee,
-  IHederaTokenServiceTokenInfo,
-  IHederaTokenServiceRoyaltyFee,
-  IHederaTokenServiceKeyValueType,
-  ISmartContractExecutionResult,
-  IHederaTokenServiceFractionalFee,
-  IHederaTokenServiceFungibleTokenInfo,
-  IHederaTokenServiceNonFungibleTokenInfo,
-} from '@/types/contract-interactions/HTS';
+import { ISmartContractExecutionResult } from '@/types/contract-interactions/shared';
 import { KEY_TYPE_MAP, DEFAULT_IHTS_KEY_VALUE } from './token-create-custom/constant';
 
 /**

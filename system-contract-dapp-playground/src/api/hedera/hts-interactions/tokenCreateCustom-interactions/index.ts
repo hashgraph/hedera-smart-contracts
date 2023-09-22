@@ -23,7 +23,7 @@ import {
   prepareHederaTokenKeyArray,
 } from '@/utils/contract-interactions/HTS/helpers';
 import { Contract, ethers, isAddress } from 'ethers';
-import { ICommonKeyObject, ISmartContractExecutionResult } from '@/types/contract-interactions/HTS';
+import { ISmartContractExecutionResult } from '@/types/contract-interactions/shared';
 
 /**
  * @dev creates a Hedera fungible token

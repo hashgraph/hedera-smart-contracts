@@ -18,6 +18,7 @@
  *
  */
 
+import { Contract } from 'ethers';
 import {
   manageTokenStatus,
   manageTokenRelation,
@@ -25,12 +26,6 @@ import {
   manageTokenInfomation,
   manageTokenPermission,
 } from '@/api/hedera/hts-interactions/tokenManagement-interactions';
-import {
-  ICommonKeyObject,
-  IHederaTokenServiceExpiry,
-  IHederaTokenServiceHederaToken,
-} from '@/types/contract-interactions/HTS';
-import { Contract } from 'ethers';
 import {
   MOCK_CONTRACT_ID,
   MOCK_GAS_LIMIT,

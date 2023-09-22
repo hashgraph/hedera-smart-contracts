@@ -20,10 +20,6 @@
 
 import { Contract } from 'ethers';
 import {
-  IHederaTokenServiceTokenTransferList,
-  IHederaTokenServiceTransferList,
-} from '@/types/contract-interactions/HTS';
-import {
   MOCK_RESPONSE_CODE,
   MOCK_TX_HASH,
   MOCK_TOKEN_ADDRESS,

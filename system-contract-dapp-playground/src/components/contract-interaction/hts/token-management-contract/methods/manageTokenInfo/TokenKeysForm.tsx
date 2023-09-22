@@ -27,11 +27,6 @@ import {
   HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
 } from '@/utils/common/constants';
 import { handleKeyValueTypeOnChange, handleUpdateKeyValue } from '../../../shared/methods/signingKeys';
-import {
-  ICommonKeyObject,
-  IHederaTokenServiceKeyType,
-  IHederaTokenServiceKeyValueType,
-} from '@/types/contract-interactions/HTS';
 
 interface PageProps {
   isSuccessful?: boolean;

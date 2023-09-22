@@ -19,7 +19,6 @@
  */
 
 import { Dispatch, SetStateAction } from 'react';
-import { IHederaTokenServiceKeyType, ICommonKeyObject } from '@/types/contract-interactions/HTS';
 
 /** @dev handle updating number of keys*/
 export const handleAddingOrRemovingKeys = (

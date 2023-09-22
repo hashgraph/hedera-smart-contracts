@@ -19,11 +19,6 @@
  */
 
 import { ethers } from 'ethers';
-import {
-  IHederaTokenServiceKeyType,
-  IHederaTokenServiceKeyValue,
-  IHederaTokenServiceKeyTypeBitValue,
-} from '@/types/contract-interactions/HTS';
 import { HEDERA_SHARED_PARAM_INPUT_FIELDS } from '@/utils/common/constants';
 
 /**
@@ -31,16 +26,15 @@ import { HEDERA_SHARED_PARAM_INPUT_FIELDS } from '@/utils/common/constants';
  *
  * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L128C22-L128C22
  */
-export const KEY_TYPE_MAP: Record<IHederaTokenServiceKeyType, IHederaTokenServiceKeyTypeBitValue> =
-  {
-    ADMIN: 1,
-    KYC: 2,
-    FREEZE: 4,
-    WIPE: 8,
-    SUPPLY: 16,
-    FEE: 32,
-    PAUSE: 64,
-  };
+export const KEY_TYPE_MAP: Record<IHederaTokenServiceKeyType, IHederaTokenServiceKeyTypeBitValue> = {
+  ADMIN: 1,
+  KYC: 2,
+  FREEZE: 4,
+  WIPE: 8,
+  SUPPLY: 16,
+  FEE: 32,
+  PAUSE: 64,
+};
 
 /**
  * @notice an object of the keyValue's default values which conform to IHederaTokenService.KeyValue
@@ -104,8 +98,7 @@ export const htsTokenCreateParamFields = {
     inputType: 'text',
     paramKey: 'treasury',
     inputPlaceholder: 'The token treasury account ID...',
-    explanation:
-      'represents the account will receive the specified initial supply or the newly minted NFTs',
+    explanation: 'represents the account will receive the specified initial supply or the newly minted NFTs',
   },
   feeTokenAddress: {
     ...HEDERA_SHARED_PARAM_INPUT_FIELDS,

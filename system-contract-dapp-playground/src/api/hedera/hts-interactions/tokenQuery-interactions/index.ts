@@ -18,8 +18,8 @@
  *
  */
 
-import { IHederaTokenServiceKeyType, ISmartContractExecutionResult } from '@/types/contract-interactions/HTS';
 import { Contract, isAddress } from 'ethers';
+import { ISmartContractExecutionResult } from '@/types/contract-interactions/shared';
 import { KEY_TYPE_MAP } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
 import {
   convertsArgsProxyToHTSSpecificInfo,

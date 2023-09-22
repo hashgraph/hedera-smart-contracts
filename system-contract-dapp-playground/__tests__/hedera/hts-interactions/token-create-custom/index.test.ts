@@ -27,7 +27,6 @@ import {
   createHederaNonFungibleToken,
   associateHederaTokensToAccounts,
 } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
-import { ICommonKeyObject } from '@/types/contract-interactions/HTS';
 import { MOCK_TOKEN_ADDRESS, MOCK_TX_HASH } from '../../../utils/common/constants';
 
 describe('createHederaFungibleToken test suite', () => {

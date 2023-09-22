@@ -20,7 +20,7 @@
 
 import { Contract, ethers, isAddress } from 'ethers';
 import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/common/constants';
-import { ISmartContractExecutionResult } from '@/types/contract-interactions/HTS';
+import { ISmartContractExecutionResult } from '@/types/contract-interactions/shared';
 
 /**
  * @dev handle associating and/or dissociating token from an EOA

@@ -22,7 +22,7 @@ import { ethers } from 'ethers';
 import { TNetworkName } from '@/types/common';
 import { getCurrentChainId } from '@/api/wallet';
 import { HEDERA_NETWORKS, PROTECTED_ROUTES } from './constants';
-import { ITransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 
 /**
  * @dev validating if a route is protected

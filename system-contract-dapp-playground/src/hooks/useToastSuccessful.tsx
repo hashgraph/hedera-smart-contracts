@@ -18,11 +18,6 @@
  *
  */
 
-import {
-  ICommonKeyObject,
-  ITransactionResult,
-  IHederaTokenServiceKeyType,
-} from '@/types/contract-interactions/HTS';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import {
   HederaTokenKeyTypes,
@@ -32,6 +27,7 @@ import {
   generateInitialFungibleParamValue,
   generateInitialNonFungibleParamValue,
 } from '../components/contract-interaction/hts/token-transfer-contract/method/transferMultipleTokens/helpers/generateInitialValues';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 
 interface HookProps {
   toaster: any;

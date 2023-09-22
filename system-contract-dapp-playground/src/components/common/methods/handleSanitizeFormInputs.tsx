@@ -19,7 +19,6 @@
  */
 
 import { isAddress } from 'ethers';
-import { ICommonKeyObject } from '@/types/contract-interactions/HTS';
 import { isCompressedPublicKey } from '@/utils/contract-interactions/HTS/helpers';
 
 interface ParamsProps {

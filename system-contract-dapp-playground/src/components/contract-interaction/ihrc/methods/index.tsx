@@ -24,7 +24,7 @@ import { useToast } from '@chakra-ui/react';
 import { getWalletProvider } from '@/api/wallet';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { handleIHRC719APIs } from '@/api/hedera/ihrc-interactions';
-import { ITransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import { handleAPIErrors } from '../../../common/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../../../hooks/useToastSuccessful';
 import { TRANSACTION_PAGE_SIZE } from '../../hts/shared/states/commonStates';

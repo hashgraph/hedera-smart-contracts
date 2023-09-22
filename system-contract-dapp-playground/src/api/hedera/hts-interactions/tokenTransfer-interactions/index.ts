@@ -19,12 +19,8 @@
  */
 
 import { Contract, isAddress } from 'ethers';
-import {
-  IHederaTokenServiceTransferList,
-  IHederaTokenServiceTokenTransferList,
-  ISmartContractExecutionResult,
-} from '@/types/contract-interactions/HTS';
 import { handleContractResponse } from '@/utils/contract-interactions/HTS/helpers';
+import { ISmartContractExecutionResult } from '@/types/contract-interactions/shared';
 
 /**
  * @dev transfers Hedera Cryptos
