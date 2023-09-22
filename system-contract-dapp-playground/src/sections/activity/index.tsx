@@ -25,13 +25,13 @@ import { motion } from 'framer-motion';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { FiExternalLink } from 'react-icons/fi';
 import { useEffect, useMemo, useState } from 'react';
-import ConfirmModal from '@/components/common/ConfirmModal';
 import { prepareTransactionList } from '@/utils/common/helpers';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
+import ConfirmModal from '@/components/common/components/ConfirmModal';
 import { clearCachedTransactions, getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
-import { usePaginatedTxResults } from '@/components/contract-interaction/hts/shared/hooks/usePaginatedTxResults';
 import {
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,

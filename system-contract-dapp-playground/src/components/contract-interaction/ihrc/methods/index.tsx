@@ -27,11 +27,11 @@ import { handleIHRC719APIs } from '@/api/hedera/ihrc-interactions';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../hts/shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../hts/shared/states/commonStates';
-import { useToastSuccessful } from '../../hts/shared/hooks/useToastSuccessful';
-import { usePaginatedTxResults } from '../../hts/shared/hooks/usePaginatedTxResults';
+import { useToastSuccessful } from '../../../../hooks/useToastSuccessful';
+import { usePaginatedTxResults } from '../../../../hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../hts/shared/components/TransactionResultTable';
 import { SharedExecuteButton, SharedFormInputField } from '../../hts/shared/components/ParamInputForm';
-import { useUpdateTransactionResultsToLocalStorage } from '../../hts/shared/hooks/useUpdateLocalStorage';
+import { useUpdateTransactionResultsToLocalStorage } from '../../../../hooks/useUpdateLocalStorage';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,

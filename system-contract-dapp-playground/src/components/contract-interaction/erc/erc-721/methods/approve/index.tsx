@@ -22,18 +22,18 @@ import Image from 'next/image';
 import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
 import { isAddress } from 'ethers';
-import MultiLineMethod from '@/components/common/MultiLineMethod';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { erc721TokenApprove } from '@/api/hedera/erc721-interactions';
-import HederaCommonTextField from '@/components/common/HederaCommonTextField';
+import MultiLineMethod from '@/components/common/components/MultiLineMethod';
+import HederaCommonTextField from '@/components/common/components/HederaCommonTextField';
 import { Th, Tr, Table, Tbody, Thead, useToast, TableContainer } from '@chakra-ui/react';
 import { approveERC721ParamFields } from '@/utils/contract-interactions/erc/erc721/constant';
 import useUpdateMapStateUILocalStorage from '../../../shared/hooks/useUpdateMapStateUILocalStorage';
 import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
 import useRetrieveMapValueFromLocalStorage from '../../../shared/hooks/useRetrieveMapValueFromLocalStorage';
-import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
+import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   CONTRACT_NAMES,
