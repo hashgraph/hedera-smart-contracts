@@ -28,7 +28,7 @@ import { IoRefreshOutline } from 'react-icons/io5';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { erc721TokenApproval } from '@/api/hedera/erc721-interactions';
-import { copyContentToClipboard } from '../../../shared/methods/common';
+import { copyContentToClipboard } from '../../../../../common/methods/common';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
 import MultiLineMethod from '@/components/common/components/MultiLineMethod';
 import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';

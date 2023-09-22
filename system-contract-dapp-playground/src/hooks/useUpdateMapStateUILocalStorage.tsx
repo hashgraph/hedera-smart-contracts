@@ -26,7 +26,7 @@ import { IoRefreshOutline } from 'react-icons/io5';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { erc721TokenApprove } from '@/api/hedera/erc721-interactions';
 import { HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
-import { copyContentToClipboard, handleRemoveRecord } from '../methods/common';
+import { copyContentToClipboard, handleRemoveRecord } from '../components/common/methods/common';
 import { Tr, Td, Popover, PopoverTrigger, PopoverContent, Tooltip } from '@chakra-ui/react';
 
 interface PageProps {
