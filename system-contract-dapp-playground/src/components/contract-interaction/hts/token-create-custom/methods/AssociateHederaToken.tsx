@@ -30,7 +30,7 @@ import { useToastSuccessful } from '../../../../../hooks/useToastSuccessful';
 import { handleAPIErrors } from '../../../../common/methods/handleAPIErrors';
 import { usePaginatedTxResults } from '../../../../../hooks/usePaginatedTxResults';
 import TokenAddressesInputForm from '../../shared/components/TokenAddressesInputForm';
-import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
+import { TransactionResultTable } from '../../../../common/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../../../common/methods/handleSanitizeFormInputs';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { SharedFormInputField, SharedExecuteButton } from '../../shared/components/ParamInputForm';

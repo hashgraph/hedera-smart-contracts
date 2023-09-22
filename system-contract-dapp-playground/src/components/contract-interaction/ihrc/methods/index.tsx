@@ -29,7 +29,7 @@ import { handleAPIErrors } from '../../../common/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../../../hooks/useToastSuccessful';
 import { TRANSACTION_PAGE_SIZE } from '../../hts/shared/states/commonStates';
 import { usePaginatedTxResults } from '../../../../hooks/usePaginatedTxResults';
-import { TransactionResultTable } from '../../hts/shared/components/TransactionResultTable';
+import { TransactionResultTable } from '../../../common/components/TransactionResultTable';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../hooks/useUpdateLocalStorage';
 import { SharedExecuteButton, SharedFormInputField } from '../../hts/shared/components/ParamInputForm';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';

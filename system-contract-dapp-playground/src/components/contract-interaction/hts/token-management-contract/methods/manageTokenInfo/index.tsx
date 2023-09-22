@@ -29,7 +29,7 @@ import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import { SharedSigningKeysComponent } from '../../../shared/components/SigningKeysForm';
-import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
+import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { HederaTokenKeyTypes, TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';

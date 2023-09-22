@@ -30,7 +30,7 @@ import { useToastSuccessful } from '../../../../hooks/useToastSuccessful';
 import { TRANSACTION_PAGE_SIZE } from '../../hts/shared/states/commonStates';
 import { usePaginatedTxResults } from '../../../../hooks/usePaginatedTxResults';
 import { SharedExecuteButtonWithFee } from '../../hts/shared/components/ParamInputForm';
-import { TransactionResultTable } from '../../hts/shared/components/TransactionResultTable';
+import { TransactionResultTable } from '../../../common/components/TransactionResultTable';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../hooks/useUpdateLocalStorage';
 import useFilterTransactionsByContractAddress from '../../../../hooks/useFilterTransactionsByContractAddress';
