@@ -28,9 +28,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { prepareTransactionList } from '@/utils/common/helpers';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
+import { TransactionResult } from '@/types/contract-interactions/HTS';
 import ConfirmModal from '@/components/common/components/ConfirmModal';
+import { copyContentToClipboard } from '@/components/common/methods/common';
 import { clearCachedTransactions, getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
 import {
   HEDERA_BRANDING_COLORS,
@@ -240,7 +241,7 @@ const ActivitySection = () => {
                       {/* txHash */}
                       <Td className="cursor-pointer">
                         <div className="flex gap-1 items-center justify-between">
-                          <div onClick={() => navigator.clipboard.writeText(transaction.txHash)}>
+                          <div onClick={() => copyContentToClipboard(transaction.txHash)}>
                             <Popover>
                               <PopoverTrigger>
                                 <div className="flex gap-1 items-center">
