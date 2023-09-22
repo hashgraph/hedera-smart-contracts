@@ -39,7 +39,7 @@ import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../
 import {
   IHederaTokenServiceTokenTransferList,
   IHederaTokenServiceTransferList,
-  TransactionResult,
+  ITransactionResult,
 } from '@/types/contract-interactions/HTS';
 import {
   CryptoTransferParam,
@@ -61,7 +61,7 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const contractCaller = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_TRANSFER) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const [tokenTransferParamValues, setTokenTransferParamValues] = useState<TokenTransferParam[]>([]);
   const [cryptoTransferParamValues, setCryptoTransferParamValues] = useState<CryptoTransferParam[]>([]);
   const transactionResultStorageKey =

@@ -20,26 +20,26 @@
 
 import { ContractFactory } from 'ethers';
 import { getWalletProvider } from '../wallet';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
-import { ContractABI, HederaSmartContractResult } from '@/types/common';
+import { ITransactionResult } from '@/types/contract-interactions/HTS';
+import { IContractABI, IHederaSmartContractResult } from '@/types/common';
 import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 
 /**
  * @dev deploys smart contract to Hedera network
  *
- * @params contractABI: ContractABI
+ * @params contractABI: IContractABI
  *
  * @params contractBytecode: string
  *
- * @return Promise<HederaSmartContractResult>
+ * @return Promise<IHederaSmartContractResult>
  *
  * @resource https://github.com/ed-marquez/hedera-example-metamask-counter-dapp/blob/master/src/components/hedera/contractDeploy.js
  */
 export const deploySmartContract = async (
-  contractABI: ContractABI[],
+  contractABI: IContractABI[],
   contractBytecode: string,
   params: any[]
-): Promise<HederaSmartContractResult> => {
+): Promise<IHederaSmartContractResult> => {
   // states
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['CONTRACT-CREATE'];
 
@@ -75,7 +75,7 @@ export const deploySmartContract = async (
 
     // prepare create transaction result
     if (txReceipt) {
-      const createTransactionResult: TransactionResult = {
+      const createTransactionResult: ITransactionResult = {
         status: 'success',
         transactionTimeStamp: Date.now(),
         txHash: txReceipt.hash as string,

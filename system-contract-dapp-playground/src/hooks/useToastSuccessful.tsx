@@ -19,8 +19,8 @@
  */
 
 import {
-  CommonKeyObject,
-  TransactionResult,
+  ICommonKeyObject,
+  ITransactionResult,
   IHederaTokenServiceKeyType,
 } from '@/types/contract-interactions/HTS';
 import { Dispatch, SetStateAction, useEffect } from 'react';
@@ -47,11 +47,11 @@ interface HookProps {
   initialTokenAddressesValues?: any;
   setTokenTransferParamValues?: any;
   setCryptoTransferParamValues?: any;
-  initialKeyValues?: CommonKeyObject[];
-  transactionResults: TransactionResult[];
+  initialKeyValues?: ICommonKeyObject[];
+  transactionResults: ITransactionResult[];
   setIsSuccessful: Dispatch<SetStateAction<boolean>>;
   setWithCustomFee?: Dispatch<SetStateAction<boolean>>;
-  setKeys?: Dispatch<SetStateAction<CommonKeyObject[]>>;
+  setKeys?: Dispatch<SetStateAction<ICommonKeyObject[]>>;
   setCurrentTransactionPage: Dispatch<SetStateAction<number>>;
   setChosenKeys?: Dispatch<SetStateAction<Set<IHederaTokenServiceKeyType>>>;
   setKeyTypesToShow?: Dispatch<SetStateAction<Set<IHederaTokenServiceKeyType>>>;

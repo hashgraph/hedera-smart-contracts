@@ -41,9 +41,9 @@ import {
   SharedExecuteButtonWithFee,
 } from '../../../shared/components/ParamInputForm';
 import {
-  TransactionResult,
+  ITransactionResult,
   IHederaTokenServiceKeyType,
-  CommonKeyObject,
+  ICommonKeyObject,
 } from '@/types/contract-interactions/HTS';
 import {
   HederaTokenKeyTypes,
@@ -64,7 +64,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
   const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_CREATE) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-CREATE']['NON-FUNGIBLE-TOKEN'];
   const tokenCreateFields = {
@@ -88,7 +88,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
   );
 
   // keys states
-  const [keys, setKeys] = useState<CommonKeyObject[]>([]); // keeps track of keys array to pass to the API
+  const [keys, setKeys] = useState<ICommonKeyObject[]>([]); // keeps track of keys array to pass to the API
   const [chosenKeys, setChosenKeys] = useState(new Set<IHederaTokenServiceKeyType>()); // keeps track of keyTypes which have already been chosen in the list
   const [keyTypesToShow, setKeyTypesToShow] = useState(new Set(HederaTokenKeyTypes)); // keeps track of the left over keyTypes to show in the drop down
 

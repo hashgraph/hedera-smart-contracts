@@ -19,7 +19,7 @@
  */
 
 /** @dev the type for HTS transaction results */
-export type TransactionResult = {
+export type ITransactionResult = {
   status: 'success' | 'fail';
   txHash: string;
   APICalled?: any;
@@ -40,7 +40,7 @@ export type TransactionResult = {
 };
 
 /** @dev an interface for the results returned back from interacting with Hedera System Smart Contracts */
-interface SmartContractExecutionResult {
+interface ISmartContractExecutionResult {
   Frozen?: any;
   IsToken?: any;
   Approved?: any;
@@ -103,7 +103,7 @@ type IHederaTokenServiceKeyValueType =
  *
  * @param err?: any
  */
-interface CommonKeyObject {
+interface ICommonKeyObject {
   keyType: IHederaTokenServiceKeyType;
   keyValueType: IHederaTokenServiceKeyValueType;
   keyValue: string | boolean;

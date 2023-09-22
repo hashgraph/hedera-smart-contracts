@@ -24,7 +24,7 @@ import { useToast } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { generatedRandomUniqueKey } from '@/utils/common/helpers';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/HTS';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import MetadataInputForm from '../../../shared/components/MetadataInputForm';
 import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
@@ -62,7 +62,7 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
   const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_CREATE) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const [metadata, setMetadata] = useState<{ metaKey: string; metaValue: string }[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-CREATE']['MINT-TOKEN'];
   const tokenMintFields = useMemo(() => {

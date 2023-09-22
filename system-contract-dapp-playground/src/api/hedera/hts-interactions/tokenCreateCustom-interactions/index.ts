@@ -23,7 +23,7 @@ import {
   prepareHederaTokenKeyArray,
 } from '@/utils/contract-interactions/HTS/helpers';
 import { Contract, ethers, isAddress } from 'ethers';
-import { CommonKeyObject, SmartContractExecutionResult } from '@/types/contract-interactions/HTS';
+import { ICommonKeyObject, ISmartContractExecutionResult } from '@/types/contract-interactions/HTS';
 
 /**
  * @dev creates a Hedera fungible token
@@ -48,13 +48,13 @@ import { CommonKeyObject, SmartContractExecutionResult } from '@/types/contract-
  *
  * @param treasury: string
  *
- * @param inputKeys: CommonKeyObject[],
+ * @param inputKeys: ICommonKeyObject[],
  *
  * @param msgValue: string
  *
  * @param feeTokenAddress?: string
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  *
  * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L136
  *      for more information on the purposes of the params
@@ -69,10 +69,10 @@ export const createHederaFungibleToken = async (
   decimals: number,
   freezeDefaultStatus: boolean,
   treasury: string,
-  inputKeys: CommonKeyObject[],
+  inputKeys: ICommonKeyObject[],
   msgValue: string,
   feeTokenAddress?: string
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (initialTotalSupply < 0) {
@@ -138,9 +138,7 @@ export const createHederaFungibleToken = async (
 
     const txReceipt = await tokenCreateTx.wait();
 
-    const { data } = txReceipt.logs.filter(
-      (event: any) => event.fragment.name === 'CreatedToken'
-    )[0];
+    const { data } = txReceipt.logs.filter((event: any) => event.fragment.name === 'CreatedToken')[0];
 
     // @notice since the returned `data` is 32 byte, convert it to the public 20-byte address standard
     const tokenAddress = `0x${data.slice(-40)}`;
@@ -169,13 +167,13 @@ export const createHederaFungibleToken = async (
  *
  * @param treasury: string
  *
- * @param inputKeys: CommonKeyObject[],
+ * @param inputKeys: ICommonKeyObject[],
  *
  * @param msgValue: string
  *
  * @param feeTokenAddress?: string
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  *
  * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L136
  *      for more information on the purposes of the params
@@ -187,10 +185,10 @@ export const createHederaNonFungibleToken = async (
   memo: string,
   maxSupply: number,
   treasury: string,
-  inputKeys: CommonKeyObject[],
+  inputKeys: ICommonKeyObject[],
   msgValue: string,
   feeTokenAddress?: string
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (maxSupply < 0) {
@@ -247,9 +245,7 @@ export const createHederaNonFungibleToken = async (
 
     const txReceipt = await tokenCreateTx.wait();
 
-    const { data } = txReceipt.logs.filter(
-      (event: any) => event.fragment.name === 'CreatedToken'
-    )[0];
+    const { data } = txReceipt.logs.filter((event: any) => event.fragment.name === 'CreatedToken')[0];
 
     // @notice since the returned `data` is 32 byte, convert it to the public 20-byte address standard
     const tokenAddress = `0x${data.slice(-40)}`;
@@ -276,7 +272,7 @@ export const createHederaNonFungibleToken = async (
  *
  * @param metadata: string[]
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const mintHederaToken = async (
   baseContract: Contract,
@@ -284,7 +280,7 @@ export const mintHederaToken = async (
   hederaTokenAddress: string,
   amountToMint: number,
   metadata: string[]
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {
@@ -305,14 +301,9 @@ export const mintHederaToken = async (
 
   // execute .mintTokenPublic() method
   try {
-    const tx = await baseContract.mintTokenPublic(
-      hederaTokenAddress,
-      amountToMint,
-      bufferedMetadata,
-      {
-        gasLimit: 1_000_000,
-      }
-    );
+    const tx = await baseContract.mintTokenPublic(hederaTokenAddress, amountToMint, bufferedMetadata, {
+      gasLimit: 1_000_000,
+    });
 
     // handle contract responses
     return await handleContractResponse(tx);
@@ -339,7 +330,7 @@ export const mintHederaToken = async (
  *
  * @param metadata: string[]
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const mintHederaTokenToAddress = async (
   baseContract: Contract,
@@ -348,7 +339,7 @@ export const mintHederaTokenToAddress = async (
   recipientAddress: string,
   amountToMint: number,
   metadata: string[]
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {
@@ -412,13 +403,13 @@ export const mintHederaTokenToAddress = async (
  *
  * @param associtingAccountAddress: string
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const associateHederaTokensToAccounts = async (
   baseContract: Contract,
   hederaTokenAddresses: string[],
   associtingAccountAddress: string
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (hederaTokenAddresses.length === 0) {
@@ -445,21 +436,13 @@ export const associateHederaTokensToAccounts = async (
   try {
     let tx;
     if (hederaTokenAddresses.length === 1) {
-      tx = await baseContract.associateTokenPublic(
-        associtingAccountAddress,
-        hederaTokenAddresses[0],
-        {
-          gasLimit: 1_000_000,
-        }
-      );
+      tx = await baseContract.associateTokenPublic(associtingAccountAddress, hederaTokenAddresses[0], {
+        gasLimit: 1_000_000,
+      });
     } else {
-      tx = await baseContract.associateTokensPublic(
-        associtingAccountAddress,
-        hederaTokenAddresses,
-        {
-          gasLimit: 1_000_000,
-        }
-      );
+      tx = await baseContract.associateTokensPublic(associtingAccountAddress, hederaTokenAddresses, {
+        gasLimit: 1_000_000,
+      });
     }
 
     // handle contract responses
@@ -481,13 +464,13 @@ export const associateHederaTokensToAccounts = async (
  *
  * @param grantingKYCAccountAddress: string
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const grantTokenKYCToAccount = async (
   baseContract: Contract,
   hederaTokenAddress: string,
   grantingKYCAccountAddress: string
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {
@@ -502,11 +485,9 @@ export const grantTokenKYCToAccount = async (
   }
 
   try {
-    const tx = await baseContract.grantTokenKycPublic(
-      hederaTokenAddress,
-      grantingKYCAccountAddress,
-      { gasLimit: 1_000_000 }
-    );
+    const tx = await baseContract.grantTokenKycPublic(hederaTokenAddress, grantingKYCAccountAddress, {
+      gasLimit: 1_000_000,
+    });
 
     // handle contract responses
     return await handleContractResponse(tx);

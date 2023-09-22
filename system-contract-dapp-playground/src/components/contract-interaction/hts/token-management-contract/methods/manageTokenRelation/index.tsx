@@ -24,7 +24,7 @@ import { useToast } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { generatedRandomUniqueKey } from '@/utils/common/helpers';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/HTS';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
@@ -65,7 +65,7 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('REVOKE_KYC');
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_MANAGE) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-MANAGE']['TOKEN-RELATION'];
   const [isFreezeLoading, setIsFreezeLoading] = useState({

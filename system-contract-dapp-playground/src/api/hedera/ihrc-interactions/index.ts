@@ -20,7 +20,7 @@
 
 import { Contract, ethers, isAddress } from 'ethers';
 import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/common/constants';
-import { SmartContractExecutionResult } from '@/types/contract-interactions/HTS';
+import { ISmartContractExecutionResult } from '@/types/contract-interactions/HTS';
 
 /**
  * @dev handle associating and/or dissociating token from an EOA
@@ -35,14 +35,14 @@ import { SmartContractExecutionResult } from '@/types/contract-interactions/HTS'
  *
  * @param signer: ethers.JsonRpcSigner
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const handleIHRC719APIs = async (
   API: 'ASSOCIATE' | 'DISSOCIATE',
   hederaTokenAddress: string,
   signer: ethers.JsonRpcSigner,
   gasLimit: number
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   if (!isAddress(hederaTokenAddress)) {
     console.error('Invalid token address');

@@ -18,7 +18,7 @@
  *
  */
 
-import { WalletResult } from '@/types/common';
+import { IWalletResult } from '@/types/common';
 import { ethers, BrowserProvider } from 'ethers';
 
 /**
@@ -36,9 +36,9 @@ export const getWalletObject = () => {
 /**
  * @dev get ethersjs wallet provider (i.e. Metamask provider)
  *
- * @return WalletResult
+ * @return IWalletResult
  */
-export const getWalletProvider = (): WalletResult => {
+export const getWalletProvider = (): IWalletResult => {
   // prepare walletObject
   const walletObject = getWalletObject();
   if (!walletObject) {
@@ -57,12 +57,12 @@ export const getWalletProvider = (): WalletResult => {
  *
  * @params account: string
  *
- * @returns Promise<WalletResult>
+ * @returns Promise<IWalletResult>
  */
 export const getBalance = async (
   walletProvider: ethers.BrowserProvider,
   account: string
-): Promise<WalletResult> => {
+): Promise<IWalletResult> => {
   try {
     const balance = await walletProvider.send('eth_getBalance', [account]);
     return {
@@ -79,11 +79,9 @@ export const getBalance = async (
  *
  * @params walletProvider: ethers.BrowserProvider
  *
- * @returns Promise<WalletResult>
+ * @returns Promise<IWalletResult>
  */
-export const getCurrentChainId = async (
-  walletProvider: ethers.BrowserProvider
-): Promise<WalletResult> => {
+export const getCurrentChainId = async (walletProvider: ethers.BrowserProvider): Promise<IWalletResult> => {
   try {
     const currentChainId = await walletProvider.send('eth_chainId', []);
     return {
@@ -99,11 +97,9 @@ export const getCurrentChainId = async (
  *
  * @params walletProvider: ethers.BrowserProvider
  *
- * @returns Promise<WalletResult>
+ * @returns Promise<IWalletResult>
  */
-export const requestAccount = async (
-  walletProvider: ethers.BrowserProvider
-): Promise<WalletResult> => {
+export const requestAccount = async (walletProvider: ethers.BrowserProvider): Promise<IWalletResult> => {
   try {
     const accounts: [string] = await walletProvider.send('eth_requestAccounts', []);
     return {

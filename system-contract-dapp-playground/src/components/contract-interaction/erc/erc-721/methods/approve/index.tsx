@@ -24,7 +24,7 @@ import { Contract } from 'ethers';
 import { isAddress } from 'ethers';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/HTS';
 import { erc721TokenApprove } from '@/api/hedera/erc721-interactions';
 import MultiLineMethod from '@/components/common/components/MultiLineMethod';
 import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
@@ -54,7 +54,7 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
   const [getApproveTokenId, setGetApproveTokenId] = useState('');
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC721) as string;
   const [tokenSpenders, setTokenSpenders] = useState(new Map<number, string>());
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const tokenSpenderResultsStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['GET-APPROVE'];
   const transactionResultStorageKey =

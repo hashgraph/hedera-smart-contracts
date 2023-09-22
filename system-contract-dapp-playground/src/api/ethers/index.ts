@@ -20,21 +20,21 @@
 
 import { ethers } from 'ethers';
 import { getWalletProvider } from '../wallet';
-import { ContractABI, EthersResult } from '@/types/common';
+import { IContractABI, IEthersResult } from '@/types/common';
 
 /**
  * @dev generate a new ethers.Contract instance at contractAddress
  *
  * @param contractAddress: string
  *
- * @param contractABI: ContractABI[]
+ * @param contractABI: IContractABI[]
  *
- * @return Promise<EthersResult>
+ * @return Promise<IEthersResult>
  */
 export const generateBaseContractInstance = async (
   contractAddress: string,
-  contractABI: ContractABI[]
-): Promise<EthersResult> => {
+  contractABI: IContractABI[]
+): Promise<IEthersResult> => {
   // get wallet provider
   const walletProvider = getWalletProvider();
   if (walletProvider.err || !walletProvider.walletProvider) {
@@ -46,11 +46,7 @@ export const generateBaseContractInstance = async (
     const walletSigner = await walletProvider.walletProvider.getSigner();
 
     // generate a new ethers.Contract instance
-    const baseContract = new ethers.Contract(
-      contractAddress,
-      JSON.stringify(contractABI),
-      walletSigner
-    );
+    const baseContract = new ethers.Contract(contractAddress, JSON.stringify(contractABI), walletSigner);
 
     return { baseContract };
   } catch (err) {

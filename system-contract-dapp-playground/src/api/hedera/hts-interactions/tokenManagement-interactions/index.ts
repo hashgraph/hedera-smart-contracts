@@ -19,10 +19,10 @@
  */
 
 import {
-  CommonKeyObject,
+  ICommonKeyObject,
   IHederaTokenServiceExpiry,
   IHederaTokenServiceHederaToken,
-  SmartContractExecutionResult,
+  ISmartContractExecutionResult,
 } from '@/types/contract-interactions/HTS';
 import {
   handleContractResponse,
@@ -51,9 +51,9 @@ import { Contract, isAddress } from 'ethers';
  *
  * @param expiryInfo?: IHederaTokenServiceExpiry
  *
- * @param keysInfo?: CommonKeyObject[],
+ * @param keysInfo?: ICommonKeyObject[],
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const manageTokenInfomation = async (
   baseContract: Contract,
@@ -62,8 +62,8 @@ export const manageTokenInfomation = async (
   gasLimit: number,
   tokenInfo?: IHederaTokenServiceHederaToken,
   expiryInfo?: IHederaTokenServiceExpiry,
-  keysInfo?: CommonKeyObject[]
-): Promise<SmartContractExecutionResult> => {
+  keysInfo?: ICommonKeyObject[]
+): Promise<ISmartContractExecutionResult> => {
   // sanitize param
   if (!isAddress(hederaTokenAddress)) {
     console.error('Invalid token address');
@@ -79,22 +79,18 @@ export const manageTokenInfomation = async (
         if (!tokenInfo) {
           errMsg = 'Token information object is needed for UPDATE_INFO API';
         } else {
-          transactionResult = await baseContract.updateTokenInfoPublic(
-            hederaTokenAddress,
-            tokenInfo,
-            { gasLimit }
-          );
+          transactionResult = await baseContract.updateTokenInfoPublic(hederaTokenAddress, tokenInfo, {
+            gasLimit,
+          });
         }
         break;
       case 'UPDATE_EXPIRY':
         if (!expiryInfo) {
           errMsg = 'Expiry information object is needed for UPDATE_EXPIRY API';
         } else {
-          transactionResult = await baseContract.updateTokenExpiryInfoPublic(
-            hederaTokenAddress,
-            expiryInfo,
-            { gasLimit }
-          );
+          transactionResult = await baseContract.updateTokenExpiryInfoPublic(hederaTokenAddress, expiryInfo, {
+            gasLimit,
+          });
         }
         break;
       case 'UPDATE_KEYS':
@@ -152,7 +148,7 @@ export const manageTokenInfomation = async (
  *
  * @param approvedStatus?: boolean (SET_APPROVAL)
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const manageTokenPermission = async (
   baseContract: Contract,
@@ -163,7 +159,7 @@ export const manageTokenPermission = async (
   amountToApprove?: number,
   serialNumber?: number,
   approvedStatus?: boolean
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {
@@ -241,13 +237,13 @@ export const manageTokenPermission = async (
  *
  * @param hederaTokenAddress: string
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const manageTokenStatus = async (
   baseContract: Contract,
   API: 'PAUSE' | 'UNPAUSE',
   hederaTokenAddress: string
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize param
   if (!isAddress(hederaTokenAddress)) {
     console.error('Invalid token address');
@@ -299,7 +295,7 @@ export const manageTokenStatus = async (
  *
  * @param hederaTokenAddresses?: string[]
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const manageTokenRelation = async (
   baseContract: Contract,
@@ -308,7 +304,7 @@ export const manageTokenRelation = async (
   gasLimit: number,
   hederaTokenAddress?: string,
   hederaTokenAddresses?: string[]
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(accountAddress)) {
@@ -335,25 +331,19 @@ export const manageTokenRelation = async (
     let transactionResult;
     switch (API) {
       case 'REVOKE_KYC':
-        transactionResult = await baseContract.revokeTokenKycPublic(
-          hederaTokenAddress,
-          accountAddress,
-          { gasLimit }
-        );
+        transactionResult = await baseContract.revokeTokenKycPublic(hederaTokenAddress, accountAddress, {
+          gasLimit,
+        });
         break;
       case 'FREEZE':
-        transactionResult = await baseContract.freezeTokenPublic(
-          hederaTokenAddress,
-          accountAddress,
-          { gasLimit }
-        );
+        transactionResult = await baseContract.freezeTokenPublic(hederaTokenAddress, accountAddress, {
+          gasLimit,
+        });
         break;
       case 'UNFREEZE':
-        transactionResult = await baseContract.unfreezeTokenPublic(
-          hederaTokenAddress,
-          accountAddress,
-          { gasLimit }
-        );
+        transactionResult = await baseContract.unfreezeTokenPublic(hederaTokenAddress, accountAddress, {
+          gasLimit,
+        });
         break;
       case 'DISSOCIATE_TOKEN':
         if (hederaTokenAddresses!.length === 1) {
@@ -404,7 +394,7 @@ export const manageTokenRelation = async (
  *
  * @param serialNumbers?: number[]
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const manageTokenDeduction = async (
   baseContract: Contract,
@@ -414,7 +404,7 @@ export const manageTokenDeduction = async (
   accountAddress?: string,
   amount?: number,
   serialNumbers?: number[]
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {
@@ -476,12 +466,9 @@ export const manageTokenDeduction = async (
         if (!amount && (!serialNumbers || serialNumbers.length === 0)) {
           errMsg = 'Amount/serial number is needed for BURN API';
         } else {
-          transactionResult = await baseContract.burnTokenPublic(
-            hederaTokenAddress,
-            amount,
-            serialNumbers,
-            { gasLimit }
-          );
+          transactionResult = await baseContract.burnTokenPublic(hederaTokenAddress, amount, serialNumbers, {
+            gasLimit,
+          });
         }
         break;
 

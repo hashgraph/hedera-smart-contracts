@@ -19,11 +19,11 @@
  */
 
 import { useEffect } from 'react';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/HTS';
 
 /** @dev listen to change event on transactionResults state => load to localStorage */
 export const useUpdateTransactionResultsToLocalStorage = (
-  transactionResults: TransactionResult[],
+  transactionResults: ITransactionResult[],
   transactionResultStorageKey: string
 ) => {
   useEffect(() => {

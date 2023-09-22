@@ -26,7 +26,7 @@ import {
   manageTokenPermission,
 } from '@/api/hedera/hts-interactions/tokenManagement-interactions';
 import {
-  CommonKeyObject,
+  ICommonKeyObject,
   IHederaTokenServiceExpiry,
   IHederaTokenServiceHederaToken,
 } from '@/types/contract-interactions/HTS';
@@ -68,8 +68,8 @@ describe('TokenManagementContract test suite', () => {
     expiry: tokenExpiry,
   };
 
-  // mock inputKeys with CommonKeyObject[] type
-  const tokenKeys: CommonKeyObject[] = [
+  // mock inputKeys with ICommonKeyObject[] type
+  const tokenKeys: ICommonKeyObject[] = [
     {
       keyType: 'ADMIN',
       keyValueType: 'contractId',

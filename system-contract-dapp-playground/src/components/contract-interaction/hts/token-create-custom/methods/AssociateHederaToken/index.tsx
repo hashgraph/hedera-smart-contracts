@@ -24,7 +24,7 @@ import { useToast } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { generatedRandomUniqueKey } from '@/utils/common/helpers';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/HTS';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
@@ -54,7 +54,7 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [paramValues, setParamValues] = useState<any>(initialParamValues);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_CREATE) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const initialTokenAddressesValues = { fieldKey: generatedRandomUniqueKey(9), fieldValue: '' };
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-CREATE']['ASSOCIATE-TOKEN'];

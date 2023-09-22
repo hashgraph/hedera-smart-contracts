@@ -48,8 +48,8 @@ import {
   SharedExecuteButtonWithFee,
 } from '../../../shared/components/ParamInputForm';
 import {
-  CommonKeyObject,
-  TransactionResult,
+  ICommonKeyObject,
+  ITransactionResult,
   IHederaTokenServiceKeyType,
   IHederaTokenServiceKeyValueType,
   IHederaTokenServiceExpiry,
@@ -71,7 +71,7 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('UPDATE_INFO');
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_MANAGE) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-MANAGE']['TOKEN-INFO'];
   const APIButtonTitles: { API: API_NAMES; apiSwitchTitle: string; executeTitle: string }[] = [
     {
@@ -136,10 +136,10 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
     keyType: keyType,
     keyValueType: 'inheritAccountKey',
     keyValue: '',
-  })) as CommonKeyObject[];
+  })) as ICommonKeyObject[];
 
   // Keys states
-  const [keys, setKeys] = useState<CommonKeyObject[]>([]); // keeps track of keys array to pass to the API
+  const [keys, setKeys] = useState<ICommonKeyObject[]>([]); // keeps track of keys array to pass to the API
   const [chosenKeys, setChosenKeys] = useState(new Set<IHederaTokenServiceKeyType>()); // keeps track of keyTypes which have already been chosen in the list
   const [keyTypesToShow, setKeyTypesToShow] = useState(new Set(HederaTokenKeyTypes)); // keeps track of the left over keyTypes to show in the drop down
 

@@ -19,10 +19,10 @@
  */
 
 import { ethers } from 'ethers';
-import { NetworkName } from '@/types/common';
+import { TNetworkName } from '@/types/common';
 import { getCurrentChainId } from '@/api/wallet';
 import { HEDERA_NETWORKS, PROTECTED_ROUTES } from './constants';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/HTS';
 
 /**
  * @dev validating if a route is protected
@@ -59,7 +59,7 @@ export const isCorrectHederaNetwork = async (walletProvider: ethers.BrowserProvi
  *
  * @returns string
  */
-export const chainIdToNetwork = (chainId: string): NetworkName => {
+export const chainIdToNetwork = (chainId: string): TNetworkName => {
   switch (chainId) {
     case '0x127':
       return 'mainnet';
@@ -109,11 +109,11 @@ export const generatedRandomUniqueKey = (byteLength: number) => {
 /*
  * @dev prepare a list of transaction in order from newest to oldest based on the timestamp when each transaction occurs
  *
- * @returns allTransactions: TransactionResult[]
+ * @returns allTransactions: ITransactionResult[]
  */
 export const prepareTransactionList = () => {
   // prepare
-  const transactions: TransactionResult[] = [];
+  const transactions: ITransactionResult[] = [];
 
   // loop through localStorage items
   if (typeof localStorage !== 'undefined') {

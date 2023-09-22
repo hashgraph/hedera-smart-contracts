@@ -23,7 +23,7 @@ import { Contract } from 'ethers';
 import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
@@ -51,7 +51,7 @@ const GrantTokenKYC = ({ baseContract }: PageProps) => {
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const grantKYCFields = ['hederaTokenAddress', 'grantingKYCAccountAddress'];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_CREATE) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-CREATE']['TOKEN-KYC'];
   const initialParamValues = {
     hederaTokenAddress: '',

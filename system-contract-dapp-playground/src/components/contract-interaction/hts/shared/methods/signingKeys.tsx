@@ -19,14 +19,14 @@
  */
 
 import { Dispatch, SetStateAction } from 'react';
-import { IHederaTokenServiceKeyType, CommonKeyObject } from '@/types/contract-interactions/HTS';
+import { IHederaTokenServiceKeyType, ICommonKeyObject } from '@/types/contract-interactions/HTS';
 
 /** @dev handle updating number of keys*/
 export const handleAddingOrRemovingKeys = (
   type: 'ADD' | 'REMOVE',
   chosenKeys: Set<IHederaTokenServiceKeyType>,
   HederaTokenKeyTypes: IHederaTokenServiceKeyType[],
-  setKeys: Dispatch<SetStateAction<CommonKeyObject[]>>,
+  setKeys: Dispatch<SetStateAction<ICommonKeyObject[]>>,
   setChosenKeys: Dispatch<SetStateAction<Set<IHederaTokenServiceKeyType>>>,
   setKeyTypesToShow: Dispatch<SetStateAction<Set<IHederaTokenServiceKeyType>>>,
   removingKeyType?: IHederaTokenServiceKeyType
@@ -59,8 +59,8 @@ export const handleAddingOrRemovingKeys = (
 /** @dev handle key type on change by selecting an option from drop-down*/
 export const handleKeyTypeOnChange = (
   e: any,
-  currentKey: CommonKeyObject,
-  setKeys: Dispatch<SetStateAction<CommonKeyObject[]>>,
+  currentKey: ICommonKeyObject,
+  setKeys: Dispatch<SetStateAction<ICommonKeyObject[]>>,
   setChosenKeys: Dispatch<SetStateAction<Set<IHederaTokenServiceKeyType>>>,
   setKeyTypesToShow: Dispatch<SetStateAction<Set<IHederaTokenServiceKeyType>>>
 ) => {
@@ -94,8 +94,8 @@ export const handleKeyTypeOnChange = (
 /** @dev handle key value type on change by selecting an option from drop-down */
 export const handleKeyValueTypeOnChange = (
   e: any,
-  currentKey: CommonKeyObject,
-  setKeys: Dispatch<SetStateAction<CommonKeyObject[]>>
+  currentKey: ICommonKeyObject,
+  setKeys: Dispatch<SetStateAction<ICommonKeyObject[]>>
 ) => {
   setKeys((prev) =>
     prev.map((key) => {
@@ -111,8 +111,8 @@ export const handleKeyValueTypeOnChange = (
 /** @dev handle updating key values */
 export const handleUpdateKeyValue = (
   e: any,
-  currentKey: CommonKeyObject,
-  setKeys: Dispatch<SetStateAction<CommonKeyObject[]>>
+  currentKey: ICommonKeyObject,
+  setKeys: Dispatch<SetStateAction<ICommonKeyObject[]>>
 ) => {
   setKeys((prev) =>
     prev.map((key) => {

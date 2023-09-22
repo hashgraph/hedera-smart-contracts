@@ -23,7 +23,7 @@ import { Contract } from 'ethers';
 import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/HTS';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
@@ -58,7 +58,7 @@ const ManageTokenPermission = ({ baseContract }: PageProps) => {
   const tokenCommonFields = ['hederaTokenAddress', 'targetApprovedAddress'];
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('APPROVED_FUNGIBLE');
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_MANAGE) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-MANAGE']['TOKEN-PERMISSION'];
   const initialParamValues = {

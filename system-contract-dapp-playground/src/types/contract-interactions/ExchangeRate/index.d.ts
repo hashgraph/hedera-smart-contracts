@@ -19,7 +19,7 @@
  */
 
 /** @dev an interface for the results returned back from interacting with PRNG contract */
-interface ExchangeRateContractResult {
+interface IExchangeRateContractResult {
   convertedAmount?: number;
   transactionHash?: string;
   err?: any;
