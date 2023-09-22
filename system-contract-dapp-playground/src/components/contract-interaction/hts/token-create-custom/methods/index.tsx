@@ -37,9 +37,7 @@ const HederaTokenCreateMethods = ({ baseContract, method }: PageProps) => {
       {method === 'grantKYC' && <GrantTokenKYC baseContract={baseContract} />}
       {method === 'tokenAssociation' && <AssociateHederaToken baseContract={baseContract} />}
       {method === 'fungibleTokenCreate' && <FungibleTokenCreate baseContract={baseContract} />}
-      {method === 'non-fungibleTokenCreate' && (
-        <NonFungibleTokenCreate baseContract={baseContract} />
-      )}
+      {method === 'non-fungibleTokenCreate' && <NonFungibleTokenCreate baseContract={baseContract} />}
     </>
   );
 };

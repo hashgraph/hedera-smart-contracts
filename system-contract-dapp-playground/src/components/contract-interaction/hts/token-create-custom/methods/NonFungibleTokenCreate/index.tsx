@@ -21,70 +21,64 @@
 import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
 import { useToast } from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { handleAPIErrors } from '../../../../common/methods/handleAPIErrors';
-import { useToastSuccessful } from '../../../../../hooks/useToastSuccessful';
-import { usePaginatedTxResults } from '../../../../../hooks/usePaginatedTxResults';
-import { SharedSigningKeysComponent } from '../../shared/components/SigningKeysForm';
-import { TransactionResultTable } from '../../../../common/components/TransactionResultTable';
-import { handleSanitizeHederaFormInputs } from '../../../../common/methods/handleSanitizeFormInputs';
+import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
+import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
+import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
+import { SharedSigningKeysComponent } from '../../../shared/components/SigningKeysForm';
+import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
+import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
-import { useUpdateTransactionResultsToLocalStorage } from '../../../../../hooks/useUpdateLocalStorage';
-import { createHederaFungibleToken } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
+import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { htsTokenCreateParamFields } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
-import useFilterTransactionsByContractAddress from '../../../../../hooks/useFilterTransactionsByContractAddress';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { createHederaNonFungibleToken } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
+import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedFormInputField,
   SharedFormButton,
   SharedExecuteButtonWithFee,
-} from '../../shared/components/ParamInputForm';
+} from '../../../shared/components/ParamInputForm';
 import {
-  CommonKeyObject,
   TransactionResult,
   IHederaTokenServiceKeyType,
+  CommonKeyObject,
 } from '@/types/contract-interactions/HTS';
 import {
   HederaTokenKeyTypes,
-  TRANSACTION_PAGE_SIZE,
   HederaTokenKeyValueType,
-} from '../../shared/states/commonStates';
+  TRANSACTION_PAGE_SIZE,
+} from '../../../shared/states/commonStates';
 
 interface PageProps {
   baseContract: Contract;
 }
 
-const FungibleTokenCreate = ({ baseContract }: PageProps) => {
+const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
   // general states
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [withCustomFee, setWithCustomFee] = useState(false);
-  const [isDefaultFreeze, setIsDefaultFreeze] = useState(false);
   const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_CREATE) as string;
   const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
   const transactionResultStorageKey =
-    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-CREATE']['FUNGIBLE-TOKEN'];
+    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-CREATE']['NON-FUNGIBLE-TOKEN'];
   const tokenCreateFields = {
-    info: ['name', 'symbol', 'memo'],
-    supply: ['initSupply', 'maxSupply', 'decimals'],
-    treasury: 'treasury',
+    info: ['name', 'symbol', 'memo', 'maxSupply', 'treasury'],
     feeTokenAddress: 'feeTokenAddress',
   };
   const initialParamValues = {
-    memo: '',
     name: '',
+    memo: '',
     symbol: '',
-    feeValue: '',
     treasury: '',
-    decimals: '',
+    feeValue: '',
     maxSupply: '',
-    initSupply: '',
     feeTokenAddress: '',
-    freezeStatus: false,
   };
   const [paramValues, setParamValues] = useState<any>(initialParamValues);
 
@@ -93,7 +87,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
     currentContractAddress
   );
 
-  // Keys states
+  // keys states
   const [keys, setKeys] = useState<CommonKeyObject[]>([]); // keeps track of keys array to pass to the API
   const [chosenKeys, setChosenKeys] = useState(new Set<IHederaTokenServiceKeyType>()); // keeps track of keyTypes which have already been chosen in the list
   const [keyTypesToShow, setKeyTypesToShow] = useState(new Set(HederaTokenKeyTypes)); // keeps track of the left over keyTypes to show in the drop down
@@ -116,20 +110,9 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
     setParamValues((prev: any) => ({ ...prev, [param]: e.target.value }));
   };
 
-  /** @dev handle invoking the API to interact with smart contract and create fungible token */
-  const handleCreatingFungibleToken = async () => {
-    const {
-      memo,
-      name,
-      symbol,
-      treasury,
-      feeValue,
-      decimals,
-      maxSupply,
-      initSupply,
-      freezeStatus,
-      feeTokenAddress,
-    } = paramValues;
+  /** @dev handle invoking the API to interact with smart contract and create non fungible token */
+  const handleCreatingNonFungibleToken = async () => {
+    const { name, symbol, memo, maxSupply, treasury, feeTokenAddress, feeValue } = paramValues;
 
     // sanitize params
     const sanitizeErr = handleSanitizeHederaFormInputs({
@@ -138,10 +121,8 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
       keys,
       symbol,
       feeValue,
-      decimals,
       treasury,
       maxSupply,
-      initSupply,
       withCustomFee,
       feeTokenAddress,
     });
@@ -156,15 +137,12 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
     setIsLoading(true);
 
     // invoke createHederaFungibleToken()
-    const { transactionHash, tokenAddress, err } = await createHederaFungibleToken(
+    const { transactionHash, tokenAddress, err } = await createHederaNonFungibleToken(
       baseContract,
       name,
       symbol,
       memo,
-      Number(initSupply),
       Number(maxSupply),
-      Number(decimals),
-      freezeStatus,
       treasury,
       keys,
       feeValue,
@@ -181,7 +159,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
         toaster,
         transactionHash,
         setTransactionResults,
-        transactionType: 'HTS-TOKEN-CREATE',
+        transactionType: 'HTS-NFT-CREATE',
         sessionedContractAddress: currentContractAddress,
       });
       return;
@@ -193,8 +171,8 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
           tokenAddress,
           status: 'success',
           transactionTimeStamp: Date.now(),
+          transactionType: 'HTS-NFT-CREATE',
           txHash: transactionHash as string,
-          transactionType: 'HTS-TOKEN-CREATE',
           sessionedContractAddress: currentContractAddress,
         },
       ]);
@@ -226,8 +204,8 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
   return (
     <div className="w-full mx-3 flex justify-center mt-6 flex-col gap-20">
       {/* Token Create form */}
-      <div className="flex flex-col gap-6 justify-center tracking-tight text-white/70">
-        {/* name & symbol & memo*/}
+      <div className="w-[600px]/ flex flex-col gap-6 justify-center tracking-tight text-white/70">
+        {/* name & symbol & memo & maxSupply & treasury */}
         {tokenCreateFields.info.map((param) => {
           return (
             <div key={(htsTokenCreateParamFields as any)[param].paramKey}>
@@ -246,54 +224,6 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
             </div>
           );
         })}
-
-        {/* freeze status */}
-        <div className="w-full flex gap-3">
-          {/* false */}
-          <SharedFormButton
-            switcher={!isDefaultFreeze}
-            buttonTitle={'Freeze Status - false'}
-            explanation={(htsTokenCreateParamFields as any)['freezeStatus'].explanation.off}
-            handleButtonOnClick={() => {
-              setIsDefaultFreeze(false);
-              setParamValues((prev: any) => ({ ...prev, isDefaultFreeze: false }));
-            }}
-          />
-
-          {/* with custom fee */}
-          <SharedFormButton
-            switcher={isDefaultFreeze}
-            buttonTitle={'Freeze Status - true'}
-            explanation={(htsTokenCreateParamFields as any)['freezeStatus'].explanation.on}
-            handleButtonOnClick={() => {
-              setIsDefaultFreeze(true);
-              setParamValues((prev: any) => ({ ...prev, isDefaultFreeze: true }));
-            }}
-          />
-        </div>
-
-        {/* supply & decimals */}
-        <div className="flex gap-3">
-          {/* initSupply & maxSupply & Decimals*/}
-          {tokenCreateFields.supply.map((param) => {
-            return (
-              <div className="w-full" key={(htsTokenCreateParamFields as any)[param].paramKey}>
-                <SharedFormInputField
-                  param={param}
-                  paramValue={paramValues[param]}
-                  handleInputOnChange={handleInputOnChange}
-                  paramKey={(htsTokenCreateParamFields as any)[param].paramKey}
-                  paramType={(htsTokenCreateParamFields as any)[param].inputType}
-                  paramSize={(htsTokenCreateParamFields as any)[param].inputSize}
-                  explanation={(htsTokenCreateParamFields as any)[param].explanation}
-                  paramClassName={(htsTokenCreateParamFields as any)[param].inputClassname}
-                  paramPlaceholder={(htsTokenCreateParamFields as any)[param].inputPlaceholder}
-                  paramFocusColor={(htsTokenCreateParamFields as any)[param].inputFocusBorderColor}
-                />
-              </div>
-            );
-          })}
-        </div>
 
         {/* custom fee */}
         <div className="w-full flex gap-3">
@@ -330,20 +260,6 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
           />
         )}
 
-        {/* treasury */}
-        <SharedFormInputField
-          param={'treasury'}
-          paramValue={paramValues['treasury']}
-          handleInputOnChange={handleInputOnChange}
-          paramSize={(htsTokenCreateParamFields as any)['treasury'].inputSize}
-          paramType={(htsTokenCreateParamFields as any)['treasury'].inputType}
-          paramKey={(htsTokenCreateParamFields as any)['treasury'].explanation}
-          explanation={(htsTokenCreateParamFields as any)['treasury'].explanation}
-          paramClassName={(htsTokenCreateParamFields as any)['treasury'].inputClassname}
-          paramPlaceholder={(htsTokenCreateParamFields as any)['treasury'].inputPlaceholder}
-          paramFocusColor={(htsTokenCreateParamFields as any)['treasury'].inputFocusBorderColor}
-        />
-
         {/* keys */}
         <SharedSigningKeysComponent
           keys={keys}
@@ -365,8 +281,10 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
           placeHolder={'Service fee...'}
           executeBtnTitle={'Create Fungible Token'}
           handleInputOnChange={handleInputOnChange}
-          explanation={'Represents the transaction fee paid in HBAR'}
-          handleInvokingAPIMethod={handleCreatingFungibleToken}
+          explanation={
+            'Represents the fee in HBAR directly paid to the contract system of the Hedera Token Service'
+          }
+          handleInvokingAPIMethod={handleCreatingNonFungibleToken}
         />
       </div>
 
@@ -388,4 +306,4 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
   );
 };
 
-export default FungibleTokenCreate;
+export default NonFungibleTokenCreate;
