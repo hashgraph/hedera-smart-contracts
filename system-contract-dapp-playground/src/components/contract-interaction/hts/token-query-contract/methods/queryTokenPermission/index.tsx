@@ -28,7 +28,7 @@ import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import TokenPermissionInfoModal from '../../../shared/components/TokenPermissionInfoModal';
-import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
+import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { queryTokenPermissionInformation } from '@/api/hedera/hts-interactions/tokenQuery-interactions';

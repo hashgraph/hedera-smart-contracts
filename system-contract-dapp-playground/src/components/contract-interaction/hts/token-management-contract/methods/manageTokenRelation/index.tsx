@@ -30,7 +30,7 @@ import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import TokenAddressesInputForm from '../../../shared/components/TokenAddressesInputForm';
-import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
+import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { manageTokenRelation } from '@/api/hedera/hts-interactions/tokenManagement-interactions';
 import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';

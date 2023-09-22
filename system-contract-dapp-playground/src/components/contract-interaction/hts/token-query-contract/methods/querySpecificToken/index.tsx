@@ -26,7 +26,7 @@ import { Select, useDisclosure, useToast } from '@chakra-ui/react';
 import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import TokenSpecificInfoModal from '../../../shared/components/TokenSpecificInfoModal';
-import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
+import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { HederaTokenKeyTypes, TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { IHederaTokenServiceKeyType, TransactionResult } from '@/types/contract-interactions/HTS';
 import { queryTokenSpecificInfomation } from '@/api/hedera/hts-interactions/tokenQuery-interactions';

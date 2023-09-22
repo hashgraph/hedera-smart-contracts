@@ -28,7 +28,7 @@ import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
-import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
+import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { queryTokenValidity } from '@/api/hedera/hts-interactions/tokenQuery-interactions';
 import { SharedExecuteButton, SharedFormInputField } from '../../../shared/components/ParamInputForm';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';

@@ -29,7 +29,7 @@ import { useToastSuccessful } from '../../../../hooks/useToastSuccessful';
 import { handleExchangeRate } from '@/api/hedera/exchange-rate-interactions';
 import { TRANSACTION_PAGE_SIZE } from '../../hts/shared/states/commonStates';
 import { usePaginatedTxResults } from '../../../../hooks/usePaginatedTxResults';
-import { TransactionResultTable } from '../../hts/shared/components/TransactionResultTable';
+import { TransactionResultTable } from '../../../common/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../../common/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../hooks/useUpdateLocalStorage';
 import { SharedExecuteButton, SharedFormInputField } from '../../hts/shared/components/ParamInputForm';
