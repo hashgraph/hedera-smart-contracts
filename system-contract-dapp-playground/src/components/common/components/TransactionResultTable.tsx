@@ -23,6 +23,7 @@ import { ethers } from 'ethers';
 import { FiExternalLink } from 'react-icons/fi';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { Dispatch, SetStateAction } from 'react';
+import { copyContentToClipboard } from '../methods/common';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import { IHederaTokenServiceKeyType, TransactionResult } from '@/types/contract-interactions/HTS';
 import {
@@ -197,7 +198,7 @@ export const TransactionResultTable = ({
                 {/* transaction hash */}
                 <Td className="cursor-pointer">
                   <div className="flex gap-1 items-center">
-                    <div onClick={() => navigator.clipboard.writeText(transactionResult.txHash)}>
+                    <div onClick={() => copyContentToClipboard(transactionResult.txHash)}>
                       <Popover>
                         <PopoverTrigger>
                           <div className="flex gap-1 items-center">
@@ -246,7 +247,7 @@ export const TransactionResultTable = ({
                   <Td className="cursor-pointer">
                     {transactionResult.tokenAddress ? (
                       <div className="flex gap-1 items-center">
-                        <div onClick={() => navigator.clipboard.writeText(transactionResult.tokenAddress!)}>
+                        <div onClick={() => copyContentToClipboard(transactionResult.tokenAddress!)}>
                           <Popover>
                             <PopoverTrigger>
                               <div className="flex gap-1 items-center">
@@ -291,9 +292,7 @@ export const TransactionResultTable = ({
                   <Td className="cursor-pointer">
                     {transactionResult.tokenAddresses && transactionResult.tokenAddresses.length === 1 ? (
                       <div className="flex gap-1 items-center">
-                        <div
-                          onClick={() => navigator.clipboard.writeText(transactionResult.tokenAddresses![0])}
-                        >
+                        <div onClick={() => copyContentToClipboard(transactionResult.tokenAddresses![0])}>
                           <Popover>
                             <PopoverTrigger>
                               <div className="flex gap-1 items-center">
@@ -341,7 +340,7 @@ export const TransactionResultTable = ({
                           >
                             {transactionResult.tokenAddresses?.map((token) => (
                               <div key={token} className="bg-secondary border-none font-medium flex gap-1">
-                                <div onClick={() => navigator.clipboard.writeText(token)}>
+                                <div onClick={() => copyContentToClipboard(token)}>
                                   <Popover>
                                     <PopoverTrigger>
                                       <div className="flex gap-1 items-center">
@@ -391,7 +390,7 @@ export const TransactionResultTable = ({
                   <Td className="cursor-pointer">
                     {transactionResult.accountAddress ? (
                       <div className="flex gap-1 items-center">
-                        <div onClick={() => navigator.clipboard.writeText(transactionResult.accountAddress!)}>
+                        <div onClick={() => copyContentToClipboard(transactionResult.accountAddress!)}>
                           <Popover>
                             <PopoverTrigger>
                               <div className="flex gap-1 items-center">
@@ -437,7 +436,7 @@ export const TransactionResultTable = ({
                 {API === 'TransferSingle' && (
                   <Td className="cursor-pointer">
                     <div className="flex gap-1 items-center">
-                      <div onClick={() => navigator.clipboard.writeText(transactionResult.receiverAddress!)}>
+                      <div onClick={() => copyContentToClipboard(transactionResult.receiverAddress!)}>
                         <Popover>
                           <PopoverTrigger>
                             <div className="flex gap-1 items-center">
@@ -554,9 +553,7 @@ export const TransactionResultTable = ({
                   <Td className="cursor-pointer">
                     {transactionResult.pseudoRandomSeed ? (
                       <div className="flex gap-1 items-center">
-                        <div
-                          onClick={() => navigator.clipboard.writeText(transactionResult.pseudoRandomSeed!)}
-                        >
+                        <div onClick={() => copyContentToClipboard(transactionResult.pseudoRandomSeed!)}>
                           <Popover>
                             <PopoverTrigger>
                               <div className="flex gap-1 items-center">

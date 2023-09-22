@@ -26,12 +26,13 @@ import { FiExternalLink } from 'react-icons/fi';
 import { useEffect, useMemo, useState } from 'react';
 import { prepareTransactionList } from '@/utils/common/helpers';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
+import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
+import { copyContentToClipboard } from '@/components/common/methods/common';
 import {
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
   HEDERA_CHAKRA_TABLE_VARIANTS,
 } from '@/utils/common/constants';
-import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
 import {
   Th,
   Tr,
@@ -163,7 +164,7 @@ const ActivitySection = () => {
                       {/* transaction hash */}
                       <Td className="cursor-pointer">
                         <div className="flex gap-1 items-center justify-between">
-                          <div onClick={() => navigator.clipboard.writeText(transaction.txHash)}>
+                          <div onClick={() => copyContentToClipboard(transaction.txHash)}>
                             <Popover>
                               <PopoverTrigger>
                                 <div className="flex gap-1 items-center">

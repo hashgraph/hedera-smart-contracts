@@ -27,6 +27,7 @@ import { BiCopy, BiCheckDouble } from 'react-icons/bi';
 import ConfirmModal from '../common/components/ConfirmModal';
 import { clearCachedTransactions } from '@/api/localStorage';
 import { getBalance, getWalletProvider } from '@/api/wallet';
+import { copyContentToClipboard } from '../common/methods/common';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
@@ -105,11 +106,11 @@ const WalletPopup = ({ setIsOpen, userAddress, network }: PageProps) => {
     switch (type) {
       case 'ACCOUNTID':
         setIsCopied((prev) => ({ ...prev, accountId: true }));
-        navigator.clipboard.writeText(hederaAccountId as string);
+        copyContentToClipboard(hederaAccountId as string);
         break;
       default:
         setIsCopied((prev) => ({ ...prev, evmAddress: true }));
-        navigator.clipboard.writeText(userAddress);
+        copyContentToClipboard(userAddress);
     }
     setTimeout(() => {
       setIsCopied({ accountId: false, evmAddress: false });

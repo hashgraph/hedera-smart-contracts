@@ -35,6 +35,7 @@ import { clearCachedTransactions } from '@/api/localStorage';
 import ERC20DeployField from './erc/deployment/ERCDeployField';
 import HederaExchangeRateMethods from './exchange-rate/methods';
 import HederaAlertDialog from '../common/components/AlertDialog';
+import { copyContentToClipboard } from '../common/methods/common';
 import { HederaContractAsset, NetworkName } from '@/types/common';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
 import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
@@ -304,7 +305,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
                           <div className="flex items-center gap-1">
                             <div
                               className="cursor-pointer"
-                              onClick={() => navigator.clipboard.writeText(contractId)}
+                              onClick={() => copyContentToClipboard(contractId)}
                             >
                               <Popover>
                                 <PopoverTrigger>
@@ -342,7 +343,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
                           <div className="flex items-center gap-1">
                             <div
                               className="cursor-pointer"
-                              onClick={() => navigator.clipboard.writeText(contractAddress)}
+                              onClick={() => copyContentToClipboard(contractAddress)}
                             >
                               <Popover>
                                 <PopoverTrigger>
