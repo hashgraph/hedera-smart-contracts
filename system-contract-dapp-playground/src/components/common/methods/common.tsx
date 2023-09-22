@@ -24,7 +24,7 @@ export const copyContentToClipboard = (content: string) => {
 };
 
 /** @dev handle remove record */
-export const handleRemoveRecord = (targetKey: any, setMap: any, transactionResultStorageKey: string) => {
+export const handleRemoveMapRecord = (targetKey: any, setMap: any, transactionResultStorageKey: string) => {
   setMap((prev: any) => {
     prev.delete(targetKey);
     if (prev.size === 0) {
