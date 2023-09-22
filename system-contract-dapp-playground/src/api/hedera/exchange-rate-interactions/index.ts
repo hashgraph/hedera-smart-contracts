@@ -69,7 +69,7 @@ export const handleExchangeRate = async (
 
     const { data } = txReceipt.logs.filter((event: any) => event.fragment.name === eventNameMap[API])[0];
 
-    return { transactionHash: txReceipt.hash, convertedAmount: data };
+    return { transactionHash: txReceipt.hash, convertedAmount: Number(data) };
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };
