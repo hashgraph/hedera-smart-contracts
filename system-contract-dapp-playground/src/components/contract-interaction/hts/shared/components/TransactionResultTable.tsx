@@ -65,6 +65,7 @@ interface TransactionResultTablePageProps {
     | 'GrantKYC'
     | 'TokenMint'
     | 'TokenCreate'
+    | 'ExchangeRate'
     | 'QueryValidity'
     | 'CryptoTransfer'
     | 'TokenAssociate'
@@ -112,6 +113,7 @@ export const TransactionResultTable = ({
       beginingHashIndex = 10;
       endingHashIndex = -5;
       break;
+    case 'ExchangeRate':
     case 'TransferSingle':
     case 'QueryTokenStatus':
       beginingHashIndex = 4;
@@ -129,7 +131,7 @@ export const TransactionResultTable = ({
             </Th>
             <Th color={HEDERA_BRANDING_COLORS.violet}>Status</Th>
             <Th color={HEDERA_BRANDING_COLORS.violet}>Tx hash</Th>
-            {API !== 'CryptoTransfer' && API !== 'PRNG' && (
+            {API !== 'CryptoTransfer' && API !== 'PRNG' && API !== 'ExchangeRate' && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>{`Token ${
                 API !== 'TransferSingle' ? `Address` : ``
               }`}</Th>
@@ -146,12 +148,15 @@ export const TransactionResultTable = ({
             {(API === 'QueryTokenGeneralInfo' ||
               API === 'QuerySpecificInfo' ||
               API === 'QueryTokenPermission') && <Th color={HEDERA_BRANDING_COLORS.violet}>Token Info</Th>}
+            {API === 'PRNG' && <Th color={HEDERA_BRANDING_COLORS.violet}>Seed</Th>}
+            {API === 'ExchangeRate' && <Th color={HEDERA_BRANDING_COLORS.violet}>Initial Amount</Th>}
+            {API === 'ExchangeRate' && <Th color={HEDERA_BRANDING_COLORS.violet}>Converted Amount</Th>}
             {(API === 'QueryTokenGeneralInfo' ||
               API === 'QuerySpecificInfo' ||
               API === 'QueryTokenPermission' ||
               API === 'QueryTokenStatus' ||
-              API === 'TransferSingle') && <Th color={HEDERA_BRANDING_COLORS.violet}>API called</Th>}
-            {API === 'PRNG' && <Th color={HEDERA_BRANDING_COLORS.violet}>Seed</Th>}
+              API === 'TransferSingle' ||
+              API === 'ExchangeRate') && <Th color={HEDERA_BRANDING_COLORS.violet}>API called</Th>}
             <Th />
           </Tr>
         </Thead>
@@ -526,26 +531,18 @@ export const TransactionResultTable = ({
                   </Td>
                 )}
 
-                {/* query - API called */}
-                {(API === 'QueryTokenGeneralInfo' ||
-                  API === 'QuerySpecificInfo' ||
-                  API === 'QueryTokenPermission' ||
-                  API === 'QueryTokenStatus' ||
-                  API === 'TransferSingle') && (
-                  <Td>
-                    {transactionResult.APICalled ? (
-                      <>
-                        <p>
-                          {transactionResult.APICalled === 'TOKEN_KEYS'
-                            ? `${transactionResult.APICalled.replace('TOKEN_', '')}_${
-                                transactionResult.keyTypeCalled
-                              }`
-                            : transactionResult.APICalled === 'DEFAULT_FREEZE_STATUS' ||
-                              transactionResult.APICalled === 'DEFAULT_KYC_STATUS'
-                            ? transactionResult.APICalled.replace('DEFAULT_', '')
-                            : transactionResult.APICalled}
-                        </p>
-                      </>
+                {/* Exchange Rate - Initial Amount */}
+                {API === 'ExchangeRate' && (
+                  <Td className="cursor-pointer">
+                    <p className="w-[9rem]">{transactionResult.initialAmount}</p>
+                  </Td>
+                )}
+
+                {/* Exchange Rate - ConvertedAmount */}
+                {API === 'ExchangeRate' && (
+                  <Td className="cursor-pointer">
+                    {transactionResult.convertedAmount ? (
+                      <p className="w-[9rem]">{transactionResult.convertedAmount}</p>
                     ) : (
                       <>NULL</>
                     )}
@@ -584,6 +581,33 @@ export const TransactionResultTable = ({
                           endingHashIndex
                         )}`}
                       </>
+                    )}
+                  </Td>
+                )}
+
+                {/* query - API called */}
+                {(API === 'QueryTokenGeneralInfo' ||
+                  API === 'QuerySpecificInfo' ||
+                  API === 'QueryTokenPermission' ||
+                  API === 'QueryTokenStatus' ||
+                  API === 'TransferSingle' ||
+                  API === 'ExchangeRate') && (
+                  <Td>
+                    {transactionResult.APICalled ? (
+                      <>
+                        <p>
+                          {transactionResult.APICalled === 'TOKEN_KEYS'
+                            ? `${transactionResult.APICalled.replace('TOKEN_', '')}_${
+                                transactionResult.keyTypeCalled
+                              }`
+                            : transactionResult.APICalled === 'DEFAULT_FREEZE_STATUS' ||
+                              transactionResult.APICalled === 'DEFAULT_KYC_STATUS'
+                            ? transactionResult.APICalled.replace('DEFAULT_', '')
+                            : transactionResult.APICalled}
+                        </p>
+                      </>
+                    ) : (
+                      <>NULL</>
                     )}
                   </Td>
                 )}
