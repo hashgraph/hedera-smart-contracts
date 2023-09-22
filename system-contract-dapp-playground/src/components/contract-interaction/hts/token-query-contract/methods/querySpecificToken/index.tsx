@@ -28,7 +28,7 @@ import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxRes
 import TokenSpecificInfoModal from '../../../shared/components/TokenSpecificInfoModal';
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { HederaTokenKeyTypes, TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
-import { IHederaTokenServiceKeyType, TransactionResult } from '@/types/contract-interactions/HTS';
+import { IHederaTokenServiceKeyType, ITransactionResult } from '@/types/contract-interactions/HTS';
 import { queryTokenSpecificInfomation } from '@/api/hedera/hts-interactions/tokenQuery-interactions';
 import { htsQueryTokenInfoParamFields } from '@/utils/contract-interactions/HTS/token-query/constant';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
@@ -82,7 +82,7 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
   const [tokenAddressFromTxResult, setTokenAddressFromTxResult] = useState('');
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('DEFAULT_FREEZE_STATUS');
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_QUERY) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const [keyTypeFromTxResult, setKeyTypeFromTxResult] = useState<IHederaTokenServiceKeyType>('ADMIN');
   const [APIMethodsFromTxResult, setAPIMethodsFromTxResult] = useState<API_NAMES>('DEFAULT_FREEZE_STATUS');
   const transactionResultStorageKey =

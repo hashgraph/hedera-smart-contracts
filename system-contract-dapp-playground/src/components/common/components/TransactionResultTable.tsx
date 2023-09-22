@@ -25,7 +25,7 @@ import { AiOutlineMinus } from 'react-icons/ai';
 import { Dispatch, SetStateAction } from 'react';
 import { copyContentToClipboard } from '../methods/common';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
-import { IHederaTokenServiceKeyType, TransactionResult } from '@/types/contract-interactions/HTS';
+import { IHederaTokenServiceKeyType, ITransactionResult } from '@/types/contract-interactions/HTS';
 import {
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,
@@ -52,14 +52,14 @@ interface TransactionResultTablePageProps {
   TRANSACTION_PAGE_SIZE: number;
   currentTransactionPage: number;
   transactionResultStorageKey: string;
-  transactionResults: TransactionResult[];
+  transactionResults: ITransactionResult[];
   setTokenInfoFromTxResult?: Dispatch<any>;
-  paginatedTransactionResults: TransactionResult[];
+  paginatedTransactionResults: ITransactionResult[];
   setShowTokenInfo?: Dispatch<SetStateAction<boolean>>;
   setAPIMethodsFromTxResult?: Dispatch<SetStateAction<any>>;
   setCurrentTransactionPage: Dispatch<SetStateAction<number>>;
   setTokenAddressFromTxResult?: Dispatch<SetStateAction<string>>;
-  setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>;
+  setTransactionResults: Dispatch<SetStateAction<ITransactionResult[]>>;
   setKeyTypeFromTxResult?: Dispatch<SetStateAction<IHederaTokenServiceKeyType>>;
   API:
     | 'PRNG'
@@ -164,7 +164,7 @@ export const TransactionResultTable = ({
         <Tbody>
           {paginatedTransactionResults.map((transactionResult, index) => {
             /** @dev handle removing record */
-            const handleRemoveRecord = (targetTransactionResult: TransactionResult) => {
+            const handleRemoveRecord = (targetTransactionResult: ITransactionResult) => {
               const filteredItems = transactionResults.filter(
                 (transactionResult) => targetTransactionResult.txHash !== transactionResult.txHash
               );

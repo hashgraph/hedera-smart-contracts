@@ -30,7 +30,7 @@ import {
 } from './token-query/constant';
 import { isAddress } from 'ethers';
 import {
-  CommonKeyObject,
+  ICommonKeyObject,
   IHederaTokenServiceExpiry,
   IHederaTokenServiceKeyType,
   IHederaTokenServiceTokenKey,
@@ -38,7 +38,7 @@ import {
   IHederaTokenServiceTokenInfo,
   IHederaTokenServiceRoyaltyFee,
   IHederaTokenServiceKeyValueType,
-  SmartContractExecutionResult,
+  ISmartContractExecutionResult,
   IHederaTokenServiceFractionalFee,
   IHederaTokenServiceFungibleTokenInfo,
   IHederaTokenServiceNonFungibleTokenInfo,
@@ -98,16 +98,16 @@ export const constructIHederaTokenKey = (
 };
 
 /**
- * @dev prepares a list of IHederaTokenService.TokenKey typed keys with a CommonKeyObject[] input
+ * @dev prepares a list of IHederaTokenService.TokenKey typed keys with a ICommonKeyObject[] input
  *
- * @param inputKeys: CommonKeyObject[]
+ * @param inputKeys: ICommonKeyObject[]
  *
  * @return IHederaTokenServiceTokenKey[]
  *
- * @return err: CommonKeyObject[]
+ * @return err: ICommonKeyObject[]
  */
-export const prepareHederaTokenKeyArray = (inputKeys: CommonKeyObject[]) => {
-  let constructingKeyError: CommonKeyObject[] = [];
+export const prepareHederaTokenKeyArray = (inputKeys: ICommonKeyObject[]) => {
+  let constructingKeyError: ICommonKeyObject[] = [];
   const hederaTokenKeys = inputKeys.map((inputKey) => {
     // construct IHederaTokenKey
     const hederaTokenKey = constructIHederaTokenKey(
@@ -147,7 +147,7 @@ export const prepareHederaTokenKeyArray = (inputKeys: CommonKeyObject[]) => {
 export const handleContractResponse = async (
   transactionResult: any,
   errMsg?: any
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // return err if any
   if (errMsg) {
     console.error(errMsg);
@@ -178,7 +178,7 @@ export const handleContractResponseWithDynamicEventNames = async (
   transactionResult: any,
   eventMaps?: any,
   API?: any
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // get transaction receipt
   const txReceipt = await transactionResult.wait();
 

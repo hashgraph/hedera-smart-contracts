@@ -23,12 +23,12 @@ import { BrowserProvider, Contract, ContractFactory } from 'ethers';
 /**
  * @dev a type for network name
  */
-type NetworkName = 'mainnet' | 'testnet' | 'previewnet' | 'localnet';
+type TNetworkName = 'mainnet' | 'testnet' | 'previewnet' | 'localnet';
 
 /**
  * @dev a type for contract names
  */
-type ContractName =
+type TContractName =
   | 'TokenCreateCustomContract'
   | 'TokenManagementContract'
   | 'ExchangeRatePrecompile'
@@ -50,7 +50,7 @@ type ContractName =
  *
  * @params err: any
  */
-interface WalletResult {
+interface IWalletResult {
   walletProvider?: BrowserProvider;
   accounts?: string[];
   currentChainId?: string;
@@ -65,7 +65,7 @@ interface WalletResult {
  *
  * @params err: any
  */
-interface EthersResult {
+interface IEthersResult {
   baseContract?: Contract;
   err?: any;
 }
@@ -77,7 +77,7 @@ interface EthersResult {
  *
  * @params err: any
  */
-interface MirrorNodeResult {
+interface IMirrorNodeResult {
   accountId?: string;
   contractId?: string;
   err?: any;
@@ -90,22 +90,22 @@ interface MirrorNodeResult {
  *
  * @params err: any
  */
-interface HederaSmartContractResult {
+interface IHederaSmartContractResult {
   contractAddress?: string;
   err?: any;
 }
 
 /**
- * @dev a type for solidity contract ABI
+ * @dev an interface for solidity contract ABI
  */
-type ContractABI = {
+interface IContractABI {
   anonymous?: boolean;
   inputs?: any;
   name?: string;
   outputs?: any;
   stateMutability?: string;
   type?: string;
-};
+}
 
 /**
  * @dev an interface for the Hedera contract assets
@@ -114,17 +114,17 @@ type ContractABI = {
  *
  * @params title: string
  *
- * @params contractABI: ContractABI[]
+ * @params contractABI: IContractABI[]
  *
  * @params contractBytecode: string
  *
  * @params githubUrl: string
  */
-interface HederaContractAsset {
-  name: ContractName;
+interface IHederaContractAsset {
+  name: TContractName;
   title: string;
   githubUrl: string;
   contractBytecode: string;
-  contractABI: ContractABI[];
+  contractABI: IContractABI[];
   methods: string[];
 }

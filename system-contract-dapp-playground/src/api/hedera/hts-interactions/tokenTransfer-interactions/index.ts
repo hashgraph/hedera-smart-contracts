@@ -22,7 +22,7 @@ import { Contract, isAddress } from 'ethers';
 import {
   IHederaTokenServiceTransferList,
   IHederaTokenServiceTokenTransferList,
-  SmartContractExecutionResult,
+  ISmartContractExecutionResult,
 } from '@/types/contract-interactions/HTS';
 import { handleContractResponse } from '@/utils/contract-interactions/HTS/helpers';
 
@@ -39,14 +39,14 @@ import { handleContractResponse } from '@/utils/contract-interactions/HTS/helper
  *
  * @param gasLimit: number
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const transferCrypto = async (
   baseContract: Contract,
   transferList: IHederaTokenServiceTransferList,
   tokenTransferList: IHederaTokenServiceTokenTransferList[],
   gasLimit: number
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // invoking contract methods
   try {
     const tx = await baseContract.cryptoTransferPublic(transferList, tokenTransferList, {
@@ -75,7 +75,7 @@ export const transferCrypto = async (
  *
  * @param gasLimit: number
  *
- * @return Promise Promise<SmartContractExecutionResult>
+ * @return Promise Promise<ISmartContractExecutionResult>
  */
 export const transferFungibleTokens = async (
   baseContract: Contract,
@@ -83,7 +83,7 @@ export const transferFungibleTokens = async (
   accountIDs: string[],
   amounts: number[],
   gasLimit: number
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {
@@ -141,7 +141,7 @@ export const transferFungibleTokens = async (
  *
  * @param gasLimit: number
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const transferNonFungibleTokens = async (
   baseContract: Contract,
@@ -150,7 +150,7 @@ export const transferNonFungibleTokens = async (
   receivers: string[],
   serialNumbers: number[],
   gasLimit: number
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {
@@ -187,13 +187,9 @@ export const transferNonFungibleTokens = async (
 
   // invoking contract methods
   try {
-    const tx = await baseContract.transferNFTsPublic(
-      hederaTokenAddress,
-      senders,
-      receivers,
-      serialNumbers,
-      { gasLimit }
-    );
+    const tx = await baseContract.transferNFTsPublic(hederaTokenAddress, senders, receivers, serialNumbers, {
+      gasLimit,
+    });
 
     return await handleContractResponse(tx);
   } catch (err: any) {
@@ -225,7 +221,7 @@ export const transferNonFungibleTokens = async (
  *
  * @param quantity: number (amount/serialNumber)
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const transferSingleToken = async (
   baseContract: Contract,
@@ -235,7 +231,7 @@ export const transferSingleToken = async (
   receiver: string,
   quantity: number,
   gasLimit: number
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
   if (!isAddress(hederaTokenAddress)) {

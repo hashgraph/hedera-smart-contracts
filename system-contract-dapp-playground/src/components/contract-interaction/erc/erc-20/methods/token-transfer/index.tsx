@@ -25,7 +25,7 @@ import { useToast } from '@chakra-ui/react';
 import { erc20Transfers } from '@/api/hedera/erc20-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/HTS';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
 import MultiLineMethod from '@/components/common/components/MultiLineMethod';
 import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
@@ -46,7 +46,7 @@ const Transfer = ({ baseContract }: PageProps) => {
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['TOKEN-TRANSFER'];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC20) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
 
   const [transferParams, setTransferParams] = useState({
     owner: '',

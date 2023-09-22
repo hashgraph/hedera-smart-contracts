@@ -26,7 +26,7 @@ import { AiOutlineMinus } from 'react-icons/ai';
 import { IoRefreshOutline } from 'react-icons/io5';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/HTS';
 import { copyContentToClipboard } from '../../../../../common/methods/common';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
 import MultiLineMethod from '@/components/common/components/MultiLineMethod';
@@ -77,7 +77,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [allowances, setAllowances] = useState<Allowance[]>([]);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC20) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['TOKEN-PERMISSION'];
   const allowanceStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['ALLOWANCES-RESULT'];

@@ -36,7 +36,7 @@ import ERC20DeployField from './erc/deployment/ERCDeployField';
 import HederaExchangeRateMethods from './exchange-rate/methods';
 import HederaAlertDialog from '../common/components/AlertDialog';
 import { copyContentToClipboard } from '../common/methods/common';
-import { HederaContractAsset, NetworkName } from '@/types/common';
+import { IHederaContractAsset, TNetworkName } from '@/types/common';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
 import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
@@ -69,7 +69,7 @@ import {
 } from '@/utils/common/constants';
 
 interface PageProps {
-  contract: HederaContractAsset;
+  contract: IHederaContractAsset;
 }
 
 const ContractInteraction = ({ contract }: PageProps) => {
@@ -79,7 +79,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isDeployed, setIsDeployed] = useState(false);
   const [isDeploying, setIsDeploying] = useState(false);
-  const [network, setNetwork] = useState<NetworkName>();
+  const [network, setNetwork] = useState<TNetworkName>();
   const [contractAddress, setContractAddress] = useState('');
   const [didDeployStart, setDidDeployStart] = useState(false);
   const [baseContract, setBaseContract] = useState<Contract>();
@@ -189,7 +189,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
         setContractAddress(contractAddr);
       }
       if (network) {
-        setNetwork(JSON.parse(network) as NetworkName);
+        setNetwork(JSON.parse(network) as TNetworkName);
       }
     })();
   }, [contract.name, toaster]);
@@ -201,7 +201,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
         // handle getting Hedera native contractId from EvmAddress
         const { contractId, err: getContractIdErr } = await getHederaNativeIDFromEvmAddress(
           contractAddress,
-          network as NetworkName,
+          network as TNetworkName,
           'contracts'
         );
         // handle error

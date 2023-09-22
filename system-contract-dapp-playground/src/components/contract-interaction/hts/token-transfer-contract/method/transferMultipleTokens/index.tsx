@@ -31,7 +31,7 @@ import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxRes
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
-import { SmartContractExecutionResult, TransactionResult } from '@/types/contract-interactions/HTS';
+import { ISmartContractExecutionResult, ITransactionResult } from '@/types/contract-interactions/HTS';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { htsMultiTokensTransferParamFields } from '@/utils/contract-interactions/HTS/token-transfer/paramFieldConstant';
@@ -67,7 +67,7 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const contractCaller = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_TRANSFER) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const [isLoading, setIsLoading] = useState({
     FUNGIBLE: false,
     NON_FUNGIBLE: false,
@@ -208,7 +208,7 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
       NON_FUNGIBLE: API === 'NON_FUNGIBLE',
     });
 
-    let transactionResult: SmartContractExecutionResult;
+    let transactionResult: ISmartContractExecutionResult;
     if (API === 'FUNGIBLE') {
       transactionResult = await transferFungibleTokens(
         baseContract,

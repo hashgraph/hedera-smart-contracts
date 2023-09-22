@@ -29,12 +29,12 @@ import { Contract, isAddress } from 'ethers';
  *
  * @param method: 'name' | 'symbol' | 'totalSupply' | 'decimals'
  *
- * @return Promise<ERCSmartContractResult>
+ * @return Promise<IERCSmartContractResult>
  */
 export const getERC20TokenInformation = async (
   baseContract: Contract,
   method: 'name' | 'symbol' | 'totalSupply' | 'decimals'
-): Promise<ERCSmartContractResult> => {
+): Promise<IERCSmartContractResult> => {
   try {
     switch (method) {
       case 'name':
@@ -61,13 +61,13 @@ export const getERC20TokenInformation = async (
  *
  * @param tokenAmount: number
  *
- * @return Promise<ERCSmartContractResult>
+ * @return Promise<IERCSmartContractResult>
  */
 export const erc20Mint = async (
   baseContract: Contract,
   recipientAddress: string,
   tokenAmount: number
-): Promise<ERCSmartContractResult> => {
+): Promise<IERCSmartContractResult> => {
   if (!isAddress(recipientAddress)) {
     return { err: 'Invalid recipient address' };
   } else if (tokenAmount <= 0) {
@@ -90,12 +90,12 @@ export const erc20Mint = async (
  *
  * @param accountAddress: address
  *
- * @return Promise<ERCSmartContractResult>
+ * @return Promise<IERCSmartContractResult>
  */
 export const balanceOf = async (
   baseContract: Contract,
   accountAddress: string
-): Promise<ERCSmartContractResult> => {
+): Promise<IERCSmartContractResult> => {
   if (!isAddress(accountAddress)) {
     return { err: 'Invalid account address' };
   }
@@ -129,7 +129,7 @@ export const balanceOf = async (
  *
  * @param amount?: number
  *
- * @return Promise<ERCSmartContractResult>
+ * @return Promise<IERCSmartContractResult>
  */
 export const handleErc20TokenPermissions = async (
   baseContract: Contract,
@@ -137,7 +137,7 @@ export const handleErc20TokenPermissions = async (
   spenderAddress: string,
   ownerAddress?: string,
   amount?: number
-): Promise<ERCSmartContractResult> => {
+): Promise<IERCSmartContractResult> => {
   // sanitize params
   if (ownerAddress && !isAddress(ownerAddress)) {
     return { err: 'Invalid owner address' };
@@ -188,7 +188,7 @@ export const handleErc20TokenPermissions = async (
  *
  * @param tokenOwnerAddress?: address
  *
- * @return Promise<ERCSmartContractResult>
+ * @return Promise<IERCSmartContractResult>
  */
 export const erc20Transfers = async (
   baseContract: Contract,
@@ -196,7 +196,7 @@ export const erc20Transfers = async (
   recipientAddress: string,
   amount: number,
   tokenOwnerAddress?: string
-): Promise<ERCSmartContractResult> => {
+): Promise<IERCSmartContractResult> => {
   if (method === 'transferFrom' && !isAddress(tokenOwnerAddress)) {
     return { err: 'Invalid token owner address' };
   } else if (!isAddress(recipientAddress)) {

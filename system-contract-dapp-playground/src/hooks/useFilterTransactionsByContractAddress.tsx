@@ -19,12 +19,12 @@
  */
 
 import { useMemo } from 'react';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/HTS';
 
 /** @dev custom hook to filter transactions by contract address */
 
 const useFilterTransactionsByContractAddress = (
-  transactionResults: TransactionResult[],
+  transactionResults: ITransactionResult[],
   contractAddress: string
 ) => {
   return useMemo(

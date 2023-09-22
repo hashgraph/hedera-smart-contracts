@@ -26,21 +26,18 @@ import {
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
   HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
 } from '@/utils/common/constants';
+import { handleKeyValueTypeOnChange, handleUpdateKeyValue } from '../../../shared/methods/signingKeys';
 import {
-  handleKeyValueTypeOnChange,
-  handleUpdateKeyValue,
-} from '../../../shared/methods/signingKeys';
-import {
-  CommonKeyObject,
+  ICommonKeyObject,
   IHederaTokenServiceKeyType,
   IHederaTokenServiceKeyValueType,
 } from '@/types/contract-interactions/HTS';
 
 interface PageProps {
   isSuccessful?: boolean;
-  keys: CommonKeyObject[];
+  keys: ICommonKeyObject[];
   keyTypeArrays?: IHederaTokenServiceKeyType[];
-  setKeys: Dispatch<SetStateAction<CommonKeyObject[]>>;
+  setKeys: Dispatch<SetStateAction<ICommonKeyObject[]>>;
   HederaTokenKeyValueType: IHederaTokenServiceKeyValueType[];
 }
 
@@ -145,8 +142,7 @@ const TokenKeysForm = ({
                   type={'text'}
                   onChange={(e) => handleUpdateKeyValue(e, key, setKeys)}
                   placeholder={
-                    key.keyValueType === 'contractId' ||
-                    key.keyValueType === 'delegatableContractId'
+                    key.keyValueType === 'contractId' || key.keyValueType === 'delegatableContractId'
                       ? 'ID of a smart contract instance...'
                       : `${key.keyValueType.split('_')[0].toUpperCase()} compressed public key...`
                   }

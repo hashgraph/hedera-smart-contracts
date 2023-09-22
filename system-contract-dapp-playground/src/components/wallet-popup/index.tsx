@@ -22,7 +22,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ethers } from 'ethers';
 import { clearCookies } from '@/api/cookies';
-import { NetworkName } from '@/types/common';
+import { TNetworkName } from '@/types/common';
 import { BiCopy, BiCheckDouble } from 'react-icons/bi';
 import ConfirmModal from '../common/components/ConfirmModal';
 import { clearCachedTransactions } from '@/api/localStorage';
@@ -36,7 +36,7 @@ import { BsChevronDown, BsFillQuestionOctagonFill } from 'react-icons/bs';
 import { HASHSCAN_BASE_URL, HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
 
 interface PageProps {
-  network: NetworkName;
+  network: TNetworkName;
   userAddress: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
