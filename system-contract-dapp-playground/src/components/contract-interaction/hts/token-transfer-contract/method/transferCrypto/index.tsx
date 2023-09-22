@@ -24,6 +24,7 @@ import { useEffect, useState } from 'react';
 import { useToast } from '@chakra-ui/react';
 import TokenTransferForm from './TokenTransferForm';
 import CryptoTransferForm from './CryptoTransferForm';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
@@ -36,11 +37,6 @@ import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hoo
 import { prepareCryptoTransferList, prepareTokenTransferList } from './helpers/prepareCryptoTransferValues';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
-import {
-  IHederaTokenServiceTokenTransferList,
-  IHederaTokenServiceTransferList,
-  ITransactionResult,
-} from '@/types/contract-interactions/HTS';
 import {
   CryptoTransferParam,
   TokenTransferParam,

@@ -23,7 +23,7 @@ import { Contract } from 'ethers';
 import { useEffect, useMemo, useState } from 'react';
 import { useDisclosure, useToast } from '@chakra-ui/react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { ITransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import TokenGeneralInfoModal from '../../../shared/components/TokenGeneralInfoModal';

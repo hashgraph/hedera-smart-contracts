@@ -29,11 +29,6 @@ import {
   HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
 } from '@/utils/common/constants';
 import {
-  ICommonKeyObject,
-  IHederaTokenServiceKeyType,
-  IHederaTokenServiceKeyValueType,
-} from '@/types/contract-interactions/HTS';
-import {
   handleUpdateKeyValue,
   handleKeyTypeOnChange,
   handleAddingOrRemovingKeys,

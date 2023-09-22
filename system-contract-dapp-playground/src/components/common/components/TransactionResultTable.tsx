@@ -25,7 +25,7 @@ import { AiOutlineMinus } from 'react-icons/ai';
 import { Dispatch, SetStateAction } from 'react';
 import { copyContentToClipboard } from '../methods/common';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
-import { IHederaTokenServiceKeyType, ITransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import {
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,

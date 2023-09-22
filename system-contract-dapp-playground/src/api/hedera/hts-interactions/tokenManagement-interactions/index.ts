@@ -18,17 +18,12 @@
  *
  */
 
-import {
-  ICommonKeyObject,
-  IHederaTokenServiceExpiry,
-  IHederaTokenServiceHederaToken,
-  ISmartContractExecutionResult,
-} from '@/types/contract-interactions/HTS';
+import { Contract, isAddress } from 'ethers';
+import { ISmartContractExecutionResult } from '@/types/contract-interactions/shared';
 import {
   handleContractResponse,
   prepareHederaTokenKeyArray,
 } from '@/utils/contract-interactions/HTS/helpers';
-import { Contract, isAddress } from 'ethers';
 
 /**
  * @dev manages and updates token information

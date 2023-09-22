@@ -19,7 +19,7 @@
  */
 
 import { useMemo } from 'react';
-import { ITransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 
 /** @dev custom hook to filter transactions by contract address */
 

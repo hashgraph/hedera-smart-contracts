@@ -20,8 +20,8 @@
 
 import { Dispatch, SetStateAction } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { ITransactionResult } from '@/types/contract-interactions/HTS';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import { HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
 import { TRANSACTION_PAGE_SIZE } from '../../contract-interaction/hts/shared/states/commonStates';
 

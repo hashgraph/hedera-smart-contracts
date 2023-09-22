@@ -29,8 +29,8 @@ import { prepareTransactionList } from '@/utils/common/helpers';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
 import ConfirmModal from '@/components/common/components/ConfirmModal';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import { copyContentToClipboard } from '@/components/common/methods/common';
 import { clearCachedTransactions, getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
 import {
@@ -87,7 +87,7 @@ const ActivitySection = () => {
   );
 
   /** @dev handle removing record */
-  const handleRemoveRecord = (targetTransactionResult: TransactionResult) => {
+  const handleRemoveRecord = (targetTransactionResult: ITransactionResult) => {
     // get the cached array stored in localStoraged
     const { storageResult, err: localStorageBalanceErr } = getArrayTypedValuesFromLocalStorage(
       targetTransactionResult.transactionResultStorageKey
@@ -105,7 +105,7 @@ const ActivitySection = () => {
 
     // remove record out of the storageResult array
     const filteredTransactionResults = storageResult.filter(
-      (transactionResult: TransactionResult) => transactionResult.txHash !== targetTransactionResult.txHash
+      (transactionResult: ITransactionResult) => transactionResult.txHash !== targetTransactionResult.txHash
     );
 
     // storage the filteredTransactionResults back to storage

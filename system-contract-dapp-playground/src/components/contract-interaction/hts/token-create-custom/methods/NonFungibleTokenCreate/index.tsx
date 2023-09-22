@@ -23,6 +23,7 @@ import { Contract } from 'ethers';
 import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
@@ -40,11 +41,6 @@ import {
   SharedFormButton,
   SharedExecuteButtonWithFee,
 } from '../../../shared/components/ParamInputForm';
-import {
-  ITransactionResult,
-  IHederaTokenServiceKeyType,
-  ICommonKeyObject,
-} from '@/types/contract-interactions/HTS';
 import {
   HederaTokenKeyTypes,
   HederaTokenKeyValueType,

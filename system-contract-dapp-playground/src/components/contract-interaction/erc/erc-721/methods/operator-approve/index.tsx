@@ -26,7 +26,7 @@ import { useEffect, useState } from 'react';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { IoRefreshOutline } from 'react-icons/io5';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { ITransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import { erc721TokenApproval } from '@/api/hedera/erc721-interactions';
 import { copyContentToClipboard } from '../../../../../common/methods/common';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';

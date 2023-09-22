@@ -20,7 +20,7 @@
 
 import { ContractFactory } from 'ethers';
 import { getWalletProvider } from '../wallet';
-import { ITransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import { IContractABI, IHederaSmartContractResult } from '@/types/common';
 import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 

@@ -31,7 +31,7 @@ import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxRes
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
-import { ISmartContractExecutionResult, ITransactionResult } from '@/types/contract-interactions/HTS';
+import { ISmartContractExecutionResult, ITransactionResult } from '@/types/contract-interactions/shared';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { htsMultiTokensTransferParamFields } from '@/utils/contract-interactions/HTS/token-transfer/paramFieldConstant';

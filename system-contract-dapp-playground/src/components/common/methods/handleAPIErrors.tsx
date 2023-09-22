@@ -20,8 +20,8 @@
 
 import { Dispatch, SetStateAction } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import { HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
-import { IHederaTokenServiceKeyType, ITransactionResult } from '@/types/contract-interactions/HTS';
 
 /** @dev handle error returned back from invoking method APIs*/
 export const handleAPIErrors = ({

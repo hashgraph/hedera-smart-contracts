@@ -25,6 +25,7 @@ import { useToast } from '@chakra-ui/react';
 import TokenExpiryForm from './TokenExpiryForm';
 import { useState, useMemo, useEffect } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
@@ -47,14 +48,6 @@ import {
   SharedFormInputField,
   SharedExecuteButtonWithFee,
 } from '../../../shared/components/ParamInputForm';
-import {
-  ICommonKeyObject,
-  ITransactionResult,
-  IHederaTokenServiceKeyType,
-  IHederaTokenServiceKeyValueType,
-  IHederaTokenServiceExpiry,
-  IHederaTokenServiceHederaToken,
-} from '@/types/contract-interactions/HTS';
 
 interface PageProps {
   baseContract: Contract;
