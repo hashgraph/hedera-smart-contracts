@@ -26,15 +26,15 @@ import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
-import { useToastSuccessful } from '../../../shared/hooks/useToastSuccessful';
-import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
+import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
+import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
 import { manageTokenPermission } from '@/api/hedera/hts-interactions/tokenManagement-interactions';
-import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
+import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { htsTokenPermissionParamFields } from '@/utils/contract-interactions/HTS/token-management/constant';
-import useFilterTransactionsByContractAddress from '../../../shared/hooks/useFilterTransactionsByContractAddress';
+import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedFormButton,

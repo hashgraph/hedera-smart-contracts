@@ -22,7 +22,7 @@ import Image from 'next/image';
 import { useToast } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { CommonErrorToast } from '../../../toast/CommonToast';
-import HederaCommonTextField from '../../../common/HederaCommonTextField';
+import HederaCommonTextField from '../../../common/components/HederaCommonTextField';
 
 interface PageProps {
   isDeploying: boolean;

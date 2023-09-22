@@ -24,15 +24,15 @@ import { Contract, isAddress } from 'ethers';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { Select, useDisclosure, useToast } from '@chakra-ui/react';
 import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
-import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
+import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import TokenSpecificInfoModal from '../../../shared/components/TokenSpecificInfoModal';
 import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
 import { HederaTokenKeyTypes, TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { IHederaTokenServiceKeyType, TransactionResult } from '@/types/contract-interactions/HTS';
 import { queryTokenSpecificInfomation } from '@/api/hedera/hts-interactions/tokenQuery-interactions';
 import { htsQueryTokenInfoParamFields } from '@/utils/contract-interactions/HTS/token-query/constant';
-import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
-import useFilterTransactionsByContractAddress from '../../../shared/hooks/useFilterTransactionsByContractAddress';
+import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
+import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedFormButton,

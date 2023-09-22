@@ -28,14 +28,14 @@ import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { handleAPIErrors } from '../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../shared/states/commonStates';
 import MetadataInputForm from '../../shared/components/MetadataInputForm';
-import { useToastSuccessful } from '../../shared/hooks/useToastSuccessful';
-import { usePaginatedTxResults } from '../../shared/hooks/usePaginatedTxResults';
+import { useToastSuccessful } from '../../../../../hooks/useToastSuccessful';
+import { usePaginatedTxResults } from '../../../../../hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../shared/methods/handleSanitizeFormInputs';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
-import { useUpdateTransactionResultsToLocalStorage } from '../../shared/hooks/useUpdateLocalStorage';
+import { useUpdateTransactionResultsToLocalStorage } from '../../../../../hooks/useUpdateLocalStorage';
 import { htsTokenMintParamFields } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
-import useFilterTransactionsByContractAddress from '../../shared/hooks/useFilterTransactionsByContractAddress';
+import useFilterTransactionsByContractAddress from '../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedFormButton,

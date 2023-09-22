@@ -24,13 +24,13 @@ import { isAddress } from 'ethers';
 import { useToast } from '@chakra-ui/react';
 import { erc20Transfers } from '@/api/hedera/erc20-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import MultiLineMethod from '@/components/common/MultiLineMethod';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
+import MultiLineMethod from '@/components/common/components/MultiLineMethod';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
-import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
+import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   transferParamFields,

@@ -23,7 +23,7 @@ import { Contract, isAddress } from 'ethers';
 import { useState, ReactNode, useCallback } from 'react';
 import { balanceOf } from '@/api/hedera/erc20-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import HederaCommonTextField from '@/components/common/HederaCommonTextField';
+import HederaCommonTextField from '@/components/common/components/HederaCommonTextField';
 import { useToast, TableContainer, Table, Thead, Tr, Th, Tbody } from '@chakra-ui/react';
 import useUpdateMapStateUILocalStorage from '../../../shared/hooks/useUpdateMapStateUILocalStorage';
 import useRetrieveMapValueFromLocalStorage from '../../../shared/hooks/useRetrieveMapValueFromLocalStorage';

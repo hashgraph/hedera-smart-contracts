@@ -31,7 +31,7 @@ import {
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
   HEDERA_CHAKRA_TABLE_VARIANTS,
 } from '@/utils/common/constants';
-import { usePaginatedTxResults } from '@/components/contract-interaction/hts/shared/hooks/usePaginatedTxResults';
+import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
 import {
   Th,
   Tr,

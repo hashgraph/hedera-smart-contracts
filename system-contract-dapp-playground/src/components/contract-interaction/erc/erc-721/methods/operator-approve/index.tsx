@@ -26,14 +26,14 @@ import { useEffect, useState } from 'react';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { IoRefreshOutline } from 'react-icons/io5';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import MultiLineMethod from '@/components/common/MultiLineMethod';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { erc721TokenApproval } from '@/api/hedera/erc721-interactions';
 import { copyContentToClipboard } from '../../../shared/methods/common';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
+import MultiLineMethod from '@/components/common/components/MultiLineMethod';
 import { isApprovalERC721ParamFields } from '@/utils/contract-interactions/erc/erc721/constant';
 import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
-import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
+import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   Td,

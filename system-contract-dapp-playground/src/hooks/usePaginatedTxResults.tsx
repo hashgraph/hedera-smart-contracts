@@ -19,7 +19,7 @@
  */
 
 import { useMemo } from 'react';
-import { TRANSACTION_PAGE_SIZE } from '../states/commonStates';
+import { TRANSACTION_PAGE_SIZE } from '../components/contract-interaction/hts/shared/states/commonStates';
 import { TransactionResult } from '@/types/contract-interactions/HTS';
 
 /** @dev custom hook which declares a paginatedTransactionResults array */

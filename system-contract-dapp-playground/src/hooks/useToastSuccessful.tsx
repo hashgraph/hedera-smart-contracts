@@ -24,11 +24,14 @@ import {
   IHederaTokenServiceKeyType,
 } from '@/types/contract-interactions/HTS';
 import { Dispatch, SetStateAction, useEffect } from 'react';
-import { HederaTokenKeyTypes, TRANSACTION_PAGE_SIZE } from '../states/commonStates';
+import {
+  HederaTokenKeyTypes,
+  TRANSACTION_PAGE_SIZE,
+} from '../components/contract-interaction/hts/shared/states/commonStates';
 import {
   generateInitialFungibleParamValue,
   generateInitialNonFungibleParamValue,
-} from '../../token-transfer-contract/method/transferMultipleTokens/helpers/generateInitialValues';
+} from '../components/contract-interaction/hts/token-transfer-contract/method/transferMultipleTokens/helpers/generateInitialValues';
 
 interface HookProps {
   toaster: any;
