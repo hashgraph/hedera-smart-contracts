@@ -24,19 +24,19 @@ import { useToast } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { generatedRandomUniqueKey } from '@/utils/common/helpers';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
-import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
-import { useToastSuccessful } from '../../../shared/hooks/useToastSuccessful';
-import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
+import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
+import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
+import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import TokenAddressesInputForm from '../../../shared/components/TokenAddressesInputForm';
-import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
+import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { manageTokenRelation } from '@/api/hedera/hts-interactions/tokenManagement-interactions';
-import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
-import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
+import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
+import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { htsTokenRelationParamFields } from '@/utils/contract-interactions/HTS/token-management/constant';
-import useFilterTransactionsByContractAddress from '../../../shared/hooks/useFilterTransactionsByContractAddress';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   CONTRACT_NAMES,
   HEDERA_BRANDING_COLORS,
@@ -65,7 +65,7 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('REVOKE_KYC');
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_MANAGE) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-MANAGE']['TOKEN-RELATION'];
   const [isFreezeLoading, setIsFreezeLoading] = useState({

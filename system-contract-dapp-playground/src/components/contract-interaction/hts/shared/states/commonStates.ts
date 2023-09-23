@@ -18,11 +18,6 @@
  *
  */
 
-import {
-  IHederaTokenServiceKeyType,
-  IHederaTokenServiceKeyValueType,
-} from '@/types/contract-interactions/HTS';
-
 // Page Size
 export const TRANSACTION_PAGE_SIZE = 10;
 

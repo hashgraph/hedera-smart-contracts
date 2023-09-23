@@ -18,11 +18,8 @@
  *
  */
 
-import {
-  IHederaTokenServiceKeyType,
-  SmartContractExecutionResult,
-} from '@/types/contract-interactions/HTS';
 import { Contract, isAddress } from 'ethers';
+import { ISmartContractExecutionResult } from '@/types/contract-interactions/shared';
 import { KEY_TYPE_MAP } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
 import {
   convertsArgsProxyToHTSSpecificInfo,
@@ -39,12 +36,12 @@ import {
  *
  * @param hederaTokenAddress: string
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const queryTokenValidity = async (
   baseContract: Contract,
   hederaTokenAddress: string
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize param
   if (!isAddress(hederaTokenAddress)) {
     console.error('Invalid token address');
@@ -82,14 +79,14 @@ export const queryTokenValidity = async (
  *
  * @param serialNumber?: number
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const queryTokenGeneralInfomation = async (
   baseContract: Contract,
   API: 'TOKEN' | 'FUNGIBLE' | 'NON_FUNFIBLE',
   hederaTokenAddress: string,
   serialNumber?: number
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize param
   if (!isAddress(hederaTokenAddress)) {
     console.error('Invalid token address');
@@ -136,9 +133,7 @@ export const queryTokenGeneralInfomation = async (
     const txReceipt = await transactionResult.wait();
 
     // retrieve information from event
-    const { args } = txReceipt.logs.filter(
-      (event: any) => event.fragment.name === eventMaps[API]
-    )[0];
+    const { args } = txReceipt.logs.filter((event: any) => event.fragment.name === eventMaps[API])[0];
 
     return {
       [eventMaps[API]]: convertsArgsProxyToHTSTokenInfo(args.tokenInfo, API),
@@ -173,7 +168,7 @@ export const queryTokenGeneralInfomation = async (
  *
  * @param keyType?: IHederaTokenServiceKeyType
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const queryTokenSpecificInfomation = async (
   baseContract: Contract,
@@ -186,7 +181,7 @@ export const queryTokenSpecificInfomation = async (
     | 'DEFAULT_FREEZE_STATUS',
   hederaTokenAddress: string,
   keyType?: IHederaTokenServiceKeyType
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize param
   if (!isAddress(hederaTokenAddress)) {
     console.error('Invalid token address');
@@ -208,9 +203,7 @@ export const queryTokenSpecificInfomation = async (
     let transactionResult;
     switch (API) {
       case 'DEFAULT_FREEZE_STATUS':
-        transactionResult = await baseContract.getTokenDefaultFreezeStatusPublic(
-          hederaTokenAddress
-        );
+        transactionResult = await baseContract.getTokenDefaultFreezeStatusPublic(hederaTokenAddress);
         break;
 
       case 'DEFAULT_KYC_STATUS':
@@ -232,10 +225,7 @@ export const queryTokenSpecificInfomation = async (
           console.error('Key Type is needed for querying NON_FUNGIBLE');
           return { err: 'Key Type is needed for querying NON_FUNGIBLE' };
         } else {
-          transactionResult = await baseContract.getTokenKeyPublic(
-            hederaTokenAddress,
-            KEY_TYPE_MAP[keyType]
-          );
+          transactionResult = await baseContract.getTokenKeyPublic(hederaTokenAddress, KEY_TYPE_MAP[keyType]);
         }
         break;
     }
@@ -244,9 +234,7 @@ export const queryTokenSpecificInfomation = async (
     const txReceipt = await transactionResult.wait();
 
     // retrieve information from event
-    const tokenInfoResult = txReceipt.logs.filter(
-      (event: any) => event.fragment.name === eventMaps[API]
-    )[0];
+    const tokenInfoResult = txReceipt.logs.filter((event: any) => event.fragment.name === eventMaps[API])[0];
 
     if (API === 'DEFAULT_FREEZE_STATUS' || API === 'DEFAULT_KYC_STATUS' || API === 'TOKEN_TYPE') {
       return { [eventMaps[API]]: tokenInfoResult.data, transactionHash: txReceipt.hash };
@@ -281,7 +269,7 @@ export const queryTokenSpecificInfomation = async (
  *
  * @param serialNumber?: number
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const queryTokenPermissionInformation = async (
   baseContract: Contract,
@@ -290,7 +278,7 @@ export const queryTokenPermissionInformation = async (
   ownerAddress?: string,
   spenderAddress?: string,
   serialNumber?: number
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize param
   if (!isAddress(hederaTokenAddress)) {
     console.error('Invalid token address');
@@ -334,10 +322,7 @@ export const queryTokenPermissionInformation = async (
         if (!serialNumber) {
           errMsg = 'Serial number is needed for GET_APPROVED API';
         } else {
-          transactionResult = await baseContract.getApprovedPublic(
-            hederaTokenAddress,
-            serialNumber
-          );
+          transactionResult = await baseContract.getApprovedPublic(hederaTokenAddress, serialNumber);
         }
         break;
       case 'IS_APPROVAL':
@@ -390,14 +375,14 @@ export const queryTokenPermissionInformation = async (
  *
  * @param serialNumber?: number
  *
- * @return Promise<SmartContractExecutionResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const queryTokenStatusInformation = async (
   baseContract: Contract,
   API: 'IS_KYC' | 'IS_FROZEN',
   hederaTokenAddress: string,
   accountAddress: string
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // sanitize param
   if (!isAddress(hederaTokenAddress)) {
     console.error('Invalid token address');

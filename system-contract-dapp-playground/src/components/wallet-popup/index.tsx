@@ -22,11 +22,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ethers } from 'ethers';
 import { clearCookies } from '@/api/cookies';
-import { NetworkName } from '@/types/common';
-import ConfirmModal from '../common/ConfirmModal';
+import { TNetworkName } from '@/types/common';
 import { BiCopy, BiCheckDouble } from 'react-icons/bi';
+import ConfirmModal from '../common/components/ConfirmModal';
 import { clearCachedTransactions } from '@/api/localStorage';
 import { getBalance, getWalletProvider } from '@/api/wallet';
+import { copyContentToClipboard } from '../common/methods/common';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
@@ -35,7 +36,7 @@ import { BsChevronDown, BsFillQuestionOctagonFill } from 'react-icons/bs';
 import { HASHSCAN_BASE_URL, HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
 
 interface PageProps {
-  network: NetworkName;
+  network: TNetworkName;
   userAddress: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
@@ -105,11 +106,11 @@ const WalletPopup = ({ setIsOpen, userAddress, network }: PageProps) => {
     switch (type) {
       case 'ACCOUNTID':
         setIsCopied((prev) => ({ ...prev, accountId: true }));
-        navigator.clipboard.writeText(hederaAccountId as string);
+        copyContentToClipboard(hederaAccountId as string);
         break;
       default:
         setIsCopied((prev) => ({ ...prev, evmAddress: true }));
-        navigator.clipboard.writeText(userAddress);
+        copyContentToClipboard(userAddress);
     }
     setTimeout(() => {
       setIsCopied({ accountId: false, evmAddress: false });

@@ -23,19 +23,19 @@ import { Contract } from 'ethers';
 import { useEffect, useMemo, useState } from 'react';
 import { useDisclosure, useToast } from '@chakra-ui/react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
-import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
-import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
+import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import TokenGeneralInfoModal from '../../../shared/components/TokenGeneralInfoModal';
-import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
-import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
+import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
+import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
+import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { queryTokenGeneralInfomation } from '@/api/hedera/hts-interactions/tokenQuery-interactions';
 import { htsQueryTokenInfoParamFields } from '@/utils/contract-interactions/HTS/token-query/constant';
-import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
-import useFilterTransactionsByContractAddress from '../../../shared/hooks/useFilterTransactionsByContractAddress';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
+import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedFormButton,
   SharedExecuteButton,
@@ -63,7 +63,7 @@ const QueryTokenGeneralInfomation = ({ baseContract }: PageProps) => {
   const [tokenInfoFromTxResult, setTokenInfoFromTxResult] = useState<any>();
   const [tokenAddressFromTxResult, setTokenAddressFromTxResult] = useState('');
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_QUERY) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-QUERY']['TOKEN-GENERAL-INFO'];
   const [APIMethodsFromTxResult, setAPIMethodsFromTxResult] = useState<API_NAMES>('TOKEN');

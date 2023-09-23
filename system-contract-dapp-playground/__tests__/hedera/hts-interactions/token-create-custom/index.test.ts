@@ -27,7 +27,6 @@ import {
   createHederaNonFungibleToken,
   associateHederaTokensToAccounts,
 } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
-import { CommonKeyObject } from '@/types/contract-interactions/HTS';
 import { MOCK_TOKEN_ADDRESS, MOCK_TX_HASH } from '../../../utils/common/constants';
 
 describe('createHederaFungibleToken test suite', () => {
@@ -83,8 +82,8 @@ describe('createHederaFungibleToken test suite', () => {
     createNonFungibleTokenWithCustomFeesPublic: jest.fn().mockResolvedValue(mockResolvedValue),
   };
 
-  // mock inputKeys with CommonKeyObject[] type
-  const inputKeys: CommonKeyObject[] = [
+  // mock inputKeys with ICommonKeyObject[] type
+  const inputKeys: ICommonKeyObject[] = [
     {
       keyType: 'ADMIN',
       keyValueType: 'contractId',
@@ -261,7 +260,7 @@ describe('createHederaFungibleToken test suite', () => {
     });
 
     it('should execute createHederaFungibleToken and return error if inputKeys is invalid ', async () => {
-      const failedKeys: CommonKeyObject[] = [
+      const failedKeys: ICommonKeyObject[] = [
         {
           keyType: 'ADMIN',
           keyValueType: 'contractId',
@@ -395,7 +394,7 @@ describe('createHederaFungibleToken test suite', () => {
     });
 
     it('should execute createHederaNonFungibleToken and return error if inputKeys is invalid ', async () => {
-      const failedKeys: CommonKeyObject[] = [
+      const failedKeys: ICommonKeyObject[] = [
         {
           keyType: 'ADMIN',
           keyValueType: 'contractId',

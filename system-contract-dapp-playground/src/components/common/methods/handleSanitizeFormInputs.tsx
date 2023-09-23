@@ -19,7 +19,6 @@
  */
 
 import { isAddress } from 'ethers';
-import { CommonKeyObject } from '@/types/contract-interactions/HTS';
 import { isCompressedPublicKey } from '@/utils/contract-interactions/HTS/helpers';
 
 interface ParamsProps {
@@ -43,7 +42,7 @@ interface ParamsProps {
   serialNumbers?: number[];
   receiverAddress?: string;
   feeTokenAddress?: string;
-  keys?: CommonKeyObject[];
+  keys?: ICommonKeyObject[];
   autoRenewPeriod?: string;
   autoRenewAccount?: string;
   tokenAddresses?: string[];

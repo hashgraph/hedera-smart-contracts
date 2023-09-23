@@ -19,7 +19,7 @@
  */
 
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
-import { NetworkName } from '@/types/common';
+import { TNetworkName } from '@/types/common';
 import { HEDERA_NETWORKS } from '@/utils/common/constants';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
@@ -30,7 +30,7 @@ const RestMock = new MockAdapter(axios);
 describe('getHederaNativeIDFromEvmAddress calls the correct mirror URL', () => {
   it('should match mirror-node url dynamically based on different networks', async () => {
     const evmAddress = '0xCC07a8243578590d55c5708D7fB453245350Cc2A';
-    const networks: NetworkName[] = ['mainnet', 'testnet', 'previewnet', 'localnet'];
+    const networks: TNetworkName[] = ['mainnet', 'testnet', 'previewnet', 'localnet'];
 
     networks.forEach((network) => {
       const experimentUrl = `${HEDERA_NETWORKS[network].mirrorNodeUrl}/accounts/${evmAddress}`;
@@ -47,7 +47,7 @@ describe('getHederaNativeIDFromEvmAddress calls the correct mirror URL', () => {
 
   it('should match mirror-node url dynamically based on different params', async () => {
     const evmAddress = '0xCC07a8243578590d55c5708D7fB453245350Cc2A';
-    const network: NetworkName = 'mainnet';
+    const network: TNetworkName = 'mainnet';
     const params = ['accounts', 'contracts'];
 
     params.forEach((param) => {
@@ -61,7 +61,7 @@ describe('getHederaNativeIDFromEvmAddress calls the correct mirror URL', () => {
   it('should call the correct mirror node URL when a network environment is set', async () => {
     const accountParam = 'accounts';
     const contractParam = 'contracts';
-    const network: NetworkName = 'testnet';
+    const network: TNetworkName = 'testnet';
     const expectedHederaNativeId = '0.0.445445';
     const evmAddress = '0xCC07a8243578590d55c5708D7fB453245350Cc2A';
 
@@ -75,11 +75,7 @@ describe('getHederaNativeIDFromEvmAddress calls the correct mirror URL', () => {
     RestMock.onGet(expectedContractUrl).reply(200, mockContractResponse);
 
     const accountResult = await getHederaNativeIDFromEvmAddress(evmAddress, network, accountParam);
-    const contractResult = await getHederaNativeIDFromEvmAddress(
-      evmAddress,
-      network,
-      contractParam
-    );
+    const contractResult = await getHederaNativeIDFromEvmAddress(evmAddress, network, contractParam);
 
     expect(accountResult.accountId).toBe(expectedHederaNativeId);
     expect(contractResult.contractId).toBe(expectedHederaNativeId);

@@ -20,7 +20,7 @@
 
 import axios from 'axios';
 import { HEDERA_NETWORKS } from '@/utils/common/constants';
-import { MirrorNodeResult, NetworkName } from '@/types/common';
+import { IMirrorNodeResult, TNetworkName } from '@/types/common';
 
 /**
  * @dev get Hedera native account ID from EVM address
@@ -33,13 +33,11 @@ import { MirrorNodeResult, NetworkName } from '@/types/common';
  */
 export const getHederaNativeIDFromEvmAddress = async (
   evmAddress: string,
-  network: NetworkName,
+  network: TNetworkName,
   params: 'accounts' | 'contracts'
-): Promise<MirrorNodeResult> => {
+): Promise<IMirrorNodeResult> => {
   try {
-    const accountInfo = await axios.get(
-      `${HEDERA_NETWORKS[network].mirrorNodeUrl}/${params}/${evmAddress}`
-    );
+    const accountInfo = await axios.get(`${HEDERA_NETWORKS[network].mirrorNodeUrl}/${params}/${evmAddress}`);
 
     if (params === 'accounts') {
       return { accountId: accountInfo.data.account };

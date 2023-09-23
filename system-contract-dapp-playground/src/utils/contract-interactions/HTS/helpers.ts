@@ -29,20 +29,7 @@ import {
   TOKEN_INFO_ADVANCED_KEYS,
 } from './token-query/constant';
 import { isAddress } from 'ethers';
-import {
-  CommonKeyObject,
-  IHederaTokenServiceExpiry,
-  IHederaTokenServiceKeyType,
-  IHederaTokenServiceTokenKey,
-  IHederaTokenServiceFixedFee,
-  IHederaTokenServiceTokenInfo,
-  IHederaTokenServiceRoyaltyFee,
-  IHederaTokenServiceKeyValueType,
-  SmartContractExecutionResult,
-  IHederaTokenServiceFractionalFee,
-  IHederaTokenServiceFungibleTokenInfo,
-  IHederaTokenServiceNonFungibleTokenInfo,
-} from '@/types/contract-interactions/HTS';
+import { ISmartContractExecutionResult } from '@/types/contract-interactions/shared';
 import { KEY_TYPE_MAP, DEFAULT_IHTS_KEY_VALUE } from './token-create-custom/constant';
 
 /**
@@ -98,16 +85,16 @@ export const constructIHederaTokenKey = (
 };
 
 /**
- * @dev prepares a list of IHederaTokenService.TokenKey typed keys with a CommonKeyObject[] input
+ * @dev prepares a list of IHederaTokenService.TokenKey typed keys with a ICommonKeyObject[] input
  *
- * @param inputKeys: CommonKeyObject[]
+ * @param inputKeys: ICommonKeyObject[]
  *
  * @return IHederaTokenServiceTokenKey[]
  *
- * @return err: CommonKeyObject[]
+ * @return err: ICommonKeyObject[]
  */
-export const prepareHederaTokenKeyArray = (inputKeys: CommonKeyObject[]) => {
-  let constructingKeyError: CommonKeyObject[] = [];
+export const prepareHederaTokenKeyArray = (inputKeys: ICommonKeyObject[]) => {
+  let constructingKeyError: ICommonKeyObject[] = [];
   const hederaTokenKeys = inputKeys.map((inputKey) => {
     // construct IHederaTokenKey
     const hederaTokenKey = constructIHederaTokenKey(
@@ -147,7 +134,7 @@ export const prepareHederaTokenKeyArray = (inputKeys: CommonKeyObject[]) => {
 export const handleContractResponse = async (
   transactionResult: any,
   errMsg?: any
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // return err if any
   if (errMsg) {
     console.error(errMsg);
@@ -178,7 +165,7 @@ export const handleContractResponseWithDynamicEventNames = async (
   transactionResult: any,
   eventMaps?: any,
   API?: any
-): Promise<SmartContractExecutionResult> => {
+): Promise<ISmartContractExecutionResult> => {
   // get transaction receipt
   const txReceipt = await transactionResult.wait();
 

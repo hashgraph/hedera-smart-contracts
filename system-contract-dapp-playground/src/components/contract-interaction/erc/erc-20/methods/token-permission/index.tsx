@@ -25,15 +25,15 @@ import { BiCopy } from 'react-icons/bi';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { IoRefreshOutline } from 'react-icons/io5';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import MultiLineMethod from '@/components/common/MultiLineMethod';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
-import { copyContentToClipboard } from '../../../shared/methods/common';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
+import MultiLineMethod from '@/components/common/components/MultiLineMethod';
+import { copyContentToClipboard } from '../../../../../common/methods/common';
 import { handleErc20TokenPermissions } from '@/api/hedera/erc20-interactions';
-import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
-import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
+import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,
@@ -77,7 +77,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [allowances, setAllowances] = useState<Allowance[]>([]);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC20) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['TOKEN-PERMISSION'];
   const allowanceStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['ALLOWANCES-RESULT'];

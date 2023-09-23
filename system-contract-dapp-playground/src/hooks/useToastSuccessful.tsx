@@ -18,17 +18,16 @@
  *
  */
 
-import {
-  CommonKeyObject,
-  TransactionResult,
-  IHederaTokenServiceKeyType,
-} from '@/types/contract-interactions/HTS';
 import { Dispatch, SetStateAction, useEffect } from 'react';
-import { HederaTokenKeyTypes, TRANSACTION_PAGE_SIZE } from '../states/commonStates';
+import {
+  HederaTokenKeyTypes,
+  TRANSACTION_PAGE_SIZE,
+} from '../components/contract-interaction/hts/shared/states/commonStates';
 import {
   generateInitialFungibleParamValue,
   generateInitialNonFungibleParamValue,
-} from '../../token-transfer-contract/method/transferMultipleTokens/helpers/generateInitialValues';
+} from '../components/contract-interaction/hts/token-transfer-contract/method/transferMultipleTokens/helpers/generateInitialValues';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 
 interface HookProps {
   toaster: any;
@@ -44,11 +43,11 @@ interface HookProps {
   initialTokenAddressesValues?: any;
   setTokenTransferParamValues?: any;
   setCryptoTransferParamValues?: any;
-  initialKeyValues?: CommonKeyObject[];
-  transactionResults: TransactionResult[];
+  initialKeyValues?: ICommonKeyObject[];
+  transactionResults: ITransactionResult[];
   setIsSuccessful: Dispatch<SetStateAction<boolean>>;
   setWithCustomFee?: Dispatch<SetStateAction<boolean>>;
-  setKeys?: Dispatch<SetStateAction<CommonKeyObject[]>>;
+  setKeys?: Dispatch<SetStateAction<ICommonKeyObject[]>>;
   setCurrentTransactionPage: Dispatch<SetStateAction<number>>;
   setChosenKeys?: Dispatch<SetStateAction<Set<IHederaTokenServiceKeyType>>>;
   setKeyTypesToShow?: Dispatch<SetStateAction<Set<IHederaTokenServiceKeyType>>>;

@@ -19,6 +19,7 @@
  */
 
 import { Contract } from 'ethers';
+import { ISmartContractExecutionResult } from '@/types/contract-interactions/shared';
 
 /**
  * @dev handle retrieving a pseudo-random seed
@@ -29,12 +30,12 @@ import { Contract } from 'ethers';
  *
  * @param gasLimit: Number
  *
- * @return Promise<PRNGContractResult>
+ * @return Promise<ISmartContractExecutionResult>
  */
 export const handlePRGNAPI = async (
   baseContract: Contract,
   gasLimit: Number
-): Promise<PRNGContractResult> => {
+): Promise<ISmartContractExecutionResult> => {
   try {
     // invoke contract method
     const tx = await baseContract.getPseudorandomSeed({ gasLimit });
@@ -42,9 +43,7 @@ export const handlePRGNAPI = async (
     // retrieve txReceipt
     const txReceipt = await tx.wait();
 
-    const { data } = txReceipt.logs.filter(
-      (event: any) => event.fragment.name === 'PseudoRandomSeed'
-    )[0];
+    const { data } = txReceipt.logs.filter((event: any) => event.fragment.name === 'PseudoRandomSeed')[0];
 
     return { transactionHash: txReceipt.hash, pseudoRandomSeed: data };
   } catch (err: any) {
