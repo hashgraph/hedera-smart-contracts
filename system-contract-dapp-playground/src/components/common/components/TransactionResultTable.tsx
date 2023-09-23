@@ -23,6 +23,7 @@ import { ethers } from 'ethers';
 import { FiExternalLink } from 'react-icons/fi';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { Dispatch, SetStateAction } from 'react';
+import { IoRefreshOutline } from 'react-icons/io5';
 import { copyContentToClipboard } from '../methods/common';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import { ITransactionResult } from '@/types/contract-interactions/shared';
@@ -51,6 +52,7 @@ interface TransactionResultTablePageProps {
   hederaNetwork: string;
   TRANSACTION_PAGE_SIZE: number;
   currentTransactionPage: number;
+  handleReexecuteMethodAPI?: any;
   transactionResultStorageKey: string;
   transactionResults: ITransactionResult[];
   setTokenInfoFromTxResult?: Dispatch<any>;
@@ -67,6 +69,7 @@ interface TransactionResultTablePageProps {
     | 'TokenMint'
     | 'TokenCreate'
     | 'ExchangeRate'
+    | 'ERCBalanceOf'
     | 'QueryValidity'
     | 'CryptoTransfer'
     | 'TokenAssociate'
@@ -88,6 +91,7 @@ export const TransactionResultTable = ({
   currentTransactionPage,
   setKeyTypeFromTxResult,
   setTokenInfoFromTxResult,
+  handleReexecuteMethodAPI,
   setAPIMethodsFromTxResult,
   setCurrentTransactionPage,
   setTokenAddressFromTxResult,
@@ -96,8 +100,9 @@ export const TransactionResultTable = ({
 }: TransactionResultTablePageProps) => {
   let beginingHashIndex: number, endingHashIndex: number;
   switch (API) {
-    case 'TokenCreate':
     case 'PRNG':
+    case 'TokenCreate':
+    case 'ERCBalanceOf':
       beginingHashIndex = 15;
       endingHashIndex = -12;
       break;
@@ -131,18 +136,23 @@ export const TransactionResultTable = ({
               Index
             </Th>
             <Th color={HEDERA_BRANDING_COLORS.violet}>Status</Th>
-            <Th color={HEDERA_BRANDING_COLORS.violet}>Tx hash</Th>
-            {API !== 'CryptoTransfer' && API !== 'PRNG' && API !== 'ExchangeRate' && (
-              <Th color={HEDERA_BRANDING_COLORS.violet}>{`Token ${
-                API !== 'TransferSingle' ? `Address` : ``
-              }`}</Th>
-            )}
+            {API !== 'ERCBalanceOf' && <Th color={HEDERA_BRANDING_COLORS.violet}>Tx hash</Th>}
+            {API !== 'CryptoTransfer' &&
+              API !== 'PRNG' &&
+              API !== 'ExchangeRate' &&
+              API !== 'ERCBalanceOf' && (
+                <Th color={HEDERA_BRANDING_COLORS.violet}>{`Token ${
+                  API !== 'TransferSingle' ? `Address` : ``
+                }`}</Th>
+              )}
             {API === 'TransferSingle' && <Th color={HEDERA_BRANDING_COLORS.violet}>Sender</Th>}
             {(API === 'TokenMint' || API === 'TransferSingle') && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>Recipient</Th>
             )}
             {API === 'TokenAssociate' && <Th color={HEDERA_BRANDING_COLORS.violet}>Associated Account</Th>}
-            {API === 'QueryTokenStatus' && <Th color={HEDERA_BRANDING_COLORS.violet}>Account</Th>}
+            {API === 'QueryTokenStatus' ||
+              (API === 'ERCBalanceOf' && <Th color={HEDERA_BRANDING_COLORS.violet}>Account</Th>)}
+            {API === 'ERCBalanceOf' && <Th color={HEDERA_BRANDING_COLORS.violet}> Balance</Th>}
             {API === 'GrantKYC' && <Th color={HEDERA_BRANDING_COLORS.violet}>KYCed Account</Th>}
             {API === 'QueryValidity' && <Th color={HEDERA_BRANDING_COLORS.violet}>Valid Token</Th>}
             {API === 'QueryTokenStatus' && <Th color={HEDERA_BRANDING_COLORS.violet}>Relation</Th>}
@@ -158,6 +168,7 @@ export const TransactionResultTable = ({
               API === 'QueryTokenStatus' ||
               API === 'TransferSingle' ||
               API === 'ExchangeRate') && <Th color={HEDERA_BRANDING_COLORS.violet}>API called</Th>}
+            {API === 'ERCBalanceOf' && <Th />}
             <Th />
           </Tr>
         </Thead>
@@ -196,43 +207,45 @@ export const TransactionResultTable = ({
                 </Td>
 
                 {/* transaction hash */}
-                <Td className="cursor-pointer">
-                  <div className="flex gap-1 items-center">
-                    <div onClick={() => copyContentToClipboard(transactionResult.txHash)}>
-                      <Popover>
-                        <PopoverTrigger>
-                          <div className="flex gap-1 items-center">
-                            <Tooltip label="click to copy transaction hash">
-                              {API === 'CryptoTransfer' ? (
-                                transactionResult.txHash
-                              ) : (
-                                <p>
-                                  {transactionResult.txHash.slice(0, beginingHashIndex)}...
-                                  {transactionResult.txHash.slice(endingHashIndex)}
-                                </p>
-                              )}
-                            </Tooltip>
-                          </div>
-                        </PopoverTrigger>
-                        <PopoverContent width={'fit-content'} border={'none'}>
-                          <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                    <Tooltip
-                      label={'Explore this transaction on HashScan'}
-                      placement="top"
-                      fontWeight={'medium'}
-                    >
-                      <Link
-                        href={`https://hashscan.io/${hederaNetwork}/transaction/${transactionResult.txHash}`}
-                        target="_blank"
+                {API !== 'ERCBalanceOf' && (
+                  <Td className="cursor-pointer">
+                    <div className="flex gap-1 items-center">
+                      <div onClick={() => copyContentToClipboard(transactionResult.txHash)}>
+                        <Popover>
+                          <PopoverTrigger>
+                            <div className="flex gap-1 items-center">
+                              <Tooltip label="click to copy transaction hash">
+                                {API === 'CryptoTransfer' ? (
+                                  transactionResult.txHash
+                                ) : (
+                                  <p>
+                                    {transactionResult.txHash.slice(0, beginingHashIndex)}...
+                                    {transactionResult.txHash.slice(endingHashIndex)}
+                                  </p>
+                                )}
+                              </Tooltip>
+                            </div>
+                          </PopoverTrigger>
+                          <PopoverContent width={'fit-content'} border={'none'}>
+                            <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      <Tooltip
+                        label={'Explore this transaction on HashScan'}
+                        placement="top"
+                        fontWeight={'medium'}
                       >
-                        <FiExternalLink />
-                      </Link>
-                    </Tooltip>
-                  </div>
-                </Td>
+                        <Link
+                          href={`https://hashscan.io/${hederaNetwork}/transaction/${transactionResult.txHash}`}
+                          target="_blank"
+                        >
+                          <FiExternalLink />
+                        </Link>
+                      </Tooltip>
+                    </div>
+                  </Td>
+                )}
 
                 {/* token address */}
                 {(API === 'TokenCreate' ||
@@ -433,6 +446,7 @@ export const TransactionResultTable = ({
                   </Td>
                 )}
 
+                {/* Receiver Address */}
                 {API === 'TransferSingle' && (
                   <Td className="cursor-pointer">
                     <div className="flex gap-1 items-center">
@@ -606,6 +620,62 @@ export const TransactionResultTable = ({
                     ) : (
                       <>NULL</>
                     )}
+                  </Td>
+                )}
+
+                {/* Account address - ERCBalanceOf*/}
+                {API === 'ERCBalanceOf' && (
+                  <Td className="cursor-pointer">
+                    <div className="flex gap-1 items-center">
+                      <div onClick={() => copyContentToClipboard(transactionResult.balanceOf?.owner!)}>
+                        <Popover>
+                          <PopoverTrigger>
+                            <div className="flex gap-1 items-center">
+                              <Tooltip label="click to copy recipient address">
+                                <p>
+                                  {transactionResult.balanceOf?.owner.slice(0, beginingHashIndex)}
+                                  ...
+                                  {transactionResult.balanceOf?.owner.slice(endingHashIndex)}
+                                </p>
+                              </Tooltip>
+                            </div>
+                          </PopoverTrigger>
+                          <PopoverContent width={'fit-content'} border={'none'}>
+                            <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      <Tooltip label={'Explore this user on HashScan'} placement="top" fontWeight={'medium'}>
+                        <Link
+                          href={`https://hashscan.io/${hederaNetwork}/account/${transactionResult.balanceOf?.owner}`}
+                          target="_blank"
+                        >
+                          <FiExternalLink />
+                        </Link>
+                      </Tooltip>
+                    </div>
+                  </Td>
+                )}
+
+                {/* Balance - ERCBalanceOf */}
+                {API === 'ERCBalanceOf' && (
+                  <Td isNumeric>
+                    <p>{transactionResult.balanceOf?.balance}</p>
+                  </Td>
+                )}
+
+                {/* refresh button - ERC */}
+                {API === 'ERCBalanceOf' && (
+                  <Td>
+                    {/* refresh button */}
+                    <Tooltip label="refresh this record" placement="top">
+                      <button
+                        onClick={() => handleReexecuteMethodAPI(transactionResult.balanceOf?.owner, true)}
+                        className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-teal-500 transition duration-300`}
+                      >
+                        <IoRefreshOutline />
+                      </button>
+                    </Tooltip>
                   </Td>
                 )}
 

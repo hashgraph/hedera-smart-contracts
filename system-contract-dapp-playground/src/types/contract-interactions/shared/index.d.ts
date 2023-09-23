@@ -18,13 +18,14 @@
  *
  */
 
-/** @dev the type for HTS transaction results */
-export type ITransactionResult = {
+/** @dev an interface for transaction results when interacting with smart contracts. */
+export interface ITransactionResult {
   status: 'success' | 'fail';
   txHash: string;
   APICalled?: any;
   tokenInfo?: any;
   isToken?: boolean;
+  readonly?: boolean;
   keyTypeCalled?: any;
   recordIndex?: number;
   tokenAddress?: string;
@@ -35,10 +36,14 @@ export type ITransactionResult = {
   receiverAddress?: string;
   pseudoRandomSeed?: string;
   tokenAddresses?: string[];
-  transactionResultStorageKey;
   transactionTimeStamp: number;
   sessionedContractAddress: string;
-};
+  transactionResultStorageKey: string;
+  balanceOf?: {
+    owner: string;
+    balance: number;
+  };
+}
 
 /** @dev an interface for the results returned back from interacting with Hedera System Smart Contracts */
 interface ISmartContractExecutionResult {

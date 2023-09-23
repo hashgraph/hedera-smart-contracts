@@ -19,17 +19,23 @@
  */
 
 import Image from 'next/image';
+import Cookies from 'js-cookie';
+import { useToast } from '@chakra-ui/react';
 import { Contract, isAddress } from 'ethers';
-import { useState, ReactNode, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { balanceOf } from '@/api/hedera/erc20-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
+import { generatedRandomUniqueKey } from '@/utils/common/helpers';
+import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import HederaCommonTextField from '@/components/common/components/HederaCommonTextField';
-import { useToast, TableContainer, Table, Thead, Tr, Th, Tbody } from '@chakra-ui/react';
-import useUpdateMapStateUILocalStorage from '../../../../../../hooks/useUpdateMapStateUILocalStorage';
-import useRetrieveMapValueFromLocalStorage from '../../../../../../hooks/useRetrieveMapValueFromLocalStorage';
+import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
+import { TransactionResultTable } from '@/components/common/components/TransactionResultTable';
+import useFilterTransactionsByContractAddress from '@/hooks/useFilterTransactionsByContractAddress';
+import { TRANSACTION_PAGE_SIZE } from '@/components/contract-interaction/hts/shared/states/commonStates';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
-  HEDERA_BRANDING_COLORS,
-  HEDERA_CHAKRA_TABLE_VARIANTS,
+  CONTRACT_NAMES,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
 } from '@/utils/common/constants';
@@ -42,12 +48,29 @@ const BalanceOf = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [accountAddress, setAccountAddress] = useState('');
-  const [ractNodes, setReactNodes] = useState<ReactNode[]>([]);
-  const [balancesMap, setBalancesMap] = useState(new Map<string, number>());
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
+  const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
+  const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC20) as string;
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['BALANCE-OF'];
 
-  /** @dev retrieve values from localStorage to maintain data on re-renders */
-  useRetrieveMapValueFromLocalStorage(toaster, transactionResultStorageKey, setBalancesMap);
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
+  );
+
+  // declare a paginatedTransactionResults
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResultsToShow);
+
+  /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
+  useEffect(() => {
+    handleRetrievingTransactionResultsFromLocalStorage(
+      toaster,
+      transactionResultStorageKey,
+      setCurrentTransactionPage,
+      setTransactionResults
+    );
+  }, [toaster, transactionResultStorageKey]);
 
   /** @dev handle executing balance of */
   /** @notice wrapping handleExecuteBalanceOf in useCallback hook to prevent excessive re-renders */
@@ -78,26 +101,45 @@ const BalanceOf = ({ baseContract }: PageProps) => {
           description: 'Account address is not a valid address',
         });
         return;
-      }
+      } else {
+        // udpate balances
+        if (!refreshMode) setAccountAddress('');
 
-      // udpate balances
-      setBalancesMap((prev) => new Map(prev).set(accountAddress, Number(balanceOfRes)));
-      if (!refreshMode) setAccountAddress('');
+        setTransactionResults((prev) => {
+          let dubplicated = false;
+          const newRecords = prev.map((record) => {
+            if (record.balanceOf?.owner === accountAddress) {
+              record.balanceOf.balance = Number(balanceOfRes);
+              dubplicated = true;
+            }
+            return record;
+          });
+
+          if (!dubplicated) {
+            newRecords.push({
+              readonly: true,
+              status: 'success',
+              transactionResultStorageKey,
+              transactionTimeStamp: Date.now(),
+              transactionType: 'ERC20-BALANCE-OF',
+              txHash: generatedRandomUniqueKey(9), // acts as a key of the transaction
+              sessionedContractAddress: currentContractAddress,
+              balanceOf: {
+                owner: accountAddress,
+                balance: Number(balanceOfRes),
+              },
+            });
+          }
+
+          return newRecords;
+        });
+      }
     },
     [toaster, baseContract]
   );
 
-  // @dev listen to change event on balancesMap state => update UI & localStorage
-  useUpdateMapStateUILocalStorage({
-    toaster,
-    baseContract,
-    setReactNodes,
-    mapType: 'BALANCES',
-    mapValues: balancesMap,
-    transactionResultStorageKey,
-    setMapValues: setBalancesMap,
-    handleExecuteMethodAPI: handleExecuteBalanceOf,
-  });
+  /** @dev listen to change event on transactionResults state => load to localStorage  */
+  useUpdateTransactionResultsToLocalStorage(transactionResults, transactionResultStorageKey);
 
   return (
     <div className="flex flex-col items-start gap-12">
@@ -141,26 +183,21 @@ const BalanceOf = ({ baseContract }: PageProps) => {
         </button>
       </div>
 
-      <div className="flex flex-col gap-6 text-base">
-        {/* display balances */}
-        {balancesMap.size > 0 && (
-          <TableContainer>
-            <Table variant={HEDERA_CHAKRA_TABLE_VARIANTS.simple} size={HEDERA_CHAKRA_INPUT_BOX_SIZES.small}>
-              <Thead>
-                <Tr>
-                  <Th color={HEDERA_BRANDING_COLORS.violet}>Account</Th>
-                  <Th color={HEDERA_BRANDING_COLORS.violet} isNumeric>
-                    Balance
-                  </Th>
-                  <Th />
-                  <Th />
-                </Tr>
-              </Thead>
-              <Tbody>{ractNodes}</Tbody>
-            </Table>
-          </TableContainer>
-        )}
-      </div>
+      {/* transaction results table */}
+      {transactionResultsToShow.length > 0 && (
+        <TransactionResultTable
+          API="ERCBalanceOf"
+          hederaNetwork={HEDERA_NETWORK}
+          transactionResults={transactionResults}
+          TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
+          setTransactionResults={setTransactionResults}
+          currentTransactionPage={currentTransactionPage}
+          handleReexecuteMethodAPI={handleExecuteBalanceOf}
+          setCurrentTransactionPage={setCurrentTransactionPage}
+          transactionResultStorageKey={transactionResultStorageKey}
+          paginatedTransactionResults={paginatedTransactionResults}
+        />
+      )}
     </div>
   );
 };
