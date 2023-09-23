@@ -24,23 +24,19 @@ import { useEffect, useState } from 'react';
 import { useToast } from '@chakra-ui/react';
 import TokenTransferForm from './TokenTransferForm';
 import CryptoTransferForm from './CryptoTransferForm';
-import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
-import { useToastSuccessful } from '../../../shared/hooks/useToastSuccessful';
-import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
+import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
+import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
+import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import { SharedExecuteButtonWithFee } from '../../../shared/components/ParamInputForm';
 import { transferCrypto } from '@/api/hedera/hts-interactions/tokenTransfer-interactions';
-import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
+import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
-import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
+import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { prepareCryptoTransferList, prepareTokenTransferList } from './helpers/prepareCryptoTransferValues';
-import useFilterTransactionsByContractAddress from '../../../shared/hooks/useFilterTransactionsByContractAddress';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
-import {
-  IHederaTokenServiceTokenTransferList,
-  IHederaTokenServiceTransferList,
-  TransactionResult,
-} from '@/types/contract-interactions/HTS';
+import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   CryptoTransferParam,
   TokenTransferParam,
@@ -61,7 +57,7 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const contractCaller = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_TRANSFER) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const [tokenTransferParamValues, setTokenTransferParamValues] = useState<TokenTransferParam[]>([]);
   const [cryptoTransferParamValues, setCryptoTransferParamValues] = useState<CryptoTransferParam[]>([]);
   const transactionResultStorageKey =

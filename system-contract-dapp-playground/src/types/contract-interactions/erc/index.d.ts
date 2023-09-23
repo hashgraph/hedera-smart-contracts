@@ -21,7 +21,7 @@
 /**
  * @dev an interface for the results returned back from interacting with ERC20Mock & ERC721Mock smart contract
  */
-interface ERCSmartContractResult {
+interface IERCSmartContractResult {
   name?: string;
   symbol?: string;
   txHash?: string;

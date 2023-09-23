@@ -29,11 +29,6 @@ import {
   HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
 } from '@/utils/common/constants';
 import {
-  CommonKeyObject,
-  IHederaTokenServiceKeyType,
-  IHederaTokenServiceKeyValueType,
-} from '@/types/contract-interactions/HTS';
-import {
   handleUpdateKeyValue,
   handleKeyTypeOnChange,
   handleAddingOrRemovingKeys,
@@ -43,11 +38,11 @@ import {
 /** @dev shared component presenting signing keys*/
 interface SigningKeyPageProps {
   buttonTitle: string;
-  keys: CommonKeyObject[];
+  keys: ICommonKeyObject[];
   chosenKeys: Set<IHederaTokenServiceKeyType>;
   keyTypesToShow: Set<IHederaTokenServiceKeyType>;
   HederaTokenKeyTypes: IHederaTokenServiceKeyType[];
-  setKeys: Dispatch<SetStateAction<CommonKeyObject[]>>;
+  setKeys: Dispatch<SetStateAction<ICommonKeyObject[]>>;
   HederaTokenKeyValueType: IHederaTokenServiceKeyValueType[];
   setChosenKeys: Dispatch<SetStateAction<Set<IHederaTokenServiceKeyType>>>;
   setKeyTypesToShow: Dispatch<SetStateAction<Set<IHederaTokenServiceKeyType>>>;
@@ -70,11 +65,7 @@ export const SharedSigningKeysComponent = ({
         {/* Add more key */}
         <div className="flex flex-col gap-0">
           {keys.length < 7 && (
-            <Tooltip
-              label={keys.length !== 0 && 'Add more keys'}
-              placement="top"
-              fontWeight={'medium'}
-            >
+            <Tooltip label={keys.length !== 0 && 'Add more keys'} placement="top" fontWeight={'medium'}>
               <button
                 onClick={() =>
                   handleAddingOrRemovingKeys(
@@ -104,9 +95,7 @@ export const SharedSigningKeysComponent = ({
                 _focus={{ borderColor: HEDERA_BRANDING_COLORS.purple }}
                 placeholder={key.keyType}
                 className="w-[120px] hover:cursor-pointer rounded-md border-white/30"
-                onChange={(e) =>
-                  handleKeyTypeOnChange(e, key, setKeys, setChosenKeys, setKeyTypesToShow)
-                }
+                onChange={(e) => handleKeyTypeOnChange(e, key, setKeys, setChosenKeys, setKeyTypesToShow)}
               >
                 {Array.from(keyTypesToShow).map((keyType) => {
                   return (
@@ -151,8 +140,7 @@ export const SharedSigningKeysComponent = ({
                   type={'text'}
                   onChange={(e) => handleUpdateKeyValue(e, key, setKeys)}
                   placeholder={
-                    key.keyValueType === 'contractId' ||
-                    key.keyValueType === 'delegatableContractId'
+                    key.keyValueType === 'contractId' || key.keyValueType === 'delegatableContractId'
                       ? 'ID of a smart contract instance...'
                       : `${key.keyValueType.split('_')[0].toUpperCase()} compressed public key...`
                   }

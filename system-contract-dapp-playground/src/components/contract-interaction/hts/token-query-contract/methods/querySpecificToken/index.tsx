@@ -23,17 +23,17 @@ import { useState, useEffect } from 'react';
 import { Contract, isAddress } from 'ethers';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { Select, useDisclosure, useToast } from '@chakra-ui/react';
-import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
-import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
+import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
+import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import TokenSpecificInfoModal from '../../../shared/components/TokenSpecificInfoModal';
-import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
+import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { HederaTokenKeyTypes, TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
-import { IHederaTokenServiceKeyType, TransactionResult } from '@/types/contract-interactions/HTS';
 import { queryTokenSpecificInfomation } from '@/api/hedera/hts-interactions/tokenQuery-interactions';
 import { htsQueryTokenInfoParamFields } from '@/utils/contract-interactions/HTS/token-query/constant';
-import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
-import useFilterTransactionsByContractAddress from '../../../shared/hooks/useFilterTransactionsByContractAddress';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
+import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedFormButton,
   SharedExecuteButton,
@@ -82,7 +82,7 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
   const [tokenAddressFromTxResult, setTokenAddressFromTxResult] = useState('');
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('DEFAULT_FREEZE_STATUS');
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_QUERY) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const [keyTypeFromTxResult, setKeyTypeFromTxResult] = useState<IHederaTokenServiceKeyType>('ADMIN');
   const [APIMethodsFromTxResult, setAPIMethodsFromTxResult] = useState<API_NAMES>('DEFAULT_FREEZE_STATUS');
   const transactionResultStorageKey =

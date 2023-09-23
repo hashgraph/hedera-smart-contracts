@@ -24,12 +24,12 @@ import { useEffect, useState } from 'react';
 import { Contract, isAddress } from 'ethers';
 import { erc721Mint } from '@/api/hedera/erc721-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import MultiLineMethod from '@/components/common/MultiLineMethod';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
+import MultiLineMethod from '@/components/common/components/MultiLineMethod';
+import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
 import { mintParamFields } from '@/utils/contract-interactions/erc/erc721/constant';
-import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
-import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
+import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
+import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
 
 interface PageProps {
   baseContract: Contract;
@@ -40,7 +40,7 @@ const Mint = ({ baseContract }: PageProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC721) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['TOKEN-MINT'];
   const [mintParams, setMintParams] = useState({
     recipient: '',

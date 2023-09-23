@@ -24,18 +24,18 @@ import { useToast } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 import TransferRecordForm from './TransferRecordForm';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { handleAPIErrors } from '../../../shared/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
-import { useToastSuccessful } from '../../../shared/hooks/useToastSuccessful';
-import { usePaginatedTxResults } from '../../../shared/hooks/usePaginatedTxResults';
-import { TransactionResultTable } from '../../../shared/components/TransactionResultTable';
+import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
+import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
+import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
+import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
-import { handleSanitizeHederaFormInputs } from '../../../shared/methods/handleSanitizeFormInputs';
-import { SmartContractExecutionResult, TransactionResult } from '@/types/contract-interactions/HTS';
-import { useUpdateTransactionResultsToLocalStorage } from '../../../shared/hooks/useUpdateLocalStorage';
-import useFilterTransactionsByContractAddress from '../../../shared/hooks/useFilterTransactionsByContractAddress';
+import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
+import { ISmartContractExecutionResult, ITransactionResult } from '@/types/contract-interactions/shared';
+import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
+import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { htsMultiTokensTransferParamFields } from '@/utils/contract-interactions/HTS/token-transfer/paramFieldConstant';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   transferFungibleTokens,
   transferNonFungibleTokens,
@@ -67,7 +67,7 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const contractCaller = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_TRANSFER) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const [isLoading, setIsLoading] = useState({
     FUNGIBLE: false,
     NON_FUNGIBLE: false,
@@ -208,7 +208,7 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
       NON_FUNGIBLE: API === 'NON_FUNGIBLE',
     });
 
-    let transactionResult: SmartContractExecutionResult;
+    let transactionResult: ISmartContractExecutionResult;
     if (API === 'FUNGIBLE') {
       transactionResult = await transferFungibleTokens(
         baseContract,

@@ -26,7 +26,7 @@ import { motion } from 'framer-motion';
 import WalletPopup from '../wallet-popup';
 import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { NetworkName } from '@/types/common';
+import { TNetworkName } from '@/types/common';
 import { usePathname } from 'next/navigation';
 import { BsChevronDown } from 'react-icons/bs';
 import { CommonErrorToast } from '../toast/CommonToast';
@@ -42,7 +42,7 @@ const Navbar = () => {
   const [accounts, setAccounts] = useState<string[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [didWalletPop, setDidWalletPop] = useState(false);
-  const [network, setNetwork] = useState<NetworkName>('testnet');
+  const [network, setNetwork] = useState<TNetworkName>('testnet');
 
   // listen to pathname change event to retrieve account information cookies
   useEffect(() => {
@@ -68,7 +68,7 @@ const Navbar = () => {
       // update states
       setAccounts(JSON.parse(accountsInfo.accounts));
       setIsConnected(JSON.parse(accountsInfo.isConnected));
-      setNetwork(JSON.parse(accountsInfo.network) as NetworkName);
+      setNetwork(JSON.parse(accountsInfo.network) as TNetworkName);
     }
   }, [pathname, toaster]);
 

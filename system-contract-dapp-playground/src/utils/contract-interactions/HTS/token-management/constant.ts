@@ -19,10 +19,6 @@
  */
 
 import { ethers } from 'ethers';
-import {
-  IHederaTokenServiceExpiry,
-  IHederaTokenServiceHederaToken,
-} from '@/types/contract-interactions/HTS';
 import { HEDERA_SHARED_PARAM_INPUT_FIELDS } from '@/utils/common/constants';
 
 /**
@@ -91,8 +87,7 @@ export const htsUpdateTokenInfoParamFields = {
     inputType: 'text',
     paramKey: 'treasury',
     inputPlaceholder: 'The token treasury account ID...',
-    explanation:
-      'represents the account will receive the specified initial supply or the newly minted NFTs',
+    explanation: 'represents the account will receive the specified initial supply or the newly minted NFTs',
   },
   tokenSupplyType: {
     paramKey: 'tokenSupplyType',

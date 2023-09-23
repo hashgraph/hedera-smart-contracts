@@ -21,7 +21,7 @@
 import Link from 'next/link';
 import React, { Dispatch, SetStateAction } from 'react';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
-import { prepareInfoValuesToShow } from '../methods/prepareInfoValuesToShow';
+import { prepareInfoValuesToShow } from '../../../../common/methods/prepareInfoValuesToShow';
 import {
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,

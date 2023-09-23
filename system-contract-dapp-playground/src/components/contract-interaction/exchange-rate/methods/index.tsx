@@ -23,18 +23,18 @@ import { Contract } from 'ethers';
 import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
-import { handleAPIErrors } from '../../hts/shared/methods/handleAPIErrors';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
+import { handleAPIErrors } from '../../../common/methods/handleAPIErrors';
+import { useToastSuccessful } from '../../../../hooks/useToastSuccessful';
 import { handleExchangeRate } from '@/api/hedera/exchange-rate-interactions';
 import { TRANSACTION_PAGE_SIZE } from '../../hts/shared/states/commonStates';
-import { useToastSuccessful } from '../../hts/shared/hooks/useToastSuccessful';
-import { usePaginatedTxResults } from '../../hts/shared/hooks/usePaginatedTxResults';
-import { TransactionResultTable } from '../../hts/shared/components/TransactionResultTable';
-import { handleSanitizeHederaFormInputs } from '../../hts/shared/methods/handleSanitizeFormInputs';
+import { usePaginatedTxResults } from '../../../../hooks/usePaginatedTxResults';
+import { TransactionResultTable } from '../../../common/components/TransactionResultTable';
+import { handleSanitizeHederaFormInputs } from '../../../common/methods/handleSanitizeFormInputs';
+import { useUpdateTransactionResultsToLocalStorage } from '../../../../hooks/useUpdateLocalStorage';
 import { SharedExecuteButton, SharedFormInputField } from '../../hts/shared/components/ParamInputForm';
-import { useUpdateTransactionResultsToLocalStorage } from '../../hts/shared/hooks/useUpdateLocalStorage';
-import useFilterTransactionsByContractAddress from '../../hts/shared/hooks/useFilterTransactionsByContractAddress';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import useFilterTransactionsByContractAddress from '../../../../hooks/useFilterTransactionsByContractAddress';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   CONTRACT_NAMES,
   HEDERA_BRANDING_COLORS,
@@ -58,7 +58,7 @@ const HederaExchangeRateMethods = ({ baseContract }: PageProps) => {
   const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.EXCHANGE_RATE) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['EXCHANGE-RATE-RESULT']['EXCHANGE-RATE'];
   const [isLoading, setIsLoading] = useState({

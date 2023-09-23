@@ -24,21 +24,21 @@ import { useToast } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { generatedRandomUniqueKey } from '@/utils/common/helpers';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
-import { handleAPIErrors } from '../../shared/methods/handleAPIErrors';
-import { TRANSACTION_PAGE_SIZE } from '../../shared/states/commonStates';
-import { useToastSuccessful } from '../../shared/hooks/useToastSuccessful';
-import { usePaginatedTxResults } from '../../shared/hooks/usePaginatedTxResults';
-import TokenAddressesInputForm from '../../shared/components/TokenAddressesInputForm';
-import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
-import { handleSanitizeHederaFormInputs } from '../../shared/methods/handleSanitizeFormInputs';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
+import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
+import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
+import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
+import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
+import TokenAddressesInputForm from '../../../shared/components/TokenAddressesInputForm';
+import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
+import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
-import { SharedFormInputField, SharedExecuteButton } from '../../shared/components/ParamInputForm';
-import { useUpdateTransactionResultsToLocalStorage } from '../../shared/hooks/useUpdateLocalStorage';
+import { SharedFormInputField, SharedExecuteButton } from '../../../shared/components/ParamInputForm';
+import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { htsTokenAssociateParamFields } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
 import { associateHederaTokensToAccounts } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
-import useFilterTransactionsByContractAddress from '../../shared/hooks/useFilterTransactionsByContractAddress';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 
 interface PageProps {
   baseContract: Contract;
@@ -54,7 +54,7 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [paramValues, setParamValues] = useState<any>(initialParamValues);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_CREATE) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const initialTokenAddressesValues = { fieldKey: generatedRandomUniqueKey(9), fieldValue: '' };
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-CREATE']['ASSOCIATE-TOKEN'];

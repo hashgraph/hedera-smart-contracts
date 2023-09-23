@@ -18,11 +18,6 @@
  *
  */
 
-import {
-  IHederaTokenServiceNftTransfer,
-  IHederaTokenServiceAccountAmount,
-  IHederaTokenServiceTokenTransferList,
-} from '@/types/contract-interactions/HTS';
 import { CryptoTransferParam, TokenTransferParam } from './generateInitialValues';
 
 interface CryptoTransferPageProps {

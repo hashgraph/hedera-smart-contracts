@@ -1,0 +1,70 @@
+/*-
+ *
+ * Hedera Smart Contracts
+ *
+ * Copyright (C) 2023 Hedera Hashgraph, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+/** @dev the type for HTS transaction results */
+export type ITransactionResult = {
+  status: 'success' | 'fail';
+  txHash: string;
+  APICalled?: any;
+  tokenInfo?: any;
+  isToken?: boolean;
+  keyTypeCalled?: any;
+  recordIndex?: number;
+  tokenAddress?: string;
+  initialAmount?: string;
+  accountAddress?: string;
+  transactionType: string;
+  convertedAmount?: string;
+  receiverAddress?: string;
+  pseudoRandomSeed?: string;
+  tokenAddresses?: string[];
+  transactionResultStorageKey;
+  transactionTimeStamp: number;
+  sessionedContractAddress: string;
+};
+
+/** @dev an interface for the results returned back from interacting with Hedera System Smart Contracts */
+interface ISmartContractExecutionResult {
+  Frozen?: any;
+  IsToken?: any;
+  Approved?: any;
+  TokenType?: any;
+  KycGranted?: any;
+  result?: boolean;
+  AllowanceValue?: any;
+  ApprovedAddress?: any;
+  tokenAddress?: string;
+  convertedAmount?: number;
+  transactionHash?: string;
+  pseudoRandomSeed?: string;
+  TokenDefaultKycStatus?: any;
+  TokenDefaultFreezeStatus?: any;
+  TokenInfo?: IHederaTokenServiceTokenInfo;
+  TokenKey?: IHederaTokenServiceKeyValueType;
+  TokenExpiryInfo?: IHederaTokenServiceExpiry;
+  FungibleTokenInfo?: IHederaTokenServiceFungibleTokenInfo;
+  NonFungibleTokenInfo?: IHederaTokenServiceNonFungibleTokenInfo;
+  TokenCustomFees?: {
+    fixedFees: IHederaTokenServiceFixedFee[];
+    royaltyFees: IHederaTokenServiceRoyaltyFee[];
+    fractionalFees: IHederaTokenServiceFractionalFee[];
+  };
+  err?: any;
+}
