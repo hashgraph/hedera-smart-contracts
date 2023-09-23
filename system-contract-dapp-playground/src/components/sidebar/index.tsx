@@ -23,9 +23,9 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
-import { LEFT_SIDE_BAR_ITEMS } from '@/utils/common/constants';
+import { NAV_SIDE_BAR_ITEMS } from '@/utils/common/constants';
 
-const LeftSideBar = () => {
+const NavSideBar = () => {
   const pathname = usePathname();
 
   return (
@@ -39,7 +39,7 @@ const LeftSideBar = () => {
       viewport={{ once: true }}
       className="w-72 h-full border-r border-white/30 text-white flex flex-col gap-3 pt-7 text-lg font-light tracking-tight leading-6 pr-2"
     >
-      {LEFT_SIDE_BAR_ITEMS.map((item) => (
+      {NAV_SIDE_BAR_ITEMS.map((item) => (
         <Link
           key={item.name}
           href={item.path}
@@ -54,4 +54,4 @@ const LeftSideBar = () => {
   );
 };
 
-export default LeftSideBar;
+export default NavSideBar;

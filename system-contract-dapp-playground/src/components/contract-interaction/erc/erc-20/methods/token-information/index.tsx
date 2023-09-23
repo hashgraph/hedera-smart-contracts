@@ -21,8 +21,8 @@
 import { useState } from 'react';
 import { Contract } from 'ethers';
 import { useToast } from '@chakra-ui/react';
-import OneLineMethod from '@/components/common/OneLineMethod';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
+import OneLineMethod from '@/components/common/components/OneLineMethod';
 import { getERC20TokenInformation } from '@/api/hedera/erc20-interactions';
 import { HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
 

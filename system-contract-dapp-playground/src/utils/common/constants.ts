@@ -18,7 +18,7 @@
  *
  */
 
-import { ContractName } from '@/types/common';
+import { TContractName } from '@/types/common';
 import ERC20Mock from '@hashgraph-smartcontract/artifacts/contracts/erc-20/ERC20Mock.sol/ERC20Mock.json';
 import IHRC729Contract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/IHRC.sol/IHRC.json';
 import ERC721Mock from '@hashgraph-smartcontract/artifacts/contracts/erc-721/ERC721Mock.sol/ERC721Mock.json';
@@ -147,9 +147,9 @@ export const PROTECTED_ROUTES = [
 ];
 
 /**
- * @notice information for LeftSideBar items
+ * @notice information for NavSideBar items
  */
-export const LEFT_SIDE_BAR_ITEMS = [
+export const NAV_SIDE_BAR_ITEMS = [
   {
     name: 'Overview',
     path: PROTECTED_ROUTES[0],
@@ -183,7 +183,7 @@ export const LEFT_SIDE_BAR_ITEMS = [
 /**
  * @notice an object storing contract names
  */
-export const CONTRACT_NAMES: Record<string, ContractName> = {
+export const CONTRACT_NAMES: Record<string, TContractName> = {
   ERC20: 'ERC20Mock',
   ERC721: 'ERC721Mock',
   PRNG: 'PrngSystemContract',
@@ -201,7 +201,7 @@ export const CONTRACT_NAMES: Record<string, ContractName> = {
 export const HEDERA_SMART_CONTRACTS_ASSETS = {
   HTS_PRECOMPILED: [
     {
-      name: 'TokenCreateCustomContract' as ContractName,
+      name: 'TokenCreateCustomContract' as TContractName,
       title: 'Token Create Contract',
       contractABI: TokenCreateCustomContract.abi,
       contractBytecode: TokenCreateCustomContract.bytecode,
@@ -209,7 +209,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
       methods: ['fungibleTokenCreate', 'non-fungibleTokenCreate', 'mint', 'tokenAssociation', 'grantKYC'],
     },
     {
-      name: 'TokenManagementContract' as ContractName,
+      name: 'TokenManagementContract' as TContractName,
       title: 'Token Management Contract',
       contractABI: TokenManagementContract.abi,
       contractBytecode: TokenManagementContract.bytecode,
@@ -224,7 +224,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
       ],
     },
     {
-      name: 'TokenQueryContract' as ContractName,
+      name: 'TokenQueryContract' as TContractName,
       title: 'Token Query Contract',
       contractABI: TokenQueryContract.abi,
       contractBytecode: TokenQueryContract.bytecode,
@@ -232,7 +232,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
       methods: ['tokenValidity', 'generalInfo', 'specificInfo', 'tokenPermission', 'tokenStatus'],
     },
     {
-      name: 'TokenTransferContract' as ContractName,
+      name: 'TokenTransferContract' as TContractName,
       title: 'Token Transfer Contract',
       contractABI: TokenTransferContract.abi,
       contractBytecode: TokenTransferContract.bytecode,
@@ -241,7 +241,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
     },
   ],
   TOKEN_ASSOCIATION: {
-    name: 'IHRC729Contract' as ContractName,
+    name: 'IHRC729Contract' as TContractName,
     title: 'Token Associate Example Contract',
     contractABI: IHRC729Contract.abi,
     contractBytecode: IHRC729Contract.bytecode,
@@ -249,7 +249,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
     methods: ['IHRC / HIP-719'],
   },
   EXCHANGE_RATE: {
-    name: 'ExchangeRatePrecompile' as ContractName,
+    name: 'ExchangeRatePrecompile' as TContractName,
     title: 'Exchange Rate Example Contract',
     contractABI: ExchangeRatePrecompile.abi,
     contractBytecode: ExchangeRatePrecompile.bytecode,
@@ -257,7 +257,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
     methods: ['Exchange Rate'],
   },
   PRNG_PRECOMPILED: {
-    name: 'PrngSystemContract' as ContractName,
+    name: 'PrngSystemContract' as TContractName,
     title: 'Pseudo Random Number Example Contract',
     contractABI: PrngSystemContract.abi,
     contractBytecode: PrngSystemContract.bytecode,
@@ -265,7 +265,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
     methods: ['getPseudoRandomSeed'],
   },
   ERC_20: {
-    name: 'ERC20Mock' as ContractName,
+    name: 'ERC20Mock' as TContractName,
     title: 'ERC-20 Example Contract',
     contractABI: ERC20Mock.abi,
     contractBytecode: ERC20Mock.bytecode,
@@ -273,7 +273,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
     methods: ['tokenInformation', 'mint', 'balanceOf', 'tokenPermissions', 'transfer'],
   },
   ERC_721: {
-    name: 'ERC721Mock' as ContractName,
+    name: 'ERC721Mock' as TContractName,
     title: 'ERC-721 Example Contract',
     contractABI: ERC721Mock.abi,
     contractBytecode: ERC721Mock.bytecode,
@@ -332,7 +332,7 @@ export const HEDERA_SHARED_PARAM_INPUT_FIELDS = {
 /**
  * @notice a shared object maping contract name to storage key value
  */
-export const CONTRACT_NAME_TO_STORAGE_KEY_VALUE: Record<ContractName, string> = {
+export const CONTRACT_NAME_TO_STORAGE_KEY_VALUE: Record<TContractName, string> = {
   ERC20Mock: 'ERC-20',
   ERC721Mock: 'ERC-721',
   IHRC729Contract: 'IHRC719',

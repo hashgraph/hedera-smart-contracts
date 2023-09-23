@@ -24,14 +24,14 @@ import { isAddress } from 'ethers';
 import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import MultiLineMethod from '@/components/common/MultiLineMethod';
 import { erc721Transfers } from '@/api/hedera/erc721-interactions';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
+import MultiLineMethod from '@/components/common/components/MultiLineMethod';
+import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
+import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
-import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
-import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   transferFromERC721ParamFields,
   safeTransferFromERC721ParamFields,
@@ -46,7 +46,7 @@ const ERC721Transfer = ({ baseContract }: PageProps) => {
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['TOKEN-TRANSFER'];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC721) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
 
   const [transferFromParams, setTransferFromParams] = useState({
     sender: '',

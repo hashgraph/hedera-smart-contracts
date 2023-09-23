@@ -23,10 +23,10 @@ import { Contract } from 'ethers';
 import { ReactNode, useCallback, useState } from 'react';
 import { erc721OwnerOf } from '@/api/hedera/erc721-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import HederaCommonTextField from '@/components/common/HederaCommonTextField';
+import HederaCommonTextField from '@/components/common/components/HederaCommonTextField';
 import { Table, TableContainer, Tbody, Th, Thead, Tr, useToast } from '@chakra-ui/react';
-import useUpdateMapStateUILocalStorage from '../../../shared/hooks/useUpdateMapStateUILocalStorage';
-import useRetrieveMapValueFromLocalStorage from '../../../shared/hooks/useRetrieveMapValueFromLocalStorage';
+import useUpdateMapStateUILocalStorage from '../../../../../../hooks/useUpdateMapStateUILocalStorage';
+import useRetrieveMapValueFromLocalStorage from '../../../../../../hooks/useRetrieveMapValueFromLocalStorage';
 import {
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,

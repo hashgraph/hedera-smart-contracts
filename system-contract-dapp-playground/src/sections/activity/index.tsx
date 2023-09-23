@@ -25,13 +25,14 @@ import { motion } from 'framer-motion';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { FiExternalLink } from 'react-icons/fi';
 import { useEffect, useMemo, useState } from 'react';
-import ConfirmModal from '@/components/common/ConfirmModal';
 import { prepareTransactionList } from '@/utils/common/helpers';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
+import ConfirmModal from '@/components/common/components/ConfirmModal';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
+import { copyContentToClipboard } from '@/components/common/methods/common';
 import { clearCachedTransactions, getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
-import { usePaginatedTxResults } from '@/components/contract-interaction/hts/shared/hooks/usePaginatedTxResults';
 import {
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,
@@ -86,7 +87,7 @@ const ActivitySection = () => {
   );
 
   /** @dev handle removing record */
-  const handleRemoveRecord = (targetTransactionResult: TransactionResult) => {
+  const handleRemoveRecord = (targetTransactionResult: ITransactionResult) => {
     // get the cached array stored in localStoraged
     const { storageResult, err: localStorageBalanceErr } = getArrayTypedValuesFromLocalStorage(
       targetTransactionResult.transactionResultStorageKey
@@ -104,7 +105,7 @@ const ActivitySection = () => {
 
     // remove record out of the storageResult array
     const filteredTransactionResults = storageResult.filter(
-      (transactionResult: TransactionResult) => transactionResult.txHash !== targetTransactionResult.txHash
+      (transactionResult: ITransactionResult) => transactionResult.txHash !== targetTransactionResult.txHash
     );
 
     // storage the filteredTransactionResults back to storage
@@ -240,7 +241,7 @@ const ActivitySection = () => {
                       {/* txHash */}
                       <Td className="cursor-pointer">
                         <div className="flex gap-1 items-center justify-between">
-                          <div onClick={() => navigator.clipboard.writeText(transaction.txHash)}>
+                          <div onClick={() => copyContentToClipboard(transaction.txHash)}>
                             <Popover>
                               <PopoverTrigger>
                                 <div className="flex gap-1 items-center">

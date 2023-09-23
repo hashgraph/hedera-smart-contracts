@@ -23,33 +23,29 @@ import { Contract } from 'ethers';
 import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { handleAPIErrors } from '../../shared/methods/handleAPIErrors';
-import { useToastSuccessful } from '../../shared/hooks/useToastSuccessful';
-import { usePaginatedTxResults } from '../../shared/hooks/usePaginatedTxResults';
-import { SharedSigningKeysComponent } from '../../shared/components/SigningKeysForm';
-import { TransactionResultTable } from '../../shared/components/TransactionResultTable';
-import { handleSanitizeHederaFormInputs } from '../../shared/methods/handleSanitizeFormInputs';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
+import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
+import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
+import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
+import { SharedSigningKeysComponent } from '../../../shared/components/SigningKeysForm';
+import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
+import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
-import { useUpdateTransactionResultsToLocalStorage } from '../../shared/hooks/useUpdateLocalStorage';
+import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { htsTokenCreateParamFields } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
 import { createHederaNonFungibleToken } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
-import useFilterTransactionsByContractAddress from '../../shared/hooks/useFilterTransactionsByContractAddress';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedFormInputField,
   SharedFormButton,
   SharedExecuteButtonWithFee,
-} from '../../shared/components/ParamInputForm';
-import {
-  TransactionResult,
-  IHederaTokenServiceKeyType,
-  CommonKeyObject,
-} from '@/types/contract-interactions/HTS';
+} from '../../../shared/components/ParamInputForm';
 import {
   HederaTokenKeyTypes,
   HederaTokenKeyValueType,
   TRANSACTION_PAGE_SIZE,
-} from '../../shared/states/commonStates';
+} from '../../../shared/states/commonStates';
 
 interface PageProps {
   baseContract: Contract;
@@ -64,7 +60,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
   const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_CREATE) as string;
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-CREATE']['NON-FUNGIBLE-TOKEN'];
   const tokenCreateFields = {
@@ -88,7 +84,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
   );
 
   // keys states
-  const [keys, setKeys] = useState<CommonKeyObject[]>([]); // keeps track of keys array to pass to the API
+  const [keys, setKeys] = useState<ICommonKeyObject[]>([]); // keeps track of keys array to pass to the API
   const [chosenKeys, setChosenKeys] = useState(new Set<IHederaTokenServiceKeyType>()); // keeps track of keyTypes which have already been chosen in the list
   const [keyTypesToShow, setKeyTypesToShow] = useState(new Set(HederaTokenKeyTypes)); // keeps track of the left over keyTypes to show in the drop down
 

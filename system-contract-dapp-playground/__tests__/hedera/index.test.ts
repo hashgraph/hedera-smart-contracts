@@ -20,7 +20,7 @@
 
 import { ContractFactory } from 'ethers';
 import { deploySmartContract } from '@/api/hedera';
-import { HederaSmartContractResult } from '@/types/common';
+import { IHederaSmartContractResult } from '@/types/common';
 import { HEDERA_SMART_CONTRACTS_ASSETS } from '@/utils/common/constants';
 import { MOCK_CONTRACT_ID, MOCK_TX_HASH } from '../utils/common/constants';
 
@@ -74,7 +74,7 @@ describe('deploySmartContract', () => {
     (ContractFactory as unknown as jest.Mock).mockImplementation(() => mockContract);
 
     // execute deploySmartContract API
-    const result: HederaSmartContractResult = await deploySmartContract(
+    const result: IHederaSmartContractResult = await deploySmartContract(
       contractABI,
       contractBytecode,
       deployParams

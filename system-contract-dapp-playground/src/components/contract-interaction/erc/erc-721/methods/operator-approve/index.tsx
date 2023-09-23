@@ -26,15 +26,15 @@ import { useEffect, useState } from 'react';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { IoRefreshOutline } from 'react-icons/io5';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import MultiLineMethod from '@/components/common/MultiLineMethod';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import { erc721TokenApproval } from '@/api/hedera/erc721-interactions';
-import { copyContentToClipboard } from '../../../shared/methods/common';
+import { copyContentToClipboard } from '../../../../../common/methods/common';
 import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
+import MultiLineMethod from '@/components/common/components/MultiLineMethod';
+import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
+import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
 import { isApprovalERC721ParamFields } from '@/utils/contract-interactions/erc/erc721/constant';
-import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
-import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   Td,
   Th,
@@ -79,7 +79,7 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
   const [successStatus, setSuccessStatus] = useState(false);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC721) as string;
   const [approvalRecords, setApprovalRecords] = useState<ApprovalStatus[]>([]);
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const approvalStatusStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['GET-APPROVAL'];
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['SET-APPROVAL'];
   const [isLoading, setIsLoading] = useState({

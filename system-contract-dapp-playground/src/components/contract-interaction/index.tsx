@@ -25,17 +25,18 @@ import { BsTrash } from 'react-icons/bs';
 import HederaPRNGMethods from './prng/methods';
 import { FiExternalLink } from 'react-icons/fi';
 import ERC20Methods from './erc/erc-20/methods';
-import ConfirmModal from '../common/ConfirmModal';
 import ERC721Methods from './erc/erc-721/methods';
 import HederaIHRC719Methods from './ihrc/methods';
 import { deploySmartContract } from '@/api/hedera';
-import HederaAlertDialog from '../common/AlertDialog';
 import { useCallback, useEffect, useState } from 'react';
 import { generateBaseContractInstance } from '@/api/ethers';
+import ConfirmModal from '../common/components/ConfirmModal';
 import { clearCachedTransactions } from '@/api/localStorage';
 import ERC20DeployField from './erc/deployment/ERCDeployField';
 import HederaExchangeRateMethods from './exchange-rate/methods';
-import { HederaContractAsset, NetworkName } from '@/types/common';
+import HederaAlertDialog from '../common/components/AlertDialog';
+import { copyContentToClipboard } from '../common/methods/common';
+import { IHederaContractAsset, TNetworkName } from '@/types/common';
 import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
 import { CommonErrorToast, NoWalletToast } from '../toast/CommonToast';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
@@ -68,7 +69,7 @@ import {
 } from '@/utils/common/constants';
 
 interface PageProps {
-  contract: HederaContractAsset;
+  contract: IHederaContractAsset;
 }
 
 const ContractInteraction = ({ contract }: PageProps) => {
@@ -78,7 +79,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isDeployed, setIsDeployed] = useState(false);
   const [isDeploying, setIsDeploying] = useState(false);
-  const [network, setNetwork] = useState<NetworkName>();
+  const [network, setNetwork] = useState<TNetworkName>();
   const [contractAddress, setContractAddress] = useState('');
   const [didDeployStart, setDidDeployStart] = useState(false);
   const [baseContract, setBaseContract] = useState<Contract>();
@@ -188,7 +189,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
         setContractAddress(contractAddr);
       }
       if (network) {
-        setNetwork(JSON.parse(network) as NetworkName);
+        setNetwork(JSON.parse(network) as TNetworkName);
       }
     })();
   }, [contract.name, toaster]);
@@ -200,7 +201,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
         // handle getting Hedera native contractId from EvmAddress
         const { contractId, err: getContractIdErr } = await getHederaNativeIDFromEvmAddress(
           contractAddress,
-          network as NetworkName,
+          network as TNetworkName,
           'contracts'
         );
         // handle error
@@ -304,7 +305,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
                           <div className="flex items-center gap-1">
                             <div
                               className="cursor-pointer"
-                              onClick={() => navigator.clipboard.writeText(contractId)}
+                              onClick={() => copyContentToClipboard(contractId)}
                             >
                               <Popover>
                                 <PopoverTrigger>
@@ -342,7 +343,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
                           <div className="flex items-center gap-1">
                             <div
                               className="cursor-pointer"
-                              onClick={() => navigator.clipboard.writeText(contractAddress)}
+                              onClick={() => copyContentToClipboard(contractAddress)}
                             >
                               <Popover>
                                 <PopoverTrigger>

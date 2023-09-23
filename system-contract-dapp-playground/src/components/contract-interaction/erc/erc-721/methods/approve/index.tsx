@@ -22,19 +22,19 @@ import Image from 'next/image';
 import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
 import { isAddress } from 'ethers';
-import MultiLineMethod from '@/components/common/MultiLineMethod';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
 import { erc721TokenApprove } from '@/api/hedera/erc721-interactions';
-import HederaCommonTextField from '@/components/common/HederaCommonTextField';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
+import MultiLineMethod from '@/components/common/components/MultiLineMethod';
+import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
+import HederaCommonTextField from '@/components/common/components/HederaCommonTextField';
 import { Th, Tr, Table, Tbody, Thead, useToast, TableContainer } from '@chakra-ui/react';
+import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
 import { approveERC721ParamFields } from '@/utils/contract-interactions/erc/erc721/constant';
-import useUpdateMapStateUILocalStorage from '../../../shared/hooks/useUpdateMapStateUILocalStorage';
-import { handleAPIErrors } from '@/components/contract-interaction/hts/shared/methods/handleAPIErrors';
-import useRetrieveMapValueFromLocalStorage from '../../../shared/hooks/useRetrieveMapValueFromLocalStorage';
-import { useUpdateTransactionResultsToLocalStorage } from '@/components/contract-interaction/hts/shared/hooks/useUpdateLocalStorage';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/contract-interaction/hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import useUpdateMapStateUILocalStorage from '../../../../../../hooks/useUpdateMapStateUILocalStorage';
+import useRetrieveMapValueFromLocalStorage from '../../../../../../hooks/useRetrieveMapValueFromLocalStorage';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   CONTRACT_NAMES,
   HEDERA_BRANDING_COLORS,
@@ -54,7 +54,7 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
   const [getApproveTokenId, setGetApproveTokenId] = useState('');
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC721) as string;
   const [tokenSpenders, setTokenSpenders] = useState(new Map<number, string>());
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const tokenSpenderResultsStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['GET-APPROVE'];
   const transactionResultStorageKey =

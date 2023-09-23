@@ -24,15 +24,15 @@ import { useToast } from '@chakra-ui/react';
 import { getWalletProvider } from '@/api/wallet';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { handleIHRC719APIs } from '@/api/hedera/ihrc-interactions';
-import { TransactionResult } from '@/types/contract-interactions/HTS';
-import { handleAPIErrors } from '../../hts/shared/methods/handleAPIErrors';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
+import { handleAPIErrors } from '../../../common/methods/handleAPIErrors';
+import { useToastSuccessful } from '../../../../hooks/useToastSuccessful';
 import { TRANSACTION_PAGE_SIZE } from '../../hts/shared/states/commonStates';
-import { useToastSuccessful } from '../../hts/shared/hooks/useToastSuccessful';
-import { usePaginatedTxResults } from '../../hts/shared/hooks/usePaginatedTxResults';
-import { TransactionResultTable } from '../../hts/shared/components/TransactionResultTable';
+import { usePaginatedTxResults } from '../../../../hooks/usePaginatedTxResults';
+import { TransactionResultTable } from '../../../common/components/TransactionResultTable';
+import { useUpdateTransactionResultsToLocalStorage } from '../../../../hooks/useUpdateLocalStorage';
 import { SharedExecuteButton, SharedFormInputField } from '../../hts/shared/components/ParamInputForm';
-import { useUpdateTransactionResultsToLocalStorage } from '../../hts/shared/hooks/useUpdateLocalStorage';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../hts/shared/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
   HEDERA_BRANDING_COLORS,
@@ -57,7 +57,7 @@ const HederaIHRC719Methods = ({ network }: PageProps) => {
   const initialParamValues = { hederaTokenAddress: '', feeValue: '' };
   const [paramValues, setParamValues] = useState(initialParamValues);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
-  const [transactionResults, setTransactionResults] = useState<TransactionResult[]>([]);
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['IHRC719-RESULTS'];
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
