@@ -38,6 +38,7 @@ export const handleAPIErrors = ({
   receiverAddress,
   setTransactionResults,
   sessionedContractAddress,
+  transactionResultStorageKey,
 }: {
   err: any;
   toaster: any;
@@ -49,6 +50,7 @@ export const handleAPIErrors = ({
   receiverAddress?: string;
   tokenAddresses?: string[];
   sessionedContractAddress: string;
+  transactionResultStorageKey: string;
   transactionHash: string | undefined;
   keyTypeCalled?: IHederaTokenServiceKeyType;
   setTransactionResults: Dispatch<SetStateAction<TransactionResult[]>>;
@@ -87,12 +89,13 @@ export const handleAPIErrors = ({
         transactionType,
         txHash: transactionHash,
         sessionedContractAddress,
+        transactionResultStorageKey,
+        transactionTimeStamp: Date.now(),
         tokenAddress: tokenAddress ? tokenAddress : '',
         initialAmount: initialAmount ? initialAmount : '',
         accountAddress: accountAddress ? accountAddress : '',
         tokenAddresses: tokenAddresses ? tokenAddresses : [''],
         receiverAddress: receiverAddress ? receiverAddress : '',
-        transactionTimeStamp: Date.now(),
       },
     ]);
 

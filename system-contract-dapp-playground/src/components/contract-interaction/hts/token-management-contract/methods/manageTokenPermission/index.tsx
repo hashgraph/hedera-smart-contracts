@@ -167,6 +167,7 @@ const ManageTokenPermission = ({ baseContract }: PageProps) => {
         toaster,
         transactionHash,
         setTransactionResults,
+        transactionResultStorageKey,
         tokenAddress: hederaTokenAddress,
         transactionType: transactionTypeMap[API],
         sessionedContractAddress: currentContractAddress,
@@ -178,6 +179,7 @@ const ManageTokenPermission = ({ baseContract }: PageProps) => {
         ...prev,
         {
           status: 'success',
+          transactionResultStorageKey,
           tokenAddress: hederaTokenAddress,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,

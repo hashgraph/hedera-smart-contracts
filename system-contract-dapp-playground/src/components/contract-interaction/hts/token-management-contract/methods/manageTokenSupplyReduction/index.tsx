@@ -165,6 +165,7 @@ const ManageTokenDeduction = ({ baseContract }: PageProps) => {
         toaster,
         transactionHash,
         setTransactionResults,
+        transactionResultStorageKey,
         tokenAddress: hederaTokenAddress,
         transactionType: transactionTypeMap[API],
         sessionedContractAddress: currentContractAddress,
@@ -176,6 +177,7 @@ const ManageTokenDeduction = ({ baseContract }: PageProps) => {
         ...prev,
         {
           status: 'success',
+          transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
           tokenAddress: hederaTokenAddress,
           txHash: transactionHash as string,

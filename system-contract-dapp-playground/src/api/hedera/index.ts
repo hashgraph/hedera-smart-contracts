@@ -77,6 +77,7 @@ export const deploySmartContract = async (
     if (txReceipt) {
       const createTransactionResult: TransactionResult = {
         status: 'success',
+        transactionResultStorageKey,
         transactionTimeStamp: Date.now(),
         txHash: txReceipt.hash as string,
         transactionType: 'CONTRACT-CREATE',

@@ -173,6 +173,7 @@ const QueryTokenGeneralInfomation = ({ baseContract }: PageProps) => {
         toaster,
         err: err,
         setTransactionResults,
+        transactionResultStorageKey,
         transactionHash: transactionHash,
         transactionType: transactionTypeMap[API],
         tokenAddress: paramValues.hederaTokenAddress,
@@ -187,6 +188,7 @@ const QueryTokenGeneralInfomation = ({ baseContract }: PageProps) => {
         {
           APICalled: API,
           status: 'success',
+          transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
           transactionType: transactionTypeMap[API],
