@@ -123,6 +123,7 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
         handleAPIErrors({
           toaster,
           setTransactionResults,
+          transactionResultStorageKey,
           err: erc721ApproveResult.err,
           transactionType: 'ERC721-APPROVE',
           transactionHash: erc721ApproveResult.txHash,
@@ -136,6 +137,7 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
             ...prev,
             {
               status: 'success',
+              transactionResultStorageKey,
               transactionTimeStamp: Date.now(),
               transactionType: 'ERC721-APPROVE',
               txHash: erc721ApproveResult.txHash as string,
@@ -162,6 +164,7 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
       getApproveTokenId,
       approveParams.tokenId,
       currentContractAddress,
+      transactionResultStorageKey,
       approveParams.spenderAddress,
     ]
   );

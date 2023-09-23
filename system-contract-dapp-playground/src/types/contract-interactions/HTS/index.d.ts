@@ -37,6 +37,7 @@ export type TransactionResult = {
   tokenAddresses?: string[];
   transactionTimeStamp: number;
   sessionedContractAddress: string;
+  transactionResultStorageKey: string;
 };
 
 /** @dev an interface for the results returned back from interacting with Hedera System Smart Contracts */

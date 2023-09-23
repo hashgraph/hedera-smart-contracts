@@ -181,6 +181,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
         toaster,
         transactionHash,
         setTransactionResults,
+        transactionResultStorageKey,
         transactionType: 'HTS-TOKEN-CREATE',
         sessionedContractAddress: currentContractAddress,
       });
@@ -192,6 +193,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
         {
           tokenAddress,
           status: 'success',
+          transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
           transactionType: 'HTS-TOKEN-CREATE',

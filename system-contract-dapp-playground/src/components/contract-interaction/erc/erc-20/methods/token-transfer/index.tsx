@@ -129,6 +129,7 @@ const Transfer = ({ baseContract }: PageProps) => {
         toaster,
         setTransactionResults,
         err: tokenTransferRes.err,
+        transactionResultStorageKey,
         transactionHash: tokenTransferRes.txHash,
         sessionedContractAddress: currentContractAddress,
         transactionType: `ERC20-${convertCalmelCaseFunctionName(method).replace(' ', '-')}`,
@@ -143,6 +144,7 @@ const Transfer = ({ baseContract }: PageProps) => {
         ...prev,
         {
           status: 'success',
+          transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
           txHash: tokenTransferRes.txHash as string,
           sessionedContractAddress: currentContractAddress,

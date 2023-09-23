@@ -75,6 +75,7 @@ const Mint = ({ baseContract }: PageProps) => {
         toaster,
         setTransactionResults,
         transactionHash: txHash,
+        transactionResultStorageKey,
         transactionType: 'ERC721-MINT',
         sessionedContractAddress: currentContractAddress,
       });
@@ -86,6 +87,7 @@ const Mint = ({ baseContract }: PageProps) => {
         {
           status: 'success',
           txHash: txHash as string,
+          transactionResultStorageKey,
           transactionType: 'ERC721-MINT',
           transactionTimeStamp: Date.now(),
           sessionedContractAddress: currentContractAddress,

@@ -170,6 +170,7 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
         toaster,
         setTransactionResults,
         err: tokenApprovalRes.err,
+        transactionResultStorageKey,
         transactionType: 'ERC721-SET-APPROVAL',
         transactionHash: tokenApprovalRes.txHash,
         sessionedContractAddress: currentContractAddress,
@@ -182,6 +183,7 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
           ...prev,
           {
             status: 'success',
+            transactionResultStorageKey,
             transactionTimeStamp: Date.now(),
             transactionType: 'ERC721-SET-APPROVAL',
             txHash: tokenApprovalRes.txHash as string,
