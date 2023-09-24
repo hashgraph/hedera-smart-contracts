@@ -43,6 +43,11 @@ export interface ITransactionResult {
     owner: string;
     balance: number;
   };
+  allowances?: {
+    owner: string;
+    spender: string;
+    amount: number;
+  };
 }
 
 /** @dev an interface for the results returned back from interacting with Hedera System Smart Contracts */
