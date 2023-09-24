@@ -29,6 +29,7 @@ export interface ITransactionResult {
   keyTypeCalled?: any;
   recordIndex?: number;
   tokenAddress?: string;
+  mintedAmount?: string;
   initialAmount?: string;
   accountAddress?: string;
   transactionType: string;

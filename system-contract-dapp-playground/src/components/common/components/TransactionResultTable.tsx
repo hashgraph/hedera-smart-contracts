@@ -65,6 +65,7 @@ interface TransactionResultTablePageProps {
   setKeyTypeFromTxResult?: Dispatch<SetStateAction<IHederaTokenServiceKeyType>>;
   API:
     | 'PRNG'
+    | 'ERC20Mint'
     | 'GrantKYC'
     | 'TokenMint'
     | 'TokenCreate'
@@ -107,6 +108,7 @@ export const TransactionResultTable = ({
       beginingHashIndex = 15;
       endingHashIndex = -12;
       break;
+    case 'ERC20Mint':
     case 'TokenMint':
     case 'QuerySpecificInfo':
     case 'QueryTokenPermission':
@@ -143,13 +145,14 @@ export const TransactionResultTable = ({
               API !== 'PRNG' &&
               API !== 'ExchangeRate' &&
               API !== 'ERCBalanceOf' &&
-              API !== 'ERCTokenPermission' && (
+              API !== 'ERCTokenPermission' &&
+              API !== 'ERC20Mint' && (
                 <Th color={HEDERA_BRANDING_COLORS.violet}>{`Token ${
                   API !== 'TransferSingle' ? `Address` : ``
                 }`}</Th>
               )}
             {API === 'TransferSingle' && <Th color={HEDERA_BRANDING_COLORS.violet}>Sender</Th>}
-            {(API === 'TokenMint' || API === 'TransferSingle') && (
+            {(API === 'TokenMint' || API === 'TransferSingle' || API === 'ERC20Mint') && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>Recipient</Th>
             )}
             {API === 'ERCTokenPermission' && <Th color={HEDERA_BRANDING_COLORS.violet}>Owner</Th>}
@@ -167,7 +170,9 @@ export const TransactionResultTable = ({
             {API === 'PRNG' && <Th color={HEDERA_BRANDING_COLORS.violet}>Seed</Th>}
             {API === 'ExchangeRate' && <Th color={HEDERA_BRANDING_COLORS.violet}>Initial Amount</Th>}
             {API === 'ExchangeRate' && <Th color={HEDERA_BRANDING_COLORS.violet}>Converted Amount</Th>}
-            {API === 'ERCTokenPermission' && <Th color={HEDERA_BRANDING_COLORS.violet}>Amount</Th>}
+            {(API === 'ERCTokenPermission' || API === 'ERC20Mint') && (
+              <Th color={HEDERA_BRANDING_COLORS.violet}>Amount</Th>
+            )}
             {(API === 'QueryTokenGeneralInfo' ||
               API === 'QuerySpecificInfo' ||
               API === 'QueryTokenPermission' ||
@@ -464,36 +469,57 @@ export const TransactionResultTable = ({
                 )}
 
                 {/* Receiver Address */}
-                {API === 'TransferSingle' && (
-                  <Td className="cursor-pointer">
-                    <div className="flex gap-1 items-center">
-                      <div onClick={() => copyContentToClipboard(transactionResult.receiverAddress!)}>
-                        <Popover>
-                          <PopoverTrigger>
-                            <div className="flex gap-1 items-center">
-                              <Tooltip label="click to copy recipient address">
-                                <p>
-                                  {transactionResult.receiverAddress!.slice(0, beginingHashIndex)}
-                                  ...
-                                  {transactionResult.receiverAddress!.slice(endingHashIndex)}
-                                </p>
-                              </Tooltip>
-                            </div>
-                          </PopoverTrigger>
-                          <PopoverContent width={'fit-content'} border={'none'}>
-                            <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                      <Tooltip label={'Explore this user on HashScan'} placement="top" fontWeight={'medium'}>
-                        <Link
-                          href={`https://hashscan.io/${hederaNetwork}/account/${transactionResult.receiverAddress}`}
-                          target="_blank"
-                        >
-                          <FiExternalLink />
-                        </Link>
-                      </Tooltip>
-                    </div>
+                {API === 'TransferSingle' ||
+                  (API === 'ERC20Mint' && (
+                    <Td className="cursor-pointer">
+                      {transactionResult.receiverAddress ? (
+                        <div className="flex gap-1 items-center">
+                          <div onClick={() => copyContentToClipboard(transactionResult.receiverAddress!)}>
+                            <Popover>
+                              <PopoverTrigger>
+                                <div className="flex gap-1 items-center">
+                                  <Tooltip label="click to copy recipient address">
+                                    <p>
+                                      {transactionResult.receiverAddress!.slice(0, beginingHashIndex)}
+                                      ...
+                                      {transactionResult.receiverAddress!.slice(endingHashIndex)}
+                                    </p>
+                                  </Tooltip>
+                                </div>
+                              </PopoverTrigger>
+                              <PopoverContent width={'fit-content'} border={'none'}>
+                                <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                          <Tooltip
+                            label={'Explore this user on HashScan'}
+                            placement="top"
+                            fontWeight={'medium'}
+                          >
+                            <Link
+                              href={`https://hashscan.io/${hederaNetwork}/account/${transactionResult.receiverAddress}`}
+                              target="_blank"
+                            >
+                              <FiExternalLink />
+                            </Link>
+                          </Tooltip>
+                        </div>
+                      ) : (
+                        <>
+                          {`${ethers.ZeroAddress.slice(0, beginingHashIndex)}...${ethers.ZeroAddress.slice(
+                            endingHashIndex
+                          )}`}
+                        </>
+                      )}
+                    </Td>
+                  ))}
+
+                {/* Minted Amount */}
+                {/* Allowance */}
+                {API === 'ERC20Mint' && (
+                  <Td isNumeric>
+                    <p>{transactionResult.mintedAmount || 'N/A'}</p>
                   </Td>
                 )}
 
