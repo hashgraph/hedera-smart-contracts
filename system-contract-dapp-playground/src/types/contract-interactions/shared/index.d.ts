@@ -57,6 +57,10 @@ export interface ITransactionResult {
     spender: string;
     amount: number;
   };
+  tokenURI?: {
+    tokenID: string;
+    tokenURI: string;
+  };
 }
 
 /** @dev an interface for the results returned back from interacting with Hedera System Smart Contracts */

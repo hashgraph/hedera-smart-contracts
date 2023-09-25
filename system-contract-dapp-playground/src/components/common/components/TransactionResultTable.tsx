@@ -75,6 +75,7 @@ interface TransactionResultTablePageProps {
     | 'QueryValidity'
     | 'ERC20Transfer'
     | 'CryptoTransfer'
+    | 'ERC721TokenURI'
     | 'TokenAssociate'
     | 'TransferSingle'
     | 'QueryTokenStatus'
@@ -144,13 +145,16 @@ export const TransactionResultTable = ({
               Index
             </Th>
             {API !== 'ERCTokenPermission' && <Th color={HEDERA_BRANDING_COLORS.violet}>Status</Th>}
-            {API !== 'ERCBalanceOf' && <Th color={HEDERA_BRANDING_COLORS.violet}>Tx hash</Th>}
+            {API !== 'ERCBalanceOf' && API !== 'ERC721TokenURI' && (
+              <Th color={HEDERA_BRANDING_COLORS.violet}>Tx hash</Th>
+            )}
             {API !== 'PRNG' &&
               API !== 'ERC20Mint' &&
               API !== 'ERC721Mint' &&
               API !== 'ERCBalanceOf' &&
               API !== 'ExchangeRate' &&
               API !== 'ERC20Transfer' &&
+              API !== 'ERC721TokenURI' &&
               API !== 'CryptoTransfer' &&
               API !== 'ERCTokenPermission' && (
                 <Th color={HEDERA_BRANDING_COLORS.violet}>{`Token ${
@@ -183,7 +187,10 @@ export const TransactionResultTable = ({
             {(API === 'ERCTokenPermission' || API === 'ERC20Mint' || API === 'ERC20Transfer') && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>Amount</Th>
             )}
-            {API === 'ERC721Mint' && <Th color={HEDERA_BRANDING_COLORS.violet}>TokenID</Th>}
+            {(API === 'ERC721Mint' || API === 'ERC721TokenURI') && (
+              <Th color={HEDERA_BRANDING_COLORS.violet}>TokenID</Th>
+            )}
+            {API === 'ERC721TokenURI' && <Th color={HEDERA_BRANDING_COLORS.violet}>Token URI</Th>}
             {(API === 'QueryTokenGeneralInfo' ||
               API === 'QuerySpecificInfo' ||
               API === 'QueryTokenPermission' ||
@@ -192,7 +199,7 @@ export const TransactionResultTable = ({
               API === 'ExchangeRate' ||
               API === 'ERCTokenPermission') && <Th color={HEDERA_BRANDING_COLORS.violet}>API called</Th>}
             {/* refresh button */}
-            {(API === 'ERCBalanceOf' || API === 'ERCTokenPermission') && <Th />}
+            {(API === 'ERCBalanceOf' || API === 'ERCTokenPermission' || API === 'ERC721TokenURI') && <Th />}
             {/* delete record button */}
             <Th />
           </Tr>
@@ -236,7 +243,7 @@ export const TransactionResultTable = ({
                 )}
 
                 {/* transaction hash */}
-                {API !== 'ERCBalanceOf' && (
+                {API !== 'ERCBalanceOf' && API !== 'ERC721TokenURI' && (
                   <Td className="cursor-pointer">
                     {transactionResult.readonly ? (
                       <p>N/A</p>
@@ -543,6 +550,20 @@ export const TransactionResultTable = ({
                   </Td>
                 )}
 
+                {/* TokenURI tokenID */}
+                {API === 'ERC721TokenURI' && (
+                  <Td isNumeric>
+                    <p>{transactionResult.tokenURI?.tokenID || 'N/A'}</p>
+                  </Td>
+                )}
+
+                {/* TokenURI */}
+                {API === 'ERC721TokenURI' && (
+                  <Td isNumeric>
+                    <p>{transactionResult.tokenURI?.tokenURI || 'N/A'}</p>
+                  </Td>
+                )}
+
                 {/* Transfer Amount */}
                 {API === 'ERC20Transfer' && (
                   <Td isNumeric>
@@ -835,7 +856,7 @@ export const TransactionResultTable = ({
                 )}
 
                 {/* refresh button - ERC */}
-                {(API === 'ERCBalanceOf' || API === 'ERCTokenPermission') && (
+                {(API === 'ERCBalanceOf' || API === 'ERCTokenPermission' || API === 'ERC721TokenURI') && (
                   <Td>
                     {transactionResult.readonly && (
                       <Tooltip label="refresh this record" placement="top">
@@ -857,6 +878,11 @@ export const TransactionResultTable = ({
                                   null,
                                   true
                                 );
+                                break;
+
+                              case 'ERC721TokenURI':
+                                handleReexecuteMethodAPI(transactionResult.tokenURI?.tokenID, true);
+                                break;
                             }
                           }}
                           className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-teal-500 transition duration-300`}
