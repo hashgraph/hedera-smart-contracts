@@ -67,16 +67,19 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
     GET_APPROVE: false,
   });
 
-  const transferTypeMap = {
-    APPROVE: {
-      transactionType: 'ERC721-APPROVE',
-      API: 'APPROVE',
-    },
-    GET_APPROVE: {
-      transactionType: 'ERC721-GET-APPROVE',
-      API: 'GET_APPROVE',
-    },
-  };
+  const transferTypeMap = useCallback((API: 'APPROVE' | 'GET_APPROVE') => {
+    if (API === 'APPROVE') {
+      return {
+        transactionType: 'ERC721-APPROVE',
+        API: 'APPROVE',
+      };
+    } else {
+      return {
+        transactionType: 'ERC721-GET-APPROVE',
+        API: 'GET_APPROVE',
+      };
+    }
+  }, []);
 
   const transactionResultsToShow = useFilterTransactionsByContractAddress(
     transactionResults,
@@ -169,9 +172,9 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
               transactionResultStorageKey,
               readonly: method === 'GET_APPROVE',
               transactionTimeStamp: Date.now(),
-              APICalled: (transferTypeMap as any)[method].API,
+              APICalled: transferTypeMap(method).API,
               sessionedContractAddress: currentContractAddress,
-              transactionType: (transferTypeMap as any)[method].transactionType,
+              transactionType: transferTypeMap(method).transactionType,
               txHash:
                 method === 'GET_APPROVE'
                   ? generatedRandomUniqueKey(9)
@@ -201,7 +204,7 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
     [
       toaster,
       baseContract,
-      getApproveTokenId,
+      transferTypeMap,
       approveParams.tokenId,
       currentContractAddress,
       transactionResultStorageKey,

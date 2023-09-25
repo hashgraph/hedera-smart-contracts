@@ -138,7 +138,7 @@ const ERC721TokenURI = ({ baseContract }: PageProps) => {
         });
       }
     },
-    [toaster, baseContract]
+    [toaster, baseContract, currentContractAddress, transactionResultStorageKey]
   );
 
   /** @dev listen to change event on transactionResults state => load to localStorage  */

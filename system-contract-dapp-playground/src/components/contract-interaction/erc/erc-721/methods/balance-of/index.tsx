@@ -134,7 +134,7 @@ const ERC721BalanceOf = ({ baseContract }: PageProps) => {
         });
       }
     },
-    [baseContract, toaster]
+    [baseContract, toaster, currentContractAddress, transactionResultStorageKey]
   );
 
   /** @dev listen to change event on transactionResults state => load to localStorage  */
