@@ -75,6 +75,7 @@ interface TransactionResultTablePageProps {
     | 'ERC721OwnerOf'
     | 'QueryValidity'
     | 'ERC20Transfer'
+    | 'ERC721Approves'
     | 'CryptoTransfer'
     | 'ERC721TokenURI'
     | 'TokenAssociate'
@@ -131,6 +132,7 @@ export const TransactionResultTable = ({
     case 'ExchangeRate':
     case 'ERC20Transfer':
     case 'TransferSingle':
+    case 'ERC721Approves':
     case 'QueryTokenStatus':
     case 'ERCTokenPermission':
       beginingHashIndex = 4;
@@ -159,13 +161,16 @@ export const TransactionResultTable = ({
               API !== 'ERC20Transfer' &&
               API !== 'ERC721TokenURI' &&
               API !== 'CryptoTransfer' &&
+              API !== 'ERC721Approves' &&
               API !== 'ERCTokenPermission' && (
                 <Th color={HEDERA_BRANDING_COLORS.violet}>{`Token ${
                   API !== 'TransferSingle' ? `Address` : ``
                 }`}</Th>
               )}
             {API === 'TransferSingle' && <Th color={HEDERA_BRANDING_COLORS.violet}>Sender</Th>}
-            {API === 'ERC721OwnerOf' && <Th color={HEDERA_BRANDING_COLORS.violet}>TokenID</Th>}
+            {(API === 'ERC721OwnerOf' || API === 'ERC721Approves') && (
+              <Th color={HEDERA_BRANDING_COLORS.violet}>TokenID</Th>
+            )}
             {(API === 'ERCTokenPermission' || API === 'ERC20Transfer' || API === 'ERC721OwnerOf') && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>Owner</Th>
             )}
@@ -174,7 +179,9 @@ export const TransactionResultTable = ({
               API === 'ERC721Mint' ||
               API === 'ERC20Transfer' ||
               API === 'TransferSingle') && <Th color={HEDERA_BRANDING_COLORS.violet}>Recipient</Th>}
-            {API === 'ERCTokenPermission' && <Th color={HEDERA_BRANDING_COLORS.violet}>Spender</Th>}
+            {(API === 'ERCTokenPermission' || API === 'ERC721Approves') && (
+              <Th color={HEDERA_BRANDING_COLORS.violet}>Spender</Th>
+            )}
             {API === 'TokenAssociate' && <Th color={HEDERA_BRANDING_COLORS.violet}>Associated Account</Th>}
             {API === 'QueryTokenStatus' ||
               (API === 'ERCBalanceOf' && <Th color={HEDERA_BRANDING_COLORS.violet}>Account</Th>)}
@@ -195,16 +202,18 @@ export const TransactionResultTable = ({
               <Th color={HEDERA_BRANDING_COLORS.violet}>TokenID</Th>
             )}
             {API === 'ERC721TokenURI' && <Th color={HEDERA_BRANDING_COLORS.violet}>Token URI</Th>}
-            {(API === 'QueryTokenGeneralInfo' ||
-              API === 'QuerySpecificInfo' ||
-              API === 'QueryTokenPermission' ||
-              API === 'QueryTokenStatus' ||
+            {(API === 'ExchangeRate' ||
               API === 'TransferSingle' ||
-              API === 'ExchangeRate' ||
-              API === 'ERCTokenPermission') && <Th color={HEDERA_BRANDING_COLORS.violet}>API called</Th>}
+              API === 'ERC721Approves' ||
+              API === 'QueryTokenStatus' ||
+              API === 'QuerySpecificInfo' ||
+              API === 'ERCTokenPermission' ||
+              API === 'QueryTokenPermission' ||
+              API === 'QueryTokenGeneralInfo') && <Th color={HEDERA_BRANDING_COLORS.violet}>API called</Th>}
             {/* refresh button */}
             {(API === 'ERCBalanceOf' ||
               API === 'ERC721OwnerOf' ||
+              API === 'ERC721Approves' ||
               API === 'ERC721TokenURI' ||
               API === 'ERCTokenPermission') && <Th />}
             {/* delete record button */}
@@ -571,6 +580,13 @@ export const TransactionResultTable = ({
                   </Td>
                 )}
 
+                {/* approve tokenID */}
+                {API === 'ERC721Approves' && (
+                  <Td isNumeric>
+                    <p>{transactionResult.approves?.tokenID || 'N/A'}</p>
+                  </Td>
+                )}
+
                 {/* TokenURI */}
                 {API === 'ERC721TokenURI' && (
                   <Td isNumeric>
@@ -678,48 +694,67 @@ export const TransactionResultTable = ({
                 )}
 
                 {/* token spender */}
-                {API === 'ERCTokenPermission' && (
+                {(API === 'ERCTokenPermission' || API === 'ERC721Approves') && (
                   <Td className="cursor-pointer">
-                    {transactionResult.allowances?.spender ? (
-                      <div className="flex gap-1 items-center">
-                        <div onClick={() => copyContentToClipboard(transactionResult.allowances?.spender!)}>
-                          <Popover>
-                            <PopoverTrigger>
-                              <div className="flex gap-1 items-center">
-                                <Tooltip label="click to copy recipient address">
-                                  <p>
-                                    {transactionResult.allowances?.spender!.slice(0, beginingHashIndex)}
-                                    ...
-                                    {transactionResult.allowances?.spender!.slice(endingHashIndex)}
-                                  </p>
-                                </Tooltip>
+                    {(() => {
+                      let spender;
+                      switch (API) {
+                        case 'ERC721Approves':
+                          spender = transactionResult.approves?.spender;
+                          break;
+                        case 'ERCTokenPermission':
+                          spender = transactionResult.allowances?.spender;
+                          break;
+                      }
+
+                      return (
+                        <>
+                          {spender ? (
+                            <div className="flex gap-1 items-center">
+                              <div onClick={() => copyContentToClipboard(spender!)}>
+                                <Popover>
+                                  <PopoverTrigger>
+                                    <div className="flex gap-1 items-center">
+                                      <Tooltip label="click to copy recipient address">
+                                        <p>
+                                          {spender!.slice(0, beginingHashIndex)}
+                                          ...
+                                          {spender!.slice(endingHashIndex)}
+                                        </p>
+                                      </Tooltip>
+                                    </div>
+                                  </PopoverTrigger>
+                                  <PopoverContent width={'fit-content'} border={'none'}>
+                                    <div className="bg-secondary px-3 py-2 border-none font-medium">
+                                      Copied
+                                    </div>
+                                  </PopoverContent>
+                                </Popover>
                               </div>
-                            </PopoverTrigger>
-                            <PopoverContent width={'fit-content'} border={'none'}>
-                              <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
-                            </PopoverContent>
-                          </Popover>
-                        </div>
-                        <Tooltip
-                          label={'Explore this user on HashScan'}
-                          placement="top"
-                          fontWeight={'medium'}
-                        >
-                          <Link
-                            href={`https://hashscan.io/${hederaNetwork}/account/${transactionResult.allowances?.spender}`}
-                            target="_blank"
-                          >
-                            <FiExternalLink />
-                          </Link>
-                        </Tooltip>
-                      </div>
-                    ) : (
-                      <>
-                        {`${ethers.ZeroAddress.slice(0, beginingHashIndex)}...${ethers.ZeroAddress.slice(
-                          endingHashIndex
-                        )}`}
-                      </>
-                    )}
+                              <Tooltip
+                                label={'Explore this user on HashScan'}
+                                placement="top"
+                                fontWeight={'medium'}
+                              >
+                                <Link
+                                  href={`https://hashscan.io/${hederaNetwork}/account/${transactionResult.allowances?.spender}`}
+                                  target="_blank"
+                                >
+                                  <FiExternalLink />
+                                </Link>
+                              </Tooltip>
+                            </div>
+                          ) : (
+                            <>
+                              {`${ethers.ZeroAddress.slice(
+                                0,
+                                beginingHashIndex
+                              )}...${ethers.ZeroAddress.slice(endingHashIndex)}`}
+                            </>
+                          )}
+                        </>
+                      );
+                    })()}
                   </Td>
                 )}
 
@@ -849,6 +884,7 @@ export const TransactionResultTable = ({
                 {/* query - API called */}
                 {(API === 'ExchangeRate' ||
                   API === 'TransferSingle' ||
+                  API === 'ERC721Approves' ||
                   API === 'QueryTokenStatus' ||
                   API === 'QuerySpecificInfo' ||
                   API === 'ERCTokenPermission' ||
@@ -917,9 +953,10 @@ export const TransactionResultTable = ({
 
                 {/* refresh button - ERC */}
                 {(API === 'ERCBalanceOf' ||
-                  API === 'ERCTokenPermission' ||
+                  API === 'ERC721OwnerOf' ||
+                  API === 'ERC721Approves' ||
                   API === 'ERC721TokenURI' ||
-                  API === 'ERC721OwnerOf') && (
+                  API === 'ERCTokenPermission') && (
                   <Td>
                     {transactionResult.readonly && (
                       <Tooltip label="refresh this record" placement="top">
@@ -949,6 +986,15 @@ export const TransactionResultTable = ({
 
                               case 'ERC721OwnerOf':
                                 handleReexecuteMethodAPI(transactionResult.ownerOf?.tokenID, true);
+                                break;
+
+                              case 'ERC721Approves':
+                                handleReexecuteMethodAPI(
+                                  'GET_APPROVE',
+                                  { spender: '', tokenId: transactionResult.approves?.tokenID },
+                                  true
+                                );
+                                break;
                             }
                           }}
                           className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-teal-500 transition duration-300`}

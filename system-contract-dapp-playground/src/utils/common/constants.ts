@@ -400,7 +400,6 @@ export const HEDERA_TRANSACTION_RESULT_STORAGE_KEYS = {
     'SET-APPROVAL': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'SET-APPROVAL'),
     'TOKEN-URI': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-URI', true),
     'BALANCE-OF': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'BALANCE-OF', true),
-    'GET-APPROVE': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'GET-APPROVE', true),
     'TOKEN-TRANSFER': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-TRANSFER'),
     'GET-APPROVAL': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'GET-APPROVAL', true),
     'TOKEN-PERMISSION': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-PERMISSION'),
