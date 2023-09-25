@@ -91,7 +91,7 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
     handleRetrievingTransactionResultsFromLocalStorage(
       toaster,
       transactionResultStorageKey,
-      undefined,
+      setCurrentTransactionPage,
       setTransactionResults
     );
   }, [toaster, transactionResultStorageKey]);
@@ -156,7 +156,6 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
             method !== 'GET_APPROVE'
               ? [...prev]
               : prev.map((record) => {
-                  // @logic if an owner and a spender pair has already been queried before, update only amount
                   if (record.APICalled === 'GET_APPROVE' && record.approves?.tokenID === params.tokenId) {
                     record.approves.spender = erc721ApproveResult.approvedAccountRes || '';
                     duplicated = true;
