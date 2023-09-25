@@ -68,6 +68,7 @@ interface TransactionResultTablePageProps {
     | 'ERC20Mint'
     | 'GrantKYC'
     | 'TokenMint'
+    | 'ERC721Mint'
     | 'TokenCreate'
     | 'ExchangeRate'
     | 'ERCBalanceOf'
@@ -110,6 +111,7 @@ export const TransactionResultTable = ({
       endingHashIndex = -12;
       break;
     case 'ERC20Mint':
+    case 'ERC721Mint':
     case 'TokenMint':
     case 'QuerySpecificInfo':
     case 'QueryTokenPermission':
@@ -143,13 +145,14 @@ export const TransactionResultTable = ({
             </Th>
             {API !== 'ERCTokenPermission' && <Th color={HEDERA_BRANDING_COLORS.violet}>Status</Th>}
             {API !== 'ERCBalanceOf' && <Th color={HEDERA_BRANDING_COLORS.violet}>Tx hash</Th>}
-            {API !== 'CryptoTransfer' &&
-              API !== 'PRNG' &&
-              API !== 'ExchangeRate' &&
-              API !== 'ERCBalanceOf' &&
-              API !== 'ERCTokenPermission' &&
+            {API !== 'PRNG' &&
               API !== 'ERC20Mint' &&
-              API !== 'ERC20Transfer' && (
+              API !== 'ERC721Mint' &&
+              API !== 'ERCBalanceOf' &&
+              API !== 'ExchangeRate' &&
+              API !== 'ERC20Transfer' &&
+              API !== 'CryptoTransfer' &&
+              API !== 'ERCTokenPermission' && (
                 <Th color={HEDERA_BRANDING_COLORS.violet}>{`Token ${
                   API !== 'TransferSingle' ? `Address` : ``
                 }`}</Th>
@@ -159,9 +162,10 @@ export const TransactionResultTable = ({
               <Th color={HEDERA_BRANDING_COLORS.violet}>Owner</Th>
             )}
             {(API === 'TokenMint' ||
-              API === 'TransferSingle' ||
               API === 'ERC20Mint' ||
-              API === 'ERC20Transfer') && <Th color={HEDERA_BRANDING_COLORS.violet}>Recipient</Th>}
+              API === 'ERC721Mint' ||
+              API === 'ERC20Transfer' ||
+              API === 'TransferSingle') && <Th color={HEDERA_BRANDING_COLORS.violet}>Recipient</Th>}
             {API === 'ERCTokenPermission' && <Th color={HEDERA_BRANDING_COLORS.violet}>Spender</Th>}
             {API === 'TokenAssociate' && <Th color={HEDERA_BRANDING_COLORS.violet}>Associated Account</Th>}
             {API === 'QueryTokenStatus' ||
@@ -179,6 +183,7 @@ export const TransactionResultTable = ({
             {(API === 'ERCTokenPermission' || API === 'ERC20Mint' || API === 'ERC20Transfer') && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>Amount</Th>
             )}
+            {API === 'ERC721Mint' && <Th color={HEDERA_BRANDING_COLORS.violet}>TokenID</Th>}
             {(API === 'QueryTokenGeneralInfo' ||
               API === 'QuerySpecificInfo' ||
               API === 'QueryTokenPermission' ||
@@ -476,7 +481,10 @@ export const TransactionResultTable = ({
                 )}
 
                 {/* Receiver Address */}
-                {(API === 'TransferSingle' || API === 'ERC20Mint' || API === 'ERC20Transfer') && (
+                {(API === 'ERC20Mint' ||
+                  API === 'ERC721Mint' ||
+                  API === 'ERC20Transfer' ||
+                  API === 'TransferSingle') && (
                   <Td className="cursor-pointer">
                     {transactionResult.receiverAddress ? (
                       <div className="flex gap-1 items-center">
@@ -525,6 +533,13 @@ export const TransactionResultTable = ({
                 {API === 'ERC20Mint' && (
                   <Td isNumeric>
                     <p>{transactionResult.mintedAmount || 'N/A'}</p>
+                  </Td>
+                )}
+
+                {/* Minted tokenID */}
+                {API === 'ERC721Mint' && (
+                  <Td isNumeric>
+                    <p>{transactionResult.tokenID || 'N/A'}</p>
                   </Td>
                 )}
 

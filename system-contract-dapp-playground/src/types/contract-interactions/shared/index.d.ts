@@ -24,6 +24,7 @@ export interface ITransactionResult {
   txHash: string;
   APICalled?: any;
   tokenInfo?: any;
+  tokenID?: string;
   isToken?: boolean;
   readonly?: boolean;
   keyTypeCalled?: any;
