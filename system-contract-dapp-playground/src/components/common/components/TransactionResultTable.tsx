@@ -75,6 +75,7 @@ interface TransactionResultTablePageProps {
     | 'ERC721OwnerOf'
     | 'QueryValidity'
     | 'ERC20Transfer'
+    | 'ERC721Transfer'
     | 'ERC721Approves'
     | 'CryptoTransfer'
     | 'ERC721TokenURI'
@@ -132,6 +133,7 @@ export const TransactionResultTable = ({
       break;
     case 'ExchangeRate':
     case 'ERC20Transfer':
+    case 'ERC721Transfer':
     case 'TransferSingle':
     case 'ERC721Approves':
     case 'ERC721Approval':
@@ -163,6 +165,7 @@ export const TransactionResultTable = ({
               API !== 'ExchangeRate' &&
               API !== 'ERC721OwnerOf' &&
               API !== 'ERC20Transfer' &&
+              API !== 'ERC721Transfer' &&
               API !== 'ERC721TokenURI' &&
               API !== 'CryptoTransfer' &&
               API !== 'ERC721Approves' &&
@@ -172,7 +175,9 @@ export const TransactionResultTable = ({
                   API !== 'TransferSingle' ? `Address` : ``
                 }`}</Th>
               )}
-            {API === 'TransferSingle' && <Th color={HEDERA_BRANDING_COLORS.violet}>Sender</Th>}
+            {(API === 'TransferSingle' || API === 'ERC721Transfer') && (
+              <Th color={HEDERA_BRANDING_COLORS.violet}>Sender</Th>
+            )}
             {(API === 'ERC721OwnerOf' || API === 'ERC721Approves') && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>TokenID</Th>
             )}
@@ -185,6 +190,7 @@ export const TransactionResultTable = ({
               API === 'ERC20Mint' ||
               API === 'ERC721Mint' ||
               API === 'ERC20Transfer' ||
+              API === 'ERC721Transfer' ||
               API === 'TransferSingle') && <Th color={HEDERA_BRANDING_COLORS.violet}>Recipient</Th>}
             {(API === 'ERCTokenPermission' || API === 'ERC721Approves') && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>Spender</Th>
@@ -206,7 +212,7 @@ export const TransactionResultTable = ({
             {(API === 'ERCTokenPermission' || API === 'ERC20Mint' || API === 'ERC20Transfer') && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>Amount</Th>
             )}
-            {(API === 'ERC721Mint' || API === 'ERC721TokenURI') && (
+            {(API === 'ERC721Mint' || API === 'ERC721TokenURI' || API === 'ERC721Transfer') && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>TokenID</Th>
             )}
             {API === 'ERC721TokenURI' && <Th color={HEDERA_BRANDING_COLORS.violet}>Token URI</Th>}
@@ -461,12 +467,13 @@ export const TransactionResultTable = ({
                 )}
 
                 {/* Account address*/}
-                {(API === 'TokenMint' ||
+                {(API === 'GrantKYC' ||
+                  API === 'TokenMint' ||
+                  API === 'ERC20Transfer' ||
+                  API === 'ERC721Transfer' ||
                   API === 'TokenAssociate' ||
-                  API === 'GrantKYC' ||
-                  API === 'QueryTokenStatus' ||
                   API === 'TransferSingle' ||
-                  API === 'ERC20Transfer') && (
+                  API === 'QueryTokenStatus') && (
                   <Td className="cursor-pointer">
                     {transactionResult.accountAddress ? (
                       <div className="flex gap-1 items-center">
@@ -517,6 +524,7 @@ export const TransactionResultTable = ({
                 {(API === 'ERC20Mint' ||
                   API === 'ERC721Mint' ||
                   API === 'ERC20Transfer' ||
+                  API === 'ERC721Transfer' ||
                   API === 'TransferSingle') && (
                   <Td className="cursor-pointer">
                     {transactionResult.receiverAddress ? (
@@ -571,14 +579,16 @@ export const TransactionResultTable = ({
 
                 {/* tokenID */}
                 {(API === 'ERC721Mint' ||
-                  API === 'ERC721TokenURI' ||
                   API === 'ERC721OwnerOf' ||
-                  API === 'ERC721Approves') && (
+                  API === 'ERC721TokenURI' ||
+                  API === 'ERC721Approves' ||
+                  API === 'ERC721Transfer') && (
                   <Td isNumeric>
                     {(() => {
                       let tokenId;
                       switch (API) {
                         case 'ERC721Mint':
+                        case 'ERC721Transfer':
                           tokenId = transactionResult.tokenID;
                           break;
                         case 'ERC721TokenURI':

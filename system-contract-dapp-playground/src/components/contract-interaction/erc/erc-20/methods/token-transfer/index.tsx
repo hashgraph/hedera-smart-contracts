@@ -90,7 +90,7 @@ const Transfer = ({ baseContract }: PageProps) => {
     handleRetrievingTransactionResultsFromLocalStorage(
       toaster,
       transactionResultStorageKey,
-      undefined,
+      setCurrentTransactionPage,
       setTransactionResults
     );
   }, [toaster, transactionResultStorageKey]);

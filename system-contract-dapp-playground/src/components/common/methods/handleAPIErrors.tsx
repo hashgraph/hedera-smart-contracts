@@ -26,6 +26,7 @@ import { HEDERA_COMMON_WALLET_REVERT_REASONS } from '@/utils/common/constants';
 /** @dev handle error returned back from invoking method APIs*/
 export const handleAPIErrors = ({
   err,
+  tokenID,
   toaster,
   APICalled,
   tokenAddress,
@@ -43,6 +44,7 @@ export const handleAPIErrors = ({
 }: {
   err: any;
   toaster: any;
+  tokenID?: string;
   APICalled?: string;
   tokenAddress?: string;
   initialAmount?: string;
@@ -92,6 +94,7 @@ export const handleAPIErrors = ({
         txHash: transactionHash,
         sessionedContractAddress,
         transactionResultStorageKey,
+        tokenID: tokenID ? tokenID : '',
         transactionTimeStamp: Date.now(),
         tokenAddress: tokenAddress ? tokenAddress : '',
         initialAmount: initialAmount ? initialAmount : '',
