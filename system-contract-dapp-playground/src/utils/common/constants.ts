@@ -386,6 +386,7 @@ export const HEDERA_TRANSACTION_RESULT_STORAGE_KEYS = {
   },
   'IHRC719-RESULTS': `HEDERA.IHRC719.IHRC719-RESULTS`,
   'ERC20-RESULT': {
+    'TOKEN-INFO': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'TOKEN-INFO'),
     'TOKEN-MINT': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'TOKEN-MINT'),
     'BALANCE-OF': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'BALANCE-OF', true),
     'TOKEN-TRANSFER': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'TOKEN-TRANSFER'),

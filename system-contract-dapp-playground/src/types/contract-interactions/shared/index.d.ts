@@ -41,6 +41,12 @@ export interface ITransactionResult {
   transactionTimeStamp: number;
   sessionedContractAddress: string;
   transactionResultStorageKey: string;
+  ercTokenInfo?: {
+    name?: string;
+    symbol?: string;
+    decimals?: string;
+    totalSupply?: string;
+  };
   balanceOf?: {
     owner: string;
     balance: number;
