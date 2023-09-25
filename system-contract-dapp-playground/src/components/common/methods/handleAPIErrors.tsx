@@ -31,6 +31,7 @@ export const handleAPIErrors = ({
   tokenAddress,
   keyTypeCalled,
   initialAmount,
+  transferAmount,
   tokenAddresses,
   accountAddress,
   transactionType,
@@ -45,6 +46,7 @@ export const handleAPIErrors = ({
   APICalled?: string;
   tokenAddress?: string;
   initialAmount?: string;
+  transferAmount?: string;
   accountAddress?: string;
   transactionType: string;
   receiverAddress?: string;
@@ -94,6 +96,7 @@ export const handleAPIErrors = ({
         tokenAddress: tokenAddress ? tokenAddress : '',
         initialAmount: initialAmount ? initialAmount : '',
         accountAddress: accountAddress ? accountAddress : '',
+        transferAmount: transferAmount ? transferAmount : '',
         tokenAddresses: tokenAddresses ? tokenAddresses : [''],
         receiverAddress: receiverAddress ? receiverAddress : '',
       },

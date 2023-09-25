@@ -32,6 +32,7 @@ export interface ITransactionResult {
   mintedAmount?: string;
   initialAmount?: string;
   accountAddress?: string;
+  transferAmount?: string;
   transactionType: string;
   convertedAmount?: string;
   receiverAddress?: string;
