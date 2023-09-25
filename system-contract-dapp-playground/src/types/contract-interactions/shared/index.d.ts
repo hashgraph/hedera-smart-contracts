@@ -61,6 +61,10 @@ export interface ITransactionResult {
     tokenID: string;
     tokenURI: string;
   };
+  ownerOf?: {
+    tokenID: string;
+    owner: string;
+  };
 }
 
 /** @dev an interface for the results returned back from interacting with Hedera System Smart Contracts */

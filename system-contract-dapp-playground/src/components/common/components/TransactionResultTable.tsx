@@ -72,6 +72,7 @@ interface TransactionResultTablePageProps {
     | 'TokenCreate'
     | 'ExchangeRate'
     | 'ERCBalanceOf'
+    | 'ERC721OwnerOf'
     | 'QueryValidity'
     | 'ERC20Transfer'
     | 'CryptoTransfer'
@@ -111,20 +112,21 @@ export const TransactionResultTable = ({
       beginingHashIndex = 15;
       endingHashIndex = -12;
       break;
+    case 'GrantKYC':
+    case 'QueryValidity':
+    case 'ERC721OwnerOf':
+    case 'TokenAssociate':
+      beginingHashIndex = 10;
+      endingHashIndex = -5;
+      break;
     case 'ERC20Mint':
-    case 'ERC721Mint':
     case 'TokenMint':
+    case 'ERC721Mint':
     case 'QuerySpecificInfo':
     case 'QueryTokenPermission':
     case 'QueryTokenGeneralInfo':
       beginingHashIndex = 8;
       endingHashIndex = -4;
-      break;
-    case 'GrantKYC':
-    case 'QueryValidity':
-    case 'TokenAssociate':
-      beginingHashIndex = 10;
-      endingHashIndex = -5;
       break;
     case 'ExchangeRate':
     case 'ERC20Transfer':
@@ -145,7 +147,7 @@ export const TransactionResultTable = ({
               Index
             </Th>
             {API !== 'ERCTokenPermission' && <Th color={HEDERA_BRANDING_COLORS.violet}>Status</Th>}
-            {API !== 'ERCBalanceOf' && API !== 'ERC721TokenURI' && (
+            {API !== 'ERCBalanceOf' && API !== 'ERC721TokenURI' && API !== 'ERC721OwnerOf' && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>Tx hash</Th>
             )}
             {API !== 'PRNG' &&
@@ -153,6 +155,7 @@ export const TransactionResultTable = ({
               API !== 'ERC721Mint' &&
               API !== 'ERCBalanceOf' &&
               API !== 'ExchangeRate' &&
+              API !== 'ERC721OwnerOf' &&
               API !== 'ERC20Transfer' &&
               API !== 'ERC721TokenURI' &&
               API !== 'CryptoTransfer' &&
@@ -162,7 +165,8 @@ export const TransactionResultTable = ({
                 }`}</Th>
               )}
             {API === 'TransferSingle' && <Th color={HEDERA_BRANDING_COLORS.violet}>Sender</Th>}
-            {(API === 'ERCTokenPermission' || API === 'ERC20Transfer') && (
+            {API === 'ERC721OwnerOf' && <Th color={HEDERA_BRANDING_COLORS.violet}>TokenID</Th>}
+            {(API === 'ERCTokenPermission' || API === 'ERC20Transfer' || API === 'ERC721OwnerOf') && (
               <Th color={HEDERA_BRANDING_COLORS.violet}>Owner</Th>
             )}
             {(API === 'TokenMint' ||
@@ -199,7 +203,10 @@ export const TransactionResultTable = ({
               API === 'ExchangeRate' ||
               API === 'ERCTokenPermission') && <Th color={HEDERA_BRANDING_COLORS.violet}>API called</Th>}
             {/* refresh button */}
-            {(API === 'ERCBalanceOf' || API === 'ERCTokenPermission' || API === 'ERC721TokenURI') && <Th />}
+            {(API === 'ERCBalanceOf' ||
+              API === 'ERC721OwnerOf' ||
+              API === 'ERC721TokenURI' ||
+              API === 'ERCTokenPermission') && <Th />}
             {/* delete record button */}
             <Th />
           </Tr>
@@ -243,7 +250,7 @@ export const TransactionResultTable = ({
                 )}
 
                 {/* transaction hash */}
-                {API !== 'ERCBalanceOf' && API !== 'ERC721TokenURI' && (
+                {API !== 'ERCBalanceOf' && API !== 'ERC721TokenURI' && API !== 'ERC721OwnerOf' && (
                   <Td className="cursor-pointer">
                     {transactionResult.readonly ? (
                       <p>N/A</p>
@@ -557,6 +564,13 @@ export const TransactionResultTable = ({
                   </Td>
                 )}
 
+                {/* tokenOwner tokenID */}
+                {API === 'ERC721OwnerOf' && (
+                  <Td isNumeric>
+                    <p>{transactionResult.ownerOf?.tokenID || 'N/A'}</p>
+                  </Td>
+                )}
+
                 {/* TokenURI */}
                 {API === 'ERC721TokenURI' && (
                   <Td isNumeric>
@@ -571,7 +585,7 @@ export const TransactionResultTable = ({
                   </Td>
                 )}
 
-                {/* token owner */}
+                {/* alowance token owner */}
                 {API === 'ERCTokenPermission' && (
                   <Td className="cursor-pointer">
                     {transactionResult.allowances?.owner ? (
@@ -601,6 +615,52 @@ export const TransactionResultTable = ({
                         >
                           <Link
                             href={`https://hashscan.io/${hederaNetwork}/account/${transactionResult.allowances?.owner}`}
+                            target="_blank"
+                          >
+                            <FiExternalLink />
+                          </Link>
+                        </Tooltip>
+                      </div>
+                    ) : (
+                      <>
+                        {`${ethers.ZeroAddress.slice(0, beginingHashIndex)}...${ethers.ZeroAddress.slice(
+                          endingHashIndex
+                        )}`}
+                      </>
+                    )}
+                  </Td>
+                )}
+
+                {/* ownerOf token owner */}
+                {API === 'ERC721OwnerOf' && (
+                  <Td className="cursor-pointer">
+                    {transactionResult.ownerOf?.owner ? (
+                      <div className="flex gap-1 items-center">
+                        <div onClick={() => copyContentToClipboard(transactionResult.ownerOf?.owner!)}>
+                          <Popover>
+                            <PopoverTrigger>
+                              <div className="flex gap-1 items-center">
+                                <Tooltip label="click to copy recipient address">
+                                  <p>
+                                    {transactionResult.ownerOf?.owner!.slice(0, beginingHashIndex)}
+                                    ...
+                                    {transactionResult.ownerOf?.owner!.slice(endingHashIndex)}
+                                  </p>
+                                </Tooltip>
+                              </div>
+                            </PopoverTrigger>
+                            <PopoverContent width={'fit-content'} border={'none'}>
+                              <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                        <Tooltip
+                          label={'Explore this user on HashScan'}
+                          placement="top"
+                          fontWeight={'medium'}
+                        >
+                          <Link
+                            href={`https://hashscan.io/${hederaNetwork}/account/${transactionResult.ownerOf?.owner}`}
                             target="_blank"
                           >
                             <FiExternalLink />
@@ -856,7 +916,10 @@ export const TransactionResultTable = ({
                 )}
 
                 {/* refresh button - ERC */}
-                {(API === 'ERCBalanceOf' || API === 'ERCTokenPermission' || API === 'ERC721TokenURI') && (
+                {(API === 'ERCBalanceOf' ||
+                  API === 'ERCTokenPermission' ||
+                  API === 'ERC721TokenURI' ||
+                  API === 'ERC721OwnerOf') && (
                   <Td>
                     {transactionResult.readonly && (
                       <Tooltip label="refresh this record" placement="top">
@@ -883,6 +946,9 @@ export const TransactionResultTable = ({
                               case 'ERC721TokenURI':
                                 handleReexecuteMethodAPI(transactionResult.tokenURI?.tokenID, true);
                                 break;
+
+                              case 'ERC721OwnerOf':
+                                handleReexecuteMethodAPI(transactionResult.ownerOf?.tokenID, true);
                             }
                           }}
                           className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-teal-500 transition duration-300`}
