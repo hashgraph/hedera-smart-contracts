@@ -24,12 +24,17 @@ import { useEffect, useState } from 'react';
 import { Contract, isAddress } from 'ethers';
 import { erc721Mint } from '@/api/hedera/erc721-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
+import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
 import { ITransactionResult } from '@/types/contract-interactions/shared';
 import MultiLineMethod from '@/components/common/components/MultiLineMethod';
 import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
 import { mintParamFields } from '@/utils/contract-interactions/erc/erc721/constant';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
+import { TransactionResultTable } from '@/components/common/components/TransactionResultTable';
+import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
+import useFilterTransactionsByContractAddress from '@/hooks/useFilterTransactionsByContractAddress';
+import { TRANSACTION_PAGE_SIZE } from '@/components/contract-interaction/hts/shared/states/commonStates';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 
 interface PageProps {
   baseContract: Contract;
@@ -39,6 +44,8 @@ const Mint = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
+  const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC721) as string;
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['TOKEN-MINT'];
@@ -46,6 +53,23 @@ const Mint = ({ baseContract }: PageProps) => {
     recipient: '',
     tokenId: '',
   });
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
+  );
+
+  // declare a paginatedTransactionResults
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResultsToShow);
+
+  /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
+  useEffect(() => {
+    handleRetrievingTransactionResultsFromLocalStorage(
+      toaster,
+      transactionResultStorageKey,
+      setCurrentTransactionPage,
+      setTransactionResults
+    );
+  }, [toaster, transactionResultStorageKey]);
 
   /** @dev handle mint token */
   const handleMintToken = async () => {
@@ -77,6 +101,7 @@ const Mint = ({ baseContract }: PageProps) => {
         transactionHash: txHash,
         transactionResultStorageKey,
         transactionType: 'ERC721-MINT',
+        receiverAddress: mintParams.recipient,
         sessionedContractAddress: currentContractAddress,
       });
       return;
@@ -88,8 +113,10 @@ const Mint = ({ baseContract }: PageProps) => {
           status: 'success',
           txHash: txHash as string,
           transactionResultStorageKey,
+          tokenID: mintParams.tokenId,
           transactionType: 'ERC721-MINT',
           transactionTimeStamp: Date.now(),
+          receiverAddress: mintParams.recipient,
           sessionedContractAddress: currentContractAddress,
         },
       ]);
@@ -116,7 +143,7 @@ const Mint = ({ baseContract }: PageProps) => {
   }, [isSuccessful, toaster]);
 
   return (
-    <div className="w-full mx-3 flex justify-center mt-6">
+    <div className="w-full mx-3 flex justify-center mt-6 flex-col items-center gap-9">
       {/* approve() */}
       <MultiLineMethod
         paramFields={mintParamFields}
@@ -128,6 +155,21 @@ const Mint = ({ baseContract }: PageProps) => {
         handleExecute={handleMintToken}
         explanation="Mint a new NFT and trasfer it to the recipient"
       />
+
+      {/* transaction results table */}
+      {transactionResultsToShow.length > 0 && (
+        <TransactionResultTable
+          API="ERC721Mint"
+          hederaNetwork={HEDERA_NETWORK}
+          transactionResults={transactionResults}
+          TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
+          setTransactionResults={setTransactionResults}
+          currentTransactionPage={currentTransactionPage}
+          setCurrentTransactionPage={setCurrentTransactionPage}
+          transactionResultStorageKey={transactionResultStorageKey}
+          paginatedTransactionResults={paginatedTransactionResults}
+        />
+      )}
     </div>
   );
 };

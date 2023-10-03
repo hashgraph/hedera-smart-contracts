@@ -122,7 +122,7 @@ export const prepareTransactionList = () => {
       const key = localStorage.key(i);
 
       // only include item with KEY includes 'HEDERA' and NOT include 'READONLY'
-      if (key?.includes('HEDERA') && !key?.includes('READONLY')) {
+      if (key?.includes('HEDERA')) {
         const records = JSON.parse(localStorage.getItem(key) || '');
         records.forEach((record: any) => {
           transactions.push({ ...record });

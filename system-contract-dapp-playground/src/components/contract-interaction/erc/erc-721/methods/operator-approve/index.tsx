@@ -21,40 +21,25 @@
 import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
 import { isAddress } from 'ethers';
-import { BiCopy } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
-import { AiOutlineMinus } from 'react-icons/ai';
-import { IoRefreshOutline } from 'react-icons/io5';
+import { generatedRandomUniqueKey } from '@/utils/common/helpers';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { ITransactionResult } from '@/types/contract-interactions/shared';
+import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
 import { erc721TokenApproval } from '@/api/hedera/erc721-interactions';
-import { copyContentToClipboard } from '../../../../../common/methods/common';
-import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import MultiLineMethod from '@/components/common/components/MultiLineMethod';
 import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
 import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
 import { isApprovalERC721ParamFields } from '@/utils/contract-interactions/erc/erc721/constant';
+import { TransactionResultTable } from '@/components/common/components/TransactionResultTable';
+import useFilterTransactionsByContractAddress from '@/hooks/useFilterTransactionsByContractAddress';
+import { TRANSACTION_PAGE_SIZE } from '@/components/contract-interaction/hts/shared/states/commonStates';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
-import {
-  Td,
-  Th,
-  Tr,
-  Table,
-  Tbody,
-  Thead,
-  Tooltip,
-  Popover,
-  useToast,
-  PopoverContent,
-  PopoverTrigger,
-  TableContainer,
-} from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 import {
   CONTRACT_NAMES,
   HEDERA_BRANDING_COLORS,
-  HEDERA_CHAKRA_TABLE_VARIANTS,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
-  HEDERA_COMMON_WALLET_REVERT_REASONS,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
   HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
 } from '@/utils/common/constants';
@@ -68,19 +53,14 @@ interface PageProps {
   baseContract: Contract;
 }
 
-type ApprovalStatus = {
-  owner: string;
-  operator: string;
-  status: boolean;
-};
-
 const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [successStatus, setSuccessStatus] = useState(false);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
+  const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC721) as string;
-  const [approvalRecords, setApprovalRecords] = useState<ApprovalStatus[]>([]);
+  const contractCaller = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
-  const approvalStatusStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['GET-APPROVAL'];
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['SET-APPROVAL'];
   const [isLoading, setIsLoading] = useState({
     SET_APPROVAL: false,
@@ -95,35 +75,34 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
     operator: '',
   });
 
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
+  );
+
+  const transferTypeMap = {
+    IS_APPROVAL: {
+      transactionType: 'ERC721-IS-APPROVAL',
+      API: 'IS_APPROVAL',
+    },
+    SET_APPROVAL: {
+      transactionType: 'ERC721-SET-APPROVAL',
+      API: 'SET_APPROVAL',
+    },
+  };
+
+  // declare a paginatedTransactionResults
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResultsToShow);
+
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
   useEffect(() => {
     handleRetrievingTransactionResultsFromLocalStorage(
       toaster,
       transactionResultStorageKey,
-      undefined,
+      setCurrentTransactionPage,
       setTransactionResults
     );
   }, [toaster, transactionResultStorageKey]);
-
-  /** @dev retrieve results from localStorage to maintain data on re-renders */
-  useEffect(() => {
-    const { storageResult, err: localStorageBalanceErr } =
-      getArrayTypedValuesFromLocalStorage(approvalStatusStorageKey);
-    // handle err
-    if (localStorageBalanceErr) {
-      CommonErrorToast({
-        toaster,
-        title: 'Cannot retrieve balances from local storage',
-        description: HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description,
-      });
-      return;
-    }
-
-    // update approvalRecords
-    if (storageResult) {
-      setApprovalRecords(storageResult as ApprovalStatus[]);
-    }
-  }, [toaster, approvalStatusStorageKey]);
 
   /**
    * @dev handle execute methods
@@ -178,50 +157,58 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
       return;
     } else {
       // update transaction results
-      if (tokenApprovalRes.txHash) {
-        setTransactionResults((prev) => [
-          ...prev,
-          {
+      setTransactionResults((prev) => {
+        let duplicated = false;
+
+        const newRecords =
+          method !== 'IS_APPROVAL'
+            ? [...prev]
+            : prev.map((record) => {
+                if (
+                  record.APICalled === 'IS_APPROVAL' &&
+                  record.approval?.owner === owner &&
+                  record.approval.operator === operator
+                ) {
+                  record.approval.status = tokenApprovalRes.approvalStatusRes!;
+                  duplicated = true;
+                }
+
+                return record;
+              });
+
+        if (!duplicated) {
+          newRecords.push({
             status: 'success',
             transactionResultStorageKey,
+            readonly: method === 'IS_APPROVAL',
             transactionTimeStamp: Date.now(),
-            transactionType: 'ERC721-SET-APPROVAL',
-            txHash: tokenApprovalRes.txHash as string,
+            APICalled: (transferTypeMap as any)[method].API,
             sessionedContractAddress: currentContractAddress,
-          },
-        ]);
+            transactionType: (transferTypeMap as any)[method].transactionType,
+            txHash:
+              method === 'IS_APPROVAL' ? generatedRandomUniqueKey(9) : (tokenApprovalRes.txHash as string),
+            approval: {
+              owner: method === 'IS_APPROVAL' ? owner : contractCaller,
+              operator,
+              status: method === 'IS_APPROVAL' ? tokenApprovalRes.approvalStatusRes! : approveParams.status,
+            },
+          });
+        }
 
-        setApproveParams({ operator: '', status: false });
+        return newRecords;
+      });
+
+      // update states
+      if (!refreshMode && method === 'SET_APPROVAL') {
         setSuccessStatus(true);
       }
 
-      if (method === 'IS_APPROVAL') {
-        // update approvalRecords array
-        // @logic if an owner and an operator pair has already been queried before, update only status
-        let duplicated = false;
-        const aprovalRecordObj = {
-          owner,
-          operator,
-          status: tokenApprovalRes.approvalStatusRes!,
-        };
-
-        const newApprovalRecords = approvalRecords.map((record) => {
-          if (record.owner === aprovalRecordObj.owner && record.operator === aprovalRecordObj.operator) {
-            record.status = tokenApprovalRes.approvalStatusRes!;
-            duplicated = true;
-          }
-          return record;
-        });
-
-        if (duplicated) {
-          setApprovalRecords(newApprovalRecords);
-        } else {
-          setApprovalRecords((prev) => [...prev, aprovalRecordObj]);
-        }
-
-        // reset params
-        if (!refreshMode) {
+      // reset params
+      if (!refreshMode) {
+        if (method === 'IS_APPROVAL') {
           setIsApprovalParams({ owner: '', operator: '' });
+        } else {
+          setApproveParams({ operator: '', status: false });
         }
       }
     }
@@ -229,13 +216,6 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
 
   /** @dev listen to change event on transactionResults state => load to localStorage  */
   useUpdateTransactionResultsToLocalStorage(transactionResults, transactionResultStorageKey);
-
-  /** @dev listen to change event on approvalRecords state => localStorage */
-  useEffect(() => {
-    if (approvalRecords.length > 0) {
-      localStorage.setItem(approvalStatusStorageKey, JSON.stringify(approvalRecords));
-    }
-  }, [approvalRecords, approvalStatusStorageKey]);
 
   // toast executing successful
   useEffect(() => {
@@ -317,106 +297,20 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
         />
       </div>
 
-      {/* allowances table */}
-      {approvalRecords.length > 0 && (
-        <TableContainer>
-          <Table variant={HEDERA_CHAKRA_TABLE_VARIANTS.simple} size={HEDERA_CHAKRA_INPUT_BOX_SIZES.small}>
-            <Thead>
-              <Tr>
-                <Th color={HEDERA_BRANDING_COLORS.violet}>Owner</Th>
-                <Th color={HEDERA_BRANDING_COLORS.violet}>Operator</Th>
-                <Th color={HEDERA_BRANDING_COLORS.violet}>IS Approval</Th>
-                <Th />
-                <Th />
-              </Tr>
-            </Thead>
-            <Tbody>
-              {approvalRecords.map((record) => {
-                /** @dev handle remove record */
-                const handleRemoveRecord = (targetRecord: ApprovalStatus) => {
-                  const filteredItems = approvalRecords.filter(
-                    (record) =>
-                      targetRecord.owner.concat(targetRecord.operator) !==
-                      record.owner.concat(record.operator)
-                  );
-                  if (filteredItems.length === 0) {
-                    localStorage.removeItem(approvalStatusStorageKey);
-                  }
-                  setApprovalRecords(filteredItems);
-                };
-                return (
-                  <Tr key={`${record.owner}${record.operator}`}>
-                    <Td onClick={() => copyContentToClipboard(record.owner)} className="cursor-pointer">
-                      <Popover>
-                        <PopoverTrigger>
-                          <div className="flex gap-1 items-center">
-                            <p>
-                              {record.owner.slice(0, 15)}...{record.owner.slice(-9)}
-                            </p>
-                            <div className="w-[1rem] text-textaccents-light dark:text-textaccents-dark">
-                              <BiCopy />
-                            </div>
-                          </div>
-                        </PopoverTrigger>
-                        <PopoverContent width={'fit-content'} border={'none'}>
-                          <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
-                        </PopoverContent>
-                      </Popover>
-                    </Td>
-                    <Td onClick={() => copyContentToClipboard(record.operator)} className="cursor-pointer">
-                      <Popover>
-                        <PopoverTrigger>
-                          <div className="flex gap-1 items-center">
-                            <p>
-                              {record.operator.slice(0, 15)}...{record.operator.slice(-9)}
-                            </p>
-                            <div className="w-[1rem] text-textaccents-light dark:text-textaccents-dark">
-                              <BiCopy />
-                            </div>
-                          </div>
-                        </PopoverTrigger>
-                        <PopoverContent width={'fit-content'} border={'none'}>
-                          <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
-                        </PopoverContent>
-                      </Popover>
-                    </Td>
-                    <Td>
-                      <p className={`${record.status ? 'text-hedera-green' : 'text-red-400'}`}>
-                        {JSON.stringify(record.status).toUpperCase()}
-                      </p>
-                    </Td>
-                    <Td>
-                      {/* retry button */}
-                      <Tooltip label="refresh this record" placement="top">
-                        <button
-                          onClick={() =>
-                            handleInvokingAPIMethod('IS_APPROVAL', record.owner, record.operator, true)
-                          }
-                          className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-teal-500 transition duration-300`}
-                        >
-                          <IoRefreshOutline />
-                        </button>
-                      </Tooltip>
-                    </Td>
-                    <Td>
-                      {/* delete button */}
-                      <Tooltip label="delete this record" placement="top">
-                        <button
-                          onClick={() => {
-                            handleRemoveRecord(record);
-                          }}
-                          className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-red-400 transition duration-300`}
-                        >
-                          <AiOutlineMinus />
-                        </button>
-                      </Tooltip>
-                    </Td>
-                  </Tr>
-                );
-              })}
-            </Tbody>
-          </Table>
-        </TableContainer>
+      {/* transaction results table */}
+      {transactionResultsToShow.length > 0 && (
+        <TransactionResultTable
+          API="ERC721Approval"
+          hederaNetwork={HEDERA_NETWORK}
+          transactionResults={transactionResults}
+          TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
+          setTransactionResults={setTransactionResults}
+          currentTransactionPage={currentTransactionPage}
+          handleReexecuteMethodAPI={handleInvokingAPIMethod}
+          setCurrentTransactionPage={setCurrentTransactionPage}
+          transactionResultStorageKey={transactionResultStorageKey}
+          paginatedTransactionResults={paginatedTransactionResults}
+        />
       )}
     </div>
   );
