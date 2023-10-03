@@ -21,71 +21,54 @@
 import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
 import { isAddress } from 'ethers';
-import { BiCopy } from 'react-icons/bi';
-import { AiOutlineMinus } from 'react-icons/ai';
-import { IoRefreshOutline } from 'react-icons/io5';
+import { useToast } from '@chakra-ui/react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
+import { generatedRandomUniqueKey } from '@/utils/common/helpers';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
+import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
 import { ITransactionResult } from '@/types/contract-interactions/shared';
 import MultiLineMethod from '@/components/common/components/MultiLineMethod';
-import { copyContentToClipboard } from '../../../../../common/methods/common';
 import { handleErc20TokenPermissions } from '@/api/hedera/erc20-interactions';
 import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
 import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
+import { TransactionResultTable } from '@/components/common/components/TransactionResultTable';
+import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS, CONTRACT_NAMES } from '@/utils/common/constants';
+import useFilterTransactionsByContractAddress from '@/hooks/useFilterTransactionsByContractAddress';
+import { TRANSACTION_PAGE_SIZE } from '@/components/contract-interaction/hts/shared/states/commonStates';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
-import {
-  HEDERA_BRANDING_COLORS,
-  HEDERA_CHAKRA_TABLE_VARIANTS,
-  HEDERA_CHAKRA_INPUT_BOX_SIZES,
-  HEDERA_COMMON_WALLET_REVERT_REASONS,
-  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
-  CONTRACT_NAMES,
-} from '@/utils/common/constants';
 import {
   approveParamFields,
   allowanceParamFields,
   increaseAllowanceParamFields,
   decreaseAllowanceParamFields,
 } from '@/utils/contract-interactions/erc/erc20/constant';
-import {
-  Td,
-  Th,
-  Tr,
-  Table,
-  Tbody,
-  Thead,
-  Tooltip,
-  Popover,
-  useToast,
-  PopoverContent,
-  PopoverTrigger,
-  TableContainer,
-} from '@chakra-ui/react';
 
 interface PageProps {
   baseContract: Contract;
 }
 
-type Allowance = {
-  owner: string;
-  spender: string;
-  amount: number;
-};
-
 const TokenPermission = ({ baseContract }: PageProps) => {
   const toaster = useToast();
-  const [allowances, setAllowances] = useState<Allowance[]>([]);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
+  const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC20) as string;
+  const contractCaller = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['TOKEN-PERMISSION'];
-  const allowanceStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['ALLOWANCES-RESULT'];
   const [successStatus, setSuccessStatus] = useState({
     approve: false,
     increaseAllowance: false,
     decreaseAllowance: false,
   });
+
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
+  );
+
+  // declare a paginatedTransactionResults
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResultsToShow);
 
   const [approveParams, setApproveParams] = useState({
     owner: '',
@@ -128,9 +111,22 @@ const TokenPermission = ({ baseContract }: PageProps) => {
   });
 
   const transferTypeMap = {
-    approve: 'ERC20-APPROVE',
-    increaseAllowance: 'ERC20-INCREASE-ALLOWANCE',
-    decreaseAllowance: 'ERC20-DECREASE-ALLOWANCE',
+    approve: {
+      transactionType: 'ERC20-APPROVE',
+      API: 'APPROVE',
+    },
+    allowance: {
+      transactionType: 'ERC20-ALLOWANCES',
+      API: 'ALLOWANCES',
+    },
+    increaseAllowance: {
+      transactionType: 'ERC20-INCREASE-ALLOWANCE',
+      API: 'INCREASE',
+    },
+    decreaseAllowance: {
+      transactionType: 'ERC20-DECREASE-ALLOWANCE',
+      API: 'DECREASE',
+    },
   };
 
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
@@ -143,39 +139,20 @@ const TokenPermission = ({ baseContract }: PageProps) => {
     );
   }, [toaster, transactionResultStorageKey]);
 
-  /** @dev retrieve allowances from localStorage to maintain data on re-renders */
-  useEffect(() => {
-    const { storageResult, err: localStorageBalanceErr } =
-      getArrayTypedValuesFromLocalStorage(allowanceStorageKey);
-    // handle err
-    if (localStorageBalanceErr) {
-      CommonErrorToast({
-        toaster,
-        title: 'Cannot retrieve balances from local storage',
-        description: HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description,
-      });
-      return;
-    }
-
-    // update balancesMap
-    if (storageResult) {
-      setAllowances(storageResult as Allowance[]);
-    }
-  }, [toaster, allowanceStorageKey]);
-
   /**
    * @dev handle execute methods
    */
   const handleExecutingMethods = async (
     method: 'approve' | 'allowance' | 'increaseAllowance' | 'decreaseAllowance',
     params: { spender: string; amount: string; owner: string },
-    setParams: Dispatch<
+    setParams?: Dispatch<
       SetStateAction<{
         owner: string;
         spender: string;
         amount: string;
       }>
-    >
+    >,
+    refreshMode?: boolean
   ) => {
     // toast error invalid params
     let paramErrDescription;
@@ -194,7 +171,8 @@ const TokenPermission = ({ baseContract }: PageProps) => {
     }
 
     // turn on isLoading
-    setMethodStates((prev) => ({ ...prev, [method]: { ...prev[method], isLoading: true } }));
+    if (!refreshMode)
+      setMethodStates((prev) => ({ ...prev, [method]: { ...prev[method], isLoading: true } }));
 
     // invoke method API
     const tokenPermissionRes = await handleErc20TokenPermissions(
@@ -206,7 +184,8 @@ const TokenPermission = ({ baseContract }: PageProps) => {
     );
 
     // turn off isLoading
-    setMethodStates((prev) => ({ ...prev, [method]: { ...prev[method], isLoading: false } }));
+    if (!refreshMode)
+      setMethodStates((prev) => ({ ...prev, [method]: { ...prev[method], isLoading: false } }));
 
     // handle err
     if (tokenPermissionRes.err || !tokenPermissionRes[`${method}Res`]) {
@@ -217,75 +196,68 @@ const TokenPermission = ({ baseContract }: PageProps) => {
         err: tokenPermissionRes.err,
         transactionHash: tokenPermissionRes.txHash,
         sessionedContractAddress: currentContractAddress,
-        transactionType: (transferTypeMap as any)[method],
+        APICalled: (transferTypeMap as any)[method].API,
+        transactionType: (transferTypeMap as any)[method].transactionType,
       });
       return;
     } else {
-      // update states
-      if (method === 'allowance') {
-        setMethodStates((prev) => ({
-          ...prev,
-          allowance: { ...prev.allowance, result: tokenPermissionRes.allowanceRes! },
-        }));
-
-        // update allowances array
-        // @logic if an owner and a spender pair has already been queried before, update only amount
-        let duplicated = false;
-        const allowanceObj = {
-          owner: allowanceParams.owner,
-          spender: allowanceParams.spender,
-          amount: Number(tokenPermissionRes.allowanceRes!),
-        };
-        const newAllowances = allowances.map((allowance) => {
-          if (allowance.owner === allowanceObj.owner && allowance.spender === allowanceObj.spender) {
-            allowance.amount = Number(tokenPermissionRes.allowanceRes!);
-            duplicated = true;
-          }
-          return allowance;
-        });
-
-        if (duplicated) {
-          setAllowances(newAllowances);
-        } else {
-          setAllowances((prev) => [...prev, allowanceObj]);
-        }
-      } else {
-        setMethodStates((prev) => ({
-          ...prev,
-          [method]: { ...prev[method], result: tokenPermissionRes[`${method}Res`] },
-        }));
-        setSuccessStatus((prev) => ({ ...prev, approve: true }));
-      }
-
-      // reset params
-      setParams({ owner: '', spender: '', amount: '' });
-
       // update transaction results
-      if (tokenPermissionRes.txHash) {
-        setTransactionResults((prev) => [
-          ...prev,
-          {
+      setTransactionResults((prev) => {
+        let duplicated = false;
+        const newRecords =
+          method !== 'allowance'
+            ? [...prev]
+            : prev.map((record) => {
+                // @logic if an owner and a spender pair has already been queried before, update only amount
+                if (
+                  record.APICalled === 'ALLOWANCES' &&
+                  record.allowances?.owner === params.owner &&
+                  record.allowances?.spender === params.spender
+                ) {
+                  record.allowances.amount = Number(tokenPermissionRes.allowanceRes!);
+                  duplicated = true;
+                }
+                return record;
+              });
+
+        // @notice `duplicated` is only true when `method` !== allowance
+        if (!duplicated) {
+          newRecords.push({
             status: 'success',
             transactionResultStorageKey,
+            readonly: method === 'allowance',
             transactionTimeStamp: Date.now(),
-            txHash: tokenPermissionRes.txHash as string,
+            APICalled: (transferTypeMap as any)[method].API,
             sessionedContractAddress: currentContractAddress,
-            transactionType: (transferTypeMap as any)[method],
-          },
-        ]);
-      }
+            transactionType: (transferTypeMap as any)[method].transactionType,
+            txHash:
+              method === 'allowance' ? generatedRandomUniqueKey(9) : (tokenPermissionRes.txHash as string),
+            allowances: {
+              spender: params.spender,
+              owner: method === 'allowance' ? allowanceParams.owner : contractCaller,
+              amount:
+                method === 'allowance' ? Number(tokenPermissionRes.allowanceRes!) : Number(params.amount),
+            },
+          });
+        }
+
+        return newRecords;
+      });
+
+      // update states
+      setSuccessStatus((prev) => ({ ...prev, [method]: true }));
+      setMethodStates((prev) => ({
+        ...prev,
+        [method]: { ...prev[method], result: tokenPermissionRes[`${method}Res`] },
+      }));
+
+      // reset params
+      if (setParams && !refreshMode) setParams({ owner: '', spender: '', amount: '' });
     }
   };
 
   /** @dev listen to change event on transactionResults state => load to localStorage  */
   useUpdateTransactionResultsToLocalStorage(transactionResults, transactionResultStorageKey);
-
-  /** @dev listen to change event on allowances state => localStorage */
-  useEffect(() => {
-    if (allowances.length > 0) {
-      localStorage.setItem(allowanceStorageKey, JSON.stringify(allowances));
-    }
-  }, [allowances, allowanceStorageKey]);
 
   // toast executing successful
   useEffect(() => {
@@ -367,146 +339,20 @@ const TokenPermission = ({ baseContract }: PageProps) => {
         />
       </div>
 
-      {/* allowances table */}
-      {allowances.length > 0 && (
-        <TableContainer>
-          <Table variant={HEDERA_CHAKRA_TABLE_VARIANTS.simple} size={HEDERA_CHAKRA_INPUT_BOX_SIZES.small}>
-            <Thead>
-              <Tr>
-                <Th color={HEDERA_BRANDING_COLORS.violet}>Owner</Th>
-                <Th color={HEDERA_BRANDING_COLORS.violet}>Spender</Th>
-                <Th color={HEDERA_BRANDING_COLORS.violet} isNumeric>
-                  Allowance
-                </Th>
-                <Th />
-                <Th />
-              </Tr>
-            </Thead>
-            <Tbody>
-              {allowances.map((allowance) => {
-                /** @dev handle refresh record */
-                const handleRefreshRecord = async () => {
-                  // invoke handleErc20TokenPermissions()
-                  const { allowanceRes, err: allowanceErr } = await handleErc20TokenPermissions(
-                    baseContract,
-                    'allowance',
-                    allowance.spender,
-                    allowance.owner
-                  );
-                  if (allowanceErr || !allowanceRes) {
-                    CommonErrorToast({
-                      toaster,
-                      title: 'Invalid parameters',
-                      description: 'Account address is not a valid address',
-                    });
-                    return;
-                  }
-
-                  let duplicated = false;
-                  const allowanceObj = {
-                    owner: allowance.owner,
-                    spender: allowance.spender,
-                    amount: Number(allowance.amount),
-                  };
-                  const newAllowances = allowances.map((iterAllowance) => {
-                    if (
-                      iterAllowance.owner === allowanceObj.owner &&
-                      iterAllowance.spender === allowanceObj.spender
-                    ) {
-                      iterAllowance.amount = Number(allowanceRes);
-                      duplicated = true;
-                    }
-                    return iterAllowance;
-                  });
-
-                  if (duplicated) {
-                    setAllowances(newAllowances);
-                  } else {
-                    setAllowances((prev) => [...prev, allowanceObj]);
-                  }
-                };
-
-                /** @dev handle remove record */
-                const handleRemoveRecord = (targetAllowance: Allowance) => {
-                  const filteredItems = allowances.filter(
-                    (allowance) =>
-                      targetAllowance.owner.concat(targetAllowance.spender) !==
-                      allowance.owner.concat(allowance.spender)
-                  );
-                  if (filteredItems.length === 0) {
-                    localStorage.removeItem(allowanceStorageKey);
-                  }
-                  setAllowances(filteredItems);
-                };
-                return (
-                  <Tr key={`${allowance.owner}${allowance.spender}`}>
-                    <Td onClick={() => copyContentToClipboard(allowance.owner)} className="cursor-pointer">
-                      <Popover>
-                        <PopoverTrigger>
-                          <div className="flex gap-1 items-center">
-                            <p>
-                              {allowance.owner.slice(0, 15)}...{allowance.owner.slice(-9)}
-                            </p>
-                            <div className="w-[1rem] text-textaccents-light dark:text-textaccents-dark">
-                              <BiCopy />
-                            </div>
-                          </div>
-                        </PopoverTrigger>
-                        <PopoverContent width={'fit-content'} border={'none'}>
-                          <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
-                        </PopoverContent>
-                      </Popover>
-                    </Td>
-                    <Td onClick={() => copyContentToClipboard(allowance.spender)} className="cursor-pointer">
-                      <Popover>
-                        <PopoverTrigger>
-                          <div className="flex gap-1 items-center">
-                            <p>
-                              {allowance.spender.slice(0, 15)}...{allowance.spender.slice(-9)}
-                            </p>
-                            <div className="w-[1rem] text-textaccents-light dark:text-textaccents-dark">
-                              <BiCopy />
-                            </div>
-                          </div>
-                        </PopoverTrigger>
-                        <PopoverContent width={'fit-content'} border={'none'}>
-                          <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
-                        </PopoverContent>
-                      </Popover>
-                    </Td>
-                    <Td isNumeric>
-                      <p>{allowance.amount}</p>
-                    </Td>
-                    <Td>
-                      {/* retry button */}
-                      <Tooltip label="refresh this record" placement="top">
-                        <button
-                          onClick={handleRefreshRecord}
-                          className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-teal-500 transition duration-300`}
-                        >
-                          <IoRefreshOutline />
-                        </button>
-                      </Tooltip>
-                    </Td>
-                    <Td>
-                      {/* delete button */}
-                      <Tooltip label="delete this record" placement="top">
-                        <button
-                          onClick={() => {
-                            handleRemoveRecord(allowance);
-                          }}
-                          className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-red-400 transition duration-300`}
-                        >
-                          <AiOutlineMinus />
-                        </button>
-                      </Tooltip>
-                    </Td>
-                  </Tr>
-                );
-              })}
-            </Tbody>
-          </Table>
-        </TableContainer>
+      {/* transaction results table */}
+      {transactionResultsToShow.length > 0 && (
+        <TransactionResultTable
+          API="ERCTokenPermission"
+          hederaNetwork={HEDERA_NETWORK}
+          transactionResults={transactionResults}
+          TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
+          setTransactionResults={setTransactionResults}
+          currentTransactionPage={currentTransactionPage}
+          handleReexecuteMethodAPI={handleExecutingMethods}
+          setCurrentTransactionPage={setCurrentTransactionPage}
+          transactionResultStorageKey={transactionResultStorageKey}
+          paginatedTransactionResults={paginatedTransactionResults}
+        />
       )}
     </div>
   );

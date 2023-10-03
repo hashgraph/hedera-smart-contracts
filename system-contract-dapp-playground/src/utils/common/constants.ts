@@ -386,6 +386,7 @@ export const HEDERA_TRANSACTION_RESULT_STORAGE_KEYS = {
   },
   'IHRC719-RESULTS': `HEDERA.IHRC719.IHRC719-RESULTS`,
   'ERC20-RESULT': {
+    'TOKEN-INFO': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'TOKEN-INFO'),
     'TOKEN-MINT': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'TOKEN-MINT'),
     'BALANCE-OF': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'BALANCE-OF', true),
     'TOKEN-TRANSFER': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'TOKEN-TRANSFER'),
@@ -393,14 +394,13 @@ export const HEDERA_TRANSACTION_RESULT_STORAGE_KEYS = {
     'ALLOWANCES-RESULT': prepareTransactionResultStorageKey('EIP', 'ERC-20', 'ALLOWANCES', true),
   },
   'ERC721-RESULT': {
+    'TOKEN-INFO': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-INFO', true),
     'TOKEN-MINT': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-MINT'),
     'OWNER-OF': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'OWNER-OF', true),
     'SET-APPROVAL': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'SET-APPROVAL'),
     'TOKEN-URI': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-URI', true),
     'BALANCE-OF': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'BALANCE-OF', true),
-    'GET-APPROVE': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'GET-APPROVE', true),
     'TOKEN-TRANSFER': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-TRANSFER'),
-    'GET-APPROVAL': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'GET-APPROVAL', true),
     'TOKEN-PERMISSION': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'TOKEN-PERMISSION'),
     'APPROVAL-STATUS': prepareTransactionResultStorageKey('EIP', 'ERC-721', 'APPROVAL-STATUS', true),
   },
