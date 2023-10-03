@@ -27,6 +27,7 @@ export interface ITransactionResult {
   tokenID?: string;
   isToken?: boolean;
   readonly?: boolean;
+  selected?: boolean;
   keyTypeCalled?: any;
   recordIndex?: number;
   tokenAddress?: string;

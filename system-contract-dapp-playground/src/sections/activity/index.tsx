@@ -21,11 +21,10 @@
 'use client';
 
 import Cookies from 'js-cookie';
+import { CSVLink } from 'react-csv';
 import { motion } from 'framer-motion';
-import { AiOutlineMinus } from 'react-icons/ai';
-import { FiExternalLink } from 'react-icons/fi';
 import { useEffect, useMemo, useState } from 'react';
-import { prepareTransactionList } from '@/utils/common/helpers';
+import { FiExternalLink, FiMoreVertical } from 'react-icons/fi';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
@@ -33,6 +32,7 @@ import ConfirmModal from '@/components/common/components/ConfirmModal';
 import { ITransactionResult } from '@/types/contract-interactions/shared';
 import { copyContentToClipboard } from '@/components/common/methods/common';
 import { clearCachedTransactions, getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
+import { prepareCSVData, prepareCSVHeaders, prepareTransactionList } from '@/utils/common/helpers';
 import {
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,
@@ -50,6 +50,7 @@ import {
   Popover,
   Tooltip,
   useToast,
+  Checkbox,
   useDisclosure,
   PopoverTrigger,
   PopoverContent,
@@ -59,13 +60,29 @@ import {
 const ActivitySection = () => {
   const toaster = useToast();
   const TRANSACTION_PAGE_SIZE = 20;
+  const CSVHeaders = prepareCSVHeaders();
   const hederaNetwork = Cookies.get('_network');
   const [mounted, setMounted] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [order, setOrder] = useState<'OLDEST' | 'LATEST'>('OLDEST');
   const parsedHederaNetwork = hederaNetwork && JSON.parse(hederaNetwork);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
-  const [transactionList, setTransactionList] = useState(prepareTransactionList());
+  const [selectedTransactionList, setSelectedTransactionList] = useState<ITransactionResult[]>([]);
+  const [transactionList, setTransactionList] = useState<ITransactionResult[]>(prepareTransactionList());
+  const CSVData = useMemo(
+    () => prepareCSVData(selectedTransactionList, parsedHederaNetwork),
+    [selectedTransactionList]
+  );
+
+  const allChecked = useMemo(
+    () => selectedTransactionList.length === transactionList.length,
+    [transactionList, selectedTransactionList]
+  );
+
+  const isIndeterminate = useMemo(
+    () => selectedTransactionList.length >= 1 && !allChecked,
+    [selectedTransactionList, allChecked]
+  );
 
   // sort transactionList based on order
   const sortedTransactionList = useMemo(
@@ -86,56 +103,62 @@ const ActivitySection = () => {
     order
   );
 
-  /** @dev handle removing record */
-  const handleRemoveRecord = (targetTransactionResult: ITransactionResult) => {
-    // get the cached array stored in localStoraged
-    const { storageResult, err: localStorageBalanceErr } = getArrayTypedValuesFromLocalStorage(
-      targetTransactionResult.transactionResultStorageKey
-    );
+  /** @dev hande removing selected records */
+  const handleRemoveRecords = () => {
+    // @logic: selectedTransactionList.length === transactionList.length => remove all
+    // @logic: selectedTransactionList.length !== transactionList.length => remove some
+    if (selectedTransactionList.length === transactionList.length) {
+      // clear localStorage cache
+      clearCachedTransactions();
 
-    // handle err
-    if (localStorageBalanceErr) {
-      CommonErrorToast({
-        toaster,
-        title: 'Cannot access transaction results in storage',
-        description: "See client's console for more information",
-      });
-      return;
-    }
-
-    // remove record out of the storageResult array
-    const filteredTransactionResults = storageResult.filter(
-      (transactionResult: ITransactionResult) => transactionResult.txHash !== targetTransactionResult.txHash
-    );
-
-    // storage the filteredTransactionResults back to storage
-    // @notice if  filteredTransactionResults.length === 0, remove that key in storage
-    if (filteredTransactionResults.length === 0) {
-      localStorage.removeItem(targetTransactionResult.transactionResultStorageKey);
+      // update transactionList
+      setTransactionList([]);
     } else {
-      localStorage.setItem(
-        targetTransactionResult.transactionResultStorageKey,
-        JSON.stringify(filteredTransactionResults)
-      );
+      // remove each transaction in selectedTransactionList
+      selectedTransactionList.forEach((record) => {
+        // get the cached array stored in localStoraged
+        const { storageResult, err: localStorageBalanceErr } = getArrayTypedValuesFromLocalStorage(
+          record.transactionResultStorageKey
+        );
+
+        // handle err
+        if (localStorageBalanceErr) {
+          CommonErrorToast({
+            toaster,
+            title: 'Cannot access transaction results in storage',
+            description: "See client's console for more information",
+          });
+          return;
+        }
+
+        // remove record out of the storageResult array
+        const filteredTransactionResults = storageResult.filter(
+          (transactionResult: ITransactionResult) => transactionResult.txHash !== record.txHash
+        );
+
+        // storage the filteredTransactionResults back to storage
+        // @notice if  filteredTransactionResults.length === 0, remove that key in storage
+        if (filteredTransactionResults.length === 0) {
+          localStorage.removeItem(record.transactionResultStorageKey);
+        } else {
+          localStorage.setItem(
+            record.transactionResultStorageKey,
+            JSON.stringify(filteredTransactionResults)
+          );
+        }
+
+        // update transactionList
+        setTransactionList((prev) =>
+          prev.filter((transactionResult) => transactionResult.txHash !== record.txHash)
+        );
+      });
+
+      // reset selectedTransactionList
+      setSelectedTransactionList([]);
+
+      // close modal
+      onClose();
     }
-
-    // update transactionList
-    setTransactionList((prev) =>
-      prev.filter((transactionResult) => transactionResult.txHash !== targetTransactionResult.txHash)
-    );
-  };
-
-  /** @dev handle removing all records */
-
-  const handleRemoveAllRecords = async () => {
-    // close modal
-    onClose();
-
-    // clear localStorage cache
-    clearCachedTransactions();
-
-    // update transactionList
-    setTransactionList([]);
   };
 
   // ensures that the "application mounted" flag is set to ensure consistent UI rendering on both the server and client sides.
@@ -181,16 +204,46 @@ const ActivitySection = () => {
             </Select>
           </div>
 
-          {/* remove all button */}
+          {/* Extra options button */}
           <div>
-            <Tooltip label="" placement="top">
-              <button
-                onClick={onOpen}
-                className={`border border-white/30 text-sm px-3 py-2 rounded-lg flex items-center justify-center cursor-pointer hover:bg-red-400 transition duration-300`}
-              >
-                Remove all records
-              </button>
-            </Tooltip>
+            <Popover placement="right">
+              <PopoverTrigger>
+                <button
+                  disabled={selectedTransactionList.length === 0}
+                  className={`border border-white/30 text-sm p-2 rounded-lg flex items-center justify-center ${
+                    selectedTransactionList.length > 0
+                      ? `cursor-pointer hover:bg-button-stroke-violet transition duration-300`
+                      : `cursor-not-allowed text-gray-500`
+                  }`}
+                >
+                  <FiMoreVertical />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="bg-button w-fit py-3 border-white/30">
+                <div className="flex flex-col gap-3">
+                  {/* Export button */}
+                  <CSVLink
+                    data={CSVData}
+                    headers={CSVHeaders}
+                    filename={'hedera-system-contract-dapp-transactions.csv'}
+                    target="_blank"
+                    className={`text-sm pl-3 py-2 pr-6 text-left cursor-pointer hover:bg-neutral-700/50 transition duration-300 w-full`}
+                  >
+                    Export selected records
+                  </CSVLink>
+
+                  {/* remove button */}
+                  <button
+                    onClick={() => {
+                      onOpen();
+                    }}
+                    className={`text-sm pl-3 py-2 pr-6 text-left cursor-pointer hover:bg-neutral-700/50 transition duration-300 w-full`}
+                  >
+                    Remove selected records
+                  </button>
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
       )}
@@ -209,7 +262,26 @@ const ActivitySection = () => {
                   <Th color={HEDERA_BRANDING_COLORS.violet}>Transaction Type</Th>
                   <Th color={HEDERA_BRANDING_COLORS.violet}>Status</Th>
                   <Th color={HEDERA_BRANDING_COLORS.violet}>Transaction hash</Th>
-                  <Th />
+                  <Th>
+                    <Checkbox
+                      size={HEDERA_CHAKRA_INPUT_BOX_SIZES.medium}
+                      colorScheme="teal"
+                      isChecked={allChecked}
+                      isIndeterminate={isIndeterminate}
+                      onChange={(e) => {
+                        setTransactionList((prev) =>
+                          prev.map((record) => ({ ...record, selected: e.target.checked }))
+                        );
+                        if (e.target.checked) {
+                          setSelectedTransactionList(
+                            transactionList.map((record) => ({ ...record, selected: e.target.checked }))
+                          );
+                        } else {
+                          setSelectedTransactionList([]);
+                        }
+                      }}
+                    />
+                  </Th>
                 </Tr>
               </Thead>
 
@@ -284,18 +356,39 @@ const ActivitySection = () => {
                         </div>
                       </Td>
 
-                      {/* delete button */}
                       <Td>
-                        <Tooltip label="delete this record" placement="top">
-                          <button
-                            onClick={() => {
-                              handleRemoveRecord(transaction);
-                            }}
-                            className={`border border-white/30 px-1 py-1 rounded-lg flex items-center justify-center cursor-pointer hover:bg-red-400 transition duration-300`}
-                          >
-                            <AiOutlineMinus />
-                          </button>
-                        </Tooltip>
+                        <Checkbox
+                          size={HEDERA_CHAKRA_INPUT_BOX_SIZES.medium}
+                          colorScheme="teal"
+                          isChecked={transaction.selected}
+                          onChange={(e) => {
+                            // include this record to the global selectedTransactionList state
+                            const checkedValue = e.target.checked;
+                            if (checkedValue) {
+                              setSelectedTransactionList((prev) => [...prev, transaction]);
+                              setTransactionList((prev) =>
+                                prev.map((record) => {
+                                  if (record.txHash === transaction.txHash) {
+                                    record.selected = checkedValue;
+                                  }
+                                  return record;
+                                })
+                              );
+                            } else {
+                              setSelectedTransactionList((prev) =>
+                                prev.filter((prev) => prev.txHash !== transaction.txHash)
+                              );
+                              setTransactionList((prev) =>
+                                prev.map((record) => {
+                                  if (record.txHash === transaction.txHash) {
+                                    record.selected = checkedValue;
+                                  }
+                                  return record;
+                                })
+                              );
+                            }
+                          }}
+                        />
                       </Td>
                     </Tr>
                   );
@@ -345,13 +438,12 @@ const ActivitySection = () => {
         onClose={onClose}
         modalBody={
           <p className="text-white/70">
-            By completing this action, all the transactions you have made during this session will be
-            permanently erased from the DApp&apos;s cache, but they will still be accessible through HashScan
-            or other explorer solutions.
+            By completing this action, the selected transactions will be permanently erased from the
+            DApp&apos;s cache, but they will still be accessible through HashScan or other explorer solutions.
           </p>
         }
-        modalHeader={'Sure to remove all?'}
-        handleAcknowledge={handleRemoveAllRecords}
+        modalHeader={'Sure to remove?'}
+        handleAcknowledge={handleRemoveRecords}
       />
     </motion.section>
   );
