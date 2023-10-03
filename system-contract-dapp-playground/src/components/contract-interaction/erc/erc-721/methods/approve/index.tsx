@@ -22,23 +22,24 @@ import Image from 'next/image';
 import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
 import { isAddress } from 'ethers';
+import { useToast } from '@chakra-ui/react';
+import { useCallback, useEffect, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
-import { ReactNode, useCallback, useEffect, useState } from 'react';
+import { generatedRandomUniqueKey } from '@/utils/common/helpers';
+import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
 import { erc721TokenApprove } from '@/api/hedera/erc721-interactions';
 import { ITransactionResult } from '@/types/contract-interactions/shared';
 import MultiLineMethod from '@/components/common/components/MultiLineMethod';
 import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
 import HederaCommonTextField from '@/components/common/components/HederaCommonTextField';
-import { Th, Tr, Table, Tbody, Thead, useToast, TableContainer } from '@chakra-ui/react';
 import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
 import { approveERC721ParamFields } from '@/utils/contract-interactions/erc/erc721/constant';
-import useUpdateMapStateUILocalStorage from '../../../../../../hooks/useUpdateMapStateUILocalStorage';
-import useRetrieveMapValueFromLocalStorage from '../../../../../../hooks/useRetrieveMapValueFromLocalStorage';
+import { TransactionResultTable } from '@/components/common/components/TransactionResultTable';
+import useFilterTransactionsByContractAddress from '@/hooks/useFilterTransactionsByContractAddress';
+import { TRANSACTION_PAGE_SIZE } from '@/components/contract-interaction/hts/shared/states/commonStates';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   CONTRACT_NAMES,
-  HEDERA_BRANDING_COLORS,
-  HEDERA_CHAKRA_TABLE_VARIANTS,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
 } from '@/utils/common/constants';
@@ -50,13 +51,11 @@ interface PageProps {
 const ERC721Approve = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [successStatus, setSuccessStatus] = useState(false);
-  const [ractNodes, setReactNodes] = useState<ReactNode[]>([]);
   const [getApproveTokenId, setGetApproveTokenId] = useState('');
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
+  const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC721) as string;
-  const [tokenSpenders, setTokenSpenders] = useState(new Map<number, string>());
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
-  const tokenSpenderResultsStorageKey =
-    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['GET-APPROVE'];
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['TOKEN-PERMISSION'];
   const [approveParams, setApproveParams] = useState({
@@ -68,24 +67,47 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
     GET_APPROVE: false,
   });
 
+  const transferTypeMap = useCallback((API: 'APPROVE' | 'GET_APPROVE') => {
+    if (API === 'APPROVE') {
+      return {
+        transactionType: 'ERC721-APPROVE',
+        API: 'APPROVE',
+      };
+    } else {
+      return {
+        transactionType: 'ERC721-GET-APPROVE',
+        API: 'GET_APPROVE',
+      };
+    }
+  }, []);
+
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
+  );
+
+  // declare a paginatedTransactionResults
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResultsToShow);
+
   /** @dev retrieve approve transaction results from localStorage to maintain data on re-renders */
   useEffect(() => {
     handleRetrievingTransactionResultsFromLocalStorage(
       toaster,
       transactionResultStorageKey,
-      undefined,
+      setCurrentTransactionPage,
       setTransactionResults
     );
   }, [toaster, transactionResultStorageKey]);
-
-  /** @dev retrieve balances from localStorage to maintain data on re-renders */
-  useRetrieveMapValueFromLocalStorage(toaster, tokenSpenderResultsStorageKey, setTokenSpenders);
 
   /**
    * @dev handle executing methods
    */
   const handleExecutingMethods = useCallback(
-    async (method: 'APPROVE' | 'GET_APPROVE') => {
+    async (
+      method: 'APPROVE' | 'GET_APPROVE',
+      params: { spender: string; tokenId: string },
+      refreshMode?: boolean
+    ) => {
       // toast error invalid params
       let paramErrDescription;
       if (method === 'APPROVE') {
@@ -105,18 +127,18 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
       }
 
       // turn on isLoading
-      setIsLoading((prev) => ({ ...prev, [method]: true }));
+      if (!refreshMode) setIsLoading((prev) => ({ ...prev, [method]: true }));
 
       // invoke method API
       const erc721ApproveResult = await erc721TokenApprove(
         baseContract,
         method,
-        approveParams.spenderAddress,
-        method === 'APPROVE' ? Number(approveParams.tokenId) : Number(getApproveTokenId)
+        params.spender,
+        Number(params.tokenId)
       );
 
       // turn off isLoading
-      setIsLoading((prev) => ({ ...prev, [method]: false }));
+      if (!refreshMode) setIsLoading((prev) => ({ ...prev, [method]: false }));
 
       // handle err
       if (erc721ApproveResult.err && method === 'APPROVE') {
@@ -131,37 +153,58 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
         });
         return;
       } else {
-        // update transaction results
-        if (erc721ApproveResult.txHash) {
-          setTransactionResults((prev) => [
-            ...prev,
-            {
+        setTransactionResults((prev) => {
+          let duplicated = false;
+          const newRecords =
+            method !== 'GET_APPROVE'
+              ? [...prev]
+              : prev.map((record) => {
+                  if (record.APICalled === 'GET_APPROVE' && record.approves?.tokenID === params.tokenId) {
+                    record.approves.spender = erc721ApproveResult.approvedAccountRes || '';
+                    duplicated = true;
+                  }
+                  return record;
+                });
+
+          if (!duplicated) {
+            newRecords.push({
               status: 'success',
               transactionResultStorageKey,
+              readonly: method === 'GET_APPROVE',
               transactionTimeStamp: Date.now(),
-              transactionType: 'ERC721-APPROVE',
-              txHash: erc721ApproveResult.txHash as string,
+              APICalled: transferTypeMap(method).API,
               sessionedContractAddress: currentContractAddress,
-            },
-          ]);
+              transactionType: transferTypeMap(method).transactionType,
+              txHash:
+                method === 'GET_APPROVE'
+                  ? generatedRandomUniqueKey(9)
+                  : (erc721ApproveResult.txHash as string),
+              approves: {
+                spender: method === 'GET_APPROVE' ? erc721ApproveResult.approvedAccountRes! : params.spender,
+                tokenID: params.tokenId,
+              },
+            });
+          }
 
-          setApproveParams({ spenderAddress: '', tokenId: '' });
-          setSuccessStatus(true);
-        }
+          return newRecords;
+        });
 
-        if (method === 'GET_APPROVE') {
-          // udpate tokenOwners
-          setTokenSpenders((prev) =>
-            new Map(prev).set(Number(getApproveTokenId), erc721ApproveResult.approvedAccountRes || '')
-          );
-          setGetApproveTokenId('');
+        // udpate states
+        if (method === 'APPROVE') setSuccessStatus(true);
+        // reset param
+        if (!refreshMode) {
+          if (method === 'APPROVE') {
+            setApproveParams({ spenderAddress: '', tokenId: '' });
+          } else {
+            setGetApproveTokenId('');
+          }
         }
       }
     },
     [
       toaster,
       baseContract,
-      getApproveTokenId,
+      transferTypeMap,
       approveParams.tokenId,
       currentContractAddress,
       transactionResultStorageKey,
@@ -171,18 +214,6 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
 
   /** @dev listen to change event on transactionResults state => load to localStorage  */
   useUpdateTransactionResultsToLocalStorage(transactionResults, transactionResultStorageKey);
-
-  /** @dev listen to change event on tokenOwners state => update UI & localStorage */
-  useUpdateMapStateUILocalStorage({
-    toaster,
-    baseContract,
-    setReactNodes,
-    mapValues: tokenSpenders,
-    mapType: 'GET_APPROVE',
-    setMapValues: setTokenSpenders,
-    handleExecuteMethodAPI: handleExecutingMethods,
-    transactionResultStorageKey: tokenSpenderResultsStorageKey,
-  });
 
   // toast executing successful
   useEffect(() => {
@@ -210,7 +241,12 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
           widthSize="w-[700px]"
           params={approveParams}
           setParams={setApproveParams}
-          handleExecute={() => handleExecutingMethods('APPROVE')}
+          handleExecute={() =>
+            handleExecutingMethods('APPROVE', {
+              spender: approveParams.spenderAddress,
+              tokenId: approveParams.tokenId,
+            })
+          }
           explanation="Sets amount as the allowance of `spender` over the caller’s tokens."
         />
       </div>
@@ -229,7 +265,7 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
 
         {/* execute button */}
         <button
-          onClick={() => handleExecutingMethods('GET_APPROVE')}
+          onClick={() => handleExecutingMethods('GET_APPROVE', { spender: '', tokenId: getApproveTokenId })}
           disabled={isLoading.GET_APPROVE}
           className={`border mt-3 w-48 py-2 rounded-xl transition duration-300 ${
             isLoading.GET_APPROVE
@@ -254,26 +290,21 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
         </button>
       </div>
 
-      <div className="flex flex-col gap-6 text-base">
-        {/* display balances */}
-        {tokenSpenders.size > 0 && (
-          <TableContainer>
-            <Table variant={HEDERA_CHAKRA_TABLE_VARIANTS.simple} size={HEDERA_CHAKRA_INPUT_BOX_SIZES.small}>
-              <Thead>
-                <Tr>
-                  <Th color={HEDERA_BRANDING_COLORS.violet} isNumeric>
-                    Token ID
-                  </Th>
-                  <Th color={HEDERA_BRANDING_COLORS.violet}>Spender Address</Th>
-                  <Th />
-                  <Th />
-                </Tr>
-              </Thead>
-              <Tbody className="w-full">{ractNodes}</Tbody>
-            </Table>
-          </TableContainer>
-        )}
-      </div>
+      {/* transaction results table */}
+      {transactionResultsToShow.length > 0 && (
+        <TransactionResultTable
+          API="ERC721Approves"
+          hederaNetwork={HEDERA_NETWORK}
+          transactionResults={transactionResults}
+          TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
+          setTransactionResults={setTransactionResults}
+          currentTransactionPage={currentTransactionPage}
+          handleReexecuteMethodAPI={handleExecutingMethods}
+          setCurrentTransactionPage={setCurrentTransactionPage}
+          transactionResultStorageKey={transactionResultStorageKey}
+          paginatedTransactionResults={paginatedTransactionResults}
+        />
+      )}
     </div>
   );
 };

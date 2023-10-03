@@ -19,17 +19,23 @@
  */
 
 import Image from 'next/image';
+import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
-import { ReactNode, useCallback, useState } from 'react';
+import { useToast } from '@chakra-ui/react';
+import { useCallback, useEffect, useState } from 'react';
 import { erc721OwnerOf } from '@/api/hedera/erc721-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
+import { generatedRandomUniqueKey } from '@/utils/common/helpers';
+import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import HederaCommonTextField from '@/components/common/components/HederaCommonTextField';
-import { Table, TableContainer, Tbody, Th, Thead, Tr, useToast } from '@chakra-ui/react';
-import useUpdateMapStateUILocalStorage from '../../../../../../hooks/useUpdateMapStateUILocalStorage';
-import useRetrieveMapValueFromLocalStorage from '../../../../../../hooks/useRetrieveMapValueFromLocalStorage';
+import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
+import { TransactionResultTable } from '@/components/common/components/TransactionResultTable';
+import useFilterTransactionsByContractAddress from '@/hooks/useFilterTransactionsByContractAddress';
+import { TRANSACTION_PAGE_SIZE } from '@/components/contract-interaction/hts/shared/states/commonStates';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
-  HEDERA_BRANDING_COLORS,
-  HEDERA_CHAKRA_TABLE_VARIANTS,
+  CONTRACT_NAMES,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
   HEDERA_COMMON_WALLET_REVERT_REASONS,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
@@ -43,12 +49,29 @@ const ERC721OwnerOf = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [tokenId, setTokenId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [ractNodes, setReactNodes] = useState<ReactNode[]>([]);
-  const [tokenOwners, setTokenOwners] = useState(new Map<number, string>());
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
+  const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
+  const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC721) as string;
+  const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['OWNER-OF'];
 
-  /** @dev retrieve values from localStorage to maintain data on re-renders */
-  useRetrieveMapValueFromLocalStorage(toaster, transactionResultStorageKey, setTokenOwners);
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
+  );
+
+  // declare a paginatedTransactionResults
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResultsToShow);
+
+  /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
+  useEffect(() => {
+    handleRetrievingTransactionResultsFromLocalStorage(
+      toaster,
+      transactionResultStorageKey,
+      setCurrentTransactionPage,
+      setTransactionResults
+    );
+  }, [toaster, transactionResultStorageKey]);
 
   /** @dev handle executing erc721OwnerOf */
   /** @notice wrapping handleExecuteOwnerOf in useCallback hook to prevent excessive re-renders */
@@ -80,26 +103,45 @@ const ERC721OwnerOf = ({ baseContract }: PageProps) => {
           description: HEDERA_COMMON_WALLET_REVERT_REASONS.DEFAULT.description,
         });
         return;
-      }
+      } else {
+        // udpate tokenOwners
+        if (!refreshMode) setTokenId('');
 
-      // udpate tokenOwners
-      setTokenOwners((prev) => new Map(prev).set(tokenIdValue, ownerOfRes || ''));
-      if (!refreshMode) setTokenId('');
+        setTransactionResults((prev) => {
+          let dubplicated = false;
+          const newRecords = prev.map((record) => {
+            if (record.ownerOf?.tokenID === tokenIdValue.toString()) {
+              record.ownerOf.owner = ownerOfRes || '';
+              dubplicated = true;
+            }
+            return record;
+          });
+
+          if (!dubplicated) {
+            newRecords.push({
+              readonly: true,
+              status: 'success',
+              transactionResultStorageKey,
+              transactionTimeStamp: Date.now(),
+              transactionType: 'ERC721-OWNER-OF',
+              txHash: generatedRandomUniqueKey(9), // acts as a key of the transaction
+              sessionedContractAddress: currentContractAddress,
+              ownerOf: {
+                tokenID: tokenIdValue.toString(),
+                owner: ownerOfRes || '',
+              },
+            });
+          }
+
+          return newRecords;
+        });
+      }
     },
-    [toaster, baseContract]
+    [toaster, baseContract, currentContractAddress, transactionResultStorageKey]
   );
 
-  // @dev listen to change event on tokenURIMap state => update UI & localStorage
-  useUpdateMapStateUILocalStorage({
-    toaster,
-    baseContract,
-    setReactNodes,
-    mapValues: tokenOwners,
-    mapType: 'TOKEN_OWNERS',
-    transactionResultStorageKey,
-    setMapValues: setTokenOwners,
-    handleExecuteMethodAPI: handleExecuteOwnerOf,
-  });
+  /** @dev listen to change event on transactionResults state => load to localStorage  */
+  useUpdateTransactionResultsToLocalStorage(transactionResults, transactionResultStorageKey);
 
   return (
     <div className="flex flex-col items-start gap-12">
@@ -143,26 +185,21 @@ const ERC721OwnerOf = ({ baseContract }: PageProps) => {
         </button>
       </div>
 
-      <div className="flex flex-col gap-6 text-base w-full">
-        {/* display balances */}
-        {tokenOwners.size > 0 && (
-          <TableContainer>
-            <Table variant={HEDERA_CHAKRA_TABLE_VARIANTS.simple} size={HEDERA_CHAKRA_INPUT_BOX_SIZES.small}>
-              <Thead>
-                <Tr>
-                  <Th color={HEDERA_BRANDING_COLORS.violet} isNumeric>
-                    Token ID
-                  </Th>
-                  <Th color={HEDERA_BRANDING_COLORS.violet}>Token URI</Th>
-                  <Th />
-                  <Th />
-                </Tr>
-              </Thead>
-              <Tbody className="w-full">{ractNodes}</Tbody>
-            </Table>
-          </TableContainer>
-        )}
-      </div>
+      {/* transaction results table */}
+      {transactionResultsToShow.length > 0 && (
+        <TransactionResultTable
+          API="ERC721OwnerOf"
+          hederaNetwork={HEDERA_NETWORK}
+          transactionResults={transactionResults}
+          TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
+          setTransactionResults={setTransactionResults}
+          currentTransactionPage={currentTransactionPage}
+          handleReexecuteMethodAPI={handleExecuteOwnerOf}
+          setCurrentTransactionPage={setCurrentTransactionPage}
+          transactionResultStorageKey={transactionResultStorageKey}
+          paginatedTransactionResults={paginatedTransactionResults}
+        />
+      )}
     </div>
   );
 };

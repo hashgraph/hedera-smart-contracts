@@ -31,7 +31,6 @@ import { deploySmartContract } from '@/api/hedera';
 import { useCallback, useEffect, useState } from 'react';
 import { generateBaseContractInstance } from '@/api/ethers';
 import ConfirmModal from '../common/components/ConfirmModal';
-import { clearCachedTransactions } from '@/api/localStorage';
 import ERC20DeployField from './erc/deployment/ERCDeployField';
 import HederaExchangeRateMethods from './exchange-rate/methods';
 import HederaAlertDialog from '../common/components/AlertDialog';
@@ -227,9 +226,6 @@ const ContractInteraction = ({ contract }: PageProps) => {
 
     // remove contract record in cookies
     removeCookieAt(contract.name);
-
-    // remove all readonly transactions
-    clearCachedTransactions(CONTRACT_NAME_TO_STORAGE_KEY_VALUE[contract.name], true);
 
     // reset states
     setContractId('');

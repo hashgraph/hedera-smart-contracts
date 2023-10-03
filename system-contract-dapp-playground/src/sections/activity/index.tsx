@@ -205,6 +205,7 @@ const ActivitySection = () => {
                   <Th color={HEDERA_BRANDING_COLORS.violet} isNumeric className="flex justify-start">
                     Index
                   </Th>
+                  <Th color={HEDERA_BRANDING_COLORS.violet}>Request Type</Th>
                   <Th color={HEDERA_BRANDING_COLORS.violet}>Transaction Type</Th>
                   <Th color={HEDERA_BRANDING_COLORS.violet}>Status</Th>
                   <Th color={HEDERA_BRANDING_COLORS.violet}>Transaction hash</Th>
@@ -226,7 +227,10 @@ const ActivitySection = () => {
                         <p>{transaction.recordIndex}</p>
                       </Td>
 
-                      {/* Transaction TYPE */}
+                      {/* request type */}
+                      <Td>{transaction.readonly ? `QUERY` : `TRANSACTION`}</Td>
+
+                      {/* Transaction type */}
                       <Td>{transaction.transactionType}</Td>
 
                       {/* status */}
@@ -241,32 +245,42 @@ const ActivitySection = () => {
                       {/* txHash */}
                       <Td className="cursor-pointer">
                         <div className="flex gap-1 items-center justify-between">
-                          <div onClick={() => copyContentToClipboard(transaction.txHash)}>
-                            <Popover>
-                              <PopoverTrigger>
-                                <div className="flex gap-1 items-center">
-                                  <Tooltip label="click to copy transaction hash">
-                                    <p>{transaction.txHash}</p>
-                                  </Tooltip>
-                                </div>
-                              </PopoverTrigger>
-                              <PopoverContent width={'fit-content'} border={'none'}>
-                                <div className="bg-secondary px-3 py-2 border-none font-medium">Copied</div>
-                              </PopoverContent>
-                            </Popover>
-                          </div>
-                          <Tooltip
-                            label={'Explore this transaction on HashScan'}
-                            placement="top"
-                            fontWeight={'medium'}
-                          >
-                            <Link
-                              href={`https://hashscan.io/${parsedHederaNetwork}/transaction/${transaction.txHash}`}
-                              target="_blank"
-                            >
-                              <FiExternalLink />
-                            </Link>
-                          </Tooltip>
+                          {transaction.readonly ? (
+                            <>N/A</>
+                          ) : (
+                            <>
+                              <div onClick={() => copyContentToClipboard(transaction.txHash)}>
+                                <Popover>
+                                  <PopoverTrigger>
+                                    <div className="flex gap-1 items-center">
+                                      <Tooltip label="click to copy transaction hash">
+                                        <p>{`${transaction.txHash.slice(0, 15)}...${transaction.txHash.slice(
+                                          -15
+                                        )}`}</p>
+                                      </Tooltip>
+                                    </div>
+                                  </PopoverTrigger>
+                                  <PopoverContent width={'fit-content'} border={'none'}>
+                                    <div className="bg-secondary px-3 py-2 border-none font-medium">
+                                      Copied
+                                    </div>
+                                  </PopoverContent>
+                                </Popover>
+                              </div>
+                              <Tooltip
+                                label={'Explore this transaction on HashScan'}
+                                placement="top"
+                                fontWeight={'medium'}
+                              >
+                                <Link
+                                  href={`https://hashscan.io/${parsedHederaNetwork}/transaction/${transaction.txHash}`}
+                                  target="_blank"
+                                >
+                                  <FiExternalLink />
+                                </Link>
+                              </Tooltip>
+                            </>
+                          )}
                         </div>
                       </Td>
 

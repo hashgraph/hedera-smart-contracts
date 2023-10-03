@@ -25,12 +25,16 @@ import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { erc721Transfers } from '@/api/hedera/erc721-interactions';
-import { ITransactionResult } from '@/types/contract-interactions/shared';
+import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
 import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
+import { ITransactionResult } from '@/types/contract-interactions/shared';
 import MultiLineMethod from '@/components/common/components/MultiLineMethod';
 import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
 import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
+import { TransactionResultTable } from '@/components/common/components/TransactionResultTable';
 import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
+import useFilterTransactionsByContractAddress from '@/hooks/useFilterTransactionsByContractAddress';
+import { TRANSACTION_PAGE_SIZE } from '@/components/contract-interaction/hts/shared/states/commonStates';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   transferFromERC721ParamFields,
@@ -43,10 +47,12 @@ interface PageProps {
 
 const ERC721Transfer = ({ baseContract }: PageProps) => {
   const toaster = useToast();
-  const transactionResultStorageKey =
-    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['TOKEN-TRANSFER'];
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
+  const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC721) as string;
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
+  const transactionResultStorageKey =
+    HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['TOKEN-TRANSFER'];
 
   const [transferFromParams, setTransferFromParams] = useState({
     sender: '',
@@ -71,12 +77,20 @@ const ERC721Transfer = ({ baseContract }: PageProps) => {
     },
   });
 
+  const transactionResultsToShow = useFilterTransactionsByContractAddress(
+    transactionResults,
+    currentContractAddress
+  );
+
+  // declare a paginatedTransactionResults
+  const paginatedTransactionResults = usePaginatedTxResults(currentTransactionPage, transactionResultsToShow);
+
   /** @dev retrieve token creation results from localStorage to maintain data on re-renders */
   useEffect(() => {
     handleRetrievingTransactionResultsFromLocalStorage(
       toaster,
       transactionResultStorageKey,
-      undefined,
+      setCurrentTransactionPage,
       setTransactionResults
     );
   }, [toaster, transactionResultStorageKey]);
@@ -120,8 +134,11 @@ const ERC721Transfer = ({ baseContract }: PageProps) => {
       handleAPIErrors({
         toaster,
         setTransactionResults,
+        tokenID: params.tokenId,
         err: tokenTransferRes.err,
         transactionResultStorageKey,
+        accountAddress: params.sender,
+        receiverAddress: params.recipient,
         transactionHash: tokenTransferRes.txHash,
         sessionedContractAddress: currentContractAddress,
         transactionType: `ERC721-${convertCalmelCaseFunctionName(method).replace(' ', '-')}`,
@@ -135,8 +152,11 @@ const ERC721Transfer = ({ baseContract }: PageProps) => {
         ...prev,
         {
           status: 'success',
+          tokenID: params.tokenId,
           transactionResultStorageKey,
+          accountAddress: params.sender,
           transactionTimeStamp: Date.now(),
+          receiverAddress: params.recipient,
           txHash: tokenTransferRes.txHash as string,
           sessionedContractAddress: currentContractAddress,
           transactionType: `ERC721-${convertCalmelCaseFunctionName(method).toUpperCase().replace(' ', '-')}`,
@@ -174,7 +194,7 @@ const ERC721Transfer = ({ baseContract }: PageProps) => {
   }, [methodState, toaster]);
 
   return (
-    <div className="w-full mx-3 flex">
+    <div className="w-full mx-3 flex flex-col items-center gap-9">
       {/* wrapper */}
       <div className="w-full flex gap-12 justify-between items-end">
         {/* transferFrom() */}
@@ -201,6 +221,21 @@ const ERC721Transfer = ({ baseContract }: PageProps) => {
           explanation="Moves amount tokens from `token owner` to `recipient` using the allowance mechanism. `Token amount` is then deducted from the caller’s allowance."
         />
       </div>
+
+      {/* transaction results table */}
+      {transactionResultsToShow.length > 0 && (
+        <TransactionResultTable
+          API="ERC721Transfer"
+          hederaNetwork={HEDERA_NETWORK}
+          transactionResults={transactionResults}
+          TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
+          setTransactionResults={setTransactionResults}
+          currentTransactionPage={currentTransactionPage}
+          setCurrentTransactionPage={setCurrentTransactionPage}
+          transactionResultStorageKey={transactionResultStorageKey}
+          paginatedTransactionResults={paginatedTransactionResults}
+        />
+      )}
     </div>
   );
 };

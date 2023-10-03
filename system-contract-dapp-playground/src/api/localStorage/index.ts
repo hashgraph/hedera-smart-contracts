@@ -77,7 +77,7 @@ export const clearCachedTransactions = (contractKey?: string, readonly?: boolean
       // get key
       const key = localStorage.key(i);
 
-      // remove items that have keys start with HEDERA
+      // remove items that have keys include `contractKey`
       if (key?.includes(targetKey)) {
         if (readonly) {
           if (key?.includes('READONLY')) {
