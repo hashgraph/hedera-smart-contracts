@@ -106,7 +106,7 @@ export const generatedRandomUniqueKey = (byteLength: number) => {
   return randomKey;
 };
 
-/*
+/**
  * @dev prepare a list of transaction in order from newest to oldest based on the timestamp when each transaction occurs
  *
  * @returns allTransactions: ITransactionResult[]
@@ -137,4 +137,62 @@ export const prepareTransactionList = () => {
     .map((record, index) => ({ ...record, recordIndex: index + 1 }));
 
   return sortedTransactions;
+};
+
+/**
+ * @dev prepare headers object for CSV exporting feature
+ */
+export const prepareCSVHeaders = () => {
+  return [
+    {
+      label: 'Request Type',
+      key: 'reques_type',
+    },
+    {
+      label: 'Transaction Type',
+      key: 'transaction_type',
+    },
+    {
+      label: 'Status',
+      key: 'status',
+    },
+    {
+      label: 'Transaction Hash',
+      key: 'transaction_hash',
+    },
+    {
+      label: 'Contract Address',
+      key: 'contract_address',
+    },
+    {
+      label: 'Timestamp',
+      key: 'transaction_time_stamp',
+    },
+    {
+      label: 'HashScan Explorer',
+      key: 'hashscan_explorer',
+    },
+  ];
+};
+
+/**
+ * @dev prepare data object for CSV exporting feature
+ */
+export const prepareCSVData = (transactionList: ITransactionResult[], network: string) => {
+  // sort transactionList based on order
+  const sortedTransactionList = transactionList.sort((txA, txB) => {
+    return txA.transactionTimeStamp - txB.transactionTimeStamp;
+  });
+
+  return sortedTransactionList.map((transaction) => ({
+    status: transaction.status,
+    transaction_type: transaction.transactionType,
+    contract_address: transaction.sessionedContractAddress,
+    transaction_time_stamp: new Date(transaction.transactionTimeStamp).toLocaleString(),
+    reques_type: transaction.readonly ? 'QUERY' : 'TRANSACTION',
+    transaction_hash: transaction.readonly ? 'N/A' : transaction.txHash,
+    hashscan_explorer: transaction.readonly
+      ? 'N/A'
+      : `https://hashscan.io/${network}/transaction/${transaction.txHash}`,
+  }));
 };

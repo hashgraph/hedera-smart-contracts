@@ -21,10 +21,10 @@
 'use client';
 
 import Cookies from 'js-cookie';
+import { CSVLink } from 'react-csv';
 import { motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import { FiExternalLink, FiMoreVertical } from 'react-icons/fi';
-import { prepareTransactionList } from '@/utils/common/helpers';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
@@ -32,6 +32,7 @@ import ConfirmModal from '@/components/common/components/ConfirmModal';
 import { ITransactionResult } from '@/types/contract-interactions/shared';
 import { copyContentToClipboard } from '@/components/common/methods/common';
 import { clearCachedTransactions, getArrayTypedValuesFromLocalStorage } from '@/api/localStorage';
+import { prepareCSVData, prepareCSVHeaders, prepareTransactionList } from '@/utils/common/helpers';
 import {
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,
@@ -59,6 +60,7 @@ import {
 const ActivitySection = () => {
   const toaster = useToast();
   const TRANSACTION_PAGE_SIZE = 20;
+  const CSVHeaders = prepareCSVHeaders();
   const hederaNetwork = Cookies.get('_network');
   const [mounted, setMounted] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -67,10 +69,10 @@ const ActivitySection = () => {
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [selectedTransactionList, setSelectedTransactionList] = useState<ITransactionResult[]>([]);
   const [transactionList, setTransactionList] = useState<ITransactionResult[]>(prepareTransactionList());
-  const [confirmationType, setConfirmationType] = useState({
-    removeRecords: false,
-    exportRecords: false,
-  });
+  const CSVData = useMemo(
+    () => prepareCSVData(selectedTransactionList, parsedHederaNetwork),
+    [selectedTransactionList]
+  );
 
   const allChecked = useMemo(
     () => selectedTransactionList.length === transactionList.length,
@@ -82,8 +84,6 @@ const ActivitySection = () => {
     [selectedTransactionList, allChecked]
   );
 
-  useEffect(() => {}, [selectedTransactionList]);
-
   // sort transactionList based on order
   const sortedTransactionList = useMemo(
     () =>
@@ -94,7 +94,6 @@ const ActivitySection = () => {
       }),
     [order, transactionList]
   );
-  useEffect(() => {}, [order, transactionList]);
 
   // declare a paginatedTransactionResults
   const paginatedTransactionResults = usePaginatedTxResults(
@@ -162,13 +161,6 @@ const ActivitySection = () => {
     }
   };
 
-  // turn off confirmation state when confirmation modal is off
-  useEffect(() => {
-    if (!isOpen) {
-      setConfirmationType({ removeRecords: false, exportRecords: false });
-    }
-  }, [isOpen]);
-
   // ensures that the "application mounted" flag is set to ensure consistent UI rendering on both the server and client sides.
   useEffect(() => setMounted(true), []);
 
@@ -230,20 +222,19 @@ const ActivitySection = () => {
               <PopoverContent className="bg-button w-fit py-3 border-white/30">
                 <div className="flex flex-col gap-3">
                   {/* Export button */}
-                  <button
-                    onClick={() => {
-                      setConfirmationType((prev) => ({ ...prev, exportRecords: true }));
-                      onOpen();
-                    }}
+                  <CSVLink
+                    data={CSVData}
+                    headers={CSVHeaders}
+                    filename={'hedera-system-contract-dapp-transactions.csv'}
+                    target="_blank"
                     className={`text-sm pl-3 py-2 pr-6 text-left cursor-pointer hover:bg-neutral-700/50 transition duration-300 w-full`}
                   >
                     Export selected records
-                  </button>
+                  </CSVLink>
 
                   {/* remove button */}
                   <button
                     onClick={() => {
-                      setConfirmationType((prev) => ({ ...prev, removeRecords: true }));
                       onOpen();
                     }}
                     className={`text-sm pl-3 py-2 pr-6 text-left cursor-pointer hover:bg-neutral-700/50 transition duration-300 w-full`}
@@ -447,19 +438,12 @@ const ActivitySection = () => {
         onClose={onClose}
         modalBody={
           <p className="text-white/70">
-            {confirmationType.removeRecords ? (
-              <>
-                By completing this action, the selected transactions will be permanently erased from the
-                DApp&apos;s cache, but they will still be accessible through HashScan or other explorer
-                solutions.
-              </>
-            ) : (
-              <>By completing this action, the selected transactions will be exported into a CSV file.</>
-            )}
+            By completing this action, the selected transactions will be permanently erased from the
+            DApp&apos;s cache, but they will still be accessible through HashScan or other explorer solutions.
           </p>
         }
-        modalHeader={confirmationType.removeRecords ? 'Sure to remove?' : 'Sure to export?'}
-        handleAcknowledge={confirmationType.removeRecords ? () => handleRemoveRecords() : () => {}}
+        modalHeader={'Sure to remove?'}
+        handleAcknowledge={handleRemoveRecords}
       />
     </motion.section>
   );
