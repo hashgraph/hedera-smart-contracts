@@ -21,10 +21,9 @@
 import Link from 'next/link';
 import { FiExternalLink } from 'react-icons/fi';
 import { Dispatch, SetStateAction } from 'react';
-import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import { copyContentToClipboard } from '../../common/methods/common';
 import { ITransactionResult } from '@/types/contract-interactions/shared';
-import { TRANSACTION_PAGE_SIZE } from '../../contract-interaction/hts/shared/states/commonStates';
+import PageinationButtons from '@/components/common/components/PageinationButtons';
 import {
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,
@@ -49,6 +48,7 @@ interface PageProps {
   allChecked: boolean;
   isIndeterminate: boolean;
   parsedHederaNetwork: any;
+  TRANSACTION_PAGE_SIZE: number;
   currentTransactionPage: number;
   transactionList: ITransactionResult[];
   paginatedTransactionResults: ITransactionResult[];
@@ -63,6 +63,7 @@ const ActivityTransactionTable = ({
   isIndeterminate,
   setTransactionList,
   parsedHederaNetwork,
+  TRANSACTION_PAGE_SIZE,
   currentTransactionPage,
   setCurrentTransactionPage,
   setSelectedTransactionList,
@@ -213,35 +214,12 @@ const ActivityTransactionTable = ({
       </TableContainer>
 
       {/* pagination buttons */}
-      <div className="flex gap-3 justify-center items-center">
-        <Tooltip label="Return to the previous page">
-          <button
-            onClick={() => setCurrentTransactionPage((prev) => prev - 1)}
-            disabled={currentTransactionPage === 1}
-            className={`border rounded-lg border-white/30 text-2xl ${
-              currentTransactionPage === 1
-                ? 'hover:cursor-not-allowed text-white/30'
-                : 'hover:cursor-pointer text-white'
-            }`}
-          >
-            <MdNavigateBefore />
-          </button>
-        </Tooltip>
-        <p className="text-base">{currentTransactionPage}</p>
-        <Tooltip label="Proceed to the next page">
-          <button
-            onClick={() => setCurrentTransactionPage((prev) => prev + 1)}
-            disabled={paginatedTransactionResults.length < TRANSACTION_PAGE_SIZE}
-            className={`border border-white/30 rounded-lg text-2xl cursor-pointer ${
-              paginatedTransactionResults.length < TRANSACTION_PAGE_SIZE
-                ? 'hover:cursor-not-allowed text-white/30'
-                : 'hover:cursor-pointer text-white'
-            }`}
-          >
-            <MdNavigateNext />
-          </button>
-        </Tooltip>
-      </div>
+      <PageinationButtons
+        transactionList={transactionList}
+        TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
+        currentTransactionPage={currentTransactionPage}
+        setCurrentTransactionPage={setCurrentTransactionPage}
+      />
     </>
   );
 };

@@ -198,6 +198,7 @@ const ActivitySection = () => {
           transactionList={transactionList}
           setTransactionList={setTransactionList}
           parsedHederaNetwork={parsedHederaNetwork}
+          TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           currentTransactionPage={currentTransactionPage}
           setCurrentTransactionPage={setCurrentTransactionPage}
           setSelectedTransactionList={setSelectedTransactionList}
