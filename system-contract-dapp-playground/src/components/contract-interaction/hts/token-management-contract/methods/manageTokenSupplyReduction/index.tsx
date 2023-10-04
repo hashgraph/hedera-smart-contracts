@@ -30,12 +30,16 @@ import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { manageTokenDeduction } from '@/api/hedera/hts-interactions/tokenManagement-interactions';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { htsTokenDeductionParamFields } from '@/utils/contract-interactions/HTS/token-management/constant';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 import {
   SharedFormButton,
   SharedFormInputField,
@@ -83,9 +87,9 @@ const ManageTokenDeduction = ({ baseContract }: PageProps) => {
   ];
 
   const transactionTypeMap = {
-    WIPE_FUNGIBLE: 'HTS-WIPE-TOKEN',
-    WIPE_NON_FUNGIBLE: 'HTS-WIPE-NFT',
-    BURN: 'HTS-TOKEN-BURN',
+    BURN: HEDERA_COMMON_TRANSACTION_TYPE.HTS_TOKEN_BURN,
+    WIPE_FUNGIBLE: HEDERA_COMMON_TRANSACTION_TYPE.HTS_WIPE_TOKEN,
+    WIPE_NON_FUNGIBLE: HEDERA_COMMON_TRANSACTION_TYPE.HTS_WIPE_NFT,
   };
 
   const tokenCommonFields = useMemo(() => {

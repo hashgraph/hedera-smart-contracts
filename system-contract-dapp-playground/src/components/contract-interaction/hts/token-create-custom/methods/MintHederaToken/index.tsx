@@ -32,11 +32,15 @@ import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { htsTokenMintParamFields } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 import {
   SharedFormButton,
   SharedExecuteButton,
@@ -194,7 +198,10 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
         tokenAddress: tokenAddressToMint,
         transactionHash: txRes.transactionHash,
         sessionedContractAddress: currentContractAddress,
-        transactionType: `HTS-${APIMethods === 'FUNGIBLE' ? 'TOKEN' : 'NFT'}-MINT`,
+        transactionType:
+          APIMethods === 'FUNGIBLE'
+            ? HEDERA_COMMON_TRANSACTION_TYPE.HTS_TOKEN_MINT
+            : HEDERA_COMMON_TRANSACTION_TYPE.HTS_NFT_MINT,
       });
       return;
     } else {
@@ -209,7 +216,10 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
           txHash: txRes.transactionHash as string,
           tokenAddress: paramValues.tokenAddressToMint,
           sessionedContractAddress: currentContractAddress,
-          transactionType: `HTS-${APIMethods === 'FUNGIBLE' ? 'TOKEN' : 'NFT'}-MINT`,
+          transactionType:
+            APIMethods === 'FUNGIBLE'
+              ? HEDERA_COMMON_TRANSACTION_TYPE.HTS_TOKEN_MINT
+              : HEDERA_COMMON_TRANSACTION_TYPE.HTS_NFT_MINT,
         },
       ]);
       setIsSuccessful(true);

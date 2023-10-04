@@ -31,10 +31,14 @@ import { TRANSACTION_PAGE_SIZE } from '../../hts/shared/states/commonStates';
 import { usePaginatedTxResults } from '../../../../hooks/usePaginatedTxResults';
 import { SharedExecuteButtonWithFee } from '../../hts/shared/components/ParamInputForm';
 import { TransactionResultTable } from '../../../common/components/TransactionResultTable';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../hooks/useUpdateLocalStorage';
 import useFilterTransactionsByContractAddress from '../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 
 interface PageProps {
   baseContract: Contract;
@@ -113,9 +117,9 @@ const HederaPRNGMethods = ({ baseContract }: PageProps) => {
         toaster,
         transactionHash,
         setTransactionResults,
-        transactionType: `PRNG`,
         transactionResultStorageKey,
         sessionedContractAddress: currentContractAddress,
+        transactionType: HEDERA_COMMON_TRANSACTION_TYPE.HIP351_PRNG,
       });
       return;
     } else {
@@ -125,11 +129,11 @@ const HederaPRNGMethods = ({ baseContract }: PageProps) => {
         {
           status: 'success',
           pseudoRandomSeed,
-          transactionType: `PRNG`,
           transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
           sessionedContractAddress: currentContractAddress,
+          transactionType: HEDERA_COMMON_TRANSACTION_TYPE.HIP351_PRNG,
         },
       ]);
 

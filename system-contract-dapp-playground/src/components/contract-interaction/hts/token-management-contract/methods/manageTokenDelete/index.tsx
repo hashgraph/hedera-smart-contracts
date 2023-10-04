@@ -29,14 +29,18 @@ import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
-import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { manageTokenDeduction } from '@/api/hedera/hts-interactions/tokenManagement-interactions';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
+import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { htsTokenDeductionParamFields } from '@/utils/contract-interactions/HTS/token-management/constant';
 import { SharedFormInputField, SharedExecuteButtonWithFee } from '../../../shared/components/ParamInputForm';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 
 interface PageProps {
   baseContract: Contract;
@@ -122,8 +126,8 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
         setTransactionResults,
         transactionResultStorageKey,
         tokenAddress: hederaTokenAddress,
-        transactionType: 'HTS-TOKEN-DELETE',
         sessionedContractAddress: currentContractAddress,
+        transactionType: HEDERA_COMMON_TRANSACTION_TYPE.HTS_TOKEN_DELETE,
       });
       return;
     } else {
@@ -136,8 +140,8 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
           tokenAddress: hederaTokenAddress,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
-          transactionType: 'HTS-TOKEN-DELETE',
           sessionedContractAddress: currentContractAddress,
+          transactionType: HEDERA_COMMON_TRANSACTION_TYPE.HTS_TOKEN_DELETE,
         },
       ]);
 
