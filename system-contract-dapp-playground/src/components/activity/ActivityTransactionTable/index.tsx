@@ -45,6 +45,7 @@ import {
 } from '@chakra-ui/react';
 
 interface PageProps {
+  onOpen: () => void;
   allChecked: boolean;
   isIndeterminate: boolean;
   parsedHederaNetwork: any;
@@ -55,13 +56,21 @@ interface PageProps {
   setCurrentTransactionPage: Dispatch<SetStateAction<number>>;
   setTransactionList: Dispatch<SetStateAction<ITransactionResult[]>>;
   setSelectedTransactionList: Dispatch<SetStateAction<ITransactionResult[]>>;
+  setQueryReponseObj: Dispatch<
+    SetStateAction<{
+      isOpen: boolean;
+      selectedTransaction: ITransactionResult;
+    }>
+  >;
 }
 
 const ActivityTransactionTable = ({
+  onOpen,
   allChecked,
   transactionList,
   isIndeterminate,
   setTransactionList,
+  setQueryReponseObj,
   parsedHederaNetwork,
   TRANSACTION_PAGE_SIZE,
   currentTransactionPage,
@@ -110,9 +119,20 @@ const ActivityTransactionTable = ({
               return (
                 <Tr
                   key={transaction.txHash}
+                  onClick={() => {
+                    if (transaction.readonly) {
+                      onOpen();
+                      setQueryReponseObj((prev) => ({
+                        ...prev,
+                        isOpen: true,
+                        selectedTransaction: transaction,
+                      }));
+                    }
+                  }}
+                  title={transaction.readonly ? 'Click to show query response' : ''}
                   className={` border-b border-white/30 ${
                     transaction.status === 'success' ? 'hover:bg-hedera-green/10' : 'hover:bg-red-400/10'
-                  }`}
+                  } ${transaction.readonly && 'cursor-pointer'}`}
                 >
                   {/* index */}
                   <Td>
@@ -172,7 +192,7 @@ const ActivityTransactionTable = ({
                     </div>
                   </Td>
 
-                  <Td>
+                  <Td onClick={(e) => e.stopPropagation()}>
                     <Checkbox
                       size={HEDERA_CHAKRA_INPUT_BOX_SIZES.medium}
                       colorScheme="teal"

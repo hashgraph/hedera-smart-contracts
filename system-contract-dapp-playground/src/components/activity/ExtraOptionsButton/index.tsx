@@ -20,6 +20,7 @@
 
 import { CSVLink } from 'react-csv';
 import { FiMoreVertical } from 'react-icons/fi';
+import { Dispatch, SetStateAction } from 'react';
 import { Popover, PopoverTrigger, PopoverContent } from '@chakra-ui/react';
 import { ITransactionResult } from '@/types/contract-interactions/shared';
 
@@ -28,9 +29,16 @@ interface PageProps {
   CSVData: any;
   CSVHeaders: any;
   selectedTransactionList: ITransactionResult[];
+  setIsRemoveModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const ExtraOptionsButton = ({ onOpen, CSVData, CSVHeaders, selectedTransactionList }: PageProps) => {
+const ExtraOptionsButton = ({
+  onOpen,
+  CSVData,
+  CSVHeaders,
+  setIsRemoveModalOpen,
+  selectedTransactionList,
+}: PageProps) => {
   return (
     <div>
       <Popover placement="right">
@@ -63,6 +71,7 @@ const ExtraOptionsButton = ({ onOpen, CSVData, CSVHeaders, selectedTransactionLi
             <button
               onClick={() => {
                 onOpen();
+                setIsRemoveModalOpen(true);
               }}
               className={`text-sm pl-3 py-2 pr-6 text-left cursor-pointer hover:bg-neutral-700/50 transition duration-300 w-full`}
             >

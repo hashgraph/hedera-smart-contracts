@@ -28,6 +28,7 @@ import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { Select, useToast, useDisclosure } from '@chakra-ui/react';
 import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
 import ConfirmModal from '@/components/common/components/ConfirmModal';
+import QeuryResponseModal from '@/components/activity/QueryResponseModal';
 import { ITransactionResult } from '@/types/contract-interactions/shared';
 import ExtraOptionsButton from '@/components/activity/ExtraOptionsButton';
 import ActivityTransactionTable from '@/components/activity/ActivityTransactionTable';
@@ -41,14 +42,20 @@ const ActivitySection = () => {
   const hederaNetwork = Cookies.get('_network');
   const [mounted, setMounted] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [order, setOrder] = useState<'OLDEST' | 'LATEST'>('OLDEST');
   const parsedHederaNetwork = hederaNetwork && JSON.parse(hederaNetwork);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [selectedTransactionList, setSelectedTransactionList] = useState<ITransactionResult[]>([]);
   const [transactionList, setTransactionList] = useState<ITransactionResult[]>(prepareTransactionList());
+  const [queryResponseObj, setQueryReponseObj] = useState({
+    isOpen: false,
+    selectedTransaction: {} as ITransactionResult,
+  });
+
   const CSVData = useMemo(
     () => prepareCSVData(selectedTransactionList, parsedHederaNetwork),
-    [selectedTransactionList]
+    [selectedTransactionList, parsedHederaNetwork]
   );
 
   const allChecked = useMemo(
@@ -129,14 +136,25 @@ const ActivitySection = () => {
           prev.filter((transactionResult) => transactionResult.txHash !== record.txHash)
         );
       });
-
-      // reset selectedTransactionList
-      setSelectedTransactionList([]);
-
-      // close modal
-      onClose();
     }
+    // reset states
+    setSelectedTransactionList([]);
+
+    // close modal
+    onClose();
   };
+
+  /** @dev when the modal is off, all states relate to the modal must be reset */
+  useEffect(() => {
+    if (!isOpen) {
+      setIsRemoveModalOpen(false);
+      setQueryReponseObj((prev) => ({
+        ...prev,
+        isOpen: false,
+        selectedTransaction: {} as ITransactionResult,
+      }));
+    }
+  }, [isOpen]);
 
   // ensures that the "application mounted" flag is set to ensure consistent UI rendering on both the server and client sides.
   useEffect(() => setMounted(true), []);
@@ -186,6 +204,7 @@ const ActivitySection = () => {
             onOpen={onOpen}
             CSVData={CSVData}
             CSVHeaders={CSVHeaders}
+            setIsRemoveModalOpen={setIsRemoveModalOpen}
             selectedTransactionList={selectedTransactionList}
           />
         </div>
@@ -193,9 +212,11 @@ const ActivitySection = () => {
 
       {sortedTransactionList.length > 0 ? (
         <ActivityTransactionTable
+          onOpen={onOpen}
           allChecked={allChecked}
           isIndeterminate={isIndeterminate}
           transactionList={transactionList}
+          setQueryReponseObj={setQueryReponseObj}
           setTransactionList={setTransactionList}
           parsedHederaNetwork={parsedHederaNetwork}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
@@ -210,18 +231,30 @@ const ActivitySection = () => {
         </div>
       )}
 
-      <ConfirmModal
-        isOpen={isOpen}
-        onClose={onClose}
-        modalBody={
-          <p className="text-white/70">
-            By completing this action, the selected transactions will be permanently erased from the
-            DApp&apos;s cache, but they will still be accessible through HashScan or other explorer solutions.
-          </p>
-        }
-        modalHeader={'Sure to remove?'}
-        handleAcknowledge={handleRemoveRecords}
-      />
+      {queryResponseObj.isOpen && (
+        <QeuryResponseModal
+          isOpen={isOpen}
+          onClose={onClose}
+          hederaNetwork={parsedHederaNetwork}
+          transaction={queryResponseObj.selectedTransaction}
+        />
+      )}
+
+      {isRemoveModalOpen && (
+        <ConfirmModal
+          isOpen={isOpen}
+          onClose={onClose}
+          modalBody={
+            <p className="text-white/70">
+              By completing this action, the selected transactions will be permanently erased from the
+              DApp&apos;s cache, but they will still be accessible through HashScan or other explorer
+              solutions.
+            </p>
+          }
+          modalHeader={'Sure to remove?'}
+          handleAcknowledge={handleRemoveRecords}
+        />
+      )}
     </motion.section>
   );
 };

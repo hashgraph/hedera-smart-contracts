@@ -103,7 +103,7 @@ const TokenInformation = ({ baseContract }: PageProps) => {
           txHash: generatedRandomUniqueKey(9), // acts as a key of the transaction
           sessionedContractAddress: currentContractAddress,
           transactionType: HEDERA_COMMON_TRANSACTION_TYPE.ERC721_TOKEN_INFO,
-          tokenInfo: {
+          ercTokenInfo: {
             [method]: tokenInfoRes[method],
           },
         },
