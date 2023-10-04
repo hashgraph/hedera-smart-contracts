@@ -28,7 +28,7 @@ import { HEDERA_BRANDING_COLORS } from '@/utils/common/constants';
 import { Select, useToast, useDisclosure } from '@chakra-ui/react';
 import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
 import ConfirmModal from '@/components/common/components/ConfirmModal';
-import QeuryResponseModal from '@/components/activity/QueryResponseModal';
+import QueryResponseModal from '@/components/activity/QueryResponseModal';
 import { ITransactionResult } from '@/types/contract-interactions/shared';
 import ExtraOptionsButton from '@/components/activity/ExtraOptionsButton';
 import ActivityTransactionTable from '@/components/activity/ActivityTransactionTable';
@@ -232,7 +232,7 @@ const ActivitySection = () => {
       )}
 
       {queryResponseObj.isOpen && (
-        <QeuryResponseModal
+        <QueryResponseModal
           isOpen={isOpen}
           onClose={onClose}
           hederaNetwork={parsedHederaNetwork}

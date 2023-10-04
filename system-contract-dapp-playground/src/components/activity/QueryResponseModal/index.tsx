@@ -50,7 +50,7 @@ interface PageProps {
   transaction: ITransactionResult;
 }
 
-const QeuryResponseModal = ({ hederaNetwork, transaction, isOpen, onClose }: PageProps) => {
+const QueryResponseModal = ({ hederaNetwork, transaction, isOpen, onClose }: PageProps) => {
   const ercTokenInfoKeys = ['name', 'symbol', 'decimals', 'totalSupply'];
   return (
     <Modal
@@ -356,4 +356,4 @@ const QeuryResponseModal = ({ hederaNetwork, transaction, isOpen, onClose }: Pag
   );
 };
 
-export default QeuryResponseModal;
+export default QueryResponseModal;
