@@ -17,6 +17,12 @@ permissions:
   pull-requests: write
 
 jobs:
+  BlockInfo:
+    name: BlockInfo Contract Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: BlockInfo
+
   ERC20Contract:
     name: ERC20 Contract Test Suite
     uses: ./.github/workflows/test-workflow.yml
