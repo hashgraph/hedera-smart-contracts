@@ -32,13 +32,17 @@ import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxRes
 import TokenAddressesInputForm from '../../../shared/components/TokenAddressesInputForm';
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { SharedFormInputField, SharedExecuteButton } from '../../../shared/components/ParamInputForm';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { htsTokenAssociateParamFields } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
 import { associateHederaTokensToAccounts } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 
 interface PageProps {
   baseContract: Contract;
@@ -154,8 +158,8 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
         setTransactionResults,
         transactionResultStorageKey,
         accountAddress: associatingAddress,
-        transactionType: 'HTS-TOKEN-ASSOCIATE',
         sessionedContractAddress: currentContractAddress,
+        transactionType: HEDERA_COMMON_TRANSACTION_TYPE.HTS_TOKEN_ASSOCIATE,
       });
       return;
     } else {
@@ -169,8 +173,8 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
           accountAddress: associatingAddress,
-          transactionType: 'HTS-TOKEN-ASSOCIATE',
           sessionedContractAddress: currentContractAddress,
+          transactionType: HEDERA_COMMON_TRANSACTION_TYPE.HTS_TOKEN_ASSOCIATE,
         },
       ]);
 

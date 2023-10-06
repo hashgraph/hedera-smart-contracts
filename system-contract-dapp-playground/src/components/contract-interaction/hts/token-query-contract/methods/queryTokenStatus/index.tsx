@@ -29,14 +29,18 @@ import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
-import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { queryTokenStatusInformation } from '@/api/hedera/hts-interactions/tokenQuery-interactions';
 import { SharedExecuteButton, SharedFormInputField } from '../../../shared/components/ParamInputForm';
+import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { htsQueryTokenStatusParamFields } from '@/utils/contract-interactions/HTS/token-query/constant';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 
 interface PageProps {
   baseContract: Contract;
@@ -82,6 +86,11 @@ const QueryTokenStatusInfomation = ({ baseContract }: PageProps) => {
   const eventMaps: Record<API_NAMES, EVENT_NAMES> = {
     IS_KYC: 'KycGranted',
     IS_FROZEN: 'Frozen',
+  };
+
+  const transactionTypeMap = {
+    IS_KYC: HEDERA_COMMON_TRANSACTION_TYPE.HTS_QUERY_ALLOWANCE,
+    IS_FROZEN: HEDERA_COMMON_TRANSACTION_TYPE.HTS_QUERY_IS_APPROVAL,
   };
 
   const transactionResultsToShow = useFilterTransactionsByContractAddress(
@@ -155,9 +164,9 @@ const QueryTokenStatusInfomation = ({ baseContract }: PageProps) => {
         setTransactionResults,
         err: tokenInfoResult.err,
         transactionResultStorageKey,
+        transactionType: transactionTypeMap[API],
         accountAddress: paramValues.accountAddress,
         tokenAddress: paramValues.hederaTokenAddress,
-        transactionType: `HTS-${API.replace('_', '-')}`,
         transactionHash: tokenInfoResult.transactionHash,
         sessionedContractAddress: currentContractAddress,
       });
@@ -171,9 +180,9 @@ const QueryTokenStatusInfomation = ({ baseContract }: PageProps) => {
           status: 'success',
           transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
+          transactionType: transactionTypeMap[API],
           accountAddress: paramValues.accountAddress,
           tokenAddress: paramValues.hederaTokenAddress,
-          transactionType: `HTS-${API.replace('_', '-')}`,
           sessionedContractAddress: currentContractAddress,
           txHash: tokenInfoResult.transactionHash as string,
           tokenInfo: Number(tokenInfoResult[eventMaps[API]]),

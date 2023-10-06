@@ -30,15 +30,19 @@ import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxRes
 import TokenPermissionInfoModal from '../../../shared/components/TokenPermissionInfoModal';
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { queryTokenPermissionInformation } from '@/api/hedera/hts-interactions/tokenQuery-interactions';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { htsQueryTokenPermissionParamFields } from '@/utils/contract-interactions/HTS/token-query/constant';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
-  SharedExecuteButton,
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
+import {
   SharedFormButton,
+  SharedExecuteButton,
   SharedFormInputField,
 } from '../../../shared/components/ParamInputForm';
 
@@ -109,6 +113,12 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
     GET_APPROVED: 'ApprovedAddress',
   };
 
+  const transactionTypeMap = {
+    ALLOWANCE: HEDERA_COMMON_TRANSACTION_TYPE.HTS_QUERY_ALLOWANCE,
+    IS_APPROVAL: HEDERA_COMMON_TRANSACTION_TYPE.HTS_QUERY_IS_APPROVAL,
+    GET_APPROVED: HEDERA_COMMON_TRANSACTION_TYPE.HTS_QUERY_GET_APPROVED,
+  };
+
   const transactionResultsToShow = useFilterTransactionsByContractAddress(
     transactionResults,
     currentContractAddress
@@ -176,8 +186,8 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
         setTransactionResults,
         err: tokenInfoResult.err,
         transactionResultStorageKey,
+        transactionType: transactionTypeMap[API],
         tokenAddress: paramValues.hederaTokenAddress,
-        transactionType: `HTS-${API.replace('_', '-')}`,
         transactionHash: tokenInfoResult.transactionHash,
         sessionedContractAddress: currentContractAddress,
       });
@@ -202,8 +212,8 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
           tokenInfo: cachedTokenInfo,
           transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
+          transactionType: transactionTypeMap[API],
           tokenAddress: paramValues.hederaTokenAddress,
-          transactionType: `HTS-${API.replace('_', '-')}`,
           sessionedContractAddress: currentContractAddress,
           txHash: tokenInfoResult.transactionHash as string,
         },

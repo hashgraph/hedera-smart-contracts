@@ -28,15 +28,19 @@ import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
-import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { transferSingleToken } from '@/api/hedera/hts-interactions/tokenTransfer-interactions';
-import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
+import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { SharedExecuteButton, SharedFormInputField } from '../../../shared/components/ParamInputForm';
+import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
-import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { htsTokenTransferParamFields } from '@/utils/contract-interactions/HTS/token-transfer/paramFieldConstant';
+import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 
 interface PageProps {
   baseContract: Contract;
@@ -148,9 +152,9 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
         setTransactionResults,
         transactionResultStorageKey,
         accountAddress: senderAddress,
-        transactionType: 'HTS-TOKEN-TRANSFER',
         tokenAddress: paramValues.hederaTokenAddress,
         sessionedContractAddress: currentContractAddress,
+        transactionType: HEDERA_COMMON_TRANSACTION_TYPE.HTS_TOKEN_TRANSFER,
       });
       return;
     } else {
@@ -165,9 +169,9 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
           accountAddress: senderAddress,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
-          transactionType: 'HTS-TOKEN-TRANSFER',
           tokenAddress: paramValues.hederaTokenAddress,
           sessionedContractAddress: currentContractAddress,
+          transactionType: HEDERA_COMMON_TRANSACTION_TYPE.HTS_TOKEN_TRANSFER,
         },
       ]);
 

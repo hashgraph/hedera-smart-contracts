@@ -32,7 +32,11 @@ import MultiLineMethod from '@/components/common/components/MultiLineMethod';
 import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
 import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
 import { TransactionResultTable } from '@/components/common/components/TransactionResultTable';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
+import {
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 import useFilterTransactionsByContractAddress from '@/hooks/useFilterTransactionsByContractAddress';
 import { TRANSACTION_PAGE_SIZE } from '@/components/contract-interaction/hts/shared/states/commonStates';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
@@ -141,7 +145,10 @@ const ERC721Transfer = ({ baseContract }: PageProps) => {
         receiverAddress: params.recipient,
         transactionHash: tokenTransferRes.txHash,
         sessionedContractAddress: currentContractAddress,
-        transactionType: `ERC721-${convertCalmelCaseFunctionName(method).replace(' ', '-')}`,
+        transactionType:
+          method === 'TRANSFER_FROM'
+            ? HEDERA_COMMON_TRANSACTION_TYPE.ERC721_TRANSFER_FROM
+            : HEDERA_COMMON_TRANSACTION_TYPE.ERC721_SAFE_TRANSFER_FROM,
       });
       return;
     } else {
@@ -159,7 +166,10 @@ const ERC721Transfer = ({ baseContract }: PageProps) => {
           receiverAddress: params.recipient,
           txHash: tokenTransferRes.txHash as string,
           sessionedContractAddress: currentContractAddress,
-          transactionType: `ERC721-${convertCalmelCaseFunctionName(method).toUpperCase().replace(' ', '-')}`,
+          transactionType:
+            method === 'TRANSFER_FROM'
+              ? HEDERA_COMMON_TRANSACTION_TYPE.ERC721_TRANSFER_FROM
+              : HEDERA_COMMON_TRANSACTION_TYPE.ERC721_SAFE_TRANSFER_FROM,
         },
       ]);
     }

@@ -34,9 +34,10 @@ import { useUpdateTransactionResultsToLocalStorage } from '../../../../hooks/use
 import { SharedExecuteButton, SharedFormInputField } from '../../hts/shared/components/ParamInputForm';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
-  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
   HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
 } from '@/utils/common/constants';
 
@@ -124,8 +125,11 @@ const HederaIHRC719Methods = ({ network }: PageProps) => {
         setTransactionResults,
         sessionedContractAddress: '',
         transactionResultStorageKey,
-        transactionType: `IHRC719-${API}`,
         tokenAddress: paramValues.hederaTokenAddress,
+        transactionType:
+          API === 'ASSOCIATE'
+            ? HEDERA_COMMON_TRANSACTION_TYPE.IHRC719_ASSOCIATE
+            : HEDERA_COMMON_TRANSACTION_TYPE.IHRC719_DISSOCIATE,
       });
       return;
     } else {
@@ -138,8 +142,11 @@ const HederaIHRC719Methods = ({ network }: PageProps) => {
           sessionedContractAddress: '',
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
-          transactionType: `IHRC719-${API}`,
           tokenAddress: paramValues.hederaTokenAddress,
+          transactionType:
+            API === 'ASSOCIATE'
+              ? HEDERA_COMMON_TRANSACTION_TYPE.IHRC719_ASSOCIATE
+              : HEDERA_COMMON_TRANSACTION_TYPE.IHRC719_DISSOCIATE,
         },
       ]);
 

@@ -31,6 +31,7 @@ import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLoca
 import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
   HEDERA_COMMON_WALLET_REVERT_REASONS,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
 } from '@/utils/common/constants';
@@ -107,10 +108,10 @@ const TokenInformation = ({ baseContract }: PageProps) => {
           status: 'success',
           transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
-          transactionType: 'ERC20-TOKEN-INFO',
           txHash: generatedRandomUniqueKey(9), // acts as a key of the transaction
           sessionedContractAddress: currentContractAddress,
-          tokenInfo: {
+          transactionType: HEDERA_COMMON_TRANSACTION_TYPE.ERC20_TOKEN_INFO,
+          ercTokenInfo: {
             [method]: tokenInfoRes[method],
           },
         },
