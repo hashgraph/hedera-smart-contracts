@@ -42,10 +42,11 @@ import {
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
   HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
+  HEDERA_COMMON_TRANSACTION_TYPE,
 } from '@/utils/common/constants';
 import {
-  SharedExecuteButton,
   SharedFormButton,
+  SharedExecuteButton,
   SharedFormInputField,
 } from '@/components/contract-interaction/hts/shared/components/ParamInputForm';
 
@@ -82,12 +83,12 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
 
   const transferTypeMap = {
     IS_APPROVAL: {
-      transactionType: 'ERC721-IS-APPROVAL',
       API: 'IS_APPROVAL',
+      transactionType: HEDERA_COMMON_TRANSACTION_TYPE.ERC721_IS_APPROVAL,
     },
     SET_APPROVAL: {
-      transactionType: 'ERC721-SET-APPROVAL',
       API: 'SET_APPROVAL',
+      transactionType: HEDERA_COMMON_TRANSACTION_TYPE.ERC721_SET_APPROVAL,
     },
   };
 

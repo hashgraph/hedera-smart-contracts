@@ -30,12 +30,16 @@ import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxRes
 import { SharedSigningKeysComponent } from '../../../shared/components/SigningKeysForm';
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { htsTokenCreateParamFields } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
 import { createHederaNonFungibleToken } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 import {
   SharedFormInputField,
   SharedFormButton,
@@ -156,8 +160,8 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         transactionResultStorageKey,
-        transactionType: 'HTS-NFT-CREATE',
         sessionedContractAddress: currentContractAddress,
+        transactionType: HEDERA_COMMON_TRANSACTION_TYPE.HTS_NFT_CREATE,
       });
       return;
     } else {
@@ -169,9 +173,9 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
           status: 'success',
           transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
-          transactionType: 'HTS-NFT-CREATE',
           txHash: transactionHash as string,
           sessionedContractAddress: currentContractAddress,
+          transactionType: HEDERA_COMMON_TRANSACTION_TYPE.HTS_NFT_CREATE,
         },
       ]);
 

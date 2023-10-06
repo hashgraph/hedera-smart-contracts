@@ -26,16 +26,19 @@ import { erc20Transfers } from '@/api/hedera/erc20-interactions';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { usePaginatedTxResults } from '@/hooks/usePaginatedTxResults';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { convertCalmelCaseFunctionName } from '@/utils/common/helpers';
 import { ITransactionResult } from '@/types/contract-interactions/shared';
 import MultiLineMethod from '@/components/common/components/MultiLineMethod';
 import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
 import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
 import { TransactionResultTable } from '@/components/common/components/TransactionResultTable';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import useFilterTransactionsByContractAddress from '@/hooks/useFilterTransactionsByContractAddress';
 import { TRANSACTION_PAGE_SIZE } from '@/components/contract-interaction/hts/shared/states/commonStates';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 import {
   transferParamFields,
   transferFromParamFields,
@@ -150,7 +153,10 @@ const Transfer = ({ baseContract }: PageProps) => {
         receiverAddress: params.recipient,
         transactionHash: tokenTransferRes.txHash,
         sessionedContractAddress: currentContractAddress,
-        transactionType: `ERC20-${convertCalmelCaseFunctionName(method).toUpperCase().replace(' ', '-')}`,
+        transactionType:
+          method === 'transfer'
+            ? HEDERA_COMMON_TRANSACTION_TYPE.ERC20_TRANSFER
+            : HEDERA_COMMON_TRANSACTION_TYPE.ERC20_TRANSFER_FROM,
       });
       return;
     } else {
@@ -169,7 +175,10 @@ const Transfer = ({ baseContract }: PageProps) => {
           receiverAddress: params.recipient,
           txHash: tokenTransferRes.txHash as string,
           sessionedContractAddress: currentContractAddress,
-          transactionType: `ERC20-${convertCalmelCaseFunctionName(method).toUpperCase().replace(' ', '-')}`,
+          transactionType:
+            method === 'transfer'
+              ? HEDERA_COMMON_TRANSACTION_TYPE.ERC20_TRANSFER
+              : HEDERA_COMMON_TRANSACTION_TYPE.ERC20_TRANSFER_FROM,
         },
       ]);
     }

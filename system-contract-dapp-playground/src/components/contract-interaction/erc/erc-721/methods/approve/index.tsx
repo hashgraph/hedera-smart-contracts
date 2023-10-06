@@ -41,6 +41,7 @@ import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components
 import {
   CONTRACT_NAMES,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
 } from '@/utils/common/constants';
 
@@ -70,13 +71,13 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
   const transferTypeMap = useCallback((API: 'APPROVE' | 'GET_APPROVE') => {
     if (API === 'APPROVE') {
       return {
-        transactionType: 'ERC721-APPROVE',
         API: 'APPROVE',
+        transactionType: HEDERA_COMMON_TRANSACTION_TYPE.ERC721_APPROVE,
       };
     } else {
       return {
-        transactionType: 'ERC721-GET-APPROVE',
         API: 'GET_APPROVE',
+        transactionType: HEDERA_COMMON_TRANSACTION_TYPE.ERC721_GET_APPROVE,
       };
     }
   }, []);

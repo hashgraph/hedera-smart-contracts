@@ -28,14 +28,18 @@ import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
-import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { manageTokenStatus } from '@/api/hedera/hts-interactions/tokenManagement-interactions';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
+import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { SharedExecuteButton, SharedFormInputField } from '../../../shared/components/ParamInputForm';
-import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { htsTokenStatusParamFields } from '@/utils/contract-interactions/HTS/token-management/constant';
+import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 
 interface PageProps {
   baseContract: Contract;
@@ -131,9 +135,12 @@ const ManageTokenStatus = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         transactionResultStorageKey,
-        transactionType: `HTS-TOKEN-${API}`,
         tokenAddress: paramValues.hederaTokenAddress,
         sessionedContractAddress: currentContractAddress,
+        transactionType:
+          API === 'PAUSE'
+            ? HEDERA_COMMON_TRANSACTION_TYPE.HTS_TOKEN_PAUSE
+            : HEDERA_COMMON_TRANSACTION_TYPE.HTS_TOKEN_UNPAUSE,
       });
       return;
     } else {
@@ -145,9 +152,12 @@ const ManageTokenStatus = ({ baseContract }: PageProps) => {
           transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
-          transactionType: `HTS-TOKEN-${API}`,
           tokenAddress: paramValues.hederaTokenAddress,
           sessionedContractAddress: currentContractAddress,
+          transactionType:
+            API === 'PAUSE'
+              ? HEDERA_COMMON_TRANSACTION_TYPE.HTS_TOKEN_PAUSE
+              : HEDERA_COMMON_TRANSACTION_TYPE.HTS_TOKEN_UNPAUSE,
         },
       ]);
 

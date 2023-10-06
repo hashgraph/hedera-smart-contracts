@@ -32,10 +32,14 @@ import { handleErc20TokenPermissions } from '@/api/hedera/erc20-interactions';
 import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
 import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
 import { TransactionResultTable } from '@/components/common/components/TransactionResultTable';
-import { HEDERA_TRANSACTION_RESULT_STORAGE_KEYS, CONTRACT_NAMES } from '@/utils/common/constants';
 import useFilterTransactionsByContractAddress from '@/hooks/useFilterTransactionsByContractAddress';
 import { TRANSACTION_PAGE_SIZE } from '@/components/contract-interaction/hts/shared/states/commonStates';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 import {
   approveParamFields,
   allowanceParamFields,
@@ -112,20 +116,20 @@ const TokenPermission = ({ baseContract }: PageProps) => {
 
   const transferTypeMap = {
     approve: {
-      transactionType: 'ERC20-APPROVE',
       API: 'APPROVE',
+      transactionType: HEDERA_COMMON_TRANSACTION_TYPE.ERC20_APPROVE,
     },
     allowance: {
-      transactionType: 'ERC20-ALLOWANCES',
       API: 'ALLOWANCES',
+      transactionType: HEDERA_COMMON_TRANSACTION_TYPE.ERC20_ALLOWANCES,
     },
     increaseAllowance: {
-      transactionType: 'ERC20-INCREASE-ALLOWANCE',
       API: 'INCREASE',
+      transactionType: HEDERA_COMMON_TRANSACTION_TYPE.ERC20_INCREASE_ALLOWANCE,
     },
     decreaseAllowance: {
-      transactionType: 'ERC20-DECREASE-ALLOWANCE',
       API: 'DECREASE',
+      transactionType: HEDERA_COMMON_TRANSACTION_TYPE.ERC20_DECREASE_ALLOWANCE,
     },
   };
 

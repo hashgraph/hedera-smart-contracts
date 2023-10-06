@@ -30,7 +30,11 @@ import TokenGeneralInfoModal from '../../../shared/components/TokenGeneralInfoMo
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
+import {
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 import { queryTokenGeneralInfomation } from '@/api/hedera/hts-interactions/tokenQuery-interactions';
 import { htsQueryTokenInfoParamFields } from '@/utils/contract-interactions/HTS/token-query/constant';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
@@ -88,9 +92,9 @@ const QueryTokenGeneralInfomation = ({ baseContract }: PageProps) => {
   };
 
   const transactionTypeMap = {
-    TOKEN: 'HTS-QUERY-TOKEN-INFO',
-    FUNGIBLE: 'HTS-QUERY-FUNGIBLE-INFO',
-    NON_FUNFIBLE: 'HTS-QUERY-NFT-INFO',
+    TOKEN: HEDERA_COMMON_TRANSACTION_TYPE.HTS_QUERY_TOKEN_INFO,
+    NON_FUNFIBLE: HEDERA_COMMON_TRANSACTION_TYPE.HTS_QUERY_NFT_INFO,
+    FUNGIBLE: HEDERA_COMMON_TRANSACTION_TYPE.HTS_QUERY_FUNGIBLE_INFO,
   };
 
   const APIButtonTitles: { API: API_NAMES; apiSwitchTitle: string; executeTitle: any }[] = [

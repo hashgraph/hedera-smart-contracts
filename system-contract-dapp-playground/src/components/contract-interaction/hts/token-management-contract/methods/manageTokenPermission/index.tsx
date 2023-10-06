@@ -29,13 +29,17 @@ import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { manageTokenPermission } from '@/api/hedera/hts-interactions/tokenManagement-interactions';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { htsTokenPermissionParamFields } from '@/utils/contract-interactions/HTS/token-management/constant';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 import {
   SharedFormButton,
   SharedFormInputField,
@@ -72,9 +76,9 @@ const ManageTokenPermission = ({ baseContract }: PageProps) => {
   const [paramValues, setParamValues] = useState<any>(initialParamValues);
 
   const transactionTypeMap = {
-    APPROVED_FUNGIBLE: 'HTS-APPROVED-TOKEN',
-    APPROVED_NON_FUNGIBLE: 'HTS-APPROVED-NFT',
-    SET_APPROVAL: 'HTS-SET-APPROVAL',
+    SET_APPROVAL: HEDERA_COMMON_TRANSACTION_TYPE.HTS_SET_APPROVAL,
+    APPROVED_FUNGIBLE: HEDERA_COMMON_TRANSACTION_TYPE.HTS_APPROVED_TOKEN,
+    APPROVED_NON_FUNGIBLE: HEDERA_COMMON_TRANSACTION_TYPE.HTS_APPROVED_NFT,
   };
 
   const APIButtonTitles: { API: API_NAMES; apiSwitchTitle: string; executeTitle: string }[] = [

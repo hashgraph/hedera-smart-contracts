@@ -169,6 +169,10 @@ export const prepareCSVHeaders = () => {
       key: 'transaction_time_stamp',
     },
     {
+      label: 'Query Reponse',
+      key: 'query_response',
+    },
+    {
       label: 'HashScan Explorer',
       key: 'hashscan_explorer',
     },
@@ -179,20 +183,41 @@ export const prepareCSVHeaders = () => {
  * @dev prepare data object for CSV exporting feature
  */
 export const prepareCSVData = (transactionList: ITransactionResult[], network: string) => {
+  const queryResponseKeys = [
+    'ownerOf',
+    'tokenURI',
+    'approves',
+    'approves',
+    'balanceOf',
+    'allowances',
+    'ercTokenInfo',
+  ];
+
   // sort transactionList based on order
   const sortedTransactionList = transactionList.sort((txA, txB) => {
     return txA.transactionTimeStamp - txB.transactionTimeStamp;
   });
 
-  return sortedTransactionList.map((transaction) => ({
-    status: transaction.status,
-    transaction_type: transaction.transactionType,
-    contract_address: transaction.sessionedContractAddress,
-    transaction_time_stamp: new Date(transaction.transactionTimeStamp).toLocaleString(),
-    reques_type: transaction.readonly ? 'QUERY' : 'TRANSACTION',
-    transaction_hash: transaction.readonly ? 'N/A' : transaction.txHash,
-    hashscan_explorer: transaction.readonly
-      ? 'N/A'
-      : `https://hashscan.io/${network}/transaction/${transaction.txHash}`,
-  }));
+  return sortedTransactionList.map((transaction) => {
+    // prepare query responses
+    let queryResponse;
+    queryResponseKeys.forEach((key) => {
+      if ((transaction as any)[key] && transaction.readonly) {
+        queryResponse = JSON.stringify((transaction as any)[key]).replaceAll(',', ';');
+      }
+    });
+
+    return {
+      status: transaction.status,
+      query_response: queryResponse || 'N/A',
+      transaction_type: transaction.transactionType,
+      contract_address: transaction.sessionedContractAddress,
+      reques_type: transaction.readonly ? 'QUERY' : 'TRANSACTION',
+      transaction_hash: transaction.readonly ? 'N/A' : transaction.txHash,
+      transaction_time_stamp: new Date(transaction.transactionTimeStamp).toLocaleString(),
+      hashscan_explorer: transaction.readonly
+        ? 'N/A'
+        : `https://hashscan.io/${network}/transaction/${transaction.txHash}`,
+    };
+  });
 };

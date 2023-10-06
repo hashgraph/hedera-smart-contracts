@@ -31,10 +31,14 @@ import { handleAPIErrors } from '@/components/common/methods/handleAPIErrors';
 import { mintParamFields } from '@/utils/contract-interactions/erc/erc20/constant';
 import { useUpdateTransactionResultsToLocalStorage } from '@/hooks/useUpdateLocalStorage';
 import { TransactionResultTable } from '@/components/common/components/TransactionResultTable';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import useFilterTransactionsByContractAddress from '@/hooks/useFilterTransactionsByContractAddress';
 import { TRANSACTION_PAGE_SIZE } from '@/components/contract-interaction/hts/shared/states/commonStates';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components/common/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 
 interface PageProps {
   baseContract: Contract;
@@ -101,8 +105,8 @@ const Mint = ({ baseContract }: PageProps) => {
         setTransactionResults,
         transactionHash: txHash,
         transactionResultStorageKey,
-        transactionType: 'ERC20-MINT',
         sessionedContractAddress: currentContractAddress,
+        transactionType: HEDERA_COMMON_TRANSACTION_TYPE.ERC20_MINT,
       });
       return;
     } else {
@@ -113,12 +117,11 @@ const Mint = ({ baseContract }: PageProps) => {
           status: 'success',
           txHash: txHash as string,
           transactionResultStorageKey,
-          transactionType: 'ERC20-MINT',
           mintedAmount: mintParams.amount,
           transactionTimeStamp: Date.now(),
           receiverAddress: mintParams.recipient,
-
           sessionedContractAddress: currentContractAddress,
+          transactionType: HEDERA_COMMON_TRANSACTION_TYPE.ERC20_MINT,
         },
       ]);
 
