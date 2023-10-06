@@ -32,12 +32,16 @@ import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxRes
 import { SharedSigningKeysComponent } from '../../../shared/components/SigningKeysForm';
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { HederaTokenKeyTypes, TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
-import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { manageTokenInfomation } from '@/api/hedera/hts-interactions/tokenManagement-interactions';
+import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 import {
   DEFAULT_TOKEN_EXIPIRY_VALUE,
   htsUpdateTokenInfoParamFields,
@@ -75,6 +79,7 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
     { API: 'UPDATE_EXPIRY', apiSwitchTitle: 'Token Exipry', executeTitle: 'Update Token Expiry' },
     { API: 'UPDATE_KEYS', apiSwitchTitle: 'Token Keys', executeTitle: 'Update Token Keys' },
   ];
+
   const tokenInfoFields = useMemo(() => {
     switch (APIMethods) {
       case 'UPDATE_INFO':
@@ -86,6 +91,7 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
         return ['second', 'autoRenewAccount', 'autoRenewPeriod'];
     }
   }, [APIMethods]);
+
   const initialParamValues = {
     name: '',
     memo: '',
@@ -124,6 +130,12 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
     'FEE',
     'PAUSE',
   ] as IHederaTokenServiceKeyType[];
+
+  const transactionTypeMap = {
+    UPDATE_INFO: HEDERA_COMMON_TRANSACTION_TYPE.HTS_FREEZE_TOKEN,
+    UPDATE_EXPIRY: HEDERA_COMMON_TRANSACTION_TYPE.HTS_REVOKE_KYC,
+    UPDATE_KEYS: HEDERA_COMMON_TRANSACTION_TYPE.HTS_UNFREEZE_TOKEN,
+  };
 
   const initialKeyValues = keyTypeArrays.map((keyType) => ({
     keyType: keyType,
@@ -257,8 +269,8 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
         setTransactionResults,
         transactionResultStorageKey,
         tokenAddress: hederaTokenAddress,
+        transactionType: transactionTypeMap[APIMethods],
         sessionedContractAddress: currentContractAddress,
-        transactionType: `HTS-${APIMethods.replace('_', '-')}`,
       });
       return;
     } else {
@@ -271,8 +283,8 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
           tokenAddress: hederaTokenAddress,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
+          transactionType: transactionTypeMap[APIMethods],
           sessionedContractAddress: currentContractAddress,
-          transactionType: `HTS-${APIMethods.replace('_', '-')}`,
         },
       ]);
 

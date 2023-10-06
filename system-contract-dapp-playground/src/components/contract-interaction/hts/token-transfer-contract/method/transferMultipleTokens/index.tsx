@@ -29,7 +29,6 @@ import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { ISmartContractExecutionResult, ITransactionResult } from '@/types/contract-interactions/shared';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
@@ -37,9 +36,10 @@ import useFilterTransactionsByContractAddress from '../../../../../../hooks/useF
 import { htsMultiTokensTransferParamFields } from '@/utils/contract-interactions/HTS/token-transfer/paramFieldConstant';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
-  transferFungibleTokens,
-  transferNonFungibleTokens,
-} from '@/api/hedera/hts-interactions/tokenTransfer-interactions';
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 import {
   FungibleParamValue,
   NonFungibleParamValue,
@@ -51,6 +51,10 @@ import {
   SharedFormInputField,
   SharedExecuteButtonWithFee,
 } from '../../../shared/components/ParamInputForm';
+import {
+  transferFungibleTokens,
+  transferNonFungibleTokens,
+} from '@/api/hedera/hts-interactions/tokenTransfer-interactions';
 
 interface PageProps {
   baseContract: Contract;
@@ -242,10 +246,10 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
         setTransactionResults,
         err: transactionResult.err,
         transactionResultStorageKey,
-        transactionType: 'HTS-TOKENS-TRANSFER',
         sessionedContractAddress: currentContractAddress,
         tokenAddress: commonParamValues.hederaTokenAddress,
         transactionHash: transactionResult.transactionHash,
+        transactionType: HEDERA_COMMON_TRANSACTION_TYPE.HTS_TOKENS_TRANSFER,
       });
       return;
     } else {
@@ -257,10 +261,10 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
           status: 'success',
           transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
-          transactionType: 'HTS-TOKENS-TRANSFER',
           sessionedContractAddress: currentContractAddress,
           tokenAddress: commonParamValues.hederaTokenAddress,
           txHash: transactionResult.transactionHash as string,
+          transactionType: HEDERA_COMMON_TRANSACTION_TYPE.HTS_TOKENS_TRANSFER,
         },
       ]);
 

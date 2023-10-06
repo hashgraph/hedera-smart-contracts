@@ -37,6 +37,7 @@ import { handleRetrievingTransactionResultsFromLocalStorage } from '@/components
 import {
   CONTRACT_NAMES,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
 } from '@/utils/common/constants';
 
@@ -120,9 +121,9 @@ const ERC721BalanceOf = ({ baseContract }: PageProps) => {
               status: 'success',
               transactionResultStorageKey,
               transactionTimeStamp: Date.now(),
-              transactionType: 'ERC721-BALANCE-OF',
               txHash: generatedRandomUniqueKey(9), // acts as a key of the transaction
               sessionedContractAddress: currentContractAddress,
+              transactionType: HEDERA_COMMON_TRANSACTION_TYPE.ERC721_BALANCE_OF,
               balanceOf: {
                 owner: accountAddress,
                 balance: Number(balanceOfRes),

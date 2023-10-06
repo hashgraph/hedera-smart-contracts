@@ -24,19 +24,23 @@ import { useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { ITransactionResult } from '@/types/contract-interactions/shared';
-import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
+import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
-import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { SharedFormInputField, SharedExecuteButton } from '../../../shared/components/ParamInputForm';
 import { grantTokenKYCToAccount } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
+import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { htsGrantTokenKYCParamFields } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
+import {
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
 
 interface PageProps {
   baseContract: Contract;
@@ -121,9 +125,9 @@ const GrantTokenKYC = ({ baseContract }: PageProps) => {
         setTransactionResults,
         transactionResultStorageKey,
         tokenAddress: hederaTokenAddress,
-        transactionType: 'HTS-GRANT-KYC',
         accountAddress: grantingKYCAccountAddress,
         sessionedContractAddress: currentContractAddress,
+        transactionType: HEDERA_COMMON_TRANSACTION_TYPE.HTS_GRANT_KYC,
       });
       return;
     } else {
@@ -133,12 +137,12 @@ const GrantTokenKYC = ({ baseContract }: PageProps) => {
         {
           status: 'success',
           transactionResultStorageKey,
-          transactionType: 'HTS-GRANT-KYC',
           transactionTimeStamp: Date.now(),
           tokenAddress: hederaTokenAddress,
           txHash: transactionHash as string,
           accountAddress: grantingKYCAccountAddress,
           sessionedContractAddress: currentContractAddress,
+          transactionType: HEDERA_COMMON_TRANSACTION_TYPE.HTS_GRANT_KYC,
         },
       ]);
 

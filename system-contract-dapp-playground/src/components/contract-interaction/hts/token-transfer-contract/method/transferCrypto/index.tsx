@@ -32,14 +32,18 @@ import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxRes
 import { SharedExecuteButtonWithFee } from '../../../shared/components/ParamInputForm';
 import { transferCrypto } from '@/api/hedera/hts-interactions/tokenTransfer-interactions';
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
-import { CONTRACT_NAMES, HEDERA_TRANSACTION_RESULT_STORAGE_KEYS } from '@/utils/common/constants';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
 import { prepareCryptoTransferList, prepareTokenTransferList } from './helpers/prepareCryptoTransferValues';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
-  CryptoTransferParam,
+  CONTRACT_NAMES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
+  HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
+} from '@/utils/common/constants';
+import {
   TokenTransferParam,
+  CryptoTransferParam,
   generateInitialTokenTransferParamValues,
 } from './helpers/generateInitialValues';
 
@@ -248,8 +252,8 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         transactionResultStorageKey,
-        transactionType: 'HTS-CRYPTO-TRANSFER',
         sessionedContractAddress: currentContractAddress,
+        transactionType: HEDERA_COMMON_TRANSACTION_TYPE.HTS_CRYPTO_TRANSFER,
       });
       return;
     } else {
@@ -261,8 +265,8 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
           transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
-          transactionType: 'HTS-CRYPTO-TRANSFER',
           sessionedContractAddress: currentContractAddress,
+          transactionType: HEDERA_COMMON_TRANSACTION_TYPE.HTS_CRYPTO_TRANSFER,
         },
       ]);
 

@@ -39,6 +39,7 @@ import {
   CONTRACT_NAMES,
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
   HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
 } from '@/utils/common/constants';
@@ -122,11 +123,14 @@ const HederaExchangeRateMethods = ({ baseContract }: PageProps) => {
         err,
         toaster,
         transactionHash,
-        transactionType: API,
         setTransactionResults,
         transactionResultStorageKey,
         initialAmount: paramValues.amountToConvert,
         sessionedContractAddress: currentContractAddress,
+        transactionType:
+          API === 'BAR_TO_CENT'
+            ? HEDERA_COMMON_TRANSACTION_TYPE.HIP475_BAR_TO_CENT
+            : HEDERA_COMMON_TRANSACTION_TYPE.HIP475_CENT_TO_BAR,
       });
       return;
     } else {
@@ -136,13 +140,16 @@ const HederaExchangeRateMethods = ({ baseContract }: PageProps) => {
         {
           status: 'success',
           APICalled: API,
-          transactionType: API,
           transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
           initialAmount: paramValues.amountToConvert,
           convertedAmount: convertedAmount.toString(),
           sessionedContractAddress: currentContractAddress,
+          transactionType:
+            API === 'BAR_TO_CENT'
+              ? HEDERA_COMMON_TRANSACTION_TYPE.HIP475_BAR_TO_CENT
+              : HEDERA_COMMON_TRANSACTION_TYPE.HIP475_CENT_TO_BAR,
         },
       ]);
 

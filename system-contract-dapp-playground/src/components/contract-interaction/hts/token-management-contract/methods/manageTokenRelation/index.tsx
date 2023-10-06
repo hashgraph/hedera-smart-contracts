@@ -41,13 +41,14 @@ import {
   CONTRACT_NAMES,
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
 } from '@/utils/common/constants';
 import {
-  SharedExecuteButton,
-  SharedExecuteButtonWithFee,
   SharedFormButton,
+  SharedExecuteButton,
   SharedFormInputField,
+  SharedExecuteButtonWithFee,
 } from '../../../shared/components/ParamInputForm';
 
 interface PageProps {
@@ -116,6 +117,13 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
     transactionResults,
     currentContractAddress
   );
+
+  const transactionTypeMap = {
+    FREEZE: HEDERA_COMMON_TRANSACTION_TYPE.HTS_FREEZE_TOKEN,
+    REVOKE_KYC: HEDERA_COMMON_TRANSACTION_TYPE.HTS_REVOKE_KYC,
+    UNFREEZE: HEDERA_COMMON_TRANSACTION_TYPE.HTS_UNFREEZE_TOKEN,
+    DISSOCIATE_TOKEN: HEDERA_COMMON_TRANSACTION_TYPE.HTS_DISSOCIATE_TOKEN,
+  };
 
   /** @dev handle adding metadata */
   const handleModifyTokenAddresses = (type: 'ADD' | 'REMOVE', removingFieldKey?: string) => {
@@ -219,8 +227,8 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         transactionResultStorageKey,
+        transactionType: transactionTypeMap[API],
         tokenAddress: paramValues.hederaTokenAddress,
-        transactionType: `HTS-${API.replace('_', '-')}`,
         sessionedContractAddress: currentContractAddress,
       });
       return;
@@ -233,8 +241,8 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
           transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
           txHash: transactionHash as string,
+          transactionType: transactionTypeMap[API],
           tokenAddress: paramValues.hederaTokenAddress,
-          transactionType: `HTS-${API.replace('_', '-')}`,
           sessionedContractAddress: currentContractAddress,
         },
       ]);

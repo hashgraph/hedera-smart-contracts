@@ -42,6 +42,7 @@ import {
 import {
   CONTRACT_NAMES,
   HEDERA_BRANDING_COLORS,
+  HEDERA_COMMON_TRANSACTION_TYPE,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
 } from '@/utils/common/constants';
 
@@ -96,6 +97,15 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
     TOKEN_EXPIRY: 'TokenExpiryInfo',
     DEFAULT_KYC_STATUS: 'TokenDefaultKycStatus',
     DEFAULT_FREEZE_STATUS: 'TokenDefaultFreezeStatus',
+  };
+
+  const transactionTypeMap = {
+    TOKEN_TYPE: HEDERA_COMMON_TRANSACTION_TYPE.HTS_QUERY_TOKEN_TYPE,
+    TOKEN_KEYS: HEDERA_COMMON_TRANSACTION_TYPE.HTS_QUERY_TOKEN_KEYS,
+    CUSTOM_FEES: HEDERA_COMMON_TRANSACTION_TYPE.HTS_QUERY_CUSTOM_FEES,
+    TOKEN_EXPIRY: HEDERA_COMMON_TRANSACTION_TYPE.HTS_QUERY_TOKEN_EXPIRY,
+    DEFAULT_KYC_STATUS: HEDERA_COMMON_TRANSACTION_TYPE.HTS_QUERY_DEFAULT_KYC_STATUS,
+    DEFAULT_FREEZE_STATUS: HEDERA_COMMON_TRANSACTION_TYPE.HTS_QUERY_DEFAULT_FREEZE_STATUS,
   };
 
   const APIButtonTitles: { API: API_NAMES; apiSwitchTitle: string; executeTitle: any }[] = [
@@ -189,10 +199,10 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
         keyTypeCalled: keyType,
         err: tokenInfoResult.err,
         transactionResultStorageKey,
+        transactionType: transactionTypeMap[API],
         tokenAddress: paramValues.hederaTokenAddress,
         sessionedContractAddress: currentContractAddress,
         transactionHash: tokenInfoResult.transactionHash,
-        transactionType: `HTS-QUERY-${API.replace('_', '-')}`,
       });
       return;
     } else {
@@ -236,10 +246,10 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
           tokenInfo: cachedTokenInfo,
           transactionResultStorageKey,
           transactionTimeStamp: Date.now(),
+          transactionType: transactionTypeMap[API],
           tokenAddress: paramValues.hederaTokenAddress,
           sessionedContractAddress: currentContractAddress,
           txHash: tokenInfoResult.transactionHash as string,
-          transactionType: `HTS-QUERY-${API.replace('_', '-')}`,
         },
       ]);
 

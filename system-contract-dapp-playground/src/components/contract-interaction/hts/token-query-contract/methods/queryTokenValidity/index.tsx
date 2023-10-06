@@ -38,6 +38,7 @@ import {
   CONTRACT_NAMES,
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_INPUT_BOX_SIZES,
+  HEDERA_COMMON_TRANSACTION_TYPE,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
   HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
 } from '@/utils/common/constants';
@@ -112,9 +113,9 @@ const QueryTokenValidity = ({ baseContract }: PageProps) => {
         transactionHash,
         setTransactionResults,
         transactionResultStorageKey,
-        transactionType: 'HTS-IS-TOKEN',
         tokenAddress: paramValues.hederaTokenAddress,
         sessionedContractAddress: currentContractAddress,
+        transactionType: HEDERA_COMMON_TRANSACTION_TYPE.HTS_QUERY_IS_TOKEN,
       });
       return;
     } else {
@@ -125,11 +126,11 @@ const QueryTokenValidity = ({ baseContract }: PageProps) => {
           status: 'success',
           transactionResultStorageKey,
           isToken: Number(IsToken) === 1,
-          transactionType: 'HTS-IS-TOKEN',
           txHash: transactionHash as string,
           transactionTimeStamp: Date.now(),
           tokenAddress: paramValues.hederaTokenAddress,
           sessionedContractAddress: currentContractAddress,
+          transactionType: HEDERA_COMMON_TRANSACTION_TYPE.HTS_QUERY_IS_TOKEN,
         },
       ]);
 
