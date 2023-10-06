@@ -22,7 +22,9 @@
     │   └──utils/
     │      └── common/
     │
-    ├── contracts-info/
+    ├── preprequisite-check/
+    │   └──contracts-info/
+    │   └──scripts/
     │
     ├── docs/
     │
@@ -32,8 +34,6 @@
     │   │   └── icons/
     │   │   └── socials/
     │   └── brandings/
-    │
-    ├── scripts/
     │
     ├── src/
     │   ├── api/

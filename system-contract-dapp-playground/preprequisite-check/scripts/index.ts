@@ -23,7 +23,7 @@ const path = require('path');
 const getHederaSmartContractAssetsFunc = require('../contracts-info');
 
 /** @dev resolves the root path of the hedera smart contracts repo */
-const HederaSmartContractsRootPath = path.resolve(__dirname, '..', '..');
+const HederaSmartContractsRootPath = path.resolve(__dirname, '..', '..', '..');
 
 if (
   !fs.existsSync(`${HederaSmartContractsRootPath}/artifacts`) ||
