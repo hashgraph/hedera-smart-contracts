@@ -60,6 +60,7 @@ const Events = {
 
 const Path = {
   CRYPTO_MATH: 'contracts/solidity/cryptomath/CryptoMath.sol:CryptoMath',
+  BLOCK_INFO: 'contracts/solidity/block/BlockInfo.sol:BlockInfo',
   ERC20Mock: 'contracts/erc-20/ERC20Mock.sol:ERC20Mock',
   ERC721Mock: 'contracts/erc-721/ERC721Mock.sol:ERC721Mock',
   HIP583_ERC20Mock: 'contracts/hip-583/ERC20Mock.sol:ERC20Mock',
@@ -68,6 +69,7 @@ const Path = {
 }
 
 const Contract = {
+  BlockInfo: 'BlockInfo',
   ERC20Mock: 'ERC20Mock',
   TokenCreateContract: 'TokenCreateContract',
   DiamondCutFacet: 'DiamondCutFacet',
