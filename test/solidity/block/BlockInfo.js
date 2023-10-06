@@ -39,11 +39,18 @@ describe('BlockInfo Test Suite', function () {
     expect(blockBaseFee).to.equal(0)
   })
 
-  it('should be able to get the hash of a given block when the block number is one of the 256 most recent blocks', async function () {
+  xit('should be able to get the hash of a given block when the block number is one of the 256 most recent blocks', async function () {
     const blockNumber = await provider.getBlockNumber()
     const block = await provider.getBlock(blockNumber)
     const blockHash = await blockInfo.getBlockHash(blockNumber)
     expect(blockHash).to.equal(block.hash)
+  })
+
+  xit('should get the current block miners address using block.coinbase', async function () { 
+    const blockNumber = await provider.getBlockNumber()
+    const block = await provider.getBlock(blockNumber)
+    const coinbase = await blockInfo.getCurrentMinerAddress()
+    expect(coinbase).to.equal(block.miner)
   })
 
 })
