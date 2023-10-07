@@ -25,3 +25,4 @@ Offers a concise and accessible overview of the code components as well as provi
   - [\_\_tests\_\_/](./architecture/codebase-structure/2.codebase-walkthrough/__tests__/index.md)
   - [prerequisite-check/](./architecture/codebase-structure/2.codebase-walkthrough/preprequisite-check/index.md)
   - [public/](./architecture/codebase-structure/2.codebase-walkthrough/public/index.md)
+  - [config-files](./architecture/codebase-structure/2.codebase-walkthrough/config-files/index.md)
