@@ -1,6 +1,6 @@
 # Source code documentation
 
-## Codebase Walkthrough - `__tests__` folder
+## Codebase Walkthrough - **\_\_tests\_\_** folder
 
 ### a. Overview
 
@@ -8,7 +8,7 @@ The DApp employs the Jest testing framework, with its unit tests organized withi
 
 **_Note_**: It's important to note that the structure of the `__tests__/` folder is designed to closely resemble that of the `src/api/` folder, with the exception of certain API folders that are primarily focused on client-browser interactions.
 
-Here is a breakdown of the test folders:
+Here is a breakdown of the **\_\_tests\_\_** folders:
 
 - `ethers/` folder: Contains unit tests for functionalities connected to the `ethers.js` library. This includes tasks such as contract deployment, the generation of `ethers.Contract` instances, and related operations.
 
