@@ -31,5 +31,6 @@ Offers a concise and accessible overview of the code components as well as provi
     - [fonts/](./architecture/codebase-structure/2.codebase-walkthrough/src/fonts/index.md)
     - [hooks/](./architecture/codebase-structure/2.codebase-walkthrough/src/hooks/index.md)
     - [libs/](./architecture/codebase-structure/2.codebase-walkthrough/src/libs/index.md)
+    - [sections/](./architecture/codebase-structure/2.codebase-walkthrough/src/sections/index.md)
     - [styles/](./architecture/codebase-structure/2.codebase-walkthrough/src/styles/index.md)
   - [config-files](./architecture/codebase-structure/2.codebase-walkthrough/config-files/index.md)
