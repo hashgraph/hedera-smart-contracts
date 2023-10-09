@@ -35,4 +35,5 @@ Offers a concise and accessible overview of the code components as well as provi
     - [styles/](./architecture/codebase-structure/2.codebase-walkthrough/src/styles/index.md)
     - [types/](./architecture/codebase-structure/2.codebase-walkthrough/src/types/index.md)
     - [utils/](./architecture/codebase-structure/2.codebase-walkthrough/src/utils/index.md)
+    - [middleware.ts/](./architecture/codebase-structure/2.codebase-walkthrough/src/middleware.md)
   - [config-files](./architecture/codebase-structure/2.codebase-walkthrough/config-files/index.md)
