@@ -30,7 +30,7 @@ describe('BlockInfo Test Suite', function () {
     provider = ethers.getDefaultProvider();
     
     const factory = await ethers.getContractFactory(Constants.Path.BLOCK_INFO)
-    blockInfo = await factory.deploy()
+    blockInfo = await factory.  deploy()
   })
 
   // EIP-1559 does not apply to Hedera
@@ -49,8 +49,16 @@ describe('BlockInfo Test Suite', function () {
   xit('should get the current block miners address using block.coinbase', async function () { 
     const blockNumber = await provider.getBlockNumber()
     const block = await provider.getBlock(blockNumber)
-    const coinbase = await blockInfo.getCurrentMinerAddress()
+    const coinbase = await blockInfo.getMinerAddress()
     expect(coinbase).to.equal(block.miner)
+  })
+
+  xit('should get the current block prevrandao using block.prevrandao', async function () { 
+    const blockNumber = await provider.getBlockNumber()
+    const block = await provider.getBlock(blockNumber)
+    const prevrandao = await blockInfo.getBlockPrevrando()
+    console.log(`Prevrandao: ${prevrandao}`)
+    // expect(prevrandao).to.equal(block.prevrandao)
   })
 
 })
