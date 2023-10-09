@@ -34,6 +34,7 @@ Offers a concise and accessible overview of the code components as well as provi
       - [activity/](./architecture/codebase-structure/2.codebase-walkthrough/src/components/activity/index.md)
       - [background-gradients/](./architecture/codebase-structure/2.codebase-walkthrough/src/components/background-gradients/index.md)
       - [common/](./architecture/codebase-structure/2.codebase-walkthrough/src/components/common/index.md)
+      - [contract-interactions/](./architecture/codebase-structure/2.codebase-walkthrough/src/components/contract-interactions/index.md)
       - [footer/](./architecture/codebase-structure/2.codebase-walkthrough/src/components/footer/index.md)
       - [navbar/](./architecture/codebase-structure/2.codebase-walkthrough/src/components/navbar/index.md)
       - [sidebar/](./architecture/codebase-structure/2.codebase-walkthrough/src/components/sidebar/index.md)
