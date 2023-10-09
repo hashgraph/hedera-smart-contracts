@@ -32,6 +32,7 @@ Offers a concise and accessible overview of the code components as well as provi
     - components/
 
       - [activity/](./architecture/codebase-structure/2.codebase-walkthrough/src/components/activity/index.md)
+      - [background-gradients/](./architecture/codebase-structure/2.codebase-walkthrough/src/components/background-gradients/index.md)
 
     - [fonts/](./architecture/codebase-structure/2.codebase-walkthrough/src/fonts/index.md)
     - [hooks/](./architecture/codebase-structure/2.codebase-walkthrough/src/hooks/index.md)
