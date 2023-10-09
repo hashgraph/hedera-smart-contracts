@@ -11,7 +11,11 @@ contract BlockInfo {
         return blockhash(blockNumber);
     }
 
-    function getCurrentMinerAddress() public view returns (address) {
+    function getMinerAddress() public view returns (address) {
         return block.coinbase;
+    }
+
+    function getBlockPrevrando() external view returns (uint256) {
+        return block.prevrandao;
     }
 }
