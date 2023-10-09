@@ -26,8 +26,13 @@ Offers a concise and accessible overview of the code components as well as provi
   - [prerequisite-check/](./architecture/codebase-structure/2.codebase-walkthrough/preprequisite-check/index.md)
   - [public/](./architecture/codebase-structure/2.codebase-walkthrough/public/index.md)
   - src/
+
     - [api/](./architecture/codebase-structure/2.codebase-walkthrough/src/api/index.md)
     - [app/](./architecture/codebase-structure/2.codebase-walkthrough/src/app/index.md)
+    - components/
+
+      - [activity/](./architecture/codebase-structure/2.codebase-walkthrough/src/components/activity/index.md)
+
     - [fonts/](./architecture/codebase-structure/2.codebase-walkthrough/src/fonts/index.md)
     - [hooks/](./architecture/codebase-structure/2.codebase-walkthrough/src/hooks/index.md)
     - [libs/](./architecture/codebase-structure/2.codebase-walkthrough/src/libs/index.md)
@@ -36,4 +41,5 @@ Offers a concise and accessible overview of the code components as well as provi
     - [types/](./architecture/codebase-structure/2.codebase-walkthrough/src/types/index.md)
     - [utils/](./architecture/codebase-structure/2.codebase-walkthrough/src/utils/index.md)
     - [middleware.ts/](./architecture/codebase-structure/2.codebase-walkthrough/src/middleware.md)
+
   - [config-files](./architecture/codebase-structure/2.codebase-walkthrough/config-files/index.md)
