@@ -38,6 +38,7 @@ Offers a concise and accessible overview of the code components as well as provi
       - [navbar/](./architecture/codebase-structure/2.codebase-walkthrough/src/components/navbar/index.md)
       - [sidebar/](./architecture/codebase-structure/2.codebase-walkthrough/src/components/sidebar/index.md)
       - [toast/](./architecture/codebase-structure/2.codebase-walkthrough/src/components/toast/index.md)
+      - [wallet-popup/](./architecture/codebase-structure/2.codebase-walkthrough/src/components/wallet-popup/index.md)
 
     - [fonts/](./architecture/codebase-structure/2.codebase-walkthrough/src/fonts/index.md)
     - [hooks/](./architecture/codebase-structure/2.codebase-walkthrough/src/hooks/index.md)
