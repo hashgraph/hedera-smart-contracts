@@ -19,6 +19,7 @@
  */
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
+const { BigNumber } = require('ethers');
 const Constants = require('../../constants')
 
 describe('BlockInfo Test Suite', function () {
@@ -54,11 +55,51 @@ describe('BlockInfo Test Suite', function () {
   })
 
   xit('should get the current block prevrandao using block.prevrandao', async function () { 
-    const blockNumber = await provider.getBlockNumber()
-    const block = await provider.getBlock(blockNumber)
-    const prevrandao = await blockInfo.getBlockPrevrando()
-    console.log(`Prevrandao: ${prevrandao}`)
-    // expect(prevrandao).to.equal(block.prevrandao)
+    const prevrandao = await blockInfo.getBlockPrevrando()  
+    expect(BigNumber.isBigNumber(prevrandao)).to.be.true
   })
 
+  xit('should get the current block difficulty using block.difficulty (replaced by prevrandao)', async function () { 
+    const difficulty = await blockInfo.getBlockDifficulty()  
+    expect(BigNumber.isBigNumber(difficulty)).to.be.true
+  })
+
+  it('should get the block gas limit', async function () { 
+    const gasLimit = await blockInfo.getBlockGasLimit()
+    expect(gasLimit).to.equal(9021272)
+  })
+
+  it('should get the block number', async function () { 
+    const blockNumber = await blockInfo.getBlockNumber()
+    expect(BigNumber.isBigNumber(blockNumber)).to.equal(true)
+  })
+
+  it('should get the block timestamp', async function () { 
+    const timeStamp = await blockInfo.getBlockTimestamp()
+    console.log(`Time stampe: ${timeStamp}`)
+    expect(isTimestamp(timeStamp)).to.equal(true)
+  })
+
+
 })
+
+function isTimestamp(value) {
+  // Ensure the value is a BigNumber
+  if (!BigNumber.isBigNumber(value)) {
+      return false;
+  }
+
+  const date = new Date(value * 1000);
+  if (isNaN(date)) {
+      return false;
+  }
+
+  const year = date.getUTCFullYear();
+  return year >= 1970 && year <= 2030;
+}
+
+
+
+
+
+

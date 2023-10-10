@@ -18,4 +18,21 @@ contract BlockInfo {
     function getBlockPrevrando() external view returns (uint256) {
         return block.prevrandao;
     }
+
+    function getBlockGasLimit() external view returns (uint256) {
+        return block.gaslimit;
+    }
+
+    function getBlockNumber() external view returns (uint256) {
+        return block.number;
+    }
+
+    function getBlockTimestamp() external view returns (uint256) {
+        return block.timestamp;
+    }
+
+    // should behave like prevrandao
+    function getBlockDifficulty() external view returns (uint256) {
+        return block.difficulty;
+    }
 }
