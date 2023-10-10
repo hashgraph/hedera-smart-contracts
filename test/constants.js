@@ -109,6 +109,12 @@ const GAS_LIMIT_8000000 = { gasLimit: 8000000 }
 const TOKEN_NAME = 'tokenName'
 const TOKEN_SYMBOL = 'tokenSymbol'
 const TX_SUCCESS_CODE = 22
+const SECOND = WEI = 1
+const MINUTE = 60 * SECOND
+const HOUR = 60 * MINUTE
+const DAY = 24 * HOUR
+const WEEK = 7 * DAY
+const GWEI = 1e9
 
 module.exports = {
   Events,
@@ -122,4 +128,11 @@ module.exports = {
   TOKEN_NAME,
   TOKEN_SYMBOL,
   TX_SUCCESS_CODE,
+  SECOND,
+  MINUTE,
+  HOUR,
+  DAY,
+  WEEK,
+  WEI,
+  GWEI
 }
