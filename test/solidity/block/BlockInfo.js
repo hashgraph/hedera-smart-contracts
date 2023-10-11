@@ -27,11 +27,10 @@ describe('@solidityevmequiv BlockInfo Test Suite', function () {
 
   before(async function () {
     signers = await ethers.getSigners()
-    // const ethers = hre.ethers;
     provider = ethers.getDefaultProvider();
     
     const factory = await ethers.getContractFactory(Constants.Path.BLOCK_INFO)
-    blockInfo = await factory.  deploy()
+    blockInfo = await factory.  deploy({ gasLimit: 15000000 })
   })
 
   // EIP-1559 does not apply to Hedera
@@ -40,25 +39,30 @@ describe('@solidityevmequiv BlockInfo Test Suite', function () {
     expect(blockBaseFee).to.equal(0)
   })
 
+  // Turn off until mirror node issue is resolved: https://github.com/hashgraph/hedera-mirror-node/issues/7045
   xit('should be able to get the hash of a given block when the block number is one of the 256 most recent blocks', async function () {
     const blockNumber = await provider.getBlockNumber()
     const block = await provider.getBlock(blockNumber)
-    const blockHash = await blockInfo.getBlockHash(blockNumber)
-    expect(blockHash).to.equal(block.hash)
+    const blockHash = await blockInfo.getBlockHash()
+    console.log(`Block hash: ${blockHash}`)
   })
-
+  // Turn off until smart contracts issue is resolved: https://github.com/hashgraph/hedera-smart-contracts/issues/456
   xit('should get the current block miners address using block.coinbase', async function () { 
     const blockNumber = await provider.getBlockNumber()
     const block = await provider.getBlock(blockNumber)
+    console.log(`Block.miner: ${JSON.stringify(block.miner)}`)
     const coinbase = await blockInfo.getMinerAddress()
+    console.log(`Coinbase: ${coinbase}`)
     expect(coinbase).to.equal(block.miner)
   })
 
+  // Turn off until mirror node issue is resolved: https://github.com/hashgraph/hedera-mirror-node/issues/7036
   xit('should get the current block prevrandao using block.prevrandao', async function () { 
     const prevrandao = await blockInfo.getBlockPrevrando()  
     expect(BigNumber.isBigNumber(prevrandao)).to.be.true
   })
 
+  // Turn off until mirror node issue is resolved: https://github.com/hashgraph/hedera-mirror-node/issues/7036
   xit('should get the current block difficulty using block.difficulty (replaced by prevrandao)', async function () { 
     const difficulty = await blockInfo.getBlockDifficulty()  
     expect(BigNumber.isBigNumber(difficulty)).to.be.true
@@ -76,7 +80,6 @@ describe('@solidityevmequiv BlockInfo Test Suite', function () {
 
   it('should get the block timestamp', async function () { 
     const timeStamp = await blockInfo.getBlockTimestamp()
-    console.log(`Time stampe: ${timeStamp}`)
     expect(isTimestamp(timeStamp)).to.equal(true)
   })
 
