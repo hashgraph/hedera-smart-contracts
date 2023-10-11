@@ -21,7 +21,7 @@ Offers a concise and accessible overview of the code components as well as provi
 - Codebase Walkthrough
 
   - [\_\_tests\_\_/](./codebase-structure/2.codebase-walkthrough/__tests__/index.md)
-  - [prerequisite-check/](./codebase-structure/2.codebase-walkthrough/preprequisite-check/index.md)
+  - [prerequisite-check/](./codebase-structure/2.codebase-walkthrough/prerequisite-check/index.md)
   - [public/](./codebase-structure/2.codebase-walkthrough/public/index.md)
   - src/
 
@@ -56,7 +56,7 @@ Here is a step-by-step guide for adding a new contract to the DApp:
 
 1. **Prerequisite Check**
 
-   Begin by ensuring that the contract assets are available in the `prerequisite-check` directory. Follow the tutorial [here](./codebase-structure/2.codebase-walkthrough/preprequisite-check/index.md#b-adding-new-system-contracts-to-the-dapp) for detailed instructions.
+   Begin by ensuring that the contract assets are available in the `prerequisite-check` directory. Follow the tutorial [here](./codebase-structure/2.codebase-walkthrough/prerequisite-check/index.md#b-adding-new-system-contracts-to-the-dapp) for detailed instructions.
 
 2. **New Dedicated Route**
 

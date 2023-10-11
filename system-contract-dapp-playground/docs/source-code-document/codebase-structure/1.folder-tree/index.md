@@ -22,7 +22,7 @@
     │   └──utils/
     │      └── common/
     │
-    ├── preprequisite-check/
+    ├── prerequisite-check/
     │   └──contracts-info/
     │   └──scripts/
     │

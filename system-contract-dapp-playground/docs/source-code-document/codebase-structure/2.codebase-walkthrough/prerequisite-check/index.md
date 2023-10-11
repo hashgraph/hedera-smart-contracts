@@ -16,7 +16,7 @@ Here is a breakdown of the **prerequisite-check** folder:
 
 #### b1. Contract Assets
 
-When adding new system contracts to the DApp, the first crucial step is to include the corresponding `contract assets` object within the returned value of the `getHederaSmartContractAssets` function. You can find this function in the [contracts-info/index.ts](../../../../../../preprequisite-check/contracts-info/index.ts) file.
+When adding new system contracts to the DApp, the first crucial step is to include the corresponding `contract assets` object within the returned value of the `getHederaSmartContractAssets` function. You can find this function in the [contracts-info/index.ts](../../../../../../prerequisite-check/contracts-info/index.ts) file.
 
 For example, consider a `contract assets` object corresponding to `TokenCreateCustomContract`, structured as follows:
 
