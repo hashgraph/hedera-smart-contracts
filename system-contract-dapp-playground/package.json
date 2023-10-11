@@ -17,7 +17,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prerequisite-check": "ts-node ./scripts/prerequisite-check.ts",
+    "prerequisite-check": "ts-node ./prerequisite-check/scripts/index.ts",
     "test:watch": "jest --watch",
     "test": "jest"
   },

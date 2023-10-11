@@ -10,7 +10,7 @@
 - [Hedera accounts](https://docs.hedera.com/hedera/getting-started/introduction#create-hedera-portal-profile-faucet)
 - [prettier pluggin](https://prettier.io/) (recommended)
 
-**_Notes_**: If your IDE does not support the Prettier plugin, please follow the [code formatter guidelines](GUIDELINES.md#code-formatter) to maintain the consistent code format.
+**_Notes_**: If your IDE does not support the Prettier plugin, please follow the [code formatter guidelines](TEST_SETUP.md#code-formatter) to maintain the consistent code format.
 
 ## Building and Running the Project
 
@@ -80,4 +80,3 @@ Before committing your new changes, please run command below to format all files
 ```
 
 **_Notes_**: This is applicable only in cases where you haven't configured prettier within your IDE.
-
