@@ -1,4 +1,4 @@
-name: Tests CI
+name: Solidity Tests CI
 
 on:
   pull_request:
