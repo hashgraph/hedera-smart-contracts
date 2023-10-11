@@ -99,6 +99,7 @@ const Contract = {
   HRCContract: 'HRCContract',
   ExchangeRateMock: 'ExchangeRateMock',
   PrngSystemContract: 'PrngSystemContract',
+  Concatenation: 'Concatenation',
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
