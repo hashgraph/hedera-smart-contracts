@@ -101,6 +101,8 @@ const Contract = {
   PrngSystemContract: 'PrngSystemContract',
   Concatenation: 'Concatenation',
   Errors: 'Errors',
+  Transaction: 'Transaction',
+  Secondary: 'Secondary',
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
