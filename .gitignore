@@ -5,8 +5,8 @@ cache
 # ignore non repo contract related aritifacts
 artifacts/@openzeppelin
 artifacts/build-info
-artifacts/lib
-artifacts/**/**.dbg.json
+artifacts/contracts
+
 .openzeppelin/unknown-298.json
 
 test-results.*
