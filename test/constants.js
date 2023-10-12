@@ -105,6 +105,8 @@ const Contract = {
   Transaction: 'Transaction',
   MessageFrameAddresses: 'MessageFrameAddresses',
   New: 'New',
+  AddressContract: 'AddressContract',
+  Recipient: 'Recipient',
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
