@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.9;
 
-import '../../contracts/hts-precompile/IHederaTokenService.sol';
-import '../../contracts/hts-precompile/HederaResponseCodes.sol';
+import '../../../contracts/hts-precompile/IHederaTokenService.sol';
+import '../../../contracts/hts-precompile/HederaResponseCodes.sol';
 
 import '../mocks/hts-precompile/HederaFungibleToken.sol';
 
@@ -94,7 +94,7 @@ contract HederaNonFungibleTokenUtils is CommonUtils, HederaTokenUtils {
             vm.expectRevert(bytes("PRECHECK_FAILED"));
         }
 
-        /// @dev no need to register newly created HederaNonFungibleToken in this context as the constructor will call HtsPrecompileMock#registerHederaNonFungibleToken
+        /// @dev no need to register newly created HederaNonFungibleToken in this context as the constructor will call HtsSystemContractMock#registerHederaNonFungibleToken
         HederaNonFungibleToken hederaNonFungibleToken = new HederaNonFungibleToken(nftTokenInfo);
 
         if (expectedResponseCode == HederaResponseCodes.SUCCESS) {

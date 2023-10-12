@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.9;
 
-import '../../contracts/hts-precompile/IHederaTokenService.sol';
-import '../../contracts/hts-precompile/HederaResponseCodes.sol';
+import '../../../contracts/hts-precompile/IHederaTokenService.sol';
+import '../../../contracts/hts-precompile/HederaResponseCodes.sol';
 
 import '../mocks/hts-precompile/HederaFungibleToken.sol';
 
@@ -86,7 +86,7 @@ contract HederaFungibleTokenUtils is CommonUtils, HederaTokenUtils {
 
         IHederaTokenService.HederaToken memory token = fungibleTokenInfo.tokenInfo.token;
 
-        /// @dev no need to register newly created HederaFungibleToken in this context as the constructor will call HtsPrecompileMock#registerHederaFungibleToken
+        /// @dev no need to register newly created HederaFungibleToken in this context as the constructor will call HtsSystemContractMock#registerHederaFungibleToken
         HederaFungibleToken hederaFungibleToken = new HederaFungibleToken(fungibleTokenInfo);
         tokenAddress = address(hederaFungibleToken);
 

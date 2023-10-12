@@ -3,8 +3,8 @@ pragma solidity ^0.8.9;
 
 import '../../contracts/hts-precompile/IHederaTokenService.sol';
 import '../../contracts/hts-precompile/KeyHelper.sol';
-import '../../contracts/utils/HederaTokenUtils.sol';
-import '../../contracts/utils/HederaFungibleTokenUtils.sol';
+import './utils/HederaTokenUtils.sol';
+import './utils/HederaFungibleTokenUtils.sol';
 
 contract HederaFungibleTokenTest is HederaTokenUtils, HederaFungibleTokenUtils {
 

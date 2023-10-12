@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.9;
 
-import '../../hts-precompile/IHederaTokenService.sol';
+import '../../../../contracts/hts-precompile/IHederaTokenService.sol';
 
 interface IHtsPrecompileMock is IHederaTokenService {
 

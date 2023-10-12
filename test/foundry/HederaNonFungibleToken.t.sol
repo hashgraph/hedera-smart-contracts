@@ -4,10 +4,10 @@ pragma solidity ^0.8.9;
 import '../../contracts/hts-precompile/IHederaTokenService.sol';
 import '../../contracts/hts-precompile/HederaResponseCodes.sol';
 import '../../contracts/hts-precompile/KeyHelper.sol';
-import '../../contracts/mocks/hts-precompile/HederaNonFungibleToken.sol';
-import '../../contracts/mocks/hts-precompile/HtsPrecompileMock.sol';
+import './mocks/hts-precompile/HederaNonFungibleToken.sol';
+import './mocks/hts-precompile/HtsSystemContractMock.sol';
 
-import '../../contracts/utils/HederaNonFungibleTokenUtils.sol';
+import './utils/HederaNonFungibleTokenUtils.sol';
 import '../../contracts/libraries/Constants.sol';
 
 contract HederaNonFungibleTokenTest is HederaNonFungibleTokenUtils {

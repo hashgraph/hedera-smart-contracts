@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.9;
 
-import '../../../contracts/hts-precompile/HederaResponseCodes.sol';
+import '../../../../contracts/hts-precompile/HederaResponseCodes.sol';
 import '../hts-precompile/HederaFungibleToken.sol';
 import '../hts-precompile/HederaNonFungibleToken.sol';
 import '../interfaces/IHtsPrecompileMock.sol';
 
-library Validation {
+library HederaTokenValidation {
 
     /// checks if token exists and has not been deleted and returns appropriate response code
     function _validateToken(

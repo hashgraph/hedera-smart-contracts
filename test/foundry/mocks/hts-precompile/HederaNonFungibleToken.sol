@@ -3,15 +3,15 @@ pragma solidity ^0.8.9;
 
 import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 
-import '../../../contracts/hts-precompile/HederaResponseCodes.sol';
-import '../../../contracts/hts-precompile/IHederaTokenService.sol';
-import './HtsPrecompileMock.sol';
-import '../../../contracts/libraries/Constants.sol';
+import '../../../../contracts/hts-precompile/HederaResponseCodes.sol';
+import '../../../../contracts/hts-precompile/IHederaTokenService.sol';
+import './HtsSystemContractMock.sol';
+import '../../../../contracts/libraries/Constants.sol';
 
 contract HederaNonFungibleToken is ERC721, Constants {
     error HtsPrecompileError(int64 responseCode);
 
-    HtsPrecompileMock internal constant HtsPrecompile = HtsPrecompileMock(HTS_PRECOMPILE);
+    HtsSystemContractMock internal constant HtsPrecompile = HtsSystemContractMock(HTS_PRECOMPILE);
 
     bool public constant IS_FUNGIBLE = false; /// @dev if HederaFungibleToken then true
 
@@ -30,8 +30,8 @@ contract HederaNonFungibleToken is ERC721, Constants {
         HtsPrecompile.registerHederaNonFungibleToken(sender, _nftTokenInfo);
     }
 
-    /// @dev the HtsPrecompileMock should do precheck validation before calling any function with this modifier
-    ///      the HtsPrecompileMock has priveleged access to do certain operations
+    /// @dev the HtsSystemContractMock should do precheck validation before calling any function with this modifier
+    ///      the HtsSystemContractMock has priveleged access to do certain operations
     modifier onlyHtsPrecompile() {
         require(msg.sender == HTS_PRECOMPILE, 'NOT_HTS_PRECOMPILE');
         _;
@@ -109,7 +109,7 @@ contract HederaNonFungibleToken is ERC721, Constants {
         _setApprovalForAll(owner, operator, approved);
     }
 
-    // standard ERC721 functions overriden for HtsPrecompileMock prechecks:
+    // standard ERC721 functions overriden for HtsSystemContractMock prechecks:
     function approve(address to, uint256 tokenId) public override {
         address sender = msg.sender;
         address spender = to;

@@ -3,14 +3,14 @@ pragma solidity ^0.8.9;
 
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 
-import '../../../contracts/hts-precompile/HederaResponseCodes.sol';
-import '../../../contracts/hts-precompile/IHederaTokenService.sol';
-import './HtsPrecompileMock.sol';
-import '../../../contracts/libraries/Constants.sol';
+import '../../../../contracts/hts-precompile/HederaResponseCodes.sol';
+import '../../../../contracts/hts-precompile/IHederaTokenService.sol';
+import './HtsSystemContractMock.sol';
+import '../../../../contracts/libraries/Constants.sol';
 
 contract HederaFungibleToken is ERC20, Constants {
     error HtsPrecompileError(int64 responseCode);
-    HtsPrecompileMock internal constant HtsPrecompile = HtsPrecompileMock(HTS_PRECOMPILE);
+    HtsSystemContractMock internal constant HtsPrecompile = HtsSystemContractMock(HTS_PRECOMPILE);
 
     bool public constant IS_FUNGIBLE = true; /// @dev if HederaNonFungibleToken then false
     uint8 internal immutable _decimals;
@@ -24,8 +24,8 @@ contract HederaFungibleToken is ERC20, Constants {
         _mint(treasury, uint(uint64(_fungibleTokenInfo.tokenInfo.totalSupply)));
     }
 
-    /// @dev the HtsPrecompileMock should do precheck validation before calling any function with this modifier
-    ///      the HtsPrecompileMock has priveleged access to do certain operations
+    /// @dev the HtsSystemContractMock should do precheck validation before calling any function with this modifier
+    ///      the HtsSystemContractMock has priveleged access to do certain operations
     modifier onlyHtsPrecompile() {
         require(msg.sender == HTS_PRECOMPILE, 'NOT_HTS_PRECOMPILE');
         _;
@@ -74,7 +74,7 @@ contract HederaFungibleToken is ERC20, Constants {
         _approve(account, spender, amount);
     }
 
-    // standard ERC20 functions overriden for HtsPrecompileMock prechecks:
+    // standard ERC20 functions overriden for HtsSystemContractMock prechecks:
     function approve(address spender, uint256 amount) public override returns (bool) {
         int64 responseCode = HtsPrecompile.preApprove(msg.sender, spender, amount);
         if (responseCode != HederaResponseCodes.SUCCESS) {
