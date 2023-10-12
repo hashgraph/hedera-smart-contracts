@@ -66,6 +66,38 @@ describe("@solidityevmequiv Encoding", function() {
         expect(result).to.equal(packedData);
     });
 
+    it("Should execute the add function and return the correct result to illustrate abi.encodeWitSelector", async function() {
+        const a = 5;
+        const b = 7;
+
+        // Verify that the add function returns the correct result
+        const sum = await encodingContract.add(a, b);        
+        expect(sum).to.equal(a + b); 
+
+        // Call the encodeAddFunction
+        const encodedData = await encodingContract.encodeAddFunction(a, b);
+
+        // Extract the selector and encoded arguments
+        const selector = encodedData.slice(0, 10);
+        const encodedArgs = "0x" + encodedData.slice(10); 
+        
+        // Verify the selector matches the add function's selector
+        expect(selector).to.equal(encodingContract.interface.getSighash("add"));
+
+        const [decodedA, decodedB] = ethers.utils.defaultAbiCoder.decode(["uint256", "uint256"], encodedArgs);
+        expect(decodedA).to.equal(a);
+        expect(decodedB).to.equal(b);   
+        
+        const tx = await encodingContract.executeAddFunction(a, b);
+        const receipt = await tx.wait(); 
+
+        expect(receipt.events.length).to.equal(1);
+        expect(receipt.events[0].event).to.equal("Added");
+
+        const eventResult = receipt.events[0].args[0].toNumber();
+        expect(eventResult).to.equal(a + b);
+    });
+    
 });
 
 function encodePacked(address, amount, data) {
