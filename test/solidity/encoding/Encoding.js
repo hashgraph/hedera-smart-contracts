@@ -20,7 +20,7 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("Encoding", function() {
+describe("@solidityevmequiv Encoding", function() {
     let encodingContract;
 
     const addressData = "0x1234567890123456789012345678901234567890";
@@ -56,5 +56,23 @@ describe("Encoding", function() {
         expect(decodedData[1]).to.equal(uintData);
     });
 
+    it("Should encode pack data", async function() {
+        const address = "0x1234567890123456789012345678901234567890";
+        const amount = 100;
+        const data = "Hello, World!";
+    
+        const packedData = encodePacked(address, amount, data);
+        const result = await encodingContract.getPackedData(address, amount, data);
+        expect(result).to.equal(packedData);
+    });
 
 });
+
+function encodePacked(address, amount, data) {
+    const addressBytes = ethers.utils.arrayify(address);
+    const amountBytes = ethers.utils.zeroPad(ethers.utils.arrayify(amount), 32);
+    const dataBytes = ethers.utils.toUtf8Bytes(data);
+
+    return ethers.utils.hexConcat([addressBytes, amountBytes, dataBytes]);
+}
+

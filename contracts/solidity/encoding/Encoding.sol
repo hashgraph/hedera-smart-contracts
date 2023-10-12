@@ -18,4 +18,7 @@ contract Encoding {
         return abi.encode(_address, _uint);
     }
 
+    function getPackedData(address _addr, uint256 _amount, string memory _data) public pure returns (bytes memory) {
+        return abi.encodePacked(_addr, _amount, _data);
+    }
 }
