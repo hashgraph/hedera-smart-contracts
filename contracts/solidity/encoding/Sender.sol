@@ -10,12 +10,21 @@ contract Sender {
         receiver = Receiver(_receiver);
     }
 
-    function sendData(uint256 data) public {
-        // Using abi.encodeWithSignature to create the data payload
+    function sendDataEncodeWithSignature(uint256 data) public {
         bytes memory payload = abi.encodeWithSignature("receiveData(uint256)", data);
 
-        // Making an external call using the encoded payload
         (bool success,) = address(receiver).call(payload);
-        require(success, "External call failed");
+        require(success, "External call using abi.encodeWithSignature failed");
     }
+
+    function sendDataEncodeCall(uint256 data) public {
+        bytes memory payload = abi.encodeCall(
+            Receiver(address(receiver)).receiveData,
+            (data)
+        );
+
+        (bool success,) = address(receiver).call(payload);
+        require(success, "External call using abi.encodeCall failed"); 
+    }
+
 }

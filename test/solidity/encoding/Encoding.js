@@ -107,13 +107,22 @@ describe("@solidityevmequiv Encoding", function() {
         expect(eventResult).to.equal(a + b);
     });
 
-    it("Should call receiveData in Receiver contract via Sender", async function() {
+    it("Should call receiveData in Receiver contract via Sender using abi.encodeWithSignature", async function() {
         const dataToSend = 12345;
 
-        await expect(sender.sendData(dataToSend))
+        await expect(sender.sendDataEncodeWithSignature(dataToSend))
+            .to.emit(receiver, "ReceivedData")
+            .withArgs(dataToSend);
+    });
+    
+    it("Should call receiveData in Receiver contract via Sender using abi.encodeCall", async function() {
+        const dataToSend = 12345;
+
+        await expect(sender.sendDataEncodeCall(dataToSend))
             .to.emit(receiver, "ReceivedData")
             .withArgs(dataToSend);
     });    
+    
     
 });
 
