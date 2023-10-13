@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.20;
 
-import { Secondary } from "./Secondary.sol";
+import { MessageFrameAddresses } from "./MessageFrameAddresses.sol";
 
 contract Transaction {
     string public message;
     uint myInteger;
-    address secondaryAddr;
-    Secondary secondaryContract;
+    address messageFrameAddresses;
+    MessageFrameAddresses mfContract;
     event MsgValue(uint256);
 
-    constructor(address secondaryAddress) {
-       secondaryAddr = secondaryAddress;
-       secondaryContract = Secondary(payable(secondaryAddress));
+    constructor(address addr) {
+       messageFrameAddresses = addr;
+       mfContract = MessageFrameAddresses(payable(addr));
     }
 
     function checkGasleft() external view returns (uint256) {
@@ -43,10 +43,10 @@ contract Transaction {
     }
 
     function getTxOriginFromSecondary() external view returns (address) {
-        return secondaryContract.getTxOrigin();
+        return mfContract.getTxOrigin();
     }
 
     function getMsgSenderFromSecondary() external view returns (address) {
-        return secondaryContract.getMsgSender();
+        return mfContract.getMsgSender();
     }
 }

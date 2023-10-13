@@ -102,7 +102,7 @@ const Contract = {
   Concatenation: 'Concatenation',
   Errors: 'Errors',
   Transaction: 'Transaction',
-  Secondary: 'Secondary',
+  MessageFrameAddresses: 'MessageFrameAddresses',
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.20;
 
-contract Secondary {
+contract MessageFrameAddresses {
     function getTxOrigin() external view returns (address) {
         return tx.origin;
     }
