@@ -23,7 +23,7 @@ const { ethers } = require('hardhat')
 const Constants = require('../../constants')
 const Utils = require('../../hts-precompile/utils')
 
-describe('PrngSystemContract tests', function () {
+describe('Transaction tests', function () {
   let contractTr, contractTrAddr, wallet, mfContract, senderWalletAddr
 
   before(async function () {
