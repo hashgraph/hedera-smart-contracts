@@ -21,7 +21,7 @@ const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
 describe("@solidityevmequiv Encoding", function() {
-    let encodingContract;
+    let encodingContract, receiver, sender;
 
     const addressData = "0x1234567890123456789012345678901234567890";
     const uintData = 123456789;
@@ -30,6 +30,15 @@ describe("@solidityevmequiv Encoding", function() {
         const Encoding = await ethers.getContractFactory("Encoding");
         encodingContract = await Encoding.deploy();
         await encodingContract.deployed();
+
+        const Receiver = await ethers.getContractFactory("contracts/solidity/encoding/Receiver.sol:Receiver");
+        receiver = await Receiver.deploy();
+        await receiver.deployed();
+
+        const Sender = await ethers.getContractFactory("Sender");
+        sender = await Sender.deploy(receiver.address);
+        await sender.deployed();        
+
     });
 
     it("Should decode data", async function() {
@@ -97,6 +106,14 @@ describe("@solidityevmequiv Encoding", function() {
         const eventResult = receipt.events[0].args[0].toNumber();
         expect(eventResult).to.equal(a + b);
     });
+
+    it("Should call receiveData in Receiver contract via Sender", async function() {
+        const dataToSend = 12345;
+
+        await expect(sender.sendData(dataToSend))
+            .to.emit(receiver, "ReceivedData")
+            .withArgs(dataToSend);
+    });    
     
 });
 
