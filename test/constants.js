@@ -100,6 +100,7 @@ const Contract = {
   ExchangeRateMock: 'ExchangeRateMock',
   PrngSystemContract: 'PrngSystemContract',
   Concatenation: 'Concatenation',
+  Errors: 'Errors',
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
