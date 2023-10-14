@@ -7,7 +7,7 @@ import '../../../../contracts/hts-precompile/HederaResponseCodes.sol';
 import '../../../../contracts/hts-precompile/KeyHelper.sol';
 import './HederaFungibleToken.sol';
 import './HederaNonFungibleToken.sol';
-import '../../../../contracts/NoDelegateCall.sol';
+import '../../../../contracts/base/NoDelegateCall.sol';
 import '../../../../contracts/libraries/Constants.sol';
 
 import '../interfaces/IHtsPrecompileMock.sol';
