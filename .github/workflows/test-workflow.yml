@@ -9,9 +9,9 @@ on:
 
 env:
   RELAY_IMAGE_TAG: 0.31.1
-  NETWORK_NODE_IMAGE_TAG: 0.42.0-alpha.0
-  HAVEGED_IMAGE_TAG: 0.42.0-alpha.0
-  MIRROR_IMAGE_TAG: 0.88.0
+  NETWORK_NODE_IMAGE_TAG: 0.42.1
+  HAVEGED_IMAGE_TAG: 0.42.1
+  MIRROR_IMAGE_TAG: 0.89.0
 
 jobs:
   acceptance-workflow:
@@ -80,7 +80,7 @@ jobs:
           check_run_disabled: true
           comment_mode: off
           json_thousands_separator: ','
-          junit_files: "test-*.xml"
+          junit_files: 'test-*.xml'
 
       - name: Stop the local node
         if: ${{ !cancelled() }}
