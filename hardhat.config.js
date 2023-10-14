@@ -1,6 +1,7 @@
 require('@nomicfoundation/hardhat-chai-matchers')
 require('@nomiclabs/hardhat-ethers')
 require('@openzeppelin/hardhat-upgrades')
+require('@nomicfoundation/hardhat-foundry');
 const {
   OPERATOR_ID_A,
   OPERATOR_KEY_A,
