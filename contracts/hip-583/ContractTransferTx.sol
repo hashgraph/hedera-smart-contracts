@@ -8,6 +8,8 @@ contract ContractTransferTx {
     function transferTo(address payable _to, uint256 _amount) public {
         require(address(this).balance > _amount, "Insufficient contract balance");
 
+        _to.call{value : _amount}("");
+
         emit Transferred(msg.sender, _to, _amount);
     }
 
