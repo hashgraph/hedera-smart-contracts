@@ -59,6 +59,7 @@ const Events = {
 }
 
 const Path = {
+  CRYPTO_MATH: 'contracts/solidity/cryptomath/CryptoMath.sol:CryptoMath',
   ERC20Mock: 'contracts/erc-20/ERC20Mock.sol:ERC20Mock',
   ERC721Mock: 'contracts/erc-721/ERC721Mock.sol:ERC721Mock',
   HIP583_ERC20Mock: 'contracts/hip-583/ERC20Mock.sol:ERC20Mock',
