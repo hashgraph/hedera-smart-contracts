@@ -117,6 +117,7 @@ const Contract = {
   Defaults: "Defaults",
   NonExisting: "NonExisting",
   NonExtDup: "NonExtDup",
+  ControlStructures: 'ControlStructures'
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
