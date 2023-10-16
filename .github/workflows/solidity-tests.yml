@@ -13,7 +13,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  BlockInfo:
+  SolidityEquivalence:
     name: BlockInfo Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
