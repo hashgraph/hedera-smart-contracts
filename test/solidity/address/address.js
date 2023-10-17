@@ -37,7 +37,7 @@ describe('Solidity Address tests:', function () {
         topUpRes.wait();
     })
 
-    it('<address>.balance', async function () {
+    it('should verify solidity functionality: <address>.balance', async function () {
         const balance = await wallet.getBalance();
         const res = await contract.getAddressBalance(walletAddr);
         
@@ -45,7 +45,7 @@ describe('Solidity Address tests:', function () {
         expect(tinybarToWeibar(res).gt(0)).to.be.true;
     })
 
-    it('<address>.code', async function () {
+    it('should verify solidity functionality: <address>.code', async function () {
         const walletAddrCodeRes = await contract.getAddressCode(walletAddr);
         const contractAddrCodeRes = await contract.getAddressCode(contract.address);
 
@@ -56,7 +56,7 @@ describe('Solidity Address tests:', function () {
         expect(contractAddrCodeRes.length > 2).to.be.true;
     })
 
-    it('<address>.codehash', async function () {
+    it('should verify solidity functionality: <address>.codehash', async function () {
         const walletAddrCodeRes = await contract.getAddressCode(walletAddr);
         const contractAddrCodeRes = await contract.getAddressCode(contract.address);
         const hashedWalletCode = ethers.utils.keccak256(walletAddrCodeRes);
@@ -68,7 +68,7 @@ describe('Solidity Address tests:', function () {
         expect(hashedContractCode).to.equal(contractAddrResHash);
     })
 
-    it('<address payable>.transfer', async function () {
+    it('should verify solidity functionality: <address payable>.transfer', async function () {
         const recipientBalanceInitial = await ethers.provider.getBalance(recipientAddr);
 
         const tx = await contract.transferTo(recipientAddr, TRANSFER_AMOUNT);
@@ -81,7 +81,7 @@ describe('Solidity Address tests:', function () {
         expect(recipientBalanceInitial.lt(recipientBalanceFinal)).to.be.true;
     })
 
-    it('<address payable>.send', async function () {
+    it('should verify solidity functionality: <address payable>.send', async function () {
         const recipientBalanceInitial = await ethers.provider.getBalance(recipientAddr);
 
         const tx = await contract.sendTo(recipientAddr, TRANSFER_AMOUNT);
@@ -94,7 +94,7 @@ describe('Solidity Address tests:', function () {
         expect(recipientBalanceInitial.lt(recipientBalanceFinal)).to.be.true;
     })
 
-    it('<address>.call', async function () {
+    it('should verify solidity functionality: <address>.call', async function () {
         const recipientBalanceInitial = await ethers.provider.getBalance(recipientAddr);
 
         const tx = await contract.callAddr(recipientAddr, TRANSFER_AMOUNT);
@@ -107,7 +107,7 @@ describe('Solidity Address tests:', function () {
         expect(recipientBalanceInitial.lt(recipientBalanceFinal)).to.be.true;
     })
 
-    it('<address>.call -> with function signature', async function () {
+    it('should verify solidity functionality: <address>.call -> with function signature', async function () {
         const resTx = await contract.callAddrWithSig(recipientAddr, TRANSFER_AMOUNT, "getMessageValue()");
         const receipt = await resTx.wait();
         const data = receipt.events[0].data;
@@ -116,7 +116,7 @@ describe('Solidity Address tests:', function () {
         expect(value).to.equal(TRANSFER_AMOUNT);
     })
 
-    it('<address>.delegatecall', async function () {
+    it('should verify solidity functionality: <address>.delegatecall', async function () {
         const MESSAGE_FROM_ADDRESS = "Hello World from AddressContract!";
         const resTx = await contract.delegate(recipientAddr, "helloWorldMessage()");
         const receipt = await resTx.wait();
@@ -125,7 +125,7 @@ describe('Solidity Address tests:', function () {
         expect(message).to.equal(MESSAGE_FROM_ADDRESS);
     })
 
-    it('<address>.staticcall', async function () {
+    it('should verify solidity functionality: <address>.staticcall', async function () {
         const MY_NUMBER = 5;
         const resTx = await contract.staticCall(recipientAddr, "getNumber()");
         const receipt = await resTx.wait();
@@ -135,7 +135,7 @@ describe('Solidity Address tests:', function () {
         expect(myNumber).to.equal(MY_NUMBER);
     })
 
-    it('<address>.staticcall -> Try to set state', async function () {
+    it('should verify solidity functionality: <address>.staticcall -> Try to set state', async function () {
         try {
             const resTx = await contract.staticCallSet(recipientAddr, "setNumber(uint number)", 10);
             await resTx.wait();
