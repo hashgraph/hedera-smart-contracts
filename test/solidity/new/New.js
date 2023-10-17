@@ -25,9 +25,7 @@ const Constants = require('../../constants')
 describe('New tests', () => {
   let newContract
   const CONTRACT_ALPHA = 'Alpha'
-  const CONTRACT_BETA = 'Beta'
   const MESSAGE_ALPHA = 'Message from Alpha contract'
-  const MESSAGE_BETA = 'Message from Beta contract'
 
   before(async () => {
     const newContractFactory = await ethers.getContractFactory(
@@ -46,10 +44,24 @@ describe('New tests', () => {
   })
 
   it('Create new contract using `new` keyword with data', async () => {
-    await newContract.createContractWithData(CONTRACT_BETA, MESSAGE_BETA)
-    const newContractsInfo = await newContract.newContractsInfo(CONTRACT_BETA)
+    await newContract.createContractWithData(CONTRACT_ALPHA, MESSAGE_ALPHA)
+    const newContractsInfo = await newContract.newContractsInfo(CONTRACT_ALPHA)
 
     expect(ethers.utils.isAddress(newContractsInfo.contractAddr)).to.be.true
-    expect(newContractsInfo.message).to.eq(MESSAGE_BETA)
+    expect(newContractsInfo.message).to.eq(MESSAGE_ALPHA)
+  })
+
+  it('Create new contract using `new` keyword with salt', async () => {
+    const SALT = ethers.utils.formatBytes32String('salt')
+
+    await newContract.createContractWithSalt(
+      SALT,
+      CONTRACT_ALPHA,
+      MESSAGE_ALPHA
+    )
+    const newContractsInfo = await newContract.newContractsInfo(CONTRACT_ALPHA)
+
+    expect(ethers.utils.isAddress(newContractsInfo.contractAddr)).to.be.true
+    expect(newContractsInfo.message).to.eq(MESSAGE_ALPHA)
   })
 })

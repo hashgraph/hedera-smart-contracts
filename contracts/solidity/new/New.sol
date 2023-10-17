@@ -44,4 +44,13 @@ contract New {
             message: newTargetWithConstructor.message()
         });
     }
+
+    function createContractWithSalt(bytes32 salt, string calldata contractName, string calldata message) external {
+        TargetWithConstructor newContractsWithSalt = new TargetWithConstructor{salt: salt}(message);
+
+        newContractsInfo[contractName] = ContractInformation({
+            contractAddr: address(newContractsWithSalt),
+            message: newContractsWithSalt.message()
+        });
+    }
 }
