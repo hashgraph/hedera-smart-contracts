@@ -22,7 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../../constants')
 
-describe('New tests', () => {
+describe('@solidityequiv1 New tests', () => {
   let newContract
   const CONTRACT_ALPHA = 'Alpha'
   const MESSAGE_ALPHA = 'Message from Alpha contract'

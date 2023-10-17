@@ -2,7 +2,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const { SECOND, MINUTE, HOUR, DAY, WEEK } = require('../../constants')
 
-describe('Time Units tests', function () {
+describe('@solidityequiv3 Time Units tests', function () {
   let signers
   let contract
 

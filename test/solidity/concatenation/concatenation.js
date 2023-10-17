@@ -2,7 +2,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../../constants')
 
-describe('Concatenation', function () {
+describe('@solidityequiv2 Concatenation', function () {
     let signers;
     let contract;
     const first = 'first';

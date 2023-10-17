@@ -23,7 +23,7 @@ const { ethers } = require('hardhat')
 const Constants = require('../../constants')
 const Utils = require('../../hts-precompile/utils')
 
-describe('Transaction tests', function () {
+describe('@solidityequiv1 Transaction tests', function () {
   let contractTr, contractTrAddr, wallet, mfContract, senderWalletAddr
 
   before(async function () {
