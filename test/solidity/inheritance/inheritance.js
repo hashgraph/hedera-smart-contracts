@@ -28,19 +28,19 @@ describe('Crypto Inheritance tests', function () {
     await topUpRes.wait();
   })
 
-  it("this (current contract's type)", async function () {
+  it("it should confirm solidity functionality: this (current contract's type)", async function () {
     const mainThis = await contractMain.returnThis()
 
     expect(mainThis).to.equal(contractMainAddr)
   })
 
-  it('super', async function () {
+  it('it should confirm solidity functionality: super', async function () {
     const res = await contractMain.classIdentifier()
 
     expect(res).to.equal("Main")
   })
 
-  it('selfdestruct(address payable recipient)', async function () {
+  it('it should confirm solidity functionality: selfdestruct(address payable recipient)', async function () {
     const balanceBaseInitial = await contractBase.getBalance()
     expect(balanceBaseInitial).to.be.equal(0)
 
