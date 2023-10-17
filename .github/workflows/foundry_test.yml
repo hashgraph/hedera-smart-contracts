@@ -1,0 +1,46 @@
+name: Foundry Tests
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    strategy:
+      fail-fast: true
+
+    name: Foundry project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Use Node.js [18.15]
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.15
+          cache: npm
+
+      - name: Create .env file
+        run: cp local.env .env
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Run Forge build
+        run: |
+          forge --version
+          forge build
+        id: build
+
+      - name: Run Forge tests
+        run: |
+          forge test -vvv
+        id: test

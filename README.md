@@ -38,6 +38,8 @@ For further details on methods, hashes and availability please refer to [PRNG Pr
 
 This project is set up using the Hardhat development environment. To get started, please follow this [test setup guide](./TEST_SETUP.md).
 
+For using this project as a library in a Foundry project see [Foundry Testing](FOUNDRY_TESTING.md)
+
 ## Support
 
 If you have a question on how to use the product, please see our
@@ -63,4 +65,3 @@ to [oss@hedera.com](mailto:oss@hedera.com).
 ## Smart contracts - testing
 
 [Smart contracts tests - documentation](https://raw.githubusercontent.com/hashgraph/hedera-smart-contracts/main/test/README.md)
-

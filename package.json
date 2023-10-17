@@ -16,14 +16,28 @@
     "url": "https://github.com/hashgraph/hedera-smart-contracts/issues"
   },
   "homepage": "https://github.com/hashgraph/hedera-smart-contracts#readme",
+  "scripts": {
+    "forge:build": "forge build",
+    "forge:test": "forge test",
+    "forge:coverage": "forge coverage",
+    "forge:coverage:report": "forge coverage --report lcov",
+    "forge:coverage:html": "forge coverage --report lcov && genhtml lcov.info --branch-coverage --output-dir coverage",
+    "hh:compile": "hardhat compile",
+    "hh:test": "hardhat test",
+    "hedera:start": "npx @hashgraph/hedera-local start --limits=false --dev=true --balance=10000000",
+    "hedera:stop": "npx @hashgraph/hedera-local stop",
+    "prepare": "husky install"
+  },
   "devDependencies": {
     "@hashgraph/hedera-local": "2.13.0",
     "@hashgraph/sdk": "^2.25.0",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
+    "@nomicfoundation/hardhat-foundry": "^1.1.1",
     "@openzeppelin/contracts": "^4.9.3",
     "@openzeppelin/contracts-upgradeable": "^4.9.3",
     "@openzeppelin/hardhat-upgrades": "^1.22.1",
-    "hardhat": "^2.14.0",
+    "hardhat": "^2.17.2",
+    "husky": "^8.0.0",
     "mocha-junit-reporter": "^2.2.0",
     "mocha-multi-reporters": "^1.5.1",
     "prettier": "3.0.0"
@@ -33,4 +47,3 @@
     "dotenv": "^16.3.1"
   }
 }
-
