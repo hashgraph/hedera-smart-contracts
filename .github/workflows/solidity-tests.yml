@@ -1,7 +1,7 @@
 name: Solidity Equivalence Tests CI
 
 on:
-  workflow_dispatch:
+  workflow_call:
 
 concurrency:
   group: tests-${{ github.workflow }}-${{ github.head_ref || github.run_id }}
@@ -17,7 +17,7 @@ jobs:
     name: BlockInfo Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
-      testfilter: @solidityequiv
+      testfilter: '@solidityequiv'
 
 
   PublishResults:
