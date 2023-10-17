@@ -104,6 +104,7 @@ const Contract = {
   Errors: 'Errors',
   Transaction: 'Transaction',
   MessageFrameAddresses: 'MessageFrameAddresses',
+  New: 'New',
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
