@@ -108,6 +108,9 @@ const Contract = {
   AddressContract: 'AddressContract',
   Recipient: 'Recipient',
   Inheritance: 'Inheritance',
+  Functions: 'Functions',
+  FunctionsChild: 'FunctionsChild',
+  FunctionsParent: 'FunctionsParent',
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
