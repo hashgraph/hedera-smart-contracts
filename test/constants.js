@@ -105,6 +105,7 @@ const Contract = {
   Transaction: 'Transaction',
   MessageFrameAddresses: 'MessageFrameAddresses',
   New: 'New',
+  AssemblyAddress: 'AssemblyAddress',
   AddressContract: 'AddressContract',
   Recipient: 'Recipient',
   Inheritance: 'Inheritance',
