@@ -88,12 +88,6 @@ contract HederaNonFungibleToken is ERC721, Constants {
 
         _transfer(from, to, tokenId);
         responseCode = HederaResponseCodes.SUCCESS;
-        // if (getApproved(tokenId) == spender) {
-        //     _transfer(from, to, tokenId);
-        //     responseCode = HederaResponseCodes.SUCCESS;
-        // } else {
-        //     responseCode = HederaResponseCodes.INSUFFICIENT_TOKEN_BALANCE;
-        // }
     }
 
     /// @dev unlike fungible/ERC20 tokens this only allows for a single spender to be approved at any one time
