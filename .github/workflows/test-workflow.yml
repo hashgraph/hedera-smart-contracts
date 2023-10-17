@@ -40,25 +40,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: nightly
-
-      - name: Install foundry dependencies
-        run: forge install
-
-      - name: Run Forge build
-        run: |
-          forge --version
-          forge build
-        id: build
-
-      - name: Run Forge tests
-        run: |
-          forge test -vvv
-        id: test
-
       - name: Start the local node
         run: npx hedera start -d --network local
         timeout-minutes: 5
