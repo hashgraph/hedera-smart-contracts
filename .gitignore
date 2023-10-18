@@ -6,6 +6,7 @@ cache
 artifacts/@openzeppelin
 artifacts/build-info
 artifacts/contracts
+artifacts/
 .openzeppelin/unknown-298.json
 .env
 test-results.*

@@ -113,7 +113,8 @@ const Contract = {
   FunctionsChild: 'FunctionsChild',
   FunctionsParent: 'FunctionsParent',
   Scoping: 'Scoping',
-  Arithmetic: "Arithmetic"
+  Arithmetic: "Arithmetic",
+  Defaults: "Defaults",
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
