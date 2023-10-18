@@ -25,6 +25,7 @@ contract ControlStructures {
     }
 
     function testWhile(uint256 total) external pure returns(uint256) {
+        require(total < 100, "Cannot have more than 100 iterations");
         uint256 it = 0;
         while(++it < total) {}
 
@@ -32,6 +33,7 @@ contract ControlStructures {
     }
 
     function testDoWhile(uint256 total) external pure returns(uint256) {
+        require(total < 100, "Cannot have more than 100 iterations");
         uint256 it = 0;
         do {
             it++;
@@ -41,6 +43,7 @@ contract ControlStructures {
     }
 
     function testBreak(uint256 total, uint256 interception) external pure returns(uint256) {
+        require(total < 100, "Cannot have more than 100 iterations");
         uint256 it = 0;
         while(it++ < total) {
             if(it == interception) break;
@@ -50,6 +53,7 @@ contract ControlStructures {
     }
 
     function testContinue(uint256 total, uint256 interception) external pure returns(uint256) {
+        require(total < 100, "Cannot have more than 100 iterations");
         uint256 iterableSteps = 0;
         
         for(uint i=0; i < total; i++) {
@@ -61,6 +65,7 @@ contract ControlStructures {
     }
 
     function testFor(uint256 total) external pure returns(uint256) {
+        require(total < 100, "Cannot have more than 100 iterations");
         uint256 it = 0;
         for(uint i=0; i < total; i++) {
             it = i;
