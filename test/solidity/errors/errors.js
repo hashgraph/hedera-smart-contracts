@@ -23,17 +23,17 @@ const { ethers } = require('hardhat')
 const Constants = require('../../constants')
 
 describe('@solidityequiv2 Solidity Errors', function () {
-  let signers
   let contract
 
   before(async function () {
-    signers = await ethers.getSigners()
+    const factoryErrorsExternal = await ethers.getContractFactory(Constants.Contract.ErrorsExternal)
+    contractExternal = await factoryErrorsExternal.deploy()
 
     const factory = await ethers.getContractFactory(Constants.Contract.Errors)
-    contract = await factory.deploy()
+    contract = await factory.deploy(contractExternal.address)
   })
 
-  it('confirm assert works', async function () {
+  it('should confirm assert works', async function () {
     try {
       const res = await contract.assertCheck(1 == 1)
       expect(res).to.equal(true)
@@ -44,7 +44,7 @@ describe('@solidityequiv2 Solidity Errors', function () {
     }
   })
 
-  it('confirm require works', async function () {
+  it('should confirm require works', async function () {
     try {
         const resReverted = await contract.requireCheck(true)
         expect(resReverted).to.equal(true)
@@ -55,7 +55,7 @@ describe('@solidityequiv2 Solidity Errors', function () {
       }
   })
 
-  it('confirm revert works', async function () {
+  it('should confirm revert works', async function () {
     try {
         await contract.revertCheck()
     } catch (err) {
@@ -63,7 +63,7 @@ describe('@solidityequiv2 Solidity Errors', function () {
     }
   })
 
-  it('confirm revert with message works', async function () {
+  it('should confirm revert with message works', async function () {
     const message = "We unfortunalty need to revert this transaction"
     try {
         await contract.revertWithMessageCheck(message)
@@ -71,6 +71,42 @@ describe('@solidityequiv2 Solidity Errors', function () {
         expect(err.reason).to.exist
         expect(err.reason).to.equal(message)
     }
+  })
+
+  it('should confirm revert with custom error works', async function () {
+    try {
+      await contract.revertWithCustomError()
+    } catch (err) {
+        expect(err.code).to.equal('CALL_EXCEPTION')
+        expect(err.errorName).to.equal('InsufficientBalance')
+        expect(err.errorArgs.available).to.equal(ethers.BigNumber.from(1))
+        expect(err.errorArgs.required).to.equal(ethers.BigNumber.from(100))
+    }
+  })
+
+  it('should confirm try/catch with simple revert', async function () {
+      const tx = await contract.tryCatchWithSimpleRevert()
+      const receipt = await tx.wait()
+      expect(receipt).to.exist
+      expect(receipt.events[0].args.code).to.equal(0)
+      expect(receipt.events[0].args.message).to.equal('revertSimple')
+  })
+
+  it('should confirm try/catch revert with error message', async function () {
+    const message = "We unfortunalty need to revert this transaction"
+    const tx = await contract.tryCatchWithErrorMessageRevert(message)
+    const receipt = await tx.wait()
+    expect(receipt).to.exist
+    expect(receipt.events[0].args.code).to.equal(0)
+    expect(receipt.events[0].args.message).to.equal(message)
+  })
+
+  it('should confirm try/catch revert with panic', async function () {
+    const tx = await contract.tryCatchWithPanic()
+    const receipt = await tx.wait()
+    expect(receipt).to.exist
+    expect(receipt.events[0].args.code).to.equal(18)
+    expect(receipt.events[0].args.message).to.equal('panic')
   })
 
 })
