@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
-contract TestContract {
-
-    constructor() {}
-
+contract TestTryCatchContract {
     function myFunc(uint x) public pure returns (string memory) {
         require(x != 0, "require failed");
         return "my func was called";
@@ -13,10 +10,10 @@ contract TestContract {
 
 
 contract ControlStructures {
-    TestContract public test;
+    TestTryCatchContract private testContract;
 
     constructor() {
-        test = new TestContract();
+        testContract = new TestTryCatchContract();
     }
 
     function testIfElse(bool condition) external pure returns(bool) {
@@ -78,7 +75,7 @@ contract ControlStructures {
     }
 
     function testTryCatch(uint256 condition) external view returns(bool) {
-        try test.myFunc(condition) {
+        try testContract.myFunc(condition) {
             return true;
         } catch {
             return false;
