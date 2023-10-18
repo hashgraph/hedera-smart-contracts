@@ -22,7 +22,7 @@ const { ethers } = require('hardhat')
 const { BigNumber } = require('ethers');
 const Constants = require('../../constants')
 
-describe('@solidityevmequiv BlockInfo Test Suite', function () {
+describe('@solidityequiv1 BlockInfo Test Suite', function () {
   let blockInfo, provider, signers
 
   before(async function () {
