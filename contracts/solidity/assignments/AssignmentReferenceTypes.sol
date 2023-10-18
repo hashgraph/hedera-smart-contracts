@@ -14,11 +14,11 @@ contract AssignmentReferenceTypes {
         y[2] = 8;
     }
 
-    function testChangeReference(uint[5] storage y) internal {
+    function testChangeReference(uint[5] storage y) internal pure {
         y[3] = 10;
     }
 
-    function getSomeArray() external view returns(uint[5] memory){
+    function getSomeArray() external view returns(uint[5] memory) {
         return someArray;
     }
 }
