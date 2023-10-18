@@ -25,7 +25,7 @@ const Utils = require('../../hts-precompile/utils')
 
 const weibarTotinybar = (amount) => amount.div(Utils.tinybarToWeibarCoef)
 
-describe('Solidity Functions', function () {
+describe('@solidityequiv1 Solidity Functions', function () {
   let contract, contractAddr, contractChild, 
       contractChildAddr, contractParent, contractParentAddr
 
