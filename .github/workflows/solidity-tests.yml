@@ -1,7 +1,12 @@
-name: Solidity Equivalence Tests CI
+name: Solidity Equivalence Tests
 
 on:
-  workflow_call:
+  workflow_dispatch:
+    inputs:
+      filterTagOverride:
+        description: 'The Test filter tag to use for overrides'
+        required: false
+        type: string
 
 concurrency:
   group: tests-${{ github.workflow }}-${{ github.head_ref || github.run_id }}
@@ -13,18 +18,41 @@ permissions:
   pull-requests: write
 
 jobs:
-  SolidityEquivalence:
-    name: BlockInfo Test Suite
+  CustomFilterTagTest:
+    if: ${{ inputs.filterTagOverride != ''}}
+    name: ${{ inputs.filterTagOverride }} Tests
     uses: ./.github/workflows/test-workflow.yml
     with:
-      testfilter: '@solidityequiv'
+      testfilter: ${{ inputs.filterTagOverride }}
 
+  SolidityEquivalence1:
+    if: ${{ inputs.filterTagOverride == ''}}
+    name: Solidity Equivalence Suite 1
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: '@solidityequiv1'
+
+  SolidityEquivalence2:
+    if: ${{ inputs.filterTagOverride == ''}}
+    name: Solidity Equivalence Suite 2
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: '@solidityequiv2'
+
+  SolidityEquivalence3:
+    if: ${{ inputs.filterTagOverride == ''}}
+    name: Solidity Equivalence Suite 3
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: '@solidityequiv3'
 
   PublishResults:
     name: Publish Results
     if: ${{ !cancelled() }}
     needs:
-      - BlockInfo
+      - SolidityEquivalence1
+      - SolidityEquivalence2
+      - SolidityEquivalence3
 
     runs-on: ubuntu-latest
     steps:

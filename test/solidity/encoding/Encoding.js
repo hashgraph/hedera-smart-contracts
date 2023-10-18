@@ -20,7 +20,7 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("@solidityevmequiv Encoding", function() {
+describe("@solidityevmequiv1 Encoding", function() {
     let encodingContract, receiver, sender;
 
     const addressData = "0x1234567890123456789012345678901234567890";

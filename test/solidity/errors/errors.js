@@ -2,7 +2,7 @@ const { expect, assert } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../../constants')
 
-describe('Solidity Errors', function () {
+describe('@solidityequiv2 Solidity Errors', function () {
   let signers
   let contract
 
