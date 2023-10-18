@@ -93,8 +93,12 @@ describe('@solidityevmequiv2 Solidity Defaults', function () {
     expect(res).to.equal(ethers.utils.hexZeroPad(ethers.utils.hexlify(0), 20))
   })
 
-  // mapping cannot be returned from solidity
-  xit('confirm solidity functionality: mapping', async function () {
-    
+  it('confirm solidity functionality: mapping', async function () {
+    const res1 = await contract.strUintMap('')
+    const res2 = await contract.addrBoolMap(contract.address)
+    const res3 = await contract.bytesBytesMap(10)
+    expect(res1).to.equal(ethers.BigNumber.from(0))
+    expect(res2).to.equal(false)
+    expect(res3).to.equal('0x')
   })
 })

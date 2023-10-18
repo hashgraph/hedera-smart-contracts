@@ -59,6 +59,10 @@ contract Defaults {
         bytes[] bytesArr;
     }
 
+    mapping(string => uint) public strUintMap;
+    mapping(address => bool) public addrBoolMap;
+    mapping(int => bytes) public bytesBytesMap;
+
     function getUintDefaults() external pure returns (UintDefaults memory) {
         UintDefaults memory defaults;
         return defaults;
