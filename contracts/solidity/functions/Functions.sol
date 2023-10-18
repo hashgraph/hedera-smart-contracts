@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 
 interface ContractInterface {
-  function sumThemUp (int a, int b) external returns (int);
+  function sumThemUp (uint a, uint b) external returns (uint);
 }
 
 contract Functions is ContractInterface {
@@ -50,7 +50,7 @@ contract Functions is ContractInterface {
         });
     }
 
-    function sumThemUp (int a, int) external pure override returns (int) {
+    function sumThemUp(uint a, uint) external pure override returns (uint) {
         return a;
     }
 
