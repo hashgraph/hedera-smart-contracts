@@ -43,6 +43,11 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
     // HTS token -> paused
     mapping(address => TokenConfig) internal _tokenPaused;
 
+    // - - - - - - EVENTS - - - - - -
+
+    // emitted for convenience of having the token address accessible in a Hardhat environment
+    event TokenCreated(address indexed token);
+
     constructor() NoDelegateCall(HTS_PRECOMPILE) {}
 
     // peripheral internal helpers:
@@ -1222,6 +1227,7 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
 
         /// @dev no need to register newly created HederaFungibleToken in this context as the constructor will call HtsSystemContractMock#registerHederaFungibleToken
         HederaFungibleToken hederaFungibleToken = new HederaFungibleToken(fungibleTokenInfo);
+        emit TokenCreated(address(hederaFungibleToken));
         return (HederaResponseCodes.SUCCESS, address(hederaFungibleToken));
     }
 
@@ -1238,6 +1244,7 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
 
         /// @dev no need to register newly created HederaNonFungibleToken in this context as the constructor will call HtsSystemContractMock#registerHederaNonFungibleToken
         HederaNonFungibleToken hederaNonFungibleToken = new HederaNonFungibleToken(tokenInfo);
+        emit TokenCreated(address(hederaNonFungibleToken));
         return (HederaResponseCodes.SUCCESS, address(hederaNonFungibleToken));
     }
 
@@ -1267,6 +1274,7 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
 
         /// @dev no need to register newly created HederaFungibleToken in this context as the constructor will call HtsSystemContractMock#registerHederaFungibleToken
         HederaFungibleToken hederaFungibleToken = new HederaFungibleToken(fungibleTokenInfo);
+        emit TokenCreated(address(hederaFungibleToken));
         return (HederaResponseCodes.SUCCESS, address(hederaFungibleToken));
     }
 
@@ -1288,6 +1296,7 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
 
         /// @dev no need to register newly created HederaNonFungibleToken in this context as the constructor will call HtsSystemContractMock#registerHederaNonFungibleToken
         HederaNonFungibleToken hederaNonFungibleToken = new HederaNonFungibleToken(tokenInfo);
+        emit TokenCreated(address(hederaNonFungibleToken));
         return (HederaResponseCodes.SUCCESS, address(hederaNonFungibleToken));
     }
 
