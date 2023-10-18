@@ -15,9 +15,7 @@ contract Main is Base {
         return super.classIdentifier();
     }
 
-    function destroyContract(address recipient) public returns (bool) {
+    function destroyContract(address recipient) public {
         selfdestruct(payable(recipient));
-
-        return true;
     }
 }
