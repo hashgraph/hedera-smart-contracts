@@ -4,7 +4,9 @@
   "description": "Hedera Smart Contract Service supporting files",
   "files": [
     "/contracts/**/*.sol",
-    "/contracts/**/**/**/*.sol"
+    "/contracts/**/**/**/*.sol",
+    "/test/foundry/mocks/**/*.sol",
+    "/test/foundry/mocks/**/**/**/*.sol"
   ],
   "repository": {
     "type": "git",
