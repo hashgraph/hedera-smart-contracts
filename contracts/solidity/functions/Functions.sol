@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.20;
 
-
 interface ContractInterface {
   function sumThemUp (uint a, uint b) external returns (uint);
 }
@@ -53,5 +52,4 @@ contract Functions is ContractInterface {
     function sumThemUp(uint a, uint) external pure override returns (uint) {
         return a;
     }
-
 }
