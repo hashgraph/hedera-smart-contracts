@@ -10,51 +10,40 @@ contract Arithmetic {
         return name;
     }
 
-    function add() external returns (bool) {
+    function add() external {
         name = "Arithmetic check if NOT reverted";
         maxUint = maxUint + 1;
-        return true;
     }
 
-    function add2() external returns (uint) {
+    function add2() external {
         uint256 tmp = maxUint;
         name = "Arithmetic check if NOT reverted";
         tmp += 100;
-        
-        return tmp;
     }
 
-    function mul() external returns (bool) {
+    function mul() external {
         uint8 maxUint8 = type(uint8).max;
         name = "Arithmetic check if NOT reverted";
         maxUint8 * 2;
-
-        return true;
     }
 
-    function dec() external returns (bool) {
+    function dec() external {
         // This subtraction will revert on underflow.
         name = "Arithmetic check if NOT reverted";
         minUint--;
-
-        return true;
     }
 
-    function sub() external returns (bool) {
+    function sub() external {
         uint256 tmp = minUint;
         name = "Arithmetic check if NOT reverted";
         tmp -= 1;
-
-        return true;
     }
 
-    function negativeHasMoreValues() external returns (bool) {
+    function negativeHasMoreValues() external {
         int tmp;
         int x = type(int).min;
         name = "Arithmetic check if NOT reverted";
         tmp = -x;
-
-        return true;
     }
 
     function uncheckedAdd() external view returns (bool) {
