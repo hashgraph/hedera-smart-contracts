@@ -26,10 +26,10 @@ describe('@solidityequiv2 Solidity Errors', function () {
   let contract, hasError
 
   before(async function () {
-    const factoryErrorsExternal = await ethers.getContractFactory(Constants.Contract.ErrorsExternal)
+    const factoryErrorsExternal = await ethers.getContractFactory('ErrorsExternal')
     contractExternal = await factoryErrorsExternal.deploy()
 
-    const factory = await ethers.getContractFactory(Constants.Contract.Errors)
+    const factory = await ethers.getContractFactory('Errors')
     contract = await factory.deploy(contractExternal.address)
   })
 

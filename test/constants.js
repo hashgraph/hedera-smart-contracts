@@ -101,8 +101,6 @@ const Contract = {
   ExchangeRateMock: 'ExchangeRateMock',
   PrngSystemContract: 'PrngSystemContract',
   Concatenation: 'Concatenation',
-  Errors: 'Errors',
-  ErrorsExternal: 'ErrorsExternal',
   Transaction: 'Transaction',
   MessageFrameAddresses: 'MessageFrameAddresses',
   New: 'New',
