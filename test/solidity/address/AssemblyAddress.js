@@ -22,7 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../../constants')
 
-describe('AssemblyAddress tests', () => {
+describe('@solidityevmequiv3 AssemblyAddress', () => {
   let assemblyAddressContract, expectedContractBytecode
 
   before(async () => {
