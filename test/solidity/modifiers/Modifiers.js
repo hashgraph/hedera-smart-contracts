@@ -23,7 +23,7 @@ const Utils = require('../../hts-precompile/utils');
 
 
 describe("@solidityevmequiv1 Modifiers", function() {
-    let modifiersContract, owner;
+    let accounts, modifiersContract, owner;
 
     const tinybarToWeibar = (amount) => amount.mul(Utils.tinybarToWeibarCoef)
     const weibarTotinybar = (amount) => amount.div(Utils.tinybarToWeibarCoef)
@@ -33,6 +33,7 @@ describe("@solidityevmequiv1 Modifiers", function() {
         modifiersContract = await Modifiers.deploy(42);
         await modifiersContract.deployed();
         [owner] = await ethers.getSigners();
+        accounts = await ethers.getSigners();
     });
 
     it("Should not modify the contract's state after calling a pure function", async function() {
@@ -77,9 +78,23 @@ describe("@solidityevmequiv1 Modifiers", function() {
     it("Should set deploymentTimestamp to the block timestamp of deployment", async function() {
         const txReceipt = await modifiersContract.deployTransaction.wait();
         const block = await ethers.provider.getBlock(txReceipt.blockHash);
-        
+
         const deploymentTimestamp = await modifiersContract.deploymentTimestamp();
         expect(deploymentTimestamp).to.equal(block.timestamp);
-      });
+    });
+
+    it("Should emit indexed from and to values in the Transfer event", async function() {
+        const toAddress = accounts[1].address;
+        const tx = await modifiersContract.emitExampleTransferEvent(toAddress, 100, "test transfer");
+        const receipt = await tx.wait();
+    
+        expect(receipt.events?.length).to.equal(1);
+        const event = receipt.events[0];
+    
+        // Check the event's topics. The first topic is the event's signature.
+        // The next topics are the indexed parameters in the order they appear in the event.
+        expect(event.topics[1].toLowerCase()).to.equal(ethers.utils.hexZeroPad(accounts[0].address, 32).toLowerCase()); // from address
+        expect(event.topics[2].toLowerCase()).to.equal(ethers.utils.hexZeroPad(toAddress, 32).toLowerCase()); // to address
+    });
 
 });
