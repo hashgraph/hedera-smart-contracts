@@ -24,7 +24,6 @@ const Constants = require('../../constants')
 describe('@solidityevmequiv1 CryptoMath Test Suite', function () {
     let cryptoMathContract, provider, signers;
 
-
     before(async function () {
         signers = await ethers.getSigners();
         provider = ethers.getDefaultProvider();        
