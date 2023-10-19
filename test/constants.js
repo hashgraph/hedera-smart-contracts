@@ -111,6 +111,7 @@ const Contract = {
   Functions: 'Functions',
   FunctionsChild: 'FunctionsChild',
   FunctionsParent: 'FunctionsParent',
+  Scoping: 'Scoping',
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
