@@ -3,11 +3,8 @@ const { ethers } = require('hardhat')
 const Constants = require('../../constants')
 
 describe('@solidityequiv1 Test assignments', function () {
-  let signers;
 
   before(async function () {
-    signers = await ethers.getSigners()
-
     const factoryDestructuring = await ethers.getContractFactory(Constants.Contract.DestructuringReturns)
     contractDesctructuring = await factoryDestructuring.deploy()
 
