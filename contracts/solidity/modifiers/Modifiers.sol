@@ -5,9 +5,13 @@ contract Modifiers {
     uint256 public data;
     address public owner;
 
+    uint256 public constant MAX_SUPPLY = 1000000;  
+    uint256 public immutable deploymentTimestamp;  
+
     constructor(uint256 _initialData) {
         data = _initialData;
         owner = msg.sender;
+        deploymentTimestamp = block.timestamp;
     }
 
     function addPure(uint256 a, uint256 b) public pure returns (uint256) {

@@ -24,6 +24,7 @@ const Utils = require('../../hts-precompile/utils');
 
 describe("@solidityevmequiv1 Modifiers", function() {
     let modifiersContract, owner;
+
     const tinybarToWeibar = (amount) => amount.mul(Utils.tinybarToWeibarCoef)
     const weibarTotinybar = (amount) => amount.div(Utils.tinybarToWeibarCoef)
 
@@ -66,7 +67,19 @@ describe("@solidityevmequiv1 Modifiers", function() {
     
         const finalBalance = await modifiersContract.getBalance();
         expect(tinybarToWeibar(finalBalance.add(initialBalance))).to.equal(paymentAmount);
-       
     });    
+
+    it("Should have the correct MAX_SUPPLY value", async function() {
+        const maxSupply = await modifiersContract.MAX_SUPPLY();
+        expect(maxSupply).to.equal(1000000);
+    });
+
+    it("Should set deploymentTimestamp to the block timestamp of deployment", async function() {
+        const txReceipt = await modifiersContract.deployTransaction.wait();
+        const block = await ethers.provider.getBlock(txReceipt.blockHash);
+        
+        const deploymentTimestamp = await modifiersContract.deploymentTimestamp();
+        expect(deploymentTimestamp).to.equal(block.timestamp);
+      });
 
 });
