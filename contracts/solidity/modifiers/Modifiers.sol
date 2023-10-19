@@ -8,7 +8,8 @@ contract Modifiers {
     uint256 public constant MAX_SUPPLY = 1000000;  
     uint256 public immutable deploymentTimestamp;  
 
-    event Transfer(address indexed from, address indexed to, uint256 value, string message);
+    event RegularEvent(address indexed from, address indexed to, uint256 value, string message);
+    event AnonymousEvent(address indexed sender, uint256 value) anonymous;
 
     constructor(uint256 _initialData) {
         data = _initialData;
@@ -32,7 +33,12 @@ contract Modifiers {
         return data;
     }
 
-    function emitExampleTransferEvent(address _to, uint256 _value, string memory _message) public {
-        emit Transfer(msg.sender, _to, _value, _message);
+    function triggerRegularEvent(address _to, uint256 _value, string memory _message) public {
+        emit RegularEvent(msg.sender, _to, _value, _message);
     }
+
+    function triggerAnonymousEvent(uint256 _value) public {
+        emit AnonymousEvent(msg.sender, _value);
+    }
+    
 }

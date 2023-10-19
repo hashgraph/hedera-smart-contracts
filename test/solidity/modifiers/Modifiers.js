@@ -83,9 +83,9 @@ describe("@solidityevmequiv1 Modifiers", function() {
         expect(deploymentTimestamp).to.equal(block.timestamp);
     });
 
-    it("Should emit indexed from and to values in the Transfer event", async function() {
+    it("Should emit indexed from and to values in the RegularEvent", async function() {
         const toAddress = accounts[1].address;
-        const tx = await modifiersContract.emitExampleTransferEvent(toAddress, 100, "test transfer");
+        const tx = await modifiersContract.triggerRegularEvent(toAddress, 100, "test transfer");
         const receipt = await tx.wait();
     
         expect(receipt.events?.length).to.equal(1);
@@ -96,5 +96,21 @@ describe("@solidityevmequiv1 Modifiers", function() {
         expect(event.topics[1].toLowerCase()).to.equal(ethers.utils.hexZeroPad(accounts[0].address, 32).toLowerCase()); // from address
         expect(event.topics[2].toLowerCase()).to.equal(ethers.utils.hexZeroPad(toAddress, 32).toLowerCase()); // to address
     });
+
+    it("Should emit the AnonymousEvent with correct values", async function() {
+        const tx = await modifiersContract.triggerAnonymousEvent(257);
+        const receipt = await tx.wait();
+    
+        expect(receipt.events?.length).to.equal(1);
+    
+        const anonymousEvent = receipt.events[0];
+        expect(anonymousEvent.event).to.undefined;
+        
+        // Since it's anonymous, we access the topics directly to get the indexed values.
+        const senderAddress = "0x" + anonymousEvent.topics[0].slice(-40);
+        expect(senderAddress.toLowerCase()).to.equal(accounts[0].address.toLowerCase());
+        const value = ethers.utils.defaultAbiCoder.decode(["uint256"], anonymousEvent.data);
+        expect(value[0]).to.equal(257);
+    });    
 
 });
