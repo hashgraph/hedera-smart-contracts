@@ -23,7 +23,7 @@ const Utils = require('../../hts-precompile/utils');
 
 
 describe("@solidityevmequiv1 Modifiers", function() {
-    let accounts, derivedContract, modifiersContract, owner;
+    let accounts, contractA, contractB, derivedContract, modifiersContract, owner;
 
     const tinybarToWeibar = (amount) => amount.mul(Utils.tinybarToWeibarCoef)
     const weibarTotinybar = (amount) => amount.div(Utils.tinybarToWeibarCoef)
@@ -36,6 +36,14 @@ describe("@solidityevmequiv1 Modifiers", function() {
         const Derived = await ethers.getContractFactory("DerivedContract");
         derivedContract = await Derived.deploy(55);
         await derivedContract.deployed();
+
+        const ContractA = await ethers.getContractFactory("A");
+        contractA = await ContractA.deploy();
+        await contractA.deployed();
+
+        const ContractB = await ethers.getContractFactory("B");
+        contractB = await ContractB.deploy(79);
+        await contractB.deployed();
         
         [owner] = await ethers.getSigners();
         accounts = await ethers.getSigners();
@@ -119,7 +127,13 @@ describe("@solidityevmequiv1 Modifiers", function() {
     });    
 
     it("Should return the message in the from the derived contract that overrides the virtual function", async function() {
+        expect(await derivedContract.getData()).to.equal(55);
         expect(await derivedContract.show()).to.equal("This is the derived contract");
+    });
+    
+    it("Should return the message in the from ContractB that overrides the show function", async function() {
+        expect(await contractB.getData()).to.equal(79);
+        expect(await contractB.show()).to.equal("This is the overriding contract B");
     });    
-
+    
 });
