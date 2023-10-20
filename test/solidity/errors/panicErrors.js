@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*-
  *
  * Hedera Smart Contracts
@@ -23,6 +24,13 @@ const { ethers } = require('hardhat')
 const Constants = require('../../constants')
 
 describe('@solidityequiv3 Panic Errors', function () {
+=======
+const { expect, assert } = require('chai')
+const { ethers } = require('hardhat')
+const Constants = require('../../constants')
+
+describe('Panic Errors', function () {
+>>>>>>> 326b5c3 (Drafts tests for panic errors support)
   let contract
 
   before(async function () {
