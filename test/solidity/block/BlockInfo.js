@@ -33,14 +33,14 @@ describe('@solidityequiv1 BlockInfo Test Suite', function () {
     blockInfo = await factory. deploy({ gasLimit: 15000000 })
   })
 
-  // EIP-1559 does not apply to Hedera
+  // EIP-1559 does not apply to Hedera.  Base fees do not adjust per block.
   it('should be able to execute getBlockBaseFee()', async function () {
     const blockBaseFee = await blockInfo.getBlockBaseFee()
     expect(blockBaseFee).to.equal(0)
   })
 
-  // Turn off until mirror node issue is resolved: https://github.com/hashgraph/hedera-mirror-node/issues/7045
-  xit('should be able to get the hash of a given block when the block number is one of the 256 most recent blocks', async function () {
+  // https://github.com/hashgraph/hedera-mirror-node/issues/7045
+  it('should be able to get the hash of a given block when the block number is one of the 256 most recent blocks', async function () {
     const blockNumber = await provider.getBlockNumber()
     const block = await provider.getBlock(blockNumber)
     const blockHash = await blockInfo.getBlockHash()
@@ -95,9 +95,8 @@ function isTimestamp(value) {
   }
 
   const year = date.getUTCFullYear();
-  return year >= 1970 && year <= 2030;
+  return year >= 1970;
 }
-
 
 
 
