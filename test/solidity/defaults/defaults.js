@@ -54,12 +54,14 @@ describe('@solidityequiv3 Solidity Defaults', function () {
     expect(res.uInt).to.equal(ethers.BigNumber.from(0))
   })
 
-  // Not supported by solidity yet
+  // Fixed point numbers are Not supported by Solidity yet
+  // You can find the documentation: https://docs.soliditylang.org/en/latest/types.html#fixed-point-numbers
   xit('confirm solidity functionality: fixed defaults', async function () {
     const res = await contract.getFixedDefaults()
   })
 
-  // Not supported by solidity yet
+  // Fixed point numbers are Not supported by Solidity yet
+  // You can find the documentation: https://docs.soliditylang.org/en/latest/types.html#fixed-point-numbers
   xit('confirm solidity functionality: ufixed defaults', async function () {
     const res = await contract.getUFixedDefaults()
   })
