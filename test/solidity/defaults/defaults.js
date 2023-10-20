@@ -28,7 +28,7 @@ describe('@solidityequiv3 Solidity Defaults', function () {
   before(async function () {
     signers = await ethers.getSigners()
 
-    const factory = await ethers.getContractFactory(Constants.Contract.Defaults)
+    const factory = await ethers.getContractFactory("Defaults")
     contract = await factory.deploy()
   })
 
