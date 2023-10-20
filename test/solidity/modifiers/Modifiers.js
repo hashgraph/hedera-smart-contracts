@@ -23,7 +23,7 @@ const Utils = require('../../hts-precompile/utils');
 
 
 describe("@solidityevmequiv1 Modifiers", function() {
-    let accounts, modifiersContract, owner;
+    let accounts, derivedContract, modifiersContract, owner;
 
     const tinybarToWeibar = (amount) => amount.mul(Utils.tinybarToWeibarCoef)
     const weibarTotinybar = (amount) => amount.div(Utils.tinybarToWeibarCoef)
@@ -32,6 +32,11 @@ describe("@solidityevmequiv1 Modifiers", function() {
         const Modifiers = await ethers.getContractFactory("Modifiers");
         modifiersContract = await Modifiers.deploy(42);
         await modifiersContract.deployed();
+
+        const Derived = await ethers.getContractFactory("DerivedContract");
+        derivedContract = await Derived.deploy(55);
+        await derivedContract.deployed();
+        
         [owner] = await ethers.getSigners();
         accounts = await ethers.getSigners();
     });
@@ -105,12 +110,16 @@ describe("@solidityevmequiv1 Modifiers", function() {
     
         const anonymousEvent = receipt.events[0];
         expect(anonymousEvent.event).to.undefined;
-        
+
         // Since it's anonymous, we access the topics directly to get the indexed values.
         const senderAddress = "0x" + anonymousEvent.topics[0].slice(-40);
         expect(senderAddress.toLowerCase()).to.equal(accounts[0].address.toLowerCase());
         const value = ethers.utils.defaultAbiCoder.decode(["uint256"], anonymousEvent.data);
         expect(value[0]).to.equal(257);
+    });    
+
+    it("Should return the message in the from the derived contract that overrides the virtual function", async function() {
+        expect(await derivedContract.show()).to.equal("This is the derived contract");
     });    
 
 });

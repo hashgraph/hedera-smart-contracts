@@ -40,5 +40,9 @@ contract Modifiers {
     function triggerAnonymousEvent(uint256 _value) public {
         emit AnonymousEvent(msg.sender, _value);
     }
+
+    function show() public virtual returns(string memory) {
+        return "This is the base Modifiers contract";
+    }    
     
 }
