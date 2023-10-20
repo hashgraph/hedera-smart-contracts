@@ -21,7 +21,6 @@
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const PaymentChannelHelper = require('./helper')
-const { GAS_LIMIT_1_000_000 } = require('../../constants')
 
 describe('@solidityequiv3 PaymentChannel', () => {
   const GASLIMIT = 1000000
@@ -77,7 +76,7 @@ describe('@solidityequiv3 PaymentChannel', () => {
 
     const receipt = await transaction.wait()
 
-    const [contractBaleBefore, senderBalBefore, recipientBalBefore] =
+    const [contractBalBefore, senderBalBefore, recipientBalBefore] =
       receipt.events[0].args
 
     const [contractBaleAfter, senderBalAfter, recipientBalAfter] =
@@ -92,7 +91,7 @@ describe('@solidityequiv3 PaymentChannel', () => {
     expect(contractBaleAfter).to.eq(0)
     expect(recipientBalAfter - recipientBalBefore).to.eq(OWED_AMOUNT)
     expect(senderBalAfter - senderBalBefore).to.eq(
-      contractBaleBefore - OWED_AMOUNT
+      contractBalBefore - OWED_AMOUNT
     )
   })
 
