@@ -47,4 +47,19 @@ describe("@solidityevmequiv1 Precompiles Support", function () {
         expect(isVerifiedAddress).to.be.true;
     });
 
+    it("Should return the correct SHA-256 hash", async function () {
+            
+        // Compute the SHA-256 hash of the string "Hello future!" using JavaScript
+        const crypto = require('crypto');
+        const input = "Hello future!";
+        const hash = crypto.createHash('sha256').update(input).digest('hex');
+        const expectedHash = "0x" + hash;
+    
+        // Call the computeHash function from the contract
+        const result = await precompilesContract.computeHash(input);
+    
+        // Assert
+        expect(result).to.equal(expectedHash);
+    });   
+
 });

@@ -17,4 +17,7 @@ contract Precompiles {
         return recoveredAddress == expectedSigner;
     }
 
+    function computeHash(string memory input) public pure returns (bytes32) {
+        return sha256(abi.encodePacked(input));
+    }
 }
