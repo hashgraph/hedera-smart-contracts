@@ -49,17 +49,24 @@ describe("@solidityevmequiv1 Precompiles Support", function () {
 
     it("Should return the correct SHA-256 hash", async function () {
             
-        // Compute the SHA-256 hash of the string "Hello future!" using JavaScript
         const crypto = require('crypto');
         const input = "Hello future!";
         const hash = crypto.createHash('sha256').update(input).digest('hex');
         const expectedHash = "0x" + hash;
     
-        // Call the computeHash function from the contract
-        const result = await precompilesContract.computeHash(input);
-    
-        // Assert
+        const result = await precompilesContract.computeSha256Hash(input);
         expect(result).to.equal(expectedHash);
-    });   
+    }); 
+    
+    it("Should return the correct RIPEMD-160 hash", async function () {
+    
+        const crypto = require('crypto');
+        const input = "Hello future!";
+        const hash = crypto.createHash('ripemd160').update(input).digest('hex');
+        const expectedHash = "0x" + hash;
+    
+        const result = await precompilesContract.computeRipemd160Hash(input);
+        expect(result).to.equal(expectedHash);
+    });
 
 });
