@@ -25,4 +25,12 @@ contract Precompiles {
         return ripemd160(abi.encodePacked(input));
     }
 
+    function getIdentity(uint256 input) public pure returns (uint256) {
+        uint256 output;
+        assembly {
+            // Load data from the call data at the specified index
+            output := calldataload(4) // 4 bytes offset for the function selector
+        }
+        return output;
+    }    
 }

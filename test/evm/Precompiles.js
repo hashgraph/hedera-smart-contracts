@@ -69,4 +69,11 @@ describe("@solidityevmequiv1 Precompiles Support", function () {
         expect(result).to.equal(expectedHash);
     });
 
+    it("Should return the same value as input", async function () {
+
+        const inputValue = 12345;
+        const result = await precompilesContract.getIdentity(inputValue);
+    
+        expect(result).to.equal(inputValue);
+    });
 });
