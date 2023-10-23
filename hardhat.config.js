@@ -9,6 +9,9 @@ const {
   HEX_PRIVATE_KEY_B,
   NETWORKS,
   HEX_PRIVATE_KEY_C,
+  HEX_PRIVATE_KEY_D,
+  HEX_PRIVATE_KEY_E,
+  HEX_PRIVATE_KEY_F,
 } = require('./utils/constants')
 
 /** @type import('hardhat/config').HardhatUserConfig */
@@ -41,7 +44,7 @@ module.exports = {
   networks: {
     local: {
       url: NETWORKS.local.url,
-      accounts: [HEX_PRIVATE_KEY_A, HEX_PRIVATE_KEY_B, HEX_PRIVATE_KEY_C],
+      accounts: [HEX_PRIVATE_KEY_A, HEX_PRIVATE_KEY_B, HEX_PRIVATE_KEY_C, HEX_PRIVATE_KEY_D, HEX_PRIVATE_KEY_E, HEX_PRIVATE_KEY_F],
       chainId: NETWORKS.local.chainId,
       gas: 10000000,
       sdkClient: {
@@ -54,7 +57,7 @@ module.exports = {
     },
     testnet: {
       url: NETWORKS.testnet.url,
-      accounts: [HEX_PRIVATE_KEY_A, HEX_PRIVATE_KEY_B, HEX_PRIVATE_KEY_C],
+      accounts: [HEX_PRIVATE_KEY_A, HEX_PRIVATE_KEY_B, HEX_PRIVATE_KEY_C, HEX_PRIVATE_KEY_D, HEX_PRIVATE_KEY_E, HEX_PRIVATE_KEY_F],
       chainId: NETWORKS.testnet.chainId,
       sdkClient: {
         operatorId: OPERATOR_ID_A,
@@ -66,7 +69,7 @@ module.exports = {
     },
     previewnet: {
       url: NETWORKS.previewnet.url,
-      accounts: [HEX_PRIVATE_KEY_A, HEX_PRIVATE_KEY_B, HEX_PRIVATE_KEY_C],
+      accounts: [HEX_PRIVATE_KEY_A, HEX_PRIVATE_KEY_B, HEX_PRIVATE_KEY_C, HEX_PRIVATE_KEY_D, HEX_PRIVATE_KEY_E, HEX_PRIVATE_KEY_F],
       chainId: NETWORKS.previewnet.chainId,
       sdkClient: {
         operatorId: OPERATOR_ID_A,
