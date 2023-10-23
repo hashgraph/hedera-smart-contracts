@@ -17,11 +17,22 @@ const HEX_PRIVATE_KEY_A = process.env.HEX_PRIVATE_KEY_A
 const HEX_PRIVATE_KEY_B = process.env.HEX_PRIVATE_KEY_B
   ? process.env.HEX_PRIVATE_KEY_B
   : ethers.constants.HashZero
-  /**  @type string */
+/**  @type string */
 const HEX_PRIVATE_KEY_C = process.env.HEX_PRIVATE_KEY_C
 ? process.env.HEX_PRIVATE_KEY_C
 : ethers.constants.HashZero
-
+/**  @type string */
+const HEX_PRIVATE_KEY_D = process.env.HEX_PRIVATE_KEY_D
+? process.env.HEX_PRIVATE_KEY_D
+: ethers.constants.HashZero
+/**  @type string */
+const HEX_PRIVATE_KEY_E = process.env.HEX_PRIVATE_KEY_E
+? process.env.HEX_PRIVATE_KEY_E
+: ethers.constants.HashZero
+/**  @type string */
+const HEX_PRIVATE_KEY_F = process.env.HEX_PRIVATE_KEY_F
+? process.env.HEX_PRIVATE_KEY_F
+: ethers.constants.HashZero
 
 const NETWORKS = {
   local: {
@@ -56,5 +67,8 @@ module.exports = {
   HEX_PRIVATE_KEY_A,
   HEX_PRIVATE_KEY_B,
   HEX_PRIVATE_KEY_C,
+  HEX_PRIVATE_KEY_D,
+  HEX_PRIVATE_KEY_E,
+  HEX_PRIVATE_KEY_F,
   NETWORKS,
 }

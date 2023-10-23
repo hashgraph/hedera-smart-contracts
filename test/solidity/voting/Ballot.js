@@ -21,7 +21,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../../constants')
 
-describe('@solidityequiv1 Ballot Units tests', function () {
+describe('@solidityequiv4 Ballot Units tests', function () {
     let ballotContract, owner, addressB, addressC, addressD, addressE, addressF, addrs;
 
     beforeEach(async function() {
@@ -58,11 +58,19 @@ describe('@solidityequiv1 Ballot Units tests', function () {
     });
 
     it("Should correctly determine the winning proposal", async function() {
+
         await ballotContract.giveRightToVote(addressB.address);
         await ballotContract.connect(addressB).vote(1); // voting for proposal2
+
         await ballotContract.giveRightToVote(addressC.address);
         await ballotContract.connect(addressC).vote(1); // voting for proposal2
-    
+
+        await ballotContract.giveRightToVote(addressD.address);
+        await ballotContract.connect(addressD).vote(2); // voting for proposal3
+
+        await ballotContract.giveRightToVote(addressE.address);
+        await ballotContract.connect(addressE).vote(0); // voting for proposal1
+
         const winningProposalId = await ballotContract.winningProposal();
         expect(winningProposalId).to.equal(1);
     });    
