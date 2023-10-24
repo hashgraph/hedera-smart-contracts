@@ -21,7 +21,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../../constants')
 
-describe('@solidityevmequiv2 TypeOps Test Suite', function () {
+describe('@solidityevmequiv1 TypeOps Test Suite', function () {
     let cryptoMathContract, provider, signers;
 
     before(async function () {
@@ -85,6 +85,6 @@ describe('@solidityevmequiv2 TypeOps Test Suite', function () {
         const res = await typeOpsContract.typeUintMax();
         expect(res).to.equal(expectedUintMax);
     });
-    
+
 
 });
