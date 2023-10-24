@@ -76,4 +76,17 @@ describe("@solidityevmequiv1 Precompiles Support", function () {
     
         expect(result).to.equal(inputValue);
     });
+
+    it("Should correctly compute modular exponentiation", async function () {
+    
+        const base = ethers.BigNumber.from("3");
+        const exponent = ethers.BigNumber.from("2");
+        const modulus = ethers.BigNumber.from("5");
+    
+        // Expected result: (3^2) % 5 = 9 % 5 = 4
+        const expectedOutput = ethers.BigNumber.from("4");
+        const result = await precompilesContract.callStatic.modExp(base, exponent, modulus);
+
+        expect(result).to.equal(expectedOutput);
+    });    
 });
