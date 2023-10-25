@@ -83,4 +83,39 @@ contract Precompiles {
             }
         }
     }    
+
+    function ecMul(uint256[2] memory point, uint256 k, uint256 prime) public returns (uint256[2] memory result) {
+        // Ensure the input point is on the curve
+        require(isOnCurve(point, prime), "Point is not on the curve");
+
+        // Use the precompiled contract for the ecMul operation
+        // The precompiled contract for ecMul is at address 0x07
+        assembly {
+            // Free memory pointer
+            let p := mload(0x40)
+            
+            // Store input data in memory
+            mstore(p, mload(point))
+            mstore(add(p, 0x20), mload(add(point, 0x20)))
+            mstore(add(p, 0x40), k)
+            
+            // Call the precompiled contract
+            // Input: 0x60 bytes (point x, point y, scalar k)
+            // Output: 0x40 bytes (resulting point x', y')
+            if iszero(call(not(0), 0x07, 0, p, 0x60, p, 0x40)) {
+                revert(0, 0)
+            }
+            
+            // Load the result from memory
+            result := p
+        }
+    }    
+
+    function isOnCurve(uint256[2] memory point, uint256 prime) public pure returns (bool) {
+        uint256 x = point[0];
+        uint256 y = point[1];
+        uint256 lhs = mulmod(y, y, prime);
+        uint256 rhs = addmod(mulmod(mulmod(x, x, prime), x, prime), 3, prime);
+        return lhs == rhs;
+    }    
 }

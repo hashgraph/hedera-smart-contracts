@@ -25,6 +25,19 @@ const BN = require('bn.js');
 
 describe("@solidityevmequiv1 Precompiles Support", function () {
     let precompilesContract; 
+    const prime = '21888242871839275222246405745257275088696311157297823662689037894645226208583';
+    
+    const alt_bn128 = new elliptic.curve.short({
+        p: new BN(prime),
+        a: '0',
+        b: '3',
+        g: [
+          new BN('1'),
+          new BN('2')
+        ],
+        n: new BN('21888242871839275222246405745257275088548364400416034343698204186575808495617'),
+        h: '1'
+    });
 
     before(async () => {
         const Precompiles = await ethers.getContractFactory("Precompiles");
@@ -91,44 +104,65 @@ describe("@solidityevmequiv1 Precompiles Support", function () {
         expect(result).to.equal(expectedOutput);
     });    
 
-    it("should add two elliptic curve points", async function () {
-
-        // build an elliptic curve
-        const alt_bn128 = new elliptic.curve.short({
-            p: new BN('21888242871839275222246405745257275088696311157297823662689037894645226208583'),
-            a: '0',
-            b: '3',
-            g: [
-              new BN('1'),
-              new BN('2')
-            ],
-            n: new BN('21888242871839275222246405745257275088548364400416034343698204186575808495617'),
-            h: '1'
-        });
-          
+    it("should add two elliptic curve points", async function () {          
         // Get the base point (generator) of the curve
         const basePoint = alt_bn128.g;
+        // check that all is well
         expect(alt_bn128.validate(basePoint)).to.be.true;
           
         // Get another point on the curve by multiplying the base point by 2
-        const anotherPoint = basePoint.mul(new BN('2'));
-        expect(alt_bn128.validate(anotherPoint)).to.be.true;
+        const secondPoint = basePoint.mul(new BN('2'));
+        // check that all is well
+        expect(alt_bn128.validate(secondPoint)).to.be.true;
           
-        const resPoint = basePoint.add(anotherPoint);
+        const resPoint = basePoint.add(secondPoint);
    
         const base = [
           ethers.BigNumber.from(basePoint.getX().toString()),
           ethers.BigNumber.from(basePoint.getY().toString())
         ];
 
-        const another = [
-          ethers.BigNumber.from(anotherPoint.getX().toString()),
-          ethers.BigNumber.from(anotherPoint.getY().toString())
+        const second = [
+          ethers.BigNumber.from(secondPoint.getX().toString()),
+          ethers.BigNumber.from(secondPoint.getY().toString())
         ];
+
+        // check in contract that the second point is on the curve 
+        expect(await precompilesContract.isOnCurve(second, prime)).to.be.true;
     
-        const result = await precompilesContract.ecAdd(base, another);
+        const result = await precompilesContract.ecAdd(base, second);
         
         expect(result[0]).to.equal(resPoint.getX());
         expect(result[1]).to.equal(resPoint.getY());
     });
+
+    it("should correctly multiply a point on the curve by a scalar", async () => {
+        // Define a point on the curve (for example, the generator/base point)
+        const basePoint = alt_bn128.g; // This is the generator point of the curve
+
+        // Get another point on the curve by multiplying the base point by 2
+        const secondPoint = basePoint.mul(new BN('2'));
+        // check that all is well
+        expect(alt_bn128.validate(secondPoint)).to.be.true
+
+        // Define a scalar for multiplication
+        const scalar = new BN('7');
+
+        // Multiply the point by the scalar
+        const resultPoint = secondPoint.mul(scalar);
+
+        const result = await precompilesContract.callStatic.ecMul(
+            [
+                ethers.BigNumber.from(secondPoint.getX().toString()),
+                ethers.BigNumber.from(secondPoint.getY().toString())
+            ],
+            ethers.BigNumber.from(scalar.toString()),
+            ethers.BigNumber.from(prime.toString())
+        );
+
+        expect(result[0]).to.equal(resultPoint.getX());
+        expect(result[1]).to.equal(resultPoint.getY());
+
+    });
+
 });
