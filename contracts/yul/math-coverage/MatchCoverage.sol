@@ -115,3 +115,4 @@ contract MathCoverage {
         }
     }
 }
+
