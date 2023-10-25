@@ -59,3 +59,4 @@ contract Token {
         return allowed[owner][spender];
     }
 }
+
