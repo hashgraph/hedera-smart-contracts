@@ -20,7 +20,8 @@
 
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
-// import { ECRecoverExample } from "../typechain/ECRecoverExample";
+const elliptic = require('elliptic');
+const BN = require('bn.js');
 
 describe("@solidityevmequiv1 Precompiles Support", function () {
     let precompilesContract; 
@@ -89,4 +90,45 @@ describe("@solidityevmequiv1 Precompiles Support", function () {
 
         expect(result).to.equal(expectedOutput);
     });    
+
+    it("should add two elliptic curve points", async function () {
+
+        // build an elliptic curve
+        const alt_bn128 = new elliptic.curve.short({
+            p: new BN('21888242871839275222246405745257275088696311157297823662689037894645226208583'),
+            a: '0',
+            b: '3',
+            g: [
+              new BN('1'),
+              new BN('2')
+            ],
+            n: new BN('21888242871839275222246405745257275088548364400416034343698204186575808495617'),
+            h: '1'
+        });
+          
+        // Get the base point (generator) of the curve
+        const basePoint = alt_bn128.g;
+        expect(alt_bn128.validate(basePoint)).to.be.true;
+          
+        // Get another point on the curve by multiplying the base point by 2
+        const anotherPoint = basePoint.mul(new BN('2'));
+        expect(alt_bn128.validate(anotherPoint)).to.be.true;
+          
+        const resPoint = basePoint.add(anotherPoint);
+   
+        const base = [
+          ethers.BigNumber.from(basePoint.getX().toString()),
+          ethers.BigNumber.from(basePoint.getY().toString())
+        ];
+
+        const another = [
+          ethers.BigNumber.from(anotherPoint.getX().toString()),
+          ethers.BigNumber.from(anotherPoint.getY().toString())
+        ];
+    
+        const result = await precompilesContract.ecAdd(base, another);
+        
+        expect(result[0]).to.equal(resPoint.getX());
+        expect(result[1]).to.equal(resPoint.getY());
+    });
 });

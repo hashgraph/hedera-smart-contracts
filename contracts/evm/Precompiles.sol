@@ -67,4 +67,20 @@ contract Precompiles {
             result := mload(p)
         }
     }  
+
+    function ecAdd(uint256[2] memory point1, uint256[2] memory point2) public view returns (uint256[2] memory result) {
+        // Input format: (x1, y1, x2, y2)
+        uint256[4] memory input;
+        input[0] = point1[0];
+        input[1] = point1[1];
+        input[2] = point2[0];
+        input[3] = point2[1];
+
+        assembly {
+            // Call the ecAdd precompile at address 0x6
+            if iszero(staticcall(not(0), 0x6, input, 0x80, result, 0x40)) {
+                revert(0, 0)
+            }
+        }
+    }    
 }
