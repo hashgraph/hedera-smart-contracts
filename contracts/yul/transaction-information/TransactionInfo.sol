@@ -72,5 +72,54 @@ contract TransactionInfo {
             data := mload(t)
         }
     }
+
+    /// chainid() - ID of the executing chain
+    function getChainId() external view returns (uint256 chainId) {
+        assembly {
+            chainId := chainid()
+        }
+    }
+
+    /// origin() - transaction sender
+    function getOrigin() external view returns (address originSender) {
+        assembly{
+            originSender := origin()
+        }
+    }
+
+    /// gasprice() - gas price of the transaction
+    function getGasPrice() external view returns (uint256 gasPrice) {
+        assembly {
+            gasPrice := gasprice()
+        }
+    }
+
+    /// coinbase() - current mining beneficiary
+    function getCoinbase() external view returns (address beneficiary) {
+        assembly {
+            beneficiary := coinbase()
+        }
+    }
+
+    /// timestamp() - timestamp of the current block in seconds since the epoch
+    function getTimestamp() external view returns (uint256 currentTimestamp) {
+        assembly {
+            currentTimestamp := timestamp()
+        }
+    }
+
+    /// number() - current block number
+    function getCurrentBlockNumber() external view returns (uint256 blockNumber) {
+        assembly {
+            blockNumber := number()
+        }
+    }
+
+    /// gaslimit() - block gas limit of the current block
+    function getGasLimit() external view returns (uint256 gasLimit) {
+        assembly {
+            gasLimit := gaslimit()
+        }
+    }
 }
 

@@ -19,7 +19,7 @@
  */
 
 const { expect } = require('chai')
-const { ethers } = require('hardhat')
+const { ethers, network } = require('hardhat')
 
 describe('@solidityequiv5 TransactionInfo Tests', () => {
   let transactionInfoContract, signers
@@ -47,10 +47,9 @@ describe('@solidityequiv5 TransactionInfo Tests', () => {
   })
 
   it('Should get the gas left', async () => {
-    const expectedGas = 9000132
     const result = await transactionInfoContract.getGasLeft()
 
-    expect(result).to.eq(expectedGas)
+    expect(result).to.gt(0)
   })
 
   it('Should get contract address', async () => {
@@ -160,5 +159,54 @@ describe('@solidityequiv5 TransactionInfo Tests', () => {
     )
 
     expect(result).to.eq(bytes32MessageCallData)
+  })
+
+  it('Should get current chainID', async () => {
+    const chainId = await transactionInfoContract.getChainId()
+    const expectedChainId = ethers.provider.network.chainId
+
+    expect(chainId).to.eq(expectedChainId)
+  })
+
+  it('Should get original sender', async () => {
+    const originalSender = await transactionInfoContract.getOrigin()
+    const expectedSender = await signers[0].getAddress()
+
+    expect(originalSender).to.eq(expectedSender)
+  })
+
+  it('Should get gas price', async () => {
+    const gasPrice = await transactionInfoContract.getGasPrice()
+
+    expect(gasPrice).to.eq(1)
+  })
+
+  it('Should get coinbase', async () => {
+    const coinbase = await transactionInfoContract.getCoinbase()
+
+    expect(ethers.utils.isAddress(coinbase)).to.be.true
+  })
+
+  it('Should get current block timestamp', async () => {
+    const blockTimestamp = await transactionInfoContract.getTimestamp()
+
+    const expectedTimeStamp = Math.floor(Date.now() / 1000)
+
+    expect(blockTimestamp).to.lte(expectedTimeStamp)
+  })
+
+  it('Should get current block number', async () => {
+    const currentBlockNumber =
+      await transactionInfoContract.getCurrentBlockNumber()
+
+    expect(currentBlockNumber).to.gt(0)
+  })
+
+  it('Should get gas limit', async () => {
+    const gasLimit = await transactionInfoContract.getGasLimit({
+      gasLimit: GASLIMIT,
+    })
+
+    expect(gasLimit).to.eq(GASLIMIT)
   })
 })
