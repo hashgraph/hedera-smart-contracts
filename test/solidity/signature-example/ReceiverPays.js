@@ -22,7 +22,7 @@ const { ethers } = require('hardhat')
 const Constants = require('../../constants')
 const abi = require('ethereumjs-abi');
 
-describe('@solidityevmequiv7 Signature Example ReceiverPays Test Suite', function () {
+describe('@solidityequiv4 Signature Example ReceiverPays Test Suite', function () {
     let receiverPaysContract, provider, signers, currentNonce, sender, receiver;
 
     before(async function () {
