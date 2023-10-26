@@ -22,6 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const elliptic = require('elliptic');
 const BN = require('bn.js');
+const exp = require('constants');
 
 describe("@solidityevmequiv1 Precompiles Support", function () {
     let precompilesContract; 
@@ -163,6 +164,19 @@ describe("@solidityevmequiv1 Precompiles Support", function () {
         expect(result[0]).to.equal(resultPoint.getX())
         expect(result[1]).to.equal(resultPoint.getY())
 
+    })
+
+    it("Should correctly compute the ecPairing check", async function () {
+        // zkSNARK verification with the pairing check. EIP-197: https://github.com/ethereum/EIPs/blob/master/EIPS/eip-197.md
+        // Inputs are taken from circom's "Getting started" example using circom and snarkjs:  https://docs.circom.io/getting-started/installation/
+
+        const pa = ["0x10e0c597f83b5955dea39d1070b715e52c102ddb7e3a00168b44be8bf7119f55", "0x11661888377b0b03f2bcc23b8a351c8f3d23aabc8dc8df65c41e5d21c974b7c2"]
+        const pb = [["0x2cf266680cb145e28c214aa7942adb33928091b85ee6a7d0f54c94b6073b89d9", "0x0c27c439fc1fd3e02ab52f501d6667fa3d3e1187fafd5b2c0ac15f45e6fbeae9"],["0x0f2f9159625c763a41d9eda032e8333d34d8d33d241f040f56e168de8236146c", "0x18bcf1bf1212e5e13fea9a0f7a7a01a663782a018a8dfaf5d1cbed099d8f2c45"]]
+        const pc = ["0x01c57619c684da393e699fe9399a537a5d8d103b55151af2d750c67502a206ce", "0x171fe18647a62dbdb54ccb4ba1171ca0210715575ebd51e0abc5a2b8d9411f0c"]
+        const pd = ["0x0000000000000000000000000000000000000000000000000000000000000021"]
+
+        const result = await precompilesContract.ecPairing(pa, pb, pc, pd)
+        expect(result).to.be.true
     })
 
 })
