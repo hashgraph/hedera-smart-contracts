@@ -3,8 +3,9 @@ pragma solidity >=0.5.0 <0.9.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Utils.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../../hts-precompile/IHederaTokenService.sol";
 import "../../hts-precompile/HederaResponseCodes.sol";
 
@@ -75,7 +76,7 @@ contract Exchange is OwnableUpgradeable, UUPSUpgradeable {
     }
 
     function getImplementationAddress() public view returns (address) {
-        return _getImplementation();
+        return ERC1967Utils.getImplementation();
     }
 
     function associateToken() public returns (int responseCode) {
