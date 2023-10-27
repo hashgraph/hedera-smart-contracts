@@ -23,15 +23,22 @@ const { ethers } = require('hardhat')
 const Constants = require('../../constants')
 
 describe('@solidityequiv3 Solidity Account non Existing', function () {
-  let contract, randomAddress, hasError, fakeContract
+  let contract, randomAddress, hasError, fakeContract, contractDup, factory
   const TRANSACTION_FAILED = "transaction failed"
+  const UNSUPPORTED_OPERATION = "UNSUPPORTED_OPERATION"
+  const INVALID_ARGUMENT = "INVALID_ARGUMENT"
+  const ADDR_DOES_NOT_EXIST = "nonExtAddr is not defined"
 
   before(async function () {
     randomAddress = ethers.Wallet.createRandom().address;
-    const factory = await ethers.getContractFactory('NonExisting')
+    factory = await ethers.getContractFactory(Constants.Contract.NonExisting)
+    const factoryDup = await ethers.getContractFactory(Constants.Contract.NonExtDup)
     fakeContract = factory.attach(randomAddress);
 
-    contract = await factory.deploy()
+    contractDup = await factoryDup.deploy()
+    await contractDup.deployed()
+    contract = await factory.deploy(contractDup.address)
+    await contract.deployed()
   })
 
   beforeEach(function () {
@@ -102,6 +109,26 @@ describe('@solidityequiv3 Solidity Account non Existing', function () {
     } catch (err) {
         hasError = true
         expect(err.reason).to.equal(TRANSACTION_FAILED)
+    }
+    expect(hasError).to.equal(true)
+  })
+
+  it('should confirm creation of a contract on non Existing addr', async function () {
+    try {
+      contract = await factory.deploy('randomAddress')
+    } catch (err) {
+        hasError = true
+        expect(err.code).to.equal(UNSUPPORTED_OPERATION)
+    }
+    expect(hasError).to.equal(true)
+  })
+
+  it("should confirm function call balance on an address that doesn't exist. ", async function () {
+    try {
+      await contract.balanceNoneExistingAddr(nonExtAddr)
+    } catch (err) {
+        hasError = true
+        expect(err.message).to.equal(ADDR_DOES_NOT_EXIST)
     }
     expect(hasError).to.equal(true)
   })
