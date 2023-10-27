@@ -18,11 +18,16 @@
  *
  */
 
-const { expect } = require('chai')
-const { ethers } = require('hardhat')
-const elliptic = require('elliptic');
+const blake = require('blakejs');
 const BN = require('bn.js');
-const exp = require('constants');
+const elliptic = require('elliptic');
+const { ethers } = require('hardhat')
+const { expect } = require('chai')
+
+function computeBlake2b(input) {
+    const hash = blake.blake2b(input, null, 32); // 32 bytes = 256 bits
+    return Buffer.from(hash).toString('hex');
+}
 
 describe("@solidityevmequiv1 Precompiles Support", function () {
     let precompilesContract; 
@@ -179,5 +184,26 @@ describe("@solidityevmequiv1 Precompiles Support", function () {
         expect(result).to.be.true
     })
 
+    it("Should return the correct Blake2 hash", async function() {
+        // data from EIP-152: https://eips.ethereum.org/EIPS/eip-152
+        const rounds = 12
+        const h = ["0x48c9bdf267e6096a3ba7ca8485ae67bb2bf894fe72f36e3cf1361d5f3af54fa5", "0xd182e6ad7f520e511f6c3e2b8c68059b6bbd41fbabd9831f79217e1319cde05b"]
+        const m = [
+            "0x6162630000000000000000000000000000000000000000000000000000000000",
+            "0x0000000000000000000000000000000000000000000000000000000000000000",
+            "0x0000000000000000000000000000000000000000000000000000000000000000",
+            "0x0000000000000000000000000000000000000000000000000000000000000000"
+        ]
+        // const t = ["0x03000000", "0x00000000"]
+        const t = ["0x0300000000000000", "0x0000000000000000"];
+
+        const f = true;
+
+        const result = await precompilesContract.callStatic.blake2(rounds, h, m, t, f)
+
+        expect(result[0]).to.equal("0xba80a53f981c4d0d6a2797b69f12f6e94c212f14685ac4b74b12bb6fdbffa2d1")
+        expect(result[1]).to.equal("0x7d87c5392aab792dc252d5de4533cc9518d38aa8dbf1925ab92386edd4009923")
+    });
+    
 })
 
