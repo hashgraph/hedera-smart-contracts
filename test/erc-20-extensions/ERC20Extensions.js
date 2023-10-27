@@ -32,7 +32,6 @@ describe('ERC20ExtensionsMock tests', function () {
   let ERC20Burnable
   let ERC20Capped
   let ERC20Pausable
-  let ERC20Snapshot
   const amount = 1000
   const cap = 10000
   const burnAmount = 100
@@ -71,16 +70,6 @@ describe('ERC20ExtensionsMock tests', function () {
       Constants.TOKEN_SYMBOL
     )
     await ERC20Pausable.mint(owner.address, amount)
-
-    // Deploy ERC20Snapshot contract
-    const snapshotFactory = await ethers.getContractFactory(
-      Constants.Contract.ERC20SnapshotMock
-    )
-    ERC20Snapshot = await snapshotFactory.deploy(
-      Constants.TOKEN_NAME,
-      Constants.TOKEN_SYMBOL
-    )
-    await ERC20Snapshot.mint(owner.address, amount)
   })
 
   describe('ERC20Burnable tests', function () {
