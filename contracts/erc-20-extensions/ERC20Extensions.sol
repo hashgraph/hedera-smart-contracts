@@ -25,7 +25,7 @@ contract ERC20CappedMock is ERC20Capped {
 }
 
 contract ERC20PausableMock is ERC20Pausable, Ownable {
-    constructor(string memory name, string memory symbol) ERC20(name, symbol) {}
+    constructor(string memory name, string memory symbol) ERC20(name, symbol) Ownable(msg.sender){}
     
     function mint(address to, uint256 amount) public virtual {
         require(amount > 0);

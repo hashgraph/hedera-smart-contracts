@@ -15,7 +15,7 @@ contract Exchange is OwnableUpgradeable, UUPSUpgradeable {
 
     function initialize(address token) public initializer {
         tokenAddress = token;
-        __Ownable_init();
+        __Ownable_init(msg.sender);
     }
 
     function _authorizeUpgrade(address) internal override onlyOwner {}
