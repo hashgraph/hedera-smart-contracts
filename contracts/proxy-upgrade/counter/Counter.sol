@@ -13,7 +13,7 @@ contract Counter is OwnableUpgradeable, UUPSUpgradeable {
 
     function initialize(string memory _name) public initializer {
         name = _name;
-        __Ownable_init();
+        __Ownable_init(msg.sender);
     }
 
     function _authorizeUpgrade(address) internal override onlyOwner {}
