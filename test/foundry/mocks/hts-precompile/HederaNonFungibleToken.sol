@@ -138,15 +138,6 @@ contract HederaNonFungibleToken is ERC721, Constants {
         return super.transferFrom(from, to, tokenId);
     }
 
-    function safeTransferFrom(address from, address to, uint256 tokenId) public override {
-        address sender = msg.sender;
-        int64 responseCode = HtsPrecompile.preTransfer(sender, from, to, tokenId);
-        if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert HtsPrecompileError(responseCode);
-        }
-        return super.safeTransferFrom(from, to, tokenId);
-    }
-
     function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data) public override {
         address sender = msg.sender;
         int64 responseCode = HtsPrecompile.preTransfer(sender, from, to, tokenId);
