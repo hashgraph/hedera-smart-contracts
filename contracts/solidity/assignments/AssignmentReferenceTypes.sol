@@ -14,7 +14,7 @@ contract AssignmentReferenceTypes {
         y[2] = 8;
     }
 
-    function testChangeReference(uint[5] storage y) internal pure {
+    function testChangeReference(uint[5] storage y) internal {
         y[3] = 10;
     }
 
