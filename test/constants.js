@@ -105,7 +105,6 @@ const Contract = {
   Transaction: 'Transaction',
   MessageFrameAddresses: 'MessageFrameAddresses',
   New: 'New',
-<<<<<<< HEAD
   AssemblyAddress: 'AssemblyAddress',
   AddressContract: 'AddressContract',
   Recipient: 'Recipient',
@@ -116,16 +115,11 @@ const Contract = {
   Scoping: 'Scoping',
   Arithmetic: "Arithmetic",
   Defaults: "Defaults",
-<<<<<<< HEAD
   NonExisting: "NonExisting",
   NonExtDup: "NonExtDup",
-=======
-=======
   AddressContract: 'AddressContract',
   Recipient: 'Recipient',
   Inheritance: 'Inheritance',
->>>>>>> edd617d (Sets loop limit)
->>>>>>> 2830516 (Sets loop limit)
   ControlStructures: 'ControlStructures'
 }
 
