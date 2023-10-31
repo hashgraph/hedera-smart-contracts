@@ -32,3 +32,4 @@ coverage/
 ## --- Hardhat Gitignore for Foundry artifacts ---
 artifacts/forge-std
 artifacts/ds-test
+.vscode/settings.json
