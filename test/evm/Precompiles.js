@@ -1,6 +1,6 @@
 /*-
  *
- * Hedera JSON RPC Relay - Hardhat Example
+ * Hedera Smart Contracts
  *
  * Copyright (C) 2023 Hedera Hashgraph, LLC
  *
