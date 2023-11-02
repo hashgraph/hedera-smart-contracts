@@ -45,8 +45,8 @@ contract Errors {
     function tryCatchWithErrorMessageRevert(string memory message) external returns (int value, bool success) {
         try errorsExternal.revertWithErrorMessage(message) returns (bool v) {
             return (1, v);
-        } catch Error(string memory message) {
-            emit Result(0, message);
+        } catch Error(string memory _message) {
+            emit Result(0, _message);
         }
     }
 
