@@ -115,6 +115,8 @@ const Contract = {
   Scoping: 'Scoping',
   Arithmetic: "Arithmetic",
   Defaults: "Defaults",
+  NonExisting: "NonExisting",
+  NonExtDup: "NonExtDup",
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
