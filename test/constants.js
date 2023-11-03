@@ -117,6 +117,10 @@ const Contract = {
   Defaults: "Defaults",
   NonExisting: "NonExisting",
   NonExtDup: "NonExtDup",
+  AddressContract: 'AddressContract',
+  Recipient: 'Recipient',
+  Inheritance: 'Inheritance',
+  ControlStructures: 'ControlStructures'
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
