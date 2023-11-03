@@ -124,6 +124,8 @@ const Contract = {
   Panic: 'Panic',
   ReentrancyGuardTestSender: 'ReentrancyGuardTestSender',
   ReentrancyGuardTestReceiver: 'ReentrancyGuardTestReceiver',
+  Defaults: 'Defaults',
+  BlindAuction: 'BlindAuction',
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
