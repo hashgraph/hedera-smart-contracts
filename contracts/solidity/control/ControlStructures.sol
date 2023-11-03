@@ -16,7 +16,7 @@ contract ControlStructures {
         testContract = new TestTryCatchContract();
     }
 
-    function testIfElse(bool condition) external pure returns(bool) {
+    function evaluateIfElse(bool condition) external pure returns(bool) {
         if(condition) {
             return true;
         } else {
@@ -24,7 +24,7 @@ contract ControlStructures {
         }
     }
 
-    function testWhile(uint256 total) external pure returns(uint256) {
+    function evaluateWhile(uint256 total) external pure returns(uint256) {
         require(total < 100, "Cannot have more than 100 iterations");
         uint256 it = 0;
         while(++it < total) {}
@@ -32,7 +32,7 @@ contract ControlStructures {
         return it;
     }
 
-    function testDoWhile(uint256 total) external pure returns(uint256) {
+    function evaluateDoWhile(uint256 total) external pure returns(uint256) {
         require(total < 100, "Cannot have more than 100 iterations");
         uint256 it = 0;
         do {
@@ -42,7 +42,7 @@ contract ControlStructures {
         return it;
     }
 
-    function testBreak(uint256 total, uint256 interception) external pure returns(uint256) {
+    function evaluateBreak(uint256 total, uint256 interception) external pure returns(uint256) {
         require(total < 100, "Cannot have more than 100 iterations");
         uint256 it = 0;
         while(it++ < total) {
@@ -52,7 +52,7 @@ contract ControlStructures {
         return it;
     }
 
-    function testContinue(uint256 total, uint256 interception) external pure returns(uint256) {
+    function evaluateContinue(uint256 total, uint256 interception) external pure returns(uint256) {
         require(total < 100, "Cannot have more than 100 iterations");
         uint256 iterableSteps = 0;
         
@@ -64,7 +64,7 @@ contract ControlStructures {
         return iterableSteps;
     }
 
-    function testFor(uint256 total) external pure returns(uint256) {
+    function evaluateFor(uint256 total) external pure returns(uint256) {
         require(total < 100, "Cannot have more than 100 iterations");
         uint256 it = 0;
         for(uint i=0; i < total; i++) {
@@ -79,7 +79,7 @@ contract ControlStructures {
         return "my func was called";
     }
 
-    function testTryCatch(uint256 condition) external view returns(bool) {
+    function evaluateTryCatch(uint256 condition) external view returns(bool) {
         try testContract.myFunc(condition) {
             return true;
         } catch {
