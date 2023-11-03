@@ -123,7 +123,7 @@ const Contract = {
   Defaults: 'Defaults',
   AssignmentReferenceTypes: 'AssignmentReferenceTypes',
   DestructuringReturns: 'DestructuringReturns',
-  Panic: 'Panic'
+  Panic: 'Panic',
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
