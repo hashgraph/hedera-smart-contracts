@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 // SPDX-License-Identifier: Apache-2.0
-=======
-// SPDX-License-Identifier: UNLICENSED
->>>>>>> 326b5c3 (Drafts tests for panic errors support)
 pragma solidity ^0.8.20;
 
 contract Panic {
