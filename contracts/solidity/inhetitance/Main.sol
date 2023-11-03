@@ -14,4 +14,8 @@ contract Main is Base {
     function returnSuper() public view virtual returns (string memory) {
         return super.classIdentifier();
     }
+
+    function destroyContract(address recipient) public {
+        selfdestruct(payable(recipient));
+    }
 }
