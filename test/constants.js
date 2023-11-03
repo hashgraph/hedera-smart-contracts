@@ -97,7 +97,6 @@ const Contract = {
   ERC20BurnableMock: 'ERC20BurnableMock',
   ERC20CappedMock: 'ERC20CappedMock',
   ERC20PausableMock: 'ERC20PausableMock',
-  ERC20SnapshotMock: 'ERC20SnapshotMock',
   HRCContract: 'HRCContract',
   ExchangeRateMock: 'ExchangeRateMock',
   PrngSystemContract: 'PrngSystemContract',
@@ -113,14 +112,15 @@ const Contract = {
   FunctionsChild: 'FunctionsChild',
   FunctionsParent: 'FunctionsParent',
   Scoping: 'Scoping',
-  Arithmetic: "Arithmetic",
-  Defaults: "Defaults",
-  NonExisting: "NonExisting",
-  NonExtDup: "NonExtDup",
+  Arithmetic: 'Arithmetic',
+  Defaults: 'Defaults',
+  NonExisting: 'NonExisting',
+  NonExtDup: 'NonExtDup',
   AddressContract: 'AddressContract',
   Recipient: 'Recipient',
   Inheritance: 'Inheritance',
-  ControlStructures: 'ControlStructures'
+  ControlStructures: 'ControlStructures',
+  Defaults: 'Defaults',
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
@@ -131,7 +131,7 @@ const GAS_LIMIT_8000000 = { gasLimit: 8000000 }
 const TOKEN_NAME = 'tokenName'
 const TOKEN_SYMBOL = 'tokenSymbol'
 const TX_SUCCESS_CODE = 22
-const SECOND = WEI = 1
+const SECOND = (WEI = 1)
 const MINUTE = 60 * SECOND
 const HOUR = 60 * MINUTE
 const DAY = 24 * HOUR
@@ -156,5 +156,5 @@ module.exports = {
   DAY,
   WEEK,
   WEI,
-  GWEI
+  GWEI,
 }

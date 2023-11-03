@@ -81,7 +81,7 @@ contract HederaNonFungibleToken is ERC721, Constants {
         address to,
         uint256 tokenId
     ) external onlyHtsPrecompile returns (int64 responseCode) {
-        bool isSpenderApproved = _isApprovedOrOwner(spender, tokenId);
+        bool isSpenderApproved = _isAuthorized(from, spender, tokenId);
         if (!isSpenderApproved) {
             return HederaResponseCodes.INSUFFICIENT_TOKEN_BALANCE;
         }
@@ -91,8 +91,11 @@ contract HederaNonFungibleToken is ERC721, Constants {
     }
 
     /// @dev unlike fungible/ERC20 tokens this only allows for a single spender to be approved at any one time
-    function approveRequestFromHtsPrecompile(address spender, int64 tokenId) external onlyHtsPrecompile {
-        _approve(spender, uint64(tokenId));
+    /// @notice The `auth` argument is optional. If the value passed is non 0, then this function will check that `auth` is
+    ///         either the owner of the token, or approved to operate on all tokens held by this owner.
+    ///         https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v5.0.0/contracts/token/ERC721/ERC721.sol#L400
+    function approveRequestFromHtsPrecompile(address spender, int64 tokenId, address auth) external onlyHtsPrecompile {
+        _approve(spender, uint64(tokenId), auth);
     }
 
     function setApprovalForAllFromHtsPrecompile(
@@ -135,15 +138,6 @@ contract HederaNonFungibleToken is ERC721, Constants {
         return super.transferFrom(from, to, tokenId);
     }
 
-    function safeTransferFrom(address from, address to, uint256 tokenId) public override {
-        address sender = msg.sender;
-        int64 responseCode = HtsPrecompile.preTransfer(sender, from, to, tokenId);
-        if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert HtsPrecompileError(responseCode);
-        }
-        return super.safeTransferFrom(from, to, tokenId);
-    }
-
     function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data) public override {
         address sender = msg.sender;
         int64 responseCode = HtsPrecompile.preTransfer(sender, from, to, tokenId);
@@ -158,8 +152,8 @@ contract HederaNonFungibleToken is ERC721, Constants {
         return uint64(nftCount.minted - nftCount.burned);
     }
 
-    function isApprovedOrOwner(address spender, uint256 tokenId) external view returns (bool) {
-        return _isApprovedOrOwner(spender, tokenId);
+    function isApprovedOrOwner(address owner, address spender, uint256 tokenId) external view returns (bool) {
+        return _isAuthorized(owner, spender, tokenId);
     }
 
     function mintCount() external view returns (int64 minted) {

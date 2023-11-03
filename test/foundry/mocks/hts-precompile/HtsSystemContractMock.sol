@@ -1351,7 +1351,7 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
         }
 
         _postApprove(token, owner, spender, serialNumber);
-        HederaNonFungibleToken(token).approveRequestFromHtsPrecompile(spender, _serialNumber);
+        HederaNonFungibleToken(token).approveRequestFromHtsPrecompile(spender, _serialNumber, owner);
     }
 
     function associateToken(address account, address token) public noDelegateCall returns (int64 responseCode) {
