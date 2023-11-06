@@ -16,15 +16,14 @@ contract TokenVault is ERC4626 {
     constructor(
         IERC20 _asset,
         string memory _name,
-        string memory _symbol,
-        uint256 initialSupply
+        string memory _symbol
     ) ERC4626(_asset) ERC20(_name, _symbol) {
-        _mint(msg.sender, initialSupply);
+       
     }
 
     function _deposit(uint256 _assets) public {
         // checks that the deposited amount is greater than zero.
-        require(_assets > 0, "Deposit less than Zero");
+        require(_assets > 0, "Deposit is zero");
         // calling the deposit function from the ERC-4626 library to perform all the necessary functionality
         deposit(_assets, msg.sender);
         // Increase the share of the user
@@ -47,7 +46,7 @@ contract TokenVault is ERC4626 {
         // calling the redeem function from the ERC-4626 library to perform all the necessary functionality
         redeem(assets, _receiver, msg.sender);
         // Decrease the share of the user
-        shareHolders[msg.sender] -= _shares;
+        shareHolders[msg.sender] -= _shares;        
     }
 
     // returns total number of assets

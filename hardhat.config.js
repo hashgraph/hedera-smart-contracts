@@ -7,6 +7,7 @@ const {
   OPERATOR_KEY_A,
   HEX_PRIVATE_KEY_A,
   HEX_PRIVATE_KEY_B,
+  HEX_PRIVATE_KEY_C,
   NETWORKS,
 } = require('./utils/constants')
 
@@ -40,7 +41,7 @@ module.exports = {
   networks: {
     local: {
       url: NETWORKS.local.url,
-      accounts: [HEX_PRIVATE_KEY_A, HEX_PRIVATE_KEY_B],
+      accounts: [HEX_PRIVATE_KEY_A, HEX_PRIVATE_KEY_B, HEX_PRIVATE_KEY_C],
       chainId: NETWORKS.local.chainId,
       gas: 10000000,
       sdkClient: {
@@ -53,7 +54,7 @@ module.exports = {
     },
     testnet: {
       url: NETWORKS.testnet.url,
-      accounts: [HEX_PRIVATE_KEY_A, HEX_PRIVATE_KEY_B],
+      accounts: [HEX_PRIVATE_KEY_A, HEX_PRIVATE_KEY_B, HEX_PRIVATE_KEY_C],
       chainId: NETWORKS.testnet.chainId,
       sdkClient: {
         operatorId: OPERATOR_ID_A,
@@ -65,7 +66,7 @@ module.exports = {
     },
     previewnet: {
       url: NETWORKS.previewnet.url,
-      accounts: [HEX_PRIVATE_KEY_A, HEX_PRIVATE_KEY_B],
+      accounts: [HEX_PRIVATE_KEY_A, HEX_PRIVATE_KEY_B, HEX_PRIVATE_KEY_C],
       chainId: NETWORKS.previewnet.chainId,
       sdkClient: {
         operatorId: OPERATOR_ID_A,

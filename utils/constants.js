@@ -17,6 +17,10 @@ const HEX_PRIVATE_KEY_A = process.env.HEX_PRIVATE_KEY_A
 const HEX_PRIVATE_KEY_B = process.env.HEX_PRIVATE_KEY_B
   ? process.env.HEX_PRIVATE_KEY_B
   : ethers.constants.HashZero
+/**  @type string */
+const HEX_PRIVATE_KEY_C = process.env.HEX_PRIVATE_KEY_C
+  ? process.env.HEX_PRIVATE_KEY_C
+  : ethers.constants.HashZero  
 
 const NETWORKS = {
   local: {
@@ -50,5 +54,6 @@ module.exports = {
   OPERATOR_KEY_A,
   HEX_PRIVATE_KEY_A,
   HEX_PRIVATE_KEY_B,
+  HEX_PRIVATE_KEY_C,
   NETWORKS,
 }
