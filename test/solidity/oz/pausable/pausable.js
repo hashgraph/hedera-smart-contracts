@@ -38,9 +38,9 @@ describe('@solidityequiv3 Pausable', function () {
   it('should BE able to call function "setPausedMessage" with "whenNotPaused" modifier when unpaused', async function () {
     const tx = await contract.setPausedMessage("Hello World")
     await tx.wait()
-    const messate = await contract.message()
+    const message = await contract.message()
 
-    expect(messate).to.equal("Hello World")
+    expect(message).to.equal("Hello World")
   })
 
   it('should NOT be able to call function "setPausedMessage" with "whenNotPaused" modifier when paused', async function () {
