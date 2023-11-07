@@ -122,6 +122,8 @@ const Contract = {
   AssignmentReferenceTypes: 'AssignmentReferenceTypes',
   DestructuringReturns: 'DestructuringReturns',
   Panic: 'Panic',
+  ReentrancyGuardTestSender: 'ReentrancyGuardTestSender',
+  ReentrancyGuardTestReceiver: 'ReentrancyGuardTestReceiver',
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
