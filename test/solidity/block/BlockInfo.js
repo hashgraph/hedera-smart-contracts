@@ -33,7 +33,7 @@ describe('@solidityequiv1 BlockInfo Test Suite', function () {
     blockInfo = await factory. deploy({ gasLimit: 15000000 })
   })
 
-  // EIP-1559 does not apply to Hedera.  Base fees do not adjust per block.
+  // Base fees do not adjust per block.
   it('should be able to execute getBlockBaseFee()', async function () {
     const blockBaseFee = await blockInfo.getBlockBaseFee()
     expect(blockBaseFee).to.equal(0)
@@ -45,6 +45,7 @@ describe('@solidityequiv1 BlockInfo Test Suite', function () {
     const block = await provider.getBlock(blockNumber)
     try {
       const blockHash = await blockInfo.getBlockHash()
+      expect.fail("Expected an error but did not get one");
     } catch(e) {
       expect(e.code).to.equal('CALL_EXCEPTION')
       expect(e.message).to.contain('missing revert data in call exception')
@@ -63,6 +64,7 @@ describe('@solidityequiv1 BlockInfo Test Suite', function () {
   it('should get the current block prevrandao using block.prevrandao', async function () { 
     try{
       const prevrandao = await blockInfo.getBlockPrevrando()  
+      expect.fail("Expected an error but did not get one");
     } catch (e) {
       expect(e.code).to.equal('CALL_EXCEPTION')
       expect(e.message).to.contain('missing revert data in call exception')
@@ -76,6 +78,7 @@ describe('@solidityequiv1 BlockInfo Test Suite', function () {
   it('should get the current block difficulty using block.difficulty (replaced by prevrandao)', async function () { 
     try {
       const difficulty = await blockInfo.getBlockDifficulty()
+      expect.fail("Expected an error but did not get one");
     } catch (e) {
       expect(e.code).to.equal('CALL_EXCEPTION')
       expect(e.message).to.contain('missing revert data in call exception')
@@ -100,8 +103,6 @@ describe('@solidityequiv1 BlockInfo Test Suite', function () {
     const timeStamp = await blockInfo.getBlockTimestamp()
     expect(isTimestamp(timeStamp)).to.equal(true)
   })
-
-
 })
 
 function isTimestamp(value) {
