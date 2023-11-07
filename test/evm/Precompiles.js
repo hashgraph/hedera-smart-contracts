@@ -203,7 +203,7 @@ describe("@solidityevmequiv1 Precompiles Support", function () {
 
         expect(result[0]).to.equal("0xba80a53f981c4d0d6a2797b69f12f6e94c212f14685ac4b74b12bb6fdbffa2d1")
         expect(result[1]).to.equal("0x7d87c5392aab792dc252d5de4533cc9518d38aa8dbf1925ab92386edd4009923")
-    });
-    
+    })
 })
+
 
