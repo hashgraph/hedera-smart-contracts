@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.7.0 <0.9.0;
-// This will report a warning due to deprecated selfdestruct
+
 contract ReceiverPays {
     address owner = msg.sender;
 
@@ -23,6 +23,7 @@ contract ReceiverPays {
     /// destroy the contract and reclaim the leftover funds.
     function shutdown() external {
         require(msg.sender == owner, "only owner can shutdown");
+        // This will report a warning due to deprecated selfdestruct
         selfdestruct(payable(msg.sender));
     }
 
