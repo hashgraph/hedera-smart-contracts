@@ -22,7 +22,7 @@ contract ExchangeRatePrecompile is SelfFunding {
 
     function invalidCall() external payable {
         // Should fail, this is not a valid selector 
-        (bool success, bytes memory result) = PRECOMPILE_ADDRESS.call(
+        (bool success, ) = PRECOMPILE_ADDRESS.call(
             abi.encodeWithSelector(ExchangeRatePrecompile.approxUsdValue.selector));
         require(success);
     }

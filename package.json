@@ -1,10 +1,12 @@
 {
   "name": "@hashgraph/smart-contracts",
-  "version": "0.6.0-SNAPSHOT",
+  "version": "0.7.0-SNAPSHOT",
   "description": "Hedera Smart Contract Service supporting files",
   "files": [
     "/contracts/**/*.sol",
-    "/contracts/**/**/**/*.sol"
+    "/contracts/**/**/**/*.sol",
+    "/test/foundry/mocks/**/*.sol",
+    "/test/foundry/mocks/**/**/**/*.sol"
   ],
   "repository": {
     "type": "git",
@@ -33,8 +35,8 @@
     "@hashgraph/sdk": "^2.25.0",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
     "@nomicfoundation/hardhat-foundry": "^1.1.1",
-    "@openzeppelin/contracts": "^4.9.3",
-    "@openzeppelin/contracts-upgradeable": "^4.9.3",
+    "@openzeppelin/contracts": "^5.0.0",
+    "@openzeppelin/contracts-upgradeable": "^5.0.0",
     "@openzeppelin/hardhat-upgrades": "^1.22.1",
     "hardhat": "^2.17.2",
     "husky": "^8.0.0",

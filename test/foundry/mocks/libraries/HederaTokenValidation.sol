@@ -263,6 +263,7 @@ library HederaTokenValidation {
     }
 
     function _validateNftApproval(
+        address owner,
         address token,
         address spender,
         uint256 serialNumber,
@@ -270,7 +271,7 @@ library HederaTokenValidation {
     ) internal view returns (bool success, int64 responseCode) {
 
         if (_isNonFungible[token]) {
-            bool canSpendToken = HederaNonFungibleToken(token).isApprovedOrOwner(spender, serialNumber);
+            bool canSpendToken = HederaNonFungibleToken(token).isApprovedOrOwner(owner, spender, serialNumber);
             if (!canSpendToken) {
                 return (false, HederaResponseCodes.INSUFFICIENT_ACCOUNT_BALANCE);
             }
@@ -294,7 +295,7 @@ library HederaTokenValidation {
         }
 
         if (_isNonFungible[token]) {
-            return _validateNftApproval(token, spender, amountOrSerialNumber, _isNonFungible);
+            return _validateNftApproval(from, token, spender, amountOrSerialNumber, _isNonFungible);
         }
     }
 

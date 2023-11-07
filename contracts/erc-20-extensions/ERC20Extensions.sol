@@ -5,7 +5,6 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Snapshot.sol";
 
 contract ERC20BurnableMock is ERC20Burnable {
     constructor(string memory name, string memory symbol) ERC20(name, symbol) {}
@@ -26,7 +25,7 @@ contract ERC20CappedMock is ERC20Capped {
 }
 
 contract ERC20PausableMock is ERC20Pausable, Ownable {
-    constructor(string memory name, string memory symbol) ERC20(name, symbol) {}
+    constructor(string memory name, string memory symbol) ERC20(name, symbol) Ownable(msg.sender){}
     
     function mint(address to, uint256 amount) public virtual {
         require(amount > 0);
@@ -39,18 +38,5 @@ contract ERC20PausableMock is ERC20Pausable, Ownable {
 
     function unpause() external onlyOwner {
         _unpause();
-    }
-}
-
-contract ERC20SnapshotMock is ERC20Snapshot {
-    constructor(string memory name, string memory symbol) ERC20(name, symbol) {}
-
-    function mint(address to, uint256 amount) public virtual {
-        require(amount > 0);
-        _mint(to, amount);
-    }
-    
-    function snapshot() external {
-        _snapshot();
     }
 }
