@@ -32,11 +32,10 @@ contract SimpleAuction {
     }
 
     function bid() external payable {
-
         if (block.timestamp > auctionEndTime)
             revert('AuctionAlreadyEnded');
 
-        if (msg.value <= highestBid)
+        if (highestBid >= msg.value)
             revert('BidNotHighEnough');
 
         if (highestBid != 0) {
