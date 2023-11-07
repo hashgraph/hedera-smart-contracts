@@ -135,5 +135,4 @@ describe("@solidityevmequiv1 Modifiers", function() {
         expect(await contractB.getData()).to.equal(79);
         expect(await contractB.show()).to.equal("This is the overriding contract B");
     });    
-    
 });
