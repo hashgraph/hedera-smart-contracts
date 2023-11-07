@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.9;
 
-import 'forge-std/console.sol';
-
 import '../../../../contracts/hts-precompile/HederaResponseCodes.sol';
 import '../../../../contracts/hts-precompile/KeyHelper.sol';
 import './HederaFungibleToken.sol';
@@ -44,6 +42,11 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
     mapping(address => bool) internal _tokenDeleted;
     // HTS token -> paused
     mapping(address => TokenConfig) internal _tokenPaused;
+
+    // - - - - - - EVENTS - - - - - -
+
+    // emitted for convenience of having the token address accessible in a Hardhat environment
+    event TokenCreated(address indexed token);
 
     constructor() NoDelegateCall(HTS_PRECOMPILE) {}
 
@@ -1224,6 +1227,7 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
 
         /// @dev no need to register newly created HederaFungibleToken in this context as the constructor will call HtsSystemContractMock#registerHederaFungibleToken
         HederaFungibleToken hederaFungibleToken = new HederaFungibleToken(fungibleTokenInfo);
+        emit TokenCreated(address(hederaFungibleToken));
         return (HederaResponseCodes.SUCCESS, address(hederaFungibleToken));
     }
 
@@ -1240,6 +1244,7 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
 
         /// @dev no need to register newly created HederaNonFungibleToken in this context as the constructor will call HtsSystemContractMock#registerHederaNonFungibleToken
         HederaNonFungibleToken hederaNonFungibleToken = new HederaNonFungibleToken(tokenInfo);
+        emit TokenCreated(address(hederaNonFungibleToken));
         return (HederaResponseCodes.SUCCESS, address(hederaNonFungibleToken));
     }
 
@@ -1269,6 +1274,7 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
 
         /// @dev no need to register newly created HederaFungibleToken in this context as the constructor will call HtsSystemContractMock#registerHederaFungibleToken
         HederaFungibleToken hederaFungibleToken = new HederaFungibleToken(fungibleTokenInfo);
+        emit TokenCreated(address(hederaFungibleToken));
         return (HederaResponseCodes.SUCCESS, address(hederaFungibleToken));
     }
 
@@ -1290,6 +1296,7 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
 
         /// @dev no need to register newly created HederaNonFungibleToken in this context as the constructor will call HtsSystemContractMock#registerHederaNonFungibleToken
         HederaNonFungibleToken hederaNonFungibleToken = new HederaNonFungibleToken(tokenInfo);
+        emit TokenCreated(address(hederaNonFungibleToken));
         return (HederaResponseCodes.SUCCESS, address(hederaNonFungibleToken));
     }
 
@@ -1344,7 +1351,7 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
         }
 
         _postApprove(token, owner, spender, serialNumber);
-        HederaNonFungibleToken(token).approveRequestFromHtsPrecompile(spender, _serialNumber);
+        HederaNonFungibleToken(token).approveRequestFromHtsPrecompile(spender, _serialNumber, owner);
     }
 
     function associateToken(address account, address token) public noDelegateCall returns (int64 responseCode) {

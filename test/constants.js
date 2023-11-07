@@ -65,6 +65,7 @@ const Path = {
   HIP583_ERC20Mock: 'contracts/hip-583/ERC20Mock.sol:ERC20Mock',
   HIP583_ERC721Mock: 'contracts/hip-583/ERC721Mock.sol:ERC721Mock',
   HRC: 'contracts/hrc/HRC.sol:HRC',
+  TYPE_OPS: 'contracts/solidity/typeops/TypeOps.sol:TypeOps',
 }
 
 const Contract = {
@@ -96,18 +97,33 @@ const Contract = {
   ERC20BurnableMock: 'ERC20BurnableMock',
   ERC20CappedMock: 'ERC20CappedMock',
   ERC20PausableMock: 'ERC20PausableMock',
-  ERC20SnapshotMock: 'ERC20SnapshotMock',
   HRCContract: 'HRCContract',
   ExchangeRateMock: 'ExchangeRateMock',
   PrngSystemContract: 'PrngSystemContract',
   Concatenation: 'Concatenation',
-  Errors: 'Errors',
   Transaction: 'Transaction',
   MessageFrameAddresses: 'MessageFrameAddresses',
   New: 'New',
+  AssemblyAddress: 'AssemblyAddress',
   AddressContract: 'AddressContract',
   Recipient: 'Recipient',
   Inheritance: 'Inheritance',
+  Functions: 'Functions',
+  FunctionsChild: 'FunctionsChild',
+  FunctionsParent: 'FunctionsParent',
+  Scoping: 'Scoping',
+  Arithmetic: 'Arithmetic',
+  Defaults: 'Defaults',
+  NonExisting: 'NonExisting',
+  NonExtDup: 'NonExtDup',
+  AddressContract: 'AddressContract',
+  Recipient: 'Recipient',
+  Inheritance: 'Inheritance',
+  ControlStructures: 'ControlStructures',
+  Defaults: 'Defaults',
+  AssignmentReferenceTypes: 'AssignmentReferenceTypes',
+  DestructuringReturns: 'DestructuringReturns',
+  Panic: 'Panic',
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
@@ -118,7 +134,7 @@ const GAS_LIMIT_8000000 = { gasLimit: 8000000 }
 const TOKEN_NAME = 'tokenName'
 const TOKEN_SYMBOL = 'tokenSymbol'
 const TX_SUCCESS_CODE = 22
-const SECOND = WEI = 1
+const SECOND = (WEI = 1)
 const MINUTE = 60 * SECOND
 const HOUR = 60 * MINUTE
 const DAY = 24 * HOUR
@@ -143,5 +159,5 @@ module.exports = {
   DAY,
   WEEK,
   WEI,
-  GWEI
+  GWEI,
 }

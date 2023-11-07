@@ -21,18 +21,20 @@
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../constants')
-const { pollForERC20BurnableChangedSupply, pauseAndPoll, unPauseAndPoll } = require('../../utils/helpers')
+const {
+  pollForERC20BurnableChangedSupply,
+  pauseAndPoll,
+  unPauseAndPoll,
+} = require('../../utils/helpers')
 
 describe('ERC20ExtensionsMock tests', function () {
   let owner, addr1
   let ERC20Burnable
   let ERC20Capped
   let ERC20Pausable
-  let ERC20Snapshot
   const amount = 1000
   const cap = 10000
   const burnAmount = 100
-  const transferAmount = 500
 
   before(async function () {
     // Set up signers
@@ -68,16 +70,6 @@ describe('ERC20ExtensionsMock tests', function () {
       Constants.TOKEN_SYMBOL
     )
     await ERC20Pausable.mint(owner.address, amount)
-
-    // Deploy ERC20Snapshot contract
-    const snapshotFactory = await ethers.getContractFactory(
-      Constants.Contract.ERC20SnapshotMock
-    )
-    ERC20Snapshot = await snapshotFactory.deploy(
-      Constants.TOKEN_NAME,
-      Constants.TOKEN_SYMBOL
-    )
-    await ERC20Snapshot.mint(owner.address, amount)
   })
 
   describe('ERC20Burnable tests', function () {
@@ -90,7 +82,10 @@ describe('ERC20ExtensionsMock tests', function () {
       const burnReceipt = await burnTx.wait()
 
       // Get updated values
-      const newSupply = await pollForERC20BurnableChangedSupply(ERC20Burnable, initialSupply)
+      const newSupply = await pollForERC20BurnableChangedSupply(
+        ERC20Burnable,
+        initialSupply
+      )
       const newBalance = await ERC20Burnable.balanceOf(owner.address)
 
       // Check if the Transfer event was emitted to AddressZero
@@ -203,56 +198,4 @@ describe('ERC20ExtensionsMock tests', function () {
       await expect(ERC20Pausable.connect(addr1).unpause()).to.be.reverted
     })
   })
-
-  describe('ERC20Snapshot tests', function () {
-    it('should create a new snapshot and emit a Snapshot event', async function () {
-      // Create a new snapshot and wait for the transaction receipt
-      const tx = await ERC20Snapshot.snapshot()
-      const receipt = await tx.wait()
-
-      // Verify that "Snapshot" event is emited
-      expect(receipt.events[0].event).to.equal('Snapshot')
-    })
-
-    it('should return the correct totalSupplyAt(snapshotId)', async function () {
-      // Create a new snapshot and wait for the transaction receipt
-      const snapshot = await ERC20Snapshot.snapshot()
-      const tx = await snapshot.wait()
-
-      // Get the snapshotID
-      const snapshotId = tx.events[0].args[0]
-
-      // Mint extra tokens, increase the total supply and get the current total supply
-      await ERC20Snapshot.mint(owner.address, amount)
-      const newTotalSupply = await ERC20Snapshot.totalSupply()
-
-      // Verify that the total supply at the time of the snapshot is equal to the initial mint amount.
-      expect(await ERC20Snapshot.totalSupplyAt(snapshotId)).to.equal(
-        newTotalSupply - amount
-      )
-    })
-
-    it('should return the correct balanceOfAt(address, snapshotId)', async function () {
-      await ERC20Snapshot.transfer(addr1.address, transferAmount)
-
-      // Create a new snapshot and wait for the transaction receipt
-      const snapshot = await ERC20Snapshot.snapshot()
-      const tx = await snapshot.wait()
-
-      // Get the snapshotID
-      const snapshotId = tx.events[0].args[0]
-
-      // Transfer extra tokens to addr1 to verify that the snapshot is valid and get new ballance
-      await ERC20Snapshot.transfer(addr1.address, transferAmount)
-      const newBalance = await ERC20Snapshot.balanceOf(addr1.address)
-
-      // Verify that the balance of addr1 at the time of the snapshot is equal to the initial transfer amount.
-      expect(
-        await ERC20Snapshot.balanceOfAt(addr1.address, snapshotId)
-      ).to.equal(newBalance - transferAmount)
-    })
-  })
 })
-
-
-

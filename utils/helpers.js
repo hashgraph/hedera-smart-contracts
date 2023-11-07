@@ -102,7 +102,7 @@ const pollForNewERC721Owner = async(erc721Contract, tokenId, ownerBefore) => {
         return ownerAfter; // Ownership changed
       }
   
-      delay();
+      await delay();
     }
   
     throw new Error(`Ownership did not change after ${process.env.MAX_RETRY} tries`);
@@ -132,7 +132,7 @@ const pollForNewERC721HollowWalletOwner = async(erc721Contract, nftTokenAddress,
         return ownerAfter; // Ownership changed
       }
   
-      delay();
+      await delay();
     }
   
     throw new Error(`Ownership did not change after ${process.env.MAX_RETRY} tries`);
@@ -162,7 +162,7 @@ const pollForNewHollowWalletBalance = async (provider, walletAddress, balanceBef
         return balanceAfter; // Balance changed
       }
   
-      delay();
+      await delay();
     }
   
     throw new Error(`Failed to get a different balance value after ${process.env.MAX_RETRY} tries`);

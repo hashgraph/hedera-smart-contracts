@@ -1,6 +1,6 @@
 /*-
  *
- * Hedera JSON RPC Relay - Hardhat Example
+ * Hedera Smart Contracts
  *
  * Copyright (C) 2023 Hedera Hashgraph, LLC
  *
@@ -22,7 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../../constants')
 
-describe('New tests', () => {
+describe('@solidityequiv1 New tests', () => {
   let newContract
   const CONTRACT_ALPHA = 'Alpha'
   const MESSAGE_ALPHA = 'Message from Alpha contract'

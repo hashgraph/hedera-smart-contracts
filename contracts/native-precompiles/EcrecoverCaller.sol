@@ -5,7 +5,7 @@ contract EcrecoverCaller {
     event EcrecoverResult(bytes result);
     address accountZeroZeroOne = address(0x0000000000000000000000000000000000000001);
 
-    function callEcrecover(bytes32 messageHash, uint8 v, bytes32 r, bytes32 s) external view returns (address) {
+    function callEcrecover(bytes32 messageHash, uint8 v, bytes32 r, bytes32 s) external pure returns (address) {
         address result = ecrecover(messageHash, v, r, s);
         return result;
     }
@@ -22,7 +22,7 @@ contract EcrecoverCaller {
 
     function send0x1() external payable {
         address payable target = payable(accountZeroZeroOne);
-        target.send(msg.value);
+        target.transfer(msg.value);
     }
 
     function transfer0x1() external payable {

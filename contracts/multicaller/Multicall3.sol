@@ -179,8 +179,9 @@ contract Multicall3 {
     }
 
     /// @notice Returns the block difficulty
+    /// @notice Since the VM version paris, "difficulty" was replaced by "prevrandao", which now returns a random number based on the beacon chain.
     function getCurrentBlockDifficulty() public view returns (uint256 difficulty) {
-        difficulty = block.difficulty;
+        difficulty = block.prevrandao;
     }
 
     /// @notice Returns the block gas limit

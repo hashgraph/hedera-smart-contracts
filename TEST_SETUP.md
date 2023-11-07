@@ -14,66 +14,80 @@
 
 ## Building and Running the Project
 
-1. Install dependencies
+#### 1. Install dependencies
 
 ```
    npm install
 ```
 
-2. Configure environment variables
+#### 2. Configure environment variables
 
-   At root, create a `.env` file using the `example.env` as the template and fill out the variables.
+At root, create a `.env` file using the `example.env` as the template and fill out the variables.
 
-   | Variable            | Description                                                                      |
-   | ------------------- | -------------------------------------------------------------------------------- |
-   | `OPERATOR_ID_A`     | This is the `Account ID` which can be found in your account portal.              |
-   | `OPERATOR_KEY_A`    | This is the `DER Encoded Private Key` which can be found in your account portal. |
-   | `HEX_PRIVATE_KEY_A` | This is the `HEX Encoded Private Key` which can be found in your account portal. |
-   | `HEX_PRIVATE_KEY_B` | This is the `HEX Encoded Private Key` which can be found in your account portal. |
-   | `HEX_PRIVATE_KEY_C` | This is the `HEX Encoded Private Key` which can be found in your account portal. This key is used in the voting example. |
-   | `HEX_PRIVATE_KEY_D` | This is the `HEX Encoded Private Key` which can be found in your account portal. This key is used in the voting example. |
-   | `HEX_PRIVATE_KEY_E` | This is the `HEX Encoded Private Key` which can be found in your account portal. This key is used in the voting example. |
-   | `HEX_PRIVATE_KEY_F` | This is the `HEX Encoded Private Key` which can be found in your account portal. This key is used in the voting example. |
+| Variable            | Description                                                                      |
+| ------------------- | -------------------------------------------------------------------------------- |
+| `OPERATOR_ID_A`     | This is the `Account ID` which can be found in your account portal.              |
+| `OPERATOR_KEY_A`    | This is the `DER Encoded Private Key` which can be found in your account portal. |
+| `HEX_PRIVATE_KEY_A` | This is the `HEX Encoded Private Key` which can be found in your account portal. |
+| `HEX_PRIVATE_KEY_B` | This is the `HEX Encoded Private Key` which can be found in your account portal. |
 
 **_Notes_**: At least two accounts are required for the `HEX_PRIVATE_KEY` fields. See [Create Hedera Portal Profile](https://docs.hedera.com/hedera/getting-started/introduction#create-hedera-portal-profile-faucet) on how to create accounts on Hedera networks.  Six accounts will be needed if you want to run the solidity voting example.  The local.env file uses ECDSA accounts listed when starting the local node.
 
 **_Important_**: While Hedera supports both ECDSA and ED25519 accounts, please use ECDSA since Ethereum only supports ECDSA.
 
-3. Configure Hardhat
+#### 3. Configure Hardhat
 
-   Adjust the `defaultNetwork` field in the [hardhat.config.js](hardhat.config.js) file based on the network your accounts (specified in the .env file) are associated with.
+Adjust the `defaultNetwork` field in the [hardhat.config.js](hardhat.config.js) file based on the network your accounts (specified in the .env file) are associated with.
 
-4. Compile smart contracts
+#### 4. Installing the `foundry-rs` toolkit for the `forge` testing framework
+
+**_Motivation_**: This step is necessary for the project as it utilizes the `hardhat-foundry` plugin, enabling Hardhat to use dependencies from the `./lib` folder, which are installed using `forge`. Consequently, the plugin attempts to execute `forge install` to make these dependencies accessible to Hardhat. Therefore, it is crucial to install the `forge` testing framework, which is a part of the `foundry-rs` toolkit.
+
+**_Notes_**: If you already have `foundry-rs` and `forge` correctly installed locally, you can skip this step.
+
+##### 4.a. First, download the `foundry-rs` installer by running the following command:
+
+```bash
+curl -L https://foundry.paradigm.xyz | bash
+```
+
+##### 4.b. Next, to install `Foundry` and `forge`, simply execute:
+
+```bash
+foundryup
+```
+
+#### 5. Compile smart contracts
 
 ```
     npx hardhat compile
 ```
 
-5. Test smart contracts
+#### 6. Test smart contracts
 
-   5.1 Set up `Hedera Local Node`
+##### 6.1 Set up `Hedera Local Node`
 
-   - Use the default env variables provided in [local.env](./local.env) for your `.env` file.
+- Use the default env variables provided in [local.env](./local.env) for your `.env` file.
 
-   - Ensure that the `defaultNetwork` in [hardhat.config.js](./hardhat.config.js) is set to `NETWORKS.local.name`.
+- Ensure that the `defaultNetwork` in [hardhat.config.js](./hardhat.config.js) is set to `NETWORKS.local.name`.
 
-   - From the root of your project directory, execute the following command to start up a `Hedera local node`:
+- From the root of your project directory, execute the following command to start up a `Hedera local node`:
 
-   ```
-      npx hedera start -d
-   ```
+```
+   npx hedera start -d
+```
 
-   **_Important_**: Before running the `hedera local node`, verify that there are no other instances of Hedera docker containers or json-rpc-relay running in the background, as they might interfere with the functionality of the `hedera local node`.
+**_Important_**: Before running the `hedera local node`, verify that there are no other instances of Hedera docker containers or json-rpc-relay running in the background, as they might interfere with the functionality of the `hedera local node`.
 
-   5.2 Execute test suites
+##### 6.2 Execute test suites
 
-   Run below command to execute the tests
+Run below command to execute the tests
 
-   ```
-      npx hardhat test
-   ```
+```
+   npx hardhat test
+```
 
-   **_Note_**: For more information on testing, follow the instructions in the [test guide](test/README.md).
+**_Note_**: For more information on testing, follow the instructions in the [test guide](test/README.md).
 
 ## Code Formatter
 
