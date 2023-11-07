@@ -106,6 +106,30 @@ describe('@solidityevmequiv6 Ownable - Crowd Fund tests', () => {
     )
   })
 
+  it('Should NOT allow owner to withdraw an amount which is greater than the contract balance', async () => {
+    // prepare signers
+    const owner = signers[0]
+    const funder = signers[1]
+
+    // fund the contract by the funder
+    await crowdFund.connect(funder).deposit({ value: FUND_AMOUNT })
+
+    // prepare transaction to withdraw an amount by owner
+    const WITHDRAWN_AMOUNT = 40000000000 // > FUND_AMOUNT
+    const tx = await crowdFund
+      .connect(owner)
+      .withdraw(WITHDRAWN_AMOUNT / TINY_BAR_TO_WEI_COEF)
+
+    try {
+      await tx.wait()
+    } catch (error) {
+      expect(error).to.not.null
+
+      const balance = await crowdFund.balance()
+      expect(balance).to.eq(Math.round(FUND_AMOUNT / TINY_BAR_TO_WEI_COEF))
+    }
+  })
+
   it('Should NOT allow non-owner address to withdraw', async () => {
     try {
       const funder = signers[1]
