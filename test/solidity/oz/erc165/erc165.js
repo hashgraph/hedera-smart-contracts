@@ -42,13 +42,13 @@ describe('@solidityequiv3 OpenZeppelin - ERC165', function () {
     ]);
   })
 
-  it('should confirm supprot for: ERC-165', async function () {
+  it('should confirm support for: ERC-165', async function () {
     const selector = climberSelectorContract.calculateSelector()
     const supports = await contract.supportsInterface(selector)
     expect(supports).to.equal(true)
   })
 
-  it('should confirm supprot for: ERC-165 -> Selector not suported', async function () {
+  it('should confirm support for: ERC-165 -> Selector not suported', async function () {
     const selector = climberSelectorContract.calculateSelectorNotSupported()
     const supports = await contract.supportsInterface(selector)
     expect(supports).to.equal(false)
