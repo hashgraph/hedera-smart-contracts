@@ -5,9 +5,8 @@ require('@nomicfoundation/hardhat-foundry');
 const {
   OPERATOR_ID_A,
   OPERATOR_KEY_A,
-  HEX_PRIVATE_KEY_A,
-  HEX_PRIVATE_KEY_B,
   NETWORKS,
+  PRIVATE_KEYS,
 } = require('./utils/constants')
 
 /** @type import('hardhat/config').HardhatUserConfig */
@@ -40,7 +39,7 @@ module.exports = {
   networks: {
     local: {
       url: NETWORKS.local.url,
-      accounts: [HEX_PRIVATE_KEY_A, HEX_PRIVATE_KEY_B],
+      accounts: [PRIVATE_KEYS[0], PRIVATE_KEYS[1], PRIVATE_KEYS[2], PRIVATE_KEYS[3], PRIVATE_KEYS[4], PRIVATE_KEYS[5]],
       chainId: NETWORKS.local.chainId,
       gas: 10000000,
       sdkClient: {
@@ -53,7 +52,7 @@ module.exports = {
     },
     testnet: {
       url: NETWORKS.testnet.url,
-      accounts: [HEX_PRIVATE_KEY_A, HEX_PRIVATE_KEY_B],
+      accounts: [PRIVATE_KEYS[0], PRIVATE_KEYS[1], PRIVATE_KEYS[2], PRIVATE_KEYS[3], PRIVATE_KEYS[4], PRIVATE_KEYS[5]],
       chainId: NETWORKS.testnet.chainId,
       sdkClient: {
         operatorId: OPERATOR_ID_A,
@@ -65,7 +64,7 @@ module.exports = {
     },
     previewnet: {
       url: NETWORKS.previewnet.url,
-      accounts: [HEX_PRIVATE_KEY_A, HEX_PRIVATE_KEY_B],
+      accounts: [PRIVATE_KEYS[0], PRIVATE_KEYS[1], PRIVATE_KEYS[2], PRIVATE_KEYS[3], PRIVATE_KEYS[4], PRIVATE_KEYS[5]],
       chainId: NETWORKS.previewnet.chainId,
       sdkClient: {
         operatorId: OPERATOR_ID_A,
