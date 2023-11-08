@@ -45,15 +45,7 @@ describe('@solidityequiv3 Solidity OZ ERC-20 Votes', function () {
         expect(deployed).to.exist
     })
 
-    it('should create/mint the erc20 tokens', async function () {
-        const supply = await contract.totalSupply()
-        const balance = await contract.balanceOf(wallet.address)
-
-        expect(balance).to.equal(AMOUNT_TO_MINT)
-        expect(supply).to.equal(AMOUNT_TO_MINT)
-    })
-
-    it('should check balance of the erc20 tokens', async function () {
+    it('should check if create/mint the erc20 tokens happened when contract created', async function () {
         const supply = await contract.totalSupply()
         const balance = await contract.balanceOf(wallet.address)
 
