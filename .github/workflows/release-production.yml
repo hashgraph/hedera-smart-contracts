@@ -11,7 +11,7 @@ env:
 
 jobs:
   npm-package-artifact:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, large, ephemeral]
 
     steps:
       - name: Checkout repository
