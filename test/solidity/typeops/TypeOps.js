@@ -85,6 +85,4 @@ describe('@solidityevmequiv1 TypeOps Test Suite', function () {
         const res = await typeOpsContract.typeUintMax();
         expect(res).to.equal(expectedUintMax);
     });
-
-
 });
