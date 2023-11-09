@@ -69,14 +69,6 @@ const Path = {
   TYPE_OPS: 'contracts/solidity/typeops/TypeOps.sol:TypeOps',
 }
 
-const OZ = {
-  ERC165: {
-    Test: 'Test_ERC165',
-    IClimber: 'IClimber',
-    ClimberSelector: 'ClimberSelector',
-  },
-}
-
 const Contract = {
   ERC20Mock: 'ERC20Mock',
   TokenCreateContract: 'TokenCreateContract',

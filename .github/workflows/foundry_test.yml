@@ -11,7 +11,7 @@ jobs:
       fail-fast: true
 
     name: Foundry project
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, large, ephemeral]
     steps:
       - uses: actions/checkout@v3
         with:
