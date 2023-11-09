@@ -19,6 +19,8 @@
  */
 require('dotenv').config();
 
+const Constants = require('../test/constants');
+
 const delay = () => {
     return new Promise(resolve => setTimeout(resolve, process.env.RETRY_DELAY || 2000));
 }
@@ -267,6 +269,17 @@ const unPauseAndPoll = async(ERC20Pausable) => {
 
     return false // paused
 }
+
+const pollForResponseCode = async(contract) => {
+  for (let numberOfTries = 0; process.env.MAX_RETRY <= process.env.MAX_RETRY; numberOfTries++) {
+    const event = contract.events.filter(
+      (e) => e.event === Constants.Events.ResponseCode
+    )[0].args[0]
+    return parseInt(event._hex);
+  }
+  
+  throw new Error(`Failed to get an event after ${process.env.MAX_RETRY} tries`);
+}
       
 module.exports = {
     delay,
@@ -283,5 +296,6 @@ module.exports = {
     pollForNewERC721HollowWalletOwner,
     pollForNewSignerBalance,
     pollForNewWalletBalance,
-    unPauseAndPoll
+    unPauseAndPoll,
+    pollForEvent: pollForResponseCode
 }
