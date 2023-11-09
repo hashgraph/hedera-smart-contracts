@@ -15,7 +15,7 @@ env:
 
 jobs:
   acceptance-workflow:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, large, ephemeral]
     timeout-minutes: 35
     strategy:
       fail-fast: false
