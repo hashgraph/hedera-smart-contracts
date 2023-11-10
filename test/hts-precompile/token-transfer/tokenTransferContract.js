@@ -22,7 +22,7 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const utils = require('../utils')
 const Constants = require('../../constants')
-const { pollForEvent, pollForNewERC20Balance, pollForNewSignerBalanceUsingProvider } = require('../../../utils/helpers')
+const { pollForLastEvent, pollForNewERC20Balance, pollForNewSignerBalanceUsingProvider } = require('../../../utils/helpers')
 
 describe('TokenTransferContract Test Suite', function () {
   const TX_SUCCESS_CODE = 22
@@ -268,7 +268,7 @@ describe('TokenTransferContract Test Suite', function () {
       Constants.GAS_LIMIT_1_000_000
     )
     const cryptoTransferReceipt = await cryptoTransferTx.wait()
-    const responseCode = await pollForEvent(cryptoTransferReceipt, Constants.Events.ResponseCode)
+    const responseCode = await pollForLastEvent(cryptoTransferReceipt, Constants.Events.ResponseCode)
     
     const signers0After = await pollForNewSignerBalanceUsingProvider(signers[0].provider, signers[0].address, signers0Before)
 
