@@ -270,7 +270,7 @@ const unPauseAndPoll = async(ERC20Pausable) => {
     return false // paused
 }
 
-const pollForResponseCode = async(contract) => {
+const pollForEvent = async(contract) => {
   for (let numberOfTries = 0; process.env.MAX_RETRY <= process.env.MAX_RETRY; numberOfTries++) {
     const event = contract.events.filter(
       (e) => e.event === Constants.Events.ResponseCode
@@ -297,5 +297,5 @@ module.exports = {
     pollForNewSignerBalance,
     pollForNewWalletBalance,
     unPauseAndPoll,
-    pollForEvent: pollForResponseCode
+    pollForEvent,
 }
