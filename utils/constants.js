@@ -9,18 +9,14 @@ const OPERATOR_ID_A = process.env.OPERATOR_ID_A
 const OPERATOR_KEY_A = process.env.OPERATOR_KEY_A
   ? process.env.OPERATOR_KEY_A
   : ethers.constants.HashZero
-/**  @type string */
-const HEX_PRIVATE_KEY_A = process.env.HEX_PRIVATE_KEY_A
-  ? process.env.HEX_PRIVATE_KEY_A
-  : ethers.constants.HashZero
-/**  @type string */
-const HEX_PRIVATE_KEY_B = process.env.HEX_PRIVATE_KEY_B
-  ? process.env.HEX_PRIVATE_KEY_B
-  : ethers.constants.HashZero
-/**  @type string */
-const HEX_PRIVATE_KEY_C = process.env.HEX_PRIVATE_KEY_C
-  ? process.env.HEX_PRIVATE_KEY_C
-  : ethers.constants.HashZero  
+
+const PRIVATE_KEYS = process.env.PRIVATE_KEYS
+  ? process.env.PRIVATE_KEYS.split(',').map(key => key.trim())
+  : [];
+
+while (PRIVATE_KEYS.length < 6) {
+  PRIVATE_KEYS.push(ethers.constants.HashZero);
+}
 
 const NETWORKS = {
   local: {
@@ -52,8 +48,6 @@ const NETWORKS = {
 module.exports = {
   OPERATOR_ID_A,
   OPERATOR_KEY_A,
-  HEX_PRIVATE_KEY_A,
-  HEX_PRIVATE_KEY_B,
-  HEX_PRIVATE_KEY_C,
+  PRIVATE_KEYS,
   NETWORKS,
 }
