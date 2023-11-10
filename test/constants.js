@@ -67,6 +67,7 @@ const Path = {
   HIP583_ERC721Mock: 'contracts/hip-583/ERC721Mock.sol:ERC721Mock',
   HRC: 'contracts/hrc/HRC.sol:HRC',
   TYPE_OPS: 'contracts/solidity/typeops/TypeOps.sol:TypeOps',
+  RECEIVER_PAYS: 'contracts/solidity/signature-example/ReceiverPays.sol:ReceiverPays',
 }
 
 const Contract = {

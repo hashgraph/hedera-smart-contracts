@@ -22,7 +22,7 @@ const { ethers } = require('hardhat')
 const Constants = require('../../constants')
 
 describe('@solidityevmequiv1 TypeOps Test Suite', function () {
-    let cryptoMathContract, provider, signers;
+    let typeOpsContract, provider, signers;
 
     before(async function () {
         signers = await ethers.getSigners();
@@ -85,6 +85,4 @@ describe('@solidityevmequiv1 TypeOps Test Suite', function () {
         const res = await typeOpsContract.typeUintMax();
         expect(res).to.equal(expectedUintMax);
     });
-
-
 });
