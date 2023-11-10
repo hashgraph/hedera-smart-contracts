@@ -38,7 +38,7 @@ describe('@solidityevmequiv5 Contract Creator with OZ/Create2', async () => {
     })
   })
 
-  it('Deployment', async () => {
+  it('Should deployed contractCreatorOZCreate2 with correct deployed arguments', async () => {
     const balance = await ethers.provider.getBalance(
       contractCreatorOZCreate2.address
     )
