@@ -275,7 +275,9 @@ const pollForEvent = async(contract) => {
     const event = contract.events.filter(
       (e) => e.event === Constants.Events.ResponseCode
     )[0].args[0]
-    return parseInt(event._hex);
+    if((event._hex !== undefined) && (event._hex !== null)){
+      return parseInt(event._hex);
+    }
   }
   
   throw new Error(`Failed to get an event after ${process.env.MAX_RETRY} tries`);
