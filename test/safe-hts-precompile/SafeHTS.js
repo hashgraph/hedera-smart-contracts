@@ -320,10 +320,8 @@ describe('SafeHTS library Test Suite', function () {
     )
 
     const signers0AfterTokenBalance = await pollForNewBalance(erc20Mock, signer1AccountID, signers0BeforeTokenBalance)
-  
-    const signers1AfterTokenBalance = parseInt(
-      await erc20Mock.balanceOf(signer2AccountID)
-    )
+
+    const signers1AfterTokenBalance = await pollForNewBalance(erc20Mock, signer2AccountID, signers1BeforeTokenBalance)
 
     const hbarTransferableAmount = ethers.BigNumber.from(
       10_000 * 10_000_000_000
