@@ -270,10 +270,10 @@ const unPauseAndPoll = async(ERC20Pausable) => {
     return false // paused
 }
 
-const pollForLastEvent = async(transactionReceipt) => {
+const pollForLastEvent = async(transactionReceipt, code) => {
   for (let numberOfTries = 0; process.env.MAX_RETRY <= process.env.MAX_RETRY; numberOfTries++) {
     const event = transactionReceipt.events.filter(
-      (e) => e.event === Constants.Events.ResponseCode
+      (e) => e.event === code
     )[0].args[0]
     if((event._hex !== undefined) && (event._hex !== null)){
       return parseInt(event._hex);
