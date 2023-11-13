@@ -22,24 +22,18 @@ const { expect } = require('chai')
 const { ethers } = require('hardhat')
 const Constants = require('../../constants')
 
-describe('Reentrancy Guard', function () {
+describe('@solidityequiv3 Reentrancy Guard', function () {
   const tenHBAR = ethers.utils.parseEther("10.0");
   async function deployContractsAndSendHbars() {
     const [owner] = await ethers.getSigners();
     const factorySender = await ethers.getContractFactory(
         Constants.Contract.ReentrancyGuardTestSender
     )
-    contractSender = await factorySender.deploy()
+    contractSender = await factorySender.deploy({value: tenHBAR})
     const factoryReceiver = await ethers.getContractFactory(
         Constants.Contract.ReentrancyGuardTestReceiver
       )
     contractReceiver = await factoryReceiver.deploy(contractSender.address)
-    const transactionHash = await owner.sendTransaction({
-        gasLimit: 3000000,
-        to: contractSender.address,
-        value: tenHBAR,
-    });
-    await transactionHash.wait();
   }
 
   it('should verify it reenters without guard', async function () {

@@ -8,12 +8,14 @@ import "../ReentrancyGuard/ReentrancyGuardTestReceiver.sol";
 contract ReentrancyGuardTestSender is ReentrancyGuard {
     uint256 public counter = 0;
 
-    function reentrancyTest() public {
+    constructor() payable {}
+
+    function reentrancyTest() external {
         counter = counter + 1;
         (bool sent,) = msg.sender.call{value: 100000000}("");
     }
 
-    function reentrancyTestNonReentrant() public nonReentrant {
+    function reentrancyTestNonReentrant() external nonReentrant {
         counter = counter + 1;
         (bool sent,) = msg.sender.call{value: 100000000}("");
     }

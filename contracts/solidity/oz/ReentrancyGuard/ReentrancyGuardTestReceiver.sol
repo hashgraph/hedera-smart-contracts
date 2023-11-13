@@ -28,7 +28,7 @@ contract ReentrancyGuardTestReceiver {
         reentrancyGuardTestSender.reentrancyTestNonReentrant();
     }
 
-    function setNonReentrant(bool _nonReentrant) public {
+    function setNonReentrant(bool _nonReentrant) external {
         nonReentrant = _nonReentrant;
     }
 }
