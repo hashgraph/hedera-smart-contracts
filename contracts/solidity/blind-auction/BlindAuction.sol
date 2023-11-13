@@ -168,4 +168,8 @@ contract BlindAuction {
     function getPendingReturns(address bidderAddress) public view returns(uint) {
         return pendingReturns[bidderAddress];
     }
+
+    function getBalance() public view returns(uint256) {
+        return address(this).balance;
+    }
 }
