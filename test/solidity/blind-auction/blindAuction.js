@@ -23,6 +23,7 @@ const { expect } = require('chai')
 const chaiAsPromised = require("chai-as-promised")
 const { ethers } = require('hardhat')
 const Constants = require('../../constants')
+const { tinybarToHbarCoef, tinybarToWeibarCoef } = require('../../hts-precompile/utils')
 chai.use(chaiAsPromised);
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -36,13 +37,15 @@ const deployBlindAuctionContract = async (biddingTime, revealTime, beneficiaryAd
     return contract;
 }
 
-describe('Solidity Errors', function () {
+describe('@solidityequiv3 Solidity Blind Auction', function () {
   let beneficiary, wallet1;
-  const hundred = ethers.utils.parseEther("100.0");
-  const twoHundred = ethers.utils.parseEther("200.0");
-  const fiftyGwei = ethers.utils.parseUnits('50', 'gwei');
-  const hundredHbars = 10000000000;
-  const twoHundredHbars = 20000000000;
+
+  const fiveHbars = 5 * tinybarToHbarCoef
+  const hundredHbars = 100 * tinybarToHbarCoef
+  const twoHundredHbars = 200 * tinybarToHbarCoef
+  const hundredHbarsToWeibar = ethers.BigNumber.from(String(hundredHbars * tinybarToWeibarCoef))
+  const twohundredHbarsToWeibar = ethers.BigNumber.from(String(twoHundredHbars * tinybarToWeibarCoef))
+  const fiveHbarsToWeibar = ethers.BigNumber.from(String(fiveHbars * tinybarToWeibarCoef))
 
   before(async function () {
     [beneficiary, wallet1] = await ethers.getSigners();
@@ -58,9 +61,9 @@ describe('Solidity Errors', function () {
   it('should confirm a user can bid', async function () {
     const contract = await deployBlindAuctionContract(3, 5, beneficiary.address);
 
-    const bidData = ethers.utils.solidityKeccak256(["uint256", "bool", "uint256"] ,[hundred, false, 2]);
+    const bidData = ethers.utils.solidityKeccak256(["uint256", "bool", "uint256"], [hundredHbars, false, 2]);
 
-    const result = await contract.connect(wallet1).bid(bidData, {value: hundred});
+    const result = await contract.connect(wallet1).bid(bidData, {value: hundredHbarsToWeibar});
     await result.wait();
     const firstBidder = await contract.getBids(wallet1.address);
 
@@ -69,24 +72,21 @@ describe('Solidity Errors', function () {
   })
 
   it('should confirm a user can reveal their bids', async function () {
-    const contract = await deployBlindAuctionContract(6, 5, beneficiary.address);
+    const contract = await deployBlindAuctionContract(5, 5, beneficiary.address);
 
     const firstBid = ethers.utils.solidityKeccak256(["uint256", "bool", "uint256"] ,[hundredHbars, false, ethers.utils.formatBytes32String('2')]);
     const secondBid = ethers.utils.solidityKeccak256(["uint256", "bool", "uint256"] ,[hundredHbars, true, ethers.utils.formatBytes32String('23')]);
 
-    const bid = await contract.connect(wallet1).bid(firstBid, {value: hundred});
+    const bid = await contract.connect(wallet1).bid(firstBid, {value: hundredHbarsToWeibar});
     await bid.wait();
 
-    await sleep(2000);
-
-    const bid2 = await contract.connect(wallet1).bid(secondBid, {value: fiftyGwei});
+    const bid2 = await contract.connect(wallet1).bid(secondBid, {value: fiveHbarsToWeibar});
     await bid2.wait();
 
     await sleep(3000);
 
     const result = await contract.connect(wallet1).reveal([hundredHbars, hundredHbars], [false, true], [ethers.utils.formatBytes32String('2'), ethers.utils.formatBytes32String('23')], {gasLimit: 5000000});
     await result.wait();
-    await sleep(3000);
 
     const highestBidder =  await contract.highestBidder();
     const highestBid = await contract.highestBid()
@@ -96,60 +96,57 @@ describe('Solidity Errors', function () {
   })
 
   it('should confirm a user can withdraw', async function () {
-    const contract = await deployBlindAuctionContract(9, 5, beneficiary.address);
+    const contract = await deployBlindAuctionContract(5, 5, beneficiary.address);
 
     const firstBid = ethers.utils.solidityKeccak256(["uint256", "bool", "uint256"] ,[hundredHbars, false, ethers.utils.formatBytes32String('2')]);
     const secondBid = ethers.utils.solidityKeccak256(["uint256", "bool", "uint256"] ,[twoHundredHbars, true, ethers.utils.formatBytes32String('23')]);
     const thirdBid = ethers.utils.solidityKeccak256(["uint256", "bool", "uint256"] ,[twoHundredHbars, false, ethers.utils.formatBytes32String('5')]);
 
-    const bid = await contract.connect(wallet1).bid(firstBid, {value: hundred});
+    const bid = await contract.connect(wallet1).bid(firstBid, {value: hundredHbarsToWeibar});
     await bid.wait();
 
-    await sleep(2000);
-
-    const bid2 = await contract.connect(wallet1).bid(secondBid, {value: fiftyGwei});
+    const bid2 = await contract.connect(wallet1).bid(secondBid, {value: fiveHbarsToWeibar});
     await bid2.wait();
 
-    const bid3 = await contract.connect(wallet1).bid(thirdBid, {value: twoHundred});
+    const bid3 = await contract.connect(wallet1).bid(thirdBid, {value: twohundredHbarsToWeibar});
     await bid3.wait();
 
-    await sleep(3000);
+    //this sleep is needed as part of the contract business logic
+    //to ensure time has passed and we can reveal the blind bid
+    await sleep(2000);
 
     const result = await contract.connect(wallet1).reveal([hundredHbars, twoHundredHbars, twoHundredHbars], [false, true, false], [ethers.utils.formatBytes32String('2'), ethers.utils.formatBytes32String('23'), ethers.utils.formatBytes32String('5')], {gasLimit: 5000000});
     await result.wait();
 
-    await sleep(2000);
-
     const highestBidder =  await contract.highestBidder();
     const highestBid = await contract.highestBid();
 
-    const balanceBeforeWithdraw = await ethers.provider.getBalance(wallet1.address);
+    const balanceBeforeWithdraw = await contract.getBalance()
 
     const withdraw = await contract.connect(wallet1).withdraw();
     await withdraw.wait();
 
-    await sleep(1000);
-    const balanceAfterWithdraw = await ethers.provider.getBalance(wallet1.address);
+    const balanceAfterWithdraw = await await contract.getBalance()
 
-    expect(balanceBeforeWithdraw).to.be.lessThan(balanceAfterWithdraw);
+    expect(balanceBeforeWithdraw).to.be.greaterThan(balanceAfterWithdraw);
     expect(highestBid).to.equal(BigInt(twoHundredHbars));
     expect(highestBidder).to.equal(wallet1.address);
   })
 
   it('should confirm a user can end an auction', async function () {
-    const contract = await deployBlindAuctionContract(5, 5, beneficiary.address);
+    const contract = await deployBlindAuctionContract(6, 5, beneficiary.address);
 
     const firstBid = ethers.utils.solidityKeccak256(["uint256", "bool", "uint256"] ,[hundredHbars, false, ethers.utils.formatBytes32String('2')]);
     const secondBid = ethers.utils.solidityKeccak256(["uint256", "bool", "uint256"] ,[hundredHbars, true, ethers.utils.formatBytes32String('23')]);
     const thirdBid = ethers.utils.solidityKeccak256(["uint256", "bool", "uint256"] ,[twoHundredHbars, false, ethers.utils.formatBytes32String('5')]);
 
-    const bid = await contract.connect(wallet1).bid(firstBid, {value: hundred});
+    const bid = await contract.connect(wallet1).bid(firstBid, {value: hundredHbarsToWeibar});
     await bid.wait();
 
-    const bid2 = await contract.connect(wallet1).bid(secondBid, {value: fiftyGwei});
+    const bid2 = await contract.connect(wallet1).bid(secondBid, {value: fiveHbarsToWeibar});
     await bid2.wait();
 
-    const bid3 = await contract.connect(wallet1).bid(thirdBid, {value: twoHundred});
+    const bid3 = await contract.connect(wallet1).bid(thirdBid, {value: twohundredHbarsToWeibar});
     await bid3.wait();
 
     await sleep(3000);
@@ -159,16 +156,18 @@ describe('Solidity Errors', function () {
 
     const balanceBeforeAuctionEnd = await ethers.provider.getBalance(beneficiary.address);
 
+    //this sleep is needed as part of the contract business logic
+    //to ensure time has passed and we can end the auction
+    //it is the revealEnd time + 5 seconds
     await sleep(2000);
-    const highestBidder =  await contract.highestBidder();
-    const highestBid = await contract.highestBid()
 
     const result = await contract.connect(wallet1).auctionEnd();
     await result.wait();
 
-    await sleep(2000);
-
     const balanceAfterAuctionEnd = await ethers.provider.getBalance(beneficiary.address);
+
+    const highestBidder =  await contract.highestBidder();
+    const highestBid = await contract.highestBid()
 
     expect(highestBid).to.equal(BigInt(twoHundredHbars));
     expect(highestBidder).to.equal(wallet1.address);
@@ -177,29 +176,29 @@ describe('Solidity Errors', function () {
 
   it('should confirm a user cannot bid after end', async function () {
     const contract = await deployBlindAuctionContract(4, 2, beneficiary.address);
-    const bidData = ethers.utils.solidityKeccak256(["uint256", "bool", "uint256"] ,[hundred, false, 2]);
+    const bidData = ethers.utils.solidityKeccak256(["uint256", "bool", "uint256"], [hundredHbars, false, 2]);
 
     await sleep(5000);
 
-    const result = await contract.connect(wallet1).bid(bidData, {value: hundred});
+    const result = await contract.connect(wallet1).bid(bidData, {value: hundredHbarsToWeibar});
     await expect(result.wait()).to.eventually.be.rejected.and.have.property('code', 'CALL_EXCEPTION')
   })
 
   it('should confirm a user cannot reveal after reveal end', async function () {
-    const contract = await deployBlindAuctionContract(5, 2, beneficiary.address);
+    const contract = await deployBlindAuctionContract(4, 2, beneficiary.address);
 
-    const bidData = ethers.utils.solidityKeccak256(["uint256", "bool", "uint256"] ,[hundred, false, 2]);
-    const anotherBidData = ethers.utils.solidityKeccak256(["uint256", "bool", "uint256"] ,[twoHundred, true, 23]);
+    const bidData = ethers.utils.solidityKeccak256(["uint256", "bool", "uint256"], [hundredHbars, false, 2]);
+    const anotherBidData = ethers.utils.solidityKeccak256(["uint256", "bool", "uint256"], [hundredHbars, true, 23]);
 
-    const bid = await contract.connect(wallet1).bid(bidData, {value: hundred});
+    const bid = await contract.connect(wallet1).bid(bidData, {value: hundredHbarsToWeibar});
     await bid.wait();
 
-    const bidAgain = await contract.connect(wallet1).bid(anotherBidData, {value: fiftyGwei});
+    const bidAgain = await contract.connect(wallet1).bid(anotherBidData, {value: fiveHbarsToWeibar});
     await bidAgain.wait();
 
-    await sleep(6000);
+    await sleep(5000);
 
-    const result = await contract.connect(wallet1).reveal([hundred, twoHundred], [false, true], [ethers.utils.formatBytes32String(2), ethers.utils.formatBytes32String(23)]);
+    const result = await contract.connect(wallet1).reveal([hundredHbars, twoHundredHbars], [false, true], [ethers.utils.formatBytes32String(2), ethers.utils.formatBytes32String(23)]);
     await expect(result.wait()).to.eventually.be.rejected.and.have.property('code', 'CALL_EXCEPTION')
   })
 })
