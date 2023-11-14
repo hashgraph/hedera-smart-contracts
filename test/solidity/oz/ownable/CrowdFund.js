@@ -21,7 +21,7 @@
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
 
-describe('@solidityevmequiv6 Ownable - Crowd Fund tests', () => {
+describe('@OZOwnable Crowd Fund tests', () => {
   const FUND_AMOUNT = 30000000000
   const TINY_BAR_TO_WEI_COEF = 10_000_000_000
 
