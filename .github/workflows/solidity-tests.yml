@@ -46,6 +46,13 @@ jobs:
     with:
       testfilter: '@solidityequiv3'
 
+  OpenZeppelinEquivalence:
+    if: ${{ inputs.filterTagOverride == ''}}
+    name: OpenZeppelin Equivalence
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: ${{inputs.filterTagOverride}}
+
   PublishResults:
     name: Publish Results
     if: ${{ !cancelled() }}
