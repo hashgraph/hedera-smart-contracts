@@ -46,7 +46,7 @@ jobs:
     with:
       testfilter: '@solidityequiv3'
 
-  OpenZeppelinEquivalence:
+  OpenZeppelin:
     if: ${{ inputs.filterTagOverride == ''}}
     name: OpenZeppelin Equivalence
     uses: ./.github/workflows/test-workflow.yml
