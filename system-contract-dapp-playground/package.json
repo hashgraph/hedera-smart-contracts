@@ -42,7 +42,7 @@
     "react-csv": "^2.2.2",
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1",
-    "sharp": "^0.32.4",
+    "sharp": "^0.32.6",
     "tailwindcss": "3.3.3",
     "ts-node": "^10.9.1",
     "typescript": "5.1.6",
