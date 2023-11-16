@@ -18,6 +18,4 @@ contract Box {
         return value;
     }
 }
-//deploy a contract with fucntion which returns sth -> address
-// deploy transparent upgradeable proxy - pass address of contract, and signer0
-// 
+
