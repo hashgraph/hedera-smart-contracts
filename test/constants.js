@@ -125,6 +125,9 @@ const Contract = {
   ReentrancyGuardTestSender: 'ReentrancyGuardTestSender',
   ReentrancyGuardTestReceiver: 'ReentrancyGuardTestReceiver',
   SimpleAuction: 'SimpleAuction',
+  MyCustomTransparentUpgradeableProxy: 'MyCustomTransparentUpgradeableProxy',
+  Box: 'Box',
+  BoxV2:'BoxV2'
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'
