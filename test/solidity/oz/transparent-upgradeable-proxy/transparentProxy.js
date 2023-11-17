@@ -17,15 +17,16 @@
  * limitations under the License.
  *
  */
+
 const chai = require('chai')
 const { expect } = require('chai')
 const chaiAsPromised = require("chai-as-promised")
 const { ethers } = require('hardhat')
 const Constants = require('../../../constants')
-
+const Utils = require('../../../utils')
 chai.use(chaiAsPromised);
 
-describe('@solidityequiv3 Transparent Upgradeable Proxy', function () {
+describe('@OZ[TransparentUpgradeableProxy] Transparent Upgradeable Proxy', function () {
   let contractProxy, contractBox
   let owner, signer, proxyAdminAddress
   before(async function () {
@@ -37,21 +38,21 @@ describe('@solidityequiv3 Transparent Upgradeable Proxy', function () {
     const factory = await ethers.getContractFactory(Constants.Contract.MyCustomTransparentUpgradeableProxy)
     contractProxy = await factory.deploy(contractBox.address, owner.address, [])
     const receipt = await contractProxy.deployTransaction.wait()
-
     proxyAdminAddress = receipt.events[2].args.newAdmin
   })
 
   it('should verify it calls the correct contract and method via proxy', async function () {
+    const storeFunctionData  = '0x6057361d0000000000000000000000000000000000000000000000000000000000000008'
     const signedTx = await owner.sendTransaction({
         to: contractProxy.address,
-        data: '0x6057361d0000000000000000000000000000000000000000000000000000000000000008',
+        data: storeFunctionData,
         gasLimit: 5000000
     })
     const receipt = await signedTx.wait()
-
+    const encodedInt = '0x0000000000000000000000000000000000000000000000000000000000000008'
     expect(receipt.to).to.eq(contractProxy.address)
     expect(receipt.from).to.eq(owner.address)
-    expect(receipt.logs[0].data).to.eq('0x0000000000000000000000000000000000000000000000000000000000000008')
+    expect(receipt.logs[0].data).to.eq(encodedInt)
   })
 
   it('should verify it can change the underlying contract', async function () {
@@ -59,7 +60,7 @@ describe('@solidityequiv3 Transparent Upgradeable Proxy', function () {
     contractBoxV2 = await factoryBoxV2.deploy()
     await contractBoxV2.deployed()
 
-    const functionSelectorUpgradeAndCall = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("upgradeAndCall(address,address,bytes)")).substring(0,10)
+    const functionSelectorUpgradeAndCall = Utils.functionSelector("upgradeAndCall(address,address,bytes)")
     const abi = ethers.utils.defaultAbiCoder;
     const encoded = abi.encode(["address","address","bytes"],[contractProxy.address, contractBoxV2.address, []])
 
@@ -77,7 +78,7 @@ describe('@solidityequiv3 Transparent Upgradeable Proxy', function () {
     expect(eventUpgradedNameHashed).to.eq(topics[0])
     expect(newContractAddressEncoded.toLowerCase()).to.eq(topics[1])
 
-    const functionSelectorIncrement = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("increment()")).substring(0,10)
+    const functionSelectorIncrement = Utils.functionSelector("increment()")
     const eventValueChangedNameHashed = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("ValueChanged(uint256)"))
     const signedTxToNewContract = await owner.sendTransaction({
         to: contractProxy.address,
