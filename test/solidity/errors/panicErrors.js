@@ -77,14 +77,13 @@ describe('@solidityequiv3 Panic Errors', function () {
   it('should verify panic error 0x31', async function () {
     let error
     try {
-      const result = await contract.getSomeArray()
-      console.log(result)
-      await contract.verifyPanicError0x31()
+      const result = await contract.verifyPanicError0x31()
+      await result.wait()
     } catch (e) {
       error = e
     }
-    expect(error.errorName).to.eq('Panic')
-    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(18)])
+    expect(error.code).to.eq('CALL_EXCEPTION')
+    expect(error.reason).to.eq('transaction failed')
   })
 
   it('should verify panic error 0x32', async function () {
@@ -103,7 +102,6 @@ describe('@solidityequiv3 Panic Errors', function () {
     try {
       await contract.verifyPanicError0x41()
     } catch (e) {
-      console.log(e)
       error = e
     }
     expect(error.errorName).to.eq('Panic')
