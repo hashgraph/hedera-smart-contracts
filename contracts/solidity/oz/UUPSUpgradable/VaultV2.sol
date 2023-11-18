@@ -9,9 +9,9 @@ import "./VaultV1.sol";
 // @notice: Avoid working with state variables among implementation contracts
 
 contract VaultV2 is VaultV1 {
-    uint256 private _version;
-    uint256 private _totalBalance;
-    address private _beneficiary;
+    uint256 private _version; // slot 0
+    uint256 private _totalBalance; // slot 1
+    address private _beneficiary; // slot 2
 
     modifier onlyRightfulBeneficiary() {
         assembly {

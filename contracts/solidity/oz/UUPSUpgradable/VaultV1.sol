@@ -11,8 +11,8 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 // @notice: Avoid working with state variables among implementation contracts
 
 contract VaultV1 is OwnableUpgradeable, OZUUPSUpgradeableV4{
-    uint256 private _version;
-    uint256 private _totalBalance; // slot 0
+    uint256 private _version;   // slot 0
+    uint256 private _totalBalance; // slot 1
 
     error InsufficientFund();
     event Deposited(address depositor, uint256 amount);
