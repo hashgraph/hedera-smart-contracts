@@ -21,7 +21,7 @@
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
 
-describe('@solidityevmequiv5 Contract Creator with OZ/Create2', async () => {
+describe('@OZCreate2 Contract Creator Tests', async () => {
   let contractCreatorOZCreate2
   const INITIAL_VALUE = 30_000_000_000
   const NEW_CONTRACT_EVENT = 'NewContractDeployedAt'

@@ -20,10 +20,9 @@
 
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
-const constants = require('../../constants')
-const utils = require('../../hts-precompile/utils')
+const constants = require('../../../constants')
 
-describe('@solidityevmequiv5 Vesting Wallet tests', () => {
+describe('@OZVestingWallet Vesting Wallet tests', () => {
   let vestingWallet, erc20Mock, signers, beneficiaryAddress
   const DURATION = 3 // seconds
   const GAS_LIMIT = 1_000_000
