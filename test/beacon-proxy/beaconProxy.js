@@ -20,6 +20,7 @@
 
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
+const Utils = require('../utils')
 
 describe('@OZBeaconProxy', function () {
   let owner, signer
@@ -89,7 +90,7 @@ describe('@OZBeaconProxy', function () {
     await contractLogicContractV2.deployed()
 
     const getImplementationBeforeUpgrade = await beacon.implementation()
-    const functionSelectorUpgradeTo = ethers.utils.keccak256(ethers.utils.toUtf8Bytes('upgradeTo(address)')).substring(0,10)
+    const functionSelectorUpgradeTo =  Utils.functionSelector('upgradeTo(address)')
     const abi = ethers.utils.defaultAbiCoder;
     const encoded = abi.encode(["address"],[contractLogicContractV2.address])
 
@@ -107,7 +108,7 @@ describe('@OZBeaconProxy', function () {
     expect(newContractAddressEncoded.toLowerCase()).to.eq(topics[1])
 
     const getImplementationAfterUpgrade = await beacon.implementation()
-    const functionSelectorSquare = ethers.utils.keccak256(ethers.utils.toUtf8Bytes('square(uint256)')).substring(0,10)
+    const functionSelectorSquare = Utils.functionSelector('square(uint256)')
     const encoded2 = abi.encode(["uint256"],[2])
 
     const eventSquaredNameHashed = ethers.utils.keccak256(ethers.utils.toUtf8Bytes('Squared(uint256)'))
@@ -132,7 +133,7 @@ describe('@OZBeaconProxy', function () {
     })
 
     it('verifies underlying contract can be changed only by owner', async function () {
-      const functionSelectorUpgradeTo = ethers.utils.keccak256(ethers.utils.toUtf8Bytes('upgradeTo(address)')).substring(0,10)
+      const functionSelectorUpgradeTo = Utils.functionSelector('upgradeTo(address)')
       const abi = ethers.utils.defaultAbiCoder;
       const encoded = abi.encode(["address"],[contractLogicContractV2.address])
   
@@ -146,7 +147,7 @@ describe('@OZBeaconProxy', function () {
     })
   
     it('verifies underlying contract cannot be changed to EOA address', async function () {
-      const functionSelectorUpgradeTo = ethers.utils.keccak256(ethers.utils.toUtf8Bytes('upgradeTo(address)')).substring(0,10)
+      const functionSelectorUpgradeTo = Utils.functionSelector('upgradeTo(address)')
       const abi = ethers.utils.defaultAbiCoder;
       const encoded = abi.encode(["address"],[owner.address])
   
