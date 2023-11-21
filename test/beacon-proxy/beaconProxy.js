@@ -19,9 +19,7 @@
  */
 
 const { expect } = require('chai')
-const { ethers, upgrades } = require('hardhat')
-const utils = require('../hts-precompile/utils')
-const Constants = require('../constants')
+const { ethers } = require('hardhat')
 
 describe('@OZBeaconProxy', function () {
   let owner, signer
@@ -84,7 +82,7 @@ describe('@OZBeaconProxy', function () {
     expect(receipt.logs[0].topics[0]).to.eq(eventValueHashed)
   })
 
-  it.only('verifies underlying contract can be changed', async function () {
+  it('verifies underlying contract can be changed', async function () {
     const contractFactoryV2 = await ethers.getContractFactory(logicContractV2)
     const initialValue = 2
     contractLogicContractV2 = await contractFactoryV2.deploy(initialValue)
@@ -123,5 +121,42 @@ describe('@OZBeaconProxy', function () {
     expect(eventSquaredNameHashed).to.eq(receipt2.logs[0].topics[0])
     expect(getImplementationBeforeUpgrade).to.eq(contractLogicContractV1.address)
     expect(getImplementationAfterUpgrade).to.eq(contractLogicContractV2.address)
-  }) 
+  })
+
+  describe('logicContractV2', function () {
+    before(async function() {
+      const contractFactoryV2 = await ethers.getContractFactory(logicContractV2)
+      const initialValue = 2
+      contractLogicContractV2 = await contractFactoryV2.deploy(initialValue)
+      await contractLogicContractV2.deployed()
+    })
+
+    it('verifies underlying contract can be changed only by owner', async function () {
+      const functionSelectorUpgradeTo = ethers.utils.keccak256(ethers.utils.toUtf8Bytes('upgradeTo(address)')).substring(0,10)
+      const abi = ethers.utils.defaultAbiCoder;
+      const encoded = abi.encode(["address"],[contractLogicContractV2.address])
+  
+      const signedTx = await signer.sendTransaction({
+          to: beacon.address,
+          data: functionSelectorUpgradeTo + encoded.replace('0x', ''),
+          gasLimit: 5000000
+      })
+  
+      await expect(signedTx.wait()).to.eventually.be.rejected.and.have.property('code', 'CALL_EXCEPTION')
+    })
+  
+    it('verifies underlying contract cannot be changed to EOA address', async function () {
+      const functionSelectorUpgradeTo = ethers.utils.keccak256(ethers.utils.toUtf8Bytes('upgradeTo(address)')).substring(0,10)
+      const abi = ethers.utils.defaultAbiCoder;
+      const encoded = abi.encode(["address"],[owner.address])
+  
+      const signedTx = await signer.sendTransaction({
+          to: beacon.address,
+          data: functionSelectorUpgradeTo + encoded.replace('0x', ''),
+          gasLimit: 5000000
+      })
+  
+      await expect(signedTx.wait()).to.eventually.be.rejected.and.have.property('code', 'CALL_EXCEPTION')
+    })
+  })
 })
