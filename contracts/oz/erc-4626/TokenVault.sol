@@ -43,10 +43,10 @@ contract TokenVault is ERC4626 {
         uint256 percent = (10 * _shares) / 100;
         // Calculate the total asset amount as the sum of the share amount plus 10% of the share amount.
         uint256 assets = _shares + percent;
-        // calling the redeem function from the ERC-4626 library to perform all the necessary functionality
-        redeem(assets, _receiver, msg.sender);
         // Decrease the share of the user
-        shareHolders[msg.sender] -= _shares;        
+        shareHolders[msg.sender] -= _shares;
+        // calling the redeem function from the ERC-4626 library to perform all the necessary functionality
+        redeem(assets, _receiver, msg.sender);                
     }
 
     // returns total number of assets
