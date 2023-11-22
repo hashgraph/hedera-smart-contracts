@@ -64,7 +64,7 @@ describe("TokenVault Contract", function () {
       const depositTxPromise = tokenVault.connect(addr1)._deposit(0);
   
       // Expect the transaction to be reverted with the specific error message
-      // Revert reason is not available at this time, https://github.com/hashgraph/hedera-mirror-node/issues/7214
+      // Revert reason is not available at this time, https://github.com/hashgraph/hedera-json-rpc-relay/issues/1916
       // await expect(depositTxPromise).to.be.revertedWith("Deposit is zero");
   
       let receipt;
@@ -75,7 +75,7 @@ describe("TokenVault Contract", function () {
 
       } catch (error) {
 
-        // Handle the expected revert here until revert reason is available, https://github.com/hashgraph/hedera-mirror-node/issues/7214
+        // Handle the expected revert here until revert reason is available, https://github.com/hashgraph/hedera-json-rpc-relay/issues/1916
         if (error.code === ethers.errors.CALL_EXCEPTION) {
           let reason = "Unknown Error";
           if (error.transaction) {
@@ -105,7 +105,7 @@ describe("TokenVault Contract", function () {
 
     it("Should fail if withdraw is zero", async function () {
       // Expect the transaction to be reverted with the specific error message
-      // Revert reason is not available at this time, https://github.com/hashgraph/hedera-mirror-node/issues/7214
+      // Revert reason is not available at this time, https://github.com/hashgraph/hedera-json-rpc-relay/issues/1916
       // await expect(tokenVault.connect(addr1)._withdraw(0, addr1.address)).to.be.revertedWith("withdraw must be greater than Zero");
       let receipt;
       try {
@@ -115,7 +115,7 @@ describe("TokenVault Contract", function () {
   
       } catch (error) {
   
-          // Handle the expected revert here until revert reason is available, https://github.com/hashgraph/hedera-mirror-node/issues/7214
+          // Handle the expected revert here until revert reason is available, https://github.com/hashgraph/hedera-json-rpc-relay/issues/1916
           if (error.code === ethers.errors.CALL_EXCEPTION) {
             let reason = "Unknown Error";
             if (error.transaction) {
@@ -129,7 +129,7 @@ describe("TokenVault Contract", function () {
 
     it("Should fail if withdraw is to zero address", async function () {
       // Expect the transaction to be reverted with the specific error message
-      // Revert reason is not available at this time, https://github.com/hashgraph/hedera-mirror-node/issues/7214      
+      // Revert reason is not available at this time, https://github.com/hashgraph/hedera-json-rpc-relay/issues/1916      
       // await expect(tokenVault.connect(addr1)._withdraw(1, ethers.constants.AddressZero)).to.be.revertedWith("Zero Address");
       let receipt;
       try {
@@ -139,7 +139,7 @@ describe("TokenVault Contract", function () {
     
       } catch (error) {
     
-            // Handle the expected revert here until revert reason is available, https://github.com/hashgraph/hedera-mirror-node/issues/7214      
+            // Handle the expected revert here until revert reason is available, https://github.com/hashgraph/hedera-json-rpc-relay/issues/1916
             if (error.code === ethers.errors.CALL_EXCEPTION) {
               let reason = "Unknown Error";
               if (error.transaction) {
@@ -153,7 +153,7 @@ describe("TokenVault Contract", function () {
     
     it("Should fail if not a shareholder", async function () {
       // Expect the transaction to be reverted with the specific error message
-      // Revert reason is not available at this time, https://github.com/hashgraph/hedera-mirror-node/issues/7214      
+      // Revert reason is not available at this time, https://github.com/hashgraph/hedera-json-rpc-relay/issues/1916      
       // await expect(tokenVault.connect(addr2)._withdraw(1, addr2.address)).to.be.revertedWith("Not a shareHolder");
       let receipt;
       try {
@@ -163,7 +163,7 @@ describe("TokenVault Contract", function () {
 
       } catch (error) {
 
-        // Handle the expected revert here until revert reason is available, https://github.com/hashgraph/hedera-mirror-node/issues/7214      
+        // Handle the expected revert here until revert reason is available, https://github.com/hashgraph/hedera-json-rpc-relay/issues/1916      
         if (error.code === ethers.errors.CALL_EXCEPTION) {
           let reason = "Unknown Error";
           if (error.transaction) {
@@ -180,7 +180,7 @@ describe("TokenVault Contract", function () {
       await asset.connect(addr1).approve(tokenVault.address, depositAmount);
       await tokenVault.connect(addr1)._deposit(depositAmount);
       // Expect the transaction to be reverted with the specific error message
-      // Revert reason is not available at this time, https://github.com/hashgraph/hedera-mirror-node/issues/7214   
+      // Revert reason is not available at this time, https://github.com/hashgraph/hedera-json-rpc-relay/issues/1916   
       // await expect(tokenVault.connect(addr1)._withdraw(depositAmount.add(1), addr1.address)).to.be.revertedWith("Not enough shares");
       let receipt;
       try {
@@ -190,7 +190,7 @@ describe("TokenVault Contract", function () {
 
       } catch (error) {
 
-        // Handle the expected revert here until revert reason is available, https://github.com/hashgraph/hedera-mirror-node/issues/7214      
+        // Handle the expected revert here until revert reason is available, https://github.com/hashgraph/hedera-json-rpc-relay/issues/1916      
         if (error.code === ethers.errors.CALL_EXCEPTION) {
           let reason = "Unknown Error";
           if (error.transaction) {
