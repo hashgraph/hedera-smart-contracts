@@ -32,7 +32,7 @@ function permitRequestType() {
   ]
 }
 
-describe('@solidityequiv3 ERC2612 Tests', function () {
+describe('@OZERC2612 ERC2612 Tests', function () {
   let signers, wallet, wallet2, permitRequest
   let contract, splitSignature
 
@@ -49,10 +49,6 @@ describe('@solidityequiv3 ERC2612 Tests', function () {
     contract = await factory.deploy()
     await contract.deployed()
     await contract.connect(wallet).mint(MINT_AMOUNT)
-    // const supply = await contract.totalSupply()
-    // const balanceOf = await contract.balanceOf(wallet.address)
-    // const balanceOf2 = await contract.balanceOf(wallet2.address)
-    // const allowance = await contract.allowance(wallet.address, wallet2.address)
 
     permitRequest = {
       owner: wallet.address,
@@ -71,7 +67,6 @@ describe('@solidityequiv3 ERC2612 Tests', function () {
     const mismatchedSignature = await wallet2._signTypedData(domain, types, permitRequest);
     splitSignature = ethers.utils.splitSignature(signature);
     mismatchedSplitSignature = ethers.utils.splitSignature(mismatchedSignature);
-    console.log()
   })
 
   it('should deploy contract', async function () {
