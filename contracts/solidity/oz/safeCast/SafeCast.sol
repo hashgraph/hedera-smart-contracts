@@ -70,259 +70,259 @@ contract SafeCastTest {
     int16 maxInt16 = type(int16).max;
     int8 maxInt8 = type(int8).max;
 
-    function testToUint256(int256 number) public pure returns (uint256) {
+    function toUint256(int256 number) public pure returns (uint256) {
         return SafeCast.toUint256(number);
     }
 
-    function testToUint248(uint256 number) public view returns (uint248) {
+    function toUint248(uint256 number) public view returns (uint248) {
         return SafeCast.toUint248(maxUint248 + number);
     }
 
-    function testToUint240(uint256 number) public view returns (uint240) {
+    function toUint240(uint256 number) public view returns (uint240) {
         return SafeCast.toUint240(maxUint240 + number);
     }
 
-    function testToUint232(uint256 number) public view returns (uint232) {
+    function toUint232(uint256 number) public view returns (uint232) {
         return SafeCast.toUint232(maxUint232 + number);
     }
 
-    function testToUint224(uint256 number) public view returns (uint224) {
+    function toUint224(uint256 number) public view returns (uint224) {
         return SafeCast.toUint224(maxUint224 + number);
     }
 
-    function testToUint216(uint256 number) public view returns (uint216) {
+    function toUint216(uint256 number) public view returns (uint216) {
         return SafeCast.toUint216(maxUint216 + number);
     }
 
-    function testToUint208(uint256 number) public view returns (uint208) {
+    function toUint208(uint256 number) public view returns (uint208) {
         return SafeCast.toUint208(maxUint208 + number);
     }
 
-    function testToUint200(uint256 number) public view returns (uint200) {
+    function toUint200(uint256 number) public view returns (uint200) {
         return SafeCast.toUint200(maxUint200 + number);
     }
 
-    function testToUint192(uint256 number) public view returns (uint192) {
+    function toUint192(uint256 number) public view returns (uint192) {
         return SafeCast.toUint192(maxUint192 + number);
     }
 
-    function testToUint184(uint256 number) public view returns (uint184) {
+    function toUint184(uint256 number) public view returns (uint184) {
         return SafeCast.toUint184(maxUint184 + number);
     }
 
-    function testToUint176(uint256 number) public view returns (uint176) {
+    function toUint176(uint256 number) public view returns (uint176) {
         return SafeCast.toUint176(maxUint176 + number);
     }
 
-    function testToUint168(uint256 number) public view returns (uint168) {
+    function toUint168(uint256 number) public view returns (uint168) {
         return SafeCast.toUint168(maxUint168 + number);
     }
 
-    function testToUint160(uint256 number) public view returns (uint160) {
+    function toUint160(uint256 number) public view returns (uint160) {
         return SafeCast.toUint160(maxUint160 + number);
     }
 
-    function testToUint152(uint256 number) public view returns (uint152) {
+    function toUint152(uint256 number) public view returns (uint152) {
         return SafeCast.toUint152(maxUint152 + number);
     }
 
-    function testToUint144(uint256 number) public view returns (uint144) {
+    function toUint144(uint256 number) public view returns (uint144) {
         return SafeCast.toUint144(maxUint144 + number);
     }
 
-    function testToUint136(uint256 number) public view returns (uint136) {
+    function toUint136(uint256 number) public view returns (uint136) {
         return SafeCast.toUint136(maxUint136 + number);
     }
 
-    function testToUint128(uint256 number) public view returns (uint128) {
+    function toUint128(uint256 number) public view returns (uint128) {
         return SafeCast.toUint128(maxUint128 + number);
     }
 
-    function testToUint120(uint256 number) public view returns (uint120) {
+    function toUint120(uint256 number) public view returns (uint120) {
         return SafeCast.toUint120(maxUint120 + number);
     }
 
-    function testToUint112(uint256 number) public view returns (uint112) {
+    function toUint112(uint256 number) public view returns (uint112) {
         return SafeCast.toUint112(maxUint112 + number);
     }
 
-    function testToUint104(uint256 number) public view returns (uint104) {
+    function toUint104(uint256 number) public view returns (uint104) {
         return SafeCast.toUint104(maxUint104 + number);
     }
 
-    function testToUint96(uint256 number) public view returns (uint96) {
+    function toUint96(uint256 number) public view returns (uint96) {
         return SafeCast.toUint96(maxUint96 + number);
     }
 
-    function testToUint88(uint256 number) public view returns (uint88) {
+    function toUint88(uint256 number) public view returns (uint88) {
         return SafeCast.toUint88(maxUint88 + number);
     }
 
-    function testToUint80(uint256 number) public view returns (uint80) {
+    function toUint80(uint256 number) public view returns (uint80) {
         return SafeCast.toUint80(maxUint80 + number);
     }
 
-    function testToUint72(uint256 number) public view returns (uint72) {
+    function toUint72(uint256 number) public view returns (uint72) {
         return SafeCast.toUint72(maxUint72 + number);
     }
 
-    function testToUint64(uint256 number) public view returns (uint64) {
+    function toUint64(uint256 number) public view returns (uint64) {
         return SafeCast.toUint64(maxUint64 + number);
     }
 
-    function testToUint56(uint256 number) public view returns (uint56) {
+    function toUint56(uint256 number) public view returns (uint56) {
         return SafeCast.toUint56(maxUint56 + number);
     }
 
-    function testToUint48(uint256 number) public view returns (uint48) {
+    function toUint48(uint256 number) public view returns (uint48) {
         return SafeCast.toUint48(maxUint48 + number);
     }
 
-    function testToUint40(uint256 number) public view returns (uint40) {
+    function toUint40(uint256 number) public view returns (uint40) {
         return SafeCast.toUint40(maxUint40 + number);
     }
 
-    function testToUint32(uint256 number) public view returns (uint32) {
+    function toUint32(uint256 number) public view returns (uint32) {
         return SafeCast.toUint32(maxUint32 + number);
     }
 
-    function testToUint24(uint256 number) public view returns (uint24) {
+    function toUint24(uint256 number) public view returns (uint24) {
         return SafeCast.toUint24(maxUint24 + number);
     }
 
-    function testToUint16(uint256 number) public view returns (uint16) {
+    function toUint16(uint256 number) public view returns (uint16) {
         return SafeCast.toUint16(maxUint16 + number);
     }
 
-    function testToUint8(uint256 number) public view returns (uint8) {
+    function toUint8(uint256 number) public view returns (uint8) {
         return SafeCast.toUint8(maxUint8 + number);
     }
 
-    function testToInt248(int256 number) public view returns (int248) {
+    function toInt248(int256 number) public view returns (int248) {
         return SafeCast.toInt248(maxInt248 + number);
     }
 
-    function testToInt240(int256 number) public view returns (int240) {
+    function toInt240(int256 number) public view returns (int240) {
         return SafeCast.toInt240(maxInt240 + number);
     }
 
-    function testToInt232(int256 number) public view returns (int232) {
+    function toInt232(int256 number) public view returns (int232) {
         return SafeCast.toInt232(maxInt232 + number);
     }
 
-    function testToInt224(int256 number) public view returns (int224) {
+    function toInt224(int256 number) public view returns (int224) {
         return SafeCast.toInt224(maxInt224 + number);
     }
 
-    function testToInt216(int256 number) public view returns (int216) {
+    function toInt216(int256 number) public view returns (int216) {
         return SafeCast.toInt216(maxInt216 + number);
     }
 
-    function testToInt208(int256 number) public view returns (int208) {
+    function toInt208(int256 number) public view returns (int208) {
         return SafeCast.toInt208(maxInt208 + number);
     }
 
-    function testToInt200(int256 number) public view returns (int200) {
+    function toInt200(int256 number) public view returns (int200) {
         return SafeCast.toInt200(maxInt200 + number);
     }
 
-    function testToInt192(int256 number) public view returns (int192) {
+    function toInt192(int256 number) public view returns (int192) {
         return SafeCast.toInt192(maxInt192 + number);
     }
 
-    function testToInt184(int256 number) public view returns (int184) {
+    function toInt184(int256 number) public view returns (int184) {
         return SafeCast.toInt184(maxInt184 + number);
     }
 
-    function testToInt176(int256 number) public view returns (int176) {
+    function toInt176(int256 number) public view returns (int176) {
         return SafeCast.toInt176(maxInt176 + number);
     }
 
-    function testToInt168(int256 number) public view returns (int168) {
+    function toInt168(int256 number) public view returns (int168) {
         return SafeCast.toInt168(maxInt168 + number);
     }
 
-    function testToInt160(int256 number) public view returns (int160) {
+    function toInt160(int256 number) public view returns (int160) {
         return SafeCast.toInt160(maxInt160 + number);
     }
 
-    function testToInt152(int256 number) public view returns (int152) {
+    function toInt152(int256 number) public view returns (int152) {
         return SafeCast.toInt152(maxInt152 + number);
     }
 
-    function testToInt144(int256 number) public view returns (int144) {
+    function toInt144(int256 number) public view returns (int144) {
         return SafeCast.toInt144(maxInt144 + number);
     }
 
-    function testToInt136(int256 number) public view returns (int136) {
+    function toInt136(int256 number) public view returns (int136) {
         return SafeCast.toInt136(maxInt136 + number);
     }
 
-    function testToInt128(int256 number) public view returns (int128) {
+    function toInt128(int256 number) public view returns (int128) {
         return SafeCast.toInt128(maxInt128 + number);
     }
 
-    function testToInt120(int256 number) public view returns (int120) {
+    function toInt120(int256 number) public view returns (int120) {
         return SafeCast.toInt120(maxInt120 + number);
     }
 
-    function testToInt112(int256 number) public view returns (int112) {
+    function toInt112(int256 number) public view returns (int112) {
         return SafeCast.toInt112(maxInt112 + number);
     }
 
-    function testToInt104(int256 number) public view returns (int104) {
+    function toInt104(int256 number) public view returns (int104) {
         return SafeCast.toInt104(maxInt104 + number);
     }
 
-    function testToInt96(int256 number) public view returns (int96) {
+    function toInt96(int256 number) public view returns (int96) {
         return SafeCast.toInt96(maxInt96 + number);
     }
 
-    function testToInt88(int256 number) public view returns (int88) {
+    function toInt88(int256 number) public view returns (int88) {
         return SafeCast.toInt88(maxInt88 + number);
     }
 
-    function testToInt80(int256 number) public view returns (int80) {
+    function toInt80(int256 number) public view returns (int80) {
         return SafeCast.toInt80(maxInt80 + number);
     }
 
-    function testToInt72(int256 number) public view returns (int72) {
+    function toInt72(int256 number) public view returns (int72) {
         return SafeCast.toInt72(maxInt72 + number);
     }
 
-    function testToInt64(int256 number) public view returns (int64) {
+    function toInt64(int256 number) public view returns (int64) {
         return SafeCast.toInt64(maxInt64 + number);
     }
 
-    function testToInt56(int256 number) public view returns (int56) {
+    function toInt56(int256 number) public view returns (int56) {
         return SafeCast.toInt56(maxInt56 + number);
     }
 
-    function testToInt48(int256 number) public view returns (int48) {
+    function toInt48(int256 number) public view returns (int48) {
         return SafeCast.toInt48(maxInt48 + number);
     }
 
-    function testToInt40(int256 number) public view returns (int40) {
+    function toInt40(int256 number) public view returns (int40) {
         return SafeCast.toInt40(maxInt40 + number);
     }
 
-    function testToInt32(int256 number) public view returns (int32) {
+    function toInt32(int256 number) public view returns (int32) {
         return SafeCast.toInt32(maxInt32 + number);
     }
 
-    function testToInt24(int256 number) public view returns (int24) {
+    function toInt24(int256 number) public view returns (int24) {
         return SafeCast.toInt24(maxInt24 + number);
     }
 
-    function testToInt16(int256 number) public view returns (int16) {
+    function toInt16(int256 number) public view returns (int16) {
         return SafeCast.toInt16(maxInt16 + number);
     }
 
-    function testToInt8(int256 number) public view returns (int8) {
+    function toInt8(int256 number) public view returns (int8) {
         return SafeCast.toInt8(maxInt8 + number);
     }
 
-    function testToInt256(uint256 number) public view returns (int256) {
+    function toInt256(uint256 number) public view returns (int256) {
         return SafeCast.toInt256(uint256(maxInt256) + number);
     }
 }
