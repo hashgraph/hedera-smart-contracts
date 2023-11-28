@@ -1,12 +1,11 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: Apache-2.0
 
 pragma solidity ^0.8.0;
 
-contract LogicContractV2 {
+contract LogicContractV1 {
     uint256 private value;
     event Value(uint256 value);
     event ValueChanged(uint256 newValue);
-    event Squared(uint256 squaredValue);
 
     constructor(uint256 _value) {
         value = _value;
@@ -25,8 +24,7 @@ contract LogicContractV2 {
     }
 
     // returns the square of the _input
-    function square(uint256 _input) public returns (uint256) {
-        emit Squared(_input * _input);
-        return _input * _input;
+    function square(uint256 _input) public pure returns (uint256) {
+        return _input; // implementation error
     }
 }

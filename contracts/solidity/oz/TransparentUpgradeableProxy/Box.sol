@@ -18,7 +18,3 @@ contract Box {
         return value;
     }
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 78e08e7 (Removes comment from Box.sol)
