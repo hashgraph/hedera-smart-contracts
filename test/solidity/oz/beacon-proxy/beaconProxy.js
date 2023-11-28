@@ -20,7 +20,7 @@
 
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
-const Utils = require('../utils')
+const Utils = require('../../../utils')
 
 describe('@OZBeaconProxy', function () {
   let owner, signer

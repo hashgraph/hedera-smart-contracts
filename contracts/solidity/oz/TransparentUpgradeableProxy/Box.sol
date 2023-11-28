@@ -18,3 +18,4 @@ contract Box {
         return value;
     }
 }
+
