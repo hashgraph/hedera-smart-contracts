@@ -9,6 +9,7 @@ import {GovernorTimelockControl} from "@openzeppelin/contracts/governance/extens
 import {TimelockController} from "@openzeppelin/contracts/governance/TimelockController.sol";
 import {IVotes} from "@openzeppelin/contracts/governance/utils/IVotes.sol";
 import {IERC165} from "@openzeppelin/contracts/interfaces/IERC165.sol";
+import"hardhat/console.sol";
 
 contract ExampleGovernor is
     Governor,
@@ -57,7 +58,8 @@ contract ExampleGovernor is
         bytes[] memory calldatas,
         bytes32 descriptionHash
     ) internal override(Governor, GovernorTimelockControl) returns (uint48) {
-        return super._queueOperations(proposalId, targets, values, calldatas, descriptionHash);
+        console.log("ExampleGovernor._queueOperations");
+        return uint48(block.timestamp); // return current block timestamp for this example
     }
 
     function _executeOperations(
@@ -67,6 +69,7 @@ contract ExampleGovernor is
         bytes[] memory calldatas,
         bytes32 descriptionHash
     ) internal override(Governor, GovernorTimelockControl) {
+        console.log("ExampleGovernor._executeOperations");
         super._executeOperations(proposalId, targets, values, calldatas, descriptionHash);
     }
 
