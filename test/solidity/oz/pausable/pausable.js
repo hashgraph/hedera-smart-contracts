@@ -21,8 +21,8 @@
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
 
-describe('@solidityequiv3 Pausable', function () {
-  let signers,wallet
+describe('@OZPausable Pausable Tests', function () {
+  let signers, wallet
   let contract
   const CALL_EXCEPTION = 'CALL_EXCEPTION'
 
@@ -36,28 +36,33 @@ describe('@solidityequiv3 Pausable', function () {
   })
 
   it('should BE able to call function "setPausedMessage" with "whenNotPaused" modifier when unpaused', async function () {
-    const tx = await contract.setPausedMessage("Hello World")
+    const tx = await contract.setPausedMessage('Hello World')
     await tx.wait()
     const message = await contract.message()
 
-    expect(message).to.equal("Hello World")
+    expect(message).to.equal('Hello World')
   })
 
   it('should NOT be able to call function "setPausedMessage" with "whenNotPaused" modifier when paused', async function () {
     await contract.pause()
-    const tx = await contract.setPausedMessage("Hello World")
+    const tx = await contract.setPausedMessage('Hello World')
 
-    expect(tx.wait()).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION)
+    expect(tx.wait()).to.eventually.be.rejected.and.have.property(
+      'code',
+      CALL_EXCEPTION
+    )
   })
 
   it('should BE able to call function "getPausedMessage" with "whenNotPaused" modifier when unpaused', async function () {
-    expect(await contract.getPausedMessage()).to.be.equal("Hello World")
+    expect(await contract.getPausedMessage()).to.be.equal('Hello World')
   })
 
   it('should NOT be able to call function "getPausedMessage" with "whenNotPaused" modifier when paused', async function () {
     await contract.unpause()
-   
-    expect(contract.getPausedMessage()).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION)
+
+    expect(
+      contract.getPausedMessage()
+    ).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION)
   })
 
   it('should fire event when Paused', async function () {
@@ -66,8 +71,7 @@ describe('@solidityequiv3 Pausable', function () {
     const event = rec.events[0]
     const account = event.args.account
 
-   
-    expect(event.event).to.be.equal("Paused")
+    expect(event.event).to.be.equal('Paused')
     expect(account).to.be.equal(wallet.address)
   })
 
@@ -77,8 +81,7 @@ describe('@solidityequiv3 Pausable', function () {
     const event = rec.events[0]
     const account = event.args.account
 
-   
-    expect(event.event).to.be.equal("Unpaused")
+    expect(event.event).to.be.equal('Unpaused')
     expect(account).to.be.equal(wallet.address)
   })
 
@@ -86,16 +89,21 @@ describe('@solidityequiv3 Pausable', function () {
     const tx = await contract.pause()
     await tx.wait()
     const tx2 = await contract.pause()
-    
-    expect(tx2.wait()).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION)
+
+    expect(tx2.wait()).to.eventually.be.rejected.and.have.property(
+      'code',
+      CALL_EXCEPTION
+    )
   })
 
   it('should Not be able to Unpause when Unpaused', async function () {
     const tx = await contract.unpause()
     await tx.wait()
     const tx2 = await contract.unpause()
-    
-    expect(tx2.wait()).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION)
-  })
 
+    expect(tx2.wait()).to.eventually.be.rejected.and.have.property(
+      'code',
+      CALL_EXCEPTION
+    )
+  })
 })

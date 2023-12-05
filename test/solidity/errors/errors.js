@@ -122,5 +122,4 @@ describe('@solidityequiv2 Solidity Errors', function () {
     expect(receipt.events[0].args.code).to.equal(18)
     expect(receipt.events[0].args.message).to.equal('panic')
   })
-
 })

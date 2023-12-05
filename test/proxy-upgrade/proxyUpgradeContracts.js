@@ -370,8 +370,11 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
       {
         const counterBefore = await proxyContract.count()
         await proxyContract.increment()
-        
-        const counterAfter = await pollForNewCounterValue(proxyContract, counterBefore);
+
+        const counterAfter = await pollForNewCounterValue(
+          proxyContract,
+          counterBefore
+        )
         expect(counterAfter, 'Asserting counter increment').to.be.greaterThan(
           counterBefore
         )
@@ -397,5 +400,3 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
     })
   })
 })
-
-

@@ -20,11 +20,9 @@
 
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
-const { Contract } = require('../../../constants')
 
-describe('@solidityequiv3 OpenZeppelin - ERC165', function () {
-  let signers
-  let contract, climberInterface, climberSelectorContract
+describe('@OZERC165 Support Interface Tests', function () {
+  let contract, climberSelectorContract
 
   before(async function () {
     signers = await ethers.getSigners()
@@ -32,14 +30,16 @@ describe('@solidityequiv3 OpenZeppelin - ERC165', function () {
     const factory = await ethers.getContractFactory('Test_ERC165')
     contract = await factory.deploy()
 
-    const ClimberSelectorFactory = await ethers.getContractFactory('ClimberSelector')
+    const ClimberSelectorFactory = await ethers.getContractFactory(
+      'ClimberSelector'
+    )
     climberSelectorContract = await ClimberSelectorFactory.deploy()
 
     climberInterface = new ethers.utils.Interface([
-        "function hasHarness()",
-        "function hasChalk()",
-        "function hasClimbingShoes()"
-    ]);
+      'function hasHarness()',
+      'function hasChalk()',
+      'function hasClimbingShoes()',
+    ])
   })
 
   it('should confirm support for: ERC-165', async function () {
@@ -53,6 +53,4 @@ describe('@solidityequiv3 OpenZeppelin - ERC165', function () {
     const supports = await contract.supportsInterface(selector)
     expect(supports).to.equal(false)
   })
-
 })
-
