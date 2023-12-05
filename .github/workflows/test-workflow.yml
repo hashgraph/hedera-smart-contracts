@@ -8,6 +8,7 @@ on:
         type: string
 
 env:
+
   RELAY_IMAGE_TAG: 0.36.0
   NETWORK_NODE_IMAGE_TAG: 0.45.0-alpha.0
   HAVEGED_IMAGE_TAG: 0.45.0-alpha.0
