@@ -47,10 +47,7 @@ describe("@OZTokenValut TokenVault Contract", function () {
     });
 
     it("Should fail if deposit is less than zero", async function () {
-      const depositTxPromise = tokenVault.connect(addr1)._deposit(0);
-  
-      await expect(depositTxPromise).to.be.revertedWith("Deposit is zero");
-  
+      expect(await tokenVault.connect(addr1)._deposit(0)).to.be.revertedWith("Deposit is zero");  
     });
 
     it("Should withdraw tokens and update shareHolders mapping", async function () {
@@ -69,22 +66,22 @@ describe("@OZTokenValut TokenVault Contract", function () {
     });
 
     it("Should fail if withdraw is zero", async function () {
-      await expect(tokenVault.connect(addr1)._withdraw(0, addr1.address)).to.be.revertedWith("withdraw must be greater than Zero");
+      expect(await tokenVault.connect(addr1)._withdraw(0, addr1.address)).to.be.revertedWith("withdraw must be greater than Zero");
     });
 
     it("Should fail if withdraw is to zero address", async function () {   
-      await expect(tokenVault.connect(addr1)._withdraw(1, ethers.constants.AddressZero)).to.be.revertedWith("Zero Address");
+      expect(await tokenVault.connect(addr1)._withdraw(1, ethers.constants.AddressZero)).to.be.revertedWith("Zero Address");
     }); 
     
     it("Should fail if not a shareholder", async function () { 
-      await expect(tokenVault.connect(addr2)._withdraw(1, addr2.address)).to.be.revertedWith("Not a shareHolder");
+      expect(await tokenVault.connect(addr2)._withdraw(1, addr2.address)).to.be.revertedWith("Not a shareHolder");
     });
 
     it("Should fail if not enough shares", async function () {
       const depositAmount = ethers.utils.parseEther("10");
       await asset.connect(addr1).approve(tokenVault.address, depositAmount);
       await tokenVault.connect(addr1)._deposit(depositAmount);
-      await expect(tokenVault.connect(addr1)._withdraw(depositAmount.add(1), addr1.address)).to.be.revertedWith("Not enough shares");
+      expect(await tokenVault.connect(addr1)._withdraw(depositAmount.add(1), addr1.address)).to.be.revertedWith("Not enough shares");
     });    
 
   });  
