@@ -43,6 +43,15 @@ const NETWORKS = {
     nodeId: '3',
     mirrorNode: 'https://previewnet.mirrornode.hedera.com',
   },
+  besu: {
+    name: 'besu_local',
+    url: 'http://127.0.0.1:8544',
+    chainId: 1337,
+    allowUnlimitedContractSize: true,
+    blockGasLimit: 0x1fffffffffffff,
+    gas: 1_000_000_000,
+    timeout: 60_000,
+  }
 }
 
 module.exports = {
