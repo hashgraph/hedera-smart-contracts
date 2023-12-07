@@ -51,13 +51,13 @@ describe('@OZERC2771 Context', function () {
     expect(res).to.be.false
   })
 
-  it('should return Pure message sender when not correct request is sent to _msgSender', async function () {
+  it('should return Pure message sender when incorrect request is sent to _msgSender', async function () {
     const res = await contract.callStatic.msgSenderTest()
 
     expect(res).to.be.equal(wallet.address)
   })
 
-  it('should return Pure message data when not correct request is sent to _msgData', async function () {
+  it('should return Pure message data when incorrect request is sent to _msgData', async function () {
     const res = await contract.callStatic.msgDataTest()
 
     expect(res).to.be.equal(msgDataTestFuncSig)
@@ -89,4 +89,14 @@ describe('@OZERC2771 Context', function () {
     const msgData = await contract.msgData()
     expect(msgData).to.be.equal(initialData)
   })
+
+  it('should return an event for [changeMessageTestRequest]', async function () {        
+    const signedTrx = await contract.changeMessageTestRequest('test', {
+        value: 100
+    })
+    const rec = await signedTrx.wait()
+    const eventName = rec.events[0].event
+
+    expect(eventName).to.be.equal('MessageChanged')
+})
 })
