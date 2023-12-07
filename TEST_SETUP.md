@@ -38,6 +38,12 @@ At root, create a `.env` file using the `example.env` as the template and fill o
 
 Adjust the `defaultNetwork` field in the [hardhat.config.js](hardhat.config.js) file based on the network your accounts (specified in the .env file) are associated with.
 
+Available Networks:
+   - local for reference and how to setup a local besu node please follow the [link](https://docs.hedera.com/hedera/sdks-and-apis/sdks/set-up-your-local-network)
+   - testnet
+   - previewnet
+   - besu_local for reference and how to setup a local besu node please follow the [link](https://besu.hyperledger.org/)
+
 #### 4. Installing the `foundry-rs` toolkit for the `forge` testing framework
 
 **_Motivation_**: This step is necessary for the project as it utilizes the `hardhat-foundry` plugin, enabling Hardhat to use dependencies from the `./lib` folder, which are installed using `forge`. Consequently, the plugin attempts to execute `forge install` to make these dependencies accessible to Hardhat. Therefore, it is crucial to install the `forge` testing framework, which is a part of the `foundry-rs` toolkit.
