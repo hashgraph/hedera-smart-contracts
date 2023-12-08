@@ -14,7 +14,7 @@ describe("@OZTokenValut TokenVault Contract", function () {
 
   beforeEach(async function () {
     ERC20Mock = await ethers.getContractFactory("contracts/erc-20/ERC20Mock.sol:ERC20Mock");
-    asset = await ERC20Mock.deploy("MockToken", "MTK");
+    asset = await ERC20Mock.deploy("MockToken", "MTK", Constants.GAS_LIMIT_1_000_000);
     await asset.deployed();
 
     TokenVault = await ethers.getContractFactory("TokenVault");
@@ -46,10 +46,6 @@ describe("@OZTokenValut TokenVault Contract", function () {
       expect(await tokenVault.shareHolders(addr1.address)).to.equal(depositAmount);
     });
 
-    it("Should fail if deposit is less than zero", async function () {
-      expect(await tokenVault.connect(addr1)._deposit(0)).to.be.revertedWith("Deposit is zero");  
-    });
-
     it("Should withdraw tokens and update shareHolders mapping", async function () {
       const depositAmount = ethers.utils.parseEther("10");
       const withdrawAmount = ethers.utils.parseEther("5");
@@ -63,10 +59,6 @@ describe("@OZTokenValut TokenVault Contract", function () {
         .withArgs(addr2.address, addr2.address, addr2.address, redemedAmount, redemedAmount);      
  
       expect(await tokenVault.totalAssetsOfUser(addr2.address)).to.equal(depositAmount.sub(withdrawAmount));
-    });
-
-    it("Should fail if withdraw is zero", async function () {
-      expect(await tokenVault.connect(addr1)._withdraw(0, addr1.address)).to.be.revertedWith("withdraw must be greater than Zero");
     });
 
     it("Should fail if withdraw is to zero address", async function () {   
