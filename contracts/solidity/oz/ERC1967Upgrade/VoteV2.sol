@@ -2,11 +2,12 @@
 pragma solidity ^0.8.20;
 
 import './VoteV1.sol';
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 /**
  * @dev This contract is an upgraded version of the VoteV1
  */
-contract VoteV2 is VoteV1 {
+contract VoteV2 is Initializable, VoteV1 {
 
     /**
      * @dev The caller has not voted
@@ -28,6 +29,13 @@ contract VoteV2 is VoteV1 {
      * @dev Initialize the vote system version 2
      */
     constructor() {
+        _version = 2;
+    }
+
+    /**
+     * @dev Initializes the vote system version 2
+     */
+    function initializeV2() external reinitializer(2) {
         _version = 2;
     }
 

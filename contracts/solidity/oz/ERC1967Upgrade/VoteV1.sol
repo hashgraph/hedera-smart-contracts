@@ -2,11 +2,12 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/utils/Context.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 /**
  * @dev This contract is an example of a simple voting system.
  */
-contract VoteV1 is Context {
+contract VoteV1 is Context, Initializable {
     /**
      * @dev version of the vote system
      */
@@ -39,9 +40,16 @@ contract VoteV1 is Context {
     }
 
     /**
-     * @dev Initialize the vote system version 1
+     * @dev Initializes the vote system version 1
      */
     constructor() {
+        _version = 1;
+    }
+
+    /**
+     * @dev Initializes the vote system version 1
+     */
+    function initialize() external initializer {
         _version = 1;
     }
 
