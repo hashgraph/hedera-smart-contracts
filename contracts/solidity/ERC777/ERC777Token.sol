@@ -21,7 +21,7 @@ contract ERC777Token is Context, IERC777 {
     using Address for address;
 
     /**
-     * @notice currently ERC1820 is not supported on Hedera networks. Therefore, this implementation requires a manual ERC1820Registry deployment
+     * @notice currently ERC1820Registry is not deployed on Hedera networks. Therefore, this implementation requires a manual ERC1820Registry deployment
      */
     IERC1820Registry internal immutable _ERC1820_REGISTRY;
     // IERC1820Registry internal constant _ERC1820_REGISTRY = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);

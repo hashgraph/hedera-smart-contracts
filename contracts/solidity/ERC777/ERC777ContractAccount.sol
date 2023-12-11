@@ -19,7 +19,7 @@ contract ERC777ContractAccount {
     bytes32 internal constant _TOKENS_RECIPIENT_INTERFACE_HASH = keccak256("ERC777TokensRecipient");
 
     /**
-     * @notice currently ERC1820 is not supported on Hedera networks. Therefore, this implementation requires a manual ERC1820Registry deployment
+     * @notice currently ERC1820Registry is not deployed on Hedera networks. Therefore, this implementation requires a manual ERC1820Registry deployment
      */
     IERC1820Registry internal immutable _ERC1820_REGISTRY;
     // IERC1820Registry internal constant _ERC1820_REGISTRY = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
