@@ -46,6 +46,7 @@ describe('@ERC1967Upgrade Upgradable Vote Tests', () => {
   let voteV1, voteV2, proxiedVoteV1, proxiedVoteV2, voteProxy
   let admin, voter
   const CALL_EXCEPTION = 'CALL_EXCEPTION'
+  const EMPTY_DATA = '0x'
 
   beforeEach(async () => {
     ;[admin, voter] = await ethers.getSigners()
@@ -66,7 +67,7 @@ describe('@ERC1967Upgrade Upgradable Vote Tests', () => {
     })
 
     it('Should upgrade proxy vote to point to voteV2', async () => {
-      await voteProxy.upgradeToAndCall(voteV2.address)
+      await voteProxy.upgradeToAndCall(voteV2.address, EMPTY_DATA)
 
       expect(await voteProxy.implementation()).to.eq(voteV2.address)
     })
@@ -154,7 +155,7 @@ describe('@ERC1967Upgrade Upgradable Vote Tests', () => {
         admin
       )
 
-      await voteProxy.upgradeToAndCall(voteV2.address)
+      await voteProxy.upgradeToAndCall(voteV2.address, EMPTY_DATA)
 
       proxiedVoteV2 = new ethers.Contract(
         voteProxy.address,

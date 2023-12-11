@@ -62,8 +62,8 @@ contract VoteProxy is ERC1967Proxy, Context {
      *
      * Emits an {IERC1967-Upgraded} event.
      */
-    function upgradeToAndCall(address newImplementation) external onlyProxyAdmin(_msgSender()){
-        ERC1967Utils.upgradeToAndCall(newImplementation, "");
+    function upgradeToAndCall(address newImplementation, bytes memory data) external onlyProxyAdmin(_msgSender()){
+        ERC1967Utils.upgradeToAndCall(newImplementation, data);
     }
 
     /**
