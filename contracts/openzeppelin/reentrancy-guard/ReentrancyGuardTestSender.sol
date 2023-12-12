@@ -1,9 +1,8 @@
 //SPDX-License-Identifier: Apache-2.0
-
 pragma solidity ^0.8.20;
 
+import "./ReentrancyGuardTestReceiver.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import "../ReentrancyGuard/ReentrancyGuardTestReceiver.sol";
 
 contract ReentrancyGuardTestSender is ReentrancyGuard {
     uint256 public counter = 0;

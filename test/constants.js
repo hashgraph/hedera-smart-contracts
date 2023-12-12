@@ -61,13 +61,14 @@ const Events = {
 const Path = {
   BLOCK_INFO: 'contracts/solidity/block/BlockInfo.sol:BlockInfo',
   CRYPTO_MATH: 'contracts/solidity/cryptomath/CryptoMath.sol:CryptoMath',
-  ERC20Mock: 'contracts/erc-20/ERC20Mock.sol:ERC20Mock',
-  ERC721Mock: 'contracts/erc-721/ERC721Mock.sol:ERC721Mock',
+  ERC20Mock: 'contracts/openzeppelin/ERC-20/ERC20Mock.sol:ERC20Mock',
+  ERC721Mock: 'contracts/openzeppelin/ERC-721/ERC721Mock.sol:ERC721Mock',
   HIP583_ERC20Mock: 'contracts/hip-583/ERC20Mock.sol:ERC20Mock',
   HIP583_ERC721Mock: 'contracts/hip-583/ERC721Mock.sol:ERC721Mock',
   HRC: 'contracts/hrc/HRC.sol:HRC',
   TYPE_OPS: 'contracts/solidity/typeops/TypeOps.sol:TypeOps',
-  RECEIVER_PAYS: 'contracts/solidity/signature-example/ReceiverPays.sol:ReceiverPays',
+  RECEIVER_PAYS:
+    'contracts/solidity/signature-example/ReceiverPays.sol:ReceiverPays',
 }
 
 const Contract = {
@@ -129,7 +130,7 @@ const Contract = {
   SimpleAuction: 'SimpleAuction',
   MyCustomTransparentUpgradeableProxy: 'MyCustomTransparentUpgradeableProxy',
   Box: 'Box',
-  BoxV2:'BoxV2',
+  BoxV2: 'BoxV2',
 }
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION'

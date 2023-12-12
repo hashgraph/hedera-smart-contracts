@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
-
 pragma solidity ^0.8.20;
 
-import "../../erc-20/ERC20Mock.sol";
+import "../ERC-20/ERC20Mock.sol";
 
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
