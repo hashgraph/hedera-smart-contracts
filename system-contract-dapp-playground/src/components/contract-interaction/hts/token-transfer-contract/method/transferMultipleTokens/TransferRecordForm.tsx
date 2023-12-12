@@ -18,10 +18,7 @@
  *
  */
 
-import {
-  SharedFormInputField,
-  SharedRemoveFieldsButton,
-} from '../../../shared/components/ParamInputForm';
+import { SharedFormInputField, SharedRemoveFieldsButton } from '../../../shared/components/ParamInputForm';
 import { htsMultiTokensTransferParamFields } from '@/utils/contract-interactions/HTS/token-transfer/paramFieldConstant';
 
 interface PageProps {
@@ -58,9 +55,7 @@ const TransferRecordForm = ({
             explanation={(htsMultiTokensTransferParamFields as any)[param].explanation}
             paramClassName={(htsMultiTokensTransferParamFields as any)[param].inputClassname}
             paramPlaceholder={(htsMultiTokensTransferParamFields as any)[param].inputPlaceholder}
-            paramFocusColor={
-              (htsMultiTokensTransferParamFields as any)[param].inputFocusBorderColor
-            }
+            paramFocusColor={(htsMultiTokensTransferParamFields as any)[param].inputFocusBorderColor}
           />
         );
       })}

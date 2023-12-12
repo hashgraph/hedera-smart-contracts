@@ -18,9 +18,9 @@
  *
  */
 
-const { expect } = require('chai')
-const { ethers } = require('hardhat')
-const { getDomain } = require('../helpers/eip712')
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
+const { getDomain } = require('../helpers/eip712');
 
 function permitRequestType() {
   return [
@@ -29,26 +29,28 @@ function permitRequestType() {
     { name: 'value', type: 'uint256' },
     { name: 'nonce', type: 'uint256' },
     { name: 'deadline', type: 'uint256' },
-  ]
+  ];
 }
 
 describe('@OZERC2612 ERC2612 Tests', function () {
-  let signers, wallet, wallet2, permitRequest
-  let contract, splitSignature
+  let signers, wallet, wallet2, permitRequest;
+  let contract, splitSignature;
 
-  const FUTURE_TIMESTAMP = new Date(new Date().setFullYear(new Date().getFullYear() + 1)).getTime()
-  const MINT_AMOUNT = '10000000000000000000'
-  const PERMIT_AMOUNT = 10000000000000
+  const FUTURE_TIMESTAMP = new Date(
+    new Date().setFullYear(new Date().getFullYear() + 1)
+  ).getTime();
+  const MINT_AMOUNT = '10000000000000000000';
+  const PERMIT_AMOUNT = 10000000000000;
 
   before(async function () {
-    signers = await ethers.getSigners()
-    wallet = signers[0]
-    wallet2 = signers[1]
+    signers = await ethers.getSigners();
+    wallet = signers[0];
+    wallet2 = signers[1];
 
-    const factory = await ethers.getContractFactory('ERC2612Test')
-    contract = await factory.deploy()
-    await contract.deployed()
-    await contract.connect(wallet).mint(MINT_AMOUNT)
+    const factory = await ethers.getContractFactory('ERC2612Test');
+    contract = await factory.deploy();
+    await contract.deployed();
+    await contract.connect(wallet).mint(MINT_AMOUNT);
 
     permitRequest = {
       owner: wallet.address,
@@ -56,41 +58,51 @@ describe('@OZERC2612 ERC2612 Tests', function () {
       value: PERMIT_AMOUNT,
       nonce: 0,
       deadline: FUTURE_TIMESTAMP,
-    }
+    };
 
-    const domain = await getDomain(contract)
+    const domain = await getDomain(contract);
     const types = {
-        Permit: permitRequestType(),
+      Permit: permitRequestType(),
     };
 
     const signature = await wallet._signTypedData(domain, types, permitRequest);
-    const mismatchedSignature = await wallet2._signTypedData(domain, types, permitRequest);
+    const mismatchedSignature = await wallet2._signTypedData(
+      domain,
+      types,
+      permitRequest
+    );
     splitSignature = ethers.utils.splitSignature(signature);
     mismatchedSplitSignature = ethers.utils.splitSignature(mismatchedSignature);
-  })
+  });
 
   it('should deploy contract', async function () {
-    const isDeployed = await contract.deployed()
+    const isDeployed = await contract.deployed();
 
-    expect(isDeployed).to.exist
-  })
+    expect(isDeployed).to.exist;
+  });
 
   it('should revert permit call with "Permit deadline has expired"', async function () {
-    const { v, r, s } = splitSignature
-      await expect(contract.callStatic.permitTest(
-          wallet.address,
-          wallet2.address,
-          1,
-          1,
-          v,
-          r,
-          s
-      )).to.eventually.be.rejected.and.have.property('errorName', 'ERC2612ExpiredSignature')
-  })
+    const { v, r, s } = splitSignature;
+    await expect(
+      contract.callStatic.permitTest(
+        wallet.address,
+        wallet2.address,
+        1,
+        1,
+        v,
+        r,
+        s
+      )
+    ).to.eventually.be.rejected.and.have.property(
+      'errorName',
+      'ERC2612ExpiredSignature'
+    );
+  });
 
   it('should revert permit call with "Mismatched signature"', async function () {
-    const { v, r, s } = mismatchedSplitSignature
-    await expect(contract.callStatic.permitTest(
+    const { v, r, s } = mismatchedSplitSignature;
+    await expect(
+      contract.callStatic.permitTest(
         permitRequest.owner,
         permitRequest.spender,
         permitRequest.value,
@@ -98,11 +110,15 @@ describe('@OZERC2612 ERC2612 Tests', function () {
         v,
         r,
         s
-    )).to.eventually.be.rejected.and.have.property('errorName', 'ERC2612InvalidSigner')
-  })
+      )
+    ).to.eventually.be.rejected.and.have.property(
+      'errorName',
+      'ERC2612InvalidSigner'
+    );
+  });
 
   it('should permit', async function () {
-    const { v, r, s } = splitSignature
+    const { v, r, s } = splitSignature;
     const trx = await contract.permit(
       permitRequest.owner,
       permitRequest.spender,
@@ -111,9 +127,9 @@ describe('@OZERC2612 ERC2612 Tests', function () {
       v,
       r,
       s
-    )
-    await trx.wait()
-    const allowance = await contract.allowance(wallet.address, wallet2.address)
-    expect(allowance).to.equal(PERMIT_AMOUNT)
-  })
-})
+    );
+    await trx.wait();
+    const allowance = await contract.allowance(wallet.address, wallet2.address);
+    expect(allowance).to.equal(PERMIT_AMOUNT);
+  });
+});

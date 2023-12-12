@@ -104,13 +104,7 @@ export const TOKEN_INFO_ADVANCED_KEYS = [
   'pauseStatus',
   'ledgerId',
 ];
-export const TOKEN_INFO_NFT_KEYS = [
-  'serialNumber',
-  'ownerId',
-  'creationTime',
-  'metadata',
-  'spenderId',
-];
+export const TOKEN_INFO_NFT_KEYS = ['serialNumber', 'ownerId', 'creationTime', 'metadata', 'spenderId'];
 
 type CustomFeeKeys = 'fixedFees' | 'fractionalFees' | 'royaltyFees';
 export const CUSTOM_FEES_KEYS: CustomFeeKeys[] = ['fixedFees', 'fractionalFees', 'royaltyFees'];

@@ -18,106 +18,108 @@
  *
  */
 
-const { expect } = require('chai')
-const { ethers } = require('hardhat')
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
 
 describe('@solidityequiv4 Modular Token', () => {
-  const INITIAL_AMOUNT = 12000
-  let modularTokenContract, signers, accountA, accountB
+  const INITIAL_AMOUNT = 12000;
+  let modularTokenContract, signers, accountA, accountB;
 
   beforeEach(async () => {
-    signers = await ethers.getSigners()
-    accountA = await signers[0].getAddress()
-    accountB = await signers[1].getAddress()
+    signers = await ethers.getSigners();
+    accountA = await signers[0].getAddress();
+    accountB = await signers[1].getAddress();
 
-    const modularTokenContractFactory = await ethers.getContractFactory('Token')
+    const modularTokenContractFactory = await ethers.getContractFactory(
+      'Token'
+    );
 
     modularTokenContract = await modularTokenContractFactory.deploy(
       INITIAL_AMOUNT
-    )
-  })
+    );
+  });
 
   it('Deployment', async () => {
     const initialBalance = await modularTokenContract.balanceOf(
       accountA // deployer
-    )
+    );
 
-    expect(initialBalance).to.eq(INITIAL_AMOUNT)
-    expect(ethers.utils.isAddress(modularTokenContract.address)).to.be.true
-  })
+    expect(initialBalance).to.eq(INITIAL_AMOUNT);
+    expect(ethers.utils.isAddress(modularTokenContract.address)).to.be.true;
+  });
 
   it('Should transfer an `amount` of token from `msg.sender` to `to` address', async () => {
-    const TRANSFER_AMOUNT = 3000
+    const TRANSFER_AMOUNT = 3000;
 
     // execute transaction
-    const tx = await modularTokenContract.transfer(accountB, TRANSFER_AMOUNT)
+    const tx = await modularTokenContract.transfer(accountB, TRANSFER_AMOUNT);
 
     // retrieve states from event
-    const receipt = await tx.wait()
-    const event = receipt.events.map((e) => e.event === 'Transfer' && e)[0]
-    const [from, to, amount] = event.args
+    const receipt = await tx.wait();
+    const event = receipt.events.map((e) => e.event === 'Transfer' && e)[0];
+    const [from, to, amount] = event.args;
 
     // retrieve balances after transfer
-    const accountABalance = await modularTokenContract.balanceOf(accountA)
-    const accountBBalance = await modularTokenContract.balanceOf(accountB)
+    const accountABalance = await modularTokenContract.balanceOf(accountA);
+    const accountBBalance = await modularTokenContract.balanceOf(accountB);
 
     // assertion
-    expect(from).to.eq(accountA)
-    expect(to).to.eq(accountB)
-    expect(amount).to.eq(TRANSFER_AMOUNT)
-    expect(accountABalance).to.eq(INITIAL_AMOUNT - TRANSFER_AMOUNT)
-    expect(accountBBalance).to.eq(TRANSFER_AMOUNT)
-  })
+    expect(from).to.eq(accountA);
+    expect(to).to.eq(accountB);
+    expect(amount).to.eq(TRANSFER_AMOUNT);
+    expect(accountABalance).to.eq(INITIAL_AMOUNT - TRANSFER_AMOUNT);
+    expect(accountBBalance).to.eq(TRANSFER_AMOUNT);
+  });
 
   it('Should let `msg.sender` approve an `amount` of allowance for `spender`', async () => {
-    const ALLOWANCE = 3000
+    const ALLOWANCE = 3000;
 
     // execute transaction
-    const tx = await modularTokenContract.approve(accountB, ALLOWANCE)
+    const tx = await modularTokenContract.approve(accountB, ALLOWANCE);
 
     // retrieve states from event
-    const receipt = await tx.wait()
-    const event = receipt.events.map((e) => e.event === 'Approval' && e)[0]
-    const [owner, spender, allowance] = event.args
+    const receipt = await tx.wait();
+    const event = receipt.events.map((e) => e.event === 'Approval' && e)[0];
+    const [owner, spender, allowance] = event.args;
 
     // retrieve allowance from contract
     const storageAllowance = await modularTokenContract.allowance(
       accountA,
       accountB
-    )
+    );
 
     // assertion
-    expect(owner).to.eq(accountA)
-    expect(spender).to.eq(accountB)
-    expect(allowance).to.eq(ALLOWANCE)
-    expect(storageAllowance).to.eq(ALLOWANCE)
-  })
+    expect(owner).to.eq(accountA);
+    expect(spender).to.eq(accountB);
+    expect(allowance).to.eq(ALLOWANCE);
+    expect(storageAllowance).to.eq(ALLOWANCE);
+  });
 
   it('Should let `msg.sender` transfer an `amount` to `to` on behalf of `from`', async () => {
-    const ALLOWANCE = 3000
+    const ALLOWANCE = 3000;
 
     // accountA first need to approve an allowance for accountB
-    await modularTokenContract.approve(accountB, ALLOWANCE)
+    await modularTokenContract.approve(accountB, ALLOWANCE);
 
     // execute transferFrom by signer[1] (i.e. accountB)
     const tx = await modularTokenContract
       .connect(signers[1])
-      .transferFrom(accountA, accountB, ALLOWANCE)
+      .transferFrom(accountA, accountB, ALLOWANCE);
 
     // retrieve states from event
-    const receipt = await tx.wait()
-    const event = receipt.events.map((e) => e.event === 'Transfer' && e)[0]
-    const [from, to, amount] = event.args
+    const receipt = await tx.wait();
+    const event = receipt.events.map((e) => e.event === 'Transfer' && e)[0];
+    const [from, to, amount] = event.args;
 
     // retrieve balances and allowance from storage
-    const accountABalance = await modularTokenContract.balanceOf(accountA)
-    const accountBBalance = await modularTokenContract.balanceOf(accountB)
+    const accountABalance = await modularTokenContract.balanceOf(accountA);
+    const accountBBalance = await modularTokenContract.balanceOf(accountB);
 
     // assertion
-    expect(to).to.eq(accountB)
-    expect(from).to.eq(accountA)
-    expect(amount).to.eq(ALLOWANCE)
-    expect(accountBBalance).to.eq(ALLOWANCE)
-    expect(accountABalance).to.eq(INITIAL_AMOUNT - ALLOWANCE)
-  })
-})
+    expect(to).to.eq(accountB);
+    expect(from).to.eq(accountA);
+    expect(amount).to.eq(ALLOWANCE);
+    expect(accountBBalance).to.eq(ALLOWANCE);
+    expect(accountABalance).to.eq(INITIAL_AMOUNT - ALLOWANCE);
+  });
+});

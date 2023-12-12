@@ -18,108 +18,108 @@
  *
  */
 
-const { expect } = require('chai')
-const { ethers } = require('hardhat')
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
 
 describe('@OZERC29821 Royalty Info Tests', function () {
-  let signers, wallet, wallet2
-  let contract
-  const TOKEN_ID = 666
-  const DEFAULT_FEE_NUMERATOR = 20
-  const DEFAULT_FEE_DENOMINATOR = 10000
+  let signers, wallet, wallet2;
+  let contract;
+  const TOKEN_ID = 666;
+  const DEFAULT_FEE_NUMERATOR = 20;
+  const DEFAULT_FEE_DENOMINATOR = 10000;
 
   before(async function () {
-    signers = await ethers.getSigners()
-    wallet = signers[0]
-    wallet2 = signers[1]
+    signers = await ethers.getSigners();
+    wallet = signers[0];
+    wallet2 = signers[1];
 
-    const factory = await ethers.getContractFactory('ERC2981Test')
-    contract = await factory.deploy()
-  })
+    const factory = await ethers.getContractFactory('ERC2981Test');
+    contract = await factory.deploy();
+  });
 
   it('should deploy the contract', async function () {
-    const deployed = await contract.deployed()
-    expect(deployed).to.exist
-  })
+    const deployed = await contract.deployed();
+    expect(deployed).to.exist;
+  });
 
   it('should return the default Fee Denominator', async function () {
-    const res = await contract.feeDenominator()
+    const res = await contract.feeDenominator();
 
-    expect(res).to.equal(DEFAULT_FEE_DENOMINATOR)
-  })
+    expect(res).to.equal(DEFAULT_FEE_DENOMINATOR);
+  });
 
   it('should set the Default Royalty', async function () {
     const trx = await contract.setDefaultRoyalty(
       wallet2.address,
       DEFAULT_FEE_NUMERATOR,
       { gasLimit: 10_000_000 }
-    )
-    await trx.wait()
+    );
+    await trx.wait();
     const royaltyInfoDefault = await contract.royaltyInfo(
       ethers.constants.AddressZero,
       10000
-    )
+    );
 
-    expect(royaltyInfoDefault[0]).to.equal(wallet2.address)
-    expect(royaltyInfoDefault[1]).to.equal(DEFAULT_FEE_NUMERATOR)
-  })
+    expect(royaltyInfoDefault[0]).to.equal(wallet2.address);
+    expect(royaltyInfoDefault[1]).to.equal(DEFAULT_FEE_NUMERATOR);
+  });
 
   it('should return error for setting ZERO Address for receiver', async function () {
-    let hasError = false
+    let hasError = false;
     try {
       const trx = await contract.setDefaultRoyalty(
         ethers.constants.AddressZero,
         DEFAULT_FEE_NUMERATOR
-      )
-      await trx.wait()
+      );
+      await trx.wait();
     } catch (error) {
-      hasError = true
+      hasError = true;
     }
 
-    expect(hasError).to.equal(true)
-  })
+    expect(hasError).to.equal(true);
+  });
 
   it('should return error for setting too big of feeNumerator', async function () {
-    let hasError = false
+    let hasError = false;
     try {
       const trx = await contract.setDefaultRoyalty(
         wallet.address,
         DEFAULT_FEE_DENOMINATOR + 1
-      )
-      await trx.wait()
+      );
+      await trx.wait();
     } catch (error) {
-      hasError = true
+      hasError = true;
     }
 
-    expect(hasError).to.equal(true)
-  })
+    expect(hasError).to.equal(true);
+  });
 
   it('should return Royalty info for token', async function () {
-    const salePrice = 200
-    const royaltyFraction = 400
-    const feeDenominator = await contract.feeDenominator()
-    const calculatedRoyalty = (salePrice * royaltyFraction) / feeDenominator
+    const salePrice = 200;
+    const royaltyFraction = 400;
+    const feeDenominator = await contract.feeDenominator();
+    const calculatedRoyalty = (salePrice * royaltyFraction) / feeDenominator;
     const trx = await contract.setTokenRoyalty(
       TOKEN_ID,
       wallet.address,
       royaltyFraction
-    )
-    trx.wait()
-    const royaltyInfoDefault = await contract.royaltyInfo(TOKEN_ID, salePrice)
+    );
+    trx.wait();
+    const royaltyInfoDefault = await contract.royaltyInfo(TOKEN_ID, salePrice);
 
-    expect(royaltyInfoDefault[0]).to.equal(wallet.address)
-    expect(royaltyInfoDefault[1]).to.equal(calculatedRoyalty)
-  })
+    expect(royaltyInfoDefault[0]).to.equal(wallet.address);
+    expect(royaltyInfoDefault[1]).to.equal(calculatedRoyalty);
+  });
 
   it('should reset Royalty Info', async function () {
-    const trx = await contract.resetTokenRoyalty(TOKEN_ID)
-    await trx.wait()
+    const trx = await contract.resetTokenRoyalty(TOKEN_ID);
+    await trx.wait();
     const royaltyInfoDefault = await contract.royaltyInfo(
       TOKEN_ID,
       DEFAULT_FEE_NUMERATOR
-    )
+    );
 
-    expect(royaltyInfoDefault[0]).to.equal(wallet2.address)
-    expect(royaltyInfoDefault[1]).to.equal(0)
-  })
-})
+    expect(royaltyInfoDefault[0]).to.equal(wallet2.address);
+    expect(royaltyInfoDefault[1]).to.equal(0);
+  });
+});

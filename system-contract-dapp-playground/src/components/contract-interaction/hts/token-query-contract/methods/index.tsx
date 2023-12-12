@@ -37,9 +37,7 @@ const HederaTokenQueryMethods = ({ baseContract, method }: PageProps) => {
       {method === 'generalInfo' && <QueryTokenGeneralInfomation baseContract={baseContract} />}
       {method === 'specificInfo' && <QueryTokenSpecificInfomation baseContract={baseContract} />}
       {method === 'tokenStatus' && <QueryTokenStatusInfomation baseContract={baseContract} />}
-      {method === 'tokenPermission' && (
-        <QueryTokenPermissionInfomation baseContract={baseContract} />
-      )}
+      {method === 'tokenPermission' && <QueryTokenPermissionInfomation baseContract={baseContract} />}
     </>
   );
 };

@@ -18,30 +18,30 @@
  *
  */
 
-const { expect } = require('chai')
-const { ethers } = require('hardhat')
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
 
 describe('@OZMulticall Solidity OZ Multicall Tests', function () {
-  let contract
+  let contract;
 
   before(async function () {
     const factoryErrorsExternal = await ethers.getContractFactory(
       'MulticallTest'
-    )
-    contract = await factoryErrorsExternal.deploy()
-    await contract.deployed()
-  })
+    );
+    contract = await factoryErrorsExternal.deploy();
+    await contract.deployed();
+  });
 
   it('should perform a multicall', async function () {
-    const foo = await contract.populateTransaction.foo()
-    const bar = await contract.populateTransaction.bar()
-    const res = await contract.callStatic.multicall([foo.data, bar.data])
+    const foo = await contract.populateTransaction.foo();
+    const bar = await contract.populateTransaction.bar();
+    const res = await contract.callStatic.multicall([foo.data, bar.data]);
 
     expect(ethers.BigNumber.from(res[0])).to.be.equal(
       ethers.BigNumber.from(123)
-    )
+    );
     expect(ethers.BigNumber.from(res[1])).to.be.equal(
       ethers.BigNumber.from(456)
-    )
-  })
-})
+    );
+  });
+});

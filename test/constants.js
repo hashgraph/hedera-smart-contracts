@@ -56,7 +56,7 @@ const Events = {
   TinyBars: 'TinyBars',
   TinyCents: 'TinyCents',
   PseudoRandomSeed: 'PseudoRandomSeed',
-}
+};
 
 const Path = {
   BLOCK_INFO: 'contracts/solidity/block/BlockInfo.sol:BlockInfo',
@@ -69,7 +69,7 @@ const Path = {
   TYPE_OPS: 'contracts/solidity/typeops/TypeOps.sol:TypeOps',
   RECEIVER_PAYS:
     'contracts/solidity/signature-example/ReceiverPays.sol:ReceiverPays',
-}
+};
 
 const Contract = {
   ERC20Mock: 'ERC20Mock',
@@ -131,22 +131,22 @@ const Contract = {
   MyCustomTransparentUpgradeableProxy: 'MyCustomTransparentUpgradeableProxy',
   Box: 'Box',
   BoxV2: 'BoxV2',
-}
+};
 
-const CALL_EXCEPTION = 'CALL_EXCEPTION'
-const GAS_LIMIT_1_000_000 = { gasLimit: 1_000_000 }
-const GAS_LIMIT_10_000_000 = { gasLimit: 10_000_000 }
-const GAS_LIMIT_800000 = { gasLimit: 800000 }
-const GAS_LIMIT_8000000 = { gasLimit: 8000000 }
-const TOKEN_NAME = 'tokenName'
-const TOKEN_SYMBOL = 'tokenSymbol'
-const TX_SUCCESS_CODE = 22
-const SECOND = (WEI = 1)
-const MINUTE = 60 * SECOND
-const HOUR = 60 * MINUTE
-const DAY = 24 * HOUR
-const WEEK = 7 * DAY
-const GWEI = 1e9
+const CALL_EXCEPTION = 'CALL_EXCEPTION';
+const GAS_LIMIT_1_000_000 = { gasLimit: 1_000_000 };
+const GAS_LIMIT_10_000_000 = { gasLimit: 10_000_000 };
+const GAS_LIMIT_800000 = { gasLimit: 800000 };
+const GAS_LIMIT_8000000 = { gasLimit: 8000000 };
+const TOKEN_NAME = 'tokenName';
+const TOKEN_SYMBOL = 'tokenSymbol';
+const TX_SUCCESS_CODE = 22;
+const SECOND = (WEI = 1);
+const MINUTE = 60 * SECOND;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
+const WEEK = 7 * DAY;
+const GWEI = 1e9;
 
 module.exports = {
   Events,
@@ -167,4 +167,4 @@ module.exports = {
   WEEK,
   WEI,
   GWEI,
-}
+};

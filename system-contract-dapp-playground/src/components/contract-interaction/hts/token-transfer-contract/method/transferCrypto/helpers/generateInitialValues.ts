@@ -71,18 +71,17 @@ export const generateInitialFungibleTokenTransferParamValues = (): CryptoTransfe
   };
 };
 
-export const generateInitialNonFungibleTokenTransferParamValues =
-  (): NonFungibleTokenTransferParam => {
-    return {
-      fieldKey: generatedRandomUniqueKey(9),
-      fieldValue: {
-        senderAccountID: '',
-        receiverAccountID: '',
-        serialNumber: '',
-        isApprovalB: false,
-      },
-    };
+export const generateInitialNonFungibleTokenTransferParamValues = (): NonFungibleTokenTransferParam => {
+  return {
+    fieldKey: generatedRandomUniqueKey(9),
+    fieldValue: {
+      senderAccountID: '',
+      receiverAccountID: '',
+      serialNumber: '',
+      isApprovalB: false,
+    },
   };
+};
 
 export const generateInitialTokenTransferParamValues = (): TokenTransferParam => {
   return {

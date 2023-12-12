@@ -18,51 +18,59 @@
  *
  */
 
-const { expect } = require('chai')
-const { ethers } = require('hardhat')
-const Constants = require('../../constants')
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@solidityequiv3 Reentrancy Guard', function () {
-  const tenHBAR = ethers.utils.parseEther("10.0");
+  const tenHBAR = ethers.utils.parseEther('10.0');
   async function deployContractsAndSendHbars() {
     const [owner] = await ethers.getSigners();
     const factorySender = await ethers.getContractFactory(
-        Constants.Contract.ReentrancyGuardTestSender
-    )
-    contractSender = await factorySender.deploy({value: tenHBAR})
+      Constants.Contract.ReentrancyGuardTestSender
+    );
+    contractSender = await factorySender.deploy({ value: tenHBAR });
     const factoryReceiver = await ethers.getContractFactory(
-        Constants.Contract.ReentrancyGuardTestReceiver
-      )
-    contractReceiver = await factoryReceiver.deploy(contractSender.address)
+      Constants.Contract.ReentrancyGuardTestReceiver
+    );
+    contractReceiver = await factoryReceiver.deploy(contractSender.address);
   }
 
   it('should verify it reenters without guard', async function () {
     await deployContractsAndSendHbars();
 
-    const res = await contractReceiver.attack()
-    const counter = await contractSender.counter()
-    await res.wait()
-    const receiverBalance = await ethers.provider.getBalance(contractReceiver.address)
-    const senderBalance = await ethers.provider.getBalance(contractSender.address)
+    const res = await contractReceiver.attack();
+    const counter = await contractSender.counter();
+    await res.wait();
+    const receiverBalance = await ethers.provider.getBalance(
+      contractReceiver.address
+    );
+    const senderBalance = await ethers.provider.getBalance(
+      contractSender.address
+    );
 
-    expect(counter).to.eq(10)
-    expect(senderBalance).to.eq(0)
-    expect(receiverBalance).to.eq(tenHBAR)
-  })
+    expect(counter).to.eq(10);
+    expect(senderBalance).to.eq(0);
+    expect(receiverBalance).to.eq(tenHBAR);
+  });
 
   it('should verify it cannot reenter with guard', async function () {
     await deployContractsAndSendHbars();
 
     await contractReceiver.setNonReentrant(true);
-    const res = await contractReceiver.attackNonReentrant()
-    const counter = await contractSender.counter()
-    await res.wait()
+    const res = await contractReceiver.attackNonReentrant();
+    const counter = await contractSender.counter();
+    await res.wait();
 
-    const receiverBalance = await ethers.provider.getBalance(contractReceiver.address)
-    const senderBalance = await ethers.provider.getBalance(contractSender.address)
+    const receiverBalance = await ethers.provider.getBalance(
+      contractReceiver.address
+    );
+    const senderBalance = await ethers.provider.getBalance(
+      contractSender.address
+    );
 
-    expect(counter).to.eq(1)
-    expect(receiverBalance).to.eq(0)
-    expect(senderBalance).to.eq(tenHBAR)
-  })
-})
+    expect(counter).to.eq(1);
+    expect(receiverBalance).to.eq(0);
+    expect(senderBalance).to.eq(tenHBAR);
+  });
+});

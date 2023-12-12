@@ -18,43 +18,43 @@
  *
  */
 
-const { expect } = require('chai')
-const { ethers } = require('hardhat')
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
 
 describe('@solidityequiv1 Crypto Inheritance tests', function () {
-  let signers, contractMain, contractBase, wallet
-  const TOP_UP_AMOUNT = ethers.utils.parseEther('0.000001')
+  let signers, contractMain, contractBase, wallet;
+  const TOP_UP_AMOUNT = ethers.utils.parseEther('0.000001');
 
   before(async function () {
-    signers = await ethers.getSigners()
-    wallet = signers[0]
+    signers = await ethers.getSigners();
+    wallet = signers[0];
 
-    const factoryMain = await ethers.getContractFactory('Main')
-    contractMain = await factoryMain.deploy()
-    await contractMain.deployed()
+    const factoryMain = await ethers.getContractFactory('Main');
+    contractMain = await factoryMain.deploy();
+    await contractMain.deployed();
 
-    const factoryBase = await ethers.getContractFactory('Base')
-    contractBase = await factoryBase.deploy()
-    await contractBase.deployed()
+    const factoryBase = await ethers.getContractFactory('Base');
+    contractBase = await factoryBase.deploy();
+    await contractBase.deployed();
 
     //top up the test contract with some funds
     const tx = {
       to: contractMain.address,
       value: TOP_UP_AMOUNT,
-    }
-    const topUpRes = await wallet.sendTransaction(tx)
-    await topUpRes.wait()
-  })
+    };
+    const topUpRes = await wallet.sendTransaction(tx);
+    await topUpRes.wait();
+  });
 
   it("should confirm solidity functionality: this (current contract's type)", async function () {
-    const mainThis = await contractMain.returnThis()
+    const mainThis = await contractMain.returnThis();
 
-    expect(mainThis).to.equal(contractMain.address)
-  })
+    expect(mainThis).to.equal(contractMain.address);
+  });
 
   it('should confirm solidity functionality: super', async function () {
-    const res = await contractMain.classIdentifier()
+    const res = await contractMain.classIdentifier();
 
-    expect(res).to.equal('Main')
-  })
-})
+    expect(res).to.equal('Main');
+  });
+});

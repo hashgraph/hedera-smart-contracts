@@ -36,11 +36,7 @@ const MetadataInputForm = ({ metadata, handleInputOnChange, handleAddMetadata }:
     <div className="flex flex-col gap-6">
       {/* Add metadata */}
       <div className="flex flex-col gap-0">
-        <Tooltip
-          label={metadata.length > 0 && 'Add more metadata'}
-          placement="top"
-          fontWeight={'medium'}
-        >
+        <Tooltip label={metadata.length > 0 && 'Add more metadata'} placement="top" fontWeight={'medium'}>
           <button
             onClick={() => handleAddMetadata('ADD')}
             className="w-full rounded border border-white/30 text-center text-sm hover:border-hedera-purple hover:text-hedera-purple transition duration-300 hover:cursor-pointer "
@@ -67,10 +63,7 @@ const MetadataInputForm = ({ metadata, handleInputOnChange, handleAddMetadata }:
             paramFocusColor={(htsTokenMintParamFields as any)['metadata'].inputFocusBorderColor}
           />
           {/* delete key button */}
-          <SharedRemoveFieldsButton
-            fieldKey={meta.metaKey}
-            handleModifyTokenAddresses={handleAddMetadata}
-          />
+          <SharedRemoveFieldsButton fieldKey={meta.metaKey} handleModifyTokenAddresses={handleAddMetadata} />
         </div>
       ))}
     </div>

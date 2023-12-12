@@ -18,39 +18,39 @@
  *
  */
 
-const { expect } = require('chai')
-const { ethers } = require('hardhat')
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
 
 describe('@OZERC165 Support Interface Tests', function () {
-  let contract, climberSelectorContract
+  let contract, climberSelectorContract;
 
   before(async function () {
-    signers = await ethers.getSigners()
+    signers = await ethers.getSigners();
 
-    const factory = await ethers.getContractFactory('Test_ERC165')
-    contract = await factory.deploy()
+    const factory = await ethers.getContractFactory('Test_ERC165');
+    contract = await factory.deploy();
 
     const ClimberSelectorFactory = await ethers.getContractFactory(
       'ClimberSelector'
-    )
-    climberSelectorContract = await ClimberSelectorFactory.deploy()
+    );
+    climberSelectorContract = await ClimberSelectorFactory.deploy();
 
     climberInterface = new ethers.utils.Interface([
       'function hasHarness()',
       'function hasChalk()',
       'function hasClimbingShoes()',
-    ])
-  })
+    ]);
+  });
 
   it('should confirm support for: ERC-165', async function () {
-    const selector = climberSelectorContract.calculateSelector()
-    const supports = await contract.supportsInterface(selector)
-    expect(supports).to.equal(true)
-  })
+    const selector = climberSelectorContract.calculateSelector();
+    const supports = await contract.supportsInterface(selector);
+    expect(supports).to.equal(true);
+  });
 
   it('should confirm support for: ERC-165 -> Selector not suported', async function () {
-    const selector = climberSelectorContract.calculateSelectorNotSupported()
-    const supports = await contract.supportsInterface(selector)
-    expect(supports).to.equal(false)
-  })
-})
+    const selector = climberSelectorContract.calculateSelectorNotSupported();
+    const supports = await contract.supportsInterface(selector);
+    expect(supports).to.equal(false);
+  });
+});

@@ -29,12 +29,7 @@ interface PageProps {
   handleInputOnChange: (e: any, param: string) => void;
 }
 
-const TokenInfoForm = ({
-  paramValues,
-  setParamValues,
-  tokenInfoFields,
-  handleInputOnChange,
-}: PageProps) => {
+const TokenInfoForm = ({ paramValues, setParamValues, tokenInfoFields, handleInputOnChange }: PageProps) => {
   return (
     <div className="flex flex-col gap-6">
       {/* name & symbol & memo*/}
@@ -52,9 +47,7 @@ const TokenInfoForm = ({
                 explanation={(htsUpdateTokenInfoParamFields as any)[param].explanation}
                 paramClassName={(htsUpdateTokenInfoParamFields as any)[param].inputClassname}
                 paramPlaceholder={(htsUpdateTokenInfoParamFields as any)[param].inputPlaceholder}
-                paramFocusColor={
-                  (htsUpdateTokenInfoParamFields as any)[param].inputFocusBorderColor
-                }
+                paramFocusColor={(htsUpdateTokenInfoParamFields as any)[param].inputFocusBorderColor}
               />
             </div>
           );
@@ -70,9 +63,7 @@ const TokenInfoForm = ({
           handleButtonOnClick={() => {
             setParamValues((prev: any) => ({ ...prev, tokenSupplyType: false }));
           }}
-          explanation={
-            (htsUpdateTokenInfoParamFields as any)['tokenSupplyType'].explanation.infinite
-          }
+          explanation={(htsUpdateTokenInfoParamFields as any)['tokenSupplyType'].explanation.infinite}
         />
 
         {/* finite */}

@@ -36,7 +36,15 @@ const Permit = [
 ];
 
 async function getDomain(contract) {
-  const { fields, name, version, chainId, verifyingContract, salt, extensions } = await contract.eip712Domain();
+  const {
+    fields,
+    name,
+    version,
+    chainId,
+    verifyingContract,
+    salt,
+    extensions,
+  } = await contract.eip712Domain();
 
   if (extensions.length > 0) {
     throw Error('Extensions not implemented');
@@ -66,7 +74,13 @@ function domainType(domain) {
 
 function hashTypedData(domain, structHash) {
   return ethers.keccak256(
-    Buffer.concat(['0x1901', ethers.utils._TypedDataEncoder.hashDomain(domain), structHash].map(ethers.toBeArray)),
+    Buffer.concat(
+      [
+        '0x1901',
+        ethers.utils._TypedDataEncoder.hashDomain(domain),
+        structHash,
+      ].map(ethers.toBeArray)
+    )
   );
 }
 

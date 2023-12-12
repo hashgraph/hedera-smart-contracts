@@ -18,97 +18,97 @@
  *
  */
 
-const { expect } = require('chai')
-const { ethers } = require('hardhat')
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
 
-const AMOUNT_TO_MINT = 100
-const sleep = (timeToSleep) => new Promise((r) => setTimeout(r, timeToSleep))
-const FUTURE_LOOKUP_ERROR = 'ERC5805FutureLookup'
+const AMOUNT_TO_MINT = 100;
+const sleep = (timeToSleep) => new Promise((r) => setTimeout(r, timeToSleep));
+const FUTURE_LOOKUP_ERROR = 'ERC5805FutureLookup';
 
 describe('@OZERC20Votes ERC-20 Votes', function () {
-  let contract, wallet, wallet2
-  const TIME_INCREMENT = 10000
+  let contract, wallet, wallet2;
+  const TIME_INCREMENT = 10000;
 
   before(async function () {
-    const signers = await ethers.getSigners()
-    wallet = signers[0]
-    wallet2 = signers[1]
-    const votesFactory = await ethers.getContractFactory('ERC20VotesTest')
+    const signers = await ethers.getSigners();
+    wallet = signers[0];
+    wallet2 = signers[1];
+    const votesFactory = await ethers.getContractFactory('ERC20VotesTest');
     contract = await votesFactory.deploy(AMOUNT_TO_MINT, {
       gasLimit: 8000000,
-    })
-  })
+    });
+  });
 
   it('should deploy contract', async function () {
-    const deployed = await contract.deployed()
-    expect(deployed).to.exist
-  })
+    const deployed = await contract.deployed();
+    expect(deployed).to.exist;
+  });
 
   it('should check if create/mint the erc20 tokens happened when contract created', async function () {
-    const supply = await contract.totalSupply()
-    const balance = await contract.balanceOf(wallet.address)
+    const supply = await contract.totalSupply();
+    const balance = await contract.balanceOf(wallet.address);
 
-    expect(balance).to.equal(AMOUNT_TO_MINT)
-    expect(supply).to.equal(AMOUNT_TO_MINT)
-  })
+    expect(balance).to.equal(AMOUNT_TO_MINT);
+    expect(supply).to.equal(AMOUNT_TO_MINT);
+  });
 
   it('should be able to delegate votes', async function () {
-    await contract.delegate(wallet2.address)
-    const balance = await contract.getVotes(wallet2.address)
+    await contract.delegate(wallet2.address);
+    const balance = await contract.getVotes(wallet2.address);
 
-    expect(balance).to.equal(AMOUNT_TO_MINT)
-  })
+    expect(balance).to.equal(AMOUNT_TO_MINT);
+  });
 
   it('should return the delegate that `account` has chosen.', async function () {
-    const addr = await contract.delegates(wallet.address)
+    const addr = await contract.delegates(wallet.address);
 
-    expect(addr).to.equal(wallet2.address)
-  })
+    expect(addr).to.equal(wallet2.address);
+  });
 
   it('should get the time: clock()', async function () {
-    const time = await contract.clock()
+    const time = await contract.clock();
 
-    expect(time).to.exist
-  })
+    expect(time).to.exist;
+  });
 
   it('should return the correct value for CLOCK_MODE ', async function () {
-    const time = await contract.CLOCK_MODE()
+    const time = await contract.CLOCK_MODE();
 
-    expect(time).to.equal('mode=blocknumber&from=default')
-  })
+    expect(time).to.equal('mode=blocknumber&from=default');
+  });
 
   it('should return the current amount of votes that `account` has ', async function () {
-    const votes = await contract.getVotes(wallet2.address)
+    const votes = await contract.getVotes(wallet2.address);
 
-    expect(votes).to.equal(AMOUNT_TO_MINT)
-  })
+    expect(votes).to.equal(AMOUNT_TO_MINT);
+  });
 
   it('should return the current amount of votes that `account` has in the past (getPastVotes) ', async function () {
-    const timeTick = await contract.clock()
-    await contract.delegate(wallet.address)
+    const timeTick = await contract.clock();
+    await contract.delegate(wallet.address);
 
-    const votesPast = await contract.getPastVotes(wallet.address, timeTick)
-    const timeTick2 = await contract.clock()
-    await sleep(3000)
-    const votesPast2 = await contract.getPastVotes(wallet.address, timeTick2)
+    const votesPast = await contract.getPastVotes(wallet.address, timeTick);
+    const timeTick2 = await contract.clock();
+    await sleep(3000);
+    const votesPast2 = await contract.getPastVotes(wallet.address, timeTick2);
 
-    expect(votesPast).to.equal(0)
-    expect(votesPast2).to.equal(AMOUNT_TO_MINT)
-  })
+    expect(votesPast).to.equal(0);
+    expect(votesPast2).to.equal(AMOUNT_TO_MINT);
+  });
 
   it('should produce an error when looking up votes in the future (getPastVotes) ', async function () {
-    const timeTick = await contract.clock()
+    const timeTick = await contract.clock();
     expect(
       contract.getPastVotes(wallet.address, timeTick + TIME_INCREMENT)
     ).to.eventually.be.rejected.and.have.property(
       'errorName',
       FUTURE_LOOKUP_ERROR
-    )
-  })
+    );
+  });
 
   it('should produce an error when looking up tottle supply in the future (getPastTotalSupply) ', async function () {
-    const timeTick = await contract.clock()
-    const supply = await contract.getPastTotalSupply(timeTick - 1)
-    expect(supply).to.equal(AMOUNT_TO_MINT)
-  })
-})
+    const timeTick = await contract.clock();
+    const supply = await contract.getPastTotalSupply(timeTick - 1);
+    expect(supply).to.equal(AMOUNT_TO_MINT);
+  });
+});

@@ -18,85 +18,85 @@
  *
  */
 
-const { expect } = require('chai')
-const { ethers } = require('hardhat')
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
 
 describe('@OZERC2771 Context', function () {
-  let signers, wallet2, wallet
-  let contract, msgDataTestFuncSig
+  let signers, wallet2, wallet;
+  let contract, msgDataTestFuncSig;
 
   before(async function () {
-    signers = await ethers.getSigners()
-    wallet2 = signers[1]
-    wallet = signers[0]
+    signers = await ethers.getSigners();
+    wallet2 = signers[1];
+    wallet = signers[0];
 
-    const factory = await ethers.getContractFactory('ERC2771ContextTest')
-    contract = await factory.deploy(wallet2.address)
+    const factory = await ethers.getContractFactory('ERC2771ContextTest');
+    contract = await factory.deploy(wallet2.address);
 
-    const iface = new ethers.utils.Interface(['function msgDataTest()'])
-    msgDataTestFuncSig = iface.getSighash('msgDataTest')
-  })
+    const iface = new ethers.utils.Interface(['function msgDataTest()']);
+    msgDataTestFuncSig = iface.getSighash('msgDataTest');
+  });
 
   it('should deploy the contract', async function () {
-    const res = await contract.deployed()
+    const res = await contract.deployed();
 
-    expect(res).to.exist
-  })
+    expect(res).to.exist;
+  });
 
   it('should have the correct trusted forwarder', async function () {
-    const res2 = await contract.isTrustedForwarder(wallet2.address)
-    const res = await contract.isTrustedForwarder(wallet.address)
+    const res2 = await contract.isTrustedForwarder(wallet2.address);
+    const res = await contract.isTrustedForwarder(wallet.address);
 
-    expect(res2).to.be.true
-    expect(res).to.be.false
-  })
+    expect(res2).to.be.true;
+    expect(res).to.be.false;
+  });
 
   it('should return Pure message sender when incorrect request is sent to _msgSender', async function () {
-    const res = await contract.callStatic.msgSenderTest()
+    const res = await contract.callStatic.msgSenderTest();
 
-    expect(res).to.be.equal(wallet.address)
-  })
+    expect(res).to.be.equal(wallet.address);
+  });
 
   it('should return Pure message data when incorrect request is sent to _msgData', async function () {
-    const res = await contract.callStatic.msgDataTest()
+    const res = await contract.callStatic.msgDataTest();
 
-    expect(res).to.be.equal(msgDataTestFuncSig)
-  })
+    expect(res).to.be.equal(msgDataTestFuncSig);
+  });
 
   it('should extract message sender from the request', async function () {
     const trx = await contract
       .connect(wallet2)
-      .populateTransaction.msgSenderTest()
-    trx.data = trx.data + wallet2.address.substring(2)
+      .populateTransaction.msgSenderTest();
+    trx.data = trx.data + wallet2.address.substring(2);
 
-    const signedTrx = await wallet2.sendTransaction(trx)
-    await signedTrx.wait()
+    const signedTrx = await wallet2.sendTransaction(trx);
+    await signedTrx.wait();
 
-    const msgData = await contract.sender()
-    expect(msgData).to.be.equal(wallet2.address)
-  })
+    const msgData = await contract.sender();
+    expect(msgData).to.be.equal(wallet2.address);
+  });
 
   it('should extract message data from the request', async function () {
     const trx = await contract
       .connect(wallet2)
-      .populateTransaction.msgDataTest()
-    const initialData = trx.data
-    trx.data = initialData + wallet2.address.substring(2)
+      .populateTransaction.msgDataTest();
+    const initialData = trx.data;
+    trx.data = initialData + wallet2.address.substring(2);
 
-    const signedTrx = await wallet2.sendTransaction(trx)
-    await signedTrx.wait()
+    const signedTrx = await wallet2.sendTransaction(trx);
+    await signedTrx.wait();
 
-    const msgData = await contract.msgData()
-    expect(msgData).to.be.equal(initialData)
-  })
+    const msgData = await contract.msgData();
+    expect(msgData).to.be.equal(initialData);
+  });
 
-  it('should return an event for [changeMessageTestRequest]', async function () {        
+  it('should return an event for [changeMessageTestRequest]', async function () {
     const signedTrx = await contract.changeMessageTestRequest('test', {
-        value: 100
-    })
-    const rec = await signedTrx.wait()
-    const eventName = rec.events[0].event
+      value: 100,
+    });
+    const rec = await signedTrx.wait();
+    const eventName = rec.events[0].event;
 
-    expect(eventName).to.be.equal('MessageChanged')
-})
-})
+    expect(eventName).to.be.equal('MessageChanged');
+  });
+});

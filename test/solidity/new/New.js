@@ -18,50 +18,50 @@
  *
  */
 
-const { expect } = require('chai')
-const { ethers } = require('hardhat')
-const Constants = require('../../constants')
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@solidityequiv1 New tests', () => {
-  let newContract
-  const CONTRACT_ALPHA = 'Alpha'
-  const MESSAGE_ALPHA = 'Message from Alpha contract'
+  let newContract;
+  const CONTRACT_ALPHA = 'Alpha';
+  const MESSAGE_ALPHA = 'Message from Alpha contract';
 
   before(async () => {
     const newContractFactory = await ethers.getContractFactory(
       Constants.Contract.New
-    )
+    );
 
-    newContract = await newContractFactory.deploy()
-  })
+    newContract = await newContractFactory.deploy();
+  });
 
   it('Create new contract using `new` keyword', async () => {
-    await newContract.createContract(CONTRACT_ALPHA, MESSAGE_ALPHA)
-    const newContractsInfo = await newContract.newContractsInfo(CONTRACT_ALPHA)
+    await newContract.createContract(CONTRACT_ALPHA, MESSAGE_ALPHA);
+    const newContractsInfo = await newContract.newContractsInfo(CONTRACT_ALPHA);
 
-    expect(ethers.utils.isAddress(newContractsInfo.contractAddr)).to.be.true
-    expect(newContractsInfo.message).to.eq(MESSAGE_ALPHA)
-  })
+    expect(ethers.utils.isAddress(newContractsInfo.contractAddr)).to.be.true;
+    expect(newContractsInfo.message).to.eq(MESSAGE_ALPHA);
+  });
 
   it('Create new contract using `new` keyword with data', async () => {
-    await newContract.createContractWithData(CONTRACT_ALPHA, MESSAGE_ALPHA)
-    const newContractsInfo = await newContract.newContractsInfo(CONTRACT_ALPHA)
+    await newContract.createContractWithData(CONTRACT_ALPHA, MESSAGE_ALPHA);
+    const newContractsInfo = await newContract.newContractsInfo(CONTRACT_ALPHA);
 
-    expect(ethers.utils.isAddress(newContractsInfo.contractAddr)).to.be.true
-    expect(newContractsInfo.message).to.eq(MESSAGE_ALPHA)
-  })
+    expect(ethers.utils.isAddress(newContractsInfo.contractAddr)).to.be.true;
+    expect(newContractsInfo.message).to.eq(MESSAGE_ALPHA);
+  });
 
   it('Create new contract using `new` keyword with salt', async () => {
-    const SALT = ethers.utils.formatBytes32String('salt')
+    const SALT = ethers.utils.formatBytes32String('salt');
 
     await newContract.createContractWithSalt(
       SALT,
       CONTRACT_ALPHA,
       MESSAGE_ALPHA
-    )
-    const newContractsInfo = await newContract.newContractsInfo(CONTRACT_ALPHA)
+    );
+    const newContractsInfo = await newContract.newContractsInfo(CONTRACT_ALPHA);
 
-    expect(ethers.utils.isAddress(newContractsInfo.contractAddr)).to.be.true
-    expect(newContractsInfo.message).to.eq(MESSAGE_ALPHA)
-  })
-})
+    expect(ethers.utils.isAddress(newContractsInfo.contractAddr)).to.be.true;
+    expect(newContractsInfo.message).to.eq(MESSAGE_ALPHA);
+  });
+});
