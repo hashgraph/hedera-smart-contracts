@@ -20,7 +20,7 @@
 
 const { expect } = require('chai')
 const { ethers, upgrades } = require('hardhat')
-const { CALL_EXCEPTION } = require('../../../constants')
+const { CALL_EXCEPTION } = require('../../constants')
 
 describe('@OZERC1155 Upgradable Vaults Tests', () => {
   let erc1155Token, wallet1, wallet2

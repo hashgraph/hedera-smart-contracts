@@ -20,7 +20,7 @@
 
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
-const constants = require('../../../constants')
+const constants = require('../../constants')
 
 describe('@OZVestingWallet Vesting Wallet tests', () => {
   let vestingWallet, erc20Mock, signers, beneficiaryAddress

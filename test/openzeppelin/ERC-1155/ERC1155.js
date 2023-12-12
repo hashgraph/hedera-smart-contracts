@@ -20,7 +20,7 @@
 
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
-const Constants = require('../constants')
+const Constants = require('../../constants')
 
 describe('ERC1155 tests', function () {
   const uri = 'testuri'

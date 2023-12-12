@@ -18,44 +18,44 @@
  *
  */
 
-const { expect } = require('chai')
-const { ethers } = require('hardhat')
-const Constants = require('../../../../constants')
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
+const Constants = require('../../../constants');
 
 describe('@OZERC1820 Tests', () => {
-  let erc1820registry, wallet1, wallet2
+  let erc1820registry, wallet1, wallet2;
 
   const ERC777TOKEN_HASH = ethers.utils.keccak256(
     ethers.utils.toUtf8Bytes('ERC777TOKEN_HASH')
-  )
+  );
 
   beforeEach(async () => {
-    ;[wallet1, wallet2] = await ethers.getSigners()
+    [wallet1, wallet2] = await ethers.getSigners();
 
     const erc1820RegistryFac = await ethers.getContractFactory(
       'ERC1820Registry'
-    )
-    erc1820registry = await erc1820RegistryFac.deploy()
-  })
+    );
+    erc1820registry = await erc1820RegistryFac.deploy();
+  });
 
   it('Should deploy the registry', async () => {
-    expect(erc1820registry).to.not.null
-    expect(ethers.utils.isAddress(erc1820registry.address)).to.be.true
-  })
+    expect(erc1820registry).to.not.null;
+    expect(ethers.utils.isAddress(erc1820registry.address)).to.be.true;
+  });
 
   it('Should get a manager of an address', async () => {
-    const manager = await erc1820registry.getManager(wallet2.address)
-    expect(manager).to.eq(wallet2.address)
-  })
+    const manager = await erc1820registry.getManager(wallet2.address);
+    expect(manager).to.eq(wallet2.address);
+  });
 
   it('Should set a new manager for an address', async () => {
     await erc1820registry
       .connect(wallet2)
-      .setManager(wallet2.address, wallet1.address)
+      .setManager(wallet2.address, wallet1.address);
 
-    const newManager = await erc1820registry.getManager(wallet2.address)
-    expect(newManager).to.eq(wallet1.address)
-  })
+    const newManager = await erc1820registry.getManager(wallet2.address);
+    expect(newManager).to.eq(wallet1.address);
+  });
 
   it('Should NOT allow a non-manager to set a new manager', async () => {
     expect(
@@ -67,30 +67,30 @@ describe('@OZERC1820 Tests', () => {
     ).to.eventually.be.rejected.and.have.property(
       'code',
       Constants.CALL_EXCEPTION
-    )
-  })
+    );
+  });
 
   it('Should get the implementer of an interface', async () => {
     const implementer = await erc1820registry.getInterfaceImplementer(
       wallet1.address,
       ERC777TOKEN_HASH
-    )
+    );
 
-    expect(implementer).to.eq(ethers.constants.AddressZero)
-  })
+    expect(implementer).to.eq(ethers.constants.AddressZero);
+  });
 
   it('Should set a new implementer for an interface', async () => {
     await erc1820registry.setInterfaceImplementer(
       wallet1.address,
       ERC777TOKEN_HASH,
       wallet1.address
-    )
+    );
 
     const implementer = await erc1820registry.getInterfaceImplementer(
       wallet1.address,
       ERC777TOKEN_HASH
-    )
+    );
 
-    expect(implementer).to.eq(wallet1.address)
-  })
-})
+    expect(implementer).to.eq(wallet1.address);
+  });
+});

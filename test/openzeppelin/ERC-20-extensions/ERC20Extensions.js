@@ -20,12 +20,12 @@
 
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
-const Constants = require('../constants')
+const Constants = require('../../constants')
 const {
   pollForERC20BurnableChangedSupply,
   pauseAndPoll,
   unPauseAndPoll,
-} = require('../../utils/helpers')
+} = require('../../../utils/helpers')
 
 describe('ERC20ExtensionsMock tests', function () {
   let owner, addr1
