@@ -60,13 +60,13 @@ const getHederaSmartContractAssets = (HederaSmartContractsRootPath: string) => {
     },
     ERC20Mock: {
       name: 'ERC20Mock',
-      contractPath: `${HederaSmartContractsRootPath}/contracts/erc-20/ERC20Mock.sol`,
-      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/erc-20/ERC20Mock.sol/ERC20Mock.json`,
+      contractPath: `${HederaSmartContractsRootPath}/contracts/openzeppelin/ERC-20/ERC20Mock.sol`,
+      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/openzeppelin/ERC-20/ERC20Mock.sol/ERC20Mock.json`,
     },
     ERC721Mock: {
       name: 'ERC721Mock',
-      contractPath: `${HederaSmartContractsRootPath}/contracts/erc-721/ERC721Mock.sol`,
-      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/erc-721/ERC721Mock.sol/ERC721Mock.json`,
+      contractPath: `${HederaSmartContractsRootPath}/contracts/openzeppelin/ERC-721/ERC721Mock.sol`,
+      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/openzeppelin/ERC-721/ERC721Mock.sol/ERC721Mock.json`,
     },
   };
 };
