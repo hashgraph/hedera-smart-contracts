@@ -124,6 +124,8 @@ const Contract = {
   Panic: 'Panic',
   ReentrancyGuardTestSender: 'ReentrancyGuardTestSender',
   ReentrancyGuardTestReceiver: 'ReentrancyGuardTestReceiver',
+  Defaults: 'Defaults',
+  BlindAuction: 'BlindAuction',
   SimpleAuction: 'SimpleAuction',
   MyCustomTransparentUpgradeableProxy: 'MyCustomTransparentUpgradeableProxy',
   Box: 'Box',

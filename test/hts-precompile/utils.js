@@ -40,6 +40,7 @@ class Utils {
   static createTokenCost = '50000000000000000000'
   static createTokenCustomFeesCost = '60000000000000000000'
   static tinybarToWeibarCoef = 10_000_000_000
+  static tinybarToHbarCoef = 100_000_000
 
   static KeyType = {
     ADMIN: 1,
