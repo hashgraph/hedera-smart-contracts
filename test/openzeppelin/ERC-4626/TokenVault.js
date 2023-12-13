@@ -2,7 +2,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZTokenVault Contract', function () {
+describe('@OZTokenVault Tests', function () {
   let TokenVault;
   let tokenVault;
   let ERC20Mock;

@@ -19,9 +19,8 @@
  */
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const Constants = require('../../constants');
 
-describe('@solidityequiv3 Solidity Defaults', function () {
+describe('@solidityequiv1 Solidity Defaults Tests', function () {
   let signers;
   let contract;
 

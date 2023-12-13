@@ -50,7 +50,7 @@ const deployBlindAuctionContract = async (
   return contract;
 };
 
-describe('@solidityequiv3 Solidity Blind Auction', function () {
+describe('@solidityequiv1 Solidity Blind Auction Tests', function () {
   let beneficiary, wallet1;
 
   const fiveHbars = 5 * tinybarToHbarCoef;

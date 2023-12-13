@@ -20,9 +20,8 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
-const abi = require('ethereumjs-abi');
 
-describe('@solidityequiv4 Signature Example ReceiverPays Test Suite', function () {
+describe('@solidityequiv3 Signature Example ReceiverPays Tests', function () {
   let receiverPaysContract, provider, signers, currentNonce, sender, receiver;
 
   before(async function () {

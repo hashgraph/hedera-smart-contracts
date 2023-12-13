@@ -19,17 +19,9 @@
  */
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const Constants = require('../../constants');
 
-describe('@solidityequiv4 Ballot Units tests', function () {
-  let ballotContract,
-    owner,
-    addressB,
-    addressC,
-    addressD,
-    addressE,
-    addressF,
-    addrs;
+describe('@solidityequiv3 Ballot Units Tests', function () {
+  let ballotContract, owner, addressB, addressC, addressD, addressE, addrs;
 
   beforeEach(async function () {
     const Ballot = await ethers.getContractFactory('Ballot');

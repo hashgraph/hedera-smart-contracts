@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@solidityequiv1 Test assignments', function () {
+describe('@solidityequiv1 Assignments Tests', function () {
   before(async function () {
     const factoryDestructuring = await ethers.getContractFactory(
       Constants.Contract.DestructuringReturns

@@ -23,15 +23,12 @@ const Constants = require('../../constants');
 const Utils = require('../../hts-precompile/utils');
 const { genericPoll } = require('../../../utils/helpers');
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
-describe('Solidity Simple Auction example', function () {
+describe('@solidityequiv3 Simple Auction Tests', function () {
   let factory,
     signers,
     wallet,
     wallet1,
     contract,
-    hasError,
     bidAmount,
     contractShortLived,
     bidAmountSmall,

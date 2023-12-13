@@ -22,11 +22,10 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@solidityequiv3 Solidity Account non Existing', function () {
+describe('@solidityequiv1 Solidity Account Non Existing Tests', function () {
   let contract, randomAddress, hasError, fakeContract, contractDup, factory;
   const TRANSACTION_FAILED = 'transaction failed';
   const UNSUPPORTED_OPERATION = 'UNSUPPORTED_OPERATION';
-  const INVALID_ARGUMENT = 'INVALID_ARGUMENT';
   const ADDR_DOES_NOT_EXIST = 'nonExtAddr is not defined';
 
   before(async function () {

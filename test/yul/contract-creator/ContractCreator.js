@@ -21,7 +21,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 
-describe('@solidityequiv5 Contract Creator Tests', async () => {
+describe('@yulequiv Contract Creator Tests', async () => {
   let contractCreator, signers;
   const EXPECTED_COUNT = 3;
   const TARGET_CONTRACT_BYTECODE =

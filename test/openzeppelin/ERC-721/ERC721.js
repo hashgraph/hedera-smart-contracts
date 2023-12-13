@@ -23,7 +23,7 @@ const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 const { pollForNewERC721Owner } = require('../../../utils/helpers');
 
-describe('ERC721 tests', function () {
+describe('@OZERC721 Tests', function () {
   const tokenId = 33;
   let signers;
   let erc721;

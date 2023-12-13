@@ -21,7 +21,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 
-describe('@solidityequiv5 Data Allocation Tests', () => {
+describe('@yulequiv Data Allocation Tests', () => {
   let dataAllocationContract;
   const P = 32;
   const V = 72;

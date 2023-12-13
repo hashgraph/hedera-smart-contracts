@@ -21,7 +21,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 
-describe('@solidityequiv5 Bitwise Tests', () => {
+describe('@yulequiv Bitwise Tests', () => {
   let bitwiseContract;
   const X = 1;
   const Y = 12;

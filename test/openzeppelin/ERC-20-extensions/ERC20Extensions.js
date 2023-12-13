@@ -27,7 +27,7 @@ const {
   unPauseAndPoll,
 } = require('../../../utils/helpers');
 
-describe('ERC20ExtensionsMock tests', function () {
+describe('@OZERC20Extensions Tests', function () {
   let owner, addr1;
   let ERC20Burnable;
   let ERC20Capped;

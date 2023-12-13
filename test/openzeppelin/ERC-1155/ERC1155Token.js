@@ -19,10 +19,10 @@
  */
 
 const { expect } = require('chai');
-const { ethers, upgrades } = require('hardhat');
+const { ethers } = require('hardhat');
 const { CALL_EXCEPTION } = require('../../constants');
 
-describe('@OZERC1155 Upgradable Vaults Tests', () => {
+describe('@OZERC1155 Tests', () => {
   let erc1155Token, wallet1, wallet2;
 
   const TOKEN_URI = '_token_uri_';

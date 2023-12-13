@@ -21,7 +21,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@solidityevmequiv1 CryptoMath Test Suite', function () {
+describe('@solidityequiv1 CryptoMath Tests', function () {
   let cryptoMathContract, provider, signers;
 
   before(async function () {

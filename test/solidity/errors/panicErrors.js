@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@solidityequiv3 Panic Errors', function () {
+describe('@solidityequiv2 Panic Errors Tests', function () {
   let contract;
 
   before(async function () {

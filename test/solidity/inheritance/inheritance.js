@@ -21,7 +21,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 
-describe('@solidityequiv1 Crypto Inheritance tests', function () {
+describe('@solidityequiv2 Crypto Inheritance Tests', function () {
   let signers, contractMain, contractBase, wallet;
   const TOP_UP_AMOUNT = ethers.utils.parseEther('0.000001');
 

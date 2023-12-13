@@ -19,9 +19,9 @@
  */
 
 const { expect } = require('chai');
-const { ethers, network } = require('hardhat');
+const { ethers } = require('hardhat');
 
-describe('@solidityequiv5 TransactionInfo Tests', () => {
+describe('@yulequiv TransactionInfo Tests', () => {
   let transactionInfoContract, signers;
   const GASLIMIT = 1000000;
   const INITIAL_BALANCE = 30000000000;

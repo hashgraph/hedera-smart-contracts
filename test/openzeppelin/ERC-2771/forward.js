@@ -37,7 +37,7 @@ function forwardRequestType() {
   ];
 }
 
-describe('@OZERC-2771 Fоrward', function () {
+describe('@OZERC-2771 Fоrward Tests', function () {
   let signers,
     wallet2,
     wallet,

@@ -21,7 +21,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Utils = require('../../hts-precompile/utils');
 
-describe('@solidityevmequiv1 Modifiers', function () {
+describe('@solidityequiv2 Modifiers Tests', function () {
   let accounts, contractA, contractB, derivedContract, modifiersContract, owner;
 
   const tinybarToWeibar = (amount) => amount.mul(Utils.tinybarToWeibarCoef);

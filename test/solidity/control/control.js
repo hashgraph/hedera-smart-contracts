@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('Control Structures', function () {
+describe('@solidityequiv1 Control Structures Tests', function () {
   let contract;
 
   before(async function () {

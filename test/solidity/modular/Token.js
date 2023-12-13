@@ -21,7 +21,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 
-describe('@solidityequiv4 Modular Token', () => {
+describe('@solidityequiv2 Modular Token Tests', () => {
   const INITIAL_AMOUNT = 12000;
   let modularTokenContract, signers, accountA, accountB;
 

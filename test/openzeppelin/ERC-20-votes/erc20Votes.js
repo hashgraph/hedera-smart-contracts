@@ -25,7 +25,7 @@ const AMOUNT_TO_MINT = 100;
 const sleep = (timeToSleep) => new Promise((r) => setTimeout(r, timeToSleep));
 const FUTURE_LOOKUP_ERROR = 'ERC5805FutureLookup';
 
-describe('@OZERC20Votes ERC-20 Votes', function () {
+describe('@OZERC20Votes Tests', function () {
   let contract, wallet, wallet2;
   const TIME_INCREMENT = 10000;
 

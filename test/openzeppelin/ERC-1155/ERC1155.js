@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('ERC1155 tests', function () {
+describe('@OZERC1155 Tests', function () {
   const uri = 'testuri';
   const tokenId1 = 1;
   const tokenId2 = 33;

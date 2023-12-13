@@ -21,7 +21,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 
-describe('@OZERC2771 Context', function () {
+describe('@OZERC2771 Context Tests', function () {
   let signers, wallet2, wallet;
   let contract, msgDataTestFuncSig;
 

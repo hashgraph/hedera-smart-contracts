@@ -21,7 +21,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 
-describe('@OZPausable Pausable Tests', function () {
+describe('@OZPausable Tests', function () {
   let signers, wallet;
   let contract;
   const CALL_EXCEPTION = 'CALL_EXCEPTION';

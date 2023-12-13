@@ -21,7 +21,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 
-describe('@OZMulticall Solidity OZ Multicall Tests', function () {
+describe('@OZMulticall Tests', function () {
   let contract;
 
   before(async function () {

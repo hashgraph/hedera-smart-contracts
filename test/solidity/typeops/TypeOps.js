@@ -21,8 +21,8 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@solidityevmequiv1 TypeOps Test Suite', function () {
-  let typeOpsContract, provider, signers;
+describe('@solidityequiv3 TypeOps Tests', function () {
+  let typeOpsContract;
 
   before(async function () {
     signers = await ethers.getSigners();

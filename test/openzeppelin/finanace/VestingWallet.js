@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const constants = require('../../constants');
 
-describe('@OZVestingWallet Vesting Wallet tests', () => {
+describe('@OZVestingWallet Tests', () => {
   let vestingWallet, erc20Mock, signers, beneficiaryAddress;
   const DURATION = 3; // seconds
   const GAS_LIMIT = 1_000_000;

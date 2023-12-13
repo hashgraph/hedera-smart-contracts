@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const { WEI, GWEI } = require('../../constants');
 
-describe('@solidityequiv3 Crypto Units tests', function () {
+describe('@solidityequiv3 Crypto Units Tests', function () {
   let signers;
   let contract;
 

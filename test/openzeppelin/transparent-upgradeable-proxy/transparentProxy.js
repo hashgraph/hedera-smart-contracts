@@ -26,7 +26,7 @@ const Constants = require('../../constants');
 const Utils = require('../../utils');
 chai.use(chaiAsPromised);
 
-describe('@OZTransparentUpgradeableProxy Transparent Upgradeable Proxy', function () {
+describe('@OZTransparentUpgradeableProxy Tests', function () {
   let contractProxy, contractBox;
   let owner, signer, proxyAdminAddress;
   before(async function () {

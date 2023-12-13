@@ -21,7 +21,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('Arithmetic Test Suite', function () {
+describe('@solidityequiv1 Arithmetic Tests', function () {
   let contract;
 
   before(async function () {

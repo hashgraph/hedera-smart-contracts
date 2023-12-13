@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const PaymentChannelHelper = require('./helper');
 
-describe('@solidityequiv3 PaymentChannel', () => {
+describe('@solidityequiv2 PaymentChannel Tests', () => {
   const GASLIMIT = 1000000;
   const DURATION = 3; // 3 seconds
   const OWED_AMOUNT = 100000000;

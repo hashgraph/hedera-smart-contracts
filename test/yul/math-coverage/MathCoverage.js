@@ -21,7 +21,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 
-describe('solidityequiv5 Math coverage tests', () => {
+describe('@yulequiv Math Tests', () => {
   let mathCoverageContract;
   const X = 6;
   const SX = -6;

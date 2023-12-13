@@ -25,13 +25,8 @@ const Utils = require('../../hts-precompile/utils');
 
 const weibarTotinybar = (amount) => amount.div(Utils.tinybarToWeibarCoef);
 
-describe('@solidityequiv1 Solidity Functions', function () {
-  let contract,
-    contractAddr,
-    contractChild,
-    contractChildAddr,
-    contractParent,
-    contractParentAddr;
+describe('@solidityequiv2 Solidity Functions Tests', function () {
+  let contract, contractAddr, contractChild, contractParent;
 
   before(async function () {
     const factory = await ethers.getContractFactory(

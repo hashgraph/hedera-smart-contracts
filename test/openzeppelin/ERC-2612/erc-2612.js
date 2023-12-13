@@ -32,7 +32,7 @@ function permitRequestType() {
   ];
 }
 
-describe('@OZERC2612 ERC2612 Tests', function () {
+describe('@OZERC2612 Tests', function () {
   let signers, wallet, wallet2, permitRequest;
   let contract, splitSignature;
 

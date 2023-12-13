@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('Scoping tests', () => {
+describe('@solidityequiv3 Scoping Tests', () => {
   let contract;
 
   before(async () => {

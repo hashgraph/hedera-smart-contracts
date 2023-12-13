@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Utils = require('../../utils');
 
-describe('@OZBeaconProxy', function () {
+describe('@OZBeaconProxy Tests', function () {
   let owner, signer;
   let contractLogicContractV1, factoryLogicContractV1, contractLogicContractV2;
   let beaconFactory, beaconProxyFactory, beacon, beaconProxy;

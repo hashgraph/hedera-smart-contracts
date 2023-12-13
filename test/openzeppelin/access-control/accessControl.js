@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZAccessControlContract', function () {
+describe('@OZAccessControlContract Tests', function () {
   let admin;
   let manager;
   let user;

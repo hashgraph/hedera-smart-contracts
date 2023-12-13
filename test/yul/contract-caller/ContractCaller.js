@@ -21,7 +21,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 
-describe('@solidityequiv5 Contract Caller Tests', async () => {
+describe('@yulequiv Contract Caller Tests', async () => {
   let contractCaller, targetContract, getCountEncodedSig, setCountEncodedSig;
   const COUNT_A = 3;
   const GAS = 1_000_000;
