@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@OZERC777ContractAccount Tests', () => {
   let erc1820registry,
@@ -46,17 +47,19 @@ describe('@OZERC777ContractAccount Tests', () => {
     wallet1 = await ethers.getSigner();
 
     const ERC1820registryFac = await ethers.getContractFactory(
-      'ERC1820Registry'
+      Constants.Contract.ERC1820Registry
     );
     const ERC777SenderHookImplFac = await ethers.getContractFactory(
-      'ERC777SenderHookImpl'
+      Constants.Contract.ERC777SenderHookImpl
     );
     const ERC777RecipientHookImplFac = await ethers.getContractFactory(
-      'ERC777RecipientHookImpl'
+      Constants.Contract.ERC777RecipientHookImpl
     );
-    const ERC777TokenFac = await ethers.getContractFactory('ERC777Token');
+    const ERC777TokenFac = await ethers.getContractFactory(
+      Constants.Contract.ERC777Token
+    );
     const ERC777ContractAccountFac = await ethers.getContractFactory(
-      'ERC777ContractAccount'
+      Constants.Contract.ERC777ContractAccount
     );
 
     erc1820registry = await ERC1820registryFac.deploy();

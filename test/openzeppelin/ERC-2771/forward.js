@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 const { getDomain } = require('../helpers/eip712');
 
 const FORWARDER_NAME = 'ForwardRequest';
@@ -40,7 +41,6 @@ function forwardRequestType() {
 describe('@OZERC-2771 Fоrward Tests', function () {
   let signers,
     wallet2,
-    wallet,
     forwarderAddress,
     trx,
     contractForwarder,
@@ -61,7 +61,7 @@ describe('@OZERC-2771 Fоrward Tests', function () {
     wallet = signers[0];
 
     const factoryForwarder = await ethers.getContractFactory(
-      'ERC2771ForwardTest'
+      Constants.Contract.ERC2771ForwardTest
     );
     contractForwarder = await factoryForwarder.deploy(FORWARDER_NAME, {
       gasLimit: ethers.BigNumber.from(STARTING_GAS_LIMIT),
@@ -74,7 +74,7 @@ describe('@OZERC-2771 Fоrward Tests', function () {
     const res = await transaction.wait();
 
     const factoryContext = await ethers.getContractFactory(
-      'ERC2771ContextTest'
+      Constants.Contract.ERC2771ContextTest
     );
     contractRegestry = await factoryContext.deploy(forwarderAddress, {
       gasLimit: ethers.BigNumber.from(STARTING_GAS_LIMIT),

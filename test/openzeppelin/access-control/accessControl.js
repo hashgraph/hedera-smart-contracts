@@ -40,7 +40,7 @@ describe('@OZAccessControlContract Tests', function () {
     [admin, manager, user] = await ethers.getSigners();
 
     const AccessControlContract = await ethers.getContractFactory(
-      'AccessControlContract'
+      Constants.Contract.AccessControlContract
     );
     accessContract = await AccessControlContract.deploy(
       Constants.GAS_LIMIT_1_000_000

@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@OZERC165 Support Interface Tests', function () {
   let contract, climberSelectorContract;
@@ -27,11 +28,13 @@ describe('@OZERC165 Support Interface Tests', function () {
   before(async function () {
     signers = await ethers.getSigners();
 
-    const factory = await ethers.getContractFactory('Test_ERC165');
+    const factory = await ethers.getContractFactory(
+      Constants.Contract.Test_ERC165
+    );
     contract = await factory.deploy();
 
     const ClimberSelectorFactory = await ethers.getContractFactory(
-      'ClimberSelector'
+      Constants.Contract.ClimberSelector
     );
     climberSelectorContract = await ClimberSelectorFactory.deploy();
 

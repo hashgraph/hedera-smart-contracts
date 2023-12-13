@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@yulequiv Bitwise Tests', () => {
   let bitwiseContract;
@@ -27,7 +28,9 @@ describe('@yulequiv Bitwise Tests', () => {
   const Y = 12;
 
   before(async () => {
-    const bitwiseContractFactory = await ethers.getContractFactory('Bitwise');
+    const bitwiseContractFactory = await ethers.getContractFactory(
+      Constants.Contract.Bitwise
+    );
     bitwiseContract = await bitwiseContractFactory.deploy();
   });
 

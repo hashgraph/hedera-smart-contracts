@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@OZPausable Tests', function () {
   let signers, wallet;
@@ -30,7 +31,9 @@ describe('@OZPausable Tests', function () {
     signers = await ethers.getSigners();
     wallet = signers[0];
 
-    const factory = await ethers.getContractFactory('PausableTest');
+    const factory = await ethers.getContractFactory(
+      Constants.Contract.PausableTest
+    );
     contract = await factory.deploy();
     await contract.deployed();
   });

@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@yulequiv Math Tests', () => {
   let mathCoverageContract;
@@ -31,7 +32,7 @@ describe('@yulequiv Math Tests', () => {
 
   before(async () => {
     const mathConverageContractFactory = await ethers.getContractFactory(
-      'MathCoverage'
+      Constants.Contract.MathCoverage
     );
 
     mathCoverageContract = await mathConverageContractFactory.deploy();

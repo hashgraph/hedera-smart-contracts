@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 const AMOUNT_TO_MINT = 100;
 const sleep = (timeToSleep) => new Promise((r) => setTimeout(r, timeToSleep));
@@ -33,7 +34,9 @@ describe('@OZERC20Votes Tests', function () {
     const signers = await ethers.getSigners();
     wallet = signers[0];
     wallet2 = signers[1];
-    const votesFactory = await ethers.getContractFactory('ERC20VotesTest');
+    const votesFactory = await ethers.getContractFactory(
+      Constants.Contract.ERC20VotesTest
+    );
     contract = await votesFactory.deploy(AMOUNT_TO_MINT, {
       gasLimit: 8000000,
     });

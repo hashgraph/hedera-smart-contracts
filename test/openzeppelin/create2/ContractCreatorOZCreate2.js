@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@OZCreate2 Contract Creator Tests', async () => {
   let contractCreatorOZCreate2;
@@ -31,7 +32,9 @@ describe('@OZCreate2 Contract Creator Tests', async () => {
     '0xfe131e3071808ee9d140a8930ecf11a0f2dda60e626df1983bc19ea581f00d4b';
 
   before(async () => {
-    const factory = await ethers.getContractFactory('ContractCreatorOZCreate2');
+    const factory = await ethers.getContractFactory(
+      Constants.Contract.ContractCreatorOZCreate2
+    );
     contractCreatorOZCreate2 = await factory.deploy({
       gasLimit: 1000000,
       value: INITIAL_VALUE,

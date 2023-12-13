@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@yulequiv Contract Creator Tests', async () => {
   let contractCreator, signers;
@@ -59,7 +60,7 @@ describe('@yulequiv Contract Creator Tests', async () => {
   before(async () => {
     signers = await ethers.getSigners();
     const contractCreatorFactory = await ethers.getContractFactory(
-      'ContractCreator'
+      Constants.Contract.ContractCreator
     );
     contractCreator = await contractCreatorFactory.deploy();
   });

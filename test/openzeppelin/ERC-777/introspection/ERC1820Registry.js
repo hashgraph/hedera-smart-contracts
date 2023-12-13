@@ -33,7 +33,7 @@ describe('@OZERC1820 Tests', () => {
     [wallet1, wallet2] = await ethers.getSigners();
 
     const erc1820RegistryFac = await ethers.getContractFactory(
-      'ERC1820Registry'
+      Constants.Contract.ERC1820Registry
     );
     erc1820registry = await erc1820RegistryFac.deploy();
   });

@@ -20,16 +20,15 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const { WEI, GWEI } = require('../../constants');
+const { WEI, GWEI, Contract } = require('../../constants');
 
 describe('@solidityequiv3 Crypto Units Tests', function () {
-  let signers;
   let contract;
 
   before(async function () {
     signers = await ethers.getSigners();
 
-    const factory = await ethers.getContractFactory('CryptoUnits');
+    const factory = await ethers.getContractFactory(Contract.CryptoUnits);
     contract = await factory.deploy();
   });
 

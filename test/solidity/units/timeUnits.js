@@ -20,16 +20,22 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const { SECOND, MINUTE, HOUR, DAY, WEEK } = require('../../constants');
+const {
+  SECOND,
+  MINUTE,
+  HOUR,
+  DAY,
+  WEEK,
+  Contract,
+} = require('../../constants');
 
 describe('@solidityequiv3 Time Units Tests', function () {
-  let signers;
   let contract;
 
   before(async function () {
     signers = await ethers.getSigners();
 
-    const factory = await ethers.getContractFactory('TimeUnits');
+    const factory = await ethers.getContractFactory(Contract.TimeUnits);
     contract = await factory.deploy();
   });
 

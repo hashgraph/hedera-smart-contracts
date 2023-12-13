@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@solidityequiv2 Modular Token Tests', () => {
   const INITIAL_AMOUNT = 12000;
@@ -31,7 +32,7 @@ describe('@solidityequiv2 Modular Token Tests', () => {
     accountB = await signers[1].getAddress();
 
     const modularTokenContractFactory = await ethers.getContractFactory(
-      'Token'
+      Constants.Contract.Token
     );
 
     modularTokenContract = await modularTokenContractFactory.deploy(

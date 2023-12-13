@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@OZERC2771 Context Tests', function () {
   let signers, wallet2, wallet;
@@ -30,7 +31,9 @@ describe('@OZERC2771 Context Tests', function () {
     wallet2 = signers[1];
     wallet = signers[0];
 
-    const factory = await ethers.getContractFactory('ERC2771ContextTest');
+    const factory = await ethers.getContractFactory(
+      Constants.Contract.ERC2771ContextTest
+    );
     contract = await factory.deploy(wallet2.address);
 
     const iface = new ethers.utils.Interface(['function msgDataTest()']);

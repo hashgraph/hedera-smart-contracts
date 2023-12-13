@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@yulequiv TransactionInfo Tests', () => {
   let transactionInfoContract, signers;
@@ -30,7 +31,7 @@ describe('@yulequiv TransactionInfo Tests', () => {
   before(async () => {
     signers = await ethers.getSigners();
     const transactionInfoContractFactory = await ethers.getContractFactory(
-      'TransactionInfo'
+      Constants.Contract.TransactionInfo
     );
     transactionInfoContract = await transactionInfoContractFactory.deploy({
       value: INITIAL_BALANCE,

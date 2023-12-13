@@ -20,7 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const constants = require('../../constants');
+const Constants = require('../../constants');
 
 describe('@OZVestingWallet Tests', () => {
   let vestingWallet, erc20Mock, signers, beneficiaryAddress;
@@ -36,7 +36,7 @@ describe('@OZVestingWallet Tests', () => {
     beneficiaryAddress = await signers[1].getAddress();
 
     const vestingWalletFactory = await ethers.getContractFactory(
-      'VestingWallet'
+      Constants.Contract.VestingWallet
     );
     vestingWallet = await vestingWalletFactory.deploy(
       beneficiaryAddress,
@@ -46,7 +46,7 @@ describe('@OZVestingWallet Tests', () => {
     );
 
     const erc20MockFactory = await ethers.getContractFactory(
-      constants.Path.ERC20Mock
+      Constants.Path.ERC20Mock
     );
 
     erc20Mock = await erc20MockFactory.deploy('Hedera', 'HBAR');

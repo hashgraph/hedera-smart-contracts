@@ -19,6 +19,7 @@
  */
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 const Utils = require('../../hts-precompile/utils');
 
 describe('@solidityequiv2 Modifiers Tests', function () {
@@ -28,11 +29,15 @@ describe('@solidityequiv2 Modifiers Tests', function () {
   const weibarTotinybar = (amount) => amount.div(Utils.tinybarToWeibarCoef);
 
   beforeEach(async function () {
-    const Modifiers = await ethers.getContractFactory('Modifiers');
+    const Modifiers = await ethers.getContractFactory(
+      Constants.Contract.Modifiers
+    );
     modifiersContract = await Modifiers.deploy(42);
     await modifiersContract.deployed();
 
-    const Derived = await ethers.getContractFactory('DerivedContract');
+    const Derived = await ethers.getContractFactory(
+      Constants.Contract.DerivedContract
+    );
     derivedContract = await Derived.deploy(55);
     await derivedContract.deployed();
 

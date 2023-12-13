@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@OZOwnable Crowd Fund Tests', () => {
   const FUND_AMOUNT = 30000000000;
@@ -31,7 +32,9 @@ describe('@OZOwnable Crowd Fund Tests', () => {
     signers = await ethers.getSigners();
     ownerAddress = await signers[0].getAddress();
 
-    const crowdFundFactory = await ethers.getContractFactory('CrowdFund');
+    const crowdFundFactory = await ethers.getContractFactory(
+      Constants.Contract.CrowdFund
+    );
 
     crowdFund = await crowdFundFactory.deploy(ownerAddress);
   });

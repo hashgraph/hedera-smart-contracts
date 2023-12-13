@@ -289,7 +289,9 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
     });
 
     async function deployCounterProxyContract() {
-      const contract = await ethers.getContractFactory('Counter');
+      const contract = await ethers.getContractFactory(
+        Constants.Contract.Counter
+      );
 
       const proxy = await upgrades.deployProxy(contract, [nameV1], {
         kind: 'uups',

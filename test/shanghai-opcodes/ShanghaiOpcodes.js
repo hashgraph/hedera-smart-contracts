@@ -1,5 +1,6 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../constants');
 
 describe('ShanghaiOpcodes tests', function () {
   let signers;
@@ -8,7 +9,9 @@ describe('ShanghaiOpcodes tests', function () {
   before(async function () {
     signers = await ethers.getSigners();
 
-    const factory = await ethers.getContractFactory('ShanghaiOpcodes');
+    const factory = await ethers.getContractFactory(
+      Constants.Contract.ShanghaiOpcodes
+    );
     shanghaiContract = await factory.deploy();
   });
 

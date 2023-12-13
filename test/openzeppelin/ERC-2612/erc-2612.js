@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 const { getDomain } = require('../helpers/eip712');
 
 function permitRequestType() {
@@ -47,7 +48,9 @@ describe('@OZERC2612 Tests', function () {
     wallet = signers[0];
     wallet2 = signers[1];
 
-    const factory = await ethers.getContractFactory('ERC2612Test');
+    const factory = await ethers.getContractFactory(
+      Constants.Contract.ERC2612Test
+    );
     contract = await factory.deploy();
     await contract.deployed();
     await contract.connect(wallet).mint(MINT_AMOUNT);

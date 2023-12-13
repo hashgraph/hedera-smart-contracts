@@ -20,13 +20,14 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@OZMulticall Tests', function () {
   let contract;
 
   before(async function () {
     const factoryErrorsExternal = await ethers.getContractFactory(
-      'MulticallTest'
+      Constants.Contract.MulticallTest
     );
     contract = await factoryErrorsExternal.deploy();
     await contract.deployed();

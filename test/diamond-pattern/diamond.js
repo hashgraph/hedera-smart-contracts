@@ -149,7 +149,9 @@ describe('DiamondTest', async function () {
   });
 
   it('should add test1 functions', async () => {
-    const Test1Facet = await ethers.getContractFactory('Test1Facet');
+    const Test1Facet = await ethers.getContractFactory(
+      Constants.Contract.Test1Facet
+    );
     const test1Facet = await Test1Facet.deploy();
     addresses.push(test1Facet.address);
 

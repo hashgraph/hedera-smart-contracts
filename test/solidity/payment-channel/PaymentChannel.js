@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 const PaymentChannelHelper = require('./helper');
 
 describe('@solidityequiv2 PaymentChannel Tests', () => {
@@ -39,7 +40,7 @@ describe('@solidityequiv2 PaymentChannel Tests', () => {
     recipientAddress = await signers[1].getAddress();
 
     const paymentChannelContractFactory = await ethers.getContractFactory(
-      'PaymentChannel'
+      Constants.Contract.PaymentChannel
     );
 
     paymentChannelContract = await paymentChannelContractFactory.deploy(

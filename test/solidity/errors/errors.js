@@ -27,11 +27,11 @@ describe('@solidityequiv2 Solidity Errors Tests', function () {
 
   before(async function () {
     const factoryErrorsExternal = await ethers.getContractFactory(
-      'ErrorsExternal'
+      Constants.Contract.ErrorsExternal
     );
     contractExternal = await factoryErrorsExternal.deploy();
 
-    const factory = await ethers.getContractFactory('Errors');
+    const factory = await ethers.getContractFactory(Constants.Contract.Errors);
     contract = await factory.deploy(contractExternal.address);
   });
 

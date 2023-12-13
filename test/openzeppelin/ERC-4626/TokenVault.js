@@ -21,7 +21,7 @@ describe('@OZTokenVault Tests', function () {
     );
     await asset.deployed();
 
-    TokenVault = await ethers.getContractFactory('TokenVault');
+    TokenVault = await ethers.getContractFactory(Constants.Contract.TokenVault);
     tokenVault = await TokenVault.deploy(
       asset.address,
       'MockToken',

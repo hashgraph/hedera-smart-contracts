@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@OZSafeCast Tests', function () {
   let contract;
@@ -97,7 +98,9 @@ describe('@OZSafeCast Tests', function () {
   ];
 
   before(async function () {
-    const factory = await ethers.getContractFactory('SafeCastTest');
+    const factory = await ethers.getContractFactory(
+      Constants.Contract.SafeCastTest
+    );
     contract = await factory.deploy({
       gasLimit: 10000000,
     });

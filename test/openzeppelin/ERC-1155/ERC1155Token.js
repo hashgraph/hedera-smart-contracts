@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 const { CALL_EXCEPTION } = require('../../constants');
 
 describe('@OZERC1155 Tests', () => {
@@ -41,7 +42,9 @@ describe('@OZERC1155 Tests', () => {
   beforeEach(async () => {
     [wallet1, wallet2] = await ethers.getSigners();
 
-    const erc1155TokenFac = await ethers.getContractFactory('ERC1155Token');
+    const erc1155TokenFac = await ethers.getContractFactory(
+      Constants.Contract.ERC1155Token
+    );
     erc1155Token = await erc1155TokenFac.deploy(TOKEN_URI, {
       gasLimit: GAS_LIMIT,
     });

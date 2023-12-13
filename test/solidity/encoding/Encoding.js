@@ -19,6 +19,7 @@
  */
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@solidityequiv2 Encoding Tests', function () {
   let encodingContract, receiver, sender;
@@ -27,17 +28,17 @@ describe('@solidityequiv2 Encoding Tests', function () {
   const uintData = 123456789;
 
   beforeEach(async function () {
-    const Encoding = await ethers.getContractFactory('Encoding');
+    const Encoding = await ethers.getContractFactory(
+      Constants.Contract.Encoding
+    );
     encodingContract = await Encoding.deploy();
     await encodingContract.deployed();
 
-    const Receiver = await ethers.getContractFactory(
-      'contracts/solidity/encoding/Receiver.sol:Receiver'
-    );
+    const Receiver = await ethers.getContractFactory(Constants.Path.RECEIVER);
     receiver = await Receiver.deploy();
     await receiver.deployed();
 
-    const Sender = await ethers.getContractFactory('Sender');
+    const Sender = await ethers.getContractFactory(Constants.Contract.Sender);
     sender = await Sender.deploy(receiver.address);
     await sender.deployed();
   });

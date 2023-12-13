@@ -22,6 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const fs = require('fs');
 const path = require('path');
+const Constants = require('../../constants');
 const { GAS_LIMIT_1_000_000, CALL_EXCEPTION } = require('../../constants');
 const HederaSmartContractsRootPath = path.resolve(__dirname, '..', '..', '..');
 
@@ -45,13 +46,19 @@ describe('@OZERC1967Upgrade Upgradable Vote Tests', () => {
   before(async () => {
     [admin, voter1, voter2] = await ethers.getSigners();
 
-    const VoteV1Fac = await ethers.getContractFactory('VoteV1');
+    const VoteV1Fac = await ethers.getContractFactory(
+      Constants.Contract.VoteV1
+    );
     voteV1 = await VoteV1Fac.deploy();
 
-    const VoteV2Fac = await ethers.getContractFactory('VoteV2');
+    const VoteV2Fac = await ethers.getContractFactory(
+      Constants.Contract.VoteV2
+    );
     voteV2 = await VoteV2Fac.deploy();
 
-    const VoteProxyFac = await ethers.getContractFactory('VoteProxy');
+    const VoteProxyFac = await ethers.getContractFactory(
+      Constants.Contract.VoteProxy
+    );
     voteProxy = await VoteProxyFac.deploy(voteV1.address);
   });
 

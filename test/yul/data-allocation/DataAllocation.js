@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@yulequiv Data Allocation Tests', () => {
   let dataAllocationContract;
@@ -30,7 +31,7 @@ describe('@yulequiv Data Allocation Tests', () => {
 
   before(async () => {
     const dataAllocationContractFactory = await ethers.getContractFactory(
-      'DataAllocation'
+      Constants.Contract.DataAllocation
     );
 
     dataAllocationContract = await dataAllocationContractFactory.deploy();

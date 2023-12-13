@@ -23,6 +23,7 @@ const BN = require('bn.js');
 const elliptic = require('elliptic');
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
+const Constants = require('../../constants');
 
 function computeBlake2b(input) {
   const hash = blake.blake2b(input, null, 32); // 32 bytes = 256 bits
@@ -46,7 +47,9 @@ describe('@solidityequiv3 Precompiles Support Tests', function () {
   });
 
   before(async () => {
-    const Precompiles = await ethers.getContractFactory('Precompiles');
+    const Precompiles = await ethers.getContractFactory(
+      Constants.Contract.Precompiles
+    );
     precompilesContract = await Precompiles.deploy();
     await precompilesContract.deployed();
   });

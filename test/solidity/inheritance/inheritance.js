@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@solidityequiv2 Crypto Inheritance Tests', function () {
   let signers, contractMain, contractBase, wallet;
@@ -29,11 +30,15 @@ describe('@solidityequiv2 Crypto Inheritance Tests', function () {
     signers = await ethers.getSigners();
     wallet = signers[0];
 
-    const factoryMain = await ethers.getContractFactory('Main');
+    const factoryMain = await ethers.getContractFactory(
+      Constants.Contract.Main
+    );
     contractMain = await factoryMain.deploy();
     await contractMain.deployed();
 
-    const factoryBase = await ethers.getContractFactory('Base');
+    const factoryBase = await ethers.getContractFactory(
+      Constants.Contract.Base
+    );
     contractBase = await factoryBase.deploy();
     await contractBase.deployed();
 

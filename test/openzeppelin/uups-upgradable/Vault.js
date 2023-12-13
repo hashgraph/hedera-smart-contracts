@@ -19,6 +19,7 @@
  */
 
 const { expect } = require('chai');
+const Constants = require('../../constants');
 const { ethers, upgrades } = require('hardhat');
 
 describe('@OZUUPSUpgradable Upgradable Vaults Tests', () => {
@@ -32,8 +33,10 @@ describe('@OZUUPSUpgradable Upgradable Vaults Tests', () => {
     owner = signers[0];
     beneficiary = signers[1];
 
-    const VaultV1 = await ethers.getContractFactory('VaultV1');
-    vaultV1 = await upgrades.deployProxy(VaultV1, { kind: 'uups' });
+    const VaultV1 = await ethers.getContractFactory(Constants.Contract.VaultV1);
+    vaultV1 = await upgrades.deployProxy(VaultV1, {
+      kind: 'uups',
+    });
     await vaultV1.deployed();
   });
 
@@ -98,7 +101,9 @@ describe('@OZUUPSUpgradable Upgradable Vaults Tests', () => {
 
   describe('Vault V2 upgrade', () => {
     beforeEach(async () => {
-      const VaultV2 = await ethers.getContractFactory('VaultV2');
+      const VaultV2 = await ethers.getContractFactory(
+        Constants.Contract.VaultV2
+      );
       vaultV2 = await upgrades.upgradeProxy(vaultV1.address, VaultV2, {
         kind: 'uups',
       });

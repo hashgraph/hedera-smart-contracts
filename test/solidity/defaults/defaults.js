@@ -19,15 +19,17 @@
  */
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@solidityequiv1 Solidity Defaults Tests', function () {
-  let signers;
   let contract;
 
   before(async function () {
     signers = await ethers.getSigners();
 
-    const factory = await ethers.getContractFactory('Defaults');
+    const factory = await ethers.getContractFactory(
+      Constants.Contract.Defaults
+    );
     contract = await factory.deploy();
   });
 

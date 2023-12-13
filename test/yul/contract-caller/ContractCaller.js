@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@yulequiv Contract Caller Tests', async () => {
   let contractCaller, targetContract, getCountEncodedSig, setCountEncodedSig;
@@ -30,10 +31,10 @@ describe('@yulequiv Contract Caller Tests', async () => {
   beforeEach(async () => {
     // deploy contracts
     const contractCallerFactory = await ethers.getContractFactory(
-      'ContractCaller'
+      Constants.Contract.ContractCaller
     );
     const targetContractFactory = await ethers.getContractFactory(
-      'TargetContract'
+      Constants.Contract.TargetContract
     );
     contractCaller = await contractCallerFactory.deploy();
     targetContract = await targetContractFactory.deploy(INITIAL_COUNT);

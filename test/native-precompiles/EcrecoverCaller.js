@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../constants');
 
 const to32ByteString = (str) => {
   return str.toString(16).replace('0x', '').padStart(64, '0');
@@ -34,7 +35,9 @@ describe('Native Precompiles - Ecrecover', function () {
   const ADDRESS_ONE = '0x0000000000000000000000000000000000000001';
 
   before(async () => {
-    const Contract = await ethers.getContractFactory('EcrecoverCaller');
+    const Contract = await ethers.getContractFactory(
+      Constants.Contract.EcrecoverCaller
+    );
     const _contract = await Contract.deploy({
       gasLimit: 8_000_000,
     });

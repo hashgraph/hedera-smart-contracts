@@ -20,6 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@OZERC29821 Royalty Info Tests', function () {
   let signers, wallet, wallet2;
@@ -33,7 +34,9 @@ describe('@OZERC29821 Royalty Info Tests', function () {
     wallet = signers[0];
     wallet2 = signers[1];
 
-    const factory = await ethers.getContractFactory('ERC2981Test');
+    const factory = await ethers.getContractFactory(
+      Constants.Contract.ERC2981Test
+    );
     contract = await factory.deploy();
   });
 

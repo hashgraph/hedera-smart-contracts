@@ -19,12 +19,13 @@
  */
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
 describe('@solidityequiv3 Ballot Units Tests', function () {
   let ballotContract, owner, addressB, addressC, addressD, addressE, addrs;
 
   beforeEach(async function () {
-    const Ballot = await ethers.getContractFactory('Ballot');
+    const Ballot = await ethers.getContractFactory(Constants.Contract.Ballot);
     const proposalBytes = ['proposal1', 'proposal2', 'proposal3'].map(
       (proposal) => ethers.utils.formatBytes32String(proposal)
     );

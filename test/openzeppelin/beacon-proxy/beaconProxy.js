@@ -21,38 +21,41 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Utils = require('../../utils');
+const Constants = require('../../constants');
 
 describe('@OZBeaconProxy Tests', function () {
   let owner, signer;
   let contractLogicContractV1, factoryLogicContractV1, contractLogicContractV2;
   let beaconFactory, beaconProxyFactory, beacon, beaconProxy;
-  const logicContractV1 = 'LogicContractV1';
-  const logicContractV2 = 'LogicContractV2';
-  const beaconContract = 'MyBeacon';
-  const beaconProxyContract = 'MyProxy';
 
   before(async function () {
     [owner, signer] = await ethers.getSigners();
-    factoryLogicContractV1 = await ethers.getContractFactory(logicContractV1);
+    factoryLogicContractV1 = await ethers.getContractFactory(
+      Constants.Contract.LogicContractV1
+    );
     const initialValue = 1;
     contractLogicContractV1 = await factoryLogicContractV1.deploy(initialValue);
     await contractLogicContractV1.deployed();
 
-    beaconFactory = await ethers.getContractFactory(beaconContract);
+    beaconFactory = await ethers.getContractFactory(
+      Constants.Contract.BeaconContract
+    );
     beacon = await beaconFactory.deploy(
       contractLogicContractV1.address,
       owner.address
     );
     await beacon.deployed();
 
-    beaconProxyFactory = await ethers.getContractFactory(beaconProxyContract);
+    beaconProxyFactory = await ethers.getContractFactory(
+      Constants.Contract.BeaconProxyContract
+    );
     beaconProxy = await beaconProxyFactory.deploy(beacon.address);
     await beaconProxy.deployed();
   });
 
   it('verifies several proxies can be created and used', async function () {
     const beaconProxyFactory2 = await ethers.getContractFactory(
-      beaconProxyContract
+      Constants.Contract.BeaconProxyContract
     );
     beaconProxy2 = await beaconProxyFactory2.deploy(beacon.address);
     await beaconProxy2.deployed();
@@ -93,7 +96,9 @@ describe('@OZBeaconProxy Tests', function () {
   });
 
   it('verifies underlying contract can be changed', async function () {
-    const contractFactoryV2 = await ethers.getContractFactory(logicContractV2);
+    const contractFactoryV2 = await ethers.getContractFactory(
+      Constants.Contract.LogicContractV2
+    );
     const initialValue = 2;
     contractLogicContractV2 = await contractFactoryV2.deploy(initialValue);
     await contractLogicContractV2.deployed();
@@ -147,7 +152,7 @@ describe('@OZBeaconProxy Tests', function () {
   describe('logicContractV2', function () {
     before(async function () {
       const contractFactoryV2 = await ethers.getContractFactory(
-        logicContractV2
+        Constants.Contract.LogicContractV2
       );
       const initialValue = 2;
       contractLogicContractV2 = await contractFactoryV2.deploy(initialValue);
