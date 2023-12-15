@@ -188,6 +188,8 @@ const Contract = {
   Counter: 'Counter',
   Test1Facet: 'Test1Facet',
   EcrecoverCaller: 'EcrecoverCaller',
+  InvalidERC721Receiver: 'InvalidERC721Receiver',
+  ValidERC721Receiver: 'ValidERC721Receiver',
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';
