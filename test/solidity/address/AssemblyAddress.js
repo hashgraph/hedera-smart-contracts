@@ -18,55 +18,55 @@
  *
  */
 
-const { expect } = require('chai')
-const { ethers } = require('hardhat')
-const Constants = require('../../constants')
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
-describe('@solidityevmequiv3 AssemblyAddress', () => {
-  let assemblyAddressContract, expectedContractBytecode
+describe('@solidityequiv1 AssemblyAddress Tests', () => {
+  let assemblyAddressContract, expectedContractBytecode;
 
   before(async () => {
     const assemblyAddressContractFactory = await ethers.getContractFactory(
       Constants.Contract.AssemblyAddress
-    )
+    );
 
-    assemblyAddressContract = await assemblyAddressContractFactory.deploy()
+    assemblyAddressContract = await assemblyAddressContractFactory.deploy();
     expectedContractBytecode = await ethers.provider.getCode(
       assemblyAddressContract.address
-    )
-  })
+    );
+  });
 
   it("Should get contract's code size at contract address", async () => {
     const contractCodeSize = await assemblyAddressContract.codesizeat(
       assemblyAddressContract.address
-    )
+    );
 
     // @notice Remove the '0x' prefix from the expected contract bytecode, then calculate the length in bytes
     // @notice Since each hexadeimal character represents 4 bits, and each byte is represented by 2 hexadecimal characters.
     //         Therefore, the length of bytecode in bytes is half of the length of the bytecode in hexadecimal characters.
     const expectedContractCodeSize =
-      expectedContractBytecode.replace('0x', '').length / 2
+      expectedContractBytecode.replace('0x', '').length / 2;
 
-    expect(contractCodeSize).to.eq(expectedContractCodeSize)
-  })
+    expect(contractCodeSize).to.eq(expectedContractCodeSize);
+  });
 
   it("Should get contract's code hash at contract address", async () => {
     const contractCodeHash = await assemblyAddressContract.codehashat(
       assemblyAddressContract.address
-    )
+    );
 
     const expectedContractCodeHash = ethers.utils.keccak256(
       expectedContractBytecode
-    )
+    );
 
-    expect(contractCodeHash).to.eq(expectedContractCodeHash)
-  })
+    expect(contractCodeHash).to.eq(expectedContractCodeHash);
+  });
 
   it("Should get contract's code at contract address", async () => {
     const contractCode = await assemblyAddressContract.codecopyat(
       assemblyAddressContract.address
-    )
+    );
 
-    expect(contractCode).to.eq(expectedContractBytecode)
-  })
-})
+    expect(contractCode).to.eq(expectedContractBytecode);
+  });
+});

@@ -56,19 +56,21 @@ const Events = {
   TinyBars: 'TinyBars',
   TinyCents: 'TinyCents',
   PseudoRandomSeed: 'PseudoRandomSeed',
-}
+};
 
 const Path = {
   BLOCK_INFO: 'contracts/solidity/block/BlockInfo.sol:BlockInfo',
   CRYPTO_MATH: 'contracts/solidity/cryptomath/CryptoMath.sol:CryptoMath',
-  ERC20Mock: 'contracts/erc-20/ERC20Mock.sol:ERC20Mock',
-  ERC721Mock: 'contracts/erc-721/ERC721Mock.sol:ERC721Mock',
+  ERC20Mock: 'contracts/openzeppelin/ERC-20/ERC20Mock.sol:ERC20Mock',
+  ERC721Mock: 'contracts/openzeppelin/ERC-721/ERC721Mock.sol:ERC721Mock',
   HIP583_ERC20Mock: 'contracts/hip-583/ERC20Mock.sol:ERC20Mock',
   HIP583_ERC721Mock: 'contracts/hip-583/ERC721Mock.sol:ERC721Mock',
   HRC: 'contracts/hrc/HRC.sol:HRC',
   TYPE_OPS: 'contracts/solidity/typeops/TypeOps.sol:TypeOps',
-  RECEIVER_PAYS: 'contracts/solidity/signature-example/ReceiverPays.sol:ReceiverPays',
-}
+  RECEIVER_PAYS:
+    'contracts/solidity/signature-example/ReceiverPays.sol:ReceiverPays',
+  RECEIVER: 'contracts/solidity/encoding/Receiver.sol:Receiver',
+};
 
 const Contract = {
   ERC20Mock: 'ERC20Mock',
@@ -129,23 +131,79 @@ const Contract = {
   SimpleAuction: 'SimpleAuction',
   MyCustomTransparentUpgradeableProxy: 'MyCustomTransparentUpgradeableProxy',
   Box: 'Box',
-  BoxV2:'BoxV2',
-}
+  BoxV2: 'BoxV2',
+  Defaults: 'Defaults',
+  Encoding: 'Encoding',
+  Sender: 'Sender',
+  ErrorsExternal: 'ErrorsExternal',
+  Errors: 'Errors',
+  Main: 'Main',
+  Base: 'Base',
+  Modifiers: 'Modifiers',
+  DerivedContract: 'DerivedContract',
+  Token: 'Token',
+  PaymentChannel: 'PaymentChannel',
+  Precompiles: 'Precompiles',
+  CryptoUnits: 'CryptoUnits',
+  TimeUnits: 'TimeUnits',
+  Ballot: 'Ballot',
+  Bitwise: 'Bitwise',
+  ContractCaller: 'ContractCaller',
+  TargetContract: 'TargetContract',
+  ContractCreator: 'ContractCreator',
+  DataAllocation: 'DataAllocation',
+  MathCoverage: 'MathCoverage',
+  TransactionInfo: 'TransactionInfo',
+  AccessControlContract: 'AccessControlContract',
+  BeaconContract: 'MyBeacon',
+  LogicContractV1: 'LogicContractV1',
+  LogicContractV2: 'LogicContractV2',
+  BeaconProxyContract: 'MyProxy',
+  ContractCreatorOZCreate2: 'ContractCreatorOZCreate2',
+  ERC20VotesTest: 'ERC20VotesTest',
+  Test_ERC165: 'Test_ERC165',
+  ClimberSelector: 'ClimberSelector',
+  ERC1820Registry: 'ERC1820Registry',
+  ERC777SenderHookImpl: 'ERC777SenderHookImpl',
+  ERC777RecipientHookImpl: 'ERC777RecipientHookImpl',
+  ERC777Token: 'ERC777Token',
+  ERC777ContractAccount: 'ERC777ContractAccount',
+  ERC1155Token: 'ERC1155Token',
+  VoteV1: 'VoteV1',
+  VoteV2: 'VoteV2',
+  VoteProxy: 'VoteProxy',
+  ERC2612Test: 'ERC2612Test',
+  ERC2771ContextTest: 'ERC2771ContextTest',
+  ERC2771ForwardTest: 'ERC2771ForwardTest',
+  ERC2981Test: 'ERC2981Test',
+  TokenVault: 'TokenVault',
+  VestingWallet: 'VestingWallet',
+  MulticallTest: 'MulticallTest',
+  CrowdFund: 'CrowdFund',
+  PausableTest: 'PausableTest',
+  SafeCastTest: 'SafeCastTest',
+  VaultV1: 'VaultV1',
+  VaultV2: 'VaultV2',
+  ShanghaiOpcodes: 'ShanghaiOpcodes',
+  Counter: 'Counter',
+  Test1Facet: 'Test1Facet',
+  EcrecoverCaller: 'EcrecoverCaller',
+};
 
-const CALL_EXCEPTION = 'CALL_EXCEPTION'
-const GAS_LIMIT_1_000_000 = { gasLimit: 1_000_000 }
-const GAS_LIMIT_10_000_000 = { gasLimit: 10_000_000 }
-const GAS_LIMIT_800000 = { gasLimit: 800000 }
-const GAS_LIMIT_8000000 = { gasLimit: 8000000 }
-const TOKEN_NAME = 'tokenName'
-const TOKEN_SYMBOL = 'tokenSymbol'
-const TX_SUCCESS_CODE = 22
-const SECOND = (WEI = 1)
-const MINUTE = 60 * SECOND
-const HOUR = 60 * MINUTE
-const DAY = 24 * HOUR
-const WEEK = 7 * DAY
-const GWEI = 1e9
+const CALL_EXCEPTION = 'CALL_EXCEPTION';
+const GAS_LIMIT_1_000_000 = { gasLimit: 1_000_000 };
+const GAS_LIMIT_10_000_000 = { gasLimit: 10_000_000 };
+const GAS_LIMIT_800000 = { gasLimit: 800000 };
+const GAS_LIMIT_8000000 = { gasLimit: 8000000 };
+const TOKEN_NAME = 'tokenName';
+const TOKEN_SYMBOL = 'tokenSymbol';
+const TX_SUCCESS_CODE = 22;
+const SECOND = (WEI = 1);
+const MINUTE = 60 * SECOND;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
+const WEEK = 7 * DAY;
+const GWEI = 1e9;
 
 module.exports = {
   Events,
@@ -166,4 +224,4 @@ module.exports = {
   WEEK,
   WEI,
   GWEI,
-}
+};

@@ -25,75 +25,75 @@ let DiamondHelper = {
     const selectors = Object.keys(contract.interface.functions).reduce(
       (acc, val) => {
         if (val !== 'init(bytes)') {
-          acc.push(contract.interface.getSighash(val))
+          acc.push(contract.interface.getSighash(val));
         }
-        return acc
+        return acc;
       },
       []
-    )
+    );
 
-    selectors.contract = contract
-    selectors.remove = this.remove
-    selectors.get = this.get
+    selectors.contract = contract;
+    selectors.remove = this.remove;
+    selectors.get = this.get;
 
-    return selectors
+    return selectors;
   },
 
   remove: function (functionNames) {
     const selectors = this.filter((v) => {
       for (const functionName of functionNames) {
         if (v === this.contract.interface.getSighash(functionName)) {
-          return false
+          return false;
         }
       }
 
-      return true
-    })
+      return true;
+    });
 
-    selectors.contract = this.contract
-    selectors.remove = this.remove
-    selectors.get = this.get
+    selectors.contract = this.contract;
+    selectors.remove = this.remove;
+    selectors.get = this.get;
 
-    return selectors
+    return selectors;
   },
 
   get: function (functionNames) {
     const selectors = this.filter((v) => {
       for (const functionName of functionNames) {
         if (v === this.contract.interface.getSighash(functionName)) {
-          return true
+          return true;
         }
       }
 
-      return false
-    })
+      return false;
+    });
 
-    selectors.contract = this.contract
-    selectors.remove = this.remove
-    selectors.get = this.get
+    selectors.contract = this.contract;
+    selectors.remove = this.remove;
+    selectors.get = this.get;
 
-    return selectors
+    return selectors;
   },
 
   removeSelectors: function (selectors, signatures) {
     const iface = new ethers.utils.Interface(
       signatures.map((v) => 'function ' + v)
-    )
-    const removeSelectors = signatures.map((v) => iface.getSighash(v))
-    selectors = selectors.filter((v) => !removeSelectors.includes(v))
+    );
+    const removeSelectors = signatures.map((v) => iface.getSighash(v));
+    selectors = selectors.filter((v) => !removeSelectors.includes(v));
 
-    return selectors
+    return selectors;
   },
 
   findAddressPositionInFacets: function (facetAddress, facets) {
     for (let i = 0; i < facets.length; i++) {
       if (facets[i].facetAddress === facetAddress) {
-        return i
+        return i;
       }
     }
   },
-}
+};
 
 module.exports = {
   DiamondHelper,
-}
+};
