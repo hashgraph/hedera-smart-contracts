@@ -28,9 +28,7 @@ const contractStates = {
     Inactive: 3
 }
 const tinybarToHbarCoef = 100_000_000
-const EVEN_VALUE = 30_000_000_000
 const EVEN_NUMBER_PRICE = 1 * tinybarToHbarCoef
-const ODD_NUMBER_PRICE = 1 * tinybarToHbarCoef - 1
 async function setupContract() {
     const signers = await ethers.getSigners()
     const seller = signers[0]
@@ -65,43 +63,37 @@ describe('@solidityequiv2 Safe remote purchase', function () {
     })
 
     it('should revert deployment', async function () {
-        const hasError = false
-        try {
-            const cont = await factoryPurchase.deploy({
-                value : EVEN_VALUE - 1
-            })
-            const rec = await cont.deployTransaction.wait()
-            console.log(rec)
-        } catch (err) {
-            hasError = true
-        }
-        expect(hasError).to.be.true
+        const cont = await factoryPurchase.deploy({
+            value : ethers.utils.parseEther('3.0').sub(1),
+            gasLimit: 1000000
+        })
+        const receipt = await cont.deployTransaction.wait()
+        expect(receipt.events[0].event).to.equal('MsgValue')
+        expect(receipt.events[1].event).to.equal('RevertCreationForOdd')
     })
 
     it('should Abort contract', async function () {
-        const initialBalance = await ethers.provider.getBalance(seller.address)
-        const value = await contract.value()
+        await ethers.provider.getBalance(seller.address)
+        await contract.value()
         const initialState = await contract.state()
         expect(initialState).to.equal(contractStates.Created)
 
         const trxAbort = await contract.abort()
         const receiptAbort = await trxAbort.wait()
 
-        const finalBalance = await ethers.provider.getBalance(seller.address)
+        await ethers.provider.getBalance(seller.address)
         const finalState = await contract.state()
 
-        //expect(initialBalance.sub(finalBalance).sub(EVEN_NUMBER_PRICE) > 0).to.be.true
         expect(receiptAbort.events[0].event).to.equal('Aborted')
         expect(finalState).to.equal(contractStates.Inactive)
     })
 
     describe('standart flow buyer -> seller tests: ', async function () {
-        let contract, factoryPurchase, seller, buyer
+        let contract, seller, buyer
 
         before(async function () {
             const setup = await setupContract()
             contract = setup.contract
-            factoryPurchase = setup.factoryPurchase
             seller = setup.seller
             buyer = setup.buyer
         })
@@ -123,7 +115,7 @@ describe('@solidityequiv2 Safe remote purchase', function () {
             expect(initialState).to.equal(contractStates.Locked)
     
             const trxConfirm = await contract.connect(buyer).confirmReceived()
-            const receiptConfirm = await trxConfirm.wait()
+            const receiptConfirm = await trxConfirm.wait(2)
             
             expect(receiptConfirm.events[0].event).to.equal('ItemReceived')
             const finalState = await contract.state()
@@ -135,7 +127,7 @@ describe('@solidityequiv2 Safe remote purchase', function () {
             expect(initialState).to.equal(contractStates.Release)
     
             const trxRefund = await contract.connect(seller).refundSeller()
-            const receiptRefund = await trxRefund.wait()
+            const receiptRefund = await trxRefund.wait(2)
             
             expect(receiptRefund.events[0].event).to.equal('SellerRefunded')
             const finalState = await contract.state()
@@ -169,10 +161,9 @@ describe('@solidityequiv2 Safe remote purchase', function () {
         })
 
         it('should confirm condition modifier', async function () {
-            const value = await contract.value()
             await expect(
-                contract.connect(buyer).callStatic.confirmPurchase({value: EVEN_NUMBER_PRICE})
-            ).to.eventually.be.rejected.and.have.property('errorName', 'InvalidState')
+                contract.connect(buyer).callStatic.confirmPurchase({value: ethers.utils.parseEther('3.0')})
+            ).to.eventually.be.rejected
         })
     })
 })

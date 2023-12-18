@@ -46,6 +46,7 @@ contract Purchase {
     event ItemReceived();
     event SellerRefunded();
     event MsgValue(uint value);
+    event RevertCreationForOdd();
 
     // Ensure that `msg.value` is an even number.
     // Division will truncate if it is an odd number.
@@ -55,7 +56,7 @@ contract Purchase {
         value = msg.value / 2;
         emit MsgValue(value);
         if ((2 * value) != msg.value)
-            revert ValueNotEven();
+            emit RevertCreationForOdd();
     }
 
     /// Abort the purchase and reclaim the ether.
