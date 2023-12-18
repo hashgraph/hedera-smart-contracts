@@ -60,6 +60,19 @@ const pauseAndPoll = async(ERC20Pausable) => {
     return false; // Not paused
 }
 
+const pollForLastEvent = async(contract) => {
+  for (let numberOfTries = 0; process.env.MAX_RETRY <= process.env.MAX_RETRY; numberOfTries++) {
+    const event = contract.events.filter(
+      (e) => e.event === Constants.Events.ResponseCode
+    )[0].args[0]
+    if((event._hex !== undefined) && (event._hex !== null)){
+      return parseInt(event._hex);
+    }
+  }
+
+  throw new Error(`Failed to get an event after ${process.env.MAX_RETRY} tries`);
+}
+
 const pollForERC20BurnableChangedSupply = async(ERC20Burnable, initialSupply) => {
   
     for (let numberOfTries = 0; numberOfTries < process.env.MAX_RETRY; numberOfTries++) {
@@ -297,6 +310,7 @@ module.exports = {
     pauseAndPoll,
     pollForNewERC20Balance,
     pollForERC20BurnableChangedSupply,
+    pollForLastEvent,
     pollForNewBalance,
     pollForNewCounterValue,
     pollForNewHBarBalance,
