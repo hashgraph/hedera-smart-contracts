@@ -8,7 +8,7 @@ import {Nonces} from "@openzeppelin/contracts/utils/Nonces.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 
-contract ExampleToken is ERC20, ERC20Permit, ERC20Votes, Ownable {
+contract ExampleTokenVote is ERC20, ERC20Permit, ERC20Votes, Ownable {
     constructor() ERC20("ExampleToken", "EXM") ERC20Permit("ExampleToken") Ownable(msg.sender){}
 
     function mint(address to, uint256 amount) public onlyOwner {
