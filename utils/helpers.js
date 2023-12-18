@@ -19,10 +19,8 @@
  */
 require('dotenv').config();
 
-const Constants = require('../test/constants');
-
-const delay = () => {
-    return new Promise(resolve => setTimeout(resolve, process.env.RETRY_DELAY || 2000));
+const delay = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms || process.env.RETRY_DELAY || 2000));
 }
 
 const getBalance =  async(erc20Contract, tokenAddress, signersAddress) => {
@@ -270,17 +268,28 @@ const unPauseAndPoll = async(ERC20Pausable) => {
     return false // paused
 }
 
-const pollForLastEvent = async(transactionReceipt, code) => {
-  for (let numberOfTries = 0; process.env.MAX_RETRY <= process.env.MAX_RETRY; numberOfTries++) {
-    const event = transactionReceipt.events.filter(
-      (e) => e.event === code
-    )[0].args[0]
-    if((event._hex !== undefined) && (event._hex !== null)){
-      return parseInt(event._hex);
+const genericPoll = async(toPollFromPromise, comparator, ms, forOperation) => { 
+  for (let numberOfTries = 0; numberOfTries < process.env.MAX_RETRY; numberOfTries++) {
+    try {
+      let pollResult = await toPollFromPromise;
+      if (pollResult.wait) {
+        pollResult = await pollResult.wait()
+      }
+      const comparatorResult = comparator(pollResult);
+      if (comparatorResult) {
+        return pollResult;
+      }
+    } catch (error) {
+      throw error;
     }
+
+    await delay(ms);
   }
 
-  throw new Error(`Failed to get an event after ${process.env.MAX_RETRY} tries`);
+  throw new Error(`Failed to get a different value after ${process.env.MAX_RETRY} tries.
+    For: 
+    ${forOperation}
+  `);
 }
       
 module.exports = {
@@ -299,5 +308,5 @@ module.exports = {
     pollForNewSignerBalance,
     pollForNewWalletBalance,
     unPauseAndPoll,
-    pollForLastEvent,
+    genericPoll
 }

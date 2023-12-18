@@ -18,30 +18,30 @@
  *
  */
 
-const { expect } = require('chai')
-const { ethers } = require('hardhat')
-const Constants = require('../constants')
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
+const Constants = require('../constants');
 
 describe('PrngSystemContract tests', function () {
-  let prngSystemContract
+  let prngSystemContract;
 
   before(async function () {
     const factory = await ethers.getContractFactory(
       Constants.Contract.PrngSystemContract
-    )
+    );
 
-    prngSystemContract = await factory.deploy()
-  })
+    prngSystemContract = await factory.deploy();
+  });
 
   it('should be able to execute getPseudorandomSeed to generate a pseudo random seed', async function () {
-    const tx = await prngSystemContract.getPseudorandomSeed()
-    const txReceipt = await tx.wait()
+    const tx = await prngSystemContract.getPseudorandomSeed();
+    const txReceipt = await tx.wait();
 
     const result = txReceipt.events.filter(
       (e) => e.event === Constants.Events.PseudoRandomSeed
-    )[0].args[0]
+    )[0].args[0];
 
-    expect(result).to.exist
-    expect(result).to.not.hexEqual(ethers.constants.HashZero)
-  })
-})
+    expect(result).to.exist;
+    expect(result).to.not.hexEqual(ethers.constants.HashZero);
+  });
+});

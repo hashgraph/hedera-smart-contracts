@@ -22,8 +22,7 @@ import { Metadata } from 'next';
 
 const DAPP_NAME = 'Hedera System Contract Dapp';
 const TITLE = 'System Contract Dapp Playground | Hedera';
-const DESCRIPTION =
-  "Explore Hedera's system smart contract through an intutive and exciting Dapp Playground";
+const DESCRIPTION = "Explore Hedera's system smart contract through an intutive and exciting Dapp Playground";
 const OFFICIAL_REPO_URL =
   'https://github.com/hashgraph/hedera-smart-contracts/system-contract-dapp-playground';
 

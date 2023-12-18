@@ -1,6 +1,6 @@
 {
   "name": "@hashgraph/smart-contracts",
-  "version": "0.7.0-SNAPSHOT",
+  "version": "0.8.0-SNAPSHOT",
   "description": "Hedera Smart Contract Service supporting files",
   "files": [
     "/contracts/**/*.sol",
@@ -31,7 +31,7 @@
     "prepare": "husky install"
   },
   "devDependencies": {
-    "@hashgraph/hedera-local": "2.13.0",
+    "@hashgraph/hedera-local": "^2.13.0",
     "@hashgraph/sdk": "^2.25.0",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
     "@nomicfoundation/hardhat-foundry": "^1.1.1",

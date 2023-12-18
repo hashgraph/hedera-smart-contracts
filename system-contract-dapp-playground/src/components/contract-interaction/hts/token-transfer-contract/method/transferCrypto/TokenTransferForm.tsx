@@ -77,9 +77,7 @@ const TokenTransferForm = ({
               <div className="flex gap-3 justify-between">
                 <div className="w-full flex flex-col gap-6">
                   {tokenTransferParamValues.length > 1 && (
-                    <div className="w-fit text-hedera-green text-sm -mb-3">{`RECORD #${
-                      index + 1
-                    }`}</div>
+                    <div className="w-fit text-hedera-green text-sm -mb-3">{`RECORD #${index + 1}`}</div>
                   )}
 
                   {/* Hedera Token address */}
@@ -92,12 +90,8 @@ const TokenTransferForm = ({
                       paramType={htsCryptoTransferParamFields['hederaTokenAddress'].inputType}
                       paramSize={htsCryptoTransferParamFields['hederaTokenAddress'].inputSize}
                       explanation={htsCryptoTransferParamFields['hederaTokenAddress'].explanation}
-                      paramClassName={
-                        htsCryptoTransferParamFields['hederaTokenAddress'].inputClassname
-                      }
-                      paramPlaceholder={
-                        htsCryptoTransferParamFields['hederaTokenAddress'].inputPlaceholder
-                      }
+                      paramClassName={htsCryptoTransferParamFields['hederaTokenAddress'].inputClassname}
+                      paramPlaceholder={htsCryptoTransferParamFields['hederaTokenAddress'].inputPlaceholder}
                       paramFocusColor={
                         htsCryptoTransferParamFields['hederaTokenAddress'].inputFocusBorderColor
                       }
@@ -162,9 +156,7 @@ const TokenTransferForm = ({
                         masterTokenParam.fieldValue.tokenType === 'FUNGIBLE'
                           ? generateInitialFungibleTokenTransferParamValues()
                           : generateInitialNonFungibleTokenTransferParamValues(),
-                        masterTokenParam.fieldValue.tokenType === 'FUNGIBLE'
-                          ? 'transfers'
-                          : 'nftTransfers',
+                        masterTokenParam.fieldValue.tokenType === 'FUNGIBLE' ? 'transfers' : 'nftTransfers',
                         masterTokenParam.fieldKey
                       );
                     }}
@@ -221,12 +213,8 @@ const TokenTransferForm = ({
                               paramSize={htsCryptoTransferParamFields[paramKey].inputSize}
                               explanation={htsCryptoTransferParamFields[paramKey].explanation}
                               paramClassName={htsCryptoTransferParamFields[paramKey].inputClassname}
-                              paramPlaceholder={
-                                htsCryptoTransferParamFields[paramKey].inputPlaceholder
-                              }
-                              paramFocusColor={
-                                htsCryptoTransferParamFields[paramKey].inputFocusBorderColor
-                              }
+                              paramPlaceholder={htsCryptoTransferParamFields[paramKey].inputPlaceholder}
+                              paramFocusColor={htsCryptoTransferParamFields[paramKey].inputFocusBorderColor}
                               handleInputOnChange={(e) =>
                                 handleTokenTransferInputOnChange(
                                   e,

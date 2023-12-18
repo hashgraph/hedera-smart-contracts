@@ -1,17 +1,17 @@
-require('dotenv').config()
-const { ethers } = require('ethers')
+require('dotenv').config();
+const { ethers } = require('ethers');
 
 /**  @type string */
 const OPERATOR_ID_A = process.env.OPERATOR_ID_A
   ? process.env.OPERATOR_ID_A
-  : '0.0.0'
+  : '0.0.0';
 /**  @type string */
 const OPERATOR_KEY_A = process.env.OPERATOR_KEY_A
   ? process.env.OPERATOR_KEY_A
-  : ethers.constants.HashZero
+  : ethers.constants.HashZero;
 
 const PRIVATE_KEYS = process.env.PRIVATE_KEYS
-  ? process.env.PRIVATE_KEYS.split(',').map(key => key.trim())
+  ? process.env.PRIVATE_KEYS.split(',').map((key) => key.trim())
   : [];
 
 while (PRIVATE_KEYS.length < 6) {
@@ -43,11 +43,20 @@ const NETWORKS = {
     nodeId: '3',
     mirrorNode: 'https://previewnet.mirrornode.hedera.com',
   },
-}
+  besu: {
+    name: 'besu_local',
+    url: 'http://127.0.0.1:8544',
+    chainId: 1337,
+    allowUnlimitedContractSize: true,
+    blockGasLimit: 0x1fffffffffffff,
+    gas: 1_000_000_000,
+    timeout: 60_000,
+  },
+};
 
 module.exports = {
   OPERATOR_ID_A,
   OPERATOR_KEY_A,
   PRIVATE_KEYS,
   NETWORKS,
-}
+};

@@ -18,7 +18,7 @@
  *
  */
 
-const { ethers } = require('hardhat')
+const { ethers } = require('hardhat');
 
 class PaymentChannelHelper {
   /**
@@ -34,7 +34,7 @@ class PaymentChannelHelper {
     return ethers.utils.solidityKeccak256(
       ['address', 'uint256'],
       [contractAddress, amount]
-    )
+    );
   }
 
   /**
@@ -49,9 +49,9 @@ class PaymentChannelHelper {
    * @return 65 bytes signature
    */
   static async signPayment(signer, contractAddress, amount) {
-    const message = this.constructPaymentMessage(contractAddress, amount)
-    return await signer.signMessage(ethers.utils.arrayify(message))
+    const message = this.constructPaymentMessage(contractAddress, amount);
+    return await signer.signMessage(ethers.utils.arrayify(message));
   }
 }
 
-module.exports = PaymentChannelHelper
+module.exports = PaymentChannelHelper;

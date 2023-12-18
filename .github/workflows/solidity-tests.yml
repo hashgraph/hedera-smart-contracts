@@ -46,6 +46,20 @@ jobs:
     with:
       testfilter: '@solidityequiv3'
 
+  YulEquiv:
+    if: ${{ inputs.filterTagOverride == ''}}
+    name: Yul Equivalence
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: '@yulequiv'
+
+  OpenZeppelinEquiv:
+    if: ${{ inputs.filterTagOverride == ''}}
+    name: OpenZeppelin Equivalence
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: ${{inputs.filterTagOverride}}
+
   PublishResults:
     name: Publish Results
     if: ${{ !cancelled() }}

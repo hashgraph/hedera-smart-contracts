@@ -44,9 +44,7 @@ const TokenExpiryForm = ({ paramValues, tokenInfoFields, handleInputOnChange }: 
               explanation={(htsUpdateTokenExpiryParamFields as any)[param].explanation}
               paramClassName={(htsUpdateTokenExpiryParamFields as any)[param].inputClassname}
               paramPlaceholder={(htsUpdateTokenExpiryParamFields as any)[param].inputPlaceholder}
-              paramFocusColor={
-                (htsUpdateTokenExpiryParamFields as any)[param].inputFocusBorderColor
-              }
+              paramFocusColor={(htsUpdateTokenExpiryParamFields as any)[param].inputFocusBorderColor}
             />
           </div>
         );

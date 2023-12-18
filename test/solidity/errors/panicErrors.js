@@ -18,106 +18,104 @@
  *
  */
 
-const { expect } = require('chai')
-const { ethers } = require('hardhat')
-const Constants = require('../../constants')
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
+const Constants = require('../../constants');
 
-describe('@solidityequiv3 Panic Errors', function () {
-  let contract
+describe('@solidityequiv2 Panic Errors Tests', function () {
+  let contract;
 
   before(async function () {
-    const factory = await ethers.getContractFactory(Constants.Contract.Panic)
-    contract = await factory.deploy()
-  })
+    const factory = await ethers.getContractFactory(Constants.Contract.Panic);
+    contract = await factory.deploy();
+  });
 
   it('should verify panic error 0x01', async function () {
     let error;
     try {
-      await contract.testPanicError0x01();
-    } catch(e) {
+      await contract.verifyPanicError0x01();
+    } catch (e) {
       error = e;
     }
     expect(error.errorName).to.eq('Panic');
-    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(1)])
-  })
+    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(1)]);
+  });
 
   it('should verify panic error 0x11', async function () {
     let error;
     try {
-      await contract.testPanicError0x11();
-    } catch(e) {
+      await contract.verifyPanicError0x11();
+    } catch (e) {
       error = e;
     }
     expect(error.errorName).to.eq('Panic');
-    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(17)])
-  })
+    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(17)]);
+  });
 
   it('should verify panic error 0x12', async function () {
     let error;
     try {
-      await contract.testPanicError0x12();
-    } catch(e) {
+      await contract.verifyPanicError0x12();
+    } catch (e) {
       error = e;
     }
     expect(error.errorName).to.eq('Panic');
-    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(18)])
-  })
+    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(18)]);
+  });
 
   it('should verify panic error 0x21', async function () {
     let error;
     try {
-      await contract.testPanicError0x21();
-    } catch(e) {
+      await contract.verifyPanicError0x21();
+    } catch (e) {
       error = e;
     }
     expect(error.errorName).to.eq('Panic');
-    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(33)])
-  })
+    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(33)]);
+  });
 
   it('should verify panic error 0x31', async function () {
     let error;
     try {
-      const result = await contract.getSomeArray();
-      console.log(result);
-      await contract.testPanicError0x31();
-    } catch(e) {
+      const result = await contract.verifyPanicError0x31();
+      await result.wait();
+    } catch (e) {
       error = e;
     }
-    expect(error.errorName).to.eq('Panic');
-    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(18)])
-  })
+    expect(error.code).to.eq('CALL_EXCEPTION');
+    expect(error.reason).to.eq('transaction failed');
+  });
 
   it('should verify panic error 0x32', async function () {
     let error;
     try {
-      await contract.testPanicError0x32();
-    } catch(e) {
+      await contract.verifyPanicError0x32();
+    } catch (e) {
       error = e;
     }
     expect(error.errorName).to.eq('Panic');
-    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(50)])
-  })
+    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(50)]);
+  });
 
   it('should verify panic error 0x41', async function () {
     let error;
     try {
-      await contract.testPanicError0x41();
-    } catch(e) {
-      console.log(e)
+      await contract.verifyPanicError0x41();
+    } catch (e) {
       error = e;
     }
     expect(error.errorName).to.eq('Panic');
-    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(65)])
-  })
+    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(65)]);
+  });
 
   it('should verify panic error 0x51', async function () {
     let error;
     try {
-      await contract.testPanicError0x51();
-    } catch(e) {
+      await contract.verifyPanicError0x51();
+    } catch (e) {
       error = e;
     }
     expect(error.errorName).to.eq('Panic');
-    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(81)])
-  })
-})
+    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(81)]);
+  });
+});

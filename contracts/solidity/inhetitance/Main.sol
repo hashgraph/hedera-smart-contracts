@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.20;
 import { Base } from "./Base.sol";
 
@@ -13,9 +13,5 @@ contract Main is Base {
 
     function returnSuper() public view virtual returns (string memory) {
         return super.classIdentifier();
-    }
-
-    function destroyContract(address recipient) public {
-        selfdestruct(payable(recipient));
     }
 }

@@ -45,12 +45,8 @@ describe('Exchange Rate Test Suite', () => {
 
   // mock baseContract object
   const baseContract = {
-    convertTinycentsToTinybars: jest
-      .fn()
-      .mockResolvedValue(contractMockedResolvedValue('TinyBars')),
-    convertTinybarsToTinycents: jest
-      .fn()
-      .mockResolvedValue(contractMockedResolvedValue('TinyCents')),
+    convertTinycentsToTinybars: jest.fn().mockResolvedValue(contractMockedResolvedValue('TinyBars')),
+    convertTinybarsToTinycents: jest.fn().mockResolvedValue(contractMockedResolvedValue('TinyCents')),
   };
 
   it('should execute handleExchangeRate with API === "CENT_TO_BAR" and return a txHash and convertedAmount', async () => {
