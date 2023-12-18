@@ -18,14 +18,15 @@
  *
  */
 
-const hre = require('hardhat')
-const { ethers } = hre
+const hre = require('hardhat');
+const { ethers } = hre;
 
 class Utils {
-
-    static functionSelector(functionNameAndParams) {
-        return ethers.utils.keccak256(ethers.utils.toUtf8Bytes(functionNameAndParams)).substring(0,10)
-    }
+  static functionSelector(functionNameAndParams) {
+    return ethers.utils
+      .keccak256(ethers.utils.toUtf8Bytes(functionNameAndParams))
+      .substring(0, 10);
+  }
 }
 
-module.exports = Utils
+module.exports = Utils;

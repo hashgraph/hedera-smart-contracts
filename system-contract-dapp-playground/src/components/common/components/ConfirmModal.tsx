@@ -36,13 +36,7 @@ interface PageProps {
   handleAcknowledge: any;
 }
 
-const ConfirmModal = ({
-  isOpen,
-  modalBody,
-  onClose,
-  modalHeader,
-  handleAcknowledge,
-}: PageProps) => {
+const ConfirmModal = ({ isOpen, modalBody, onClose, modalHeader, handleAcknowledge }: PageProps) => {
   return (
     <Modal isOpen={isOpen} isCentered onClose={onClose}>
       <ModalOverlay />

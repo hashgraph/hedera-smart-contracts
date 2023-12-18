@@ -24,19 +24,26 @@
 
 At root, create a `.env` file using the `example.env` as the template and fill out the variables.
 
-| Variable            | Description                                                                      |
-| ------------------- | -------------------------------------------------------------------------------- |
-| `OPERATOR_ID_A`     | This is the `Account ID` which can be found in your account portal.              |
-| `OPERATOR_KEY_A`    | This is the `DER Encoded Private Key` which can be found in your account portal. |
-| `PRIVATE_KEYS`      | This is the `HEX Encoded Private Key` list which can be found in your account portal. It supports up to six private keys.|
+| Variable         | Description                                                                                                               |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `OPERATOR_ID_A`  | This is the `Account ID` which can be found in your account portal.                                                       |
+| `OPERATOR_KEY_A` | This is the `DER Encoded Private Key` which can be found in your account portal.                                          |
+| `PRIVATE_KEYS`   | This is the `HEX Encoded Private Key` list which can be found in your account portal. It supports up to six private keys. |
 
-**_Notes_**: At least two accounts are required for the `HEX_PRIVATE_KEY` fields. See [Create Hedera Portal Profile](https://docs.hedera.com/hedera/getting-started/introduction#create-hedera-portal-profile-faucet) on how to create accounts on Hedera networks.  Six accounts will be needed if you want to run the solidity voting example.  The local.env file uses ECDSA accounts listed when starting the local node.
+**_Notes_**: At least two accounts are required for the `HEX_PRIVATE_KEY` fields. See [Create Hedera Portal Profile](https://docs.hedera.com/hedera/getting-started/introduction#create-hedera-portal-profile-faucet) on how to create accounts on Hedera networks. Six accounts will be needed if you want to run the solidity voting example. The local.env file uses ECDSA accounts listed when starting the local node.
 
 **_Important_**: While Hedera supports both ECDSA and ED25519 accounts, please use ECDSA since Ethereum only supports ECDSA.
 
 #### 3. Configure Hardhat
 
 Adjust the `defaultNetwork` field in the [hardhat.config.js](hardhat.config.js) file based on the network your accounts (specified in the .env file) are associated with.
+
+Available Networks:
+
+- local for reference and how to setup a local besu node please follow the [link](https://docs.hedera.com/hedera/sdks-and-apis/sdks/set-up-your-local-network)
+- testnet
+- previewnet
+- besu_local for reference and how to setup a local besu node please follow the [link](https://besu.hyperledger.org/)
 
 #### 4. Installing the `foundry-rs` toolkit for the `forge` testing framework
 

@@ -60,12 +60,8 @@ const TokenAddressesInputForm = ({
             paramSize={(htsTokenAssociateParamFields as any)['tokenAddresses'].inputSize}
             explanation={(htsTokenAssociateParamFields as any)['tokenAddresses'].explanation}
             paramClassName={(htsTokenAssociateParamFields as any)['tokenAddresses'].inputClassname}
-            paramPlaceholder={
-              (htsTokenAssociateParamFields as any)['tokenAddresses'].inputPlaceholder
-            }
-            paramFocusColor={
-              (htsTokenAssociateParamFields as any)['tokenAddresses'].inputFocusBorderColor
-            }
+            paramPlaceholder={(htsTokenAssociateParamFields as any)['tokenAddresses'].inputPlaceholder}
+            paramFocusColor={(htsTokenAssociateParamFields as any)['tokenAddresses'].inputFocusBorderColor}
           />
           {/* delete key button */}
           {tokenAddresses.length > 1 && (

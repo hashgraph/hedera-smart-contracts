@@ -70,12 +70,7 @@ const Footer = () => {
           {HEDERA_SOCIAL_MEDIA.map((media) => {
             return (
               <Link key={media.name} href={media.link} target="_blank">
-                <Image
-                  src={`/assets/socials/${media.name}.svg`}
-                  alt={media.name}
-                  width={24}
-                  height={24}
-                />
+                <Image src={`/assets/socials/${media.name}.svg`} alt={media.name} width={24} height={24} />
               </Link>
             );
           })}

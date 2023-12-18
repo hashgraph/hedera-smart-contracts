@@ -18,66 +18,66 @@
  *
  */
 
-const utils = require('../utils')
-const { expect } = require('chai')
-const { ethers } = require('hardhat')
-const Constants = require('../../constants')
-const { expectValidHash } = require('../assertions')
+const utils = require('../utils');
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
+const Constants = require('../../constants');
+const { expectValidHash } = require('../assertions');
 
 describe('TokenCreateCustomContract Test Suite', () => {
-  const tokenName = 'WrappedHbar'
-  const tokenSymbol = 'WHBAR'
-  const tokenMemo = 'Wrapped Hbar'
-  const initialSupply = 900000000 // 9 WHBAR
-  const maxSupply = 30000000000 // 300 WHBAR
-  const decimals = 8
-  const freezeDefaultStatus = false
-  let keys, signers, fixedFeeTokenAddress, tokenCreateCustomContract
+  const tokenName = 'WrappedHbar';
+  const tokenSymbol = 'WHBAR';
+  const tokenMemo = 'Wrapped Hbar';
+  const initialSupply = 900000000; // 9 WHBAR
+  const maxSupply = 30000000000; // 300 WHBAR
+  const decimals = 8;
+  const freezeDefaultStatus = false;
+  let keys, signers, fixedFeeTokenAddress, tokenCreateCustomContract;
 
   before(async () => {
-    tokenCreateCustomContract = await utils.deployTokenCreateCustomContract()
-    signers = await ethers.getSigners()
+    tokenCreateCustomContract = await utils.deployTokenCreateCustomContract();
+    signers = await ethers.getSigners();
 
     // constructing keys array
     const adminKey = utils.constructIHederaTokenKey(
       'ADMIN',
       'CONTRACT_ID',
       tokenCreateCustomContract.address
-    )
+    );
 
     const kycKey = utils.constructIHederaTokenKey(
       'KYC',
       'CONTRACT_ID',
       tokenCreateCustomContract.address
-    )
+    );
     const freezeKey = utils.constructIHederaTokenKey(
       'FREEZE',
       'CONTRACT_ID',
       tokenCreateCustomContract.address
-    )
+    );
     const wipeKey = utils.constructIHederaTokenKey(
       'WIPE',
       'CONTRACT_ID',
       tokenCreateCustomContract.address
-    )
+    );
 
     const supplyKey = utils.constructIHederaTokenKey(
       'SUPPLY',
       'CONTRACT_ID',
       tokenCreateCustomContract.address
-    )
+    );
     const feeKey = utils.constructIHederaTokenKey(
       'FEE',
       'CONTRACT_ID',
       tokenCreateCustomContract.address
-    )
+    );
     const pauseKey = utils.constructIHederaTokenKey(
       'PAUSE',
       'CONTRACT_ID',
       tokenCreateCustomContract.address
-    )
+    );
 
-    keys = [adminKey, kycKey, freezeKey, wipeKey, supplyKey, feeKey, pauseKey]
+    keys = [adminKey, kycKey, freezeKey, wipeKey, supplyKey, feeKey, pauseKey];
 
     fixedFeeTokenAddress = await utils.createFungibleTokenPublic(
       tokenName,
@@ -90,8 +90,8 @@ describe('TokenCreateCustomContract Test Suite', () => {
       tokenCreateCustomContract.address,
       keys,
       tokenCreateCustomContract
-    )
-  })
+    );
+  });
 
   it('should be able to create fungible token with dynamic params and empty keys array', async () => {
     // @notice: Only the ID of the smart contract is valid for the treasury by default.
@@ -112,15 +112,15 @@ describe('TokenCreateCustomContract Test Suite', () => {
         value: '35000000000000000000', // = 35 hbars. The more configs on the token, the higher the value fee for precompile contract is
         gasLimit: 1_000_000,
       }
-    )
+    );
 
-    const txReceipt = await tx.wait()
+    const txReceipt = await tx.wait();
     const result = txReceipt.events.filter(
       (e) => e.event === Constants.Events.CreatedToken
-    )[0].args[0]
-    expect(result).to.exist
-    expectValidHash(result, 40)
-  })
+    )[0].args[0];
+    expect(result).to.exist;
+    expectValidHash(result, 40);
+  });
 
   it('should be able to execute createFungibleTokenWithCustomFees with dynamic params', async function () {
     const tx =
@@ -138,15 +138,15 @@ describe('TokenCreateCustomContract Test Suite', () => {
           value: '35000000000000000000',
           gasLimit: 1_000_000,
         }
-      )
+      );
 
-    const txReceipt = await tx.wait()
+    const txReceipt = await tx.wait();
     const result = txReceipt.events.filter(
       (e) => e.event === Constants.Events.CreatedToken
-    )[0].args[0]
-    expect(result).to.exist
-    expectValidHash(result, 40)
-  })
+    )[0].args[0];
+    expect(result).to.exist;
+    expectValidHash(result, 40);
+  });
 
   it('should be able to execute createNonFungibleToken with dynamic params', async function () {
     const tx = await tokenCreateCustomContract.createNonFungibleTokenPublic(
@@ -160,15 +160,15 @@ describe('TokenCreateCustomContract Test Suite', () => {
         value: '35000000000000000000',
         gasLimit: 1_000_000,
       }
-    )
+    );
 
-    const txReceipt = await tx.wait()
+    const txReceipt = await tx.wait();
     const result = txReceipt.events.filter(
       (e) => e.event === Constants.Events.CreatedToken
-    )[0].args[0]
-    expect(result).to.exist
-    expectValidHash(result, 40)
-  })
+    )[0].args[0];
+    expect(result).to.exist;
+    expectValidHash(result, 40);
+  });
 
   it('should be able to execute createNonFungibleTokenWithCustomFees', async function () {
     const tx =
@@ -184,18 +184,18 @@ describe('TokenCreateCustomContract Test Suite', () => {
           value: '20000000000000000000',
           gasLimit: 1_000_000,
         }
-      )
+      );
 
-    const txReceipt = await tx.wait()
+    const txReceipt = await tx.wait();
     const result = txReceipt.events.filter(
       (e) => e.event === Constants.Events.CreatedToken
-    )[0].args[0]
-    expect(result).to.exist
-    expectValidHash(result, 40)
-  })
+    )[0].args[0];
+    expect(result).to.exist;
+    expectValidHash(result, 40);
+  });
 
   describe('TokenCreateCustomContract token actions', () => {
-    let prepFungibleTokenAddress, prepNonFungibeTokenAddress
+    let prepFungibleTokenAddress, prepNonFungibeTokenAddress;
     before(async () => {
       prepFungibleTokenAddress = (
         await (
@@ -216,7 +216,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
           )
         ).wait()
       ).events.filter((e) => e.event === Constants.Events.CreatedToken)[0].args
-        .tokenAddress
+        .tokenAddress;
 
       prepNonFungibeTokenAddress = (
         await (
@@ -234,11 +234,11 @@ describe('TokenCreateCustomContract Test Suite', () => {
           )
         ).wait()
       ).events.filter((e) => e.event === Constants.Events.CreatedToken)[0]
-        .args[0]
-    })
+        .args[0];
+    });
 
     it('should be able to execute mintToken', async function () {
-      const amountToMint = 120
+      const amountToMint = 120;
 
       // mint fungible tokens
       const mintFungibleTokenTx =
@@ -247,19 +247,19 @@ describe('TokenCreateCustomContract Test Suite', () => {
           amountToMint,
           ['0x02'],
           Constants.GAS_LIMIT_1_000_000
-        )
+        );
 
-      const mintFungibleTokenReceipt = await mintFungibleTokenTx.wait()
+      const mintFungibleTokenReceipt = await mintFungibleTokenTx.wait();
       const { responseCode: mintFungibleTokenResCode } =
         mintFungibleTokenReceipt.events.filter(
           (e) => e.event === Constants.Events.ResponseCode
-        )[0].args
-      expect(mintFungibleTokenResCode).to.equal(22)
+        )[0].args;
+      expect(mintFungibleTokenResCode).to.equal(22);
 
       const { newTotalSupply } = mintFungibleTokenReceipt.events.filter(
         (e) => e.event === Constants.Events.MintedToken
-      )[0].args
-      expect(newTotalSupply.toNumber()).to.eq(initialSupply + amountToMint)
+      )[0].args;
+      expect(newTotalSupply.toNumber()).to.eq(initialSupply + amountToMint);
 
       // mint NFTs
       const mintNonFungibleTokenTx =
@@ -268,23 +268,23 @@ describe('TokenCreateCustomContract Test Suite', () => {
           0,
           ['0x02'],
           Constants.GAS_LIMIT_1_000_000
-        )
+        );
 
-      const mintNonFungibleTokenReceipt = await mintNonFungibleTokenTx.wait()
+      const mintNonFungibleTokenReceipt = await mintNonFungibleTokenTx.wait();
 
       const { responseCode } = mintNonFungibleTokenReceipt.events.filter(
         (e) => e.event === Constants.Events.ResponseCode
-      )[0].args
-      expect(responseCode).to.equal(22)
+      )[0].args;
+      expect(responseCode).to.equal(22);
 
       const { serialNumbers } = mintNonFungibleTokenReceipt.events.filter(
         (e) => e.event === Constants.Events.MintedToken
-      )[0].args
-      expect(serialNumbers[0].toNumber()).to.be.greaterThan(0)
-    })
+      )[0].args;
+      expect(serialNumbers[0].toNumber()).to.be.greaterThan(0);
+    });
 
     it('should be able to execute mintTokenToAddressPublic', async function () {
-      const amountToMint = 120
+      const amountToMint = 120;
 
       const tx = await tokenCreateCustomContract.mintTokenToAddressPublic(
         prepFungibleTokenAddress,
@@ -292,26 +292,26 @@ describe('TokenCreateCustomContract Test Suite', () => {
         amountToMint,
         ['0x02'],
         Constants.GAS_LIMIT_1_000_000
-      )
+      );
 
-      const receipt = await tx.wait()
+      const receipt = await tx.wait();
 
       const { responseCode } = receipt.events.filter(
         (e) => e.event === Constants.Events.ResponseCode
-      )[0].args
-      expect(responseCode).to.equal(22)
+      )[0].args;
+      expect(responseCode).to.equal(22);
 
       const { newTotalSupply } = receipt.events.filter(
         (e) => e.event === Constants.Events.MintedToken
-      )[0].args
-      expect(newTotalSupply.toNumber()).to.greaterThan(initialSupply)
+      )[0].args;
+      expect(newTotalSupply.toNumber()).to.greaterThan(initialSupply);
 
       const { receiver, amount } = receipt.events.filter(
         (e) => e.event === Constants.Events.TransferToken
-      )[0].args
-      expect(receiver).to.eq(signers[1].address)
-      expect(amount).to.eq(amountToMint)
-    })
+      )[0].args;
+      expect(receiver).to.eq(signers[1].address);
+      expect(amount).to.eq(amountToMint);
+    });
 
     it('should be able to execute mintNonFungibleTokenToAddressPublic', async function () {
       const tx =
@@ -321,64 +321,64 @@ describe('TokenCreateCustomContract Test Suite', () => {
           0,
           ['0x02'],
           Constants.GAS_LIMIT_1_000_000
-        )
+        );
 
-      const receipt = await tx.wait()
+      const receipt = await tx.wait();
 
       const { responseCode } = receipt.events.filter(
         (e) => e.event === Constants.Events.ResponseCode
-      )[0].args
-      expect(responseCode).to.equal(22)
+      )[0].args;
+      expect(responseCode).to.equal(22);
 
       const { serialNumbers } = receipt.events.filter(
         (e) => e.event === Constants.Events.MintedToken
-      )[0].args
-      expect(serialNumbers[0].toNumber()).to.be.greaterThan(0)
+      )[0].args;
+      expect(serialNumbers[0].toNumber()).to.be.greaterThan(0);
 
       const { receiver, amount } = receipt.events.filter(
         (e) => e.event === Constants.Events.TransferToken
-      )[0].args
-      expect(receiver).to.eq(signers[1].address)
-      expect(amount).to.eq(0)
-    })
+      )[0].args;
+      expect(receiver).to.eq(signers[1].address);
+      expect(amount).to.eq(0);
+    });
 
     it('should be able to execute associateTokensPublic', async function () {
       // @notice the provided associating account must sign an updateAccountKeys transaction first.
       // @notice see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/HederaTokenService.sol#L98
       //         for more information on precompiled HTS.associateTokens()
-      await utils.updateAccountKeysViaHapi([tokenCreateCustomContract.address])
+      await utils.updateAccountKeysViaHapi([tokenCreateCustomContract.address]);
 
       const tx = await tokenCreateCustomContract.associateTokensPublic(
         signers[0].address,
         [prepFungibleTokenAddress, prepNonFungibeTokenAddress],
         Constants.GAS_LIMIT_1_000_000
-      )
+      );
 
-      const receipt = await tx.wait()
+      const receipt = await tx.wait();
       const { responseCode } = receipt.events.filter(
         (e) => e.event === Constants.Events.ResponseCode
-      )[0].args
-      expect(responseCode).to.equal(22)
-    })
+      )[0].args;
+      expect(responseCode).to.equal(22);
+    });
 
     it('should be able to execute associateTokenPublic', async function () {
       // @notice the provided associating account must sign the transaction first.
       // @notice see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/HederaTokenService.sol#L105
       //         for more information on precompiled HTS.associateToken()
-      await utils.updateAccountKeysViaHapi([tokenCreateCustomContract.address])
+      await utils.updateAccountKeysViaHapi([tokenCreateCustomContract.address]);
 
       const tx = await tokenCreateCustomContract.associateTokenPublic(
         signers[1].address, // using a different account to avoid TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT error
         prepFungibleTokenAddress,
         Constants.GAS_LIMIT_1_000_000
-      )
+      );
 
-      const receipt = await tx.wait()
+      const receipt = await tx.wait();
       const { responseCode } = receipt.events.filter(
         (e) => e.event === Constants.Events.ResponseCode
-      )[0].args
-      expect(responseCode).to.equal(22)
-    })
+      )[0].args;
+      expect(responseCode).to.equal(22);
+    });
 
     it('should be able to execute grantTokenKyc', async function () {
       // @notice: The ID of the smart contract is set as the account receiving KYC for testing purpose.
@@ -390,15 +390,15 @@ describe('TokenCreateCustomContract Test Suite', () => {
         prepFungibleTokenAddress,
         tokenCreateCustomContract.address,
         Constants.GAS_LIMIT_1_000_000
-      )
+      );
 
-      const receipt = await tx.wait()
+      const receipt = await tx.wait();
       const { responseCode } = receipt.events.filter(
         (e) => e.event === Constants.Events.ResponseCode
-      )[0].args
-      expect(responseCode).to.equal(22)
-    })
-  })
+      )[0].args;
+      expect(responseCode).to.equal(22);
+    });
+  });
 
   it("should fail when token create has missing treasury's signature in transaction", async () => {
     // @notice: Only the ID of the smart contract is valid for the treasury by default.
@@ -419,21 +419,21 @@ describe('TokenCreateCustomContract Test Suite', () => {
         value: '35000000000000000000',
         gasLimit: 1_000_000,
       }
-    )
+    );
 
-    expect(tx.from).to.eq(signers[0].address)
-    expect(tx.to).to.be.null
+    expect(tx.from).to.eq(signers[0].address);
+    expect(tx.to).to.be.null;
     try {
-      await tx.wait()
+      await tx.wait();
     } catch (error) {
-      expect(error).to.exist
-      expect(error.reason).to.eq('transaction failed')
+      expect(error).to.exist;
+      expect(error.reason).to.eq('transaction failed');
     }
-  })
+  });
 
   it("should pass when token create has the correct treasury's signature in transaction", async () => {
     // @notice the treasury account must sign the transaction first.
-    await utils.updateAccountKeysViaHapi([tokenCreateCustomContract.address])
+    await utils.updateAccountKeysViaHapi([tokenCreateCustomContract.address]);
 
     const tx = await tokenCreateCustomContract.createFungibleTokenPublic(
       tokenName,
@@ -449,15 +449,15 @@ describe('TokenCreateCustomContract Test Suite', () => {
         value: '35000000000000000000',
         gasLimit: 1_000_000,
       }
-    )
+    );
 
-    expect(tx.from).to.eq(signers[0].address)
-    expect(tx.to).to.exist
+    expect(tx.from).to.eq(signers[0].address);
+    expect(tx.to).to.exist;
 
-    const txReceipt = await tx.wait()
-    const { tokenAddress } = txReceipt.events[0].args
+    const txReceipt = await tx.wait();
+    const { tokenAddress } = txReceipt.events[0].args;
 
-    expect(tokenAddress).to.exist
-    expectValidHash(tokenAddress, 40)
-  })
-})
+    expect(tokenAddress).to.exist;
+    expectValidHash(tokenAddress, 40);
+  });
+});
