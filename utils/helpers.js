@@ -18,6 +18,7 @@
  *
  */
 require('dotenv').config();
+const Constants = require('../test/constants');
 
 const delay = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms || process.env.RETRY_DELAY || 2000));
