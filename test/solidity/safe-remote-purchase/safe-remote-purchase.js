@@ -88,7 +88,7 @@ describe('@solidityequiv2 Safe remote purchase', function () {
         expect(finalState).to.equal(contractStates.Inactive)
     })
 
-    describe('standart flow buyer -> seller tests: ', async function () {
+    describe('standard flow buyer -> seller tests: ', async function () {
         let contract, seller, buyer
 
         before(async function () {
