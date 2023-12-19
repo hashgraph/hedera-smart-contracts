@@ -190,6 +190,8 @@ const Contract = {
   EcrecoverCaller: 'EcrecoverCaller',
   InvalidERC721Receiver: 'InvalidERC721Receiver',
   ValidERC721Receiver: 'ValidERC721Receiver',
+  ExampleGovernor: 'ExampleGovernor',
+  ExampleTokenVote: 'ExampleTokenVote',
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';
