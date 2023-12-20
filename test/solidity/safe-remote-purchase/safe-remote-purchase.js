@@ -20,6 +20,7 @@
 
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
+const { Contract } = require('../../constants')
 
 const contractStates = {
     Created: 0,
@@ -33,7 +34,7 @@ async function setupContract() {
     const signers = await ethers.getSigners()
     const seller = signers[0]
     const buyer = signers[1]
-    const factoryPurchase = await ethers.getContractFactory('Purchase')
+    const factoryPurchase = await ethers.getContractFactory(Contract.Purchase)
     const contract = await factoryPurchase.deploy({
         value : EVEN_NUMBER_PRICE
     })

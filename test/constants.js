@@ -126,13 +126,11 @@ const Contract = {
   Panic: 'Panic',
   ReentrancyGuardTestSender: 'ReentrancyGuardTestSender',
   ReentrancyGuardTestReceiver: 'ReentrancyGuardTestReceiver',
-  Defaults: 'Defaults',
   BlindAuction: 'BlindAuction',
   SimpleAuction: 'SimpleAuction',
   MyCustomTransparentUpgradeableProxy: 'MyCustomTransparentUpgradeableProxy',
   Box: 'Box',
   BoxV2: 'BoxV2',
-  Defaults: 'Defaults',
   Encoding: 'Encoding',
   Sender: 'Sender',
   ErrorsExternal: 'ErrorsExternal',
@@ -186,12 +184,12 @@ const Contract = {
   VaultV2: 'VaultV2',
   ShanghaiOpcodes: 'ShanghaiOpcodes',
   Counter: 'Counter',
-  Test1Facet: 'Test1Facet',
   EcrecoverCaller: 'EcrecoverCaller',
   InvalidERC721Receiver: 'InvalidERC721Receiver',
   ValidERC721Receiver: 'ValidERC721Receiver',
   ExampleGovernor: 'ExampleGovernor',
   ExampleTokenVote: 'ExampleTokenVote',
+  Purchase: 'Purchase',
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';
