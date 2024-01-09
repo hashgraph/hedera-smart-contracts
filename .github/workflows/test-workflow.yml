@@ -8,10 +8,10 @@ on:
         type: string
 
 env:
-  RELAY_IMAGE_TAG: 0.32.0
-  NETWORK_NODE_IMAGE_TAG: 0.43.0
-  HAVEGED_IMAGE_TAG: 0.43.0
-  MIRROR_IMAGE_TAG: 0.89.0
+  RELAY_IMAGE_TAG: 0.39.0
+  NETWORK_NODE_IMAGE_TAG: 0.45.2
+  HAVEGED_IMAGE_TAG: 0.45.2
+  MIRROR_IMAGE_TAG: 0.96.0
 
 jobs:
   acceptance-workflow:
