@@ -207,6 +207,44 @@ library HederaTokenValidation {
         responseCode = HederaResponseCodes.SUCCESS;
     }
 
+    function _validateEmptyFungibleBalance(
+        address token,
+        address owner,
+        mapping(address => bool) storage _isFungible
+    ) internal view returns (bool success, int64 responseCode) {
+        if (_isFungible[token]) {
+            HederaFungibleToken hederaFungibleToken = HederaFungibleToken(token);
+
+            bool emptyBalance = hederaFungibleToken.balanceOf(owner) == 0;
+
+            if (!emptyBalance) {
+                return (false, HederaResponseCodes.TRANSACTION_REQUIRES_ZERO_TOKEN_BALANCES);
+            }
+        }
+
+        success = true;
+        responseCode = HederaResponseCodes.SUCCESS;
+    }
+
+    function _validateEmptyNonFungibleBalance(
+        address token,
+        address owner,
+        mapping(address => bool) storage _isNonFungible
+    ) internal view returns (bool success, int64 responseCode) {
+        if (_isNonFungible[token]) {
+            HederaNonFungibleToken hederaNonFungibleToken = HederaNonFungibleToken(token);
+
+            bool emptyBalance = hederaNonFungibleToken.balanceOf(owner) == 0;
+
+            if (!emptyBalance) {
+                return (false, HederaResponseCodes.TRANSACTION_REQUIRES_ZERO_TOKEN_BALANCES);
+            }
+        }
+
+        success = true;
+        responseCode = HederaResponseCodes.SUCCESS;
+    }
+
     function _validateTokenSufficiency(
         address token,
         address owner,
@@ -326,6 +364,26 @@ library HederaTokenValidation {
     ) internal view returns (bool success, int64 responseCode) {
         if (!_association[token][account]) {
             return (false, HederaResponseCodes.TOKEN_NOT_ASSOCIATED_TO_ACCOUNT);
+        }
+
+        success = true;
+        responseCode = HederaResponseCodes.SUCCESS;
+    }
+
+    function _validateTokenDissociation(
+        address token,
+        address account,
+        mapping(address => mapping(address => bool)) storage _association,
+        mapping(address => bool) storage _isFungible,
+        mapping(address => bool) storage _isNonFungible
+    ) internal view returns (bool success, int64 responseCode) {
+
+        if (_isFungible[token]) {
+            return _validateEmptyFungibleBalance(token, account, _isFungible);
+        }
+
+        if (_isNonFungible[token]) {
+            return _validateEmptyNonFungibleBalance(token, account, _isNonFungible);
         }
 
         success = true;
