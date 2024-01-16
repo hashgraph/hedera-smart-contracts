@@ -20,7 +20,6 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const { solidityPack } = require('ethers/lib/utils');
 const { defaultAbiCoder } = require('@ethersproject/abi');
 
 describe('Multicall Test Suite', function () {
@@ -54,7 +53,7 @@ describe('Multicall Test Suite', function () {
   }
 
   function encodeCallData(params, abi, paramsEncoding) {
-    return solidityPack(
+    return ethers.solidityPacked(
       ['bytes4', 'bytes'],
       [
         receiver.interface.getSighash(abi),

@@ -37,7 +37,7 @@ describe('@OZERC777 Tests', () => {
   const BURNT_TOKEN_AMOUNT = 900;
   const TOTAL_TOKEN_AMOUNT = 3_000;
   const EMPTY_DATA = '0x';
-  const ADDRESS_ZERO = ethers.constants.AddressZero;
+  const ADDRESS_ZERO = ethers.ZeroAddress;
 
   beforeEach(async () => {
     [wallet1, wallet2, wallet3, wallet4] = await ethers.getSigners();
@@ -104,7 +104,7 @@ describe('@OZERC777 Tests', () => {
     expect(mintedEvent.args.operator).to.eq(wallet1.address);
     expect(mintedEvent.args.to).to.eq(wallet2.address);
     expect(mintedEvent.args.amount).to.eq(
-      ethers.BigNumber.from(TOTAL_TOKEN_AMOUNT)
+      BigInt(TOTAL_TOKEN_AMOUNT)
     );
     expect(mintedEvent.args.data).to.eq(EMPTY_DATA);
     expect(mintedEvent.args.operatorData).to.eq(EMPTY_DATA);
@@ -141,7 +141,7 @@ describe('@OZERC777 Tests', () => {
     expect(event.args.operator).to.eq(wallet1.address);
     expect(event.args.from).to.eq(wallet1.address);
     expect(event.args.to).to.eq(wallet2.address);
-    expect(event.args.amount).to.eq(ethers.BigNumber.from(SENT_TOKEN_AMOUNT));
+    expect(event.args.amount).to.eq(BigInt(SENT_TOKEN_AMOUNT));
     expect(event.args.data).to.eq(EMPTY_DATA);
     expect(event.args.operatorData).to.eq(EMPTY_DATA);
   });
@@ -198,7 +198,7 @@ describe('@OZERC777 Tests', () => {
 
     expect(event.args.operator).to.eq(wallet1.address);
     expect(event.args.from).to.eq(wallet1.address);
-    expect(event.args.amount).to.eq(ethers.BigNumber.from(BURNT_TOKEN_AMOUNT));
+    expect(event.args.amount).to.eq(BigInt(BURNT_TOKEN_AMOUNT));
     expect(event.args.data).to.eq(EMPTY_DATA);
     expect(event.args.operatorData).to.eq(EMPTY_DATA);
   });
@@ -294,7 +294,7 @@ describe('@OZERC777 Tests', () => {
     expect(event.args.operator).to.eq(wallet1.address);
     expect(event.args.from).to.eq(wallet2.address);
     expect(event.args.to).to.eq(wallet3.address);
-    expect(event.args.amount).to.eq(ethers.BigNumber.from(SENT_TOKEN_AMOUNT));
+    expect(event.args.amount).to.eq(BigInt(SENT_TOKEN_AMOUNT));
     expect(event.args.data).to.eq(EMPTY_DATA);
     expect(event.args.operatorData).to.eq(EMPTY_DATA);
   });
@@ -339,7 +339,7 @@ describe('@OZERC777 Tests', () => {
 
     expect(event.args.operator).to.eq(wallet1.address);
     expect(event.args.from).to.eq(wallet2.address);
-    expect(event.args.amount).to.eq(ethers.BigNumber.from(BURNT_TOKEN_AMOUNT));
+    expect(event.args.amount).to.eq(BigInt(BURNT_TOKEN_AMOUNT));
     expect(event.args.data).to.eq(EMPTY_DATA);
     expect(event.args.operatorData).to.eq(EMPTY_DATA);
   });
@@ -397,7 +397,7 @@ describe('@OZERC777 Tests', () => {
     expect(event.args.operator).to.eq(wallet1.address);
     expect(event.args.from).to.eq(wallet1.address);
     expect(event.args.to).to.eq(erc777ContractAccount.address);
-    expect(event.args.amount).to.eq(ethers.BigNumber.from(SENT_TOKEN_AMOUNT));
+    expect(event.args.amount).to.eq(BigInt(SENT_TOKEN_AMOUNT));
     expect(event.args.data).to.eq(EMPTY_DATA);
     expect(event.args.operatorData).to.eq(EMPTY_DATA);
   });
@@ -460,8 +460,8 @@ describe('@OZERC777 Tests', () => {
     const wallet2Balance = await erc777Token.balanceOf(wallet2.address);
 
     expect(erc777ContractAccountBalance).to.eq(
-      ethers.BigNumber.from(TOTAL_TOKEN_AMOUNT - SENT_TOKEN_AMOUNT)
+      BigInt(TOTAL_TOKEN_AMOUNT - SENT_TOKEN_AMOUNT)
     );
-    expect(wallet2Balance).to.eq(ethers.BigNumber.from(SENT_TOKEN_AMOUNT));
+    expect(wallet2Balance).to.eq(BigInt(SENT_TOKEN_AMOUNT));
   });
 });

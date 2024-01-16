@@ -23,7 +23,7 @@ const Constants = require('../../constants');
 const { ethers, upgrades } = require('hardhat');
 
 describe('@OZUUPSUpgradable Upgradable Vaults Tests', () => {
-  const DEPOSIT_AMOUNT = ethers.utils.parseEther('3.0');
+  const DEPOSIT_AMOUNT = ethers.parseEther('3.0');
   const TINY_BAR_TO_WEI_COEF = 10_000_000_000;
   const CALL_EXCEPTION = 'CALL_EXCEPTION';
   let vaultV1, vaultV2, owner, beneficiary;

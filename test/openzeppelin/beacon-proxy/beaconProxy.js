@@ -59,8 +59,8 @@ describe('@OZBeaconProxy Tests', function () {
     );
     beaconProxy2 = await beaconProxyFactory2.deploy(beacon.address);
     await beaconProxy2.deployed();
-    const eventValueHashed = ethers.utils.keccak256(
-      ethers.utils.toUtf8Bytes('Value(uint256)')
+    const eventValueHashed = ethers.keccak256(
+      ethers.toUtf8Bytes('Value(uint256)')
     );
     const signedTx = await owner.sendTransaction({
       to: beaconProxy.address,
@@ -87,8 +87,8 @@ describe('@OZBeaconProxy Tests', function () {
       data: '0x2e64cec1',
       gasLimit: 5000000,
     });
-    const eventValueHashed = ethers.utils.keccak256(
-      ethers.utils.toUtf8Bytes('Value(uint256)')
+    const eventValueHashed = ethers.keccak256(
+      ethers.toUtf8Bytes('Value(uint256)')
     );
     const receipt = await signedTx.wait();
 
@@ -117,8 +117,8 @@ describe('@OZBeaconProxy Tests', function () {
     const receipt = await signedTx.wait();
 
     const topics = receipt.logs[0].topics;
-    const eventUpgradedNameHashed = ethers.utils.keccak256(
-      ethers.utils.toUtf8Bytes('Upgraded(address)')
+    const eventUpgradedNameHashed = ethers.keccak256(
+      ethers.toUtf8Bytes('Upgraded(address)')
     );
     const newContractAddressEncoded =
       '0x000000000000000000000000' +
@@ -130,8 +130,8 @@ describe('@OZBeaconProxy Tests', function () {
     const functionSelectorSquare = Utils.functionSelector('square(uint256)');
     const encoded2 = abi.encode(['uint256'], [2]);
 
-    const eventSquaredNameHashed = ethers.utils.keccak256(
-      ethers.utils.toUtf8Bytes('Squared(uint256)')
+    const eventSquaredNameHashed = ethers.keccak256(
+      ethers.toUtf8Bytes('Squared(uint256)')
     );
     const signedTxToNewContract = await owner.sendTransaction({
       to: beaconProxy.address,

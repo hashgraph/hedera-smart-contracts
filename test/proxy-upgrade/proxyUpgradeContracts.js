@@ -41,14 +41,16 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
 
     before(async function () {
       tokenCreateContract = await utils.deployTokenCreateContract();
-      await utils.updateAccountKeysViaHapi([tokenCreateContract.address]);
+      await utils.updateAccountKeysViaHapi([
+        await tokenCreateContract.getAddress(),
+      ]);
       tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(
         tokenCreateContract,
         signers[0].address,
         utils.getSignerCompressedPublicKey()
       );
       await utils.updateTokenKeysViaHapi(tokenAddress, [
-        tokenCreateContract.address,
+        await tokenCreateContract.getAddress(),
       ]);
 
       erc20Contract = await utils.deployERC20Contract();
@@ -101,7 +103,7 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
       {
         const balanceBefore = await proxyContract.getNativeBalance();
         await proxyContract.deposit({
-          value: ethers.utils.parseEther('0.5'),
+          value: ethers.parseEther('0.5'),
         });
         const balanceAfter = await proxyContract.getNativeBalance();
 
@@ -117,7 +119,7 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
         const nativeBalanceBefore = await proxyContract.getNativeBalance();
 
         await proxyContract.buy({
-          value: ethers.utils.parseEther('0.000001'),
+          value: ethers.parseEther('0.000001'),
         });
 
         const tokenBalanceAfter = await proxyContract.getTokenBalance();
@@ -206,7 +208,7 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
       {
         const balanceBefore = await proxyContract.getNativeBalance();
         await proxyContract.deposit({
-          value: ethers.utils.parseEther('0.5'),
+          value: ethers.parseEther('0.5'),
         });
         const balanceAfter = await proxyContract.getNativeBalance();
 
@@ -222,7 +224,7 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
         const nativeBalanceBefore = await proxyContract.getNativeBalance();
 
         await proxyContract.buy({
-          value: ethers.utils.parseEther('0.000001'),
+          value: ethers.parseEther('0.000001'),
         });
 
         const tokenBalanceAfter = await proxyContract.getTokenBalance();

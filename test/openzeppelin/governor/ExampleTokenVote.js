@@ -20,7 +20,7 @@ describe('ExampleToken', function () {
     token = await ExampleToken.deploy();
     await token.deployed();
 
-    await token.mint(owner.address, ethers.utils.parseEther('1000'));
+    await token.mint(owner.address, ethers.parseEther('1000'));
   });
 
   describe('Deployment', function () {

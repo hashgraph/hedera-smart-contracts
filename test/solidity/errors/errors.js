@@ -94,8 +94,8 @@ describe('@solidityequiv2 Solidity Errors Tests', function () {
       hasError = true;
       expect(err.code).to.equal('CALL_EXCEPTION');
       expect(err.errorName).to.equal('InsufficientBalance');
-      expect(err.errorArgs.available).to.equal(ethers.BigNumber.from(1));
-      expect(err.errorArgs.required).to.equal(ethers.BigNumber.from(100));
+      expect(err.errorArgs.available).to.equal(BigInt(1));
+      expect(err.errorArgs.required).to.equal(BigInt(100));
     }
     expect(hasError).to.equal(true);
   });

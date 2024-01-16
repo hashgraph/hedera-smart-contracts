@@ -50,8 +50,8 @@ describe('@solidityequiv3 Transaction Tests', function () {
     const gasLeft = await contractTr.checkGasleft({ gasLimit: STARTING_GAS });
 
     expect(ethers.BigNumber.isBigNumber(gasLeft)).to.be.true;
-    expect(gasLeft.gt(ethers.BigNumber.from(0))).to.be.true;
-    expect(gasLeft.lt(ethers.BigNumber.from(STARTING_GAS))).to.be.true;
+    expect(gasLeft.gt(BigInt(0))).to.be.true;
+    expect(gasLeft.lt(BigInt(STARTING_GAS))).to.be.true;
   });
 
   it('msg.data (bytes calldata): complete calldata', async function () {
@@ -93,7 +93,7 @@ describe('@solidityequiv3 Transaction Tests', function () {
   });
 
   it('msg.value (uint): number of wei sent with the message', async function () {
-    const valueToSend = ethers.utils.parseEther(String(1));
+    const valueToSend = ethers.parseEther(String(1));
     const txRes = await contractTr.getMessageValue({ value: valueToSend });
     const receipt = await txRes.wait();
     const amount = receipt.events[0].args[0];
@@ -107,7 +107,7 @@ describe('@solidityequiv3 Transaction Tests', function () {
     const gasPrice = await contractTr.getGasPrice();
 
     expect(ethers.BigNumber.isBigNumber(gasPrice)).to.be.true;
-    expect(gasPrice.gt(ethers.BigNumber.from(0))).to.be.true;
+    expect(gasPrice.gt(BigInt(0))).to.be.true;
   });
 
   it('tx.origin (address): sender of the transaction (full call chain)', async function () {

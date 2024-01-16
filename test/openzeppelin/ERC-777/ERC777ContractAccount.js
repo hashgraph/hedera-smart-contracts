@@ -30,11 +30,11 @@ describe('@OZERC777ContractAccount Tests', () => {
     erc777ContractAccount,
     wallet1;
 
-  const TOKENS_SENDER_INTERFACE_HASH = ethers.utils.keccak256(
-    ethers.utils.toUtf8Bytes('ERC777TokensSender')
+  const TOKENS_SENDER_INTERFACE_HASH = ethers.keccak256(
+    ethers.toUtf8Bytes('ERC777TokensSender')
   );
-  const TOKENS_RECIPIENT_INTERFACE_HASH = ethers.utils.keccak256(
-    ethers.utils.toUtf8Bytes('ERC777TokensRecipient')
+  const TOKENS_RECIPIENT_INTERFACE_HASH = ethers.keccak256(
+    ethers.toUtf8Bytes('ERC777TokensRecipient')
   );
 
   const TOKEN_NAME = 'Uranium Token';
@@ -154,14 +154,14 @@ describe('@OZERC777ContractAccount Tests', () => {
     const currentWallet1Balance = await erc777Token.balanceOf(wallet1.address);
 
     expect(initialErc777ContractAccountBalance).to.eq(
-      ethers.BigNumber.from(TOTAL_TOKEN_AMOUNT)
+      BigInt(TOTAL_TOKEN_AMOUNT)
     );
-    expect(initialWallet1Balance).to.eq(ethers.BigNumber.from(0));
+    expect(initialWallet1Balance).to.eq(BigInt(0));
     expect(currentErc777ContractAccountBalance).to.eq(
-      ethers.BigNumber.from(TOTAL_TOKEN_AMOUNT - SENT_TOKEN_AMOUNT)
+      BigInt(TOTAL_TOKEN_AMOUNT - SENT_TOKEN_AMOUNT)
     );
     expect(currentWallet1Balance).to.eq(
-      ethers.BigNumber.from(SENT_TOKEN_AMOUNT)
+      BigInt(SENT_TOKEN_AMOUNT)
     );
   });
 });

@@ -23,7 +23,7 @@ const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
 describe('@solidityequiv3 Reentrancy Guard Tests', function () {
-  const tenHBAR = ethers.utils.parseEther('10.0');
+  const tenHBAR = ethers.parseEther('10.0');
   async function deployContractsAndSendHbars() {
     const [owner] = await ethers.getSigners();
     const factorySender = await ethers.getContractFactory(

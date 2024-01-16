@@ -37,8 +37,8 @@ describe('ERC721Contract Test Suite', function () {
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
     await utils.updateAccountKeysViaHapi([
-      tokenCreateContract.address,
-      tokenTransferContract.address,
+      await tokenCreateContract.getAddress(),
+      await tokenTransferContract.getAddress(),
     ]);
     erc721Contract = await utils.deployERC721Contract();
     tokenAddress = await utils.createNonFungibleToken(
@@ -46,8 +46,8 @@ describe('ERC721Contract Test Suite', function () {
       signers[0].address
     );
     await utils.updateTokenKeysViaHapi(tokenAddress, [
-      tokenCreateContract.address,
-      tokenTransferContract.address,
+      await tokenCreateContract.getAddress(),
+      await tokenTransferContract.getAddress(),
     ]);
     mintedTokenSerialNumber = await utils.mintNFT(
       tokenCreateContract,
@@ -63,17 +63,20 @@ describe('ERC721Contract Test Suite', function () {
     secondWallet = signers[1];
 
     await tokenCreateContract.associateTokenPublic(
-      erc721Contract.address,
+      await erc721Contract.getAddress(),
       tokenAddress,
       Constants.GAS_LIMIT_1_000_000
     );
+
     await tokenCreateContract.grantTokenKycPublic(
       tokenAddress,
-      erc721Contract.address
+      await erc721Contract.getAddress(),
+      Constants.GAS_LIMIT_1_000_000
     );
+
     await tokenTransferContract.transferNFTPublic(
       tokenAddress,
-      tokenCreateContract.address,
+      await tokenCreateContract.getAddress(),
       signers[0].address,
       mintedTokenSerialNumber,
       Constants.GAS_LIMIT_1_000_000
@@ -158,7 +161,7 @@ describe('ERC721Contract Test Suite', function () {
     );
     const erc721ContractNFTOwner = await ethers.getContractAt(
       Constants.Contract.ERC721Contract,
-      erc721Contract.address,
+      await erc721Contract.getAddress(),
       firstWallet
     );
     await erc721ContractNFTOwner.delegateTransferFrom(
@@ -180,7 +183,7 @@ describe('ERC721Contract Test Suite', function () {
   it('should be able to delegate approve', async function () {
     const erc721ContractNFTOwner = await ethers.getContractAt(
       Constants.Contract.ERC721Contract,
-      erc721Contract.address,
+      await erc721Contract.getAddress(),
       secondWallet
     );
     const beforeApproval = await erc721ContractNFTOwner.getApproved(
@@ -215,7 +218,7 @@ describe('ERC721Contract Test Suite', function () {
       ]);
       await tokenTransferContract.transferNFTPublic(
         tokenAddress,
-        tokenCreateContract.address,
+        await tokenCreateContract.getAddress(),
         signers[0].address,
         serialNumber,
         Constants.GAS_LIMIT_1_000_000
@@ -225,7 +228,7 @@ describe('ERC721Contract Test Suite', function () {
     it('should NOT be able to execute approve', async function () {
       const erc721ContractNFTOwner = await ethers.getContractAt(
         Constants.Contract.ERC721Contract,
-        erc721Contract.address,
+        await erc721Contract.getAddress(),
         secondWallet
       );
       const beforeApproval = await erc721ContractNFTOwner.getApproved(
@@ -263,7 +266,7 @@ describe('ERC721Contract Test Suite', function () {
       );
       const erc721ContractNFTOwner = await ethers.getContractAt(
         Constants.Contract.ERC721Contract,
-        erc721Contract.address,
+        await erc721Contract.getAddress(),
         firstWallet
       );
       await utils.expectToFail(
@@ -288,7 +291,7 @@ describe('ERC721Contract Test Suite', function () {
     it('should NOT be able call tokenByIndex', async function () {
       await utils.expectToFail(
         erc721Contract.tokenByIndex(tokenAddress, 0),
-        Constants.CALL_EXCEPTION
+        Constants.CONTRACT_REVERT_EXECUTED_CODE
       );
     });
 
@@ -299,7 +302,7 @@ describe('ERC721Contract Test Suite', function () {
           firstWallet.address,
           0
         ),
-        Constants.CALL_EXCEPTION
+        Constants.CONTRACT_REVERT_EXECUTED_CODE
       );
     });
 

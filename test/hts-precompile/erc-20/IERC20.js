@@ -33,24 +33,24 @@ describe('IERC20 Test Suite', function () {
   let tokenAddress;
   let IERC20;
   let signers;
-  const TOTAL_SUPPLY = 1000;
-  const AMOUNT = 33;
+  const TOTAL_SUPPLY = BigInt(1000);
+  const AMOUNT = BigInt(33);
 
   before(async function () {
     signers = await ethers.getSigners();
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
     await utils.updateAccountKeysViaHapi([
-      tokenCreateContract.address,
-      tokenTransferContract.address,
+      await tokenCreateContract.getAddress(),
+      await tokenTransferContract.getAddress(),
     ]);
     tokenAddress = await utils.createFungibleToken(
       tokenCreateContract,
       signers[0].address
     );
     await utils.updateTokenKeysViaHapi(tokenAddress, [
-      tokenCreateContract.address,
-      tokenTransferContract.address,
+      await tokenCreateContract.getAddress(),
+      await tokenTransferContract.getAddress(),
     ]);
     await utils.associateToken(
       tokenCreateContract,
@@ -83,17 +83,17 @@ describe('IERC20 Test Suite', function () {
 
   it('should be able to get token balance of any account', async function () {
     const contractOwnerBalance = await IERC20.balanceOf(
-      tokenCreateContract.address
+      await tokenCreateContract.getAddress()
     );
     const signer0Balance = await IERC20.balanceOf(signers[0].address);
     const signer1Balance = await IERC20.balanceOf(signers[1].address);
 
     expect(contractOwnerBalance).to.exist;
-    expect(contractOwnerBalance.toNumber()).to.eq(0);
+    expect(contractOwnerBalance).to.eq(0);
     expect(signer0Balance).to.exist;
-    expect(signer0Balance.toNumber()).to.eq(TOTAL_SUPPLY);
+    expect(signer0Balance).to.eq(TOTAL_SUPPLY);
     expect(signer1Balance).to.exist;
-    expect(signer1Balance.toNumber()).to.eq(0);
+    expect(signer1Balance).to.eq(0);
   });
 
   it('should be able to approve another account', async function () {
@@ -133,7 +133,7 @@ describe('IERC20 Test Suite', function () {
 
   it('should be able to execute transferFrom to another account', async function () {
     const tokenCreateBalanceBefore = await IERC20.balanceOf(
-      tokenCreateContract.address
+      await tokenCreateContract.getAddress()
     );
     const signer0BalanceBefore = await IERC20.balanceOf(signers[0].address);
     const signer1BalanceBefore = await IERC20.balanceOf(signers[1].address);
@@ -146,14 +146,14 @@ describe('IERC20 Test Suite', function () {
     const IERC20Signer1 = await IERC20.connect(signers[1]);
     await IERC20Signer1.transferFrom(
       signers[0].address,
-      tokenCreateContract.address,
+      await tokenCreateContract.getAddress(),
       AMOUNT,
       Constants.GAS_LIMIT_800000
     );
 
     const tokenCreateBalanceAfter = await pollForNewBalance(
       IERC20,
-      tokenCreateContract.address,
+      await tokenCreateContract.getAddress(),
       tokenCreateBalanceBefore
     );
     const signer0BalanceAfter = await pollForNewSignerBalance(

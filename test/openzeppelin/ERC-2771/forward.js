@@ -49,7 +49,7 @@ describe('@OZERC-2771 Fоrward Tests', function () {
     types,
     transactionObject;
   const TEST_MESSAGE = 'test message';
-  const deadlineFuture = ethers.BigNumber.from(
+  const deadlineFuture = BigInt(
     new Date(new Date().setFullYear(new Date().getFullYear() + 1)).getTime()
   );
   const STARTING_GAS_LIMIT = 15000000;
@@ -64,7 +64,7 @@ describe('@OZERC-2771 Fоrward Tests', function () {
       Constants.Contract.ERC2771ForwardTest
     );
     contractForwarder = await factoryForwarder.deploy(FORWARDER_NAME, {
-      gasLimit: ethers.BigNumber.from(STARTING_GAS_LIMIT),
+      gasLimit: BigInt(STARTING_GAS_LIMIT),
     });
     forwarderAddress = contractForwarder.address;
 
@@ -77,7 +77,7 @@ describe('@OZERC-2771 Fоrward Tests', function () {
       Constants.Contract.ERC2771ContextTest
     );
     contractRegestry = await factoryContext.deploy(forwarderAddress, {
-      gasLimit: ethers.BigNumber.from(STARTING_GAS_LIMIT),
+      gasLimit: BigInt(STARTING_GAS_LIMIT),
     });
 
     domain = await getDomain(contractForwarder);

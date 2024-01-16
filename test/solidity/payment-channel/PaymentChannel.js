@@ -27,7 +27,7 @@ describe('@solidityequiv2 PaymentChannel Tests', () => {
   const GASLIMIT = 1000000;
   const DURATION = 3; // 3 seconds
   const OWED_AMOUNT = 100000000;
-  const INITIAL_FUND = ethers.utils.parseEther('3');
+  const INITIAL_FUND = ethers.parseEther('3');
   let signers,
     senderAddress,
     recipientAddress,

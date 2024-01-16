@@ -73,14 +73,14 @@ describe('@solidityequiv2 Solidity Functions Tests', function () {
 
   it('should confirm "payable" functionality', async function () {
     const txDeposit = await contract.deposit({
-      value: ethers.utils.parseEther('1.0'),
+      value: ethers.parseEther('1.0'),
     });
     txDeposit.wait();
     const balance = await contract.getBalance();
     expect(balance).to.exist;
-    expect(balance).to.equal(weibarTotinybar(ethers.utils.parseEther('1.0')));
+    expect(balance).to.equal(weibarTotinybar(ethers.parseEther('1.0')));
     try {
-      await contract.notPayable({ value: ethers.utils.parseEther('1.0') });
+      await contract.notPayable({ value: ethers.parseEther('1.0') });
     } catch (error) {
       expect(error.code).to.eq('UNSUPPORTED_OPERATION');
     }

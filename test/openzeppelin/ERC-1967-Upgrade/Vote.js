@@ -87,7 +87,7 @@ describe('@OZERC1967Upgrade Upgradable Vote Tests', () => {
 
       // uint256(keccak256('eip1967.proxy.implementation')) - 1
       const eip1967ImplUint256 =
-        ethers.BigNumber.from(eip1967ImplByte32).sub(1);
+        BigInt(eip1967ImplByte32).sub(1);
 
       // bytes32(uint256(keccak256('eip1967.proxy.implementation')) - 1)
       const expectedImplementationSlot = ethers.utils.hexZeroPad(
@@ -115,7 +115,7 @@ describe('@OZERC1967Upgrade Upgradable Vote Tests', () => {
 
       // uint256(keccak256('eip1967.proxy.admin')) - 1
       const eip1967AdminUint256 =
-        ethers.BigNumber.from(eip1967ImplByte32).sub(1);
+        BigInt(eip1967ImplByte32).sub(1);
 
       // bytes32(uint256(keccak256('eip1967.proxy.admin')) - 1)
       const expectedAdminSlot = ethers.utils.hexZeroPad(

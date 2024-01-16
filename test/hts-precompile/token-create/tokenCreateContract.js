@@ -48,9 +48,9 @@ describe('TokenCreateContract Test Suite', function () {
     tokenTransferContract = await utils.deployTokenTransferContract();
     tokenManagmentContract = await utils.deployTokenManagementContract();
     await utils.updateAccountKeysViaHapi([
-      tokenCreateContract.address,
-      tokenTransferContract.address,
-      tokenManagmentContract.address,
+      await tokenCreateContract.getAddress(),
+      await tokenTransferContract.getAddress(),
+      await tokenManagmentContract.getAddress(),
     ]);
     erc20Contract = await utils.deployERC20Contract();
     erc721Contract = await utils.deployERC721Contract();
@@ -60,9 +60,9 @@ describe('TokenCreateContract Test Suite', function () {
       utils.getSignerCompressedPublicKey()
     );
     await utils.updateTokenKeysViaHapi(tokenAddress, [
-      tokenCreateContract.address,
-      tokenTransferContract.address,
-      tokenManagmentContract.address,
+      await tokenCreateContract.getAddress(),
+      await tokenTransferContract.getAddress(),
+      await tokenManagmentContract.getAddress(),
     ]);
     nftTokenAddress = await utils.createNonFungibleTokenWithSECP256K1AdminKey(
       tokenCreateContract,
@@ -70,9 +70,9 @@ describe('TokenCreateContract Test Suite', function () {
       utils.getSignerCompressedPublicKey()
     );
     await utils.updateTokenKeysViaHapi(nftTokenAddress, [
-      tokenCreateContract.address,
-      tokenTransferContract.address,
-      tokenManagmentContract.address,
+      await tokenCreateContract.getAddress(),
+      await tokenTransferContract.getAddress(),
+      await tokenManagmentContract.getAddress(),
     ]);
     await utils.associateToken(
       tokenCreateContract,
@@ -93,7 +93,7 @@ describe('TokenCreateContract Test Suite', function () {
   });
 
   it('should be able to execute burnToken', async function () {
-    const amount = 111;
+    const amount = BigInt(111);
     const totalSupplyBefore = await erc20Contract.totalSupply(tokenAddress);
     const balanceBefore = await erc20Contract.balanceOf(
       tokenAddress,
@@ -128,8 +128,8 @@ describe('TokenCreateContract Test Suite', function () {
       );
     const receiptDisassociate = await txDisassociate.wait();
     expect(
-      receiptDisassociate.events.filter(
-        (e) => e.event === Constants.Events.ResponseCode
+      receiptDisassociate.logs.filter(
+        (e) => e.fragment.name === Constants.Events.ResponseCode
       )[0].args.responseCode
     ).to.equal(22);
 
@@ -140,8 +140,8 @@ describe('TokenCreateContract Test Suite', function () {
     );
     const receiptAssociate = await txAssociate.wait();
     expect(
-      receiptAssociate.events.filter(
-        (e) => e.event === Constants.Events.ResponseCode
+      receiptAssociate.logs.filter(
+        (e) => e.fragment.name === Constants.Events.ResponseCode
       )[0].args.responseCode
     ).to.equal(22);
   });
@@ -160,8 +160,8 @@ describe('TokenCreateContract Test Suite', function () {
       );
     const receiptDisassociate = await txDisassociate.wait();
     expect(
-      receiptDisassociate.events.filter(
-        (e) => e.event === Constants.Events.ResponseCode
+      receiptDisassociate.logs.filter(
+        (e) => e.fragment.name === Constants.Events.ResponseCode
       )[0].args.responseCode
     ).to.equal(22);
 
@@ -172,23 +172,23 @@ describe('TokenCreateContract Test Suite', function () {
     );
     const receiptAssociate = await txAssociate.wait();
     expect(
-      receiptAssociate.events.filter(
-        (e) => e.event === Constants.Events.ResponseCode
+      receiptAssociate.logs.filter(
+        (e) => e.fragment.name === Constants.Events.ResponseCode
       )[0].args.responseCode
     ).to.equal(22);
   });
 
   it('should be able to execute createFungibleToken', async function () {
     const tokenAddressTx = await tokenCreateContract.createFungibleTokenPublic(
-      tokenCreateContract.address,
+      await tokenCreateContract.getAddress(),
       {
-        value: ethers.BigNumber.from('10000000000000000000'),
+        value: BigInt('10000000000000000000'),
         gasLimit: 1_000_000,
       }
     );
     const tokenAddressReceipt = await tokenAddressTx.wait();
-    const result = tokenAddressReceipt.events.filter(
-      (e) => e.event === Constants.Events.CreatedToken
+    const result = tokenAddressReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args[0];
     expect(result).to.exist;
     expectValidHash(result, 40);
@@ -197,16 +197,16 @@ describe('TokenCreateContract Test Suite', function () {
   it('should be able to execute createNonFungibleToken', async function () {
     const tokenAddressTx =
       await tokenCreateContract.createNonFungibleTokenPublic(
-        tokenCreateContract.address,
+        await tokenCreateContract.getAddress(),
         {
-          value: ethers.BigNumber.from('10000000000000000000'),
+          value: BigInt('10000000000000000000'),
           gasLimit: 1_000_000,
         }
       );
 
     const tokenAddressReceipt = await tokenAddressTx.wait();
-    const result = tokenAddressReceipt.events.filter(
-      (e) => e.event === Constants.Events.CreatedToken
+    const result = tokenAddressReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args[0];
     expect(result).to.exist;
     expectValidHash(result, 40);
@@ -218,14 +218,14 @@ describe('TokenCreateContract Test Suite', function () {
         signers[0].address,
         tokenAddress,
         {
-          value: ethers.BigNumber.from('20000000000000000000'),
+          value: BigInt('20000000000000000000'),
           gasLimit: 1_000_000,
         }
       );
 
     const txReceipt = await tx.wait();
-    const result = txReceipt.events.filter(
-      (e) => e.event === Constants.Events.CreatedToken
+    const result = txReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args[0];
     expect(result).to.exist;
     expectValidHash(result, 40);
@@ -237,14 +237,14 @@ describe('TokenCreateContract Test Suite', function () {
         signers[0].address,
         tokenAddress,
         {
-          value: ethers.BigNumber.from('20000000000000000000'),
+          value: BigInt('20000000000000000000'),
           gasLimit: 1_000_000,
         }
       );
 
     const txReceipt = await tx.wait();
-    const result = txReceipt.events.filter(
-      (e) => e.event === Constants.Events.CreatedToken
+    const result = txReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args[0];
     expect(result).to.exist;
     expectValidHash(result, 40);
@@ -266,14 +266,14 @@ describe('TokenCreateContract Test Suite', function () {
     );
 
     const receipt = await tx.wait();
-    const { responseCode } = receipt.events.filter(
-      (e) => e.event === Constants.Events.ResponseCode
+    const { responseCode } = receipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.ResponseCode
     )[0].args;
     expect(responseCode).to.equal(22);
-    const { serialNumbers } = receipt.events.filter(
-      (e) => e.event === Constants.Events.MintedToken
+    const { serialNumbers } = receipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.MintedToken
     )[0].args;
-    expect(serialNumbers[0].toNumber()).to.be.greaterThan(0);
+    expect(serialNumbers[0]).to.be.greaterThan(0);
   });
 
   it('should be able to execute grantTokenKyc', async function () {
@@ -283,8 +283,8 @@ describe('TokenCreateContract Test Suite', function () {
       Constants.GAS_LIMIT_1_000_000
     );
     expect(
-      (await grantKycTx.wait()).events.filter(
-        (e) => e.event === Constants.Events.ResponseCode
+      (await grantKycTx.wait()).logs.filter(
+        (e) => e.fragment.name === Constants.Events.ResponseCode
       )[0].args.responseCode
     ).to.equal(22);
   });
@@ -307,8 +307,8 @@ describe('TokenCreateContract Test Suite', function () {
       tokenCreateContract = await utils.deployTokenCreateContract();
       tokenQueryContract = await utils.deployTokenQueryContract();
       await utils.updateAccountKeysViaHapi([
-        tokenCreateContract.address,
-        tokenQueryContract.address,
+        await tokenCreateContract.getAddress(),
+        await tokenQueryContract.getAddress(),
       ]);
     });
 
@@ -357,8 +357,8 @@ describe('TokenCreateContract Test Suite', function () {
           }
         );
       const tokenAddressReceipt = await tokenAddressTx.wait();
-      const { tokenAddress } = tokenAddressReceipt.events.filter(
-        (e) => e.event === Constants.Events.CreatedToken
+      const { tokenAddress } = tokenAddressReceipt.logs.filter(
+        (e) => e.fragment.name === Constants.Events.CreatedToken
       )[0].args;
 
       return tokenAddress;
@@ -373,8 +373,8 @@ describe('TokenCreateContract Test Suite', function () {
       const hapiTokenInfoTx =
         await tokenQueryContract.getFungibleTokenInfoPublic(hapiTokenAddress);
 
-      const hapiTokenInfo = (await hapiTokenInfoTx.wait()).events.filter(
-        (e) => e.event === Constants.Events.FungibleTokenInfo
+      const hapiTokenInfo = (await hapiTokenInfoTx.wait()).logs.filter(
+        (e) => e.fragment.name === Constants.Events.FungibleTokenInfo
       )[0].args.tokenInfo[0][0];
 
       const precompileTokenInfoTx =
@@ -384,17 +384,18 @@ describe('TokenCreateContract Test Suite', function () {
 
       const precompileTokenInfo = (
         await precompileTokenInfoTx.wait()
-      ).events.filter((e) => e.event === Constants.Events.FungibleTokenInfo)[0]
-        .args.tokenInfo[0][0];
+      ).logs.filter(
+        (e) => e.fragment.name === Constants.Events.FungibleTokenInfo
+      )[0].args.tokenInfo[0][0];
 
       expect(
-        (await hapiTokenInfoTx.wait()).events.filter(
-          (e) => e.event === Constants.Events.ResponseCode
+        (await hapiTokenInfoTx.wait()).logs.filter(
+          (e) => e.fragment.name === Constants.Events.ResponseCode
         )[0].args.responseCode
       ).to.equal(22);
       expect(
-        (await precompileTokenInfoTx.wait()).events.filter(
-          (e) => e.event === Constants.Events.ResponseCode
+        (await precompileTokenInfoTx.wait()).logs.filter(
+          (e) => e.fragment.name === Constants.Events.ResponseCode
         )[0].args.responseCode
       ).to.equal(22);
       expect(hapiTokenInfo).not.null;

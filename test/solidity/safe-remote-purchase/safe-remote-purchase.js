@@ -65,7 +65,7 @@ describe('@solidityequiv2 Safe remote purchase', function () {
 
     it('should revert deployment', async function () {
         const cont = await factoryPurchase.deploy({
-            value : ethers.utils.parseEther('3.0').sub(1),
+            value : ethers.parseEther('3.0').sub(1),
             gasLimit: 1000000
         })
         const receipt = await cont.deployTransaction.wait()
@@ -163,7 +163,7 @@ describe('@solidityequiv2 Safe remote purchase', function () {
 
         it('should confirm condition modifier', async function () {
             await expect(
-                contract.connect(buyer).callStatic.confirmPurchase({value: ethers.utils.parseEther('3.0')})
+                contract.connect(buyer).callStatic.confirmPurchase({value: ethers.parseEther('3.0')})
             ).to.eventually.be.rejected
         })
     })

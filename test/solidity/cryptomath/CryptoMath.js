@@ -53,15 +53,15 @@ describe('@solidityequiv1 CryptoMath Tests', function () {
 
   // callKeccak256 computes the Keccak256 hash of the input
   it('callKeccak256', async function () {
-    const input = ethers.utils.toUtf8Bytes('hello world');
+    const input = ethers.toUtf8Bytes('hello world');
     const res = await cryptoMathContract.callKeccak256(input);
-    const expectedRes = ethers.utils.keccak256(input);
+    const expectedRes = ethers.keccak256(input);
     expect(res).to.equal(expectedRes);
   });
 
   // callSha256 computes the SHA256 hash of the input
   it('callSha256', async function () {
-    const input = ethers.utils.toUtf8Bytes('hello world');
+    const input = ethers.toUtf8Bytes('hello world');
     const res = await cryptoMathContract.callSha256(input);
     const expectedRes = ethers.utils.sha256(input);
     expect(res).to.equal(expectedRes);
@@ -69,7 +69,7 @@ describe('@solidityequiv1 CryptoMath Tests', function () {
 
   // callRipemd160 computes the RIPEMD-160 hash of the input
   it('callRipemd160', async function () {
-    const input = ethers.utils.toUtf8Bytes('hello world');
+    const input = ethers.toUtf8Bytes('hello world');
     const res = await cryptoMathContract.callRipemd160(input);
     const expectedRes = ethers.utils.ripemd160(input);
     expect(res).to.equal(expectedRes);
@@ -77,8 +77,8 @@ describe('@solidityequiv1 CryptoMath Tests', function () {
 
   // callEcrecover recovers the address associated with the public key from the signature
   it('callEcrecover and verify that returns the correct address of the signer', async function () {
-    const messageToSign = ethers.utils.toUtf8Bytes('Hello Future');
-    const hashOfMessage = ethers.utils.keccak256(messageToSign);
+    const messageToSign = ethers.toUtf8Bytes('Hello Future');
+    const hashOfMessage = ethers.keccak256(messageToSign);
     const walletSigner = ethers.Wallet.createRandom();
     const signedMessage = await walletSigner
       ._signingKey()

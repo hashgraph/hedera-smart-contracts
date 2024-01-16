@@ -132,7 +132,7 @@ describe('@solidityequiv2 Encoding Tests', function () {
 function encodePacked(address, amount, data) {
   const addressBytes = ethers.utils.arrayify(address);
   const amountBytes = ethers.utils.zeroPad(ethers.utils.arrayify(amount), 32);
-  const dataBytes = ethers.utils.toUtf8Bytes(data);
+  const dataBytes = ethers.toUtf8Bytes(data);
 
   return ethers.utils.hexConcat([addressBytes, amountBytes, dataBytes]);
 }

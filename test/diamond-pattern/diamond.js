@@ -23,7 +23,7 @@ const { ethers } = require('hardhat');
 const Constants = require('../constants');
 const Helper = require('../diamond-pattern/diamond.helper');
 
-describe('DiamondTest', async function () {
+describe('DiamondFacet Test Suite', async function () {
   let signers;
   let diamondCutFacet;
   let diamondLoupeFacet;
@@ -39,26 +39,33 @@ describe('DiamondTest', async function () {
     const DiamondCutFacetFactory = await ethers.getContractFactory(
       Constants.Contract.DiamondCutFacet
     );
+
     diamondCutFacet = await DiamondCutFacetFactory.deploy();
     console.log(
-      `${Constants.Contract.DiamondCutFacet} deployed: ${diamondCutFacet.address}`
+      `${
+        Constants.Contract.DiamondCutFacet
+      } deployed: ${await diamondCutFacet.getAddress()}`
     );
 
     const DiamondFactory = await ethers.getContractFactory(
       Constants.Contract.Diamond
     );
     diamond = await DiamondFactory.deploy(
-      signers[0].address,
-      diamondCutFacet.address
+      await signers[0].getAddress(),
+      await diamondCutFacet.getAddress()
     );
-    console.log(`${Constants.Contract.Diamond} deployed: ${diamond.address}`);
+    console.log(
+      `${Constants.Contract.Diamond} deployed: ${await diamond.getAddress()}`
+    );
 
     const DiamondInitFactory = await ethers.getContractFactory(
       Constants.Contract.DiamondInit
     );
     diamondInit = await DiamondInitFactory.deploy();
     console.log(
-      `${Constants.Contract.DiamondInit} deployed: ${diamondInit.address}`
+      `${
+        Constants.Contract.DiamondInit
+      } deployed: ${await diamondInit.getAddress()}`
     );
 
     console.log(`\nDeploying facets`);
@@ -66,10 +73,10 @@ describe('DiamondTest', async function () {
     for (const facetName of ['DiamondLoupeFacet', 'OwnershipFacet']) {
       const FacetFactory = await ethers.getContractFactory(facetName);
       const facet = await FacetFactory.deploy();
-      console.log(`${facetName} deployed: ${facet.address}`);
+      console.log(`${facetName} deployed: ${await facet.getAddress()}`);
 
       cuts.push({
-        facetAddress: facet.address,
+        facetAddress: await facet.getAddress(),
         action: Helper.DiamondHelper.FacetCutAction.Add,
         functionSelectors: Helper.DiamondHelper.getSelectors(facet),
       });
@@ -78,11 +85,11 @@ describe('DiamondTest', async function () {
     console.log(`\nDiamond Cut:`, cuts);
     const diamondCut = await ethers.getContractAt(
       Constants.Contract.IDiamondCut,
-      diamond.address
+      await diamond.getAddress()
     );
     const diamondCutTx = await diamondCut.diamondCut(
       cuts,
-      diamondInit.address,
+      await diamondInit.getAddress(),
       diamondInit.interface.encodeFunctionData('init'),
       Constants.GAS_LIMIT_10_000_000
     );
@@ -93,15 +100,15 @@ describe('DiamondTest', async function () {
 
     diamondCutFacet = await ethers.getContractAt(
       Constants.Contract.DiamondCutFacet,
-      diamond.address
+      await diamond.getAddress()
     );
     diamondLoupeFacet = await ethers.getContractAt(
       Constants.Contract.DiamondLoupeFacet,
-      diamond.address
+      await diamond.getAddress()
     );
     ownershipFacet = await ethers.getContractAt(
       Constants.Contract.OwnershipFacet,
-      diamond.address
+      await diamond.getAddress()
     );
   });
 
@@ -153,7 +160,7 @@ describe('DiamondTest', async function () {
       Constants.Contract.Test1Facet
     );
     const test1Facet = await Test1Facet.deploy();
-    addresses.push(test1Facet.address);
+    addresses.push(await test1Facet.getAddress());
 
     const selectors = Helper.DiamondHelper.getSelectors(test1Facet).remove([
       'supportsInterface(bytes4)',
@@ -161,7 +168,7 @@ describe('DiamondTest', async function () {
     const tx = await diamondCutFacet.diamondCut(
       [
         {
-          facetAddress: test1Facet.address,
+          facetAddress: await test1Facet.getAddress(),
           action: Helper.DiamondHelper.FacetCutAction.Add,
           functionSelectors: selectors,
         },
@@ -176,7 +183,9 @@ describe('DiamondTest', async function () {
     }
 
     assert.sameMembers(
-      await diamondLoupeFacet.facetFunctionSelectors(test1Facet.address),
+      await diamondLoupeFacet.facetFunctionSelectors(
+        await test1Facet.getAddress()
+      ),
       selectors
     );
   });
@@ -184,7 +193,7 @@ describe('DiamondTest', async function () {
   it('should test function call', async () => {
     const test1Facet = await ethers.getContractAt(
       Constants.Contract.Test1Facet,
-      diamond.address
+      await diamond.getAddress()
     );
     const tx = await test1Facet.test1Func10();
 
@@ -230,13 +239,13 @@ describe('DiamondTest', async function () {
       Constants.Contract.Test2Facet
     );
     const test2Facet = await Test2Facet.deploy();
-    addresses.push(test2Facet.address);
+    addresses.push(await test2Facet.getAddress());
 
     const selectors = Helper.DiamondHelper.getSelectors(test2Facet);
     const tx = await diamondCutFacet.diamondCut(
       [
         {
-          facetAddress: test2Facet.address,
+          facetAddress: await test2Facet.getAddress(),
           action: Helper.DiamondHelper.FacetCutAction.Add,
           functionSelectors: selectors,
         },
@@ -251,7 +260,9 @@ describe('DiamondTest', async function () {
     }
 
     assert.sameMembers(
-      await diamondLoupeFacet.facetFunctionSelectors(test2Facet.address),
+      await diamondLoupeFacet.facetFunctionSelectors(
+        await test2Facet.getAddress()
+      ),
       selectors
     );
   });
@@ -259,7 +270,7 @@ describe('DiamondTest', async function () {
   it('should remove some test2 functions', async () => {
     const test2Facet = await ethers.getContractAt(
       Constants.Contract.Test2Facet,
-      diamond.address
+      await diamond.getAddress()
     );
     const functionsToKeep = ['test2Func1()', 'test2Func5()', 'test2Func6()'];
     const selectors =
@@ -293,7 +304,7 @@ describe('DiamondTest', async function () {
   it('should remove some test1 functions', async () => {
     const test1Facet = await ethers.getContractAt(
       Constants.Contract.Test1Facet,
-      diamond.address
+      await diamond.getAddress()
     );
     const functionsToKeep = ['test1Func2()', 'test1Func11()', 'test1Func12()'];
     const selectors =

@@ -25,8 +25,8 @@ const Constants = require('../../../constants');
 describe('@OZERC1820 Tests', () => {
   let erc1820registry, wallet1, wallet2;
 
-  const ERC777TOKEN_HASH = ethers.utils.keccak256(
-    ethers.utils.toUtf8Bytes('ERC777TOKEN_HASH')
+  const ERC777TOKEN_HASH = ethers.keccak256(
+    ethers.toUtf8Bytes('ERC777TOKEN_HASH')
   );
 
   beforeEach(async () => {
@@ -36,11 +36,12 @@ describe('@OZERC1820 Tests', () => {
       Constants.Contract.ERC1820Registry
     );
     erc1820registry = await erc1820RegistryFac.deploy();
+
   });
 
   it('Should deploy the registry', async () => {
     expect(erc1820registry).to.not.null;
-    expect(ethers.utils.isAddress(erc1820registry.address)).to.be.true;
+    expect(ethers.isAddress(erc1820registry.address)).to.be.true;
   });
 
   it('Should get a manager of an address', async () => {

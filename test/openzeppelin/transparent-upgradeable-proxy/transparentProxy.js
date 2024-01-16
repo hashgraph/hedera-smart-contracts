@@ -88,8 +88,8 @@ describe('@OZTransparentUpgradeableProxy Tests', function () {
     const receipt = await signedTx.wait();
 
     const topics = receipt.logs[0].topics;
-    const eventUpgradedNameHashed = ethers.utils.keccak256(
-      ethers.utils.toUtf8Bytes('Upgraded(address)')
+    const eventUpgradedNameHashed = ethers.keccak256(
+      ethers.toUtf8Bytes('Upgraded(address)')
     );
     const newContractAddressEncoded =
       '0x000000000000000000000000' + contractBoxV2.address.replace('0x', '');
@@ -97,8 +97,8 @@ describe('@OZTransparentUpgradeableProxy Tests', function () {
     expect(newContractAddressEncoded.toLowerCase()).to.eq(topics[1]);
 
     const functionSelectorIncrement = Utils.functionSelector('increment()');
-    const eventValueChangedNameHashed = ethers.utils.keccak256(
-      ethers.utils.toUtf8Bytes('ValueChanged(uint256)')
+    const eventValueChangedNameHashed = ethers.keccak256(
+      ethers.toUtf8Bytes('ValueChanged(uint256)')
     );
     const signedTxToNewContract = await owner.sendTransaction({
       to: contractProxy.address,
@@ -117,9 +117,8 @@ describe('@OZTransparentUpgradeableProxy Tests', function () {
     );
     contractBoxV2 = await factoryBoxV2.deploy();
     await contractBoxV2.deployed();
-    const functionSelectorUpgradeAndCall = ethers.utils
-      .keccak256(
-        ethers.utils.toUtf8Bytes('upgradeAndCall(address,address,bytes)')
+    const functionSelectorUpgradeAndCall = ethers.keccak256(
+        ethers.toUtf8Bytes('upgradeAndCall(address,address,bytes)')
       )
       .substring(0, 10);
     const abi = ethers.utils.defaultAbiCoder;

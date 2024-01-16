@@ -44,7 +44,7 @@ describe('@OZTokenVault Tests', function () {
 
   describe('Transactions', function () {
     it('Should deposit tokens and update shareHolders mapping', async function () {
-      const depositAmount = ethers.utils.parseEther('10');
+      const depositAmount = ethers.parseEther('10');
       await asset.connect(addr1).approve(tokenVault.address, depositAmount);
       await expect(tokenVault.connect(addr1)._deposit(depositAmount))
         .to.emit(tokenVault, 'Deposit')
@@ -56,9 +56,9 @@ describe('@OZTokenVault Tests', function () {
     });
 
     it('Should withdraw tokens and update shareHolders mapping', async function () {
-      const depositAmount = ethers.utils.parseEther('10');
-      const withdrawAmount = ethers.utils.parseEther('5');
-      const redemedAmount = ethers.utils.parseEther('5.5');
+      const depositAmount = ethers.parseEther('10');
+      const withdrawAmount = ethers.parseEther('5');
+      const redemedAmount = ethers.parseEther('5.5');
 
       await asset.connect(addr2).approve(tokenVault.address, depositAmount);
       await tokenVault.connect(addr2)._deposit(depositAmount);
@@ -95,7 +95,7 @@ describe('@OZTokenVault Tests', function () {
     });
 
     it('Should fail if not enough shares', async function () {
-      const depositAmount = ethers.utils.parseEther('10');
+      const depositAmount = ethers.parseEther('10');
       await asset.connect(addr1).approve(tokenVault.address, depositAmount);
       await tokenVault.connect(addr1)._deposit(depositAmount);
       expect(
@@ -108,7 +108,7 @@ describe('@OZTokenVault Tests', function () {
 
   describe('Views', function () {
     it('Should return the total assets of a user', async function () {
-      const depositAmount = ethers.utils.parseEther('10');
+      const depositAmount = ethers.parseEther('10');
       await asset.connect(addr1).approve(tokenVault.address, depositAmount);
       await tokenVault.connect(addr1)._deposit(depositAmount);
 

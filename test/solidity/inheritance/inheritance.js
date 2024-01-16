@@ -24,7 +24,7 @@ const Constants = require('../../constants');
 
 describe('@solidityequiv2 Crypto Inheritance Tests', function () {
   let signers, contractMain, contractBase, wallet;
-  const TOP_UP_AMOUNT = ethers.utils.parseEther('0.000001');
+  const TOP_UP_AMOUNT = ethers.parseEther('0.000001');
 
   before(async function () {
     signers = await ethers.getSigners();

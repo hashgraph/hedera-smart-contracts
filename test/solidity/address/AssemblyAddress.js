@@ -55,7 +55,7 @@ describe('@solidityequiv1 AssemblyAddress Tests', () => {
       assemblyAddressContract.address
     );
 
-    const expectedContractCodeHash = ethers.utils.keccak256(
+    const expectedContractCodeHash = ethers.keccak256(
       expectedContractBytecode
     );
 

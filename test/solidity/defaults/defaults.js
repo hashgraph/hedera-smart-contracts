@@ -38,10 +38,10 @@ describe('@solidityequiv1 Solidity Defaults Tests', function () {
     expect(res.uInt8).to.equal(0);
     expect(res.uInt16).to.equal(0);
     expect(res.uInt32).to.equal(0);
-    expect(res.uInt64).to.equal(ethers.BigNumber.from(0));
-    expect(res.uInt128).to.equal(ethers.BigNumber.from(0));
-    expect(res.uInt256).to.equal(ethers.BigNumber.from(0));
-    expect(res.uInt).to.equal(ethers.BigNumber.from(0));
+    expect(res.uInt64).to.equal(BigInt(0));
+    expect(res.uInt128).to.equal(BigInt(0));
+    expect(res.uInt256).to.equal(BigInt(0));
+    expect(res.uInt).to.equal(BigInt(0));
   });
 
   it('confirm solidity functionality: int defaults', async function () {
@@ -49,10 +49,10 @@ describe('@solidityequiv1 Solidity Defaults Tests', function () {
     expect(res.uInt8).to.equal(0);
     expect(res.uInt16).to.equal(0);
     expect(res.uInt32).to.equal(0);
-    expect(res.uInt64).to.equal(ethers.BigNumber.from(0));
-    expect(res.uInt128).to.equal(ethers.BigNumber.from(0));
-    expect(res.uInt256).to.equal(ethers.BigNumber.from(0));
-    expect(res.uInt).to.equal(ethers.BigNumber.from(0));
+    expect(res.uInt64).to.equal(BigInt(0));
+    expect(res.uInt128).to.equal(BigInt(0));
+    expect(res.uInt256).to.equal(BigInt(0));
+    expect(res.uInt).to.equal(BigInt(0));
   });
 
   // Fixed point numbers are Not supported by Solidity yet
@@ -114,7 +114,7 @@ describe('@solidityequiv1 Solidity Defaults Tests', function () {
     const res1 = await contract.strUintMap('');
     const res2 = await contract.addrBoolMap(contract.address);
     const res3 = await contract.bytesBytesMap(10);
-    expect(res1).to.equal(ethers.BigNumber.from(0));
+    expect(res1).to.equal(BigInt(0));
     expect(res2).to.equal(false);
     expect(res3).to.equal('0x');
   });

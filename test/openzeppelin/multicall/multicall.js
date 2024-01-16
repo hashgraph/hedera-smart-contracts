@@ -38,11 +38,11 @@ describe('@OZMulticall Tests', function () {
     const bar = await contract.populateTransaction.bar();
     const res = await contract.callStatic.multicall([foo.data, bar.data]);
 
-    expect(ethers.BigNumber.from(res[0])).to.be.equal(
-      ethers.BigNumber.from(123)
+    expect(BigInt(res[0])).to.be.equal(
+      BigInt(123)
     );
-    expect(ethers.BigNumber.from(res[1])).to.be.equal(
-      ethers.BigNumber.from(456)
+    expect(BigInt(res[1])).to.be.equal(
+      BigInt(456)
     );
   });
 });

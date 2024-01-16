@@ -38,7 +38,7 @@ describe('@solidityequiv2 Panic Errors Tests', function () {
       error = e;
     }
     expect(error.errorName).to.eq('Panic');
-    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(1)]);
+    expect(error.errorArgs).to.deep.eq([BigInt(1)]);
   });
 
   it('should verify panic error 0x11', async function () {
@@ -49,7 +49,7 @@ describe('@solidityequiv2 Panic Errors Tests', function () {
       error = e;
     }
     expect(error.errorName).to.eq('Panic');
-    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(17)]);
+    expect(error.errorArgs).to.deep.eq([BigInt(17)]);
   });
 
   it('should verify panic error 0x12', async function () {
@@ -60,7 +60,7 @@ describe('@solidityequiv2 Panic Errors Tests', function () {
       error = e;
     }
     expect(error.errorName).to.eq('Panic');
-    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(18)]);
+    expect(error.errorArgs).to.deep.eq([BigInt(18)]);
   });
 
   it('should verify panic error 0x21', async function () {
@@ -71,7 +71,7 @@ describe('@solidityequiv2 Panic Errors Tests', function () {
       error = e;
     }
     expect(error.errorName).to.eq('Panic');
-    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(33)]);
+    expect(error.errorArgs).to.deep.eq([BigInt(33)]);
   });
 
   it('should verify panic error 0x31', async function () {
@@ -94,7 +94,7 @@ describe('@solidityequiv2 Panic Errors Tests', function () {
       error = e;
     }
     expect(error.errorName).to.eq('Panic');
-    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(50)]);
+    expect(error.errorArgs).to.deep.eq([BigInt(50)]);
   });
 
   it('should verify panic error 0x41', async function () {
@@ -105,7 +105,7 @@ describe('@solidityequiv2 Panic Errors Tests', function () {
       error = e;
     }
     expect(error.errorName).to.eq('Panic');
-    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(65)]);
+    expect(error.errorArgs).to.deep.eq([BigInt(65)]);
   });
 
   it('should verify panic error 0x51', async function () {
@@ -116,6 +116,6 @@ describe('@solidityequiv2 Panic Errors Tests', function () {
       error = e;
     }
     expect(error.errorName).to.eq('Panic');
-    expect(error.errorArgs).to.deep.eq([ethers.BigNumber.from(81)]);
+    expect(error.errorArgs).to.deep.eq([BigInt(81)]);
   });
 });

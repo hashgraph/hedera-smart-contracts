@@ -66,8 +66,8 @@ describe('@OZERC20 Tests', function () {
   it('should be able to execute approve(address,uint256)', async function () {
     const res = await erc20.approve(erc20.address, amount);
     expect(
-      (await res.wait()).events.filter(
-        (e) => e.event === Constants.Events.Approval
+      (await res.wait()).logs.filter(
+        (e) => e.fragment.name === Constants.Events.Approval
       )
     ).to.not.be.empty;
   });

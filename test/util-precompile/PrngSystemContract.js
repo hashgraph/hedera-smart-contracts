@@ -37,8 +37,8 @@ describe('PrngSystemContract tests', function () {
     const tx = await prngSystemContract.getPseudorandomSeed();
     const txReceipt = await tx.wait();
 
-    const result = txReceipt.events.filter(
-      (e) => e.event === Constants.Events.PseudoRandomSeed
+    const result = txReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.PseudoRandomSeed
     )[0].args[0];
 
     expect(result).to.exist;

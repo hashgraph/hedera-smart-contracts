@@ -83,7 +83,7 @@ describe('@solidityequiv2 Modifiers Tests', function () {
   it("Should accept payments and increase the contract's balance", async function () {
     const initialBalance = await modifiersContract.getBalance();
 
-    const paymentAmount = weibarTotinybar(ethers.utils.parseEther('100'));
+    const paymentAmount = weibarTotinybar(ethers.parseEther('100'));
     await owner.sendTransaction({
       to: modifiersContract.address,
       value: paymentAmount,

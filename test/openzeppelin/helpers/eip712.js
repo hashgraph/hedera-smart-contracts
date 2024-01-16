@@ -88,6 +88,6 @@ module.exports = {
   Permit,
   getDomain,
   domainType,
-  domainSeparator: ethers.utils._TypedDataEncoder.hashDomain,
+  domainSeparator: ethers.TypedDataEncoder.hashDomain,
   hashTypedData,
 };

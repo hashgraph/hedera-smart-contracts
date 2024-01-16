@@ -109,7 +109,7 @@ describe('@OZERC1155 Tests', () => {
     );
     expect(balanceBatch.length).to.eq(2);
     balanceBatch.forEach((bal, index) => {
-      expect(bal).to.eq(ethers.BigNumber.from(MINTED_AMOUNTS[index]));
+      expect(bal).to.eq(BigInt(MINTED_AMOUNTS[index]));
     });
   });
 
@@ -238,7 +238,7 @@ describe('@OZERC1155 Tests', () => {
       .burn(wallet2.address, TOKEN_ID, BURNT_AMOUNT);
 
     const balance = await erc1155Token.balanceOf(wallet2.address, TOKEN_ID);
-    expect(balance).to.eq(ethers.BigNumber.from(MINTED_AMOUNT - BURNT_AMOUNT));
+    expect(balance).to.eq(BigInt(MINTED_AMOUNT - BURNT_AMOUNT));
   });
 
   it('Should NOT burn insufficient amount of token', async () => {
@@ -268,7 +268,7 @@ describe('@OZERC1155 Tests', () => {
 
     balanceBatch.forEach((b, i) => {
       expect(b).to.eq(
-        ethers.BigNumber.from(MINTED_AMOUNTS[i] - BURNT_AMOUNTS[i])
+        BigInt(MINTED_AMOUNTS[i] - BURNT_AMOUNTS[i])
       );
     });
   });

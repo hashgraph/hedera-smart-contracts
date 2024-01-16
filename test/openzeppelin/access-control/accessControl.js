@@ -28,11 +28,11 @@ describe('@OZAccessControlContract Tests', function () {
   let user;
   let accessContract;
 
-  const ADMIN_ROLE = ethers.utils.keccak256(
-    ethers.utils.toUtf8Bytes('ADMIN_ROLE')
+  const ADMIN_ROLE = ethers.keccak256(
+    ethers.toUtf8Bytes('ADMIN_ROLE')
   );
-  const MANAGER_ROLE = ethers.utils.keccak256(
-    ethers.utils.toUtf8Bytes('MANAGER_ROLE')
+  const MANAGER_ROLE = ethers.keccak256(
+    ethers.toUtf8Bytes('MANAGER_ROLE')
   );
 
   // Deploy the contract and set up roles before each test

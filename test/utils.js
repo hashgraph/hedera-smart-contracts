@@ -23,8 +23,7 @@ const { ethers } = hre;
 
 class Utils {
   static functionSelector(functionNameAndParams) {
-    return ethers.utils
-      .keccak256(ethers.utils.toUtf8Bytes(functionNameAndParams))
+    return ethers.keccak256(ethers.toUtf8Bytes(functionNameAndParams))
       .substring(0, 10);
   }
 }

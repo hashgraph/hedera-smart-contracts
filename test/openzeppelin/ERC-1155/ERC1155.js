@@ -73,8 +73,8 @@ describe('@OZERC1155 Tests', function () {
   it('should be able to execute setApprovalForAll(address,bool)', async function () {
     const res = await erc1155.setApprovalForAll(signers[1].address, true);
     expect(
-      (await res.wait()).events.filter(
-        (e) => e.event === Constants.Events.ApprovalForAll
+      (await res.wait()).logs.filter(
+        (e) => e.fragment.name === Constants.Events.ApprovalForAll
       )
     ).to.not.be.empty;
   });

@@ -36,17 +36,18 @@ describe('ERC20Contract Test Suite', function () {
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
     await utils.updateAccountKeysViaHapi([
-      tokenCreateContract.address,
-      tokenTransferContract.address,
+      await tokenCreateContract.getAddress(),
+      await tokenTransferContract.getAddress(),
     ]);
     erc20Contract = await utils.deployERC20Contract();
     tokenAddress = await utils.createFungibleToken(
       tokenCreateContract,
       signers[0].address
     );
+
     await utils.updateTokenKeysViaHapi(tokenAddress, [
-      tokenCreateContract.address,
-      tokenTransferContract.address,
+      await tokenCreateContract.getAddress(),
+      await tokenTransferContract.getAddress(),
     ]);
     await utils.associateToken(
       tokenCreateContract,
@@ -79,7 +80,7 @@ describe('ERC20Contract Test Suite', function () {
   it('should be able to get token balance of any account', async function () {
     const contractOwnerBalance = await erc20Contract.balanceOf(
       tokenAddress,
-      tokenCreateContract.address
+      await tokenCreateContract.getAddress()
     );
     const wallet1Balance = await erc20Contract.balanceOf(
       tokenAddress,
@@ -91,11 +92,11 @@ describe('ERC20Contract Test Suite', function () {
     );
 
     expect(contractOwnerBalance).to.exist;
-    expect(contractOwnerBalance.toNumber()).to.eq(0);
+    expect(contractOwnerBalance).to.eq(0);
     expect(wallet1Balance).to.exist;
-    expect(wallet1Balance.toNumber()).to.eq(TOTAL_SUPPLY);
+    expect(wallet1Balance).to.eq(TOTAL_SUPPLY);
     expect(wallet2Balance).to.exist;
-    expect(wallet2Balance.toNumber()).to.eq(0);
+    expect(wallet2Balance).to.eq(0);
   });
 
   it('should NOT be able to use transfer', async function () {
@@ -104,7 +105,7 @@ describe('ERC20Contract Test Suite', function () {
 
     const contractOwnerBalanceBefore = await erc20Contract.balanceOf(
       tokenAddress,
-      tokenCreateContract.address
+      await tokenCreateContract.getAddress()
     );
     const wallet1BalanceBefore = await erc20Contract.balanceOf(
       tokenAddress,
@@ -127,12 +128,12 @@ describe('ERC20Contract Test Suite', function () {
       await tx.wait();
     } catch (e) {
       expect(e).to.exist;
-      expect(e.reason).to.eq('transaction failed');
+      expect(e.code).to.eq(Constants.CALL_EXCEPTION);
     }
 
     const contractOwnerBalanceAfter = await erc20Contract.balanceOf(
       tokenAddress,
-      tokenCreateContract.address
+      await tokenCreateContract.getAddress()
     );
     const wallet1BalanceAfter = await erc20Contract.balanceOf(
       tokenAddress,
@@ -143,15 +144,9 @@ describe('ERC20Contract Test Suite', function () {
       signers[1].address
     );
 
-    expect(contractOwnerBalanceBefore.toNumber()).to.eq(
-      contractOwnerBalanceAfter.toNumber()
-    );
-    expect(wallet1BalanceBefore.toNumber()).to.eq(
-      wallet1BalanceAfter.toNumber()
-    );
-    expect(wallet2BalanceBefore.toNumber()).to.eq(
-      wallet2BalanceAfter.toNumber()
-    );
+    expect(contractOwnerBalanceBefore).to.eq(contractOwnerBalanceAfter);
+    expect(wallet1BalanceBefore).to.eq(wallet1BalanceAfter);
+    expect(wallet2BalanceBefore).to.eq(wallet2BalanceAfter);
   });
 
   it('should NOT be able to use delegateTransfer', async function () {
@@ -179,7 +174,7 @@ describe('ERC20Contract Test Suite', function () {
       await tx.wait();
     } catch (e) {
       expect(e).to.exist;
-      expect(e.reason).to.eq('transaction failed');
+      expect(e.code).to.eq(Constants.CALL_EXCEPTION);
     }
 
     const wallet1BalanceAfter = await erc20Contract.balanceOf(
@@ -191,12 +186,8 @@ describe('ERC20Contract Test Suite', function () {
       signers[1].address
     );
 
-    expect(wallet1BalanceBefore.toNumber()).to.eq(
-      wallet1BalanceAfter.toNumber()
-    );
-    expect(wallet2BalanceBefore.toNumber()).to.eq(
-      wallet2BalanceAfter.toNumber()
-    );
+    expect(wallet1BalanceBefore).to.eq(wallet1BalanceAfter);
+    expect(wallet2BalanceBefore).to.eq(wallet2BalanceAfter);
   });
 
   it('should NOT be able to use approve', async function () {
@@ -208,7 +199,7 @@ describe('ERC20Contract Test Suite', function () {
       signers[0].address,
       signers[1].address
     );
-    expect(allowanceBefore.toNumber()).to.eq(0);
+    expect(allowanceBefore).to.eq(0);
 
     try {
       const tx = await erc20Contract
@@ -222,7 +213,7 @@ describe('ERC20Contract Test Suite', function () {
       await tx.wait();
     } catch (e) {
       expect(e).to.exist;
-      expect(e.reason).to.eq('transaction failed');
+      expect(e.code).to.eq(Constants.CALL_EXCEPTION);
     }
 
     const allowanceAfter = await erc20Contract.allowance(
@@ -230,7 +221,7 @@ describe('ERC20Contract Test Suite', function () {
       signers[0].address,
       signers[1].address
     );
-    expect(allowanceAfter.toNumber()).to.eq(0);
+    expect(allowanceAfter).to.eq(0);
   });
 
   it('should NOT be able to use delegateApprove and allowance', async function () {
@@ -242,7 +233,7 @@ describe('ERC20Contract Test Suite', function () {
       signers[0].address,
       signers[1].address
     );
-    expect(allowanceBefore.toNumber()).to.eq(0);
+    expect(allowanceBefore).to.eq(0);
 
     try {
       const tx = await erc20Contract
@@ -256,7 +247,7 @@ describe('ERC20Contract Test Suite', function () {
       await tx.wait();
     } catch (e) {
       expect(e).to.exist;
-      expect(e.reason).to.eq('transaction failed');
+      expect(e.code).to.eq(Constants.CALL_EXCEPTION);
     }
 
     const allowanceAfter = await erc20Contract.allowance(
@@ -264,7 +255,7 @@ describe('ERC20Contract Test Suite', function () {
       signers[0].address,
       signers[1].address
     );
-    expect(allowanceAfter.toNumber()).to.eq(allowanceBefore);
+    expect(allowanceAfter).to.eq(allowanceBefore);
   });
 
   it('should NOT be able to use delegateTransferFrom', async function () {
@@ -295,10 +286,10 @@ describe('ERC20Contract Test Suite', function () {
           amount,
           Constants.GAS_LIMIT_1_000_000
         );
-      const rec = await tx.wait();
+      await tx.wait();
     } catch (e) {
       expect(e).to.exist;
-      expect(e.reason).to.eq('transaction failed');
+      expect(e.code).to.eq(Constants.CALL_EXCEPTION);
     }
 
     const wallet1BalanceAfter = await erc20Contract.balanceOf(
@@ -315,12 +306,8 @@ describe('ERC20Contract Test Suite', function () {
       signers[1].address
     );
 
-    expect(allowanceAfter.toNumber()).to.eq(allowanceBefore);
-    expect(wallet1BalanceBefore.toNumber()).to.eq(
-      wallet1BalanceAfter.toNumber()
-    );
-    expect(wallet2BalanceBefore.toNumber()).to.eq(
-      wallet2BalanceAfter.toNumber()
-    );
+    expect(allowanceAfter).to.eq(allowanceBefore);
+    expect(wallet1BalanceBefore).to.eq(wallet1BalanceAfter);
+    expect(wallet2BalanceBefore).to.eq(wallet2BalanceAfter);
   });
 });

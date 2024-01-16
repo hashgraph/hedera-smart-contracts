@@ -59,8 +59,8 @@ describe('@OZERC721 Tests', function () {
   it('should be able to execute approve(address,uint256)', async function () {
     const res = await erc721.approve(signers[1].address, tokenId);
     expect(
-      (await res.wait()).events.filter(
-        (e) => e.event === Constants.Events.Approval
+      (await res.wait()).logs.filter(
+        (e) => e.fragment.name === Constants.Events.Approval
       )
     ).to.not.be.empty;
   });
@@ -73,8 +73,8 @@ describe('@OZERC721 Tests', function () {
   it('should be able to execute setApprovalForAll(address,bool)', async function () {
     const res = await erc721.setApprovalForAll(signers[1].address, true);
     expect(
-      (await res.wait()).events.filter(
-        (e) => e.event === Constants.Events.ApprovalForAll
+      (await res.wait()).logs.filter(
+        (e) => e.fragment.name === Constants.Events.ApprovalForAll
       )
     ).to.not.be.empty;
   });

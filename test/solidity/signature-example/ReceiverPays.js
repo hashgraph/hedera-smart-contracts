@@ -33,7 +33,7 @@ describe('@solidityequiv3 Signature Example ReceiverPays Tests', function () {
     const factory = await ethers.getContractFactory(
       Constants.Path.RECEIVER_PAYS
     );
-    const initialFund = ethers.utils.parseEther('4');
+    const initialFund = ethers.parseEther('4');
     receiverPaysContract = await factory.deploy({
       gasLimit: 15000000,
       value: initialFund,
@@ -48,7 +48,7 @@ describe('@solidityequiv3 Signature Example ReceiverPays Tests', function () {
       receiverPaysContract.address
     );
     // There is a discrepancy between the amount of decimals for 1 ETH and 1 HBAR. see the tinybar to wei coefficient of 10_000_000_000
-    // it should be ethers.utils.parseEther('1');
+    // it should be ethers.parseEther('1');
     const amountToTransfer = 100000000;
 
     // Generate signature for payment
@@ -69,7 +69,7 @@ describe('@solidityequiv3 Signature Example ReceiverPays Tests', function () {
     );
 
     expect(contractBalanceAfter).to.equal(
-      contractBalanceBefore.sub(ethers.utils.parseEther('1'))
+      contractBalanceBefore.sub(ethers.parseEther('1'))
     );
 
     currentNonce++;

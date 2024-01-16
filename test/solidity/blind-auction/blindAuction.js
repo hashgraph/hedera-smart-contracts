@@ -56,13 +56,13 @@ describe('@solidityequiv1 Solidity Blind Auction Tests', function () {
   const fiveHbars = 5 * tinybarToHbarCoef;
   const hundredHbars = 100 * tinybarToHbarCoef;
   const twoHundredHbars = 200 * tinybarToHbarCoef;
-  const hundredHbarsToWeibar = ethers.BigNumber.from(
+  const hundredHbarsToWeibar = BigInt(
     String(hundredHbars * tinybarToWeibarCoef)
   );
-  const twohundredHbarsToWeibar = ethers.BigNumber.from(
+  const twohundredHbarsToWeibar = BigInt(
     String(twoHundredHbars * tinybarToWeibarCoef)
   );
-  const fiveHbarsToWeibar = ethers.BigNumber.from(
+  const fiveHbarsToWeibar = BigInt(
     String(fiveHbars * tinybarToWeibarCoef)
   );
 

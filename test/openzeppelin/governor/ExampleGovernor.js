@@ -10,8 +10,8 @@ describe('@OZGovernor Tests', function () {
   const GRANT_AMOUNT = 100;
 
   const description = 'Proposal #1: ';
-  const descriptionHash = ethers.utils.keccak256(
-    ethers.utils.toUtf8Bytes(description)
+  const descriptionHash = ethers.keccak256(
+    ethers.toUtf8Bytes(description)
   );
 
   before(async function () {
@@ -82,7 +82,7 @@ describe('@OZGovernor Tests', function () {
     expect(event.args.proposalId).to.eq(proposalId);
     expect(event.blockNumber).to.lte(proposalDeadline);
     expect(event.args.voter).to.eq(await deployer.getAddress());
-    expect(event.args.weight).to.eq(ethers.BigNumber.from(VOTE_WEIGHT));
+    expect(event.args.weight).to.eq(BigInt(VOTE_WEIGHT));
   });
 
   it('Should wait until the Vote Period passes and return a successful state on the proposal', async () => {
@@ -119,13 +119,13 @@ describe('@OZGovernor Tests', function () {
       );
 
     expect(await exampleToken.balanceOf(deployer.address)).to.eq(
-      ethers.BigNumber.from(VOTE_WEIGHT - GRANT_AMOUNT)
+      BigInt(VOTE_WEIGHT - GRANT_AMOUNT)
     );
     expect(await exampleToken.balanceOf(governor.address)).to.eq(
-      ethers.BigNumber.from(0)
+      BigInt(0)
     );
     expect(await exampleToken.balanceOf(projectTeam.address)).to.eq(
-      ethers.BigNumber.from(GRANT_AMOUNT)
+      BigInt(GRANT_AMOUNT)
     );
 
     const proposalState = await governor.state(proposalId);
