@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZERC165 Support Interface Tests', function () {
+describe('@OZERC165 Support Interface Test Suite', function () {
   let contract, climberSelectorContract;
 
   before(async function () {
@@ -38,7 +38,7 @@ describe('@OZERC165 Support Interface Tests', function () {
     );
     climberSelectorContract = await ClimberSelectorFactory.deploy();
 
-    climberInterface = new ethers.utils.Interface([
+    climberInterface = new ethers.Interface([
       'function hasHarness()',
       'function hasChalk()',
       'function hasClimbingShoes()',

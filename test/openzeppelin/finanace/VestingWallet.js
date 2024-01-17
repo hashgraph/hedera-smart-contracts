@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZVestingWallet Tests', () => {
+describe('@OZVestingWallet Test Suite', () => {
   let vestingWallet, erc20Mock, signers, beneficiaryAddress;
   const DURATION = 3; // seconds
   const GAS_LIMIT = 1_000_000;
@@ -51,7 +51,10 @@ describe('@OZVestingWallet Tests', () => {
 
     erc20Mock = await erc20MockFactory.deploy('Hedera', 'HBAR');
 
-    await erc20Mock.mint(vestingWallet.address, INITIAL_ERC20TOKEN_AMOUNT);
+    await erc20Mock.mint(
+      await vestingWallet.getAddress(),
+      INITIAL_ERC20TOKEN_AMOUNT
+    );
   });
 
   it('Deployment', async () => {
@@ -60,10 +63,10 @@ describe('@OZVestingWallet Tests', () => {
     const vestingWalletBeneficiary = await vestingWallet.owner();
     const vestingWalletDuration = await vestingWallet.duration();
     const vestingWalletBalance = await ethers.provider.getBalance(
-      vestingWallet.address
+      await vestingWallet.getAddress()
     );
     const vestingWalletErc20Balance = await erc20Mock.balanceOf(
-      vestingWallet.address
+      await vestingWallet.getAddress()
     );
 
     expect(vestingWalletStart).to.eq(START);
@@ -83,7 +86,7 @@ describe('@OZVestingWallet Tests', () => {
 
   it('Should get the amount of releasable erc20 tokens', async () => {
     const releasableTokens = await vestingWallet['releasable(address)'](
-      erc20Mock.address
+      await erc20Mock.getAddress()
     );
     expect(releasableTokens).to.eq(INITIAL_ERC20TOKEN_AMOUNT);
   });
@@ -93,8 +96,8 @@ describe('@OZVestingWallet Tests', () => {
 
     const receipt = await tx.wait();
 
-    const [receiverAddress, releasedAmount] = receipt.events.map(
-      (e) => e.event === 'HbarReleased' && e
+    const [receiverAddress, releasedAmount] = receipt.logs.map(
+      (e) => e.fragment.name === 'HbarReleased' && e
     )[0].args;
 
     expect(receiverAddress).to.eq(beneficiaryAddress);
@@ -104,15 +107,17 @@ describe('@OZVestingWallet Tests', () => {
   });
 
   it('Should release the erc20 tokens that have already vested', async () => {
-    const tx = await vestingWallet['release(address)'](erc20Mock.address);
+    const tx = await vestingWallet['release(address)'](
+      await erc20Mock.getAddress()
+    );
 
     const receipt = await tx.wait();
 
     const [receiverAddress, releasedTokenAddress, releasedTokenAmount] =
-      receipt.events.map((e) => e.event === 'ERC20Released' && e)[0].args;
+      receipt.logs.find((e) => e.fragment.name === 'ERC20Released').args;
 
     expect(receiverAddress).to.eq(beneficiaryAddress);
-    expect(releasedTokenAddress).to.eq(erc20Mock.address);
+    expect(releasedTokenAddress).to.eq(await erc20Mock.getAddress());
     expect(releasedTokenAmount).to.eq(INITIAL_ERC20TOKEN_AMOUNT);
   });
 
@@ -125,10 +130,10 @@ describe('@OZVestingWallet Tests', () => {
   });
 
   it('Should get the amount of erc20 token already released', async () => {
-    await vestingWallet['release(address)'](erc20Mock.address);
+    await vestingWallet['release(address)'](await erc20Mock.getAddress());
 
     const tokenReleased = await vestingWallet['released(address)'](
-      erc20Mock.address
+      await erc20Mock.getAddress()
     );
 
     expect(tokenReleased).to.eq(INITIAL_ERC20TOKEN_AMOUNT);

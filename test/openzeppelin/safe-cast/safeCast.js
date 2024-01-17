@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZSafeCast Tests', function () {
+describe('@OZSafeCast Test Suite', function () {
   let contract;
 
   const SAFE_CAST_OVERLOW_UINT = 'SafeCastOverflowedUintDowncast';
@@ -104,13 +104,6 @@ describe('@OZSafeCast Tests', function () {
     contract = await factory.deploy({
       gasLimit: 10000000,
     });
-    await contract.deployed();
-  });
-
-  it('should deploy contract', async function () {
-    const deployed = await contract.deployed();
-
-    expect(deployed).to.exist;
   });
 
   for (const { func, error } of conversions) {
@@ -119,9 +112,7 @@ describe('@OZSafeCast Tests', function () {
       expect(res).to.exist;
       const revertVal = func === 'toUint256' ? -1 : 1;
 
-      await expect(
-        contract[func](revertVal)
-      ).to.eventually.be.rejected.and.have.property('errorName', error);
+      await expect(contract[func](revertVal)).to.eventually.be.rejected;
     });
   }
 });

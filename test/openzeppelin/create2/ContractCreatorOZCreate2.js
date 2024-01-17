@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZCreate2 Contract Creator Tests', async () => {
+describe('@OZCreate2 Test Suite', async () => {
   let contractCreatorOZCreate2;
   const INITIAL_VALUE = 30_000_000_000;
   const NEW_CONTRACT_EVENT = 'NewContractDeployedAt';
@@ -43,11 +43,12 @@ describe('@OZCreate2 Contract Creator Tests', async () => {
 
   it('Should deployed contractCreatorOZCreate2 with correct deployed arguments', async () => {
     const balance = await ethers.provider.getBalance(
-      contractCreatorOZCreate2.address
+      await contractCreatorOZCreate2.getAddress()
     );
 
     expect(balance).to.eq(INITIAL_VALUE);
-    expect(ethers.utils.isAddress(contractCreatorOZCreate2.address)).to.be.true;
+    expect(ethers.isAddress(await contractCreatorOZCreate2.getAddress())).to.be
+      .true;
   });
 
   it('Should deploy contract using OZ/Create2 library', async () => {
@@ -61,11 +62,11 @@ describe('@OZCreate2 Contract Creator Tests', async () => {
 
     const receipt = await tx.wait();
 
-    const [address] = receipt.events.map(
-      (e) => e.event === NEW_CONTRACT_EVENT && e
+    const [address] = receipt.logs.map(
+      (e) => e.fragment.name === NEW_CONTRACT_EVENT && e
     )[0].args;
 
-    expect(ethers.utils.isAddress(address)).to.be.true;
+    expect(ethers.isAddress(address)).to.be.true;
   });
 
   it("Should NOT deploy if `amount` is greater than factory's balance", async () => {
@@ -74,7 +75,8 @@ describe('@OZCreate2 Contract Creator Tests', async () => {
     const tx = await contractCreatorOZCreate2.deploy(
       DEPLOYED_AMOUNT,
       SALT,
-      TARGET_CONTRACT_CREATION_CODE
+      TARGET_CONTRACT_CREATION_CODE,
+      Constants.GAS_LIMIT_1_000_000
     );
 
     try {
@@ -90,20 +92,22 @@ describe('@OZCreate2 Contract Creator Tests', async () => {
     const tx1 = await contractCreatorOZCreate2.deploy(
       DEPLOYED_AMOUNT,
       SALT,
-      TARGET_CONTRACT_CREATION_CODE
+      TARGET_CONTRACT_CREATION_CODE,
+      Constants.GAS_LIMIT_1_000_000
     );
 
     const receipt1 = await tx1.wait();
-    const [address] = receipt1.events.map(
-      (e) => e.event === NEW_CONTRACT_EVENT && e
+    const [address] = receipt1.logs.map(
+      (e) => e.fragment.name === NEW_CONTRACT_EVENT && e
     )[0].args;
 
-    expect(ethers.utils.isAddress(address)).to.be.true;
+    expect(ethers.isAddress(address)).to.be.true;
 
     const tx2 = await contractCreatorOZCreate2.deploy(
       DEPLOYED_AMOUNT,
       SALT, // same salt
-      TARGET_CONTRACT_CREATION_CODE
+      TARGET_CONTRACT_CREATION_CODE,
+      Constants.GAS_LIMIT_1_000_000
     );
 
     try {
@@ -120,7 +124,8 @@ describe('@OZCreate2 Contract Creator Tests', async () => {
     const tx = await contractCreatorOZCreate2.deploy(
       DEPLOYED_AMOUNT,
       SALT,
-      EMPTY_BYTECODE
+      EMPTY_BYTECODE,
+      Constants.GAS_LIMIT_1_000_000
     );
 
     try {
@@ -145,8 +150,8 @@ describe('@OZCreate2 Contract Creator Tests', async () => {
     );
     const receipt = await deployedTx.wait();
 
-    const [expectedAddress] = receipt.events.map(
-      (e) => e.event === NEW_CONTRACT_EVENT && e
+    const [expectedAddress] = receipt.logs.map(
+      (e) => e.fragment.name === NEW_CONTRACT_EVENT && e
     )[0].args;
 
     expect(address).to.eq(expectedAddress);

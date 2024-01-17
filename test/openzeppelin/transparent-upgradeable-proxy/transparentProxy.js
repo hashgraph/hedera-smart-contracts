@@ -26,39 +26,39 @@ const Constants = require('../../constants');
 const Utils = require('../../utils');
 chai.use(chaiAsPromised);
 
-describe('@OZTransparentUpgradeableProxy Tests', function () {
-  let contractProxy, contractBox;
+describe('@OZTransparentUpgradeableProxy Test Suite', function () {
+  let contractProxy, contractBox, contractBoxV2;
   let owner, signer, proxyAdminAddress;
   before(async function () {
     [owner, signer] = await ethers.getSigners();
     const factoryBox = await ethers.getContractFactory(Constants.Contract.Box);
     contractBox = await factoryBox.deploy();
-    await contractBox.deployed();
 
     const factory = await ethers.getContractFactory(
       Constants.Contract.MyCustomTransparentUpgradeableProxy
     );
     contractProxy = await factory.deploy(
-      contractBox.address,
+      await contractBox.getAddress(),
       owner.address,
-      []
+      '0x',
+      Constants.GAS_LIMIT_1_000_000
     );
-    const receipt = await contractProxy.deployTransaction.wait();
-    proxyAdminAddress = receipt.events[2].args.newAdmin;
+
+    proxyAdminAddress = owner.address;
   });
 
   it('should verify it calls the correct contract and method via proxy', async function () {
     const storeFunctionData =
       '0x6057361d0000000000000000000000000000000000000000000000000000000000000008';
     const signedTx = await owner.sendTransaction({
-      to: contractProxy.address,
+      to: await contractProxy.getAddress(),
       data: storeFunctionData,
       gasLimit: 5000000,
     });
     const receipt = await signedTx.wait();
     const encodedInt =
       '0x0000000000000000000000000000000000000000000000000000000000000008';
-    expect(receipt.to).to.eq(contractProxy.address);
+    expect(receipt.to).to.eq(await contractProxy.getAddress());
     expect(receipt.from).to.eq(owner.address);
     expect(receipt.logs[0].data).to.eq(encodedInt);
   });
@@ -68,15 +68,14 @@ describe('@OZTransparentUpgradeableProxy Tests', function () {
       Constants.Contract.BoxV2
     );
     contractBoxV2 = await factoryBoxV2.deploy();
-    await contractBoxV2.deployed();
 
     const functionSelectorUpgradeAndCall = Utils.functionSelector(
       'upgradeAndCall(address,address,bytes)'
     );
-    const abi = ethers.utils.defaultAbiCoder;
+    const abi = ethers.AbiCoder.defaultAbiCoder();
     const encoded = abi.encode(
       ['address', 'address', 'bytes'],
-      [contractProxy.address, contractBoxV2.address, []]
+      [await contractProxy.getAddress(), await contractBoxV2.getAddress(), '0x']
     );
 
     const signedTx = await owner.sendTransaction({
@@ -92,7 +91,8 @@ describe('@OZTransparentUpgradeableProxy Tests', function () {
       ethers.toUtf8Bytes('Upgraded(address)')
     );
     const newContractAddressEncoded =
-      '0x000000000000000000000000' + contractBoxV2.address.replace('0x', '');
+      '0x000000000000000000000000' +
+      (await contractBoxV2.getAddress().replace('0x', ''));
     expect(eventUpgradedNameHashed).to.eq(topics[0]);
     expect(newContractAddressEncoded.toLowerCase()).to.eq(topics[1]);
 
@@ -101,7 +101,7 @@ describe('@OZTransparentUpgradeableProxy Tests', function () {
       ethers.toUtf8Bytes('ValueChanged(uint256)')
     );
     const signedTxToNewContract = await owner.sendTransaction({
-      to: contractProxy.address,
+      to: await contractProxy.getAddress(),
       data: functionSelectorIncrement,
       gasLimit: 5000000,
     });
@@ -116,15 +116,13 @@ describe('@OZTransparentUpgradeableProxy Tests', function () {
       Constants.Contract.BoxV2
     );
     contractBoxV2 = await factoryBoxV2.deploy();
-    await contractBoxV2.deployed();
-    const functionSelectorUpgradeAndCall = ethers.keccak256(
-        ethers.toUtf8Bytes('upgradeAndCall(address,address,bytes)')
-      )
+    const functionSelectorUpgradeAndCall = ethers
+      .keccak256(ethers.toUtf8Bytes('upgradeAndCall(address,address,bytes)'))
       .substring(0, 10);
-    const abi = ethers.utils.defaultAbiCoder;
+    const abi = ethers.AbiCoder.defaultAbiCoder();
     const encoded = abi.encode(
       ['address', 'address', 'bytes'],
-      [contractProxy.address, contractBoxV2.address, []]
+      [await contractProxy.getAddress(), await contractBoxV2.getAddress(), '0x']
     );
     const tx = await signer.sendTransaction({
       to: proxyAdminAddress,

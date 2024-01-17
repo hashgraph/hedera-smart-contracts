@@ -22,13 +22,13 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-const AMOUNT_TO_MINT = 100;
+const AMOUNT_TO_MINT = 100n;
 const sleep = (timeToSleep) => new Promise((r) => setTimeout(r, timeToSleep));
 const FUTURE_LOOKUP_ERROR = 'ERC5805FutureLookup';
 
-describe('@OZERC20Votes Tests', function () {
+describe('@OZERC20Votes Test Suite', function () {
   let contract, wallet, wallet2;
-  const TIME_INCREMENT = 10000;
+  const TIME_INCREMENT = 10000n;
 
   before(async function () {
     const signers = await ethers.getSigners();
@@ -40,11 +40,6 @@ describe('@OZERC20Votes Tests', function () {
     contract = await votesFactory.deploy(AMOUNT_TO_MINT, {
       gasLimit: 8000000,
     });
-  });
-
-  it('should deploy contract', async function () {
-    const deployed = await contract.deployed();
-    expect(deployed).to.exist;
   });
 
   it('should check if create/mint the erc20 tokens happened when contract created', async function () {
@@ -88,7 +83,7 @@ describe('@OZERC20Votes Tests', function () {
 
   it('should return the current amount of votes that `account` has in the past (getPastVotes) ', async function () {
     const timeTick = await contract.clock();
-    await contract.delegate(wallet.address);
+    await contract.delegate(wallet.address, Constants.GAS_LIMIT_1_000_000);
 
     const votesPast = await contract.getPastVotes(wallet.address, timeTick);
     const timeTick2 = await contract.clock();
@@ -111,7 +106,7 @@ describe('@OZERC20Votes Tests', function () {
 
   it('should produce an error when looking up tottle supply in the future (getPastTotalSupply) ', async function () {
     const timeTick = await contract.clock();
-    const supply = await contract.getPastTotalSupply(timeTick - 1);
+    const supply = await contract.getPastTotalSupply(timeTick - 1n);
     expect(supply).to.equal(AMOUNT_TO_MINT);
   });
 });

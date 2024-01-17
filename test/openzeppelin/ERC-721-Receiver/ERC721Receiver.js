@@ -22,14 +22,14 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZIERC721Receiver Tests', () => {
+describe('@OZIERC721Receiver Test Suite', () => {
   let wallet, invalidErc721Receiver, validErc721Receiver, erc721Token;
 
   const ERC721_NAME = 'Token';
   const ERC721_SYMBOL = 'T';
 
   before(async () => {
-    wallet = await ethers.getSigner();
+    wallet = (await ethers.getSigners())[0];
 
     const invalidErc721ReceiverFac = await ethers.getContractFactory(
       Constants.Contract.InvalidERC721Receiver
@@ -47,9 +47,10 @@ describe('@OZIERC721Receiver Tests', () => {
   });
 
   it('Should deploy contracts to proper addresses', async () => {
-    expect(ethers.utils.isAddress(invalidErc721Receiver.address)).to.be.true;
-    expect(ethers.utils.isAddress(validErc721Receiver.address)).to.be.true;
-    expect(ethers.utils.isAddress(erc721Token.address)).to.be.true;
+    expect(ethers.isAddress(await invalidErc721Receiver.getAddress())).to.be
+      .true;
+    expect(ethers.isAddress(await validErc721Receiver.getAddress())).to.be.true;
+    expect(ethers.isAddress(await erc721Token.getAddress())).to.be.true;
   });
 
   it('Should be able to send ERC721 token to validErc721Receiver via safeTransferFrom', async () => {
@@ -58,22 +59,32 @@ describe('@OZIERC721Receiver Tests', () => {
 
     const tx = await erc721Token[
       'safeTransferFrom(address,address,uint256,bytes)'
-    ](wallet.address, validErc721Receiver.address, tokenID, '0x');
+    ](wallet.address, await validErc721Receiver.getAddress(), tokenID, '0x');
     const receipt = await tx.wait();
-    const event = receipt.events.find((e) => e.event === 'Transfer');
+    const event = receipt.logs.find((e) => e.fragment.name === 'Transfer');
 
     expect(event.args.from).to.eq(wallet.address);
-    expect(event.args.to).to.eq(validErc721Receiver.address);
+    expect(event.args.to).to.eq(await validErc721Receiver.getAddress());
     expect(event.args.tokenId).to.eq(tokenID);
   });
 
   it('Should NOT be able to send ERC721 token to invalidErc721Receiver via safeTransferFrom', async () => {
     const tokenID = 3;
-    await erc721Token.mint(wallet.address, tokenID);
+    await erc721Token.mint(
+      wallet.address,
+      tokenID,
+      Constants.GAS_LIMIT_1_000_000
+    );
 
     const tx = await erc721Token[
       'safeTransferFrom(address,address,uint256,bytes)'
-    ](wallet.address, invalidErc721Receiver.address, tokenID, '0x');
+    ](
+      wallet.address,
+      await invalidErc721Receiver.getAddress(),
+      tokenID,
+      '0x',
+      Constants.GAS_LIMIT_1_000_000
+    );
 
     expect(tx.wait()).to.eventually.rejected.and.have.property(
       'code',

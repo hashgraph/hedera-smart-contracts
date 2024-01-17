@@ -23,7 +23,7 @@ const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 const { CALL_EXCEPTION } = require('../../constants');
 
-describe('@OZERC1155 Tests', () => {
+describe('@OZERC1155 Test Suite', () => {
   let erc1155Token, wallet1, wallet2;
 
   const TOKEN_URI = '_token_uri_';
@@ -52,7 +52,7 @@ describe('@OZERC1155 Tests', () => {
 
   it('Should deploy erc1155Token', async () => {
     expect(await erc1155Token.owner()).to.eq(wallet1.address);
-    expect(ethers.utils.isAddress(erc1155Token.address)).to.be.true;
+    expect(ethers.isAddress(await erc1155Token.getAddress())).to.be.true;
   });
 
   it('Should be able to mint a new token', async () => {
@@ -60,7 +60,7 @@ describe('@OZERC1155 Tests', () => {
       .connect(wallet1)
       .mint(wallet2.address, TOKEN_ID, MINTED_AMOUNT, EMPTY_DATA);
     const receipt = await tx.wait();
-    const event = receipt.events.find((e) => e.event === 'Minted');
+    const event = receipt.logs.find((e) => e.fragment.name === 'Minted');
 
     expect(event.args.id).to.eq(TOKEN_ID);
     expect(event.args.data).to.eq(EMPTY_DATA);
@@ -73,7 +73,7 @@ describe('@OZERC1155 Tests', () => {
       .connect(wallet1)
       .mintBatch(wallet2.address, TOKEN_IDS, MINTED_AMOUNTS, EMPTY_DATA);
     const receipt = await tx.wait();
-    const event = receipt.events.find((e) => e.event === 'MintedBatch');
+    const event = receipt.logs.find((e) => e.fragment.name === 'MintedBatch');
 
     expect(event.args.data).to.eq(EMPTY_DATA);
     expect(event.args.to).to.eq(wallet2.address);
@@ -166,7 +166,9 @@ describe('@OZERC1155 Tests', () => {
       .connect(wallet1)
       .setApprovalForAll(wallet2.address, true);
     const receipt = await tx.wait();
-    const event = receipt.events.find((e) => e.event === 'ApprovalForAll');
+    const event = receipt.logs.find(
+      (e) => e.fragment.name === 'ApprovalForAll'
+    );
 
     expect(event.args.account).to.eq(wallet1.address);
     expect(event.args.operator).to.eq(wallet2.address);
@@ -195,8 +197,8 @@ describe('@OZERC1155 Tests', () => {
       .connect(wallet1)
       .transferOwnership(wallet2.address);
     const receipt = await tx.wait();
-    const event = receipt.events.find(
-      (e) => (e.event = 'OwnershipTransferred')
+    const event = receipt.logs.find(
+      (e) => (e.fragment.name = 'OwnershipTransferred')
     );
 
     expect(event.args.previousOwner).to.eq(wallet1.address);
@@ -207,13 +209,9 @@ describe('@OZERC1155 Tests', () => {
     const currentOwner = await erc1155Token.owner();
     expect(currentOwner).to.not.eq(wallet2.address);
 
-    const tx = await erc1155Token
-      .connect(wallet2)
-      .transferOwnership(wallet2.address);
-    expect(tx.wait()).to.eventually.be.rejected.and.have.property(
-      'code',
-      CALL_EXCEPTION
-    );
+    expect(
+      erc1155Token.connect(wallet2).transferOwnership(wallet2.address)
+    ).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION);
   });
 
   it('Should retrieve the token uri of a tokenID', async () => {
@@ -230,36 +228,50 @@ describe('@OZERC1155 Tests', () => {
       wallet2.address,
       TOKEN_ID,
       MINTED_AMOUNT,
-      EMPTY_DATA
+      EMPTY_DATA,
+      Constants.GAS_LIMIT_1_000_000
     );
 
     await erc1155Token
       .connect(wallet2)
-      .burn(wallet2.address, TOKEN_ID, BURNT_AMOUNT);
+      .burn(
+        wallet2.address,
+        TOKEN_ID,
+        BURNT_AMOUNT,
+        Constants.GAS_LIMIT_1_000_000
+      );
 
     const balance = await erc1155Token.balanceOf(wallet2.address, TOKEN_ID);
     expect(balance).to.eq(BigInt(MINTED_AMOUNT - BURNT_AMOUNT));
   });
 
   it('Should NOT burn insufficient amount of token', async () => {
-    const tx = await erc1155Token
-      .connect(wallet2)
-      .burn(wallet2.address, TOKEN_ID, BURNT_AMOUNT);
-
-    expect(tx.wait()).to.eventually.be.rejected.and.have.property(
-      'code',
-      CALL_EXCEPTION
-    );
+    expect(
+      erc1155Token
+        .connect(wallet2)
+        .burn(wallet2.address, TOKEN_ID, BURNT_AMOUNT)
+    ).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION);
   });
 
   it('Should burn token in batch', async () => {
     await erc1155Token
       .connect(wallet1)
-      .mintBatch(wallet2.address, TOKEN_IDS, MINTED_AMOUNTS, EMPTY_DATA);
+      .mintBatch(
+        wallet2.address,
+        TOKEN_IDS,
+        MINTED_AMOUNTS,
+        EMPTY_DATA,
+        Constants.GAS_LIMIT_1_000_000
+      );
 
     await erc1155Token
       .connect(wallet2)
-      .burnBatch(wallet2.address, TOKEN_IDS, BURNT_AMOUNTS);
+      .burnBatch(
+        wallet2.address,
+        TOKEN_IDS,
+        BURNT_AMOUNTS,
+        Constants.GAS_LIMIT_1_000_000
+      );
 
     const balanceBatch = await erc1155Token.balanceOfBatch(
       [wallet2.address, wallet2.address, wallet2.address],
@@ -267,9 +279,7 @@ describe('@OZERC1155 Tests', () => {
     );
 
     balanceBatch.forEach((b, i) => {
-      expect(b).to.eq(
-        BigInt(MINTED_AMOUNTS[i] - BURNT_AMOUNTS[i])
-      );
+      expect(b).to.eq(BigInt(MINTED_AMOUNTS[i] - BURNT_AMOUNTS[i]));
     });
   });
 
@@ -293,7 +303,9 @@ describe('@OZERC1155 Tests', () => {
       EMPTY_DATA
     );
     const receipt = await tx.wait();
-    const event = receipt.events.find((e) => e.event === 'TransferSingle');
+    const event = receipt.logs.find(
+      (e) => e.fragment.name === 'TransferSingle'
+    );
 
     expect(event.args.operator).to.eq(wallet1.address);
     expect(event.args.from).to.eq(wallet2.address);
@@ -331,7 +343,7 @@ describe('@OZERC1155 Tests', () => {
       EMPTY_DATA
     );
     const receipt = await tx.wait();
-    const event = receipt.events.find((e) => e.event === 'TransferBatch');
+    const event = receipt.logs.find((e) => e.fragment.name === 'TransferBatch');
 
     expect(event.args.operator).to.eq(wallet1.address);
     expect(event.args.from).to.eq(wallet2.address);
@@ -355,17 +367,14 @@ describe('@OZERC1155 Tests', () => {
       EMPTY_DATA
     );
 
-    const tx = await erc1155Token.safeTransferFrom(
-      wallet2.address,
-      wallet1.address,
-      TOKEN_ID,
-      TRANSFER_AMOUNT,
-      EMPTY_DATA
-    );
-
-    expect(tx.wait()).to.eventually.be.rejected.and.have.property(
-      'code',
-      CALL_EXCEPTION
-    );
+    expect(
+      erc1155Token.safeTransferFrom(
+        wallet2.address,
+        wallet1.address,
+        TOKEN_ID,
+        TRANSFER_AMOUNT,
+        EMPTY_DATA
+      )
+    ).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION);
   });
 });

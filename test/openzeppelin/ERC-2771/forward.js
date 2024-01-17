@@ -38,7 +38,7 @@ function forwardRequestType() {
   ];
 }
 
-describe('@OZERC-2771 Fоrward Tests', function () {
+describe('@OZERC-2771 Fоrward Test Suite', function () {
   let signers,
     wallet2,
     forwarderAddress,
@@ -66,16 +66,18 @@ describe('@OZERC-2771 Fоrward Tests', function () {
     contractForwarder = await factoryForwarder.deploy(FORWARDER_NAME, {
       gasLimit: BigInt(STARTING_GAS_LIMIT),
     });
-    forwarderAddress = contractForwarder.address;
+    forwarderAddress = await contractForwarder.getAddress();
 
     const transaction = await contractForwarder.fund({
       value: FUND_AMOUNT,
     });
+
     const res = await transaction.wait();
 
     const factoryContext = await ethers.getContractFactory(
       Constants.Contract.ERC2771ContextTest
     );
+
     contractRegestry = await factoryContext.deploy(forwarderAddress, {
       gasLimit: BigInt(STARTING_GAS_LIMIT),
     });
@@ -89,17 +91,20 @@ describe('@OZERC-2771 Fоrward Tests', function () {
   beforeEach(async function () {
     transactionObject = await contractRegestry
       .connect(wallet2)
-      .populateTransaction.changeMessageTestRequest(TEST_MESSAGE);
+      .changeMessageTestRequest.populateTransaction(TEST_MESSAGE);
 
     const forwardRequest = {
       ...transactionObject,
+      from: wallet2.address,
       gas: 1_000_000,
       deadline: deadlineFuture,
       nonce: await contractForwarder.nonces(wallet2.address),
       value: 0,
     };
+
     delete forwardRequest.gasLimit;
-    const signature = await wallet2._signTypedData(
+
+    const signature = await wallet2.signTypedData(
       {
         ...domain,
       },
@@ -113,14 +118,6 @@ describe('@OZERC-2771 Fоrward Tests', function () {
     };
   });
 
-  it('should deploy the contracts', async function () {
-    const contractForwarderDep = await contractForwarder.deployed();
-    const contractContextDep = await contractRegestry.deployed();
-
-    expect(contractForwarderDep).to.exist;
-    expect(contractContextDep).to.exist;
-  });
-
   it('should execute forward request', async function () {
     const prevMessage = await contractRegestry.message();
     expect(prevMessage).to.equal('');
@@ -129,16 +126,16 @@ describe('@OZERC-2771 Fоrward Tests', function () {
       value: 0,
     });
     const rec = await trxCall.wait();
-    const eventExecuted = rec.events[1];
+    const eventExecuted = rec.logs[1];
     const message = await contractRegestry.message();
 
-    await expect(eventExecuted.event).to.equal('ExecutedForwardRequest');
+    expect(eventExecuted.fragment.name).to.equal('ExecutedForwardRequest');
     expect(message).to.equal(TEST_MESSAGE);
   });
 
   it('should execute forward request with [ERC2771ForwarderMismatchedValue] error', async function () {
     expect(
-      contractForwarder.callStatic.execute(trx)
+      contractForwarder.execute.staticCall(trx)
     ).to.eventually.be.rejected.and.have.property(
       'errorName',
       ERC2771_FORWARDER_MISMATCHED_VALUE
@@ -151,10 +148,10 @@ describe('@OZERC-2771 Fоrward Tests', function () {
   });
 
   it('should validate the request sender in more detail', async function () {
-    const verifiedStatic = await contractForwarder.callStatic.validateTest(trx);
+    const verifiedStatic = await contractForwarder.validateTest.staticCall(trx);
     const verifiedTrx = await contractForwarder.validateTest(trx);
     const rec = await verifiedTrx.wait();
-    const verifiedTrxResult = rec.events[0].args;
+    const verifiedTrxResult = rec.logs[0].args;
 
     expect(verifiedStatic[0]).to.be.true;
     expect(verifiedStatic[1]).to.be.true;
@@ -170,12 +167,12 @@ describe('@OZERC-2771 Fоrward Tests', function () {
       ...trx,
       from: ethers.Wallet.createRandom().address,
     };
-    const verifiedStatic = await contractForwarder.callStatic.validateTest(
+    const verifiedStatic = await contractForwarder.validateTest.staticCall(
       tamperedTrx
     );
     const verifiedTrx = await contractForwarder.validateTest(tamperedTrx);
     const rec = await verifiedTrx.wait();
-    const verifiedTrxResult = rec.events[0].args;
+    const verifiedTrxResult = rec.logs[0].args;
 
     expect(verifiedStatic[0]).to.be.true;
     expect(verifiedStatic[1]).to.be.true;
@@ -191,12 +188,12 @@ describe('@OZERC-2771 Fоrward Tests', function () {
       ...trx,
       deadline: 0,
     };
-    const verifiedStatic = await contractForwarder.callStatic.validateTest(
+    const verifiedStatic = await contractForwarder.validateTest.staticCall(
       tamperedTrx
     );
     const verifiedTrx = await contractForwarder.validateTest(tamperedTrx);
     const rec = await verifiedTrx.wait();
-    const verifiedTrxResult = rec.events[0].args;
+    const verifiedTrxResult = rec.logs[0].args;
 
     expect(verifiedStatic[0]).to.be.true;
     expect(verifiedStatic[1]).to.be.false;

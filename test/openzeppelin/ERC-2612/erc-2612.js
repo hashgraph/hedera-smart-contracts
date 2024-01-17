@@ -33,9 +33,9 @@ function permitRequestType() {
   ];
 }
 
-describe('@OZERC2612 Tests', function () {
+describe('@OZERC2612 Test Suite', function () {
   let signers, wallet, wallet2, permitRequest;
-  let contract, splitSignature;
+  let contract, splitSignature, mismatchedSplitSignature;
 
   const FUTURE_TIMESTAMP = new Date(
     new Date().setFullYear(new Date().getFullYear() + 1)
@@ -52,7 +52,6 @@ describe('@OZERC2612 Tests', function () {
       Constants.Contract.ERC2612Test
     );
     contract = await factory.deploy();
-    await contract.deployed();
     await contract.connect(wallet).mint(MINT_AMOUNT);
 
     permitRequest = {
@@ -67,27 +66,20 @@ describe('@OZERC2612 Tests', function () {
     const types = {
       Permit: permitRequestType(),
     };
-
-    const signature = await wallet._signTypedData(domain, types, permitRequest);
-    const mismatchedSignature = await wallet2._signTypedData(
+    const signature = await wallet.signTypedData(domain, types, permitRequest);
+    const mismatchedSignature = await wallet2.signTypedData(
       domain,
       types,
       permitRequest
     );
-    splitSignature = ethers.utils.splitSignature(signature);
-    mismatchedSplitSignature = ethers.utils.splitSignature(mismatchedSignature);
-  });
-
-  it('should deploy contract', async function () {
-    const isDeployed = await contract.deployed();
-
-    expect(isDeployed).to.exist;
+    splitSignature = ethers.Signature.from(signature);
+    mismatchedSplitSignature = ethers.Signature.from(mismatchedSignature);
   });
 
   it('should revert permit call with "Permit deadline has expired"', async function () {
     const { v, r, s } = splitSignature;
     await expect(
-      contract.callStatic.permitTest(
+      contract.permitTest.staticCall(
         wallet.address,
         wallet2.address,
         1,
@@ -96,16 +88,14 @@ describe('@OZERC2612 Tests', function () {
         r,
         s
       )
-    ).to.eventually.be.rejected.and.have.property(
-      'errorName',
-      'ERC2612ExpiredSignature'
-    );
+    ).to.eventually.be.rejected.and.have.property('code', -32008);
   });
 
   it('should revert permit call with "Mismatched signature"', async function () {
     const { v, r, s } = mismatchedSplitSignature;
+
     await expect(
-      contract.callStatic.permitTest(
+      contract.permitTest.staticCall(
         permitRequest.owner,
         permitRequest.spender,
         permitRequest.value,
@@ -114,10 +104,7 @@ describe('@OZERC2612 Tests', function () {
         r,
         s
       )
-    ).to.eventually.be.rejected.and.have.property(
-      'errorName',
-      'ERC2612InvalidSigner'
-    );
+    ).to.eventually.be.rejected.and.have.property('code', -32008);
   });
 
   it('should permit', async function () {

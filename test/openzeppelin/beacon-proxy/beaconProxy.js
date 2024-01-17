@@ -23,10 +23,10 @@ const { ethers } = require('hardhat');
 const Utils = require('../../utils');
 const Constants = require('../../constants');
 
-describe('@OZBeaconProxy Tests', function () {
+describe('@OZBeaconProxy Test Suite', function () {
   let owner, signer;
   let contractLogicContractV1, factoryLogicContractV1, contractLogicContractV2;
-  let beaconFactory, beaconProxyFactory, beacon, beaconProxy;
+  let beaconFactory, beaconProxyFactory, beacon, beaconProxy, beaconProxy2;
 
   before(async function () {
     [owner, signer] = await ethers.getSigners();
@@ -35,35 +35,31 @@ describe('@OZBeaconProxy Tests', function () {
     );
     const initialValue = 1;
     contractLogicContractV1 = await factoryLogicContractV1.deploy(initialValue);
-    await contractLogicContractV1.deployed();
 
     beaconFactory = await ethers.getContractFactory(
       Constants.Contract.BeaconContract
     );
     beacon = await beaconFactory.deploy(
-      contractLogicContractV1.address,
+      await contractLogicContractV1.getAddress(),
       owner.address
     );
-    await beacon.deployed();
 
     beaconProxyFactory = await ethers.getContractFactory(
       Constants.Contract.BeaconProxyContract
     );
-    beaconProxy = await beaconProxyFactory.deploy(beacon.address);
-    await beaconProxy.deployed();
+    beaconProxy = await beaconProxyFactory.deploy(await beacon.getAddress());
   });
 
   it('verifies several proxies can be created and used', async function () {
     const beaconProxyFactory2 = await ethers.getContractFactory(
       Constants.Contract.BeaconProxyContract
     );
-    beaconProxy2 = await beaconProxyFactory2.deploy(beacon.address);
-    await beaconProxy2.deployed();
+    beaconProxy2 = await beaconProxyFactory2.deploy(await beacon.getAddress());
     const eventValueHashed = ethers.keccak256(
       ethers.toUtf8Bytes('Value(uint256)')
     );
     const signedTx = await owner.sendTransaction({
-      to: beaconProxy.address,
+      to: await beaconProxy.getAddress(),
       data: '0x2e64cec1',
       gasLimit: 5000000,
     });
@@ -72,7 +68,7 @@ describe('@OZBeaconProxy Tests', function () {
     expect(receipt.logs[0].topics[0]).to.eq(eventValueHashed);
 
     const signedTx2 = await owner.sendTransaction({
-      to: beaconProxy2.address,
+      to: await beaconProxy2.getAddress(),
       data: '0x2e64cec1',
       gasLimit: 5000000,
     });
@@ -83,7 +79,7 @@ describe('@OZBeaconProxy Tests', function () {
 
   it('verifies contract can be called via beacon proxy', async function () {
     const signedTx = await owner.sendTransaction({
-      to: beaconProxy.address,
+      to: await beaconProxy.getAddress(),
       data: '0x2e64cec1',
       gasLimit: 5000000,
     });
@@ -101,16 +97,18 @@ describe('@OZBeaconProxy Tests', function () {
     );
     const initialValue = 2;
     contractLogicContractV2 = await contractFactoryV2.deploy(initialValue);
-    await contractLogicContractV2.deployed();
 
     const getImplementationBeforeUpgrade = await beacon.implementation();
     const functionSelectorUpgradeTo =
       Utils.functionSelector('upgradeTo(address)');
-    const abi = ethers.utils.defaultAbiCoder;
-    const encoded = abi.encode(['address'], [contractLogicContractV2.address]);
+    const abi = ethers.AbiCoder.defaultAbiCoder();
+    const encoded = abi.encode(
+      ['address'],
+      [await contractLogicContractV2.getAddress()]
+    );
 
     const signedTx = await owner.sendTransaction({
-      to: beacon.address,
+      to: await beacon.getAddress(),
       data: functionSelectorUpgradeTo + encoded.replace('0x', ''),
       gasLimit: 5000000,
     });
@@ -122,7 +120,7 @@ describe('@OZBeaconProxy Tests', function () {
     );
     const newContractAddressEncoded =
       '0x000000000000000000000000' +
-      contractLogicContractV2.address.replace('0x', '');
+      (await contractLogicContractV2.getAddress()).replace('0x', '');
     expect(eventUpgradedNameHashed).to.eq(topics[0]);
     expect(newContractAddressEncoded.toLowerCase()).to.eq(topics[1]);
 
@@ -134,7 +132,7 @@ describe('@OZBeaconProxy Tests', function () {
       ethers.toUtf8Bytes('Squared(uint256)')
     );
     const signedTxToNewContract = await owner.sendTransaction({
-      to: beaconProxy.address,
+      to: await beaconProxy.getAddress(),
       data: functionSelectorSquare + encoded2.replace('0x', ''),
       gasLimit: 5000000,
     });
@@ -142,10 +140,10 @@ describe('@OZBeaconProxy Tests', function () {
 
     expect(eventSquaredNameHashed).to.eq(receipt2.logs[0].topics[0]);
     expect(getImplementationBeforeUpgrade).to.eq(
-      contractLogicContractV1.address
+      await contractLogicContractV1.getAddress()
     );
     expect(getImplementationAfterUpgrade).to.eq(
-      contractLogicContractV2.address
+      await contractLogicContractV2.getAddress()
     );
   });
 
@@ -156,20 +154,19 @@ describe('@OZBeaconProxy Tests', function () {
       );
       const initialValue = 2;
       contractLogicContractV2 = await contractFactoryV2.deploy(initialValue);
-      await contractLogicContractV2.deployed();
     });
 
     it('verifies underlying contract can be changed only by owner', async function () {
       const functionSelectorUpgradeTo =
         Utils.functionSelector('upgradeTo(address)');
-      const abi = ethers.utils.defaultAbiCoder;
+      const abi = ethers.AbiCoder.defaultAbiCoder();
       const encoded = abi.encode(
         ['address'],
-        [contractLogicContractV2.address]
+        [await contractLogicContractV2.getAddress()]
       );
 
       const signedTx = await signer.sendTransaction({
-        to: beacon.address,
+        to: await beacon.getAddress(),
         data: functionSelectorUpgradeTo + encoded.replace('0x', ''),
         gasLimit: 5000000,
       });
@@ -183,11 +180,11 @@ describe('@OZBeaconProxy Tests', function () {
     it('verifies underlying contract cannot be changed to EOA address', async function () {
       const functionSelectorUpgradeTo =
         Utils.functionSelector('upgradeTo(address)');
-      const abi = ethers.utils.defaultAbiCoder;
+      const abi = ethers.AbiCoder.defaultAbiCoder();
       const encoded = abi.encode(['address'], [owner.address]);
 
       const signedTx = await signer.sendTransaction({
-        to: beacon.address,
+        to: await beacon.getAddress(),
         data: functionSelectorUpgradeTo + encoded.replace('0x', ''),
         gasLimit: 5000000,
       });

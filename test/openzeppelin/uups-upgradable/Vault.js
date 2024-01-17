@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const Constants = require('../../constants');
 const { ethers, upgrades } = require('hardhat');
 
-describe('@OZUUPSUpgradable Upgradable Vaults Tests', () => {
+describe('@OZUUPSUpgradable Upgradable Vaults Test Suite', () => {
   const DEPOSIT_AMOUNT = ethers.parseEther('3.0');
   const TINY_BAR_TO_WEI_COEF = 10_000_000_000;
   const CALL_EXCEPTION = 'CALL_EXCEPTION';
@@ -56,9 +56,7 @@ describe('@OZUUPSUpgradable Upgradable Vaults Tests', () => {
 
   it('V1: Should allow owner to withdraw an amount of Hbar', async () => {
     await vaultV1.deposit({ value: DEPOSIT_AMOUNT });
-    const WITHDRAW_AMOUNT = ethers.utils
-      .parseEther('1.0')
-      .div(TINY_BAR_TO_WEI_COEF);
+    const WITHDRAW_AMOUNT = ethers.parseEther('1.0').div(TINY_BAR_TO_WEI_COEF);
 
     const tx = await vaultV1.withdraw(WITHDRAW_AMOUNT);
     const receipt = await tx.wait();
@@ -74,9 +72,7 @@ describe('@OZUUPSUpgradable Upgradable Vaults Tests', () => {
   });
 
   it('V1: Should NOT allow owner to withdraw an amount of Hbar which is greater than current balance', async () => {
-    const WITHDRAW_AMOUNT = ethers.utils
-      .parseEther('4.0')
-      .div(TINY_BAR_TO_WEI_COEF);
+    const WITHDRAW_AMOUNT = ethers.parseEther('4.0').div(TINY_BAR_TO_WEI_COEF);
 
     const tx = await vaultV1.withdraw(WITHDRAW_AMOUNT);
 
@@ -87,9 +83,7 @@ describe('@OZUUPSUpgradable Upgradable Vaults Tests', () => {
   });
 
   it('V1: Should NOT allow non-owner account to withdraw an amount of Hbar', async () => {
-    const WITHDRAW_AMOUNT = ethers.utils
-      .parseEther('2.0')
-      .div(TINY_BAR_TO_WEI_COEF);
+    const WITHDRAW_AMOUNT = ethers.parseEther('2.0').div(TINY_BAR_TO_WEI_COEF);
 
     const tx = await vaultV1.connect(beneficiary).withdraw(WITHDRAW_AMOUNT);
 
@@ -104,14 +98,18 @@ describe('@OZUUPSUpgradable Upgradable Vaults Tests', () => {
       const VaultV2 = await ethers.getContractFactory(
         Constants.Contract.VaultV2
       );
-      vaultV2 = await upgrades.upgradeProxy(vaultV1.address, VaultV2, {
-        kind: 'uups',
-      });
+      vaultV2 = await upgrades.upgradeProxy(
+        await vaultV1.getAddress(),
+        VaultV2,
+        {
+          kind: 'uups',
+        }
+      );
       await vaultV2.initializeV2(await beneficiary.getAddress());
     });
 
     it('V2: Should upgrade vaultV1 to VaultV2', async () => {
-      expect(vaultV2.address).to.eq(vaultV1.address);
+      expect(await vaultV2.getAddress()).to.eq(await vaultV1.getAddress());
       expect(await vaultV2.version()).to.eq(2);
       expect(await vaultV2.getCurrentBeneficiary()).to.eq(
         await beneficiary.getAddress()
@@ -129,7 +127,7 @@ describe('@OZUUPSUpgradable Upgradable Vaults Tests', () => {
     it('V2: Should allow the rightful beneficiary to withdraw an amount of Hbar', async () => {
       await vaultV2.deposit({ value: DEPOSIT_AMOUNT });
 
-      const WITHDRAW_AMOUNT = ethers.utils
+      const WITHDRAW_AMOUNT = ethers
         .parseEther('1.0')
         .div(TINY_BAR_TO_WEI_COEF);
 
@@ -146,7 +144,7 @@ describe('@OZUUPSUpgradable Upgradable Vaults Tests', () => {
     });
 
     it('V2: Should NOT allow beneficiary to withdraw an amount of Hbar which is greater than current balance', async () => {
-      const WITHDRAW_AMOUNT = ethers.utils
+      const WITHDRAW_AMOUNT = ethers
         .parseEther('4.0')
         .div(TINY_BAR_TO_WEI_COEF);
 
@@ -159,7 +157,7 @@ describe('@OZUUPSUpgradable Upgradable Vaults Tests', () => {
     });
 
     it('V2: Should NOT allow non-beneficial account to withdraw an amount of Hbar', async () => {
-      const WITHDRAW_AMOUNT = ethers.utils
+      const WITHDRAW_AMOUNT = ethers
         .parseEther('2.0')
         .div(TINY_BAR_TO_WEI_COEF);
 

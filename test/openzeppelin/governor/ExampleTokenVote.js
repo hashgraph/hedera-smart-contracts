@@ -2,7 +2,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('ExampleToken', function () {
+describe('ExampleToken Test Suite', function () {
   let ExampleToken;
   let token;
   let owner;
@@ -17,8 +17,7 @@ describe('ExampleToken', function () {
     [owner, addr1, addr2] = await ethers.getSigners();
 
     // Deploy a new ExampleToken contract before each test.
-    token = await ExampleToken.deploy();
-    await token.deployed();
+    token = await ExampleToken.deploy(Constants.GAS_LIMIT_1_000_000);
 
     await token.mint(owner.address, ethers.parseEther('1000'));
   });
@@ -61,7 +60,7 @@ describe('ExampleToken', function () {
           .transfer(owner.address, 1, Constants.GAS_LIMIT_800000);
       } catch (error) {
         const errorData = error.data;
-        const errorSignature = ethers.utils
+        const errorSignature = ethers
           .id('ERC20InsufficientBalance(address,uint256,uint256)')
           .substring(0, 10);
         if (errorData.data.startsWith(errorSignature)) {

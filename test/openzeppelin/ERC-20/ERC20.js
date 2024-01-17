@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZERC20 Tests', function () {
+describe('@OZERC20 Test Suite', function () {
   const amount = 33;
   let signers;
   let erc20;
@@ -64,7 +64,7 @@ describe('@OZERC20 Tests', function () {
   });
 
   it('should be able to execute approve(address,uint256)', async function () {
-    const res = await erc20.approve(erc20.address, amount);
+    const res = await erc20.approve(await erc20.getAddress(), amount);
     expect(
       (await res.wait()).logs.filter(
         (e) => e.fragment.name === Constants.Events.Approval
@@ -73,7 +73,10 @@ describe('@OZERC20 Tests', function () {
   });
 
   it('should be able to execute allowance(address,address,uint256)', async function () {
-    const res = await erc20.allowance(signers[0].address, erc20.address);
+    const res = await erc20.allowance(
+      signers[0].address,
+      await erc20.getAddress()
+    );
     expect(res).to.eq(amount);
   });
 
@@ -89,9 +92,13 @@ describe('@OZERC20 Tests', function () {
     await erc20.approve(signers[1].address, amount);
     const erc20Signer2 = erc20.connect(signers[1]);
 
-    const balanceBefore = await erc20.balanceOf(erc20.address);
-    await erc20Signer2.transferFrom(signers[0].address, erc20.address, 33);
-    const balanceAfter = await erc20.balanceOf(erc20.address);
+    const balanceBefore = await erc20.balanceOf(await erc20.getAddress());
+    await erc20Signer2.transferFrom(
+      signers[0].address,
+      await erc20.getAddress(),
+      33
+    );
+    const balanceAfter = await erc20.balanceOf(await erc20.getAddress());
 
     expect(balanceBefore).to.not.eq(balanceAfter);
     expect(balanceAfter).to.eq(parseInt(balanceBefore) + amount);

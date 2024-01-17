@@ -173,7 +173,7 @@ describe('DiamondFacet Test Suite', async function () {
           functionSelectors: selectors,
         },
       ],
-      ethers.constants.AddressZero,
+      ethers.ZeroAddress,
       '0x',
       Constants.GAS_LIMIT_1_000_000
     );
@@ -219,7 +219,7 @@ describe('DiamondFacet Test Suite', async function () {
           functionSelectors: selectors,
         },
       ],
-      ethers.constants.AddressZero,
+      ethers.ZeroAddress,
       '0x',
       Constants.GAS_LIMIT_800000
     );
@@ -250,7 +250,7 @@ describe('DiamondFacet Test Suite', async function () {
           functionSelectors: selectors,
         },
       ],
-      ethers.constants.AddressZero,
+      ethers.ZeroAddress,
       '0x',
       Constants.GAS_LIMIT_800000
     );
@@ -279,12 +279,12 @@ describe('DiamondFacet Test Suite', async function () {
     const tx = await diamondCutFacet.diamondCut(
       [
         {
-          facetAddress: ethers.constants.AddressZero,
+          facetAddress: ethers.ZeroAddress,
           action: Helper.DiamondHelper.FacetCutAction.Remove,
           functionSelectors: selectors,
         },
       ],
-      ethers.constants.AddressZero,
+      ethers.ZeroAddress,
       '0x',
       Constants.GAS_LIMIT_1_000_000
     );
@@ -313,12 +313,12 @@ describe('DiamondFacet Test Suite', async function () {
     const tx = await diamondCutFacet.diamondCut(
       [
         {
-          facetAddress: ethers.constants.AddressZero,
+          facetAddress: ethers.ZeroAddress,
           action: Helper.DiamondHelper.FacetCutAction.Remove,
           functionSelectors: selectors,
         },
       ],
-      ethers.constants.AddressZero,
+      ethers.ZeroAddress,
       '0x',
       Constants.GAS_LIMIT_800000
     );
@@ -349,12 +349,12 @@ describe('DiamondFacet Test Suite', async function () {
     const tx = await diamondCutFacet.diamondCut(
       [
         {
-          facetAddress: ethers.constants.AddressZero,
+          facetAddress: ethers.ZeroAddress,
           action: Helper.DiamondHelper.FacetCutAction.Remove,
           functionSelectors: selectors,
         },
       ],
-      ethers.constants.AddressZero,
+      ethers.ZeroAddress,
       '0x',
       Constants.GAS_LIMIT_800000
     );
@@ -410,7 +410,7 @@ describe('DiamondFacet Test Suite', async function () {
 
     const tx = await diamondCutFacet.diamondCut(
       cuts,
-      ethers.constants.AddressZero,
+      ethers.ZeroAddress,
       '0x',
       Constants.GAS_LIMIT_8000000
     );

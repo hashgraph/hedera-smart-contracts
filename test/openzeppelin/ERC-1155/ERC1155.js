@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZERC1155 Tests', function () {
+describe('@OZERC1155 Test Suite', function () {
   const uri = 'testuri';
   const tokenId1 = 1;
   const tokenId2 = 33;
@@ -43,7 +43,7 @@ describe('@OZERC1155 Tests', function () {
       signers[0].address,
       [tokenId1, tokenId2],
       [token1InitialMint, token2InitialMint],
-      []
+      '0x'
     );
   });
 
@@ -94,7 +94,7 @@ describe('@OZERC1155 Tests', function () {
       signers[1].address,
       tokenId1,
       tradeableAmount,
-      []
+      '0x'
     );
     const balanceAfter = await erc1155.balanceOf(signers[1].address, tokenId1);
 
@@ -116,7 +116,7 @@ describe('@OZERC1155 Tests', function () {
       signers[1].address,
       [tokenId1, tokenId2],
       [tradeableAmount, tradeableAmount],
-      []
+      '0x'
     );
     const balanceAfter1 = await erc1155.balanceOf(signers[1].address, tokenId1);
     const balanceAfter33 = await erc1155.balanceOf(

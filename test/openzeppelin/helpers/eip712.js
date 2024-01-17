@@ -54,7 +54,7 @@ async function getDomain(contract) {
     name,
     version,
     // TODO: remove check when contracts are all migrated to ethers
-    chainId: chainId.toNumber(),
+    chainId: chainId,
     verifyingContract,
     salt,
   };
