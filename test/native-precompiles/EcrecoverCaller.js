@@ -26,7 +26,7 @@ const to32ByteString = (str) => {
   return str.toString(16).replace('0x', '').padStart(64, '0');
 };
 
-describe('Native Precompiles - Ecrecover', function () {
+describe('Native Precompiles - Ecrecover Test Suite', function () {
   this.timeout(10000);
 
   let contract, signedData, hashedData, v, r, s, signer, callData;
@@ -42,15 +42,15 @@ describe('Native Precompiles - Ecrecover', function () {
       gasLimit: 8_000_000,
     });
 
-    const deployRc = await _contract.deployTransaction.wait();
-    const contractAddress = deployRc.contractAddress;
+    const contractAddress = await _contract.getAddress();
     contract = Contract.attach(contractAddress);
 
-    signer = await ethers.getSigner();
+    signer = (await ethers.getSigners())[0];
     signedData = await signer.signMessage(UNSIGNED_DATA);
-    hashedData = ethers.utils.hashMessage(UNSIGNED_DATA);
+    hashedData = ethers.hashMessage(UNSIGNED_DATA);
 
-    const splitSignature = ethers.utils.splitSignature(signedData);
+    const splitSignature = ethers.Signature.from(signedData);
+
     v = splitSignature.v;
     r = splitSignature.r;
     s = splitSignature.s;
@@ -70,7 +70,7 @@ describe('Native Precompiles - Ecrecover', function () {
   it('should be able to call call0x1', async function () {
     const result = await contract.call0x1(callData);
     const rec = await result.wait();
-    expect(rec.events[0].data).to.contain(
+    expect(rec.logs[0].data).to.contain(
       signer.address.toLowerCase().replace('0x', '')
     );
   });

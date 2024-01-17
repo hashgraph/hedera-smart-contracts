@@ -34,7 +34,9 @@ describe('ShanghaiOpcodes tests', function () {
   });
 
   it('should be able to execute opExtCodeHash()', async function () {
-    const res = await shanghaiContract.opExtCodeHash(shanghaiContract.address);
+    const res = await shanghaiContract.opExtCodeHash(
+      await shanghaiContract.getAddress()
+    );
 
     // code hash
     const prefix = res.toString().slice(0, 2);
@@ -43,7 +45,7 @@ describe('ShanghaiOpcodes tests', function () {
     const hash = res.toString().slice(2);
     expect(hash.length).to.equal(64);
 
-    expect(res).not.to.equal(ethers.constants.HashZero);
+    expect(res).not.to.equal(ethers.ZeroHash);
   });
 
   it('should be able to execute opPush0()', async function () {

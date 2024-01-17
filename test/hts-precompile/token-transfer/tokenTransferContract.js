@@ -23,7 +23,6 @@ const { ethers } = require('hardhat');
 const utils = require('../utils');
 const Constants = require('../../constants');
 const {
-  pollForLastEvent,
   pollForNewERC20Balance,
   pollForNewSignerBalanceUsingProvider,
 } = require('../../../utils/helpers');
@@ -106,7 +105,7 @@ describe('TokenTransferContract Test Suite', function () {
       expect.fail();
     } catch (e) {
       expect(e).to.exist;
-      expect(e.reason).to.eq('transaction failed');
+      expect(e.code).to.eq(Constants.CALL_EXCEPTION);
     }
   });
 
@@ -124,12 +123,12 @@ describe('TokenTransferContract Test Suite', function () {
       expect.fail();
     } catch (e) {
       expect(e).to.exist;
-      expect(e.reason).to.eq('transaction failed');
+      expect(e.code).to.eq(Constants.CALL_EXCEPTION);
     }
   });
 
   it('should be able to execute transferTokens', async function () {
-    const amount = 33;
+    const amount = BigInt(33);
     const signers = await ethers.getSigners();
 
     let wallet1BalanceBefore = await erc20Contract.balanceOf(
@@ -271,10 +270,12 @@ describe('TokenTransferContract Test Suite', function () {
         {
           accountID: signers[0].address,
           amount: -10_000,
+          isApproval: false,
         },
         {
           accountID: signers[1].address,
           amount: 10_000,
+          isApproval: false,
         },
       ],
     };
@@ -292,10 +293,9 @@ describe('TokenTransferContract Test Suite', function () {
       Constants.GAS_LIMIT_1_000_000
     );
     const cryptoTransferReceipt = await cryptoTransferTx.wait();
-    const responseCode = await pollForLastEvent(
-      cryptoTransferReceipt,
-      Constants.Events.ResponseCode
-    );
+    const responseCode = cryptoTransferReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.ResponseCode
+    )[0].args[0];
 
     const signers0After = await pollForNewSignerBalanceUsingProvider(
       signers[0].provider,
@@ -339,6 +339,7 @@ describe('TokenTransferContract Test Suite', function () {
             senderAccountID: signers[0].address,
             receiverAccountID: signers[1].address,
             serialNumber: mintedTokenSerialNumber,
+            isApproval: false,
           },
         ],
       },
@@ -412,10 +413,12 @@ describe('TokenTransferContract Test Suite', function () {
         {
           accountID: signers[0].address,
           amount: -10_000,
+          isApproval: false,
         },
         {
           accountID: signers[1].address,
           amount: 10_000,
+          isApproval: false,
         },
       ],
     };
@@ -427,10 +430,12 @@ describe('TokenTransferContract Test Suite', function () {
           {
             accountID: signers[1].address,
             amount: amount,
+            isApproval: false,
           },
           {
             accountID: signers[0].address,
             amount: -amount,
+            isApproval: false,
           },
         ],
         nftTransfers: [],
@@ -443,6 +448,7 @@ describe('TokenTransferContract Test Suite', function () {
             senderAccountID: signers[0].address,
             receiverAccountID: signers[1].address,
             serialNumber: mintedTokenSerialNumber,
+            isApproval: false,
           },
         ],
       },

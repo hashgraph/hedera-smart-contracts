@@ -649,9 +649,7 @@ class Utils {
       wallet.address,
       genesisClient
     );
-    const signerPk = PrivateKey.fromStringECDSA(
-      wallet._signingKey().privateKey
-    );
+    const signerPk = PrivateKey.fromStringECDSA(wallet.signingKey.privateKey);
 
     const signerClient = await this.createSDKClient(
       accountIdAsString,

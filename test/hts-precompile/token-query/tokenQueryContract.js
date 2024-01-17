@@ -38,10 +38,19 @@ describe('TokenQueryContract Test Suite', function () {
     signers = await ethers.getSigners();
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenQueryContract = await utils.deployTokenQueryContract();
+    await utils.updateAccountKeysViaHapi([
+      await tokenCreateContract.getAddress(),
+      await tokenQueryContract.getAddress(),
+    ]);
+
     tokenAddress = await utils.createFungibleToken(
       tokenCreateContract,
       await tokenCreateContract.getAddress()
     );
+    await utils.updateTokenKeysViaHapi(tokenAddress, [
+      await tokenCreateContract.getAddress(),
+      await tokenQueryContract.getAddress(),
+    ]);
     tokenWithCustomFeesAddress = await utils.createFungibleTokenWithCustomFees(
       tokenCreateContract,
       tokenAddress
@@ -60,12 +69,15 @@ describe('TokenQueryContract Test Suite', function () {
       tokenAddress,
       Constants.Contract.TokenCreateContract
     );
+
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
+
     await utils.associateToken(
       tokenCreateContract,
       nftTokenAddress,
       Constants.Contract.TokenCreateContract
     );
+
     await utils.grantTokenKyc(tokenCreateContract, nftTokenAddress);
   });
 
@@ -75,9 +87,9 @@ describe('TokenQueryContract Test Suite', function () {
       await tokenCreateContract.getAddress(),
       signers[1].address
     );
-    const amount = (await tx.wait()).events
-      .filter((e) => e.fragment.name === Constants.Events.AllowanceValue)[0]
-      .args.amount.toNumber();
+    const amount = (await tx.wait()).logs.filter(
+      (e) => e.fragment.name === Constants.Events.AllowanceValue
+    )[0].args.amount;
     const { responseCode } = (await tx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.ResponseCode
     )[0].args;

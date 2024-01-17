@@ -69,7 +69,7 @@ const pauseAndPoll = async (ERC20Pausable) => {
 const pollForLastEvent = async (contract) => {
   for (
     let numberOfTries = 0;
-    process.env.MAX_RETRY <= process.env.MAX_RETRY;
+    numberOfTries <= process.env.MAX_RETRY;
     numberOfTries++
   ) {
     const event = contract.logs.filter(
@@ -270,6 +270,7 @@ const pollForNewBalance = async (
 
     await delay(); // Delay before the next attempt
   }
+  console.log('----');
 
   throw new Error(
     `Failed to get a different balance value after ${process.env.MAX_RETRY} tries`

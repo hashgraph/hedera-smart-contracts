@@ -42,6 +42,6 @@ describe('PrngSystemContract tests', function () {
     )[0].args[0];
 
     expect(result).to.exist;
-    expect(result).to.not.hexEqual(ethers.constants.HashZero);
+    expect(result).to.not.hexEqual(ethers.ZeroHash);
   });
 });

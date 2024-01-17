@@ -60,7 +60,7 @@ describe('RedirectForToken Test Suite', function () {
     );
     tokenCreateContract = await ethers.getContractAt(
       Constants.Contract.TokenCreateContract,
-      (await tokenCreateTx.deployTransaction.wait()).contractAddress
+      await tokenCreateTx.getAddress()
     );
 
     await utils.updateAccountKeysViaHapi([
@@ -80,6 +80,10 @@ describe('RedirectForToken Test Suite', function () {
       (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args.tokenAddress;
 
+    await utils.updateTokenKeysViaHapi(tokenAddress, [
+      await tokenCreateContract.getAddress(),
+    ]);
+
     await utils.associateToken(
       tokenCreateContract,
       tokenAddress,
@@ -87,7 +91,7 @@ describe('RedirectForToken Test Suite', function () {
     );
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
 
-    IERC20 = new ethers.utils.Interface(
+    IERC20 = new ethers.Interface(
       (await hre.artifacts.readArtifact('ERC20')).abi
     );
   });

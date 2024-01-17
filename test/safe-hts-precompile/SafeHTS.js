@@ -40,18 +40,18 @@ describe('SafeHTS library Test Suite', function () {
     safeOperationsContract = await deploySafeOperationsContract();
     safeViewOperationsContract = await deploySafeViewOperationsContract();
     await utils.updateAccountKeysViaHapi([
-      safeOperationsContract.address,
-      safeViewOperationsContract.address,
+      await safeOperationsContract.getAddress(),
+      await safeViewOperationsContract.getAddress(),
     ]);
     fungibleTokenAddress = await createFungibleToken();
     await utils.updateTokenKeysViaHapi(fungibleTokenAddress, [
-      safeOperationsContract.address,
-      safeViewOperationsContract.address,
+      await safeOperationsContract.getAddress(),
+      await safeViewOperationsContract.getAddress(),
     ]);
     nonFungibleTokenAddress = await createNonFungibleToken();
     await utils.updateTokenKeysViaHapi(nonFungibleTokenAddress, [
-      safeOperationsContract.address,
-      safeViewOperationsContract.address,
+      await safeOperationsContract.getAddress(),
+      await safeViewOperationsContract.getAddress(),
     ]);
   });
 
@@ -62,11 +62,10 @@ describe('SafeHTS library Test Suite', function () {
     const safeOperations = await safeOperationsFactory
       .connect(signers[1])
       .deploy(Constants.GAS_LIMIT_1_000_000);
-    const safeOperationsReceipt = await safeOperations.deployTransaction.wait();
 
     return await ethers.getContractAt(
       Constants.Contract.SafeOperations,
-      safeOperationsReceipt.contractAddress
+      await safeOperations.getAddress()
     );
   }
 
@@ -77,11 +76,10 @@ describe('SafeHTS library Test Suite', function () {
     const safeOperations = await safeOperationsFactory.deploy(
       Constants.GAS_LIMIT_10_000_000
     );
-    const safeOperationsReceipt = await safeOperations.deployTransaction.wait();
 
     return await ethers.getContractAt(
       Constants.Contract.SafeViewOperations,
-      safeOperationsReceipt.contractAddress
+      await safeOperations.getAddress()
     );
   }
 
@@ -178,12 +176,12 @@ describe('SafeHTS library Test Suite', function () {
   });
 
   it('should be able to transfer tokens and hbars atomically', async function () {
-    const signer1AccountID = signers[0].address;
-    const signer2AccountID = signers[1].address;
+    const signer0AccountID = signers[0].address;
+    const signer1AccountID = signers[1].address;
 
     const amount = 0;
     const signer1initialAmount = 100;
-    const transferredAmount = 10;
+    const transferredAmount = 10n;
     const mintedTokenInfo = await safeOperationsContract.safeMintTokenPublic(
       nonFungibleTokenAddress,
       amount,
@@ -208,49 +206,49 @@ describe('SafeHTS library Test Suite', function () {
 
     await safeOperationsContract.safeGrantTokenKycPublic(
       fungibleTokenAddress,
-      signer1AccountID
+      signer0AccountID
     );
 
     await safeOperationsContract.safeGrantTokenKycPublic(
       fungibleTokenAddress,
-      signer2AccountID
-    );
-
-    await safeOperationsContract.safeGrantTokenKycPublic(
-      nonFungibleTokenAddress,
       signer1AccountID
     );
 
     await safeOperationsContract.safeGrantTokenKycPublic(
       nonFungibleTokenAddress,
-      signer2AccountID
+      signer0AccountID
+    );
+
+    await safeOperationsContract.safeGrantTokenKycPublic(
+      nonFungibleTokenAddress,
+      signer1AccountID
     );
 
     await safeOperationsContract.safeTransferTokenPublic(
       fungibleTokenAddress,
-      safeOperationsContract.address,
-      signer1AccountID,
-      signer1initialAmount
+      await safeOperationsContract.getAddress(),
+      signer0AccountID,
+      signer1initialAmount,
+      Constants.GAS_LIMIT_1_000_000
     );
 
     const signers0BeforeHbarBalance = await signers[0].provider.getBalance(
-      signer1AccountID
+      signer0AccountID
     );
     const signers1BeforeHbarBalance = await signers[0].provider.getBalance(
-      signer2AccountID
+      signer1AccountID
     );
 
     const erc20Mock = await ethers.getContractAt(
       Constants.Path.ERC20Mock,
       fungibleTokenAddress
     );
-    const signers0BeforeTokenBalance = parseInt(
-      await erc20Mock.balanceOf(signer1AccountID)
+    const signers0BeforeTokenBalance = await erc20Mock.balanceOf(
+      signer0AccountID
     );
-    const signers1BeforeTokenBalance = parseInt(
-      await erc20Mock.balanceOf(signer2AccountID)
+    const signers1BeforeTokenBalance = await erc20Mock.balanceOf(
+      signer1AccountID
     );
-
     const erc721Mock = await ethers.getContractAt(
       Constants.Path.ERC721Mock,
       nonFungibleTokenAddress
@@ -262,12 +260,14 @@ describe('SafeHTS library Test Suite', function () {
     const transferList = {
       transfers: [
         {
-          accountID: signer1AccountID, //sender
+          accountID: signer0AccountID, //sender
           amount: -10_000,
+          isApproval: false,
         },
         {
-          accountID: signer2AccountID, //receiver
+          accountID: signer1AccountID, //receiver
           amount: 10_000,
+          isApproval: false,
         },
       ],
     };
@@ -279,9 +279,10 @@ describe('SafeHTS library Test Suite', function () {
         transfers: [],
         nftTransfers: [
           {
-            senderAccountID: signer1AccountID, //sender
-            receiverAccountID: signer2AccountID, //receiver
+            senderAccountID: signer0AccountID, //sender
+            receiverAccountID: signer1AccountID, //receiver
             serialNumber: nonFungibleTokeMintedSerialNumbers[0],
+            isApproval: false,
           },
         ],
       },
@@ -289,12 +290,14 @@ describe('SafeHTS library Test Suite', function () {
         token: fungibleTokenAddress,
         transfers: [
           {
-            accountID: signer2AccountID, //receiver
+            accountID: signer1AccountID, //receiver
             amount: transferredAmount,
+            isApproval: false,
           },
           {
-            accountID: signer1AccountID, //sender
+            accountID: signer0AccountID, //sender
             amount: -transferredAmount,
+            isApproval: false,
           },
         ],
         nftTransfers: [],
@@ -304,8 +307,10 @@ describe('SafeHTS library Test Suite', function () {
     const cryptoTransferTx =
       await safeOperationsContract.safeCryptoTransferPublic(
         transferList,
-        tokenTransferList
+        tokenTransferList,
+        Constants.GAS_LIMIT_1_000_000
       );
+
     const cryptoTransferReceipt = await cryptoTransferTx.wait();
 
     expect(
@@ -317,30 +322,30 @@ describe('SafeHTS library Test Suite', function () {
     const signers0AfterHbarBalance = await pollForNewHBarBalance(
       signers[0].provider,
       signers0BeforeHbarBalance,
-      signer1AccountID
+      signer0AccountID
     );
     const signers1AfterHbarBalance = await signers[0].provider.getBalance(
-      signer2AccountID
+      signer1AccountID
     );
 
     const signers0AfterTokenBalance = await pollForNewBalance(
       erc20Mock,
-      signer1AccountID,
+      signer0AccountID,
       signers0BeforeTokenBalance
     );
 
     const signers1AfterTokenBalance = await pollForNewBalance(
       erc20Mock,
-      signer2AccountID,
+      signer1AccountID,
       signers1BeforeTokenBalance
     );
 
     const hbarTransferableAmount = BigInt(10_000 * 10_000_000_000);
     expect(signers0AfterHbarBalance).to.be.lessThan(
-      signers0BeforeHbarBalance.sub(hbarTransferableAmount)
+      signers0BeforeHbarBalance - hbarTransferableAmount
     );
     expect(signers1AfterHbarBalance).to.equal(
-      signers1BeforeHbarBalance.add(hbarTransferableAmount)
+      signers1BeforeHbarBalance + hbarTransferableAmount
     );
 
     const nftOwnerAfter = await erc721Mock.ownerOf(
@@ -351,6 +356,7 @@ describe('SafeHTS library Test Suite', function () {
     expect(signers0AfterTokenBalance).to.equal(
       signers0BeforeTokenBalance - transferredAmount
     );
+
     expect(signers1AfterTokenBalance).to.equal(
       signers1BeforeTokenBalance + transferredAmount
     );

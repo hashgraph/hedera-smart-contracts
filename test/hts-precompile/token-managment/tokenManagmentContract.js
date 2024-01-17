@@ -24,7 +24,7 @@ const utils = require('../utils');
 const Constants = require('../../constants');
 const { pollForNewERC20Balance } = require('../../../utils/helpers');
 
-describe.only('TokenManagmentContract Test Suite', function () {
+describe('TokenManagmentContract Test Suite', function () {
   const TX_SUCCESS_CODE = 22;
 
   let tokenCreateContract;
