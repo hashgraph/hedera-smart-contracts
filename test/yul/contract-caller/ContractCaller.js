@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@yulequiv Contract Caller Tests', async () => {
+describe('@yulequiv Contract Caller Test Suite', async () => {
   let contractCaller, targetContract, getCountEncodedSig, setCountEncodedSig;
   const COUNT_A = 3;
   const GAS = 1_000_000;
@@ -53,12 +53,12 @@ describe('@yulequiv Contract Caller Tests', async () => {
     // prepare transactions
     const callSetCountTx = await contractCaller.call(
       GAS,
-      targetContract.address,
+      await targetContract.getAddress(),
       setCountEncodedSig
     );
     const callGetCountTx = await contractCaller.call(
       GAS,
-      targetContract.address,
+      await targetContract.getAddress(),
       getCountEncodedSig
     );
 
@@ -87,7 +87,7 @@ describe('@yulequiv Contract Caller Tests', async () => {
     // prepare transactions
     const callGetCountTx = await contractCaller.staticcall(
       GAS,
-      targetContract.address,
+      await targetContract.getAddress(),
       getCountEncodedSig
     );
 
@@ -111,7 +111,7 @@ describe('@yulequiv Contract Caller Tests', async () => {
     // prepare transactions
     const callSetCountTx = await contractCaller.callCode(
       GAS,
-      targetContract.address,
+      await targetContract.getAddress(),
       setCountEncodedSig
     );
 
@@ -136,7 +136,7 @@ describe('@yulequiv Contract Caller Tests', async () => {
     // prepare transactions
     const callSetCountTx = await contractCaller.delegateCall(
       GAS,
-      targetContract.address,
+      await targetContract.getAddress(),
       setCountEncodedSig
     );
 

@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@yulequiv Data Allocation Tests', () => {
+describe('@yulequiv Data Allocation Test Suite', () => {
   let dataAllocationContract;
   const P = 32;
   const V = 72;

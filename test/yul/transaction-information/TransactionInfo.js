@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@yulequiv TransactionInfo Tests', () => {
+describe('@yulequiv TransactionInfo Test Suite', () => {
   let transactionInfoContract, signers;
   const GASLIMIT = 1000000;
   const INITIAL_BALANCE = 30000000000;
@@ -41,7 +41,7 @@ describe('@yulequiv TransactionInfo Tests', () => {
 
   it('Should deploy with a call value', async () => {
     const intialBalance = await ethers.provider.getBalance(
-      transactionInfoContract.address
+      await transactionInfoContract.getAddress()
     );
 
     expect(intialBalance).to.eq(INITIAL_BALANCE);
@@ -54,7 +54,7 @@ describe('@yulequiv TransactionInfo Tests', () => {
   });
 
   it('Should get contract address', async () => {
-    const expectedContractAddress = transactionInfoContract.address;
+    const expectedContractAddress = await transactionInfoContract.getAddress();
     const result = await transactionInfoContract.getContractAddress();
 
     expect(result).to.eq(expectedContractAddress);
@@ -62,7 +62,10 @@ describe('@yulequiv TransactionInfo Tests', () => {
 
   it('Should get contract balance', async () => {
     const expectedSignerABalance = Math.round(
-      (await signers[0].getBalance()) / tinybarToWeibarCoef
+      parseInt(
+        (await ethers.provider.getBalance(signers[0].address)) /
+          BigInt(tinybarToWeibarCoef)
+      )
     );
 
     const result = await transactionInfoContract.getBalance(
@@ -125,7 +128,7 @@ describe('@yulequiv TransactionInfo Tests', () => {
 
   it('Should get the size of message call data', async () => {
     const messagecallData = await transactionInfoContract.getCallDataLoad(0);
-    const callDataBytesArraay = ethers.utils.arrayify(messagecallData);
+    const callDataBytesArraay = ethers.getBytes(messagecallData);
     const significantBytesLength = callDataBytesArraay.reduce(
       (length, byte) => {
         if (byte !== 0) {
@@ -166,7 +169,7 @@ describe('@yulequiv TransactionInfo Tests', () => {
 
   it('Should get current chainID', async () => {
     const chainId = await transactionInfoContract.getChainId();
-    const expectedChainId = ethers.provider.network.chainId;
+    const expectedChainId = (await ethers.provider.getNetwork()).chainId;
 
     expect(chainId).to.eq(expectedChainId);
   });
@@ -181,13 +184,13 @@ describe('@yulequiv TransactionInfo Tests', () => {
   it('Should get gas price', async () => {
     const gasPrice = await transactionInfoContract.getGasPrice();
 
-    expect(gasPrice).to.eq(1);
+    expect(gasPrice).to.eq(71);
   });
 
   it('Should get coinbase', async () => {
     const coinbase = await transactionInfoContract.getCoinbase();
 
-    expect(ethers.utils.isAddress(coinbase)).to.be.true;
+    expect(ethers.isAddress(coinbase)).to.be.true;
   });
 
   it('Should get current block timestamp', async () => {

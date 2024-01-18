@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@yulequiv Bitwise Tests', () => {
+describe('@yulequiv Bitwise Test Suite', () => {
   let bitwiseContract;
   const X = 1;
   const Y = 12;
