@@ -22,59 +22,60 @@ const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 const Utils = require('../../hts-precompile/utils');
 
-describe('@solidityequiv2 Modifiers Tests', function () {
-  let accounts, contractA, contractB, derivedContract, modifiersContract, owner;
+describe('@solidityequiv2 Modifiers Test Suite', function () {
+  let accounts, contractB, derivedContract, modifiersContract, owner;
 
-  const tinybarToWeibar = (amount) => amount.mul(Utils.tinybarToWeibarCoef);
-  const weibarTotinybar = (amount) => amount.div(Utils.tinybarToWeibarCoef);
+  const tinybarToWeibar = (amount) =>
+    amount * BigInt(Utils.tinybarToWeibarCoef);
+  const weibarTotinybar = (amount) =>
+    amount / BigInt(Utils.tinybarToWeibarCoef);
 
   beforeEach(async function () {
     const Modifiers = await ethers.getContractFactory(
       Constants.Contract.Modifiers
     );
     modifiersContract = await Modifiers.deploy(42);
-    await modifiersContract.deployed();
 
     const Derived = await ethers.getContractFactory(
       Constants.Contract.DerivedContract
     );
     derivedContract = await Derived.deploy(55);
-    await derivedContract.deployed();
 
     const ContractA = await ethers.getContractFactory('A');
     contractA = await ContractA.deploy();
-    await contractA.deployed();
 
     const ContractB = await ethers.getContractFactory('B');
     contractB = await ContractB.deploy(79);
-    await contractB.deployed();
+
     [owner] = await ethers.getSigners();
     accounts = await ethers.getSigners();
   });
 
   it("Should not modify the contract's state after calling a pure function", async function () {
     const initialState = await ethers.provider.getCode(
-      modifiersContract.address
+      await modifiersContract.getAddress()
     );
 
     const result = await modifiersContract.addPure(7, 5);
     expect(result).to.equal(12);
 
-    const finalState = await ethers.provider.getCode(modifiersContract.address);
+    const finalState = await ethers.provider.getCode(
+      await modifiersContract.getAddress()
+    );
     expect(initialState).to.equal(finalState);
   });
 
   it("Should not modify the contract's state when calling a view function", async function () {
-    const initialState = await ethers.provider.getStorageAt(
-      modifiersContract.address,
+    const initialState = await ethers.provider.getStorage(
+      await modifiersContract.getAddress(),
       0
     );
 
     const result = await modifiersContract.getData();
     expect(result).to.equal(42);
 
-    const finalState = await ethers.provider.getStorageAt(
-      modifiersContract.address,
+    const finalState = await ethers.provider.getStorage(
+      await modifiersContract.getAddress(),
       0
     );
     expect(initialState).to.equal(finalState);
@@ -85,13 +86,13 @@ describe('@solidityequiv2 Modifiers Tests', function () {
 
     const paymentAmount = weibarTotinybar(ethers.parseEther('100'));
     await owner.sendTransaction({
-      to: modifiersContract.address,
+      to: await modifiersContract.getAddress(),
       value: paymentAmount,
       data: modifiersContract.interface.encodeFunctionData('makePayment'),
     });
 
     const finalBalance = await modifiersContract.getBalance();
-    expect(tinybarToWeibar(finalBalance.add(initialBalance))).to.equal(
+    expect(tinybarToWeibar(finalBalance + initialBalance)).to.equal(
       paymentAmount
     );
   });
@@ -102,8 +103,9 @@ describe('@solidityequiv2 Modifiers Tests', function () {
   });
 
   it('Should set deploymentTimestamp to the block timestamp of deployment', async function () {
-    const txReceipt = await modifiersContract.deployTransaction.wait();
-    const block = await ethers.provider.getBlock(txReceipt.blockHash);
+    const block = await ethers.provider.getBlock(
+      modifiersContract.deploymentTransaction().blockHash
+    );
 
     const deploymentTimestamp = await modifiersContract.deploymentTimestamp();
     expect(deploymentTimestamp).to.equal(block.timestamp);
@@ -118,16 +120,16 @@ describe('@solidityequiv2 Modifiers Tests', function () {
     );
     const receipt = await tx.wait();
 
-    expect(receipt.events?.length).to.equal(1);
-    const event = receipt.events[0];
+    expect(receipt.logs?.length).to.equal(1);
+    const event = receipt.logs[0];
 
     // Check the event's topics. The first topic is the event's signature.
     // The next topics are the indexed parameters in the order they appear in the event.
     expect(event.topics[1].toLowerCase()).to.equal(
-      ethers.utils.hexZeroPad(accounts[0].address, 32).toLowerCase()
+      ethers.zeroPadValue(accounts[0].address, 32).toLowerCase()
     ); // from address
     expect(event.topics[2].toLowerCase()).to.equal(
-      ethers.utils.hexZeroPad(toAddress, 32).toLowerCase()
+      ethers.zeroPadValue(toAddress, 32).toLowerCase()
     ); // to address
   });
 
@@ -135,20 +137,18 @@ describe('@solidityequiv2 Modifiers Tests', function () {
     const tx = await modifiersContract.triggerAnonymousEvent(257);
     const receipt = await tx.wait();
 
-    expect(receipt.events?.length).to.equal(1);
+    expect(receipt.logs?.length).to.equal(1);
 
-    const anonymousEvent = receipt.events[0];
-    expect(anonymousEvent.event).to.undefined;
+    const anonymousEvent = receipt.logs[0];
+    expect(anonymousEvent.fragment).to.undefined;
 
     // Since it's anonymous, we access the topics directly to get the indexed values.
     const senderAddress = '0x' + anonymousEvent.topics[0].slice(-40);
     expect(senderAddress.toLowerCase()).to.equal(
       accounts[0].address.toLowerCase()
     );
-    const value = ethers.utils.defaultAbiCoder.decode(
-      ['uint256'],
-      anonymousEvent.data
-    );
+    const abi = ethers.AbiCoder.defaultAbiCoder();
+    const value = abi.decode(['uint256'], anonymousEvent.data);
     expect(value[0]).to.equal(257);
   });
 

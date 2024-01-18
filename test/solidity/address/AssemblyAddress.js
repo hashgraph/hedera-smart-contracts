@@ -32,13 +32,13 @@ describe('@solidityequiv1 AssemblyAddress Tests', () => {
 
     assemblyAddressContract = await assemblyAddressContractFactory.deploy();
     expectedContractBytecode = await ethers.provider.getCode(
-      assemblyAddressContract.address
+      await assemblyAddressContract.getAddress()
     );
   });
 
   it("Should get contract's code size at contract address", async () => {
     const contractCodeSize = await assemblyAddressContract.codesizeat(
-      assemblyAddressContract.address
+      await assemblyAddressContract.getAddress()
     );
 
     // @notice Remove the '0x' prefix from the expected contract bytecode, then calculate the length in bytes
@@ -52,19 +52,17 @@ describe('@solidityequiv1 AssemblyAddress Tests', () => {
 
   it("Should get contract's code hash at contract address", async () => {
     const contractCodeHash = await assemblyAddressContract.codehashat(
-      assemblyAddressContract.address
+      await assemblyAddressContract.getAddress()
     );
 
-    const expectedContractCodeHash = ethers.keccak256(
-      expectedContractBytecode
-    );
+    const expectedContractCodeHash = ethers.keccak256(expectedContractBytecode);
 
     expect(contractCodeHash).to.eq(expectedContractCodeHash);
   });
 
   it("Should get contract's code at contract address", async () => {
     const contractCode = await assemblyAddressContract.codecopyat(
-      assemblyAddressContract.address
+      await assemblyAddressContract.getAddress()
     );
 
     expect(contractCode).to.eq(expectedContractBytecode);

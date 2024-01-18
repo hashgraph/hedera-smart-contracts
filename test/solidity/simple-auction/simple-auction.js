@@ -23,7 +23,7 @@ const Constants = require('../../constants');
 const Utils = require('../../hts-precompile/utils');
 const { genericPoll } = require('../../../utils/helpers');
 
-describe('@solidityequiv3 Simple Auction Tests', function () {
+describe('@solidityequiv3 Simple Auction Test Suite', function () {
   let factory,
     signers,
     wallet,
@@ -48,44 +48,41 @@ describe('@solidityequiv3 Simple Auction Tests', function () {
       CONTRACT_SHORT_DURATION,
       wallet1.address
     );
-    await contractShortLived.deployed();
 
-    bidAmount = ethers.utils.parseUnits(TRANSACTION_VALUE, 'gwei');
-    bidAmountSmall = ethers.utils.parseUnits(TRANSACTION_VALUE_SMALL, 'gwei');
+    bidAmount = ethers.parseUnits(TRANSACTION_VALUE, 'gwei');
+    bidAmountSmall = ethers.parseUnits(TRANSACTION_VALUE_SMALL, 'gwei');
   });
 
   beforeEach(async function () {
     hasError = false;
     contract = await factory.deploy(CONTRACT_DURATION, wallet.address);
-    await contract.deployed();
 
     const trx = await contract.bid({ value: bidAmountSmall });
     const receipt = await trx.wait(1);
-    initialEvent = receipt.events[0].event;
+    initialEvent = receipt.logs[0].fragment.name;
   });
 
   it('should confirm "bid" function works', async function () {
     const highestBid = await contract.highestBid();
     const highestBidder = await contract.highestBidder();
 
-    expect(highestBid.mul(Utils.tinybarToWeibarCoef)).to.equal(bidAmountSmall);
+    expect(highestBid * BigInt(Utils.tinybarToWeibarCoef)).to.equal(
+      bidAmountSmall
+    );
     expect(highestBidder).to.equal(wallet.address);
     expect(initialEvent).to.equal('HighestBidIncreased');
   });
 
   it('should confirm bid not high enough scenario works: BidNotHighEnough', async function () {
     await expect(
-      contract.callStatic.bid({ value: 1 })
-    ).to.eventually.be.rejected.and.have.property('reason', 'BidNotHighEnough');
+      contract.bid.staticCall({ value: 1 })
+    ).to.eventually.be.rejectedWith('BidNotHighEnough');
   });
 
   it('should revert a bid with "AuctionAlreadyEnded" error', async function () {
     await expect(
-      contractShortLived.callStatic.bid({ value: bidAmountSmall })
-    ).to.eventually.be.rejected.and.have.property(
-      'reason',
-      'AuctionAlreadyEnded'
-    );
+      contractShortLived.bid.staticCall({ value: bidAmountSmall })
+    ).to.eventually.be.rejectedWith('AuctionAlreadyEnded');
   });
 
   it('should confirm "withdraw" function works', async function () {
@@ -93,7 +90,7 @@ describe('@solidityequiv3 Simple Auction Tests', function () {
 
     const initialHighestBidder = await contract.highestBidder();
     const previousContractBalance = await ethers.provider.getBalance(
-      contract.address
+      await contract.getAddress()
     );
     expect(
       previousContractBalance,
@@ -118,9 +115,9 @@ describe('@solidityequiv3 Simple Auction Tests', function () {
     );
 
     const currentContractBalance = await ethers.provider.getBalance(
-      contract.address
+      await contract.getAddress()
     );
-    const combined = bidAmount.add(bidAmountSmall);
+    const combined = bidAmount + bidAmountSmall;
     expect(
       currentContractBalance,
       'The contract balance to be the combined of the two transactions'
@@ -132,8 +129,8 @@ describe('@solidityequiv3 Simple Auction Tests', function () {
 
     // Check that the amount of Ether returned to the previous highest bidder is correct
     const newContractBalance = await genericPoll(
-      ethers.provider.getBalance(contract.address),
-      (res) => res.eq(bidAmount),
+      ethers.provider.getBalance(await contract.getAddress()),
+      (res) => res === bidAmount,
       3000,
       `The new balance to be: ${bidAmount}`
     );
@@ -145,7 +142,7 @@ describe('@solidityequiv3 Simple Auction Tests', function () {
   it('should confirm "auctionEnd" function works', async function () {
     expect(initialEvent, 'Initial bid').to.equal('HighestBidIncreased');
     const previousContractBalance = await ethers.provider.getBalance(
-      contract.address
+      await contract.getAddress()
     );
     expect(
       previousContractBalance,
@@ -156,8 +153,8 @@ describe('@solidityequiv3 Simple Auction Tests', function () {
     await tr.wait(2);
 
     const contractBalance = await genericPoll(
-      ethers.provider.getBalance(contract.address),
-      (res) => res.eq(bidAmountSmall),
+      ethers.provider.getBalance(await contract.getAddress()),
+      (res) => res === bidAmountSmall,
       1000,
       `Contract balance after 'auctionEnd' to be: ${bidAmountSmall}`
     );

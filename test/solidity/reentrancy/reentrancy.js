@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@solidityequiv3 Reentrancy Guard Tests', function () {
+describe('@solidityequiv3 Reentrancy Guard Test Suite', function () {
   const tenHBAR = ethers.parseEther('10.0');
   async function deployContractsAndSendHbars() {
     const [owner] = await ethers.getSigners();
@@ -33,20 +33,22 @@ describe('@solidityequiv3 Reentrancy Guard Tests', function () {
     const factoryReceiver = await ethers.getContractFactory(
       Constants.Contract.ReentrancyGuardTestReceiver
     );
-    contractReceiver = await factoryReceiver.deploy(contractSender.address);
+    contractReceiver = await factoryReceiver.deploy(
+      await contractSender.getAddress()
+    );
   }
 
   it('should verify it reenters without guard', async function () {
     await deployContractsAndSendHbars();
 
-    const res = await contractReceiver.attack();
+    const res = await contractReceiver.attack(Constants.GAS_LIMIT_1_000_000);
     const counter = await contractSender.counter();
     await res.wait();
     const receiverBalance = await ethers.provider.getBalance(
-      contractReceiver.address
+      await contractReceiver.getAddress()
     );
     const senderBalance = await ethers.provider.getBalance(
-      contractSender.address
+      await contractSender.getAddress()
     );
 
     expect(counter).to.eq(10);
@@ -63,10 +65,10 @@ describe('@solidityequiv3 Reentrancy Guard Tests', function () {
     await res.wait();
 
     const receiverBalance = await ethers.provider.getBalance(
-      contractReceiver.address
+      await contractReceiver.getAddress()
     );
     const senderBalance = await ethers.provider.getBalance(
-      contractSender.address
+      await contractSender.getAddress()
     );
 
     expect(counter).to.eq(1);

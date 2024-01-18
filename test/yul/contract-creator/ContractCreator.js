@@ -75,8 +75,8 @@ describe('@yulequiv Contract Creator Tests', async () => {
     const receipt = await transaction.wait();
 
     // extract newContractAddress from event logs
-    const [newContractAddress] = receipt.events.map(
-      (e) => e.event === 'NewContractCreated' && e
+    const [newContractAddress] = receipt.logs.map(
+      (e) => e.fragment.name === 'NewContractCreated' && e
     )[0].args;
 
     // assert newContractAddress is valid
@@ -111,8 +111,8 @@ describe('@yulequiv Contract Creator Tests', async () => {
     const receipt = await transaction.wait();
 
     // extract newContractAddress from event logs
-    const [newContractAddress] = receipt.events.map(
-      (e) => e.event === 'NewContractCreated' && e
+    const [newContractAddress] = receipt.logs.map(
+      (e) => e.fragment.name === 'NewContractCreated' && e
     )[0].args;
 
     // assert newContractAddress is valid

@@ -67,14 +67,14 @@ describe('@yulequiv Contract Caller Tests', async () => {
     const callGetCountReceipt = await callGetCountTx.wait();
 
     // extract events
-    const [callSetCountResult] = callSetCountReceipt.events.map(
-      (e) => e.event === 'CallResult' && e
+    const [callSetCountResult] = callSetCountReceipt.logs.map(
+      (e) => e.fragment.name === 'CallResult' && e
     )[0].args;
-    const [callGetCountResult] = callGetCountReceipt.events.map(
-      (e) => e.event === 'CallResult' && e
+    const [callGetCountResult] = callGetCountReceipt.logs.map(
+      (e) => e.fragment.name === 'CallResult' && e
     )[0].args;
-    const [callGetCountReturnedData] = callGetCountReceipt.events.map(
-      (e) => e.event === 'CallReturnedData' && e
+    const [callGetCountReturnedData] = callGetCountReceipt.logs.map(
+      (e) => e.fragment.name === 'CallReturnedData' && e
     )[1].args;
 
     // assertion
@@ -95,11 +95,11 @@ describe('@yulequiv Contract Caller Tests', async () => {
     const callGetCountReceipt = await callGetCountTx.wait();
 
     // extract events
-    const [callGetCountResult] = callGetCountReceipt.events.map(
-      (e) => e.event === 'CallResult' && e
+    const [callGetCountResult] = callGetCountReceipt.logs.map(
+      (e) => e.fragment.name === 'CallResult' && e
     )[0].args;
-    const [callGetCountReturnedData] = callGetCountReceipt.events.map(
-      (e) => e.event === 'CallReturnedData' && e
+    const [callGetCountReturnedData] = callGetCountReceipt.logs.map(
+      (e) => e.fragment.name === 'CallReturnedData' && e
     )[1].args;
 
     // assertion
@@ -119,8 +119,8 @@ describe('@yulequiv Contract Caller Tests', async () => {
     const callSetCountReceipt = await callSetCountTx.wait();
 
     // extract events
-    const [callSetCountResult] = callSetCountReceipt.events.map(
-      (e) => e.event === 'CallResult' && e
+    const [callSetCountResult] = callSetCountReceipt.logs.map(
+      (e) => e.fragment.name === 'CallResult' && e
     )[0].args;
 
     // get storage count within ContractCaller contract
@@ -144,8 +144,8 @@ describe('@yulequiv Contract Caller Tests', async () => {
     const callSetCountReceipt = await callSetCountTx.wait();
 
     // extract events
-    const [callSetCountResult] = callSetCountReceipt.events.map(
-      (e) => e.event === 'CallResult' && e
+    const [callSetCountResult] = callSetCountReceipt.logs.map(
+      (e) => e.fragment.name === 'CallResult' && e
     )[0].args;
 
     // get storage count within ContractCaller contract

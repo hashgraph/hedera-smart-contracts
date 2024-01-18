@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@solidityequiv1 Assignments Tests', function () {
+describe('@solidityequiv1 Assignments Test Suite', function () {
   before(async function () {
     const factoryDestructuring = await ethers.getContractFactory(
       Constants.Contract.DestructuringReturns
@@ -37,11 +37,7 @@ describe('@solidityequiv1 Assignments Tests', function () {
 
   it('should verify destructuring works', async function () {
     const result = await contractDesctructuring.testDestructuredReturnParams();
-    expect(result).to.deep.equal([
-      BigInt(7),
-      true,
-      BigInt(2),
-    ]);
+    expect(result).to.deep.equal([BigInt(7), true, BigInt(2)]);
   });
 
   it('should verify assignment of reference types', async function () {

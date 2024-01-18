@@ -45,12 +45,10 @@ const deployBlindAuctionContract = async (
     beneficiaryAddress
   );
 
-  await contract.deployed();
-
   return contract;
 };
 
-describe('@solidityequiv1 Solidity Blind Auction Tests', function () {
+describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
   let beneficiary, wallet1;
 
   const fiveHbars = 5 * tinybarToHbarCoef;
@@ -62,9 +60,7 @@ describe('@solidityequiv1 Solidity Blind Auction Tests', function () {
   const twohundredHbarsToWeibar = BigInt(
     String(twoHundredHbars * tinybarToWeibarCoef)
   );
-  const fiveHbarsToWeibar = BigInt(
-    String(fiveHbars * tinybarToWeibarCoef)
-  );
+  const fiveHbarsToWeibar = BigInt(String(fiveHbars * tinybarToWeibarCoef));
 
   before(async function () {
     [beneficiary, wallet1] = await ethers.getSigners();
@@ -88,7 +84,7 @@ describe('@solidityequiv1 Solidity Blind Auction Tests', function () {
       beneficiary.address
     );
 
-    const bidData = ethers.utils.solidityKeccak256(
+    const bidData = ethers.solidityPackedKeccak256(
       ['uint256', 'bool', 'uint256'],
       [hundredHbars, false, 2]
     );
@@ -110,13 +106,13 @@ describe('@solidityequiv1 Solidity Blind Auction Tests', function () {
       beneficiary.address
     );
 
-    const firstBid = ethers.utils.solidityKeccak256(
+    const firstBid = ethers.solidityPackedKeccak256(
       ['uint256', 'bool', 'uint256'],
-      [hundredHbars, false, ethers.utils.formatBytes32String('2')]
+      [hundredHbars, false, ethers.encodeBytes32String('2')]
     );
-    const secondBid = ethers.utils.solidityKeccak256(
+    const secondBid = ethers.solidityPackedKeccak256(
       ['uint256', 'bool', 'uint256'],
-      [hundredHbars, true, ethers.utils.formatBytes32String('23')]
+      [hundredHbars, true, ethers.encodeBytes32String('23')]
     );
 
     const bid = await contract
@@ -136,10 +132,7 @@ describe('@solidityequiv1 Solidity Blind Auction Tests', function () {
       .reveal(
         [hundredHbars, hundredHbars],
         [false, true],
-        [
-          ethers.utils.formatBytes32String('2'),
-          ethers.utils.formatBytes32String('23'),
-        ],
+        [ethers.encodeBytes32String('2'), ethers.encodeBytes32String('23')],
         { gasLimit: 5000000 }
       );
     await result.wait();
@@ -158,17 +151,17 @@ describe('@solidityequiv1 Solidity Blind Auction Tests', function () {
       beneficiary.address
     );
 
-    const firstBid = ethers.utils.solidityKeccak256(
+    const firstBid = ethers.solidityPackedKeccak256(
       ['uint256', 'bool', 'uint256'],
-      [hundredHbars, false, ethers.utils.formatBytes32String('2')]
+      [hundredHbars, false, ethers.encodeBytes32String('2')]
     );
-    const secondBid = ethers.utils.solidityKeccak256(
+    const secondBid = ethers.solidityPackedKeccak256(
       ['uint256', 'bool', 'uint256'],
-      [twoHundredHbars, true, ethers.utils.formatBytes32String('23')]
+      [twoHundredHbars, true, ethers.encodeBytes32String('23')]
     );
-    const thirdBid = ethers.utils.solidityKeccak256(
+    const thirdBid = ethers.solidityPackedKeccak256(
       ['uint256', 'bool', 'uint256'],
-      [twoHundredHbars, false, ethers.utils.formatBytes32String('5')]
+      [twoHundredHbars, false, ethers.encodeBytes32String('5')]
     );
 
     const bid = await contract
@@ -196,9 +189,9 @@ describe('@solidityequiv1 Solidity Blind Auction Tests', function () {
         [hundredHbars, twoHundredHbars, twoHundredHbars],
         [false, true, false],
         [
-          ethers.utils.formatBytes32String('2'),
-          ethers.utils.formatBytes32String('23'),
-          ethers.utils.formatBytes32String('5'),
+          ethers.encodeBytes32String('2'),
+          ethers.encodeBytes32String('23'),
+          ethers.encodeBytes32String('5'),
         ],
         { gasLimit: 5000000 }
       );
@@ -226,17 +219,17 @@ describe('@solidityequiv1 Solidity Blind Auction Tests', function () {
       beneficiary.address
     );
 
-    const firstBid = ethers.utils.solidityKeccak256(
+    const firstBid = ethers.solidityPackedKeccak256(
       ['uint256', 'bool', 'uint256'],
-      [hundredHbars, false, ethers.utils.formatBytes32String('2')]
+      [hundredHbars, false, ethers.encodeBytes32String('2')]
     );
-    const secondBid = ethers.utils.solidityKeccak256(
+    const secondBid = ethers.solidityPackedKeccak256(
       ['uint256', 'bool', 'uint256'],
-      [hundredHbars, true, ethers.utils.formatBytes32String('23')]
+      [hundredHbars, true, ethers.encodeBytes32String('23')]
     );
-    const thirdBid = ethers.utils.solidityKeccak256(
+    const thirdBid = ethers.solidityPackedKeccak256(
       ['uint256', 'bool', 'uint256'],
-      [twoHundredHbars, false, ethers.utils.formatBytes32String('5')]
+      [twoHundredHbars, false, ethers.encodeBytes32String('5')]
     );
 
     const bid = await contract
@@ -262,9 +255,9 @@ describe('@solidityequiv1 Solidity Blind Auction Tests', function () {
         [hundredHbars, twoHundredHbars, twoHundredHbars],
         [false, true, false],
         [
-          ethers.utils.formatBytes32String('2'),
-          ethers.utils.formatBytes32String('23'),
-          ethers.utils.formatBytes32String('5'),
+          ethers.encodeBytes32String('2'),
+          ethers.encodeBytes32String('23'),
+          ethers.encodeBytes32String('5'),
         ],
         { gasLimit: 5000000 }
       );
@@ -279,7 +272,9 @@ describe('@solidityequiv1 Solidity Blind Auction Tests', function () {
     //it is the revealEnd time + 5 seconds
     await sleep(2000);
 
-    const result = await contract.connect(wallet1).auctionEnd();
+    const result = await contract
+      .connect(wallet1)
+      .auctionEnd(Constants.GAS_LIMIT_1_000_000);
     await result.wait();
 
     const balanceAfterAuctionEnd = await ethers.provider.getBalance(
@@ -300,20 +295,16 @@ describe('@solidityequiv1 Solidity Blind Auction Tests', function () {
       2,
       beneficiary.address
     );
-    const bidData = ethers.utils.solidityKeccak256(
+    const bidData = ethers.solidityPackedKeccak256(
       ['uint256', 'bool', 'uint256'],
       [hundredHbars, false, 2]
     );
 
     await sleep(5000);
 
-    const result = await contract
-      .connect(wallet1)
-      .bid(bidData, { value: hundredHbarsToWeibar });
-    await expect(result.wait()).to.eventually.be.rejected.and.have.property(
-      'code',
-      'CALL_EXCEPTION'
-    );
+    await expect(
+      contract.connect(wallet1).bid(bidData, { value: hundredHbarsToWeibar })
+    ).to.eventually.be.rejected.and.have.property('code', -32008);
   });
 
   it('should confirm a user cannot reveal after reveal end', async function () {
@@ -323,11 +314,11 @@ describe('@solidityequiv1 Solidity Blind Auction Tests', function () {
       beneficiary.address
     );
 
-    const bidData = ethers.utils.solidityKeccak256(
+    const bidData = ethers.solidityPackedKeccak256(
       ['uint256', 'bool', 'uint256'],
       [hundredHbars, false, 2]
     );
-    const anotherBidData = ethers.utils.solidityKeccak256(
+    const anotherBidData = ethers.solidityPackedKeccak256(
       ['uint256', 'bool', 'uint256'],
       [hundredHbars, true, 23]
     );
@@ -349,10 +340,8 @@ describe('@solidityequiv1 Solidity Blind Auction Tests', function () {
       .reveal(
         [hundredHbars, twoHundredHbars],
         [false, true],
-        [
-          ethers.utils.formatBytes32String(2),
-          ethers.utils.formatBytes32String(23),
-        ]
+        [ethers.encodeBytes32String(2), ethers.encodeBytes32String(23)],
+        Constants.GAS_LIMIT_1_000_000
       );
     await expect(result.wait()).to.eventually.be.rejected.and.have.property(
       'code',

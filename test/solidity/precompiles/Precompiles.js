@@ -30,7 +30,7 @@ function computeBlake2b(input) {
   return Buffer.from(hash).toString('hex');
 }
 
-describe('@solidityequiv3 Precompiles Support Tests', function () {
+describe('@solidityequiv3 Precompiles Support Test Suite', function () {
   let precompilesContract;
   const prime =
     '21888242871839275222246405745257275088696311157297823662689037894645226208583';
@@ -51,24 +51,23 @@ describe('@solidityequiv3 Precompiles Support Tests', function () {
       Constants.Contract.Precompiles
     );
     precompilesContract = await Precompiles.deploy();
-    await precompilesContract.deployed();
   });
 
   it('Should verify the signer of a message using ecrecover', async function () {
-    const message = ethers.toUtf8Bytes('I agree to the terms');
-    const hashOfMessage = ethers.keccak256(message);
+    const UNSIGNED_MESSAGE = 'I agree to the terms';
     const walletSigner = ethers.Wallet.createRandom();
-    const signedMessage = await walletSigner
-      ._signingKey()
-      .signDigest(hashOfMessage);
+    const signedMessage = walletSigner.signMessage(UNSIGNED_MESSAGE);
+    const hashedMessage = ethers.hashMessage(UNSIGNED_MESSAGE);
 
-    const v = signedMessage.recoveryParam + 27; // always needs to add 27 to the recoveryParam
-    const r = signedMessage.r;
-    const s = signedMessage.s;
+    const splitMessage = ethers.Signature.from(signedMessage);
+
+    const v = splitMessage.v;
+    const r = splitMessage.r;
+    const s = splitMessage.s;
 
     // Verify the signature using the contract
     const isVerifiedAddress = await precompilesContract.verifySignature(
-      hashOfMessage,
+      hashedMessage,
       v,
       r,
       s,
@@ -105,12 +104,12 @@ describe('@solidityequiv3 Precompiles Support Tests', function () {
   });
 
   it('Should correctly compute modular exponentiation', async function () {
-    const base = BigInt('3');
-    const exponent = BigInt('2');
-    const modulus = BigInt('5');
+    const base = 3n;
+    const exponent = 2n;
+    const modulus = 5n;
 
     // Expected result: (3^2) % 5 = 9 % 5 = 4
-    const expectedOutput = BigInt('4');
+    const expectedOutput = 4n;
     const result = await precompilesContract.callStatic.modExp(
       base,
       exponent,

@@ -21,7 +21,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@solidityequiv2 Encoding Tests', function () {
+describe('@solidityequiv2 Encoding Test Suite', function () {
   let encodingContract, receiver, sender;
 
   const addressData = '0x1234567890123456789012345678901234567890';
@@ -32,19 +32,17 @@ describe('@solidityequiv2 Encoding Tests', function () {
       Constants.Contract.Encoding
     );
     encodingContract = await Encoding.deploy();
-    await encodingContract.deployed();
 
     const Receiver = await ethers.getContractFactory(Constants.Path.RECEIVER);
     receiver = await Receiver.deploy();
-    await receiver.deployed();
 
     const Sender = await ethers.getContractFactory(Constants.Contract.Sender);
-    sender = await Sender.deploy(receiver.address);
-    await sender.deployed();
+    sender = await Sender.deploy(await receiver.getAddress());
   });
 
   it('Should decode data', async function () {
-    const encodedData = ethers.utils.defaultAbiCoder.encode(
+    const abi = ethers.AbiCoder.defaultAbiCoder();
+    const encodedData = abi.encode(
       ['address', 'uint256'],
       [addressData, uintData]
     );
@@ -58,10 +56,8 @@ describe('@solidityequiv2 Encoding Tests', function () {
   it('Should encode data', async function () {
     const result = await encodingContract.encodeData(addressData, uintData);
 
-    const decodedData = ethers.utils.defaultAbiCoder.decode(
-      ['address', 'uint256'],
-      result
-    );
+    const abi = ethers.AbiCoder.defaultAbiCoder();
+    const decodedData = abi.decode(['address', 'uint256'], result);
 
     expect(decodedData[0]).to.equal(addressData);
     expect(decodedData[1]).to.equal(uintData);
@@ -72,7 +68,7 @@ describe('@solidityequiv2 Encoding Tests', function () {
     const amount = 100;
     const data = 'Hello, World!';
 
-    const packedData = encodePacked(address, amount, data);
+    const packedData = encodePacked(address, ethers.toBeHex(amount), data);
     const result = await encodingContract.getPackedData(address, amount, data);
     expect(result).to.equal(packedData);
   });
@@ -93,9 +89,13 @@ describe('@solidityequiv2 Encoding Tests', function () {
     const encodedArgs = '0x' + encodedData.slice(10);
 
     // Verify the selector matches the add function's selector
-    expect(selector).to.equal(encodingContract.interface.getSighash('add'));
+    expect(selector).to.equal(
+      encodingContract.interface.getFunction('add').selector
+    );
 
-    const [decodedA, decodedB] = ethers.utils.defaultAbiCoder.decode(
+    const abi = ethers.AbiCoder.defaultAbiCoder();
+
+    const [decodedA, decodedB] = abi.decode(
       ['uint256', 'uint256'],
       encodedArgs
     );
@@ -105,10 +105,10 @@ describe('@solidityequiv2 Encoding Tests', function () {
     const tx = await encodingContract.executeAddFunction(a, b);
     const receipt = await tx.wait();
 
-    expect(receipt.events.length).to.equal(1);
-    expect(receipt.events[0].event).to.equal('Added');
+    expect(receipt.logs.length).to.equal(1);
+    expect(receipt.logs[0].fragment.name).to.equal('Added');
 
-    const eventResult = receipt.events[0].args[0].toNumber();
+    const eventResult = receipt.logs[0].args[0];
     expect(eventResult).to.equal(a + b);
   });
 
@@ -130,9 +130,11 @@ describe('@solidityequiv2 Encoding Tests', function () {
 });
 
 function encodePacked(address, amount, data) {
-  const addressBytes = ethers.utils.arrayify(address);
-  const amountBytes = ethers.utils.zeroPad(ethers.utils.arrayify(amount), 32);
+  const addressBytes = ethers.getBytes(address);
+  const amountBytes = ethers.getBytes(
+    ethers.zeroPadValue(ethers.toBeHex(100), 32)
+  );
   const dataBytes = ethers.toUtf8Bytes(data);
 
-  return ethers.utils.hexConcat([addressBytes, amountBytes, dataBytes]);
+  return ethers.concat([addressBytes, amountBytes, dataBytes]);
 }

@@ -29,7 +29,7 @@ const {
   Contract,
 } = require('../../constants');
 
-describe('@solidityequiv3 Time Units Tests', function () {
+describe('@solidityequiv3 Time Units Test Suite', function () {
   let contract;
 
   before(async function () {

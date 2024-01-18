@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../constants');
 
-describe('PrngSystemContract tests', function () {
+describe('PrngSystemContract Test Suite', function () {
   let prngSystemContract;
 
   before(async function () {

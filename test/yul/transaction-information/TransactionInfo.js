@@ -97,7 +97,9 @@ describe('@yulequiv TransactionInfo Tests', () => {
     });
     const receipt = await transaction.wait();
 
-    const event = receipt.events.map((e) => e.event === 'CallValue' && e)[0];
+    const event = receipt.logs.map(
+      (e) => e.fragment.name === 'CallValue' && e
+    )[0];
 
     const [messageValue] = event.args;
 

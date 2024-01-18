@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@solidityequiv2 Modular Token Tests', () => {
+describe('@solidityequiv2 Modular Token Test Suite', () => {
   const INITIAL_AMOUNT = 12000;
   let modularTokenContract, signers, accountA, accountB;
 
@@ -46,7 +46,8 @@ describe('@solidityequiv2 Modular Token Tests', () => {
     );
 
     expect(initialBalance).to.eq(INITIAL_AMOUNT);
-    expect(ethers.utils.isAddress(modularTokenContract.address)).to.be.true;
+    expect(ethers.isAddress(await modularTokenContract.getAddress())).to.be
+      .true;
   });
 
   it('Should transfer an `amount` of token from `msg.sender` to `to` address', async () => {
@@ -57,7 +58,9 @@ describe('@solidityequiv2 Modular Token Tests', () => {
 
     // retrieve states from event
     const receipt = await tx.wait();
-    const event = receipt.events.map((e) => e.event === 'Transfer' && e)[0];
+    const event = receipt.logs.map(
+      (e) => e.fragment.name === 'Transfer' && e
+    )[0];
     const [from, to, amount] = event.args;
 
     // retrieve balances after transfer
@@ -80,7 +83,9 @@ describe('@solidityequiv2 Modular Token Tests', () => {
 
     // retrieve states from event
     const receipt = await tx.wait();
-    const event = receipt.events.map((e) => e.event === 'Approval' && e)[0];
+    const event = receipt.logs.map(
+      (e) => e.fragment.name === 'Approval' && e
+    )[0];
     const [owner, spender, allowance] = event.args;
 
     // retrieve allowance from contract
@@ -105,11 +110,18 @@ describe('@solidityequiv2 Modular Token Tests', () => {
     // execute transferFrom by signer[1] (i.e. accountB)
     const tx = await modularTokenContract
       .connect(signers[1])
-      .transferFrom(accountA, accountB, ALLOWANCE);
+      .transferFrom(
+        accountA,
+        accountB,
+        ALLOWANCE,
+        Constants.GAS_LIMIT_1_000_000
+      );
 
     // retrieve states from event
     const receipt = await tx.wait();
-    const event = receipt.events.map((e) => e.event === 'Transfer' && e)[0];
+    const event = receipt.logs.map(
+      (e) => e.fragment.name === 'Transfer' && e
+    )[0];
     const [from, to, amount] = event.args;
 
     // retrieve balances and allowance from storage

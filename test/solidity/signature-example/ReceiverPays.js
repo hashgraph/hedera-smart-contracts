@@ -21,8 +21,8 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@solidityequiv3 Signature Example ReceiverPays Tests', function () {
-  let receiverPaysContract, provider, signers, currentNonce, sender, receiver;
+describe('@solidityequiv3 Signature Example ReceiverPays Test Suite', function () {
+  let receiverPaysContract, signers, currentNonce, sender, receiver;
 
   before(async function () {
     signers = await ethers.getSigners();
@@ -45,7 +45,7 @@ describe('@solidityequiv3 Signature Example ReceiverPays Tests', function () {
   it('receiver should be able to claim payment and pay for transaction fees', async function () {
     const recipientAddress = receiver.address;
     const contractBalanceBefore = await signers[0].provider.getBalance(
-      receiverPaysContract.address
+      await receiverPaysContract.getAddress()
     );
     // There is a discrepancy between the amount of decimals for 1 ETH and 1 HBAR. see the tinybar to wei coefficient of 10_000_000_000
     // it should be ethers.parseEther('1');
@@ -56,7 +56,7 @@ describe('@solidityequiv3 Signature Example ReceiverPays Tests', function () {
       recipientAddress,
       amountToTransfer,
       currentNonce,
-      receiverPaysContract.address
+      await receiverPaysContract.getAddress()
     );
 
     // Claim payment
@@ -65,11 +65,11 @@ describe('@solidityequiv3 Signature Example ReceiverPays Tests', function () {
 
     // Verify payment is received
     const contractBalanceAfter = await signers[0].provider.getBalance(
-      receiverPaysContract.address
+      await receiverPaysContract.getAddress()
     );
 
     expect(contractBalanceAfter).to.equal(
-      contractBalanceBefore.sub(ethers.parseEther('1'))
+      contractBalanceBefore - ethers.parseEther('1')
     );
 
     currentNonce++;
@@ -78,18 +78,10 @@ describe('@solidityequiv3 Signature Example ReceiverPays Tests', function () {
   // try to shutdown contract as receiver
   it('receiver should not be able to shutdown contract', async function () {
     const contract = receiverPaysContract.connect(receiver);
-    let errorOccurred = false;
-    try {
-      const tx = await contract.shutdown();
-      await tx.wait();
-    } catch (error) {
-      expect(error.reason).to.be.equal('transaction failed');
-      errorOccurred = true;
-    }
-    expect(errorOccurred).to.be.true;
+    expect(contract.shutdown()).to.eventually.be.rejected;
     // verify the contract still has balance
     const contractBalance = await signers[0].provider.getBalance(
-      receiverPaysContract.address
+      await receiverPaysContract.getAddress()
     );
     expect(contractBalance).to.be.gt(0);
   });
@@ -100,18 +92,18 @@ describe('@solidityequiv3 Signature Example ReceiverPays Tests', function () {
     await contract.shutdown();
     // verify contract is shutdown, contract should have no balance left
     const contractBalance = await signers[0].provider.getBalance(
-      receiverPaysContract.address
+      await receiverPaysContract.getAddress()
     );
     expect(contractBalance).to.be.equal(0);
   });
 
   async function signPayment(recipient, amount, nonce, contractAddress) {
-    const hash = ethers.utils.solidityKeccak256(
+    const hash = ethers.solidityPackedKeccak256(
       ['address', 'uint256', 'uint256', 'address'],
       [recipient, amount, nonce, contractAddress]
     );
     // Sign the hash
-    const signature = await sender.signMessage(ethers.utils.arrayify(hash));
+    const signature = await sender.signMessage(ethers.getBytes(hash));
     return signature;
   }
 });

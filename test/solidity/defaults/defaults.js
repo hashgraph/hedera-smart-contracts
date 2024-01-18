@@ -21,7 +21,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@solidityequiv1 Solidity Defaults Tests', function () {
+describe('@solidityequiv1 Solidity Defaults Test Suite', function () {
   let contract;
 
   before(async function () {
@@ -70,25 +70,25 @@ describe('@solidityequiv1 Solidity Defaults Tests', function () {
   it('confirm solidity functionality: bytes defaults', async function () {
     const res = await contract.getBytesDefaults();
     expect(res.bytesDef3).to.equal(
-      ethers.utils.hexZeroPad(ethers.utils.hexlify(0), 3)
+      ethers.zeroPadValue(ethers.hexlify('0x'), 3)
     );
     expect(res.bytesDef10).to.equal(
-      ethers.utils.hexZeroPad(ethers.utils.hexlify(0), 10)
+      ethers.zeroPadValue(ethers.hexlify('0x'), 10)
     );
     expect(res.bytesDef15).to.equal(
-      ethers.utils.hexZeroPad(ethers.utils.hexlify(0), 15)
+      ethers.zeroPadValue(ethers.hexlify('0x'), 15)
     );
     expect(res.bytesDef20).to.equal(
-      ethers.utils.hexZeroPad(ethers.utils.hexlify(0), 20)
+      ethers.zeroPadValue(ethers.hexlify('0x'), 20)
     );
     expect(res.bytesDef25).to.equal(
-      ethers.utils.hexZeroPad(ethers.utils.hexlify(0), 25)
+      ethers.zeroPadValue(ethers.hexlify('0x'), 25)
     );
     expect(res.bytesDef30).to.equal(
-      ethers.utils.hexZeroPad(ethers.utils.hexlify(0), 30)
+      ethers.zeroPadValue(ethers.hexlify('0x'), 30)
     );
     expect(res.bytesDef32).to.equal(
-      ethers.utils.hexZeroPad(ethers.utils.hexlify(0), 32)
+      ethers.zeroPadValue(ethers.hexlify('0x'), 32)
     );
   });
 
@@ -107,12 +107,12 @@ describe('@solidityequiv1 Solidity Defaults Tests', function () {
 
   it('confirm solidity functionality: address defaults', async function () {
     const res = await contract.getAddressDefaults();
-    expect(res).to.equal(ethers.utils.hexZeroPad(ethers.utils.hexlify(0), 20));
+    expect(res).to.equal(ethers.zeroPadValue(ethers.hexlify('0x'), 20));
   });
 
   it('confirm solidity functionality: mapping', async function () {
     const res1 = await contract.strUintMap('');
-    const res2 = await contract.addrBoolMap(contract.address);
+    const res2 = await contract.addrBoolMap(await contract.getAddress());
     const res3 = await contract.bytesBytesMap(10);
     expect(res1).to.equal(BigInt(0));
     expect(res2).to.equal(false);

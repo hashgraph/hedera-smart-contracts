@@ -26,7 +26,7 @@ const Utils = require('../../hts-precompile/utils');
 const TOP_UP_AMOUNT = ethers.parseEther('1.0');
 const TRANSFER_AMOUNT = 1;
 
-describe('@solidityequiv1 Solidity Address Tests', function () {
+describe('@solidityequiv1 Solidity Address Test Suite', function () {
   let signers, contract, wallet, walletAddr, recipientContract, recipientAddr;
 
   const tinybarToWeibar = (amount) =>
