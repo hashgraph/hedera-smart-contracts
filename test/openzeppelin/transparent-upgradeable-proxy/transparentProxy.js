@@ -44,7 +44,10 @@ describe('@OZTransparentUpgradeableProxy Test Suite', function () {
       Constants.GAS_LIMIT_1_000_000
     );
 
-    proxyAdminAddress = owner.address;
+    const upgradeLogs = (await contractProxy.deploymentTransaction().wait())
+      .logs;
+
+    proxyAdminAddress = upgradeLogs[2].args.newAdmin;
   });
 
   it('should verify it calls the correct contract and method via proxy', async function () {
@@ -72,6 +75,7 @@ describe('@OZTransparentUpgradeableProxy Test Suite', function () {
     const functionSelectorUpgradeAndCall = Utils.functionSelector(
       'upgradeAndCall(address,address,bytes)'
     );
+
     const abi = ethers.AbiCoder.defaultAbiCoder();
     const encoded = abi.encode(
       ['address', 'address', 'bytes'],
@@ -92,7 +96,7 @@ describe('@OZTransparentUpgradeableProxy Test Suite', function () {
     );
     const newContractAddressEncoded =
       '0x000000000000000000000000' +
-      (await contractBoxV2.getAddress().replace('0x', ''));
+      (await contractBoxV2.getAddress()).replace('0x', '');
     expect(eventUpgradedNameHashed).to.eq(topics[0]);
     expect(newContractAddressEncoded.toLowerCase()).to.eq(topics[1]);
 

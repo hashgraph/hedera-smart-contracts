@@ -15,7 +15,7 @@ const PRIVATE_KEYS = process.env.PRIVATE_KEYS
   : [];
 
 while (PRIVATE_KEYS.length < 6) {
-  PRIVATE_KEYS.push(ethers.constants.HashZero);
+  PRIVATE_KEYS.push(ethers.ZeroHash);
 }
 
 const NETWORKS = {

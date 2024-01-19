@@ -167,8 +167,11 @@ describe('@OZERC1967Upgrade Upgradable Vote Test Suite', () => {
     });
 
     it('V1: Should cast votes to the system', async () => {
-      await proxiedVoteV1.connect(voter1).vote();
-      await proxiedVoteV1.connect(voter2).vote();
+      const vote1Tx = await proxiedVoteV1.connect(voter1).vote();
+      await vote1Tx.wait();
+
+      const vote2Tx = await proxiedVoteV1.connect(voter2).vote();
+      await vote2Tx.wait();
 
       const voters = await proxiedVoteV1.voters();
 
@@ -204,7 +207,8 @@ describe('@OZERC1967Upgrade Upgradable Vote Test Suite', () => {
         VoteV2Artifact.abi,
         admin
       );
-      await proxiedVoteV2.initializeV2();
+      const initTx = await proxiedVoteV2.initializeV2();
+      await initTx.wait();
 
       expect(await proxiedVoteV2.version()).to.eq(2);
       expect(await proxiedVoteV2.getAddress()).to.eq(

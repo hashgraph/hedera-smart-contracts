@@ -139,12 +139,13 @@ describe('TokenTransferContract Test Suite', function () {
       tokenAddress,
       signers[1].address
     );
-    await tokenTransferContract.transferTokensPublic(
+    const tx = await tokenTransferContract.transferTokensPublic(
       tokenAddress,
       [signers[0].address, signers[1].address],
       [-amount, amount],
       Constants.GAS_LIMIT_1_000_000
     );
+    await tx.wait();
 
     let wallet1BalanceAfter = await pollForNewERC20Balance(
       erc20Contract,
@@ -169,13 +170,14 @@ describe('TokenTransferContract Test Suite', function () {
       nftTokenAddress,
       mintedTokenSerialNumber
     );
-    await tokenTransferContract.transferNFTsPublic(
+    const tx = await tokenTransferContract.transferNFTsPublic(
       nftTokenAddress,
       [signers[0].address],
       [signers[1].address],
       [mintedTokenSerialNumber],
       Constants.GAS_LIMIT_1_000_000
     );
+    await tx.wait();
 
     const ownerAfter = await erc721Contract.ownerOf(
       nftTokenAddress,
@@ -196,13 +198,15 @@ describe('TokenTransferContract Test Suite', function () {
     let wallet2BalanceBefore = parseInt(
       await erc20Contract.balanceOf(tokenAddress, signers[1].address)
     );
-    await tokenTransferContract.transferTokenPublic(
+    const tx = await tokenTransferContract.transferTokenPublic(
       tokenAddress,
       signers[0].address,
       signers[1].address,
       amount,
-      Constants.GAS_LIMIT_1_000_000
+      Constants.GAS_LIMIT_10_000_000
     );
+
+    await tx.wait();
 
     const wallet1BalanceAfter = await pollForNewERC20Balance(
       erc20Contract,
@@ -230,13 +234,15 @@ describe('TokenTransferContract Test Suite', function () {
     const tokenTransferContractNewOwner = tokenTransferContract.connect(
       signers[1]
     );
-    await tokenTransferContractNewOwner.transferNFTPublic(
+    const tx = await tokenTransferContractNewOwner.transferNFTPublic(
       nftTokenAddress,
       signers[1].address,
       signers[0].address,
       mintedTokenSerialNumber,
       Constants.GAS_LIMIT_1_000_000
     );
+    await tx.wait();
+
     const ownerAfter = await erc721Contract.ownerOf(
       nftTokenAddress,
       mintedTokenSerialNumber

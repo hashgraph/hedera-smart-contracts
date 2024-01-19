@@ -100,7 +100,6 @@ describe('TokenManagmentContract Test Suite', function () {
       );
     await utils.updateTokenKeysViaHapi(newTokenAddress, [
       await tokenCreateContract.getAddress(),
-      await tokenTransferContract.getAddress(),
       await tokenManagmentContract.getAddress(),
       await tokenQueryContract.getAddress(),
     ]);
@@ -112,9 +111,11 @@ describe('TokenManagmentContract Test Suite', function () {
     )[0].args.tokenInfo;
 
     const tx = await tokenManagmentContract.deleteTokenPublic(newTokenAddress);
+    await tx.wait();
 
     const txAfter = await tokenQueryContract.getTokenInfoPublic(
-      newTokenAddress
+      newTokenAddress,
+      Constants.GAS_LIMIT_1_000_000
     );
     const tokenInfoAfter = (await txAfter.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.TokenInfo

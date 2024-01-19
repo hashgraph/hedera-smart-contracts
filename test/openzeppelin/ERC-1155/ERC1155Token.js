@@ -23,7 +23,7 @@ const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 const { CALL_EXCEPTION } = require('../../constants');
 
-describe('@OZERC1155 Test Suite', () => {
+describe('@OZERC1155Token Test Suite', () => {
   let erc1155Token, wallet1, wallet2;
 
   const TOKEN_URI = '_token_uri_';
@@ -89,19 +89,21 @@ describe('@OZERC1155 Test Suite', () => {
   });
 
   it('Should check the balance of an address in batch', async () => {
-    await erc1155Token.mint(
+    const mint1Tx = await erc1155Token.mint(
       wallet1.address,
       TOKEN_IDS[0],
       MINTED_AMOUNTS[0],
       EMPTY_DATA
     );
+    await mint1Tx.wait();
 
-    await erc1155Token.mint(
+    const mint2Tx = await erc1155Token.mint(
       wallet2.address,
       TOKEN_IDS[1],
       MINTED_AMOUNTS[1],
       EMPTY_DATA
     );
+    await mint2Tx.wait();
 
     const balanceBatch = await erc1155Token.balanceOfBatch(
       [wallet1.address, wallet2.address],
@@ -115,9 +117,11 @@ describe('@OZERC1155 Test Suite', () => {
 
   it('Should check the existance of a token ID', async () => {
     const beforeMintExisted = await erc1155Token.exists(TOKEN_ID);
-    await erc1155Token
+    const mintTx = await erc1155Token
       .connect(wallet1)
       .mint(wallet2.address, TOKEN_ID, MINTED_AMOUNT, EMPTY_DATA);
+    await mintTx.wait();
+
     const afterMintExisted = await erc1155Token.exists(TOKEN_ID);
 
     expect(beforeMintExisted).to.be.false;
@@ -131,9 +135,10 @@ describe('@OZERC1155 Test Suite', () => {
     const beforeMintBalance = await erc1155Token['totalSupply(uint256)'](
       TOKEN_ID
     );
-    await erc1155Token
+    const mintTx = await erc1155Token
       .connect(wallet1)
       .mint(wallet2.address, TOKEN_ID, MINTED_AMOUNT, EMPTY_DATA);
+    await mintTx.wait();
 
     /**
      * @notice as there are two different selectors with the same interfaceID, it's needed to specify the interfaceID as bellow
@@ -147,9 +152,10 @@ describe('@OZERC1155 Test Suite', () => {
   });
 
   it('Should retrieve the total supply of the whole contract', async () => {
-    await erc1155Token
+    const mintBatchTx = await erc1155Token
       .connect(wallet1)
       .mintBatch(wallet2.address, TOKEN_IDS, MINTED_AMOUNTS, EMPTY_DATA);
+    await mintBatchTx.wait();
 
     const expectedTotalySupply = MINTED_AMOUNTS.reduce((a, c) => a + c, 0);
 
@@ -219,20 +225,22 @@ describe('@OZERC1155 Test Suite', () => {
   });
 
   it('Should set a new token URI', async () => {
-    await erc1155Token.setURI(NEW_TOKEN_URI);
+    const tx = await erc1155Token.setURI(NEW_TOKEN_URI);
+    await tx.wait();
     expect(await erc1155Token.uri(TOKEN_ID)).to.eq(NEW_TOKEN_URI);
   });
 
   it('Should burn token', async () => {
-    await erc1155Token.mint(
+    const mintTx = await erc1155Token.mint(
       wallet2.address,
       TOKEN_ID,
       MINTED_AMOUNT,
       EMPTY_DATA,
       Constants.GAS_LIMIT_1_000_000
     );
+    await mintTx.wait();
 
-    await erc1155Token
+    const burnTx = await erc1155Token
       .connect(wallet2)
       .burn(
         wallet2.address,
@@ -240,6 +248,7 @@ describe('@OZERC1155 Test Suite', () => {
         BURNT_AMOUNT,
         Constants.GAS_LIMIT_1_000_000
       );
+    await burnTx.wait();
 
     const balance = await erc1155Token.balanceOf(wallet2.address, TOKEN_ID);
     expect(balance).to.eq(BigInt(MINTED_AMOUNT - BURNT_AMOUNT));
@@ -254,7 +263,7 @@ describe('@OZERC1155 Test Suite', () => {
   });
 
   it('Should burn token in batch', async () => {
-    await erc1155Token
+    const mintBatchTx = await erc1155Token
       .connect(wallet1)
       .mintBatch(
         wallet2.address,
@@ -263,8 +272,9 @@ describe('@OZERC1155 Test Suite', () => {
         EMPTY_DATA,
         Constants.GAS_LIMIT_1_000_000
       );
+    await mintBatchTx.wait();
 
-    await erc1155Token
+    const burnBatchTx = await erc1155Token
       .connect(wallet2)
       .burnBatch(
         wallet2.address,
@@ -272,6 +282,7 @@ describe('@OZERC1155 Test Suite', () => {
         BURNT_AMOUNTS,
         Constants.GAS_LIMIT_1_000_000
       );
+    await burnBatchTx.wait();
 
     const balanceBatch = await erc1155Token.balanceOfBatch(
       [wallet2.address, wallet2.address, wallet2.address],
@@ -284,16 +295,19 @@ describe('@OZERC1155 Test Suite', () => {
   });
 
   it('Should allow an operator to transfer a token to another account', async () => {
-    await erc1155Token.mint(
+    const mintTx = await erc1155Token.mint(
       wallet2.address,
       TOKEN_ID,
       MINTED_AMOUNT,
       EMPTY_DATA
     );
+    await mintTx.wait();
 
-    await erc1155Token
+    const setApprovalTx = await erc1155Token
       .connect(wallet2)
       .setApprovalForAll(wallet1.address, true);
+
+    await setApprovalTx.wait();
 
     const tx = await erc1155Token.safeTransferFrom(
       wallet2.address,
@@ -327,13 +341,15 @@ describe('@OZERC1155 Test Suite', () => {
   });
 
   it('Should allow an operator to transfer tokens in batch to another account', async () => {
-    await erc1155Token
+    const mintBatchTx = await erc1155Token
       .connect(wallet1)
       .mintBatch(wallet2.address, TOKEN_IDS, MINTED_AMOUNTS, EMPTY_DATA);
+    await mintBatchTx.wait();
 
-    await erc1155Token
+    const setApprovalForAllTx = await erc1155Token
       .connect(wallet2)
       .setApprovalForAll(wallet1.address, true);
+    await setApprovalForAllTx.wait();
 
     const tx = await erc1155Token.safeBatchTransferFrom(
       wallet2.address,
@@ -360,12 +376,13 @@ describe('@OZERC1155 Test Suite', () => {
   });
 
   it('Should NOT allow a non-operator to transfer tokens to another account', async () => {
-    await erc1155Token.mint(
+    const mintTx = await erc1155Token.mint(
       wallet2.address,
       TOKEN_ID,
       MINTED_AMOUNT,
       EMPTY_DATA
     );
+    await mintTx.wait();
 
     expect(
       erc1155Token.safeTransferFrom(

@@ -89,13 +89,14 @@ describe('@OZERC1155 Test Suite', function () {
 
   it('should be able to execute safeTransferFrom(address,address,uint256,uint256,bytes)', async function () {
     const balanceBefore = await erc1155.balanceOf(signers[1].address, tokenId1);
-    await erc1155.safeTransferFrom(
+    const tx = await erc1155.safeTransferFrom(
       signers[0].address,
       signers[1].address,
       tokenId1,
       tradeableAmount,
       '0x'
     );
+    await tx.wait();
     const balanceAfter = await erc1155.balanceOf(signers[1].address, tokenId1);
 
     expect(balanceBefore).to.not.eq(balanceAfter);
@@ -111,13 +112,16 @@ describe('@OZERC1155 Test Suite', function () {
       signers[1].address,
       tokenId2
     );
-    await erc1155.safeBatchTransferFrom(
+    const tx = await erc1155.safeBatchTransferFrom(
       signers[0].address,
       signers[1].address,
       [tokenId1, tokenId2],
       [tradeableAmount, tradeableAmount],
-      '0x'
+      '0x',
+      Constants.GAS_LIMIT_1_000_000
     );
+    await tx.wait();
+
     const balanceAfter1 = await erc1155.balanceOf(signers[1].address, tokenId1);
     const balanceAfter33 = await erc1155.balanceOf(
       signers[1].address,
