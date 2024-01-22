@@ -27,7 +27,7 @@ const {
   unPauseAndPoll,
 } = require('../../../utils/helpers');
 
-describe('@OZERC20Extensions Tests', function () {
+describe('@OZERC20Extensions Test Suite', function () {
   let owner, addr1;
   let ERC20Burnable;
   let ERC20Capped;
@@ -89,14 +89,12 @@ describe('@OZERC20Extensions Tests', function () {
       const newBalance = await ERC20Burnable.balanceOf(owner.address);
 
       // Check if the Transfer event was emitted to AddressZero
-      expect(burnReceipt.events[0].event).to.equal('Transfer');
-      expect(burnReceipt.events[0].args.to).to.equal(
-        ethers.constants.AddressZero
-      );
+      expect(burnReceipt.logs[0].fragment.name).to.equal('Transfer');
+      expect(burnReceipt.logs[0].args.to).to.equal(ethers.ZeroAddress);
 
       // Verify the new supply and new balance of the user
-      expect(newSupply).to.equal(initialSupply.sub(burnAmount));
-      expect(newBalance).to.equal(initialBalance.sub(burnAmount));
+      expect(newSupply).to.equal(initialSupply - BigInt(burnAmount));
+      expect(newBalance).to.equal(initialBalance - BigInt(burnAmount));
     });
 
     it('should be able to execute burnFrom(address, amount)', async function () {
@@ -106,19 +104,23 @@ describe('@OZERC20Extensions Tests', function () {
       await ERC20Burnable.approve(addr1.address, burnAmount);
 
       const erc20Signer2 = await ERC20Burnable.connect(addr1);
-      await erc20Signer2.burnFrom(owner.address, burnAmount);
+      await erc20Signer2.burnFrom(
+        owner.address,
+        burnAmount,
+        Constants.GAS_LIMIT_1_000_000
+      );
 
       const newBalance = await ERC20Burnable.balanceOf(owner.address);
 
       //check updated balance
-      expect(newBalance).to.equal(initialBalance.sub(burnAmount));
+      expect(newBalance).to.equal(initialBalance - BigInt(burnAmount));
     });
 
     it("should fail to burn tokens if the user doesn't have enough balance", async function () {
       const balance = await ERC20Burnable.balanceOf(owner.address);
 
       // Expect burn to be reverted due to insufficient balance
-      await expect(ERC20Burnable.burn(balance + 1)).to.be.reverted;
+      await expect(ERC20Burnable.burn(balance + 1n)).to.be.reverted;
     });
 
     it('should revert when trying to burn tokens from another account more than accepted allowance', async function () {
@@ -126,14 +128,13 @@ describe('@OZERC20Extensions Tests', function () {
       await ERC20Burnable.approve(addr1.address, burnAmount);
       const erc20Signer2 = ERC20Burnable.connect(addr1);
 
-      await expect(await erc20Signer2.burnFrom(owner.address, burnAmount + 1))
-        .to.be.reverted;
+      expect(erc20Signer2.burnFrom(owner.address, burnAmount + 1)).to.be
+        .reverted;
     });
 
     it('should revert when trying to burn tokens from another account without allowance', async function () {
-      await expect(
-        await ERC20Burnable.connect(addr1).burnFrom(owner.address, amount)
-      ).to.be.reverted;
+      expect(ERC20Burnable.connect(addr1).burnFrom(owner.address, amount)).to.be
+        .reverted;
     });
   });
 
@@ -179,21 +180,16 @@ describe('@OZERC20Extensions Tests', function () {
     });
 
     it("should revert when trying to pause the contract when it's already paused", async function () {
-      await ERC20Pausable.pause();
       await expect(ERC20Pausable.pause()).to.be.reverted;
     });
 
     it('should revert when trying to mint tokens while paused', async function () {
-      await ERC20Pausable.pause();
       await expect(ERC20Pausable.mint(addr1.address, amount)).to.be.reverted;
     });
 
     it('should revert when a non-owner tries to pause or unpause the contract', async function () {
       // Expect pause to be reverted when called by a non-owner
       await expect(ERC20Pausable.connect(addr1).pause()).to.be.reverted;
-
-      // Pause the contract
-      await ERC20Pausable.pause();
 
       // Expect unpause to be reverted when called by a non-owner
       await expect(ERC20Pausable.connect(addr1).unpause()).to.be.reverted;

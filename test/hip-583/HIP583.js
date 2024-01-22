@@ -47,8 +47,8 @@ describe('HIP583 Test Suite', function () {
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
     await utils.updateAccountKeysViaHapi([
-      tokenCreateContract.address,
-      tokenTransferContract.address,
+      await tokenCreateContract.getAddress(),
+      await tokenTransferContract.getAddress(),
     ]);
     erc20Contract = await utils.deployERC20Contract();
     erc721Contract = await utils.deployERC721Contract();
@@ -60,7 +60,10 @@ describe('HIP583 Test Suite', function () {
       );
     await utils.updateTokenKeysViaHapi(
       tokenAddress,
-      [tokenCreateContract.address, tokenTransferContract.address],
+      [
+        await tokenCreateContract.getAddress(),
+        await tokenTransferContract.getAddress(),
+      ],
       true,
       true,
       false
@@ -74,7 +77,10 @@ describe('HIP583 Test Suite', function () {
 
     await utils.updateTokenKeysViaHapi(
       nftTokenAddress,
-      [tokenCreateContract.address, tokenTransferContract.address],
+      [
+        await tokenCreateContract.getAddress(),
+        await tokenTransferContract.getAddress(),
+      ],
       true,
       true,
       false
@@ -101,7 +107,7 @@ describe('HIP583 Test Suite', function () {
           hollowWallet = ethers.Wallet.createRandom().connect(ethers.provider);
 
           hollowWalletAddress = hollowWallet.address;
-          amount = ethers.utils.parseEther('0.1');
+          amount = ethers.parseEther('0.1');
         });
 
         it('should be able to create hollow account and transfer HBARs', async function () {
@@ -140,7 +146,7 @@ describe('HIP583 Test Suite', function () {
           );
 
           expect(hollowWalletBalanceAfter).to.eq(
-            hollowWalletBalanceBefore.add(amount)
+            hollowWalletBalanceBefore + amount
           );
         });
 
@@ -161,7 +167,7 @@ describe('HIP583 Test Suite', function () {
           );
 
           expect(hollowWalletBalanceAfter).to.lessThanOrEqual(
-            hollowWalletBalanceBefore.sub(amount)
+            hollowWalletBalanceBefore - amount
           );
         });
       });
@@ -174,11 +180,11 @@ describe('HIP583 Test Suite', function () {
           hollowWallet = ethers.Wallet.createRandom().connect(ethers.provider);
 
           hollowWalletAddress = hollowWallet.address;
-          amount = 30;
+          amount = BigInt(30);
         });
 
         it('should create hollow account and transfer Fungible Tokens', async function () {
-          let signerBalanceBefore = parseInt(
+          let signerBalanceBefore = BigInt(
             await erc20Contract.balanceOf(tokenAddress, signers[0].address)
           );
 
@@ -207,7 +213,7 @@ describe('HIP583 Test Suite', function () {
         });
 
         it('should be able to make second Fungible Tokens transfer', async function () {
-          let signerBalanceBefore = parseInt(
+          let signerBalanceBefore = BigInt(
             await erc20Contract.balanceOf(tokenAddress, signers[0].address)
           );
 
@@ -237,12 +243,12 @@ describe('HIP583 Test Suite', function () {
 
           expect(signerBalanceAfter).to.eq(signerBalanceBefore - amount);
           expect(hollowalletBalanceAfter).to.eq(
-            hollowalletBalanceBefore.add(amount)
+            hollowalletBalanceBefore + amount
           );
         });
 
         it('should be able to make Fungible Tokens transfer and sign with hollow account', async function () {
-          let signerBalanceBefore = parseInt(
+          let signerBalanceBefore = BigInt(
             await erc20Contract.balanceOf(tokenAddress, signers[0].address)
           );
 
@@ -254,11 +260,14 @@ describe('HIP583 Test Suite', function () {
           //sending some HBARs, so the hollow account have some to cover the transaction
           await signers[0].sendTransaction({
             to: hollowWalletAddress,
-            value: ethers.utils.parseEther('14'),
+            value: ethers.parseEther('14'),
           });
 
           await utils.updateAccountKeysViaHapi(
-            [tokenCreateContract.address, tokenTransferContract.address],
+            [
+              await tokenCreateContract.getAddress(),
+              await tokenTransferContract.getAddress(),
+            ],
             [hollowWallet.privateKey]
           );
 
@@ -390,11 +399,14 @@ describe('HIP583 Test Suite', function () {
           //sending some HBARs, so the hollow account have some to cover the transaction
           await signers[0].sendTransaction({
             to: hollowWalletAddress,
-            value: ethers.utils.parseEther('2'),
+            value: ethers.parseEther('2'),
           });
 
           await utils.updateAccountKeysViaHapi(
-            [tokenCreateContract.address, tokenTransferContract.address],
+            [
+              await tokenCreateContract.getAddress(),
+              await tokenTransferContract.getAddress(),
+            ],
             [hollowWallet.privateKey]
           );
 
@@ -465,9 +477,9 @@ describe('HIP583 Test Suite', function () {
 describe('HIP583 Test Suite - Contract Transfer TX', function () {
   let signers;
   let contractTransferTx;
-  const totalAmount = ethers.utils.parseEther('100');
-  const amount = ethers.utils.parseEther('1');
-  const tokenAmount = 30;
+  const totalAmount = ethers.parseEther('100');
+  const amount = ethers.parseEther('1');
+  const tokenAmount = 30n;
 
   before(async function () {
     signers = await ethers.getSigners();
@@ -478,7 +490,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
 
     await (
       await signers[0].sendTransaction({
-        to: contractTransferTx.address,
+        to: await contractTransferTx.getAddress(),
         value: totalAmount,
         gasLimit: 1_000_000,
       })
@@ -498,7 +510,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
       );
       const tx = await contractTransferTx.transferTo(
         hollowWallet.address,
-        amount / utils.tinybarToWeibarCoef,
+        amount / BigInt(utils.tinybarToWeibarCoef),
         Constants.GAS_LIMIT_1_000_000
       );
       await tx.wait();
@@ -516,7 +528,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
       );
       const tx = await contractTransferTx.transferTo(
         hollowWallet.address,
-        amount / utils.tinybarToWeibarCoef,
+        amount / BigInt(utils.tinybarToWeibarCoef),
         Constants.GAS_LIMIT_1_000_000
       );
       await tx.wait();
@@ -527,7 +539,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
       );
 
       expect(hollowWalletBalanceAfter).to.eq(
-        hollowWalletBalanceBefore.add(amount)
+        hollowWalletBalanceBefore + amount
       );
     });
 
@@ -542,7 +554,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
       );
       const tx = await contractTransferTxWithHollowAccount.transferTo(
         secondHollowWallet.address,
-        amount / utils.tinybarToWeibarCoef,
+        amount / BigInt(utils.tinybarToWeibarCoef),
         Constants.GAS_LIMIT_1_000_000
       );
       await tx.wait();
@@ -558,7 +570,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
   describe('Fungible Token Test', function () {
     let hollowWallet;
     let erc20Mock;
-    const initialHollowWalletAmount = ethers.utils.parseEther('14');
+    const initialHollowWalletAmount = ethers.parseEther('14');
 
     before(async function () {
       hollowWallet = ethers.Wallet.createRandom().connect(ethers.provider);
@@ -566,19 +578,19 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
       await (
         await contractTransferTx.transferTo(
           hollowWallet.address,
-          initialHollowWalletAmount / utils.tinybarToWeibarCoef,
+          initialHollowWalletAmount / BigInt(utils.tinybarToWeibarCoef),
           Constants.GAS_LIMIT_1_000_000
         )
       ).wait();
 
       erc20Mock = await utils.deployERC20Mock();
-      await erc20Mock.mint(contractTransferTx.address, 1000);
+      await erc20Mock.mint(await contractTransferTx.getAddress(), 1000);
     });
 
     it('should create hollow account and transfer Fungible Tokens', async function () {
       const balanceBefore = await erc20Mock.balanceOf(hollowWallet.address);
       const tx = await contractTransferTx.transferFungibleTokenTo(
-        erc20Mock.address,
+        await erc20Mock.getAddress(),
         hollowWallet.address,
         tokenAmount
       );
@@ -592,7 +604,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
     it('should test that second transfer fungible tokens via contract to the hollow account is successful', async function () {
       const balanceBefore = await erc20Mock.balanceOf(hollowWallet.address);
       const tx = await contractTransferTx.transferFungibleTokenTo(
-        erc20Mock.address,
+        await erc20Mock.getAddress(),
         hollowWallet.address,
         tokenAmount
       );
@@ -603,7 +615,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
         hollowWallet.address,
         balanceBefore
       );
-      expect(balanceAfter).to.eq(balanceBefore.add(tokenAmount));
+      expect(balanceAfter).to.eq(balanceBefore + tokenAmount);
     });
 
     it('should test that can make fungible token transfer via contract from hollow account to another', async function () {
@@ -617,7 +629,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
         await contractTransferTx.connect(hollowWallet);
       const tx =
         await contractTransferTxWithHollowAccount.transferFungibleTokenTo(
-          erc20Mock.address,
+          await erc20Mock.getAddress(),
           secondHollowWallet.address,
           tokenAmount
         );
@@ -636,27 +648,27 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
     const tokenId = 27;
     let hollowWallet;
     let erc721Mock;
-    const initialHollowWalletAmount = ethers.utils.parseEther('20');
+    const initialHollowWalletAmount = ethers.parseEther('20');
 
     before(async function () {
       hollowWallet = ethers.Wallet.createRandom().connect(ethers.provider);
       await (
         await contractTransferTx.transferTo(
           hollowWallet.address,
-          initialHollowWalletAmount / utils.tinybarToWeibarCoef,
+          initialHollowWalletAmount / BigInt(utils.tinybarToWeibarCoef),
           Constants.GAS_LIMIT_1_000_000
         )
       ).wait();
 
       erc721Mock = await utils.deployERC721Mock();
-      await erc721Mock.mint(contractTransferTx.address, tokenId);
+      await erc721Mock.mint(await contractTransferTx.getAddress(), tokenId);
     });
 
     it('should create hollow account and transfer NFT', async function () {
       const ownerBefore = await erc721Mock.ownerOf(tokenId);
       const tx = await contractTransferTx.transferFromNonFungibleTokenTo(
-        erc721Mock.address,
-        contractTransferTx.address,
+        await erc721Mock.getAddress(),
+        await contractTransferTx.getAddress(),
         hollowWallet.address,
         tokenId
       );
@@ -675,14 +687,14 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
     it('should test that second transfer of NFT via contract to the hollow account is successful', async function () {
       const secondTokenId = 31;
       const mintTx = await erc721Mock.mint(
-        contractTransferTx.address,
+        await contractTransferTx.getAddress(),
         secondTokenId
       );
       await mintTx.wait();
 
       const tx = await contractTransferTx.transferFromNonFungibleTokenTo(
-        erc721Mock.address,
-        contractTransferTx.address,
+        await erc721Mock.getAddress(),
+        await contractTransferTx.getAddress(),
         hollowWallet.address,
         secondTokenId
       );
@@ -699,7 +711,10 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
       );
       const erc721MockHollow = erc721Mock.connect(hollowWallet);
       await (
-        await erc721MockHollow.approve(contractTransferTx.address, tokenId)
+        await erc721MockHollow.approve(
+          await contractTransferTx.getAddress(),
+          tokenId
+        )
       ).wait();
 
       const ownerBefore = await erc721Mock.ownerOf(tokenId);
@@ -710,7 +725,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
 
       await (
         await contractTransferTxWithHollowAccount.transferFromNonFungibleTokenTo(
-          erc721Mock.address,
+          await erc721Mock.getAddress(),
           hollowWallet.address,
           secondHollowWallet.address,
           tokenId
@@ -741,9 +756,9 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
     tokenQueryContract = await utils.deployTokenQueryContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
     await utils.updateAccountKeysViaHapi([
-      tokenCreateContract.address,
-      tokenQueryContract.address,
-      tokenTransferContract.address,
+      await tokenCreateContract.getAddress(),
+      await tokenQueryContract.getAddress(),
+      await tokenTransferContract.getAddress(),
     ]);
     erc20Contract = await utils.deployERC20Contract();
     erc721Contract = await utils.deployERC721Contract();
@@ -757,12 +772,12 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
   ) {
     await signer.sendTransaction({
       to: hollowWallet.address,
-      value: ethers.utils.parseEther('100'),
-      value: ethers.utils.parseEther('30'),
+      value: ethers.parseEther('100'),
+      value: ethers.parseEther('30'),
       gasLimit: 1_000_000,
     });
     await utils.updateAccountKeysViaHapi(
-      [tokenCreateContract.address],
+      [await tokenCreateContract.getAddress()],
       [hollowWallet.privateKey]
     );
     const hollowWalletTokenCreateContract = await tokenCreateContract.connect(
@@ -784,7 +799,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
   };
 
   describe('Fungible Token Test', function () {
-    const amount = 27;
+    const amount = BigInt(27);
     let tokenAddress;
     let hollowWallet;
 
@@ -795,8 +810,8 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         utils.getSignerCompressedPublicKey()
       );
       await utils.updateTokenKeysViaHapi(tokenAddress, [
-        tokenCreateContract.address,
-        tokenTransferContract.address,
+        await tokenCreateContract.getAddress(),
+        await tokenTransferContract.getAddress(),
       ]);
       await utils.associateToken(
         tokenCreateContract,
@@ -855,7 +870,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         hollowWallet.address,
         hollowBalanceBefore
       );
-      expect(hollowBalanceAfter).to.eq(hollowBalanceBefore.add(amount));
+      expect(hollowBalanceAfter).to.eq(hollowBalanceBefore + amount);
     });
 
     it('should test that can make fungible token transfer via precompile from hollow account to another', async function () {
@@ -870,7 +885,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
       );
 
       await utils.updateAccountKeysViaHapi(
-        [tokenTransferContract.address],
+        [await tokenTransferContract.getAddress()],
         [hollowWallet.privateKey]
       );
 
@@ -915,8 +930,8 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
       );
 
       await utils.updateTokenKeysViaHapi(nftTokenAddress, [
-        tokenCreateContract.address,
-        tokenTransferContract.address,
+        await tokenCreateContract.getAddress(),
+        await tokenTransferContract.getAddress(),
       ]);
 
       await utils.associateToken(
@@ -1021,7 +1036,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
         newMintedTokenSerialNumber
       );
       await utils.updateAccountKeysViaHapi(
-        [tokenTransferContract.address],
+        [await tokenTransferContract.getAddress()],
         [hollowWallet.privateKey]
       );
 

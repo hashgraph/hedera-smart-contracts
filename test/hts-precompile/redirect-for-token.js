@@ -30,8 +30,8 @@ describe('RedirectForToken Test Suite', function () {
   let IERC20;
 
   const parseCallResponseEventData = async (tx) => {
-    return (await tx.wait()).events.filter(
-      (e) => e.event === Constants.Events.CallResponseEvent
+    return (await tx.wait()).logs.filter(
+      (e) => e.fragment.name === Constants.Events.CallResponseEvent
     )[0].args;
   };
 
@@ -60,10 +60,12 @@ describe('RedirectForToken Test Suite', function () {
     );
     tokenCreateContract = await ethers.getContractAt(
       Constants.Contract.TokenCreateContract,
-      (await tokenCreateTx.deployTransaction.wait()).contractAddress
+      await tokenCreateTx.getAddress()
     );
 
-    await utils.updateAccountKeysViaHapi([tokenCreateContract.address]);
+    await utils.updateAccountKeysViaHapi([
+      await tokenCreateContract.getAddress(),
+    ]);
 
     const tokenAddressTx =
       await tokenCreateContract.createFungibleTokenWithSECP256K1AdminKeyPublic(
@@ -74,9 +76,13 @@ describe('RedirectForToken Test Suite', function () {
           gasLimit: 1_000_000,
         }
       );
-    tokenAddress = (await tokenAddressTx.wait()).events.filter(
-      (e) => e.event === Constants.Events.CreatedToken
+    tokenAddress = (await tokenAddressTx.wait()).logs.filter(
+      (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args.tokenAddress;
+
+    await utils.updateTokenKeysViaHapi(tokenAddress, [
+      await tokenCreateContract.getAddress(),
+    ]);
 
     await utils.associateToken(
       tokenCreateContract,
@@ -85,7 +91,7 @@ describe('RedirectForToken Test Suite', function () {
     );
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
 
-    IERC20 = new ethers.utils.Interface(
+    IERC20 = new ethers.Interface(
       (await hre.artifacts.readArtifact('ERC20')).abi
     );
   });
@@ -175,7 +181,7 @@ describe('RedirectForToken Test Suite', function () {
   it('should be able to execute allowance(address,address)', async function () {
     const encodedFunc = IERC20.encodeFunctionData(
       'allowance(address,address)',
-      [tokenCreateContract.address, signers[1].address]
+      [await tokenCreateContract.getAddress(), signers[1].address]
     );
     const tx = await tokenCreateContract.redirectForToken(
       tokenAddress,
@@ -192,7 +198,7 @@ describe('RedirectForToken Test Suite', function () {
       Constants.Path.ERC20Mock,
       tokenAddress
     );
-    await erc20.transfer(tokenCreateContract.address, amount);
+    await erc20.transfer(await tokenCreateContract.getAddress(), amount);
 
     const balanceBefore = await erc20.balanceOf(signers[1].address);
 
@@ -217,23 +223,23 @@ describe('RedirectForToken Test Suite', function () {
       Constants.Path.ERC20Mock,
       tokenAddress
     );
-    await erc20.transfer(tokenCreateContract.address, amount);
+    await erc20.transfer(await tokenCreateContract.getAddress(), amount);
 
     const tokenCreateContractBefore = await erc20.balanceOf(
-      tokenCreateContract.address
+      await tokenCreateContract.getAddress()
     );
     const balanceBefore = await erc20.balanceOf(signers[1].address);
 
     await tokenCreateContract.approvePublic(
       tokenAddress,
-      tokenCreateContract.address,
+      await tokenCreateContract.getAddress(),
       amount,
       Constants.GAS_LIMIT_1_000_000
     );
 
     const encodedFunc = IERC20.encodeFunctionData(
       'transferFrom(address,address,uint256)',
-      [tokenCreateContract.address, signers[1].address, amount]
+      [await tokenCreateContract.getAddress(), signers[1].address, amount]
     );
     const tx = await tokenCreateContract.redirectForToken(
       tokenAddress,
@@ -241,7 +247,7 @@ describe('RedirectForToken Test Suite', function () {
       Constants.GAS_LIMIT_1_000_000
     );
     const tokenCreateContractAfter = await erc20.balanceOf(
-      tokenCreateContract.address
+      await tokenCreateContract.getAddress()
     );
     const [success] = await parseCallResponseEventData(tx);
     expect(success).to.eq(true);

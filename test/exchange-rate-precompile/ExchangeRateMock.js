@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../constants');
 
-describe('ExchangeRateMock tests', function () {
+describe('ExchangeRateMock Test Suite', function () {
   let exchangeRateMock;
   const gasLimit = 1000000;
   const tinybars = 100000000;
@@ -42,8 +42,8 @@ describe('ExchangeRateMock tests', function () {
     });
 
     const txReceipt = await tx.wait();
-    const result = txReceipt.events.filter(
-      (e) => e.event === Constants.Events.TinyBars
+    const result = txReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.TinyBars
     )[0].args[0];
 
     expect(result).to.exist;
@@ -55,8 +55,8 @@ describe('ExchangeRateMock tests', function () {
     });
 
     const txReceipt = await tx.wait();
-    const result = txReceipt.events.filter(
-      (e) => e.event === Constants.Events.TinyCents
+    const result = txReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.TinyCents
     )[0].args[0];
 
     expect(result).to.exist;

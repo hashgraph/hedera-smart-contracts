@@ -69,8 +69,8 @@ class Utils {
       hre.config.networks[network.name].accounts[index]
     );
     const cpk = prune0x
-      ? wallet._signingKey().compressedPublicKey.replace('0x', '')
-      : wallet._signingKey().compressedPublicKey;
+      ? wallet.signingKey.compressedPublicKey.replace('0x', '')
+      : wallet.signingKey.compressedPublicKey;
 
     return asBuffer ? Buffer.from(cpk, 'hex') : cpk;
   }
@@ -82,11 +82,10 @@ class Utils {
     const erc20Mock = await erc20MockFactory.deploy(
       Constants.GAS_LIMIT_1_000_000
     );
-    const erc20MockReceipt = await erc20Mock.deployTransaction.wait();
 
     return await ethers.getContractAt(
       Constants.Path.HIP583_ERC20Mock,
-      erc20MockReceipt.contractAddress
+      await erc20Mock.getAddress()
     );
   }
 
@@ -97,11 +96,10 @@ class Utils {
     const erc721Mock = await erc721MockFactory.deploy(
       Constants.GAS_LIMIT_1_000_000
     );
-    const erc721MockReceipt = await erc721Mock.deployTransaction.wait();
 
     return await ethers.getContractAt(
       Constants.Path.HIP583_ERC721Mock,
-      erc721MockReceipt.contractAddress
+      await erc721Mock.getAddress()
     );
   }
 
@@ -112,11 +110,10 @@ class Utils {
     const tokenCreate = await tokenCreateFactory.deploy(
       Constants.GAS_LIMIT_1_000_000
     );
-    const tokenCreateReceipt = await tokenCreate.deployTransaction.wait();
 
     return await ethers.getContractAt(
       Constants.Contract.TokenCreateContract,
-      tokenCreateReceipt.contractAddress
+      await tokenCreate.getAddress()
     );
   }
 
@@ -127,12 +124,10 @@ class Utils {
     const tokenCreateCustom = await tokenCreateCustomFactory.deploy(
       Constants.GAS_LIMIT_1_000_000
     );
-    const tokenCreateCustomReceipt =
-      await tokenCreateCustom.deployTransaction.wait();
 
     return await ethers.getContractAt(
       Constants.Contract.TokenCreateCustomContract,
-      tokenCreateCustomReceipt.contractAddress
+      await tokenCreateCustom.getAddress()
     );
   }
 
@@ -143,12 +138,10 @@ class Utils {
     const tokenManagement = await tokenManagementFactory.deploy(
       Constants.GAS_LIMIT_1_000_000
     );
-    const tokenManagementReceipt =
-      await tokenManagement.deployTransaction.wait();
 
     return await ethers.getContractAt(
       Constants.Contract.TokenManagementContract,
-      tokenManagementReceipt.contractAddress
+      await tokenManagement.getAddress()
     );
   }
 
@@ -159,11 +152,10 @@ class Utils {
     const tokenQuery = await tokenQueryFactory.deploy(
       Constants.GAS_LIMIT_1_000_000
     );
-    const tokenQueryReceipt = await tokenQuery.deployTransaction.wait();
 
     return await ethers.getContractAt(
       Constants.Contract.TokenQueryContract,
-      tokenQueryReceipt.contractAddress
+      await tokenQuery.getAddress()
     );
   }
 
@@ -174,11 +166,10 @@ class Utils {
     const tokenTransfer = await tokenTransferFactory.deploy(
       Constants.GAS_LIMIT_1_000_000
     );
-    const tokenTransferReceipt = await tokenTransfer.deployTransaction.wait();
 
     return await ethers.getContractAt(
       Constants.Contract.TokenTransferContract,
-      tokenTransferReceipt.contractAddress
+      await tokenTransfer.getAddress()
     );
   }
 
@@ -189,11 +180,10 @@ class Utils {
     const hrcContract = await hrcContractFactory.deploy(
       Constants.GAS_LIMIT_1_000_000
     );
-    const hrcContractReceipt = await hrcContract.deployTransaction.wait();
 
     return await ethers.getContractAt(
       Constants.Contract.HRCContract,
-      hrcContractReceipt.contractAddress
+      await hrcContract.getAddress()
     );
   }
 
@@ -204,11 +194,10 @@ class Utils {
     const erc20Contract = await erc20ContractFactory.deploy(
       Constants.GAS_LIMIT_1_000_000
     );
-    const erc20ContractReceipt = await erc20Contract.deployTransaction.wait();
 
     return await ethers.getContractAt(
       Constants.Contract.ERC20Contract,
-      erc20ContractReceipt.contractAddress
+      await erc20Contract.getAddress()
     );
   }
 
@@ -219,22 +208,21 @@ class Utils {
     const erc721Contract = await erc721ContractFactory.deploy(
       Constants.GAS_LIMIT_1_000_000
     );
-    const erc721ContractReceipt = await erc721Contract.deployTransaction.wait();
 
     return await ethers.getContractAt(
       Constants.Contract.ERC721Contract,
-      erc721ContractReceipt.contractAddress
+      await erc721Contract.getAddress()
     );
   }
 
   static async createFungibleToken(contract, treasury) {
     const tokenAddressTx = await contract.createFungibleTokenPublic(treasury, {
-      value: ethers.BigNumber.from(this.createTokenCost),
+      value: BigInt(this.createTokenCost),
       gasLimit: 1_000_000,
     });
     const tokenAddressReceipt = await tokenAddressTx.wait();
-    const { tokenAddress } = tokenAddressReceipt.events.filter(
-      (e) => e.event === Constants.Events.CreatedToken
+    const { tokenAddress } = tokenAddressReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args;
 
     return tokenAddress;
@@ -270,8 +258,8 @@ class Utils {
           }
         )
       ).wait()
-    ).events.filter((e) => e.event === Constants.Events.CreatedToken)[0].args
-      .tokenAddress;
+    ).logs.filter((e) => e.fragment.name === Constants.Events.CreatedToken)[0]
+      .args.tokenAddress;
 
     return tokenAddress;
   }
@@ -286,13 +274,13 @@ class Utils {
         treasury,
         adminKey,
         {
-          value: ethers.BigNumber.from(this.createTokenCost),
+          value: BigInt(this.createTokenCost),
           gasLimit: 1_000_000,
         }
       );
     const tokenAddressReceipt = await tokenAddressTx.wait();
-    const { tokenAddress } = tokenAddressReceipt.events.filter(
-      (e) => e.event === Constants.Events.CreatedToken
+    const { tokenAddress } = tokenAddressReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args;
 
     return tokenAddress;
@@ -308,13 +296,13 @@ class Utils {
         treasury,
         adminKey,
         {
-          value: ethers.BigNumber.from(this.createTokenCost),
+          value: BigInt(this.createTokenCost),
           gasLimit: 1_000_000,
         }
       );
     const tokenAddressReceipt = await tokenAddressTx.wait();
-    const { tokenAddress } = tokenAddressReceipt.events.filter(
-      (e) => e.event === Constants.Events.CreatedToken
+    const { tokenAddress } = tokenAddressReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args;
 
     return tokenAddress;
@@ -332,13 +320,13 @@ class Utils {
         adminKey,
         initialBalance,
         {
-          value: ethers.BigNumber.from(this.createTokenCost),
+          value: BigInt(this.createTokenCost),
           gasLimit: 1_000_000,
         }
       );
     const tokenAddressReceipt = await tokenAddressTx.wait();
-    const { tokenAddress } = tokenAddressReceipt.events.filter(
-      (e) => e.event === Constants.Events.CreatedToken
+    const { tokenAddress } = tokenAddressReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args;
 
     return tokenAddress;
@@ -347,16 +335,16 @@ class Utils {
   static async createFungibleTokenWithCustomFees(contract, feeTokenAddress) {
     const tokenAddressTx =
       await contract.createFungibleTokenWithCustomFeesPublic(
-        contract.address,
+        await contract.getAddress(),
         feeTokenAddress,
         {
-          value: ethers.BigNumber.from(this.createTokenCustomFeesCost),
+          value: BigInt(this.createTokenCustomFeesCost),
           gasLimit: 10_000_000,
         }
       );
     const tokenAddressReceipt = await tokenAddressTx.wait();
-    const { tokenAddress } = tokenAddressReceipt.events.filter(
-      (e) => e.event === Constants.Events.CreatedToken
+    const { tokenAddress } = tokenAddressReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args;
 
     return tokenAddress;
@@ -366,13 +354,13 @@ class Utils {
     const tokenAddressTx = await contract.createNonFungibleTokenPublic(
       treasury,
       {
-        value: ethers.BigNumber.from(this.createTokenCost),
+        value: BigInt(this.createTokenCost),
         gasLimit: 1_000_000,
       }
     );
     const tokenAddressReceipt = await tokenAddressTx.wait();
-    const { tokenAddress } = tokenAddressReceipt.events.filter(
-      (e) => e.event === Constants.Events.CreatedToken
+    const { tokenAddress } = tokenAddressReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args;
 
     return tokenAddress;
@@ -388,13 +376,13 @@ class Utils {
         treasury,
         adminKey,
         {
-          value: ethers.BigNumber.from(this.createTokenCost),
+          value: BigInt(this.createTokenCost),
           gasLimit: 1_000_000,
         }
       );
     const tokenAddressReceipt = await tokenAddressTx.wait();
-    const { tokenAddress } = tokenAddressReceipt.events.filter(
-      (e) => e.event === Constants.Events.CreatedToken
+    const { tokenAddress } = tokenAddressReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args;
 
     return tokenAddress;
@@ -410,13 +398,13 @@ class Utils {
         treasury,
         adminKey,
         {
-          value: ethers.BigNumber.from(this.createTokenCost),
+          value: BigInt(this.createTokenCost),
           gasLimit: 1_000_000,
         }
       );
     const tokenAddressReceipt = await tokenAddressTx.wait();
-    const { tokenAddress } = tokenAddressReceipt.events.filter(
-      (e) => e.event === Constants.Events.CreatedToken
+    const { tokenAddress } = tokenAddressReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args;
 
     return tokenAddress;
@@ -430,8 +418,8 @@ class Utils {
       Constants.GAS_LIMIT_1_000_000
     );
     const tokenAddressReceipt = await mintNftTx.wait();
-    const { serialNumbers } = tokenAddressReceipt.events.filter(
-      (e) => e.event === Constants.Events.MintedToken
+    const { serialNumbers } = tokenAddressReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.MintedToken
     )[0].args;
 
     return parseInt(serialNumbers);
@@ -445,31 +433,31 @@ class Utils {
       Constants.GAS_LIMIT_1_000_000
     );
     const tokenAddressReceipt = await mintNftTx.wait();
-    const { serialNumbers } = tokenAddressReceipt.events.filter(
-      (e) => e.event === Constants.Events.MintedToken
+    const { serialNumbers } = tokenAddressReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.MintedToken
     )[0].args;
 
     return parseInt(serialNumbers);
   }
 
-  //Add Token association via hedera.js sdk
+  // Add Token association via hedera.js sdk
   // Client with signer - my private key example
 
   static async associateToken(contract, tokenAddress, contractName) {
     const signers = await ethers.getSigners();
     const associateTx1 = await ethers.getContractAt(
       contractName,
-      contract.address,
+      await contract.getAddress(),
       signers[0]
     );
     const associateTx2 = await ethers.getContractAt(
       contractName,
-      contract.address,
+      await contract.getAddress(),
       signers[1]
     );
 
     await contract.associateTokenPublic(
-      contract.address,
+      await contract.getAddress(),
       tokenAddress,
       Constants.GAS_LIMIT_1_000_000
     );
@@ -487,7 +475,10 @@ class Utils {
 
   static async grantTokenKyc(contract, tokenAddress) {
     const signers = await ethers.getSigners();
-    await contract.grantTokenKycPublic(tokenAddress, contract.address);
+    await contract.grantTokenKycPublic(
+      tokenAddress,
+      await contract.getAddress()
+    );
     await contract.grantTokenKycPublic(tokenAddress, signers[0].address);
     await contract.grantTokenKycPublic(tokenAddress, signers[1].address);
   }
@@ -495,7 +486,7 @@ class Utils {
   static async expectToFail(transaction, code) {
     try {
       const result = await transaction;
-      const receipt = await result.wait();
+      await result.wait();
       expect(true).to.eq(false);
     } catch (e) {
       expect(e).to.exist;
@@ -541,8 +532,8 @@ class Utils {
       hre.config.networks[network.name].accounts[index]
     );
     const cpk = prune0x
-      ? wallet._signingKey().compressedPublicKey.replace('0x', '')
-      : wallet._signingKey().compressedPublicKey;
+      ? wallet.signingKey.compressedPublicKey.replace('0x', '')
+      : wallet.signingKey.compressedPublicKey;
 
     return asBuffer ? Buffer.from(cpk, 'hex') : cpk;
   }
@@ -658,9 +649,7 @@ class Utils {
       wallet.address,
       genesisClient
     );
-    const signerPk = PrivateKey.fromStringECDSA(
-      wallet._signingKey().privateKey
-    );
+    const signerPk = PrivateKey.fromStringECDSA(wallet.signingKey.privateKey);
 
     const signerClient = await this.createSDKClient(
       accountIdAsString,
@@ -679,10 +668,10 @@ class Utils {
 
   static defaultKeyValues = {
     inheritAccountKey: false,
-    contractId: ethers.constants.AddressZero,
+    contractId: ethers.ZeroAddress,
     ed25519: Buffer.from('', 'hex'),
     ECDSA_secp256k1: Buffer.from('', 'hex'),
-    delegatableContractId: ethers.constants.AddressZero,
+    delegatableContractId: ethers.ZeroAddress,
   };
 
   /**

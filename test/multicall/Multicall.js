@@ -20,15 +20,12 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const { solidityPack } = require('ethers/lib/utils');
 const { defaultAbiCoder } = require('@ethersproject/abi');
 
 describe('Multicall Test Suite', function () {
-  let multicaller, receiver, reverter;
+  let multicaller, receiver, reverter, receiverAddress;
 
-  // Translates to: "Multicall3: call failed"
-  const REVERT_REASON_DATA =
-    '0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000174d756c746963616c6c333a2063616c6c206661696c6564000000000000000000';
+  const INVALID_ARGUMENT = 'INVALID_ARGUMENT';
   const RESULT_FIVE =
     '0x0000000000000000000000000000000000000000000000000000000000000005';
   const INPUT_ELEMENT_LENGTH = 266;
@@ -48,16 +45,14 @@ describe('Multicall Test Suite', function () {
       gasLimit: 8_000_000,
     });
 
-    const deployRc = await _contract.deployTransaction.wait();
-    const contractAddress = deployRc.contractAddress;
-    return Contract.attach(contractAddress);
+    return Contract.attach(await _contract.getAddress());
   }
 
   function encodeCallData(params, abi, paramsEncoding) {
-    return solidityPack(
+    return ethers.solidityPacked(
       ['bytes4', 'bytes'],
       [
-        receiver.interface.getSighash(abi),
+        receiver.interface.getFunction(abi).selector,
         defaultAbiCoder.encode(paramsEncoding, params),
       ]
     );
@@ -74,7 +69,7 @@ describe('Multicall Test Suite', function () {
     for (let i = 0; i < iterations; i++) {
       const [a, b, c, d] = [1, 2, 3, 4].map((num) => num * i);
       data.push(encodeCallData([a, b, c, d], abi, paramsEncoding));
-      addresses.push(receiver.address);
+      addresses.push(receiverAddress);
     }
 
     if (callReverter) {
@@ -86,6 +81,7 @@ describe('Multicall Test Suite', function () {
       return {
         target: addr,
         callData: data[i],
+        allowFailure: false,
       };
     });
 
@@ -93,7 +89,7 @@ describe('Multicall Test Suite', function () {
   }
 
   async function multicallProcessLongInput(callData, overrides = {}) {
-    return await multicaller.callStatic.aggregate3(callData, {
+    return await multicaller.aggregate3.staticCall(callData, {
       gasLimit: 15_000_000,
       ...overrides,
     });
@@ -111,11 +107,12 @@ describe('Multicall Test Suite', function () {
     for (let i = 0; i < n; i++) {
       callData.push({
         callData: encodeCallData([n], LONG_OUTPUT_ABI, LONG_OUTPUT_PARAMS),
-        target: receiver.address,
+        target: receiverAddress,
+        allowFailure: false,
       });
     }
 
-    return multicaller.callStatic.aggregate3(callData, {
+    return multicaller.aggregate3.staticCall(callData, {
       gasLimit: 15_000_000,
     });
   }
@@ -129,7 +126,8 @@ describe('Multicall Test Suite', function () {
           LONG_OUTPUT_TX_ABI,
           LONG_OUTPUT_TX_PARAMS
         ),
-        target: receiver.address,
+        target: receiverAddress,
+        allowFailure: false,
       });
     }
 
@@ -161,6 +159,7 @@ describe('Multicall Test Suite', function () {
       'contracts/multicaller/Receiver.sol:Receiver'
     );
     reverter = await deployContract('Reverter');
+    receiverAddress = await receiver.getAddress();
   });
 
   describe('static calls with large input', async function () {
@@ -239,8 +238,8 @@ describe('Multicall Test Suite', function () {
         await multicallProcessLongInput(callData);
       } catch (e) {
         hasError = true;
-        expect(e.data).to.exist;
-        expect(e.data).to.eq(REVERT_REASON_DATA);
+        expect(e.code).to.exist;
+        expect(e.code).to.eq(INVALID_ARGUMENT);
       }
 
       expect(hasError).to.eq(true);
@@ -351,7 +350,7 @@ describe('Multicall Test Suite', function () {
   describe('executes multiple state-changing methods', async function () {
     it('should be able to aggregate 10 calls to processLongOutputTx', async function () {
       const n = 10;
-      const receiverCounterAtStart = (await receiver.counter()).toNumber();
+      const receiverCounterAtStart = await receiver.counter();
       const res = await multicallProcessLongOutputTx(n);
       expect(res).to.exist;
       const receipt = await res.wait();
@@ -361,10 +360,10 @@ describe('Multicall Test Suite', function () {
 
       // Every processLongOutputTx call emits an event
       expect(receipt.logs.length).to.eq(n);
-      for (let i = 0; i < n; i++) {
+      for (let i = 0n; i < n; i++) {
         expect(receipt.logs[i].data).to.eq(
           '0x' +
-            Number(receiverCounterAtStart + i + 1)
+            Number(receiverCounterAtStart + i + 1n)
               .toString(16)
               .padStart(64, '0')
         );

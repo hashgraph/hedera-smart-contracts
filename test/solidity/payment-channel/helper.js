@@ -31,7 +31,7 @@ class PaymentChannelHelper {
    * @return Keccak256 hash string
    */
   static constructPaymentMessage(contractAddress, amount) {
-    return ethers.utils.solidityKeccak256(
+    return ethers.solidityPackedKeccak256(
       ['address', 'uint256'],
       [contractAddress, amount]
     );
@@ -50,7 +50,7 @@ class PaymentChannelHelper {
    */
   static async signPayment(signer, contractAddress, amount) {
     const message = this.constructPaymentMessage(contractAddress, amount);
-    return await signer.signMessage(ethers.utils.arrayify(message));
+    return await signer.signMessage(ethers.getBytes(message));
   }
 }
 

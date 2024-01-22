@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZERC777 Tests', () => {
+describe('@OZERC777 Test Suite', () => {
   let erc1820registry,
     erc777SenderHookImpl,
     erc777RecipientHookImpl,
@@ -37,7 +37,7 @@ describe('@OZERC777 Tests', () => {
   const BURNT_TOKEN_AMOUNT = 900;
   const TOTAL_TOKEN_AMOUNT = 3_000;
   const EMPTY_DATA = '0x';
-  const ADDRESS_ZERO = ethers.constants.AddressZero;
+  const ADDRESS_ZERO = ethers.ZeroAddress;
 
   beforeEach(async () => {
     [wallet1, wallet2, wallet3, wallet4] = await ethers.getSigners();
@@ -65,21 +65,24 @@ describe('@OZERC777 Tests', () => {
     erc777Token = await ERC777TokenFac.deploy(
       TOKEN_NAME,
       TOKEN_SYMBOL,
-      erc1820registry.address,
+      await erc1820registry.getAddress(),
       defaultOperators,
       { gasLimit: 1_000_000 }
     );
     erc777ContractAccount = await ERC777ContractAccountFac.deploy(
-      erc1820registry.address
+      await erc1820registry.getAddress()
     );
   });
 
   it('Should deploy contracts properly', async () => {
-    expect(ethers.utils.isAddress(erc1820registry.address)).to.be.true;
-    expect(ethers.utils.isAddress(erc777SenderHookImpl.address)).to.be.true;
-    expect(ethers.utils.isAddress(erc777RecipientHookImpl.address)).to.be.true;
-    expect(ethers.utils.isAddress(erc777Token.address)).to.be.true;
-    expect(ethers.utils.isAddress(erc777ContractAccount.address)).to.be.true;
+    expect(ethers.isAddress(await erc1820registry.getAddress())).to.be.true;
+    expect(ethers.isAddress(await erc777SenderHookImpl.getAddress())).to.be
+      .true;
+    expect(ethers.isAddress(await erc777RecipientHookImpl.getAddress())).to.be
+      .true;
+    expect(ethers.isAddress(await erc777Token.getAddress())).to.be.true;
+    expect(ethers.isAddress(await erc777ContractAccount.getAddress())).to.be
+      .true;
   });
 
   it('Should call token information view functions in ERC777Token', async () => {
@@ -99,13 +102,11 @@ describe('@OZERC777 Tests', () => {
       .connect(wallet1)
       .mint(wallet2.address, TOTAL_TOKEN_AMOUNT, EMPTY_DATA, EMPTY_DATA);
     const receipt = await tx.wait();
-    const mintedEvent = receipt.events.find((e) => e.event === 'Minted');
+    const mintedEvent = receipt.logs.find((e) => e.fragment.name === 'Minted');
 
     expect(mintedEvent.args.operator).to.eq(wallet1.address);
     expect(mintedEvent.args.to).to.eq(wallet2.address);
-    expect(mintedEvent.args.amount).to.eq(
-      ethers.BigNumber.from(TOTAL_TOKEN_AMOUNT)
-    );
+    expect(mintedEvent.args.amount).to.eq(BigInt(TOTAL_TOKEN_AMOUNT));
     expect(mintedEvent.args.data).to.eq(EMPTY_DATA);
     expect(mintedEvent.args.operatorData).to.eq(EMPTY_DATA);
   });
@@ -136,12 +137,12 @@ describe('@OZERC777 Tests', () => {
       .connect(wallet1)
       .send(wallet2.address, SENT_TOKEN_AMOUNT, EMPTY_DATA);
     const receipt = await tx.wait();
-    const event = receipt.events.find((e) => e.event === 'Sent');
+    const event = receipt.logs.find((e) => e.fragment.name === 'Sent');
 
     expect(event.args.operator).to.eq(wallet1.address);
     expect(event.args.from).to.eq(wallet1.address);
     expect(event.args.to).to.eq(wallet2.address);
-    expect(event.args.amount).to.eq(ethers.BigNumber.from(SENT_TOKEN_AMOUNT));
+    expect(event.args.amount).to.eq(BigInt(SENT_TOKEN_AMOUNT));
     expect(event.args.data).to.eq(EMPTY_DATA);
     expect(event.args.operatorData).to.eq(EMPTY_DATA);
   });
@@ -154,11 +155,11 @@ describe('@OZERC777 Tests', () => {
       EMPTY_DATA
     );
 
-    const tx = await erc777Token
-      .connect(wallet1)
-      .send(wallet2.address, TOTAL_TOKEN_AMOUNT + 1, EMPTY_DATA);
-
-    expect(tx.wait()).to.eventually.be.rejected.and.have.property(
+    expect(
+      erc777Token
+        .connect(wallet1)
+        .send(wallet2.address, TOTAL_TOKEN_AMOUNT + 1, EMPTY_DATA)
+    ).to.eventually.be.rejected.and.have.property(
       'code',
       Constants.CALL_EXCEPTION
     );
@@ -172,11 +173,11 @@ describe('@OZERC777 Tests', () => {
       EMPTY_DATA
     );
 
-    const tx = await erc777Token
-      .connect(wallet1)
-      .send(ADDRESS_ZERO, TOTAL_TOKEN_AMOUNT + 1, EMPTY_DATA);
-
-    expect(tx.wait()).to.eventually.be.rejected.and.have.property(
+    expect(
+      erc777Token
+        .connect(wallet1)
+        .send(ADDRESS_ZERO, TOTAL_TOKEN_AMOUNT + 1, EMPTY_DATA)
+    ).to.eventually.be.rejected.and.have.property(
       'code',
       Constants.CALL_EXCEPTION
     );
@@ -194,11 +195,11 @@ describe('@OZERC777 Tests', () => {
       .connect(wallet1)
       .burn(BURNT_TOKEN_AMOUNT, EMPTY_DATA);
     const receipt = await tx.wait();
-    const event = receipt.events.find((e) => e.event === 'Burned');
+    const event = receipt.logs.find((e) => e.fragment.name === 'Burned');
 
     expect(event.args.operator).to.eq(wallet1.address);
     expect(event.args.from).to.eq(wallet1.address);
-    expect(event.args.amount).to.eq(ethers.BigNumber.from(BURNT_TOKEN_AMOUNT));
+    expect(event.args.amount).to.eq(BigInt(BURNT_TOKEN_AMOUNT));
     expect(event.args.data).to.eq(EMPTY_DATA);
     expect(event.args.operatorData).to.eq(EMPTY_DATA);
   });
@@ -208,18 +209,18 @@ describe('@OZERC777 Tests', () => {
       .connect(wallet2)
       .authorizeOperator(wallet1.address);
     const receipt = await tx.wait();
-    const event = receipt.events.find((e) => e.event === 'AuthorizedOperator');
+    const event = receipt.logs.find(
+      (e) => e.fragment.name === 'AuthorizedOperator'
+    );
 
     expect(event.args.operator).to.eq(wallet1.address);
     expect(event.args.tokenHolder).to.eq(wallet2.address);
   });
 
   it('Should NOT authorize self as operator', async () => {
-    const tx = await erc777Token
-      .connect(wallet2)
-      .authorizeOperator(wallet2.address);
-
-    expect(tx.wait()).to.eventually.be.rejected.and.have.property(
+    expect(
+      erc777Token.connect(wallet2).authorizeOperator(wallet2.address)
+    ).to.eventually.be.rejected.and.have.property(
       'code',
       Constants.CALL_EXCEPTION
     );
@@ -247,18 +248,18 @@ describe('@OZERC777 Tests', () => {
       .connect(wallet2)
       .revokeOperator(wallet1.address);
     const receipt = await tx.wait();
-    const event = receipt.events.find((e) => e.event === 'RevokedOperator');
+    const event = receipt.logs.find(
+      (e) => e.fragment.name === 'RevokedOperator'
+    );
 
     expect(event.args.operator).to.eq(wallet1.address);
     expect(event.args.tokenHolder).to.eq(wallet2.address);
   });
 
   it('Should NOT revoke self as operator', async () => {
-    const tx = await erc777Token
-      .connect(wallet2)
-      .revokeOperator(wallet2.address);
-
-    expect(tx.wait()).to.eventually.be.rejected.and.have.property(
+    expect(
+      erc777Token.connect(wallet2).revokeOperator(wallet2.address)
+    ).to.eventually.be.rejected.and.have.property(
       'code',
       Constants.CALL_EXCEPTION
     );
@@ -289,12 +290,12 @@ describe('@OZERC777 Tests', () => {
 
     const receipt = await tx.wait();
 
-    const event = receipt.events.find((e) => e.event === 'Sent');
+    const event = receipt.logs.find((e) => e.fragment.name === 'Sent');
 
     expect(event.args.operator).to.eq(wallet1.address);
     expect(event.args.from).to.eq(wallet2.address);
     expect(event.args.to).to.eq(wallet3.address);
-    expect(event.args.amount).to.eq(ethers.BigNumber.from(SENT_TOKEN_AMOUNT));
+    expect(event.args.amount).to.eq(BigInt(SENT_TOKEN_AMOUNT));
     expect(event.args.data).to.eq(EMPTY_DATA);
     expect(event.args.operatorData).to.eq(EMPTY_DATA);
   });
@@ -304,17 +305,17 @@ describe('@OZERC777 Tests', () => {
       .connect(wallet2)
       .mint(wallet2.address, TOTAL_TOKEN_AMOUNT, EMPTY_DATA, EMPTY_DATA);
 
-    const tx = await erc777Token
-      .connect(wallet1)
-      .operatorSend(
-        wallet2.address,
-        wallet3.address,
-        SENT_TOKEN_AMOUNT,
-        EMPTY_DATA,
-        EMPTY_DATA
-      );
-
-    expect(tx.wait()).to.eventually.be.rejected.and.have.property(
+    expect(
+      erc777Token
+        .connect(wallet1)
+        .operatorSend(
+          wallet2.address,
+          wallet3.address,
+          SENT_TOKEN_AMOUNT,
+          EMPTY_DATA,
+          EMPTY_DATA
+        )
+    ).to.eventually.be.rejected.and.have.property(
       'code',
       Constants.CALL_EXCEPTION
     );
@@ -335,11 +336,11 @@ describe('@OZERC777 Tests', () => {
     );
 
     const receipt = await tx.wait();
-    const event = receipt.events.find((e) => e.event === 'Burned');
+    const event = receipt.logs.find((e) => e.fragment.name === 'Burned');
 
     expect(event.args.operator).to.eq(wallet1.address);
     expect(event.args.from).to.eq(wallet2.address);
-    expect(event.args.amount).to.eq(ethers.BigNumber.from(BURNT_TOKEN_AMOUNT));
+    expect(event.args.amount).to.eq(BigInt(BURNT_TOKEN_AMOUNT));
     expect(event.args.data).to.eq(EMPTY_DATA);
     expect(event.args.operatorData).to.eq(EMPTY_DATA);
   });
@@ -349,14 +350,14 @@ describe('@OZERC777 Tests', () => {
       .connect(wallet2)
       .mint(wallet2.address, TOTAL_TOKEN_AMOUNT, EMPTY_DATA, EMPTY_DATA);
 
-    const tx = await erc777Token.operatorBurn(
-      wallet2.address, //token holder
-      BURNT_TOKEN_AMOUNT, //amount
-      EMPTY_DATA, // data
-      EMPTY_DATA // operator Data
-    );
-
-    expect(tx.wait()).to.eventually.be.rejected.and.have.property(
+    expect(
+      erc777Token.operatorBurn(
+        wallet2.address, //token holder
+        BURNT_TOKEN_AMOUNT, //amount
+        EMPTY_DATA, // data
+        EMPTY_DATA // operator Data
+      )
+    ).to.eventually.be.rejected.and.have.property(
       'code',
       Constants.CALL_EXCEPTION
     );
@@ -367,11 +368,15 @@ describe('@OZERC777 Tests', () => {
       .connect(wallet1)
       .mint(wallet1.address, TOTAL_TOKEN_AMOUNT, EMPTY_DATA, EMPTY_DATA);
 
-    const tx = await erc777Token
-      .connect(wallet1)
-      .send(erc777ContractAccount.address, SENT_TOKEN_AMOUNT, EMPTY_DATA);
-
-    expect(tx.wait()).to.eventually.be.rejected.and.have.property(
+    expect(
+      erc777Token
+        .connect(wallet1)
+        .send(
+          await erc777ContractAccount.getAddress(),
+          SENT_TOKEN_AMOUNT,
+          EMPTY_DATA
+        )
+    ).to.eventually.be.rejected.and.have.property(
       'code',
       Constants.CALL_EXCEPTION
     );
@@ -383,47 +388,51 @@ describe('@OZERC777 Tests', () => {
       .mint(wallet1.address, TOTAL_TOKEN_AMOUNT, EMPTY_DATA, EMPTY_DATA);
 
     await erc777ContractAccount.registerERC777TokensRecipient(
-      erc777RecipientHookImpl.address
+      await erc777RecipientHookImpl.getAddress()
     );
 
     const tx = await erc777Token
       .connect(wallet1)
-      .send(erc777ContractAccount.address, SENT_TOKEN_AMOUNT, EMPTY_DATA);
+      .send(
+        await erc777ContractAccount.getAddress(),
+        SENT_TOKEN_AMOUNT,
+        EMPTY_DATA
+      );
 
     const receipt = await tx.wait();
 
-    const event = receipt.events.find((e) => e.event === 'Sent');
+    const event = receipt.logs.find((e) => e.fragment.name === 'Sent');
 
     expect(event.args.operator).to.eq(wallet1.address);
     expect(event.args.from).to.eq(wallet1.address);
-    expect(event.args.to).to.eq(erc777ContractAccount.address);
-    expect(event.args.amount).to.eq(ethers.BigNumber.from(SENT_TOKEN_AMOUNT));
+    expect(event.args.to).to.eq(await erc777ContractAccount.getAddress());
+    expect(event.args.amount).to.eq(BigInt(SENT_TOKEN_AMOUNT));
     expect(event.args.data).to.eq(EMPTY_DATA);
     expect(event.args.operatorData).to.eq(EMPTY_DATA);
   });
 
   it('Should NOT be able to send ERC777 token from a contract that DOES NOT register ERC777TokensSender interface', async () => {
     await erc777ContractAccount.registerERC777TokensRecipient(
-      erc777RecipientHookImpl.address
+      await erc777RecipientHookImpl.getAddress()
     );
 
     await erc777Token
       .connect(wallet1)
       .mint(
-        erc777ContractAccount.address,
+        await erc777ContractAccount.getAddress(),
         TOTAL_TOKEN_AMOUNT,
         EMPTY_DATA,
         EMPTY_DATA
       );
 
-    const tx = await erc777ContractAccount.send(
-      erc777Token.address,
-      wallet2.address,
-      SENT_TOKEN_AMOUNT,
-      EMPTY_DATA
-    );
-
-    expect(tx.wait()).to.eventually.be.rejected.and.have.property(
+    expect(
+      erc777ContractAccount.send(
+        await erc777Token.getAddress(),
+        wallet2.address,
+        SENT_TOKEN_AMOUNT,
+        EMPTY_DATA
+      )
+    ).to.eventually.be.rejected.and.have.property(
       'code',
       Constants.CALL_EXCEPTION
     );
@@ -431,37 +440,39 @@ describe('@OZERC777 Tests', () => {
 
   it('Should be able to send ERC777 token from a contract that DOES register ERC777TokensSender interface', async () => {
     await erc777ContractAccount.registerERC777TokensRecipient(
-      erc777RecipientHookImpl.address
+      await erc777RecipientHookImpl.getAddress()
     );
 
     await erc777ContractAccount.registerERC777TokensSender(
-      erc777SenderHookImpl.address
+      await erc777SenderHookImpl.getAddress()
     );
 
     await erc777Token
       .connect(wallet1)
       .mint(
-        erc777ContractAccount.address,
+        await erc777ContractAccount.getAddress(),
         TOTAL_TOKEN_AMOUNT,
         EMPTY_DATA,
-        EMPTY_DATA
+        EMPTY_DATA,
+        Constants.GAS_LIMIT_1_000_000
       );
 
     await erc777ContractAccount.send(
-      erc777Token.address,
+      await erc777Token.getAddress(),
       wallet2.address,
       SENT_TOKEN_AMOUNT,
-      EMPTY_DATA
+      EMPTY_DATA,
+      Constants.GAS_LIMIT_1_000_000
     );
 
     const erc777ContractAccountBalance = await erc777Token.balanceOf(
-      erc777ContractAccount.address
+      await erc777ContractAccount.getAddress()
     );
     const wallet2Balance = await erc777Token.balanceOf(wallet2.address);
 
     expect(erc777ContractAccountBalance).to.eq(
-      ethers.BigNumber.from(TOTAL_TOKEN_AMOUNT - SENT_TOKEN_AMOUNT)
+      BigInt(TOTAL_TOKEN_AMOUNT - SENT_TOKEN_AMOUNT)
     );
-    expect(wallet2Balance).to.eq(ethers.BigNumber.from(SENT_TOKEN_AMOUNT));
+    expect(wallet2Balance).to.eq(BigInt(SENT_TOKEN_AMOUNT));
   });
 });

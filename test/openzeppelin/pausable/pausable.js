@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZPausable Tests', function () {
+describe('@OZPausable Test Suite', function () {
   let signers, wallet;
   let contract;
   const CALL_EXCEPTION = 'CALL_EXCEPTION';
@@ -35,7 +35,6 @@ describe('@OZPausable Tests', function () {
       Constants.Contract.PausableTest
     );
     contract = await factory.deploy();
-    await contract.deployed();
   });
 
   it('should BE able to call function "setPausedMessage" with "whenNotPaused" modifier when unpaused', async function () {
@@ -48,12 +47,10 @@ describe('@OZPausable Tests', function () {
 
   it('should NOT be able to call function "setPausedMessage" with "whenNotPaused" modifier when paused', async function () {
     await contract.pause();
-    const tx = await contract.setPausedMessage('Hello World');
 
-    expect(tx.wait()).to.eventually.be.rejected.and.have.property(
-      'code',
-      CALL_EXCEPTION
-    );
+    expect(
+      contract.setPausedMessage('Hello World')
+    ).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION);
   });
 
   it('should BE able to call function "getPausedMessage" with "whenNotPaused" modifier when unpaused', async function () {
@@ -69,31 +66,30 @@ describe('@OZPausable Tests', function () {
   });
 
   it('should fire event when Paused', async function () {
-    const tx = await contract.pause();
+    const tx = await contract.pause(Constants.GAS_LIMIT_1_000_000);
     const rec = await tx.wait();
-    const event = rec.events[0];
+    const event = rec.logs[0];
     const account = event.args.account;
 
-    expect(event.event).to.be.equal('Paused');
+    expect(event.fragment.name).to.be.equal('Paused');
     expect(account).to.be.equal(wallet.address);
   });
 
   it('should fire event when Unpaused', async function () {
-    const tx = await contract.unpause();
+    const tx = await contract.unpause(Constants.GAS_LIMIT_1_000_000);
     const rec = await tx.wait();
-    const event = rec.events[0];
+    const event = rec.logs[0];
     const account = event.args.account;
 
-    expect(event.event).to.be.equal('Unpaused');
+    expect(event.fragment.name).to.be.equal('Unpaused');
     expect(account).to.be.equal(wallet.address);
   });
 
   it('should Not be able to pause when paused', async function () {
-    const tx = await contract.pause();
+    const tx = await contract.pause(Constants.GAS_LIMIT_1_000_000);
     await tx.wait();
-    const tx2 = await contract.pause();
 
-    expect(tx2.wait()).to.eventually.be.rejected.and.have.property(
+    expect(contract.pause()).to.eventually.be.rejected.and.have.property(
       'code',
       CALL_EXCEPTION
     );
@@ -102,9 +98,8 @@ describe('@OZPausable Tests', function () {
   it('should Not be able to Unpause when Unpaused', async function () {
     const tx = await contract.unpause();
     await tx.wait();
-    const tx2 = await contract.unpause();
 
-    expect(tx2.wait()).to.eventually.be.rejected.and.have.property(
+    expect(contract.unpause()).to.eventually.be.rejected.and.have.property(
       'code',
       CALL_EXCEPTION
     );

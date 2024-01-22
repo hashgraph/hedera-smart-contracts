@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZOwnable Crowd Fund Tests', () => {
+describe('@OZOwnable Crowd Fund Test Suite', () => {
   const FUND_AMOUNT = 30000000000;
   const TINY_BAR_TO_WEI_COEF = 10_000_000_000;
 
@@ -45,7 +45,7 @@ describe('@OZOwnable Crowd Fund Tests', () => {
 
     expect(contractBalance).to.eq(0);
     expect(contractOwner).to.eq(ownerAddress);
-    expect(ethers.utils.isAddress(crowdFund.address)).to.be.true;
+    expect(ethers.isAddress(await crowdFund.getAddress())).to.be.true;
   });
 
   it('Should deposit an amount of HBAR', async () => {
@@ -59,8 +59,8 @@ describe('@OZOwnable Crowd Fund Tests', () => {
     const receipt = await tx.wait();
 
     // extract event arguments
-    const [funderAddress, fundedAmount] = receipt.events.map(
-      (e) => e.event === 'Deposit' && e
+    const [funderAddress, fundedAmount] = receipt.logs.map(
+      (e) => e.fragment.name === 'Deposit' && e
     )[0].args;
 
     // retrieve contract balance
@@ -86,14 +86,17 @@ describe('@OZOwnable Crowd Fund Tests', () => {
     const WITHDRAWN_AMOUNT = 10000000000;
     const tx = await crowdFund
       .connect(owner)
-      .withdraw(WITHDRAWN_AMOUNT / TINY_BAR_TO_WEI_COEF);
+      .withdraw(
+        WITHDRAWN_AMOUNT / TINY_BAR_TO_WEI_COEF,
+        Constants.GAS_LIMIT_1_000_000
+      );
 
     // wait for receipt
     const receipt = await tx.wait();
 
     // extract event arguments
-    const [ownerAddress, withdrawnAmount] = receipt.events.map(
-      (e) => e.event === 'Withdraw' && e
+    const [ownerAddress, withdrawnAmount] = receipt.logs.map(
+      (e) => e.fragment.name === 'Withdraw' && e
     )[0].args;
 
     // retrieve contract balance
@@ -120,17 +123,10 @@ describe('@OZOwnable Crowd Fund Tests', () => {
 
     // prepare transaction to withdraw an amount by owner
     const WITHDRAWN_AMOUNT = 40000000000; // > FUND_AMOUNT
-    const tx = await crowdFund
-      .connect(owner)
-      .withdraw(WITHDRAWN_AMOUNT / TINY_BAR_TO_WEI_COEF);
 
-    try {
-      await tx.wait();
-    } catch (e) {
-      error = e;
-    }
-
-    expect(error).to.not.null;
+    expect(
+      crowdFund.connect(owner).withdraw(WITHDRAWN_AMOUNT / TINY_BAR_TO_WEI_COEF)
+    ).to.be.reverted;
 
     const balance = await crowdFund.balance();
     expect(balance).to.eq(Math.round(FUND_AMOUNT / TINY_BAR_TO_WEI_COEF));
@@ -161,8 +157,8 @@ describe('@OZOwnable Crowd Fund Tests', () => {
     const receipt = await tx.wait();
 
     // extra event's args
-    const [oldOwner, newOwner] = receipt.events.map(
-      (e) => e.event === 'OwnershipTransferred' && e
+    const [oldOwner, newOwner] = receipt.logs.map(
+      (e) => e.fragment.name === 'OwnershipTransferred' && e
     )[0].args;
 
     // retrieve current contract owner
@@ -176,14 +172,14 @@ describe('@OZOwnable Crowd Fund Tests', () => {
 
   it('Should renounce ownership', async () => {
     // prepare renounceOwnership transaction
-    const tx = await crowdFund.renounceOwnership();
+    const tx = await crowdFund.renounceOwnership(Constants.GAS_LIMIT_1_000_000);
 
     // wait for receipt
     const receipt = await tx.wait();
 
     // extra event's args
-    const [oldOwner, newOwner] = receipt.events.map(
-      (e) => e.event === 'OwnershipTransferred' && e
+    const [oldOwner, newOwner] = receipt.logs.map(
+      (e) => e.fragment.name === 'OwnershipTransferred' && e
     )[0].args;
 
     // retrieve current contract owner
@@ -191,7 +187,7 @@ describe('@OZOwnable Crowd Fund Tests', () => {
 
     // assertion
     expect(oldOwner).to.eq(ownerAddress);
-    expect(newOwner).to.eq(ethers.constants.AddressZero);
-    expect(contractOwner).to.eq(ethers.constants.AddressZero);
+    expect(newOwner).to.eq(ethers.ZeroAddress);
+    expect(contractOwner).to.eq(ethers.ZeroAddress);
   });
 });

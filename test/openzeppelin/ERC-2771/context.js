@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZERC2771 Context Tests', function () {
+describe('@OZERC2771 Context Test Suite', function () {
   let signers, wallet2, wallet;
   let contract, msgDataTestFuncSig;
 
@@ -36,14 +36,8 @@ describe('@OZERC2771 Context Tests', function () {
     );
     contract = await factory.deploy(wallet2.address);
 
-    const iface = new ethers.utils.Interface(['function msgDataTest()']);
-    msgDataTestFuncSig = iface.getSighash('msgDataTest');
-  });
-
-  it('should deploy the contract', async function () {
-    const res = await contract.deployed();
-
-    expect(res).to.exist;
+    const iface = new ethers.Interface(['function msgDataTest()']);
+    msgDataTestFuncSig = iface.getFunction('msgDataTest').selector;
   });
 
   it('should have the correct trusted forwarder', async function () {
@@ -55,13 +49,13 @@ describe('@OZERC2771 Context Tests', function () {
   });
 
   it('should return Pure message sender when incorrect request is sent to _msgSender', async function () {
-    const res = await contract.callStatic.msgSenderTest();
+    const res = await contract.msgSenderTest.staticCall();
 
     expect(res).to.be.equal(wallet.address);
   });
 
   it('should return Pure message data when incorrect request is sent to _msgData', async function () {
-    const res = await contract.callStatic.msgDataTest();
+    const res = await contract.msgDataTest.staticCall();
 
     expect(res).to.be.equal(msgDataTestFuncSig);
   });
@@ -69,7 +63,7 @@ describe('@OZERC2771 Context Tests', function () {
   it('should extract message sender from the request', async function () {
     const trx = await contract
       .connect(wallet2)
-      .populateTransaction.msgSenderTest();
+      .msgSenderTest.populateTransaction();
     trx.data = trx.data + wallet2.address.substring(2);
 
     const signedTrx = await wallet2.sendTransaction(trx);
@@ -82,7 +76,7 @@ describe('@OZERC2771 Context Tests', function () {
   it('should extract message data from the request', async function () {
     const trx = await contract
       .connect(wallet2)
-      .populateTransaction.msgDataTest();
+      .msgDataTest.populateTransaction();
     const initialData = trx.data;
     trx.data = initialData + wallet2.address.substring(2);
 
@@ -98,7 +92,7 @@ describe('@OZERC2771 Context Tests', function () {
       value: 100,
     });
     const rec = await signedTrx.wait();
-    const eventName = rec.events[0].event;
+    const eventName = rec.logs[0].fragment.name;
 
     expect(eventName).to.be.equal('MessageChanged');
   });

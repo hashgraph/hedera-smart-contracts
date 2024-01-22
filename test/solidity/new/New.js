@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@solidityequiv2 New Keyword Tests', () => {
+describe('@solidityequiv2 New Keyword Test Suite', () => {
   let newContract;
   const CONTRACT_ALPHA = 'Alpha';
   const MESSAGE_ALPHA = 'Message from Alpha contract';
@@ -39,7 +39,7 @@ describe('@solidityequiv2 New Keyword Tests', () => {
     await newContract.createContract(CONTRACT_ALPHA, MESSAGE_ALPHA);
     const newContractsInfo = await newContract.newContractsInfo(CONTRACT_ALPHA);
 
-    expect(ethers.utils.isAddress(newContractsInfo.contractAddr)).to.be.true;
+    expect(ethers.isAddress(newContractsInfo.contractAddr)).to.be.true;
     expect(newContractsInfo.message).to.eq(MESSAGE_ALPHA);
   });
 
@@ -47,12 +47,12 @@ describe('@solidityequiv2 New Keyword Tests', () => {
     await newContract.createContractWithData(CONTRACT_ALPHA, MESSAGE_ALPHA);
     const newContractsInfo = await newContract.newContractsInfo(CONTRACT_ALPHA);
 
-    expect(ethers.utils.isAddress(newContractsInfo.contractAddr)).to.be.true;
+    expect(ethers.isAddress(newContractsInfo.contractAddr)).to.be.true;
     expect(newContractsInfo.message).to.eq(MESSAGE_ALPHA);
   });
 
   it('Create new contract using `new` keyword with salt', async () => {
-    const SALT = ethers.utils.formatBytes32String('salt');
+    const SALT = ethers.encodeBytes32String('salt');
 
     await newContract.createContractWithSalt(
       SALT,
@@ -61,7 +61,7 @@ describe('@solidityequiv2 New Keyword Tests', () => {
     );
     const newContractsInfo = await newContract.newContractsInfo(CONTRACT_ALPHA);
 
-    expect(ethers.utils.isAddress(newContractsInfo.contractAddr)).to.be.true;
+    expect(ethers.isAddress(newContractsInfo.contractAddr)).to.be.true;
     expect(newContractsInfo.message).to.eq(MESSAGE_ALPHA);
   });
 });

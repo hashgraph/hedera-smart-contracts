@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@yulequiv Math Tests', () => {
+describe('@yulequiv Math Test Suite', () => {
   let mathCoverageContract;
   const X = 6;
   const SX = -6;

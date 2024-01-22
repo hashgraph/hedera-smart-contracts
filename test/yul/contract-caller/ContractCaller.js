@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@yulequiv Contract Caller Tests', async () => {
+describe('@yulequiv Contract Caller Test Suite', async () => {
   let contractCaller, targetContract, getCountEncodedSig, setCountEncodedSig;
   const COUNT_A = 3;
   const GAS = 1_000_000;
@@ -53,12 +53,12 @@ describe('@yulequiv Contract Caller Tests', async () => {
     // prepare transactions
     const callSetCountTx = await contractCaller.call(
       GAS,
-      targetContract.address,
+      await targetContract.getAddress(),
       setCountEncodedSig
     );
     const callGetCountTx = await contractCaller.call(
       GAS,
-      targetContract.address,
+      await targetContract.getAddress(),
       getCountEncodedSig
     );
 
@@ -67,14 +67,14 @@ describe('@yulequiv Contract Caller Tests', async () => {
     const callGetCountReceipt = await callGetCountTx.wait();
 
     // extract events
-    const [callSetCountResult] = callSetCountReceipt.events.map(
-      (e) => e.event === 'CallResult' && e
+    const [callSetCountResult] = callSetCountReceipt.logs.map(
+      (e) => e.fragment.name === 'CallResult' && e
     )[0].args;
-    const [callGetCountResult] = callGetCountReceipt.events.map(
-      (e) => e.event === 'CallResult' && e
+    const [callGetCountResult] = callGetCountReceipt.logs.map(
+      (e) => e.fragment.name === 'CallResult' && e
     )[0].args;
-    const [callGetCountReturnedData] = callGetCountReceipt.events.map(
-      (e) => e.event === 'CallReturnedData' && e
+    const [callGetCountReturnedData] = callGetCountReceipt.logs.map(
+      (e) => e.fragment.name === 'CallReturnedData' && e
     )[1].args;
 
     // assertion
@@ -87,7 +87,7 @@ describe('@yulequiv Contract Caller Tests', async () => {
     // prepare transactions
     const callGetCountTx = await contractCaller.staticcall(
       GAS,
-      targetContract.address,
+      await targetContract.getAddress(),
       getCountEncodedSig
     );
 
@@ -95,11 +95,11 @@ describe('@yulequiv Contract Caller Tests', async () => {
     const callGetCountReceipt = await callGetCountTx.wait();
 
     // extract events
-    const [callGetCountResult] = callGetCountReceipt.events.map(
-      (e) => e.event === 'CallResult' && e
+    const [callGetCountResult] = callGetCountReceipt.logs.map(
+      (e) => e.fragment.name === 'CallResult' && e
     )[0].args;
-    const [callGetCountReturnedData] = callGetCountReceipt.events.map(
-      (e) => e.event === 'CallReturnedData' && e
+    const [callGetCountReturnedData] = callGetCountReceipt.logs.map(
+      (e) => e.fragment.name === 'CallReturnedData' && e
     )[1].args;
 
     // assertion
@@ -111,7 +111,7 @@ describe('@yulequiv Contract Caller Tests', async () => {
     // prepare transactions
     const callSetCountTx = await contractCaller.callCode(
       GAS,
-      targetContract.address,
+      await targetContract.getAddress(),
       setCountEncodedSig
     );
 
@@ -119,8 +119,8 @@ describe('@yulequiv Contract Caller Tests', async () => {
     const callSetCountReceipt = await callSetCountTx.wait();
 
     // extract events
-    const [callSetCountResult] = callSetCountReceipt.events.map(
-      (e) => e.event === 'CallResult' && e
+    const [callSetCountResult] = callSetCountReceipt.logs.map(
+      (e) => e.fragment.name === 'CallResult' && e
     )[0].args;
 
     // get storage count within ContractCaller contract
@@ -136,7 +136,7 @@ describe('@yulequiv Contract Caller Tests', async () => {
     // prepare transactions
     const callSetCountTx = await contractCaller.delegateCall(
       GAS,
-      targetContract.address,
+      await targetContract.getAddress(),
       setCountEncodedSig
     );
 
@@ -144,8 +144,8 @@ describe('@yulequiv Contract Caller Tests', async () => {
     const callSetCountReceipt = await callSetCountTx.wait();
 
     // extract events
-    const [callSetCountResult] = callSetCountReceipt.events.map(
-      (e) => e.event === 'CallResult' && e
+    const [callSetCountResult] = callSetCountReceipt.logs.map(
+      (e) => e.fragment.name === 'CallResult' && e
     )[0].args;
 
     // get storage count within ContractCaller contract

@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZMulticall Tests', function () {
+describe('@OZMulticall Test Suite', function () {
   let contract;
 
   before(async function () {
@@ -30,19 +30,14 @@ describe('@OZMulticall Tests', function () {
       Constants.Contract.MulticallTest
     );
     contract = await factoryErrorsExternal.deploy();
-    await contract.deployed();
   });
 
   it('should perform a multicall', async function () {
-    const foo = await contract.populateTransaction.foo();
-    const bar = await contract.populateTransaction.bar();
-    const res = await contract.callStatic.multicall([foo.data, bar.data]);
+    const foo = await contract.foo.populateTransaction();
+    const bar = await contract.bar.populateTransaction();
+    const res = await contract.multicall.staticCall([foo.data, bar.data]);
 
-    expect(ethers.BigNumber.from(res[0])).to.be.equal(
-      ethers.BigNumber.from(123)
-    );
-    expect(ethers.BigNumber.from(res[1])).to.be.equal(
-      ethers.BigNumber.from(456)
-    );
+    expect(BigInt(res[0])).to.be.equal(BigInt(123));
+    expect(BigInt(res[1])).to.be.equal(BigInt(456));
   });
 });

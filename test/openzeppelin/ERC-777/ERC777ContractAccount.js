@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZERC777ContractAccount Tests', () => {
+describe('@OZERC777ContractAccount Test Suite', () => {
   let erc1820registry,
     erc777SenderHookImpl,
     erc777RecipientHookImpl,
@@ -30,11 +30,11 @@ describe('@OZERC777ContractAccount Tests', () => {
     erc777ContractAccount,
     wallet1;
 
-  const TOKENS_SENDER_INTERFACE_HASH = ethers.utils.keccak256(
-    ethers.utils.toUtf8Bytes('ERC777TokensSender')
+  const TOKENS_SENDER_INTERFACE_HASH = ethers.keccak256(
+    ethers.toUtf8Bytes('ERC777TokensSender')
   );
-  const TOKENS_RECIPIENT_INTERFACE_HASH = ethers.utils.keccak256(
-    ethers.utils.toUtf8Bytes('ERC777TokensRecipient')
+  const TOKENS_RECIPIENT_INTERFACE_HASH = ethers.keccak256(
+    ethers.toUtf8Bytes('ERC777TokensRecipient')
   );
 
   const TOKEN_NAME = 'Uranium Token';
@@ -44,7 +44,7 @@ describe('@OZERC777ContractAccount Tests', () => {
   const EMPTY_DATA = '0x';
 
   beforeEach(async () => {
-    wallet1 = await ethers.getSigner();
+    wallet1 = (await ethers.getSigners())[0];
 
     const ERC1820registryFac = await ethers.getContractFactory(
       Constants.Contract.ERC1820Registry
@@ -64,7 +64,7 @@ describe('@OZERC777ContractAccount Tests', () => {
 
     erc1820registry = await ERC1820registryFac.deploy();
     erc777ContractAccount = await ERC777ContractAccountFac.deploy(
-      erc1820registry.address
+      await erc1820registry.getAddress()
     );
 
     erc1820registry = await ERC1820registryFac.deploy();
@@ -73,74 +73,77 @@ describe('@OZERC777ContractAccount Tests', () => {
     erc777Token = await ERC777TokenFac.deploy(
       TOKEN_NAME,
       TOKEN_SYMBOL,
-      erc1820registry.address,
+      await erc1820registry.getAddress(),
       [],
       { gasLimit: 1_000_000 }
     );
     erc777ContractAccount = await ERC777ContractAccountFac.deploy(
-      erc1820registry.address
+      await erc1820registry.getAddress()
     );
   });
 
   it('Should deploy contracts properly', async () => {
-    expect(ethers.utils.isAddress(erc1820registry.address)).to.be.true;
-    expect(ethers.utils.isAddress(erc777SenderHookImpl.address)).to.be.true;
-    expect(ethers.utils.isAddress(erc777RecipientHookImpl.address)).to.be.true;
-    expect(ethers.utils.isAddress(erc777Token.address)).to.be.true;
-    expect(ethers.utils.isAddress(erc777ContractAccount.address)).to.be.true;
+    expect(ethers.isAddress(await erc1820registry.getAddress())).to.be.true;
+    expect(ethers.isAddress(await erc777SenderHookImpl.getAddress())).to.be
+      .true;
+    expect(ethers.isAddress(await erc777RecipientHookImpl.getAddress())).to.be
+      .true;
+    expect(ethers.isAddress(await erc777Token.getAddress())).to.be.true;
+    expect(ethers.isAddress(await erc777ContractAccount.getAddress())).to.be
+      .true;
   });
 
   it('Should register ERC777TokensSender interface', async () => {
     await erc777ContractAccount.registerERC777TokensSender(
-      erc777SenderHookImpl.address
+      await erc777SenderHookImpl.getAddress()
     );
 
     const implementer = await erc1820registry.getInterfaceImplementer(
-      erc777ContractAccount.address,
+      await erc777ContractAccount.getAddress(),
       TOKENS_SENDER_INTERFACE_HASH
     );
 
-    expect(implementer).to.eq(erc777SenderHookImpl.address);
+    expect(implementer).to.eq(await erc777SenderHookImpl.getAddress());
   });
 
   it('Should register ERC777TokensRecipient interface', async () => {
     await erc777ContractAccount.registerERC777TokensRecipient(
-      erc777RecipientHookImpl.address
+      await erc777RecipientHookImpl.getAddress()
     );
 
     const implementer = await erc1820registry.getInterfaceImplementer(
-      erc777ContractAccount.address,
+      await erc777ContractAccount.getAddress(),
       TOKENS_RECIPIENT_INTERFACE_HASH
     );
 
-    expect(implementer).to.eq(erc777RecipientHookImpl.address);
+    expect(implementer).to.eq(await erc777RecipientHookImpl.getAddress());
   });
 
   it('Should send an amount of ERC777 token to a recipient', async () => {
     await erc777ContractAccount.registerERC777TokensSender(
-      erc777SenderHookImpl.address
+      await erc777SenderHookImpl.getAddress()
     );
 
     await erc777ContractAccount.registerERC777TokensRecipient(
-      erc777RecipientHookImpl.address
+      await erc777RecipientHookImpl.getAddress()
     );
 
     await erc777Token
       .connect(wallet1)
       .mint(
-        erc777ContractAccount.address,
+        await erc777ContractAccount.getAddress(),
         TOTAL_TOKEN_AMOUNT,
         EMPTY_DATA,
         EMPTY_DATA
       );
 
     const initialErc777ContractAccountBalance = await erc777Token.balanceOf(
-      erc777ContractAccount.address
+      await erc777ContractAccount.getAddress()
     );
     const initialWallet1Balance = await erc777Token.balanceOf(wallet1.address);
 
     const tx = await erc777ContractAccount.send(
-      erc777Token.address,
+      await erc777Token.getAddress(),
       wallet1.address,
       SENT_TOKEN_AMOUNT,
       EMPTY_DATA
@@ -149,19 +152,17 @@ describe('@OZERC777ContractAccount Tests', () => {
     await tx.wait();
 
     const currentErc777ContractAccountBalance = await erc777Token.balanceOf(
-      erc777ContractAccount.address
+      await erc777ContractAccount.getAddress()
     );
     const currentWallet1Balance = await erc777Token.balanceOf(wallet1.address);
 
     expect(initialErc777ContractAccountBalance).to.eq(
-      ethers.BigNumber.from(TOTAL_TOKEN_AMOUNT)
+      BigInt(TOTAL_TOKEN_AMOUNT)
     );
-    expect(initialWallet1Balance).to.eq(ethers.BigNumber.from(0));
+    expect(initialWallet1Balance).to.eq(BigInt(0));
     expect(currentErc777ContractAccountBalance).to.eq(
-      ethers.BigNumber.from(TOTAL_TOKEN_AMOUNT - SENT_TOKEN_AMOUNT)
+      BigInt(TOTAL_TOKEN_AMOUNT - SENT_TOKEN_AMOUNT)
     );
-    expect(currentWallet1Balance).to.eq(
-      ethers.BigNumber.from(SENT_TOKEN_AMOUNT)
-    );
+    expect(currentWallet1Balance).to.eq(BigInt(SENT_TOKEN_AMOUNT));
   });
 });

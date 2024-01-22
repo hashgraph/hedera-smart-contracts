@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZERC29821 Royalty Info Tests', function () {
+describe('@OZERC29821 Royalty Info Test Suite', function () {
   let signers, wallet, wallet2;
   let contract;
   const TOKEN_ID = 666;
@@ -40,11 +40,6 @@ describe('@OZERC29821 Royalty Info Tests', function () {
     contract = await factory.deploy();
   });
 
-  it('should deploy the contract', async function () {
-    const deployed = await contract.deployed();
-    expect(deployed).to.exist;
-  });
-
   it('should return the default Fee Denominator', async function () {
     const res = await contract.feeDenominator();
 
@@ -59,7 +54,7 @@ describe('@OZERC29821 Royalty Info Tests', function () {
     );
     await trx.wait();
     const royaltyInfoDefault = await contract.royaltyInfo(
-      ethers.constants.AddressZero,
+      ethers.ZeroAddress,
       10000
     );
 
@@ -71,7 +66,7 @@ describe('@OZERC29821 Royalty Info Tests', function () {
     let hasError = false;
     try {
       const trx = await contract.setDefaultRoyalty(
-        ethers.constants.AddressZero,
+        ethers.ZeroAddress,
         DEFAULT_FEE_NUMERATOR
       );
       await trx.wait();
@@ -98,8 +93,8 @@ describe('@OZERC29821 Royalty Info Tests', function () {
   });
 
   it('should return Royalty info for token', async function () {
-    const salePrice = 200;
-    const royaltyFraction = 400;
+    const salePrice = 200n;
+    const royaltyFraction = 400n;
     const feeDenominator = await contract.feeDenominator();
     const calculatedRoyalty = (salePrice * royaltyFraction) / feeDenominator;
     const trx = await contract.setTokenRoyalty(

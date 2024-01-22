@@ -24,7 +24,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const utils = require('../utils');
 
-describe('HRC tests', function () {
+describe('HRC Test Suite', function () {
   let tokenCreateContract;
   let tokenAddress;
   let hrcContract;
@@ -33,8 +33,8 @@ describe('HRC tests', function () {
   let IHRC;
 
   const parseCallResponseEventData = async (tx) => {
-    return (await tx.wait()).events.filter(
-      (e) => e.event === Constants.Events.CallResponseEvent
+    return (await tx.wait()).logs.filter(
+      (e) => e.fragment.name === Constants.Events.CallResponseEvent
     )[0].args;
   };
 
@@ -46,7 +46,9 @@ describe('HRC tests', function () {
   before(async function () {
     signers = await ethers.getSigners();
     tokenCreateContract = await utils.deployTokenCreateContract();
-    await utils.updateAccountKeysViaHapi([tokenCreateContract.address]);
+    await utils.updateAccountKeysViaHapi([
+      await tokenCreateContract.getAddress(),
+    ]);
 
     // This contract is a wrapper for the associate() and dissociate() functions
     hrcContract = await utils.deployHRCContract();
@@ -55,16 +57,14 @@ describe('HRC tests', function () {
       signers[0].address
     );
     await utils.updateTokenKeysViaHapi(tokenAddress, [
-      tokenCreateContract.address,
+      await tokenCreateContract.getAddress(),
     ]);
 
     // create an interface for calling functions via redirectForToken()
-    IHRC = new ethers.utils.Interface(
-      (await hre.artifacts.readArtifact('IHRC')).abi
-    );
+    IHRC = new ethers.Interface((await hre.artifacts.readArtifact('IHRC')).abi);
     // create a contract object for the token
     hrcToken = new Contract(tokenAddress, IHRC, signers[0]);
-    console.log('hrcContract: ', hrcContract.address);
+    console.log('hrcContract: ', await hrcContract.getAddress());
     console.log('signer: ', signers[0].address);
     console.log('tokenAddress: ', tokenAddress);
   });

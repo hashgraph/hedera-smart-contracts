@@ -22,15 +22,12 @@ let DiamondHelper = {
   FacetCutAction: { Add: 0, Replace: 1, Remove: 2 },
 
   getSelectors: function (contract) {
-    const selectors = Object.keys(contract.interface.functions).reduce(
-      (acc, val) => {
-        if (val !== 'init(bytes)') {
-          acc.push(contract.interface.getSighash(val));
-        }
-        return acc;
-      },
-      []
-    );
+    const selectors = contract.interface.fragments.reduce((acc, val) => {
+      if (val.type === 'function' && val.name !== 'init(bytes)') {
+        acc.push(contract.interface.getFunction(val.name).selector);
+      }
+      return acc;
+    }, []);
 
     selectors.contract = contract;
     selectors.remove = this.remove;
@@ -42,7 +39,7 @@ let DiamondHelper = {
   remove: function (functionNames) {
     const selectors = this.filter((v) => {
       for (const functionName of functionNames) {
-        if (v === this.contract.interface.getSighash(functionName)) {
+        if (v === this.contract.interface.getFunction(functionName).selector) {
           return false;
         }
       }
@@ -60,7 +57,7 @@ let DiamondHelper = {
   get: function (functionNames) {
     const selectors = this.filter((v) => {
       for (const functionName of functionNames) {
-        if (v === this.contract.interface.getSighash(functionName)) {
+        if (v === this.contract.interface.getFunction(functionName).selector) {
           return true;
         }
       }
@@ -76,10 +73,10 @@ let DiamondHelper = {
   },
 
   removeSelectors: function (selectors, signatures) {
-    const iface = new ethers.utils.Interface(
-      signatures.map((v) => 'function ' + v)
+    const iface = new ethers.Interface(signatures.map((v) => 'function ' + v));
+    const removeSelectors = signatures.map(
+      (v) => iface.getFunction(v).selector
     );
-    const removeSelectors = signatures.map((v) => iface.getSighash(v));
     selectors = selectors.filter((v) => !removeSelectors.includes(v));
 
     return selectors;

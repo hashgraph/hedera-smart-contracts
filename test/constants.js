@@ -193,6 +193,7 @@ const Contract = {
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';
+const CONTRACT_REVERT_EXECUTED_CODE = -32008;
 const GAS_LIMIT_1_000_000 = { gasLimit: 1_000_000 };
 const GAS_LIMIT_10_000_000 = { gasLimit: 10_000_000 };
 const GAS_LIMIT_800000 = { gasLimit: 800000 };
@@ -212,6 +213,7 @@ module.exports = {
   Path,
   Contract,
   CALL_EXCEPTION,
+  CONTRACT_REVERT_EXECUTED_CODE,
   GAS_LIMIT_1_000_000,
   GAS_LIMIT_10_000_000,
   GAS_LIMIT_800000,

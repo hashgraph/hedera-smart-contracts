@@ -23,11 +23,11 @@ const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 const PaymentChannelHelper = require('./helper');
 
-describe('@solidityequiv2 PaymentChannel Tests', () => {
+describe('@solidityequiv2 PaymentChannel Test Suite', () => {
   const GASLIMIT = 1000000;
   const DURATION = 3; // 3 seconds
   const OWED_AMOUNT = 100000000;
-  const INITIAL_FUND = ethers.utils.parseEther('3');
+  const INITIAL_FUND = ethers.parseEther('3');
   let signers,
     senderAddress,
     recipientAddress,
@@ -54,14 +54,14 @@ describe('@solidityequiv2 PaymentChannel Tests', () => {
 
     paymentSignature = await PaymentChannelHelper.signPayment(
       signers[0],
-      paymentChannelContract.address,
+      await paymentChannelContract.getAddress(),
       OWED_AMOUNT
     );
   });
 
   it('Should deployed with correct deployed arguments - open payment channel', async () => {
     const contractBalance = await ethers.provider.getBalance(
-      paymentChannelContract.address
+      await paymentChannelContract.getAddress()
     );
 
     expect(contractBalance).to.eq(INITIAL_FUND);
@@ -78,10 +78,10 @@ describe('@solidityequiv2 PaymentChannel Tests', () => {
     const receipt = await transaction.wait();
 
     const [contractBalBefore, senderBalBefore, recipientBalBefore] =
-      receipt.events[0].args;
+      receipt.logs[0].args;
 
     const [contractBaleAfter, senderBalAfter, recipientBalAfter] =
-      receipt.events[1].args;
+      receipt.logs[1].args;
 
     // @notice after closing the channel, all the contract balance will be faily distributed to the parties => contractBaleAfter should be 0
     //
@@ -92,7 +92,7 @@ describe('@solidityequiv2 PaymentChannel Tests', () => {
     expect(contractBaleAfter).to.eq(0);
     expect(recipientBalAfter - recipientBalBefore).to.eq(OWED_AMOUNT);
     expect(senderBalAfter - senderBalBefore).to.eq(
-      contractBalBefore - OWED_AMOUNT
+      contractBalBefore - BigInt(OWED_AMOUNT)
     );
   });
 
@@ -114,7 +114,9 @@ describe('@solidityequiv2 PaymentChannel Tests', () => {
     const newExp = Number(currentExp) + DURATION;
 
     // call .extend() by signers[1] (i.e. the recipient)
-    await paymentChannelContract.connect(signers[1]).extend(newExp);
+    expect(paymentChannelContract.connect(signers[1]).extend(newExp)).to.be
+      .rejected;
+
     const updatedExp = await paymentChannelContract.expiration();
 
     // @notice as the caller is signers[1] who is not the sender => the .extend function will revert
@@ -124,11 +126,16 @@ describe('@solidityequiv2 PaymentChannel Tests', () => {
 
   it('Should release back the fund balance stored in the contract to sender when the timeout is reached', async () => {
     const currentExp = await paymentChannelContract.expiration();
-    const sleepTime = Number(currentExp) * 1000 - Date.now();
-    await new Promise((r) => setTimeout(r, sleepTime));
+    let currentTimeStamp = (await ethers.provider.getBlock()).timestamp;
+
+    while (currentTimeStamp < currentExp) {
+      await new Promise((r) => setTimeout(r, 2000));
+      currentTimeStamp = (await ethers.provider.getBlock()).timestamp;
+    }
+
     await paymentChannelContract.claimTimeout();
     const contractBalance = await ethers.provider.getBalance(
-      paymentChannelContract.address
+      await paymentChannelContract.getAddress()
     );
 
     expect(contractBalance).to.eq(0);

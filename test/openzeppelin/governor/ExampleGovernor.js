@@ -2,7 +2,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZGovernor Tests', function () {
+describe('@OZGovernor Test Suite', function () {
   let actions, exampleToken, governor, projectTeam, deployer, proposalId;
   const GAS_LIMIT = 1_000_000;
   const VOTE_WEIGHT = 1000;
@@ -10,9 +10,7 @@ describe('@OZGovernor Tests', function () {
   const GRANT_AMOUNT = 100;
 
   const description = 'Proposal #1: ';
-  const descriptionHash = ethers.utils.keccak256(
-    ethers.utils.toUtf8Bytes(description)
-  );
+  const descriptionHash = ethers.keccak256(ethers.toUtf8Bytes(description));
 
   before(async function () {
     [deployer, projectTeam] = await ethers.getSigners();
@@ -22,7 +20,6 @@ describe('@OZGovernor Tests', function () {
       Constants.Contract.ExampleTokenVote
     );
     exampleToken = await ExampleToken.deploy({ gasLimit: GAS_LIMIT });
-    await exampleToken.deployed();
 
     await exampleToken.mint(deployer.address, VOTE_WEIGHT);
 
@@ -30,10 +27,9 @@ describe('@OZGovernor Tests', function () {
     const ExampleGovernor = await ethers.getContractFactory(
       Constants.Contract.ExampleGovernor
     );
-    governor = await ExampleGovernor.deploy(exampleToken.address, {
+    governor = await ExampleGovernor.deploy(await exampleToken.getAddress(), {
       gasLimit: GAS_LIMIT,
     });
-    await governor.deployed();
 
     const teamAddress = await projectTeam.getAddress();
     const transferCalldata = exampleToken.interface.encodeFunctionData(
@@ -42,7 +38,7 @@ describe('@OZGovernor Tests', function () {
     );
 
     actions = {
-      targets: [exampleToken.address],
+      targets: [await exampleToken.getAddress()],
       values: [0], // ETH value for the transaction, typically 0 for non-payable functions
       calldatas: [transferCalldata],
     };
@@ -55,24 +51,24 @@ describe('@OZGovernor Tests', function () {
       .propose(actions.targets, actions.values, actions.calldatas, description);
     const receipt = await tx.wait();
 
-    const event = receipt.events.find(
-      (event) => event.event === 'ProposalCreated'
+    const event = receipt.logs.find(
+      (event) => event.fragment.name === 'ProposalCreated'
     );
 
     proposalId = event.args.proposalId;
 
     expect(proposalId).to.not.be.undefined;
     expect(event.args.description).to.eq(description);
-    expect(event.args.targets[0]).to.eq(exampleToken.address);
+    expect(event.args.targets[0]).to.eq(await exampleToken.getAddress());
     expect(event.args.proposer).to.eq(await deployer.getAddress());
   });
 
   it('Should allow voting on a proposal', async function () {
     const tx = await governor
       .connect(deployer)
-      .castVote(proposalId, VOTE_SUPPORT);
+      .castVote(proposalId, VOTE_SUPPORT, Constants.GAS_LIMIT_1_000_000);
     const receipt = await tx.wait();
-    const event = receipt.events.find((e) => e.event === 'VoteCast');
+    const event = receipt.logs.find((e) => e.fragment.name === 'VoteCast');
     const proposalDeadline = await governor.proposalDeadline(proposalId);
 
     const proposalState = await governor.state(proposalId);
@@ -82,7 +78,7 @@ describe('@OZGovernor Tests', function () {
     expect(event.args.proposalId).to.eq(proposalId);
     expect(event.blockNumber).to.lte(proposalDeadline);
     expect(event.args.voter).to.eq(await deployer.getAddress());
-    expect(event.args.weight).to.eq(ethers.BigNumber.from(VOTE_WEIGHT));
+    expect(event.args.weight).to.eq(BigInt(VOTE_WEIGHT));
   });
 
   it('Should wait until the Vote Period passes and return a successful state on the proposal', async () => {
@@ -104,9 +100,11 @@ describe('@OZGovernor Tests', function () {
     // funding governor contract
     await exampleToken
       .connect(deployer)
-      .transfer(governor.address, GRANT_AMOUNT);
+      .transfer(await governor.getAddress(), GRANT_AMOUNT);
 
-    expect(await exampleToken.balanceOf(governor.address)).to.eq(GRANT_AMOUNT);
+    expect(await exampleToken.balanceOf(await governor.getAddress())).to.eq(
+      GRANT_AMOUNT
+    );
 
     // execute proposal
     await governor
@@ -119,13 +117,13 @@ describe('@OZGovernor Tests', function () {
       );
 
     expect(await exampleToken.balanceOf(deployer.address)).to.eq(
-      ethers.BigNumber.from(VOTE_WEIGHT - GRANT_AMOUNT)
+      BigInt(VOTE_WEIGHT - GRANT_AMOUNT)
     );
-    expect(await exampleToken.balanceOf(governor.address)).to.eq(
-      ethers.BigNumber.from(0)
+    expect(await exampleToken.balanceOf(await governor.getAddress())).to.eq(
+      BigInt(0)
     );
     expect(await exampleToken.balanceOf(projectTeam.address)).to.eq(
-      ethers.BigNumber.from(GRANT_AMOUNT)
+      BigInt(GRANT_AMOUNT)
     );
 
     const proposalState = await governor.state(proposalId);

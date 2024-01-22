@@ -24,7 +24,7 @@ const Constants = require('../../constants');
 
 describe('@solidityequiv2 Crypto Inheritance Tests', function () {
   let signers, contractMain, contractBase, wallet;
-  const TOP_UP_AMOUNT = ethers.utils.parseEther('0.000001');
+  const TOP_UP_AMOUNT = ethers.parseEther('0.000001');
 
   before(async function () {
     signers = await ethers.getSigners();
@@ -34,17 +34,15 @@ describe('@solidityequiv2 Crypto Inheritance Tests', function () {
       Constants.Contract.Main
     );
     contractMain = await factoryMain.deploy();
-    await contractMain.deployed();
 
     const factoryBase = await ethers.getContractFactory(
       Constants.Contract.Base
     );
     contractBase = await factoryBase.deploy();
-    await contractBase.deployed();
 
     //top up the test contract with some funds
     const tx = {
-      to: contractMain.address,
+      to: await contractMain.getAddress(),
       value: TOP_UP_AMOUNT,
     };
     const topUpRes = await wallet.sendTransaction(tx);
@@ -54,7 +52,7 @@ describe('@solidityequiv2 Crypto Inheritance Tests', function () {
   it("should confirm solidity functionality: this (current contract's type)", async function () {
     const mainThis = await contractMain.returnThis();
 
-    expect(mainThis).to.equal(contractMain.address);
+    expect(mainThis).to.equal(await contractMain.getAddress());
   });
 
   it('should confirm solidity functionality: super', async function () {

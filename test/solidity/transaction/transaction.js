@@ -23,8 +23,8 @@ const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 const Utils = require('../../hts-precompile/utils');
 
-describe('@solidityequiv3 Transaction Tests', function () {
-  let contractTr, contractTrAddr, wallet, mfContract, senderWalletAddr;
+describe('@solidityequiv3 Transaction Test Suite', function () {
+  let contractTr, wallet, mfContract, senderWalletAddr;
 
   before(async function () {
     const factoryTrasnactionContract = await ethers.getContractFactory(
@@ -35,10 +35,9 @@ describe('@solidityequiv3 Transaction Tests', function () {
     );
 
     mfContract = await factoryMfContract.deploy();
-    await mfContract.deployed();
-    contractTr = await factoryTrasnactionContract.deploy(mfContract.address);
-    await contractTr.deployed();
-    contractTrAddr = contractTr.address;
+    contractTr = await factoryTrasnactionContract.deploy(
+      await mfContract.getAddress()
+    );
 
     const signers = await ethers.getSigners();
     wallet = signers[0];
@@ -46,12 +45,11 @@ describe('@solidityequiv3 Transaction Tests', function () {
   });
 
   it('gasleft() returns (uint256): remaining gas', async function () {
-    const STARTING_GAS = 30000;
+    const STARTING_GAS = 30000n;
     const gasLeft = await contractTr.checkGasleft({ gasLimit: STARTING_GAS });
 
-    expect(ethers.BigNumber.isBigNumber(gasLeft)).to.be.true;
-    expect(gasLeft.gt(ethers.BigNumber.from(0))).to.be.true;
-    expect(gasLeft.lt(ethers.BigNumber.from(STARTING_GAS))).to.be.true;
+    expect(gasLeft > 0n).to.be.true;
+    expect(gasLeft < STARTING_GAS).to.be.true;
   });
 
   it('msg.data (bytes calldata): complete calldata', async function () {
@@ -62,7 +60,7 @@ describe('@solidityequiv3 Transaction Tests', function () {
     const ABI = [
       'function getMessageData(uint integer, string memory inputMessage)',
     ];
-    const interface = new ethers.utils.Interface(ABI);
+    const interface = new ethers.Interface(ABI);
     const encodedFunction = interface.encodeFunctionData('getMessageData', [
       12,
       myString,
@@ -83,7 +81,7 @@ describe('@solidityequiv3 Transaction Tests', function () {
     const msgSig = await contractTr.getMessageSignature();
 
     const ABI = ['function getMessageSignature()'];
-    const interface = new ethers.utils.Interface(ABI);
+    const interface = new ethers.Interface(ABI);
     const encodedFunctionSig = interface.encodeFunctionData(
       'getMessageSignature'
     );
@@ -93,21 +91,20 @@ describe('@solidityequiv3 Transaction Tests', function () {
   });
 
   it('msg.value (uint): number of wei sent with the message', async function () {
-    const valueToSend = ethers.utils.parseEther(String(1));
+    const valueToSend = ethers.parseEther(String(1));
     const txRes = await contractTr.getMessageValue({ value: valueToSend });
     const receipt = await txRes.wait();
-    const amount = receipt.events[0].args[0];
-    ethers.utils.formatEther(amount);
+    const amount = receipt.logs[0].args[0];
+    ethers.formatEther(amount);
 
     // to compare with the value sent, we need to convert to tinybar
-    expect(amount.mul(Utils.tinybarToWeibarCoef)).to.equal(valueToSend);
+    expect(amount * BigInt(Utils.tinybarToWeibarCoef)).to.equal(valueToSend);
   });
 
   it('tx.gasprice (uint): gas price of the transaction', async function () {
     const gasPrice = await contractTr.getGasPrice();
 
-    expect(ethers.BigNumber.isBigNumber(gasPrice)).to.be.true;
-    expect(gasPrice.gt(ethers.BigNumber.from(0))).to.be.true;
+    expect(gasPrice > 0n).to.be.true;
   });
 
   it('tx.origin (address): sender of the transaction (full call chain)', async function () {
@@ -117,6 +114,6 @@ describe('@solidityequiv3 Transaction Tests', function () {
     expect(originAddr).to.exist;
     expect(msgSender).to.exist;
     expect(originAddr).to.be.equal(senderWalletAddr);
-    expect(msgSender).to.be.equal(contractTr.address);
+    expect(msgSender).to.be.equal(await contractTr.getAddress());
   });
 });

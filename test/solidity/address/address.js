@@ -23,14 +23,16 @@ const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 const Utils = require('../../hts-precompile/utils');
 
-const TOP_UP_AMOUNT = ethers.utils.parseEther('1.0');
+const TOP_UP_AMOUNT = ethers.parseEther('1.0');
 const TRANSFER_AMOUNT = 1;
 
-describe('@solidityequiv1 Solidity Address Tests', function () {
+describe('@solidityequiv1 Solidity Address Test Suite', function () {
   let signers, contract, wallet, walletAddr, recipientContract, recipientAddr;
 
-  const tinybarToWeibar = (amount) => amount.mul(Utils.tinybarToWeibarCoef);
-  const weibarTotinybar = (amount) => amount.div(Utils.tinybarToWeibarCoef);
+  const tinybarToWeibar = (amount) =>
+    BigInt(amount) * BigInt(Utils.tinybarToWeibarCoef);
+  const weibarTotinybar = (amount) =>
+    BigInt(amount) / BigInt(Utils.tinybarToWeibarCoef);
 
   before(async function () {
     signers = await ethers.getSigners();
@@ -42,19 +44,17 @@ describe('@solidityequiv1 Solidity Address Tests', function () {
       Constants.Contract.AddressContract
     );
     contract = await factory.deploy();
-    await contract.deployed();
 
     //deploy test contract
     const calledFactory = await ethers.getContractFactory(
       Constants.Contract.Recipient
     );
     recipientContract = await calledFactory.deploy();
-    await recipientContract.deployed();
-    recipientAddr = await recipientContract.address;
+    recipientAddr = recipientContract.getAddress();
 
     //top up the test contract with some funds
     let tx = {
-      to: contract.address,
+      to: await contract.getAddress(),
       value: TOP_UP_AMOUNT,
     };
     const topUpRes = await wallet.sendTransaction(tx);
@@ -62,16 +62,17 @@ describe('@solidityequiv1 Solidity Address Tests', function () {
   });
 
   it('should verify solidity functionality: <address>.balance', async function () {
-    const balance = await wallet.getBalance();
+    const balance = await ethers.provider.getBalance(wallet.address);
     const res = await contract.getAddressBalance(walletAddr);
-
     expect(tinybarToWeibar(res)).to.equal(balance);
-    expect(tinybarToWeibar(res).gt(0)).to.be.true;
+    expect(tinybarToWeibar(res) > 0).to.be.true;
   });
 
   it('should verify solidity functionality: <address>.code', async function () {
     const walletAddrCodeRes = await contract.getAddressCode(walletAddr);
-    const contractAddrCodeRes = await contract.getAddressCode(contract.address);
+    const contractAddrCodeRes = await contract.getAddressCode(
+      contract.getAddress()
+    );
 
     expect(walletAddrCodeRes).to.exist;
     expect(walletAddrCodeRes).to.equal('0x');
@@ -82,12 +83,14 @@ describe('@solidityequiv1 Solidity Address Tests', function () {
 
   it('should verify solidity functionality: <address>.codehash', async function () {
     const walletAddrCodeRes = await contract.getAddressCode(walletAddr);
-    const contractAddrCodeRes = await contract.getAddressCode(contract.address);
-    const hashedWalletCode = ethers.utils.keccak256(walletAddrCodeRes);
-    const hashedContractCode = ethers.utils.keccak256(contractAddrCodeRes);
+    const contractAddrCodeRes = await contract.getAddressCode(
+      contract.getAddress()
+    );
+    const hashedWalletCode = ethers.keccak256(walletAddrCodeRes);
+    const hashedContractCode = ethers.keccak256(contractAddrCodeRes);
     const walletAddrResHash = await contract.getAddressCodeHash(walletAddr);
     const contractAddrResHash = await contract.getAddressCodeHash(
-      contract.address
+      contract.getAddress()
     );
 
     expect(hashedWalletCode).to.equal(walletAddrResHash);
@@ -105,10 +108,10 @@ describe('@solidityequiv1 Solidity Address Tests', function () {
     const recipientBalanceFinal = await ethers.provider.getBalance(
       recipientAddr
     );
-    const diff = recipientBalanceFinal.sub(recipientBalanceInitial);
+    const diff = recipientBalanceFinal - recipientBalanceInitial;
 
     expect(weibarTotinybar(diff)).to.equal(TRANSFER_AMOUNT);
-    expect(recipientBalanceInitial.lt(recipientBalanceFinal)).to.be.true;
+    expect(recipientBalanceInitial < recipientBalanceFinal).to.be.true;
   });
 
   it('should verify solidity functionality: <address payable>.send', async function () {
@@ -122,10 +125,10 @@ describe('@solidityequiv1 Solidity Address Tests', function () {
     const recipientBalanceFinal = await ethers.provider.getBalance(
       recipientAddr
     );
-    const diff = recipientBalanceFinal.sub(recipientBalanceInitial);
+    const diff = recipientBalanceFinal - recipientBalanceInitial;
 
     expect(weibarTotinybar(diff)).to.equal(TRANSFER_AMOUNT);
-    expect(recipientBalanceInitial.lt(recipientBalanceFinal)).to.be.true;
+    expect(recipientBalanceInitial < recipientBalanceFinal).to.be.true;
   });
 
   it('should verify solidity functionality: <address>.call', async function () {
@@ -139,10 +142,10 @@ describe('@solidityequiv1 Solidity Address Tests', function () {
     const recipientBalanceFinal = await ethers.provider.getBalance(
       recipientAddr
     );
-    const diff = recipientBalanceFinal.sub(recipientBalanceInitial);
+    const diff = recipientBalanceFinal - recipientBalanceInitial;
 
     expect(weibarTotinybar(diff)).to.equal(TRANSFER_AMOUNT);
-    expect(recipientBalanceInitial.lt(recipientBalanceFinal)).to.be.true;
+    expect(recipientBalanceInitial < recipientBalanceFinal).to.be.true;
   });
 
   it('should verify solidity functionality: <address>.call -> with function signature', async function () {
@@ -152,7 +155,7 @@ describe('@solidityequiv1 Solidity Address Tests', function () {
       'getMessageValue()'
     );
     const receipt = await resTx.wait();
-    const data = receipt.events[0].data;
+    const data = receipt.logs[0].data;
     const value = BigInt(data);
 
     expect(value).to.equal(TRANSFER_AMOUNT);
@@ -162,7 +165,7 @@ describe('@solidityequiv1 Solidity Address Tests', function () {
     const MESSAGE_FROM_ADDRESS = 'Hello World from AddressContract!';
     const resTx = await contract.delegate(recipientAddr, 'helloWorldMessage()');
     const receipt = await resTx.wait();
-    const message = receipt.events[0].args[0];
+    const message = receipt.logs[0].args[0];
 
     expect(message).to.equal(MESSAGE_FROM_ADDRESS);
   });
@@ -171,7 +174,7 @@ describe('@solidityequiv1 Solidity Address Tests', function () {
     const MY_NUMBER = 5;
     const resTx = await contract.staticCall(recipientAddr, 'getNumber()');
     const receipt = await resTx.wait();
-    const result = receipt.events[0].args[1];
+    const result = receipt.logs[0].args[1];
     const myNumber = BigInt(result);
 
     expect(myNumber).to.equal(MY_NUMBER);

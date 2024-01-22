@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const { WEI, GWEI, Contract } = require('../../constants');
 
-describe('@solidityequiv3 Crypto Units Tests', function () {
+describe('@solidityequiv3 Crypto Units Test Suite', function () {
   let contract;
 
   before(async function () {
@@ -47,6 +47,6 @@ describe('@solidityequiv3 Crypto Units Tests', function () {
   it('confirm 1 ether == 1e18', async function () {
     const res = await contract.get1Eth();
 
-    expect(res / 1e9).to.equal(GWEI);
+    expect(res / BigInt(1e9)).to.equal(GWEI);
   });
 });

@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@solidityequiv1 Concatenation Tests', function () {
+describe('@solidityequiv1 Concatenation Test Suite', function () {
   let contract;
   const first = 'first';
   const second = 'second';

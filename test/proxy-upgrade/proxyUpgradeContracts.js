@@ -41,19 +41,21 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
 
     before(async function () {
       tokenCreateContract = await utils.deployTokenCreateContract();
-      await utils.updateAccountKeysViaHapi([tokenCreateContract.address]);
+      await utils.updateAccountKeysViaHapi([
+        await tokenCreateContract.getAddress(),
+      ]);
       tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(
         tokenCreateContract,
         signers[0].address,
         utils.getSignerCompressedPublicKey()
       );
       await utils.updateTokenKeysViaHapi(tokenAddress, [
-        tokenCreateContract.address,
+        await tokenCreateContract.getAddress(),
       ]);
 
       erc20Contract = await utils.deployERC20Contract();
       proxyContract = await deployDEXProxyContract(tokenAddress);
-      proxyAddress = proxyContract.address;
+      proxyAddress = await proxyContract.getAddress();
 
       await proxyContract.associateToken(Constants.GAS_LIMIT_1_000_000);
 
@@ -77,8 +79,6 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
         initializer: 'initialize',
       });
 
-      await proxy.deployed();
-
       return proxy;
     }
 
@@ -87,10 +87,17 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
         Constants.Contract.ExchangeV2
       );
 
-      const proxy = await upgrades.upgradeProxy(proxyAddress, contract, {
-        kind: 'uups',
-      });
-      await proxy.deployed();
+      const proxy = await upgrades.upgradeProxy(
+        proxyAddress,
+        contract,
+        {
+          kind: 'uups',
+        },
+        Constants.GAS_LIMIT_1_000_000
+      );
+
+      // wait for the upgrade transaction to completely be done
+      await proxy.deployTransaction.wait();
 
       return proxy;
     }
@@ -101,7 +108,7 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
       {
         const balanceBefore = await proxyContract.getNativeBalance();
         await proxyContract.deposit({
-          value: ethers.utils.parseEther('0.5'),
+          value: ethers.parseEther('0.5'),
         });
         const balanceAfter = await proxyContract.getNativeBalance();
 
@@ -117,7 +124,7 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
         const nativeBalanceBefore = await proxyContract.getNativeBalance();
 
         await proxyContract.buy({
-          value: ethers.utils.parseEther('0.000001'),
+          value: ethers.parseEther('0.000001'),
         });
 
         const tokenBalanceAfter = await proxyContract.getTokenBalance();
@@ -184,8 +191,8 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
 
     it('should upgrade contract to V2', async function () {
       const addressV1 = await proxyContract.getImplementationAddress();
-
       proxyContract = await updateDEXProxyContract();
+      // await new Promise((r) => setTimeout(r, 2000));
       const addressV2 = await proxyContract.getImplementationAddress();
 
       expect(
@@ -206,7 +213,7 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
       {
         const balanceBefore = await proxyContract.getNativeBalance();
         await proxyContract.deposit({
-          value: ethers.utils.parseEther('0.5'),
+          value: ethers.parseEther('0.5'),
         });
         const balanceAfter = await proxyContract.getNativeBalance();
 
@@ -222,7 +229,7 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
         const nativeBalanceBefore = await proxyContract.getNativeBalance();
 
         await proxyContract.buy({
-          value: ethers.utils.parseEther('0.000001'),
+          value: ethers.parseEther('0.000001'),
         });
 
         const tokenBalanceAfter = await proxyContract.getTokenBalance();
@@ -285,7 +292,7 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
 
     before(async function () {
       proxyContract = await deployCounterProxyContract();
-      proxyAddress = proxyContract.address;
+      proxyAddress = await proxyContract.getAddress();
     });
 
     async function deployCounterProxyContract() {
@@ -298,8 +305,6 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
         initializer: 'initialize',
       });
 
-      await proxy.deployed();
-
       return proxy;
     }
 
@@ -311,7 +316,6 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
       const proxy = await upgrades.upgradeProxy(proxyAddress, contract, {
         kind: 'uups',
       });
-      await proxy.deployed();
 
       return proxy;
     }
@@ -371,7 +375,8 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
       //increment counter
       {
         const counterBefore = await proxyContract.count();
-        await proxyContract.increment();
+        const tx = await proxyContract.increment();
+        await tx.wait();
 
         const counterAfter = await pollForNewCounterValue(
           proxyContract,
@@ -385,7 +390,8 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
       //decrement counter
       {
         const counterBefore = await proxyContract.count();
-        await proxyContract.decrement();
+        const tx = await proxyContract.decrement();
+        await tx.wait();
         const counterAfter = await proxyContract.count();
         expect(
           counterAfter,
@@ -395,7 +401,11 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
 
       //change name
       {
-        await proxyContract.changeName(nameV2);
+        const tx = await proxyContract.changeName(
+          nameV2,
+          Constants.GAS_LIMIT_1_000_000
+        );
+        await tx.wait();
         const name = await proxyContract.name();
         expect(name, 'Asserting counter name is different').to.eq(nameV2);
       }

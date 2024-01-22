@@ -22,11 +22,11 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../../constants');
 
-describe('@OZERC1820 Tests', () => {
+describe('@OZERC1820 Test Suite', () => {
   let erc1820registry, wallet1, wallet2;
 
-  const ERC777TOKEN_HASH = ethers.utils.keccak256(
-    ethers.utils.toUtf8Bytes('ERC777TOKEN_HASH')
+  const ERC777TOKEN_HASH = ethers.keccak256(
+    ethers.toUtf8Bytes('ERC777TOKEN_HASH')
   );
 
   beforeEach(async () => {
@@ -40,7 +40,7 @@ describe('@OZERC1820 Tests', () => {
 
   it('Should deploy the registry', async () => {
     expect(erc1820registry).to.not.null;
-    expect(ethers.utils.isAddress(erc1820registry.address)).to.be.true;
+    expect(ethers.isAddress(await erc1820registry.getAddress())).to.be.true;
   });
 
   it('Should get a manager of an address', async () => {
@@ -59,11 +59,9 @@ describe('@OZERC1820 Tests', () => {
 
   it('Should NOT allow a non-manager to set a new manager', async () => {
     expect(
-      (
-        await erc1820registry
-          .connect(wallet1)
-          .setManager(wallet2.address, wallet1.address)
-      ).wait()
+      erc1820registry
+        .connect(wallet1)
+        .setManager(wallet2.address, wallet1.address)
     ).to.eventually.be.rejected.and.have.property(
       'code',
       Constants.CALL_EXCEPTION
@@ -76,7 +74,7 @@ describe('@OZERC1820 Tests', () => {
       ERC777TOKEN_HASH
     );
 
-    expect(implementer).to.eq(ethers.constants.AddressZero);
+    expect(implementer).to.eq(ethers.ZeroAddress);
   });
 
   it('Should set a new implementer for an interface', async () => {

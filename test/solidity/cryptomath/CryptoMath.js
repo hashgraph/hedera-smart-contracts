@@ -21,7 +21,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@solidityequiv1 CryptoMath Tests', function () {
+describe('@solidityequiv1 CryptoMath Test Suite', function () {
   let cryptoMathContract, provider, signers;
 
   before(async function () {
@@ -53,40 +53,41 @@ describe('@solidityequiv1 CryptoMath Tests', function () {
 
   // callKeccak256 computes the Keccak256 hash of the input
   it('callKeccak256', async function () {
-    const input = ethers.utils.toUtf8Bytes('hello world');
+    const input = ethers.toUtf8Bytes('hello world');
     const res = await cryptoMathContract.callKeccak256(input);
-    const expectedRes = ethers.utils.keccak256(input);
+    const expectedRes = ethers.keccak256(input);
     expect(res).to.equal(expectedRes);
   });
 
   // callSha256 computes the SHA256 hash of the input
   it('callSha256', async function () {
-    const input = ethers.utils.toUtf8Bytes('hello world');
+    const input = ethers.toUtf8Bytes('hello world');
     const res = await cryptoMathContract.callSha256(input);
-    const expectedRes = ethers.utils.sha256(input);
+    const expectedRes = ethers.sha256(input);
     expect(res).to.equal(expectedRes);
   });
 
   // callRipemd160 computes the RIPEMD-160 hash of the input
   it('callRipemd160', async function () {
-    const input = ethers.utils.toUtf8Bytes('hello world');
+    const input = ethers.toUtf8Bytes('hello world');
     const res = await cryptoMathContract.callRipemd160(input);
-    const expectedRes = ethers.utils.ripemd160(input);
+    const expectedRes = ethers.ripemd160(input);
     expect(res).to.equal(expectedRes);
   });
 
   // callEcrecover recovers the address associated with the public key from the signature
   it('callEcrecover and verify that returns the correct address of the signer', async function () {
-    const messageToSign = ethers.utils.toUtf8Bytes('Hello Future');
-    const hashOfMessage = ethers.utils.keccak256(messageToSign);
+    const messageToSign = 'Hello Future';
+    const hashOfMessage = ethers.hashMessage(messageToSign);
     const walletSigner = ethers.Wallet.createRandom();
-    const signedMessage = await walletSigner
-      ._signingKey()
-      .signDigest(hashOfMessage);
-    // extract the v, r, s values from the signature
-    const v = signedMessage.recoveryParam + 27; // always needs to add 27 to the recoveryParam
-    const r = signedMessage.r;
-    const s = signedMessage.s;
+    const signedMessage = await walletSigner.signMessage(messageToSign);
+
+    const splitSignature = ethers.Signature.from(signedMessage);
+
+    // extract the v, r, s values from the splitSignature
+    const v = splitSignature.v;
+    const r = splitSignature.r;
+    const s = splitSignature.s;
 
     const res = await cryptoMathContract.callEcrecover(hashOfMessage, v, r, s);
     const signerAddress = walletSigner.address;

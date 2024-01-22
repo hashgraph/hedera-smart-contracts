@@ -38,7 +38,7 @@ const VoteV2Artifact = JSON.parse(
   )
 );
 
-describe('@OZERC1967Upgrade Upgradable Vote Tests', () => {
+describe('@OZERC1967Upgrade Upgradable Vote Test Suite', () => {
   let admin, voter1, voter2;
   let voteV1, voteV2, proxiedVoteV1, proxiedVoteV2, voteProxy;
   const EMPTY_DATA = '0x';
@@ -59,39 +59,40 @@ describe('@OZERC1967Upgrade Upgradable Vote Tests', () => {
     const VoteProxyFac = await ethers.getContractFactory(
       Constants.Contract.VoteProxy
     );
-    voteProxy = await VoteProxyFac.deploy(voteV1.address);
+    voteProxy = await VoteProxyFac.deploy(await voteV1.getAddress());
   });
 
   describe('Proxy Contract tests', () => {
     it('Should deploy vote proxy contract with the with voteV1 being the current logic contract', async () => {
-      expect(await voteProxy.implementation()).to.eq(voteV1.address);
+      expect(await voteProxy.implementation()).to.eq(await voteV1.getAddress());
     });
 
     it('Should upgrade proxy vote to point to voteV2', async () => {
-      const tx = await voteProxy.upgradeToAndCall(voteV2.address, EMPTY_DATA);
+      const tx = await voteProxy.upgradeToAndCall(
+        await voteV2.getAddress(),
+        EMPTY_DATA
+      );
       const receipt = await tx.wait();
-      const event = receipt.events.find((e) => e.event === 'Upgraded');
+      const event = receipt.logs.find((e) => e.fragment.name === 'Upgraded');
 
-      expect(event.args.implementation).to.eq(voteV2.address);
-      expect(await voteProxy.implementation()).to.eq(voteV2.address);
+      expect(event.args.implementation).to.eq(await voteV2.getAddress());
+      expect(await voteProxy.implementation()).to.eq(await voteV2.getAddress());
     });
 
     it('Should be able to get the predefined ERC1967 IMPLEMENTATION_SLOT', async () => {
       // @logic ERC1967.IMPLEMENTATION_SLOT is obtained as bytes32(uint256(keccak256('eip1967.proxy.implementation')) - 1)
 
       // keccak256('eip1967.proxy.implementation')
-      const eip1967ImplByte32 = ethers.utils.solidityKeccak256(
-        ['string'],
-        ['eip1967.proxy.implementation']
+      const eip1967ImplByte32 = ethers.keccak256(
+        ethers.toUtf8Bytes('eip1967.proxy.implementation')
       );
 
       // uint256(keccak256('eip1967.proxy.implementation')) - 1
-      const eip1967ImplUint256 =
-        ethers.BigNumber.from(eip1967ImplByte32).sub(1);
+      const eip1967ImplUint256 = BigInt(eip1967ImplByte32) - 1n;
 
       // bytes32(uint256(keccak256('eip1967.proxy.implementation')) - 1)
-      const expectedImplementationSlot = ethers.utils.hexZeroPad(
-        eip1967ImplUint256.toHexString(),
+      const expectedImplementationSlot = ethers.zeroPadValue(
+        '0x' + eip1967ImplUint256.toString(16),
         32
       );
 
@@ -108,18 +109,16 @@ describe('@OZERC1967Upgrade Upgradable Vote Tests', () => {
       // @logic ERC1967.ADMIN_SLOT is obtained as bytes32(uint256(keccak256('eip1967.proxy.admin')) - 1)
 
       // keccak256('eip1967.proxy.admin')
-      const eip1967ImplByte32 = ethers.utils.solidityKeccak256(
-        ['string'],
-        ['eip1967.proxy.admin']
+      const eip1967ImplByte32 = ethers.keccak256(
+        ethers.toUtf8Bytes('eip1967.proxy.admin')
       );
 
       // uint256(keccak256('eip1967.proxy.admin')) - 1
-      const eip1967AdminUint256 =
-        ethers.BigNumber.from(eip1967ImplByte32).sub(1);
+      const eip1967AdminUint256 = BigInt(eip1967ImplByte32) - 1n;
 
       // bytes32(uint256(keccak256('eip1967.proxy.admin')) - 1)
-      const expectedAdminSlot = ethers.utils.hexZeroPad(
-        eip1967AdminUint256.toHexString(),
+      const expectedAdminSlot = ethers.zeroPadValue(
+        '0x' + eip1967AdminUint256.toString(16),
         32
       );
 
@@ -130,8 +129,8 @@ describe('@OZERC1967Upgrade Upgradable Vote Tests', () => {
       const tx = await voteProxy.changeAdmin(await voter1.getAddress());
       const receipt = await tx.wait();
 
-      const [previousAdmin, newAdmin] = receipt.events.map(
-        (e) => e.event === 'AdminChanged' && e
+      const [previousAdmin, newAdmin] = receipt.logs.map(
+        (e) => e.fragment.name === 'AdminChanged' && e
       )[0].args;
 
       expect(previousAdmin).to.eq(await admin.getAddress());
@@ -155,19 +154,24 @@ describe('@OZERC1967Upgrade Upgradable Vote Tests', () => {
   describe('Implementation contract', () => {
     it('V1: Should load VoteV1 into proxy address', async () => {
       proxiedVoteV1 = new ethers.Contract(
-        voteProxy.address,
+        await voteProxy.getAddress(),
         VoteV1Artifact.abi,
         admin
       );
       await proxiedVoteV1.initialize();
 
       expect(await proxiedVoteV1.version()).to.eq(1);
-      expect(proxiedVoteV1.address).to.eq(voteProxy.address);
+      expect(await proxiedVoteV1.getAddress()).to.eq(
+        await voteProxy.getAddress()
+      );
     });
 
     it('V1: Should cast votes to the system', async () => {
-      await proxiedVoteV1.connect(voter1).vote();
-      await proxiedVoteV1.connect(voter2).vote();
+      const vote1Tx = await proxiedVoteV1.connect(voter1).vote();
+      await vote1Tx.wait();
+
+      const vote2Tx = await proxiedVoteV1.connect(voter2).vote();
+      await vote2Tx.wait();
 
       const voters = await proxiedVoteV1.voters();
 
@@ -192,18 +196,24 @@ describe('@OZERC1967Upgrade Upgradable Vote Tests', () => {
     });
 
     it('V2: Should load VoteV2 into proxy address', async () => {
-      const tx = await voteProxy.upgradeToAndCall(voteV2.address, EMPTY_DATA);
-      await tx.wait();
+      const tx = await voteProxy.upgradeToAndCall(
+        await voteV2.getAddress(),
+        EMPTY_DATA,
+        GAS_LIMIT_1_000_000
+      );
 
       proxiedVoteV2 = new ethers.Contract(
-        voteProxy.address,
+        await voteProxy.getAddress(),
         VoteV2Artifact.abi,
         admin
       );
-      await proxiedVoteV2.initializeV2();
+      const initTx = await proxiedVoteV2.initializeV2();
+      await initTx.wait();
 
       expect(await proxiedVoteV2.version()).to.eq(2);
-      expect(proxiedVoteV2.address).to.eq(voteProxy.address);
+      expect(await proxiedVoteV2.getAddress()).to.eq(
+        await voteProxy.getAddress()
+      );
     });
 
     it('V2: Should correctly inherit the storage states from version 1', async () => {
@@ -214,7 +224,7 @@ describe('@OZERC1967Upgrade Upgradable Vote Tests', () => {
     });
 
     it('V2: Should let voters withdraw their votes which is only available in VoteV2', async () => {
-      await proxiedVoteV2.connect(voter1).withdrawVote();
+      await proxiedVoteV2.connect(voter1).withdrawVote(GAS_LIMIT_1_000_000);
       expect(await proxiedVoteV2.voted(voter1.address)).to.be.false;
     });
   });

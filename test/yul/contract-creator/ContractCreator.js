@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@yulequiv Contract Creator Tests', async () => {
+describe('@yulequiv Contract Creator Test Suite', async () => {
   let contractCreator, signers;
   const EXPECTED_COUNT = 3;
   const TARGET_CONTRACT_BYTECODE =
@@ -75,12 +75,12 @@ describe('@yulequiv Contract Creator Tests', async () => {
     const receipt = await transaction.wait();
 
     // extract newContractAddress from event logs
-    const [newContractAddress] = receipt.events.map(
-      (e) => e.event === 'NewContractCreated' && e
+    const [newContractAddress] = receipt.logs.map(
+      (e) => e.fragment.name === 'NewContractCreated' && e
     )[0].args;
 
     // assert newContractAddress is valid
-    expect(ethers.utils.isAddress(newContractAddress)).to.be.true;
+    expect(ethers.isAddress(newContractAddress)).to.be.true;
 
     // connect to target contract at the new created contract address
     const targetContract = new ethers.Contract(
@@ -111,12 +111,12 @@ describe('@yulequiv Contract Creator Tests', async () => {
     const receipt = await transaction.wait();
 
     // extract newContractAddress from event logs
-    const [newContractAddress] = receipt.events.map(
-      (e) => e.event === 'NewContractCreated' && e
+    const [newContractAddress] = receipt.logs.map(
+      (e) => e.fragment.name === 'NewContractCreated' && e
     )[0].args;
 
     // assert newContractAddress is valid
-    expect(ethers.utils.isAddress(newContractAddress)).to.be.true;
+    expect(ethers.isAddress(newContractAddress)).to.be.true;
 
     // connect to target contract at the new created contract address
     const targetContract = new ethers.Contract(

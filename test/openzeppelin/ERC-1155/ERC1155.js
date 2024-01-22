@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZERC1155 Tests', function () {
+describe('@OZERC1155 Test Suite', function () {
   const uri = 'testuri';
   const tokenId1 = 1;
   const tokenId2 = 33;
@@ -43,7 +43,7 @@ describe('@OZERC1155 Tests', function () {
       signers[0].address,
       [tokenId1, tokenId2],
       [token1InitialMint, token2InitialMint],
-      []
+      '0x'
     );
   });
 
@@ -73,8 +73,8 @@ describe('@OZERC1155 Tests', function () {
   it('should be able to execute setApprovalForAll(address,bool)', async function () {
     const res = await erc1155.setApprovalForAll(signers[1].address, true);
     expect(
-      (await res.wait()).events.filter(
-        (e) => e.event === Constants.Events.ApprovalForAll
+      (await res.wait()).logs.filter(
+        (e) => e.fragment.name === Constants.Events.ApprovalForAll
       )
     ).to.not.be.empty;
   });
@@ -89,13 +89,14 @@ describe('@OZERC1155 Tests', function () {
 
   it('should be able to execute safeTransferFrom(address,address,uint256,uint256,bytes)', async function () {
     const balanceBefore = await erc1155.balanceOf(signers[1].address, tokenId1);
-    await erc1155.safeTransferFrom(
+    const tx = await erc1155.safeTransferFrom(
       signers[0].address,
       signers[1].address,
       tokenId1,
       tradeableAmount,
-      []
+      '0x'
     );
+    await tx.wait();
     const balanceAfter = await erc1155.balanceOf(signers[1].address, tokenId1);
 
     expect(balanceBefore).to.not.eq(balanceAfter);
@@ -111,13 +112,16 @@ describe('@OZERC1155 Tests', function () {
       signers[1].address,
       tokenId2
     );
-    await erc1155.safeBatchTransferFrom(
+    const tx = await erc1155.safeBatchTransferFrom(
       signers[0].address,
       signers[1].address,
       [tokenId1, tokenId2],
       [tradeableAmount, tradeableAmount],
-      []
+      '0x',
+      Constants.GAS_LIMIT_1_000_000
     );
+    await tx.wait();
+
     const balanceAfter1 = await erc1155.balanceOf(signers[1].address, tokenId1);
     const balanceAfter33 = await erc1155.balanceOf(
       signers[1].address,

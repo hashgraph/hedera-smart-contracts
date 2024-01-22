@@ -30,7 +30,7 @@ function computeBlake2b(input) {
   return Buffer.from(hash).toString('hex');
 }
 
-describe('@solidityequiv3 Precompiles Support Tests', function () {
+describe('@solidityequiv3 Precompiles Support Test Suite', function () {
   let precompilesContract;
   const prime =
     '21888242871839275222246405745257275088696311157297823662689037894645226208583';
@@ -51,24 +51,23 @@ describe('@solidityequiv3 Precompiles Support Tests', function () {
       Constants.Contract.Precompiles
     );
     precompilesContract = await Precompiles.deploy();
-    await precompilesContract.deployed();
   });
 
   it('Should verify the signer of a message using ecrecover', async function () {
-    const message = ethers.utils.toUtf8Bytes('I agree to the terms');
-    const hashOfMessage = ethers.utils.keccak256(message);
+    const UNSIGNED_MESSAGE = 'I agree to the terms';
     const walletSigner = ethers.Wallet.createRandom();
-    const signedMessage = await walletSigner
-      ._signingKey()
-      .signDigest(hashOfMessage);
+    const signedMessage = walletSigner.signMessage(UNSIGNED_MESSAGE);
+    const hashedMessage = ethers.hashMessage(UNSIGNED_MESSAGE);
 
-    const v = signedMessage.recoveryParam + 27; // always needs to add 27 to the recoveryParam
-    const r = signedMessage.r;
-    const s = signedMessage.s;
+    const splitMessage = ethers.Signature.from(signedMessage);
+
+    const v = splitMessage.v;
+    const r = splitMessage.r;
+    const s = splitMessage.s;
 
     // Verify the signature using the contract
     const isVerifiedAddress = await precompilesContract.verifySignature(
-      hashOfMessage,
+      hashedMessage,
       v,
       r,
       s,
@@ -105,12 +104,12 @@ describe('@solidityequiv3 Precompiles Support Tests', function () {
   });
 
   it('Should correctly compute modular exponentiation', async function () {
-    const base = ethers.BigNumber.from('3');
-    const exponent = ethers.BigNumber.from('2');
-    const modulus = ethers.BigNumber.from('5');
+    const base = 3n;
+    const exponent = 2n;
+    const modulus = 5n;
 
     // Expected result: (3^2) % 5 = 9 % 5 = 4
-    const expectedOutput = ethers.BigNumber.from('4');
+    const expectedOutput = 4n;
     const result = await precompilesContract.callStatic.modExp(
       base,
       exponent,
@@ -134,13 +133,13 @@ describe('@solidityequiv3 Precompiles Support Tests', function () {
     const resPoint = basePoint.add(secondPoint);
 
     const base = [
-      ethers.BigNumber.from(basePoint.getX().toString()),
-      ethers.BigNumber.from(basePoint.getY().toString()),
+      BigInt(basePoint.getX().toString()),
+      BigInt(basePoint.getY().toString()),
     ];
 
     const second = [
-      ethers.BigNumber.from(secondPoint.getX().toString()),
-      ethers.BigNumber.from(secondPoint.getY().toString()),
+      BigInt(secondPoint.getX().toString()),
+      BigInt(secondPoint.getY().toString()),
     ];
 
     // check in contract that the second point is on the curve
@@ -169,11 +168,11 @@ describe('@solidityequiv3 Precompiles Support Tests', function () {
 
     const result = await precompilesContract.callStatic.ecMul(
       [
-        ethers.BigNumber.from(secondPoint.getX().toString()),
-        ethers.BigNumber.from(secondPoint.getY().toString()),
+        BigInt(secondPoint.getX().toString()),
+        BigInt(secondPoint.getY().toString()),
       ],
-      ethers.BigNumber.from(scalar.toString()),
-      ethers.BigNumber.from(prime.toString())
+      BigInt(scalar.toString()),
+      BigInt(prime.toString())
     );
 
     expect(result[0]).to.equal(resultPoint.getX());

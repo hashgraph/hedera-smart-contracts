@@ -22,18 +22,14 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe('@OZAccessControlContract Tests', function () {
+describe('@OZAccessControlContract Test Suite', function () {
   let admin;
   let manager;
   let user;
   let accessContract;
 
-  const ADMIN_ROLE = ethers.utils.keccak256(
-    ethers.utils.toUtf8Bytes('ADMIN_ROLE')
-  );
-  const MANAGER_ROLE = ethers.utils.keccak256(
-    ethers.utils.toUtf8Bytes('MANAGER_ROLE')
-  );
+  const ADMIN_ROLE = ethers.keccak256(ethers.toUtf8Bytes('ADMIN_ROLE'));
+  const MANAGER_ROLE = ethers.keccak256(ethers.toUtf8Bytes('MANAGER_ROLE'));
 
   // Deploy the contract and set up roles before each test
   beforeEach(async function () {
@@ -45,7 +41,6 @@ describe('@OZAccessControlContract Tests', function () {
     accessContract = await AccessControlContract.deploy(
       Constants.GAS_LIMIT_1_000_000
     );
-    await accessContract.deployed();
 
     // Grant the MANAGER_ROLE to the manager address
     await accessContract.connect(admin).grantManagerRole(manager.address);
