@@ -241,7 +241,7 @@ contract HederaFungibleTokenTest is HederaTokenUtils, HederaFungibleTokenUtils {
         bool success;
         uint256 amount = 1e8;
 
-        TransferParams memory transferParams = TransferParams({
+        TransferParams memory transferFromAliceToBob = TransferParams({
             sender: alice,
             token: tokenAddress,
             from: alice,
@@ -257,13 +257,13 @@ contract HederaFungibleTokenTest is HederaTokenUtils, HederaFungibleTokenUtils {
             amountOrSerialNumber: amount
         });
 
-        (success, ) = _doTransferViaHtsPrecompile(transferParams);
+        (success, ) = _doTransferViaHtsPrecompile(transferFromAliceToBob);
         assertEq(success, false, 'expected transfer to fail since recipient is not associated with token');
 
         success = _doAssociateDirectly(bob, tokenAddress);
         assertEq(success, true, 'expected bob to associate with token');
 
-        (success, ) = _doTransferViaHtsPrecompile(transferParams);
+        (success, ) = _doTransferViaHtsPrecompile(transferFromAliceToBob);
         assertEq(success, true, 'expected transfer to succeed');
 
         success = _doDissociateDirectly(bob, tokenAddress);
@@ -294,7 +294,7 @@ contract HederaFungibleTokenTest is HederaTokenUtils, HederaFungibleTokenUtils {
         bool success;
         uint256 amount = 1e8;
 
-        TransferParams memory transferParams = TransferParams({
+        TransferParams memory transferFromAliceToBob = TransferParams({
             sender: alice,
             token: tokenAddress,
             from: alice,
@@ -310,7 +310,7 @@ contract HederaFungibleTokenTest is HederaTokenUtils, HederaFungibleTokenUtils {
             amountOrSerialNumber: amount
         });
 
-        (success, ) = _doTransferViaHtsPrecompile(transferParams);
+        (success, ) = _doTransferViaHtsPrecompile(transferFromAliceToBob);
         assertEq(success, false, 'expected transfer to fail since recipient is not associated with token');
 
         success = _doAssociateDirectly(bob, tokenAddress);
@@ -319,7 +319,7 @@ contract HederaFungibleTokenTest is HederaTokenUtils, HederaFungibleTokenUtils {
         success = _doAssociateDirectly(bob, tokenAddress);
         assertEq(success, false, 'expected bob to not re-associate with already associated token');
 
-        (success, ) = _doTransferViaHtsPrecompile(transferParams);
+        (success, ) = _doTransferViaHtsPrecompile(transferFromAliceToBob);
         assertEq(success, true, 'expected transfer to succeed');
 
         (success, ) = _doTransferViaHtsPrecompile(transferFromBobToAlice);
@@ -331,7 +331,7 @@ contract HederaFungibleTokenTest is HederaTokenUtils, HederaFungibleTokenUtils {
         success = _doDissociateDirectly(bob, tokenAddress);
         assertEq(success, false, 'expected bob to not re-dissociate with already unassociated token');
 
-        (success, ) = _doTransferViaHtsPrecompile(transferParams);
+        (success, ) = _doTransferViaHtsPrecompile(transferFromAliceToBob);
         assertEq(success, false, 'expected transfer to fail since bob is not associated');
     }
 }

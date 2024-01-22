@@ -544,10 +544,10 @@ contract HederaNonFungibleTokenTest is HederaNonFungibleTokenUtils {
         success = _doAssociateDirectly(bob, tokenAddress);
         assertEq(success, true, 'expected bob to associate with token');
 
-        TransferParams memory transferParams;
+        TransferParams memory transferFromAliceToBob;
         TransferParams memory transferFromBobToAlice;
 
-        transferParams = TransferParams({
+        transferFromAliceToBob = TransferParams({
             sender: alice,
             token: tokenAddress,
             from: alice,
@@ -563,7 +563,7 @@ contract HederaNonFungibleTokenTest is HederaNonFungibleTokenUtils {
             amountOrSerialNumber: serialIdU256
         });
 
-        (success, ) = _doTransferDirectly(transferParams);
+        (success, ) = _doTransferDirectly(transferFromAliceToBob);
         assertEq(success, true, 'expected success');
 
         success = _doDissociateDirectly(bob, tokenAddress);
@@ -613,10 +613,10 @@ contract HederaNonFungibleTokenTest is HederaNonFungibleTokenUtils {
 
         assertEq(mintResponse.success, true, "expected success since alice is supply key");
 
-        TransferParams memory transferParams;
+        TransferParams memory transferFromAliceToBob;
         TransferParams memory transferFromBobToAlice;
 
-        transferParams = TransferParams({
+        transferFromAliceToBob = TransferParams({
             sender: alice,
             token: tokenAddress,
             from: alice,
@@ -632,7 +632,7 @@ contract HederaNonFungibleTokenTest is HederaNonFungibleTokenUtils {
             amountOrSerialNumber: serialIdU256
         });
 
-        (success, ) = _doTransferDirectly(transferParams);
+        (success, ) = _doTransferDirectly(transferFromAliceToBob);
         assertEq(success, false, 'expected transfer to fail since recipient is not associated with token');
 
         success = _doAssociateDirectly(bob, tokenAddress);
@@ -641,7 +641,7 @@ contract HederaNonFungibleTokenTest is HederaNonFungibleTokenUtils {
         success = _doAssociateDirectly(bob, tokenAddress);
         assertEq(success, false, 'expected bob to not re-associate with already associated token');
 
-        (success, ) = _doTransferDirectly(transferParams);
+        (success, ) = _doTransferDirectly(transferFromAliceToBob);
         assertEq(success, true, 'expected transfer to succeed');
 
         (success, ) = _doTransferDirectly(transferFromBobToAlice);
@@ -653,7 +653,7 @@ contract HederaNonFungibleTokenTest is HederaNonFungibleTokenUtils {
         success = _doDissociateDirectly(bob, tokenAddress);
         assertEq(success, false, 'expected bob to not re-dissociate with already unassociated token');
 
-        (success, ) = _doTransferDirectly(transferParams);
+        (success, ) = _doTransferDirectly(transferFromAliceToBob);
         assertEq(success, false, 'expected transfer to fail since bob is not associated');
     }
 }

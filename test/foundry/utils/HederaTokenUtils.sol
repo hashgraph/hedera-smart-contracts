@@ -5,8 +5,8 @@ import 'forge-std/Test.sol';
 
 import '../mocks/hts-precompile/HtsSystemContractMock.sol';
 import '../../../contracts/hts-precompile/IHederaTokenService.sol';
-import '../../../contracts/hts-precompile/IHRC.sol';
 import './CommonUtils.sol';
+import '../mocks/interfaces/IHRCCommon.sol';
 
 /// for testing actions common to both HTS token types i.e FUNGIBLE and NON_FUNGIBLE
 /// also has common constants for both HTS token types
