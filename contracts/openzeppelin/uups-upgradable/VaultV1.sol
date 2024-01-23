@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.20;
 
-import "./OZUUPSUpgradeableV4.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
+import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 
@@ -10,7 +10,7 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 //          to access directly to the storage is recommended. 
 // @notice: Avoid working with state variables among implementation contracts
 
-contract VaultV1 is OwnableUpgradeable, OZUUPSUpgradeableV4{
+contract VaultV1 is OwnableUpgradeable, UUPSUpgradeable{
     uint256 private _version;   // slot 0
     uint256 private _totalBalance; // slot 1
 
