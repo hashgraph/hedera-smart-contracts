@@ -177,7 +177,7 @@ contract HederaNonFungibleToken is IHRC, ERC721, Constants {
 
     // IHRC getters:
 
-    function isAssociated(address evmAddress) external view override returns (bool) {
+    function isAssociated(address evmAddress) external view returns (bool) {
         return HtsPrecompile.isAssociated(evmAddress, address(this));
     }
 
