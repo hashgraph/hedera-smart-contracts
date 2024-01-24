@@ -515,6 +515,68 @@ contract HederaNonFungibleTokenTest is HederaNonFungibleTokenUtils {
         assertEq(success, true, "burn should succeed");
     }
 
+    function test_CanAssociateAndDissociateDirectly() public {
+
+        bytes[] memory NULL_BYTES = new bytes[](1);
+
+        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](1);
+        keys[0] = KeyHelper.getSingleKey(KeyHelper.KeyType.SUPPLY, KeyHelper.KeyValueType.CONTRACT_ID, alice);
+        address tokenAddress = _createSimpleMockNonFungibleToken(alice, keys);
+
+        bool success;
+        uint256 serialIdU256;
+
+        MintResponse memory mintResponse;
+        MintParams memory mintParams;
+        BurnParams memory burnParams;
+
+        mintParams = MintParams({
+            sender: alice,
+            token: tokenAddress,
+            mintAmount: 0
+        });
+
+        mintResponse = _doMintViaHtsPrecompile(mintParams);
+        serialIdU256 = uint64(mintResponse.serialId);
+
+        assertEq(mintResponse.success, true, "expected success since alice is supply key");
+
+        success = _doAssociateDirectly(bob, tokenAddress);
+        assertEq(success, true, 'expected bob to associate with token');
+
+        TransferParams memory transferFromAliceToBob;
+        TransferParams memory transferFromBobToAlice;
+
+        transferFromAliceToBob = TransferParams({
+            sender: alice,
+            token: tokenAddress,
+            from: alice,
+            to: bob,
+            amountOrSerialNumber: serialIdU256
+        });
+
+        transferFromBobToAlice = TransferParams({
+            sender: bob,
+            token: tokenAddress,
+            from: bob,
+            to: alice,
+            amountOrSerialNumber: serialIdU256
+        });
+
+        (success, ) = _doTransferDirectly(transferFromAliceToBob);
+        assertEq(success, true, 'expected success');
+
+        success = _doDissociateDirectly(bob, tokenAddress);
+        assertEq(success, false, 'expected bob to not dissociate with token while postive balance');
+
+        (success, ) = _doTransferDirectly(transferFromBobToAlice);
+        assertEq(success, true, 'expected transfer to succeed');
+
+        success = _doDissociateDirectly(bob, tokenAddress);
+        assertEq(success, true, 'expected bob to dissociate');
+
+    }
+
     // negative cases
     function test_CannotApproveIfSpenderNotAssociated() public {
         /// @dev already demonstrated in some of the postive test cases
@@ -524,6 +586,75 @@ contract HederaNonFungibleTokenTest is HederaNonFungibleTokenUtils {
     function test_CannotTransferIfRecipientNotAssociated() public {
         /// @dev already demonstrated in some of the postive test cases
         // cannot transfer to recipient if recipient is not associated with HederaNonFungibleToken BOTH directly and viaHtsPrecompile
+    }
+
+    function test_CannotRepeatedlyAssociateAndDissociateDirectly() public {
+        bytes[] memory NULL_BYTES = new bytes[](1);
+
+        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](1);
+        keys[0] = KeyHelper.getSingleKey(KeyHelper.KeyType.SUPPLY, KeyHelper.KeyValueType.CONTRACT_ID, alice);
+        address tokenAddress = _createSimpleMockNonFungibleToken(alice, keys);
+
+        bool success;
+        uint256 serialIdU256;
+
+        MintResponse memory mintResponse;
+        MintParams memory mintParams;
+        BurnParams memory burnParams;
+
+        mintParams = MintParams({
+            sender: alice,
+            token: tokenAddress,
+            mintAmount: 0
+        });
+
+        mintResponse = _doMintViaHtsPrecompile(mintParams);
+        serialIdU256 = uint64(mintResponse.serialId);
+
+        assertEq(mintResponse.success, true, "expected success since alice is supply key");
+
+        TransferParams memory transferFromAliceToBob;
+        TransferParams memory transferFromBobToAlice;
+
+        transferFromAliceToBob = TransferParams({
+            sender: alice,
+            token: tokenAddress,
+            from: alice,
+            to: bob,
+            amountOrSerialNumber: serialIdU256
+        });
+
+        transferFromBobToAlice = TransferParams({
+            sender: bob,
+            token: tokenAddress,
+            from: bob,
+            to: alice,
+            amountOrSerialNumber: serialIdU256
+        });
+
+        (success, ) = _doTransferDirectly(transferFromAliceToBob);
+        assertEq(success, false, 'expected transfer to fail since recipient is not associated with token');
+
+        success = _doAssociateDirectly(bob, tokenAddress);
+        assertEq(success, true, 'expected bob to associate with token');
+
+        success = _doAssociateDirectly(bob, tokenAddress);
+        assertEq(success, false, 'expected bob to not re-associate with already associated token');
+
+        (success, ) = _doTransferDirectly(transferFromAliceToBob);
+        assertEq(success, true, 'expected transfer to succeed');
+
+        (success, ) = _doTransferDirectly(transferFromBobToAlice);
+        assertEq(success, true, 'expected transfer to succeed');
+
+        success = _doDissociateDirectly(bob, tokenAddress);
+        assertEq(success, true, 'expected bob to dissociate with token');
+
+        success = _doDissociateDirectly(bob, tokenAddress);
+        assertEq(success, false, 'expected bob to not re-dissociate with already unassociated token');
+
+        (success, ) = _doTransferDirectly(transferFromAliceToBob);
+        assertEq(success, false, 'expected transfer to fail since bob is not associated');
     }
 }
 

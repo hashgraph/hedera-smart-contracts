@@ -645,6 +645,7 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
         success = true;
         (success, responseCode) = success ? HederaTokenValidation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
         (success, responseCode) = success ? HederaTokenValidation._validateTokenAssociation(token, account, _association) : (success, responseCode);
+        (success, responseCode) = success ? HederaTokenValidation._validateTokenDissociation(token, account, _association, _isFungible, _isNonFungible) : (success, responseCode);
     }
 
     /// @dev doesPassKyc if KYC is not enabled or if enabled then account is KYCed explicitly or by default
@@ -709,6 +710,20 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
         }
     }
 
+    function _postAssociate(
+        address token,
+        address sender
+    ) internal {
+        _association[token][sender] = true;
+    }
+
+    function _postDissociate(
+        address token,
+        address sender
+    ) internal {
+        _association[token][sender] = false;
+    }
+
     function _postApprove(
         address token,
         address sender,
@@ -752,6 +767,28 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
                 // TODO: remove the break statement below once multiple NFT burns are enabled in a single call
                 break; // only delete the info at index 0 since only 1 NFT is burnt at a time
             }
+        }
+    }
+
+    function preAssociate(
+        address sender // msg.sender in the context of the Hedera{Non|}FungibleToken; it should be owner for SUCCESS
+    ) external onlyHederaToken returns (int64 responseCode) {
+        address token = msg.sender;
+        bool success;
+        (success, responseCode) = _precheckAssociateToken(sender, token);
+        if (success) {
+            _postAssociate(token, sender);
+        }
+    }
+
+    function preDissociate(
+        address sender // msg.sender in the context of the Hedera{Non|}FungibleToken; it should be owner for SUCCESS
+    ) external onlyHederaToken returns (int64 responseCode) {
+        address token = msg.sender;
+        bool success;
+        (success, responseCode) = _precheckDissociateToken(sender, token);
+        if (success) {
+            _postDissociate(token, sender);
         }
     }
 

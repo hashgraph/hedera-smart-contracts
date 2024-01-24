@@ -5,10 +5,11 @@ import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 
 import '../../../../contracts/hts-precompile/HederaResponseCodes.sol';
 import '../../../../contracts/hts-precompile/IHederaTokenService.sol';
+import '../../../../contracts/hts-precompile/IHRC.sol';
 import './HtsSystemContractMock.sol';
 import '../../../../contracts/libraries/Constants.sol';
 
-contract HederaFungibleToken is ERC20, Constants {
+contract HederaFungibleToken is IHRC, ERC20, Constants {
     error HtsPrecompileError(int64 responseCode);
     HtsSystemContractMock internal constant HtsPrecompile = HtsSystemContractMock(HTS_PRECOMPILE);
 
@@ -102,5 +103,21 @@ contract HederaFungibleToken is ERC20, Constants {
     // standard ERC20 overriden functions
     function decimals() public view override returns (uint8) {
         return _decimals;
+    }
+
+    // IHRC setters:
+
+    function associate() external returns (uint256 responseCode) {
+        responseCode = uint64(HtsPrecompile.preAssociate(msg.sender));
+    }
+
+    function dissociate() external returns (uint256 responseCode) {
+        responseCode = uint64(HtsPrecompile.preDissociate(msg.sender));
+    }
+
+    // IHRC getters:
+
+    function isAssociated(address evmAddress) external view returns (bool) {
+        return HtsPrecompile.isAssociated(evmAddress, address(this));
     }
 }

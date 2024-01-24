@@ -234,6 +234,48 @@ contract HederaFungibleTokenTest is HederaTokenUtils, HederaFungibleTokenUtils {
         assertEq(success, true, "expected burn to succeed");
     }
 
+    function test_CanAssociateAndDissociateDirectly() public {
+        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](0);
+        address tokenAddress = _createSimpleMockFungibleToken(alice, keys);
+
+        bool success;
+        uint256 amount = 1e8;
+
+        TransferParams memory transferFromAliceToBob = TransferParams({
+            sender: alice,
+            token: tokenAddress,
+            from: alice,
+            to: bob,
+            amountOrSerialNumber: amount
+        });
+
+        TransferParams memory transferFromBobToAlice = TransferParams({
+            sender: bob,
+            token: tokenAddress,
+            from: bob,
+            to: alice,
+            amountOrSerialNumber: amount
+        });
+
+        (success, ) = _doTransferViaHtsPrecompile(transferFromAliceToBob);
+        assertEq(success, false, 'expected transfer to fail since recipient is not associated with token');
+
+        success = _doAssociateDirectly(bob, tokenAddress);
+        assertEq(success, true, 'expected bob to associate with token');
+
+        (success, ) = _doTransferViaHtsPrecompile(transferFromAliceToBob);
+        assertEq(success, true, 'expected transfer to succeed');
+
+        success = _doDissociateDirectly(bob, tokenAddress);
+        assertEq(success, false, 'expected bob to not dissociate with token while postive balance');
+
+        (success, ) = _doTransferViaHtsPrecompile(transferFromBobToAlice);
+        assertEq(success, true, 'expected transfer to succeed');
+
+        success = _doDissociateDirectly(bob, tokenAddress);
+        assertEq(success, true, 'expected bob to dissociate');
+    }
+
     // negative cases
     function test_CannotApproveIfSpenderNotAssociated() public {
         /// @dev already demonstrated in some of the postive test cases
@@ -243,6 +285,54 @@ contract HederaFungibleTokenTest is HederaTokenUtils, HederaFungibleTokenUtils {
     function test_CannotTransferIfRecipientNotAssociated() public {
         /// @dev already demonstrated in some of the postive test cases
         // cannot transfer to recipient if recipient is not associated with HederaFungibleToken BOTH directly and viaHtsPrecompile
+    }
+
+    function test_CannotRepeatedlyAssociateAndDissociateDirectly() public {
+        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](0);
+        address tokenAddress = _createSimpleMockFungibleToken(alice, keys);
+
+        bool success;
+        uint256 amount = 1e8;
+
+        TransferParams memory transferFromAliceToBob = TransferParams({
+            sender: alice,
+            token: tokenAddress,
+            from: alice,
+            to: bob,
+            amountOrSerialNumber: amount
+        });
+
+        TransferParams memory transferFromBobToAlice = TransferParams({
+            sender: bob,
+            token: tokenAddress,
+            from: bob,
+            to: alice,
+            amountOrSerialNumber: amount
+        });
+
+        (success, ) = _doTransferViaHtsPrecompile(transferFromAliceToBob);
+        assertEq(success, false, 'expected transfer to fail since recipient is not associated with token');
+
+        success = _doAssociateDirectly(bob, tokenAddress);
+        assertEq(success, true, 'expected bob to associate with token');
+
+        success = _doAssociateDirectly(bob, tokenAddress);
+        assertEq(success, false, 'expected bob to not re-associate with already associated token');
+
+        (success, ) = _doTransferViaHtsPrecompile(transferFromAliceToBob);
+        assertEq(success, true, 'expected transfer to succeed');
+
+        (success, ) = _doTransferViaHtsPrecompile(transferFromBobToAlice);
+        assertEq(success, true, 'expected transfer to succeed');
+
+        success = _doDissociateDirectly(bob, tokenAddress);
+        assertEq(success, true, 'expected bob to dissociate with token');
+
+        success = _doDissociateDirectly(bob, tokenAddress);
+        assertEq(success, false, 'expected bob to not re-dissociate with already unassociated token');
+
+        (success, ) = _doTransferViaHtsPrecompile(transferFromAliceToBob);
+        assertEq(success, false, 'expected transfer to fail since bob is not associated');
     }
 }
 

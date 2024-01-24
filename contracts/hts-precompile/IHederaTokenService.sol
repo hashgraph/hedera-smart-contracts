@@ -640,7 +640,7 @@ interface IHederaTokenService {
     function getTokenDefaultFreezeStatus(address token)
         external
         returns (int64 responseCode, bool defaultFreezeStatus);
-    
+
     /// Query token default kyc status
     /// @param token The token address to check
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
@@ -781,18 +781,18 @@ interface IHederaTokenService {
 
     /// Query if valid token found for the given address
     /// @param token The token address
-    /// @return responseCode The response code for the status of the request. SUCCESS is 22.    
-    /// @return isToken True if valid token found for the given address     
-    function isToken(address token) 
-        external returns 
+    /// @return responseCode The response code for the status of the request. SUCCESS is 22.
+    /// @return isToken True if valid token found for the given address
+    function isToken(address token)
+        external returns
         (int64 responseCode, bool isToken);
 
     /// Query to return the token type for a given address
     /// @param token The token address
-    /// @return responseCode The response code for the status of the request. SUCCESS is 22.    
-    /// @return tokenType the token type. 0 is FUNGIBLE_COMMON, 1 is NON_FUNGIBLE_UNIQUE, -1 is UNRECOGNIZED   
+    /// @return responseCode The response code for the status of the request. SUCCESS is 22.
+    /// @return tokenType the token type. 0 is FUNGIBLE_COMMON, 1 is NON_FUNGIBLE_UNIQUE, -1 is UNRECOGNIZED
     function getTokenType(address token)
-        external returns 
+        external returns
         (int64 responseCode, int32 tokenType);
 
     /// Initiates a Redirect For Token

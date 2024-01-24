@@ -6,6 +6,7 @@ import 'forge-std/Test.sol';
 import '../mocks/hts-precompile/HtsSystemContractMock.sol';
 import '../../../contracts/hts-precompile/IHederaTokenService.sol';
 import './CommonUtils.sol';
+import '../mocks/interfaces/IHRCCommon.sol';
 
 /// for testing actions common to both HTS token types i.e FUNGIBLE and NON_FUNGIBLE
 /// also has common constants for both HTS token types
@@ -51,6 +52,67 @@ abstract contract HederaTokenUtils is Test, CommonUtils, Constants {
 
         assertEq(responseCode, expectedResponseCode, 'expected response code does not match actual response code');
         assertEq(isFinallyAssociated, true, 'expected account to always be finally associated');
+    }
+
+    function _doAssociateDirectly(
+        address sender,
+        address token
+    ) internal setPranker(sender) returns (bool success) {
+
+        IHRCCommon htsToken = IHRCCommon(token);
+
+        bool isInitiallyAssociated = htsToken.isAssociated(sender);
+        int64 responseCode = int64(uint64(htsToken.associate()));
+        success = responseCode == HederaResponseCodes.SUCCESS;
+
+        int64 expectedResponseCode;
+
+        if (isInitiallyAssociated) {
+            expectedResponseCode = HederaResponseCodes.TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT;
+        }
+
+        if (!isInitiallyAssociated) {
+            expectedResponseCode = HederaResponseCodes.SUCCESS;
+        }
+
+        bool isFinallyAssociated = htsToken.isAssociated(sender);
+
+        assertEq(responseCode, expectedResponseCode, 'expected response code does not match actual response code');
+        assertEq(isFinallyAssociated, true, 'expected account to always be finally associated');
+    }
+
+    function _doDissociateDirectly(
+        address sender,
+        address token
+    ) internal setPranker(sender) returns (bool success) {
+
+        IHRCCommon htsToken = IHRCCommon(token);
+
+        bool isInitiallyAssociated = htsToken.isAssociated(sender);
+        bool hasPositiveBalance = htsToken.balanceOf(sender) > 0;
+        int64 responseCode = int64(uint64(htsToken.dissociate()));
+        success = responseCode == HederaResponseCodes.SUCCESS;
+
+        int64 expectedResponseCode;
+
+        bool isFinallyAssociated = htsToken.isAssociated(sender);
+
+        if (hasPositiveBalance) {
+            expectedResponseCode = HederaResponseCodes.TRANSACTION_REQUIRES_ZERO_TOKEN_BALANCES;
+            assertEq(isFinallyAssociated, true, 'expected account to be remain associated');
+        } else {
+            if (isInitiallyAssociated) {
+                expectedResponseCode = HederaResponseCodes.SUCCESS;
+                assertEq(isFinallyAssociated, false, 'expected account to be finally dissociated');
+            }
+
+            if (!isInitiallyAssociated) {
+                expectedResponseCode = HederaResponseCodes.TOKEN_NOT_ASSOCIATED_TO_ACCOUNT;
+                assertEq(isFinallyAssociated, false, 'expected account to be remain unassociated');
+            }
+        }
+
+        assertEq(responseCode, expectedResponseCode, 'expected response code does not match actual response code');
     }
 
     struct MintKeys {
