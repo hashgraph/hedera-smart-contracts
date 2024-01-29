@@ -14,7 +14,7 @@ on:
         description: 'Specify desired Hedera JSON-RPC Relay tag'
         required: true
         default: ''
-run-name: Manual Test with network tag ${{ inputs.networkNodeTag }}, mirror node tag ${{ inputs.mirrorNodeTag }} and relay tag ${{ inputs.relayTag }}
+run-name: Manual Test with N:${{ inputs.networkNodeTag }}, M:${{ inputs.mirrorNodeTag }} and R:${{ inputs.relayTag }}
 jobs:
   ERC20Contract:
     name: ERC20 Contract Test Suite
