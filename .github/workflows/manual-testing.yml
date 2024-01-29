@@ -1,0 +1,29 @@
+name: Manual Testing
+on:
+  workflow_dispatch:
+    inputs:
+      networkNodeTag:
+        description: 'Specify desired Network Node image tag'
+        required: true
+        default: ''
+      mirrorNodeTag:
+        description: 'Specify desired Mirror-Node image tag'
+        required: true
+        default: ''
+      relayTag:
+        description: 'Specify desired Hedera JSON-RPC Relay tag'
+        required: true
+        default: ''
+run-name: Manual Test with network tag ${{ inputs.networkNodeTag }} mirror node tag ${{ inputs.mirrorNodeTag }} and relay tag {{ inputs.relayTag }}
+jobs:
+  ERC20Contract:
+    name: ERC20 Contract Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: ERC20
+
+  ERC721Contract:
+    name: ERC721 Contract Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: ERC721
