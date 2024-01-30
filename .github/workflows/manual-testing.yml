@@ -15,6 +15,11 @@ on:
         required: true
         default: ''
 run-name: Manual Test with N:${{ inputs.networkNodeTag }}, M:${{ inputs.mirrorNodeTag }} and R:${{ inputs.relayTag }}
+permissions:
+  contents: write
+  checks: write
+  pull-requests: write
+
 jobs:
   ERC20Contract:
     name: ERC20 Contract Test Suite
