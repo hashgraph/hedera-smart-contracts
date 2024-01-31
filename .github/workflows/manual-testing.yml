@@ -146,3 +146,48 @@ jobs:
       networkTag: ${{inputs.networkNodeTag}}
       mirrorTag: ${{inputs.mirrorNodeTag}}
       relayTag: ${{inputs.relayTag}}
+
+  SolidityEquivalence1:
+    name: Solidity Equivalence Suite 1
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: 'solidityequiv1'
+      networkTag: ${{inputs.networkNodeTag}}
+      mirrorTag: ${{inputs.mirrorNodeTag}}
+      relayTag: ${{inputs.relayTag}}
+
+  SolidityEquivalence2:
+    name: Solidity Equivalence Suite 2
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: 'solidityequiv2'
+      networkTag: ${{inputs.networkNodeTag}}
+      mirrorTag: ${{inputs.mirrorNodeTag}}
+      relayTag: ${{inputs.relayTag}}
+
+  SolidityEquivalence3:
+    name: Solidity Equivalence Suite 3
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: 'solidityequiv3'
+      networkTag: ${{inputs.networkNodeTag}}
+      mirrorTag: ${{inputs.mirrorNodeTag}}
+      relayTag: ${{inputs.relayTag}}
+
+  YulEquiv:
+    name: Yul Equivalence
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: 'yulequiv'
+      networkTag: ${{inputs.networkNodeTag}}
+      mirrorTag: ${{inputs.mirrorNodeTag}}
+      relayTag: ${{inputs.relayTag}}
+
+  OpenZeppelinEquiv:
+    name: OpenZeppelin Equivalence
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: 'OZ'
+      networkTag: ${{inputs.networkNodeTag}}
+      mirrorTag: ${{inputs.mirrorNodeTag}}
+      relayTag: ${{inputs.relayTag}}
