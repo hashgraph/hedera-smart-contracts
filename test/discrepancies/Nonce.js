@@ -23,7 +23,7 @@ const Utils = require("../hts-precompile/utils");
 const {expect} = require('chai');
 const {ethers} = require('hardhat');
 
-describe.only('Nonce discrepancies Test Suite', async () => {
+describe('Nonce discrepancies Test Suite', async () => {
   let signers;
   let sdkClient;
   let internalCalleeContract;
@@ -96,7 +96,7 @@ describe.only('Nonce discrepancies Test Suite', async () => {
     expectNonIncrementedNonce(snBefore, mnBefore, snAfter, mnAfter);
   });
 
-  it('should not update nonce when user offered gas price and allowance are zero handler check failed', async function () {
+  it('should not update nonce when offered gas price and allowance are zero handler check failed', async function () {
     const snBefore = await getServicesNonce(signers[0].address);
     const mnBefore = await getMirrorNodeNonce(signers[0].address);
 
