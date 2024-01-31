@@ -22,7 +22,7 @@ const Utils = require("../hts-precompile/utils");
 const {expect} = require('chai');
 const {ethers} = require('hardhat');
 
-xdescribe('Nonce discrepancies Test Suite', async () => {
+describe('Nonce discrepancies Test Suite', async () => {
   let signers;
   let sdkClient;
   let internalCalleeContract;
