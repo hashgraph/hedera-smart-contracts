@@ -28,10 +28,16 @@ describe('Discrepancies - Nonce Test Suite', async () => {
   let sdkClient;
   let internalCalleeContract;
   let internalCallerContract;
+  let tooLowGasPrice;
+  let enoughGasPrice;
 
   before(async () => {
     signers = await ethers.getSigners();
     sdkClient = await Utils.createSDKClient();
+
+    const {gasPrice} = (await ethers.provider.getFeeData());
+    tooLowGasPrice = gasPrice - BigInt(1);
+    enoughGasPrice = gasPrice + BigInt(1);
 
     const internalCalleeContractFactory = await ethers.getContractFactory(Constants.Contract.InternalCallee);
     internalCalleeContract = await internalCalleeContractFactory.deploy();
@@ -102,7 +108,7 @@ describe('Discrepancies - Nonce Test Suite', async () => {
 
     await Utils.expectToFail(
         internalCalleeContract.externalFunction({
-          maxFeePerGas: 0,
+          gasPrice: tooLowGasPrice,
           maxGasAllowance: 0
         })
     );
@@ -122,7 +128,7 @@ describe('Discrepancies - Nonce Test Suite', async () => {
     const internalCalleeContractWithNewSigner = internalCalleeContract.connect(newAccountWithInsufficientBalance);
     await Utils.expectToFail(
         internalCalleeContractWithNewSigner.externalFunction({
-          maxFeePerGas: 1
+          gasPrice: tooLowGasPrice
         })
     );
 
@@ -138,7 +144,7 @@ describe('Discrepancies - Nonce Test Suite', async () => {
 
     await Utils.expectToFail(
         internalCalleeContract.externalFunction({
-          maxFeePerGas: 1,
+          gasPrice: tooLowGasPrice,
           maxGasAllowance: 0
         })
     );
@@ -149,7 +155,6 @@ describe('Discrepancies - Nonce Test Suite', async () => {
     expectNonIncrementedNonce(snBefore, mnBefore, snAfter, mnAfter);
   });
 
-
   it('should not update nonce when offered gas price is bigger than current and sender does not have enough balance handler check failed', async function () {
     const newAccountWithInsufficientBalance = await createNewAccountWithBalance();
 
@@ -159,7 +164,7 @@ describe('Discrepancies - Nonce Test Suite', async () => {
     const internalCalleeContractWithNewSigner = internalCalleeContract.connect(newAccountWithInsufficientBalance);
     await Utils.expectToFail(
         internalCalleeContractWithNewSigner.externalFunction({
-          maxFeePerGas: 75
+          gasPrice: enoughGasPrice
         })
     );
 
