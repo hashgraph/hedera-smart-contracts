@@ -25,7 +25,7 @@ const NETWORKS = {
     chainId: 298,
     networkNodeUrl: '127.0.0.1:50211',
     nodeId: '3',
-    mirrorNode: '127.0.0.1:5600',
+    mirrorNode: 'http://127.0.0.1:5600',
   },
   testnet: {
     name: 'testnet',

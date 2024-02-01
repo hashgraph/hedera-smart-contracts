@@ -101,6 +101,12 @@ jobs:
     with:
       testfilter: PrngSystemContract
 
+  Discrepancies:
+    name: Discrepancies Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: Discrepancies
+
   PublishResults:
     name: Publish Results
     if: ${{ !cancelled() }}
