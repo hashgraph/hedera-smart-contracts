@@ -8,7 +8,7 @@ const OPERATOR_ID_A = process.env.OPERATOR_ID_A
 /**  @type string */
 const OPERATOR_KEY_A = process.env.OPERATOR_KEY_A
   ? process.env.OPERATOR_KEY_A
-  : ethers.constants.HashZero;
+  : ethers.ZeroHash;
 
 const PRIVATE_KEYS = process.env.PRIVATE_KEYS
   ? process.env.PRIVATE_KEYS.split(',').map((key) => key.trim())
