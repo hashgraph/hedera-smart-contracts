@@ -102,7 +102,8 @@ describe('Discrepancies - Nonce Test Suite', async () => {
     expectNonIncrementedNonce(snBefore, mnBefore, snAfter, mnAfter);
   });
 
-  it('should not update nonce when offered gas price and allowance are zero handler check failed', async function () {
+  // depends on https://github.com/hashgraph/hedera-smart-contracts/issues/659
+  xit('should not update nonce when offered gas price and allowance are zero handler check failed', async function () {
     const snBefore = await getServicesNonce(signers[0].address);
     const mnBefore = await getMirrorNodeNonce(signers[0].address);
 
@@ -138,7 +139,8 @@ describe('Discrepancies - Nonce Test Suite', async () => {
     expectNonIncrementedNonce(snBefore, mnBefore, snAfter, mnAfter);
   });
 
-  it('should not update nonce when offered gas price is less than current and gas allowance is less than remaining fee handler check failed', async function () {
+  // depends on https://github.com/hashgraph/hedera-smart-contracts/issues/659
+  xit('should not update nonce when offered gas price is less than current and gas allowance is less than remaining fee handler check failed', async function () {
     const snBefore = await getServicesNonce(signers[0].address);
     const mnBefore = await getMirrorNodeNonce(signers[0].address);
 
