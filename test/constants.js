@@ -191,7 +191,8 @@ const Contract = {
   ExampleTokenVote: 'ExampleTokenVote',
   Purchase: 'Purchase',
   InternalCallee: 'InternalCallee',
-  InternalCaller: 'InternalCaller'
+  InternalCaller: 'InternalCaller',
+  EthNativePrecompileCaller: 'EthNativePrecompileCaller',
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';

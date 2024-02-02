@@ -26,6 +26,10 @@ class Utils {
     return ethers.keccak256(ethers.toUtf8Bytes(functionNameAndParams))
       .substring(0, 10);
   }
+
+  static to32ByteString(str) {
+    return str.toString(16).replace('0x', '').padStart(64, '0');
+  };
 }
 
 module.exports = Utils;
