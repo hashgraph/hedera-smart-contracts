@@ -324,8 +324,8 @@ describe('Multicall Test Suite', function () {
       expect(receipt.status).to.eq(1);
     });
 
-    it('should NOT be able to aggregate 150 calls to processLongInputTx', async function () {
-      const n = 150;
+    it('should NOT be able to aggregate 200 calls to processLongInputTx', async function () {
+      const n = 200;
       const { callData, data } = prepareLongInputData(
         n,
         LONG_INPUT_TX_ABI,
@@ -333,7 +333,7 @@ describe('Multicall Test Suite', function () {
       );
 
       const dataSize = getInputLengthInBytes(data);
-      expect(dataSize).to.be.eq(n * INPUT_ELEMENT_LENGTH); // input data is 39 kb
+      expect(dataSize).to.be.eq(n * INPUT_ELEMENT_LENGTH); // input data is 53 kb
 
       // Call is reverted because the input data exceeds the maximum transaction size
       let hasError = false;

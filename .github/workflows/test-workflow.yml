@@ -6,12 +6,15 @@ on:
       testfilter:
         required: true
         type: string
-
-env:
-  RELAY_IMAGE_TAG: 0.39.0
-  NETWORK_NODE_IMAGE_TAG: 0.45.2
-  HAVEGED_IMAGE_TAG: 0.45.2
-  MIRROR_IMAGE_TAG: 0.96.0
+      networkTag:
+        required: false
+        type: string
+      mirrorTag:
+        required: false
+        type: string
+      relayTag:
+        required: false
+        type: string
 
 jobs:
   acceptance-workflow:
@@ -47,7 +50,7 @@ jobs:
           version: nightly
 
       - name: Start the local node
-        run: npx hedera start -d --network local
+        run: npx hedera start -d --network-tag=${{inputs.networkTag}} --mirror-tag=${{inputs.mirrorTag}} --relay-tag=${{inputs.relayTag}} --verbose=trace
         timeout-minutes: 5
 
       - name: Run the test in ${{ inputs.testfilter }}
