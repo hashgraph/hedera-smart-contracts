@@ -51,14 +51,23 @@ contract EthNativePrecompileCaller {
         return calculated;
     }
 
-    function call0x05(bytes calldata callData) external returns (bool) {
-        (bool calculated, bytes memory result) = address(5).staticcall(callData);
+    function call0x05(uint64 base, uint64 exp, uint64 modulus) external returns (bytes memory) {
+        bytes memory fixed32BytesCalldata = abi.encode(
+            abi.encodePacked(base).length,
+            abi.encodePacked(exp).length,
+            abi.encodePacked(modulus).length
+        );
+        bytes memory dynamicCallData = abi.encodePacked(
+            base,
+            exp,
+            modulus
+        );
+        bytes memory callData = abi.encodePacked(fixed32BytesCalldata, dynamicCallData);
 
-        require(calculated, "Error calling precompile 0x05");
-        bytes32 remainder = abi.decode(result, (bytes32));
-        emit PrecompileResult32(remainder);
-        
-        return calculated;
+        (bool success, bytes memory result) = address(5).call(callData);
+        require(success, "Error calling precompile 0x05");
+
+        return result;
     }
 
     function call0x06(bytes calldata callData) external returns (bool) {

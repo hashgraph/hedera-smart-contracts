@@ -89,19 +89,10 @@ describe('Eth Native Precompiles - Test Suite', function () {
   });
 
   it('should be able to call "call0x05 -> modexp"', async function () {
-    let sizeOfB, sizeOfE, sizeOfM;
-    const expectedResult = Utils.to32ByteString(1);
-    sizeOfB = sizeOfE = sizeOfM = Utils.to32ByteString(32);
-    const b = Utils.to32ByteString(3);
-    const e = Utils.to32ByteString(2);
-    const m = Utils.to32ByteString(8);
-    const callData = `0x${sizeOfB}${sizeOfE}${sizeOfM}${b}${e}${m}`;
-    const result = await contract.call0x05(callData);
-    
-    const { logs } = await result.wait();
-    const remainder = logs[0].data;
+    // 3^2 mod 8 = 1
+    const result = await contract.call0x05.staticCall(3,2,8);
 
-    expect(remainder.replace('0x', '')).to.equal(expectedResult);
+    expect(parseInt(result, 16)).to.equal(1);
   });
 
   describe('call0x06 & call0x07 -> ecAdd & ecMul', function () {
