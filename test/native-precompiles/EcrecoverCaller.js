@@ -21,10 +21,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../constants');
-
-const to32ByteString = (str) => {
-  return str.toString(16).replace('0x', '').padStart(64, '0');
-};
+const Utils = require('../utils');
 
 describe('Native Precompiles - Ecrecover Test Suite', function () {
   this.timeout(10000);
@@ -55,9 +52,9 @@ describe('Native Precompiles - Ecrecover Test Suite', function () {
     r = splitSignature.r;
     s = splitSignature.s;
 
-    callData = `0x${to32ByteString(hashedData)}${to32ByteString(
+    callData = `0x${Utils.to32ByteString(hashedData)}${Utils.to32ByteString(
       v
-    )}${to32ByteString(r)}${to32ByteString(s)}`;
+    )}${Utils.to32ByteString(r)}${Utils.to32ByteString(s)}`;
   });
 
   // Calling a method that uses `ecrecover`
