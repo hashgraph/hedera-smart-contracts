@@ -509,9 +509,9 @@ class Utils {
     operatorKey =
       operatorKey || hre.config.networks[network].sdkClient.operatorKey;
 
-    const client =
-      Client.forNetwork(hederaNetwork).setMirrorNetwork(mirrorNode);
-    client.setOperator(operatorId, operatorKey);
+    const client = Client.forNetwork(hederaNetwork)
+      .setMirrorNetwork(mirrorNode)
+      .setOperator(operatorId, operatorKey);
 
     return client;
   }
