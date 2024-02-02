@@ -190,6 +190,8 @@ const Contract = {
   ExampleGovernor: 'ExampleGovernor',
   ExampleTokenVote: 'ExampleTokenVote',
   Purchase: 'Purchase',
+  InternalCallee: 'InternalCallee',
+  InternalCaller: 'InternalCaller'
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';

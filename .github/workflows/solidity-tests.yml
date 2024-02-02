@@ -53,6 +53,13 @@ jobs:
     with:
       testfilter: '@yulequiv'
 
+  Discrepancies:
+    if: ${{ inputs.filterTagOverride == ''}}
+    name: Discrepancies Suites
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: '@discrepancies'
+
   OpenZeppelinEquiv:
     if: ${{ inputs.filterTagOverride == ''}}
     name: OpenZeppelin Equivalence

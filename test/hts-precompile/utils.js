@@ -483,14 +483,16 @@ class Utils {
     await contract.grantTokenKycPublic(tokenAddress, signers[1].address);
   }
 
-  static async expectToFail(transaction, code) {
+  static async expectToFail(transaction, code = null) {
     try {
       const result = await transaction;
       await result.wait();
       expect(true).to.eq(false);
     } catch (e) {
       expect(e).to.exist;
-      expect(e.code).to.eq(code);
+      if (code) {
+        expect(e.code).to.eq(code);
+      }
     }
   }
 
@@ -521,6 +523,14 @@ class Utils {
 
     const accountInfo = await query.execute(client);
     return accountInfo.accountId.toString();
+  }
+
+  static async getAccountInfo(evmAddress, client) {
+    const query = new AccountInfoQuery().setAccountId(
+      AccountId.fromEvmAddress(0, 0, evmAddress)
+    );
+
+    return await query.execute(client);
   }
 
   static getSignerCompressedPublicKey(
