@@ -21,6 +21,11 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
+/**
+ * @notice This specific test suite necessitates the presence of 6 accounts for completion.
+ * @notice Ensure that you include 6 private keys in the .env file under the `PRIVATE_KEYS` variable.
+ */
+
 describe('@solidityequiv3 Ballot Units Test Suite', function () {
   let ballotContract, owner, addressB, addressC, addressD, addressE, addrs;
 
