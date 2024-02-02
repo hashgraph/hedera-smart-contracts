@@ -31,17 +31,17 @@ const NETWORKS = {
     name: 'testnet',
     url: 'https://testnet.hashio.io/api',
     chainId: 296,
-    networkNodeUrl: 'https://testnet.hedera.com',
+    networkNodeUrl: '0.testnet.hedera.com:50211', // https://docs.hedera.com/hedera/networks/testnet/testnet-nodes
     nodeId: '3',
-    mirrorNode: 'https://testnet.mirrornode.hedera.com',
+    mirrorNode: 'testnet.mirrornode.hedera.com:443', // https://docs.hedera.com/hedera/core-concepts/mirror-nodes/hedera-mirror-node#testnet
   },
   previewnet: {
     name: 'previewnet',
     url: 'https://previewnet.hashio.io/api',
     chainId: 297,
-    networkNodeUrl: 'https://previewnet.hedera.com',
+    networkNodeUrl: '0.previewnet.hedera.com:50211', // https://docs.hedera.com/hedera/networks/testnet/testnet-nodes#preview-testnet-nodes
     nodeId: '3',
-    mirrorNode: 'https://previewnet.mirrornode.hedera.com',
+    mirrorNode: 'previewnet.mirrornode.hedera.com:443', // https://docs.hedera.com/hedera/core-concepts/mirror-nodes/hedera-mirror-node#previewnet
   },
   besu: {
     name: 'besu_local',
