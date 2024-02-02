@@ -55,7 +55,7 @@ jobs:
 
   Discrepancies:
     if: ${{ inputs.filterTagOverride == ''}}
-    name: Yul Equivalence
+    name: Discrepancies Suites
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: '@discrepancies'
