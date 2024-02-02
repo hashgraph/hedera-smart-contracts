@@ -59,14 +59,7 @@ module.exports = {
   networks: {
     local: {
       url: NETWORKS.local.url,
-      accounts: [
-        PRIVATE_KEYS[0],
-        PRIVATE_KEYS[1],
-        PRIVATE_KEYS[2],
-        PRIVATE_KEYS[3],
-        PRIVATE_KEYS[4],
-        PRIVATE_KEYS[5],
-      ],
+      accounts: PRIVATE_KEYS,
       chainId: NETWORKS.local.chainId,
       gas: 10000000,
       sdkClient: {
@@ -79,14 +72,7 @@ module.exports = {
     },
     testnet: {
       url: NETWORKS.testnet.url,
-      accounts: [
-        PRIVATE_KEYS[0],
-        PRIVATE_KEYS[1],
-        PRIVATE_KEYS[2],
-        PRIVATE_KEYS[3],
-        PRIVATE_KEYS[4],
-        PRIVATE_KEYS[5],
-      ],
+      accounts: PRIVATE_KEYS,
       chainId: NETWORKS.testnet.chainId,
       sdkClient: {
         operatorId: OPERATOR_ID_A,
@@ -98,14 +84,7 @@ module.exports = {
     },
     previewnet: {
       url: NETWORKS.previewnet.url,
-      accounts: [
-        PRIVATE_KEYS[0],
-        PRIVATE_KEYS[1],
-        PRIVATE_KEYS[2],
-        PRIVATE_KEYS[3],
-        PRIVATE_KEYS[4],
-        PRIVATE_KEYS[5],
-      ],
+      accounts: PRIVATE_KEYS,
       chainId: NETWORKS.previewnet.chainId,
       sdkClient: {
         operatorId: OPERATOR_ID_A,
