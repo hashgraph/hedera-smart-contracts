@@ -5,6 +5,7 @@ const { ethers } = require('ethers');
 const OPERATOR_ID_A = process.env.OPERATOR_ID_A
   ? process.env.OPERATOR_ID_A
   : '0.0.0';
+
 /**  @type string */
 const OPERATOR_KEY_A = process.env.OPERATOR_KEY_A
   ? process.env.OPERATOR_KEY_A
@@ -13,10 +14,6 @@ const OPERATOR_KEY_A = process.env.OPERATOR_KEY_A
 const PRIVATE_KEYS = process.env.PRIVATE_KEYS
   ? process.env.PRIVATE_KEYS.split(',').map((key) => key.trim())
   : [];
-
-while (PRIVATE_KEYS.length < 6) {
-  PRIVATE_KEYS.push(ethers.ZeroHash);
-}
 
 const NETWORKS = {
   local: {

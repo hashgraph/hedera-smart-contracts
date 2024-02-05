@@ -21,6 +21,11 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
+/**
+ * @notice This specific test suite necessitates the presence of 6 accounts for completion.
+ * @notice Ensure that you include 6 private keys in the .env file under the `PRIVATE_KEYS` variable.
+ */
+
 describe('@solidityequiv3 Ballot Units Test Suite', function () {
   let ballotContract, owner, addressB, addressC, addressD, addressE, addrs;
 
@@ -40,21 +45,36 @@ describe('@solidityequiv3 Ballot Units Test Suite', function () {
   });
 
   it('Should give voting rights', async function () {
-    await ballotContract.giveRightToVote(addressB.address);
+    const tx = await ballotContract.giveRightToVote(addressB.address);
+    await tx.wait();
     const voter = await ballotContract.voters(addressB.address);
     expect(voter.weight).to.equal(1);
   });
 
   it('Should allow a voter to delegate their vote', async function () {
-    await ballotContract.giveRightToVote(addressB.address);
-    await ballotContract.connect(addressB).delegate(owner.address);
+    const giveRightToVoteTx = await ballotContract.giveRightToVote(
+      addressB.address
+    );
+    await giveRightToVoteTx.wait();
+
+    const delegateTx = await ballotContract
+      .connect(addressB)
+      .delegate(owner.address);
+    await delegateTx.wait();
+
     const ownerVoter = await ballotContract.voters(owner.address);
     expect(ownerVoter.weight).to.equal(2); // 1 (original) + 1 (delegated)
   });
 
   it('Should allow voting for a proposal', async function () {
-    await ballotContract.giveRightToVote(addressB.address);
-    await ballotContract.connect(addressB).vote(1); // voting for proposal2
+    const giveRightToVoteTx = await ballotContract.giveRightToVote(
+      addressB.address
+    );
+    await giveRightToVoteTx.wait();
+
+    const voteTx = await ballotContract.connect(addressB).vote(1); // voting for proposal2
+    await voteTx.wait();
+
     const proposal = await ballotContract.proposals(1);
     expect(proposal.voteCount).to.equal(1);
   });
