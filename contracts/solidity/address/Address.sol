@@ -4,7 +4,10 @@ pragma solidity ^0.8.20;
 contract AddressContract {
     receive() external payable {}
     string message = "Hello World from AddressContract!";
+    address nonExistingContract = address(999999999999);
+
     event emitMessage(string a);
+    event emitMessageData(bool success);
     event res(bool answer, bytes data);
 
     function getAddressBalance(address addressToQuery) external view returns (uint256) {
@@ -23,14 +26,24 @@ contract AddressContract {
         return addressToQuery.transfer(amount);
     }
 
-    function sendTo(address payable addressToQuery, uint amount) external {
+    function sendTo(address payable addressToQuery, uint amount) external returns (bool){
         bool answer = addressToQuery.send(amount);
-        require(answer, "Error sending");
+        emit emitMessageData(answer);
+
+        return answer;
     }
 
-    function callAddr(address payable addressToQuery, uint amount) external {
+    function callAddr(address payable addressToQuery, uint amount) external returns (bool){
         (bool answer,) = addressToQuery.call{value: amount}("");
-        require(answer, "Error calling");
+        emit emitMessageData(answer);
+
+        return answer;
+    }
+
+
+    function callNonExistingAddress() external {
+        (bool answer, bytes memory data) = nonExistingContract.call("");
+        emit res(answer, data);
     }
 
     function callAddrWithSig(address payable addressToQuery, uint amount, string memory functionSig) external payable returns (bytes memory){
