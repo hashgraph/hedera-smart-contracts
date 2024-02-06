@@ -114,6 +114,25 @@ describe('@solidityequiv1 Solidity Address Test Suite', function () {
     expect(recipientBalanceInitial < recipientBalanceFinal).to.be.true;
   });
 
+  it('should verify solidity functionality: <address payable>.transfer (FAIL, should revert if the payment fails)', async function () {
+    try {
+      await contract.transferTo(recipientAddr, Number.MAX_SAFE_INTEGER)
+      throw new Error()
+    } catch (error) {
+      expect(error).to.exist
+      expect(error.message.includes("execution reverted")).to.be.true
+    }
+  });
+
+  it('should verify calling a NON existing address', async function () {
+      const tx = await contract.callNonExistingAddress(recipientAddr);
+      const rec = await tx.wait();
+      const resArgs = rec.logs[0].args
+
+      expect(resArgs[0]).to.equal(true);
+      expect(resArgs[1]).to.equal('0x');
+  })
+
   it('should verify solidity functionality: <address payable>.send', async function () {
     const recipientBalanceInitial = await ethers.provider.getBalance(
       recipientAddr
@@ -131,6 +150,17 @@ describe('@solidityequiv1 Solidity Address Test Suite', function () {
     expect(recipientBalanceInitial < recipientBalanceFinal).to.be.true;
   });
 
+  it('should verify solidity functionality: <address payable>.send (FAIL, returnes false if the payment fails)', async function () {
+      const trx = await contract.sendTo(recipientAddr, Number.MAX_SAFE_INTEGER)
+      const rec = await trx.wait()
+      const result = rec.logs[0].data
+
+      const abi = ethers.AbiCoder.defaultAbiCoder();
+      const res = abi.decode(['bool'], result);
+
+      expect(res[0]).to.be.false;
+  });
+
   it('should verify solidity functionality: <address>.call', async function () {
     const recipientBalanceInitial = await ethers.provider.getBalance(
       recipientAddr
@@ -146,6 +176,17 @@ describe('@solidityequiv1 Solidity Address Test Suite', function () {
 
     expect(weibarTotinybar(diff)).to.equal(TRANSFER_AMOUNT);
     expect(recipientBalanceInitial < recipientBalanceFinal).to.be.true;
+  });
+
+  it('should verify solidity functionality: <address>.call (FAIL, returnes false if the payment fails)', async function () {
+      const tx = await contract.callAddr(recipientAddr, Number.MAX_SAFE_INTEGER);
+      const rec = await tx.wait()
+      const result = rec.logs[0].data
+
+      const abi = ethers.AbiCoder.defaultAbiCoder();
+      const callSuccess = abi.decode(['bool'], result);
+
+      expect(callSuccess[0]).to.be.false;
   });
 
   it('should verify solidity functionality: <address>.call -> with function signature', async function () {
@@ -192,4 +233,5 @@ describe('@solidityequiv1 Solidity Address Test Suite', function () {
       expect(error.code).to.equal('CALL_EXCEPTION');
     }
   });
+
 });
