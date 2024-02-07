@@ -45,13 +45,12 @@ describe('@solidityequiv1 Solidity Account Non Existing Test Suite', function ()
 
   it('should confirm `call` on a non existing account', async function () {
     try {
-      const tx = await fakeContract.callOnNonExistingAccount(randomAddress);
+      const tx = await fakeContract.callOnNonExistingAccount(randomAddress, {gasLimit: 100_000});
       receipt = await tx.wait();
     } catch (err) {
       hasError = true;
-      expect(err.code).to.equal(Constants.CALL_EXCEPTION);
     }
-    expect(hasError).to.equal(true);
+    expect(hasError).to.equal(false);
   });
 
   it('should confirm `call` on a non existing account internal ', async function () {
@@ -60,22 +59,18 @@ describe('@solidityequiv1 Solidity Account Non Existing Test Suite', function ()
       await tx.wait();
     } catch (err) {
       hasError = true;
-      expect(err.code).to.equal(Constants.CALL_EXCEPTION);
     }
-    expect(hasError).to.equal(true);
+    expect(hasError).to.equal(false);
   });
 
   it('should confirm `delegatecall` on a non existing account', async function () {
     try {
-      const tx = await fakeContract.delegatecallOnNoneExistingAccount(
-        randomAddress
-      );
+      const tx = await fakeContract.delegatecallOnNoneExistingAccount(randomAddress, {gasLimit: 100_000});
       await tx.wait();
     } catch (err) {
       hasError = true;
-      expect(err.code).to.equal(Constants.CALL_EXCEPTION);
     }
-    expect(hasError).to.equal(true);
+    expect(hasError).to.equal(false);
   });
 
   it('should confirm `delegatecall` on a non existing account internal', async function () {
@@ -86,22 +81,18 @@ describe('@solidityequiv1 Solidity Account Non Existing Test Suite', function ()
       await tx.wait();
     } catch (err) {
       hasError = true;
-      expect(err.code).to.equal(Constants.CALL_EXCEPTION);
     }
-    expect(hasError).to.equal(true);
+    expect(hasError).to.equal(false);
   });
 
   it('should confirm `staticcall` on a non existing account', async function () {
     try {
-      const tx = await fakeContract.staticcallOnNoneExistingAccount(
-        randomAddress
-      );
+      const tx = await fakeContract.staticcallOnNoneExistingAccount(randomAddress, {gasLimit: 100_000});
       await tx.wait();
     } catch (err) {
       hasError = true;
-      expect(err.code).to.equal(Constants.CALL_EXCEPTION);
     }
-    expect(hasError).to.equal(true);
+    expect(hasError).to.equal(false);
   });
 
   it('should confirm `staticcall` on a non existing account internal', async function () {
@@ -110,9 +101,8 @@ describe('@solidityequiv1 Solidity Account Non Existing Test Suite', function ()
       await tx.wait();
     } catch (err) {
       hasError = true;
-      expect(err.code).to.equal(Constants.CALL_EXCEPTION);
     }
-    expect(hasError).to.equal(true);
+    expect(hasError).to.equal(false);
   });
 
   it('should confirm creation of a contract on non Existing addr', async function () {

@@ -201,6 +201,7 @@ describe('@OZERC1967Upgrade Upgradable Vote Test Suite', () => {
         EMPTY_DATA,
         GAS_LIMIT_1_000_000
       );
+      await tx.wait();
 
       proxiedVoteV2 = new ethers.Contract(
         await voteProxy.getAddress(),

@@ -324,7 +324,7 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
       //increment counter
       {
         const counterBefore = await proxyContract.count();
-        await proxyContract.increment();
+        await (await proxyContract.increment()).wait();
         const counterAfter = await proxyContract.count();
         expect(counterAfter, 'Asserting counter increment').to.be.greaterThan(
           counterBefore
@@ -334,7 +334,7 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
       //decrement counter
       {
         const counterBefore = await proxyContract.count();
-        await proxyContract.decrement();
+        await (await proxyContract.decrement()).wait();
         const counterAfter = await proxyContract.count();
         expect(
           counterAfter,
