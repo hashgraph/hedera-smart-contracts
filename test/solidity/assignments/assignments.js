@@ -44,7 +44,7 @@ describe('@solidityequiv1 Assignments Test Suite', function () {
     // here we are testing that if a parameter is assigned to memory a copy will be created
     // and the original object wont be changed
     // while if it is in storage and only referenced we expect it to change
-    await contractReferenceTypes.testAssignmentOfReferenceTypes();
+    await (await contractReferenceTypes.testAssignmentOfReferenceTypes()).wait();
     const result = await contractReferenceTypes.getSomeArray();
     expect(result).to.deep.equal([
       BigInt(1),
