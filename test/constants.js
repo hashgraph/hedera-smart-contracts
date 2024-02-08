@@ -193,6 +193,7 @@ const Contract = {
   InternalCallee: 'InternalCallee',
   InternalCaller: 'InternalCaller',
   EthNativePrecompileCaller: 'EthNativePrecompileCaller',
+  AtomicHTS: 'AtomicHTS',
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';
