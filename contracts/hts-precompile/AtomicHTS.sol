@@ -28,7 +28,11 @@ contract AtomicHTS is HederaTokenService {
      */
     function batchAssociateGrantKYCTransfer(address token, address sender, address receiver, int64 amount) external {
         (int associateResponseCode) = HederaTokenService.associateToken(receiver, token);
-        require(associateResponseCode == HederaResponseCodes.SUCCESS, "Failed to associate token.");
+        require(
+            associateResponseCode == HederaResponseCodes.SUCCESS || 
+            associateResponseCode == HederaResponseCodes.TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT, 
+            "Failed to associate token."
+        );
 
         /// @notice an account needs to be granted the KYC of the HTS token for it to receive the token
         (int grantKYCResponseCode) = HederaTokenService.grantTokenKyc(token, receiver);
@@ -53,12 +57,16 @@ contract AtomicHTS is HederaTokenService {
     function batchApproveAssociateGrantKYCTransferFrom(address token, address owner, address receipient, int64 transferAmount, uint256 allowance) external {
         
         /// top up the spender with initial fund
-
+        /// @notice it is necessary for the spender to be associated and granted token KYC to receive fund. 
         address spender = address(this);
-        (int associateContractResponseCode) = HederaTokenService.associateToken(address(this), token);
-        require(associateContractResponseCode == HederaResponseCodes.SUCCESS, "Failed to associate token.");
+        (int associateContractResponseCode) = HederaTokenService.associateToken(spender, token);
+        require(
+            associateContractResponseCode == HederaResponseCodes.SUCCESS || 
+            associateContractResponseCode == HederaResponseCodes.TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT, 
+            "Failed to associate token."
+        );
 
-        (int grantKYCContractResponseCode) = HederaTokenService.grantTokenKyc(token, address(this));
+        (int grantKYCContractResponseCode) = HederaTokenService.grantTokenKyc(token, spender);
         require(grantKYCContractResponseCode == HederaResponseCodes.SUCCESS, "Failed to grant token KYC.");
 
         (int transferTokenResponseCode) = HederaTokenService.transferToken(token, owner, spender, transferAmount);
@@ -70,7 +78,11 @@ contract AtomicHTS is HederaTokenService {
         require(approveResponseCode == HederaResponseCodes.SUCCESS, "Failed to grant token allowance.");
 
         (int associateResponseCode) = HederaTokenService.associateToken(receipient, token);
-        require(associateResponseCode == HederaResponseCodes.SUCCESS, "Failed to associate token.");
+        require(
+            associateResponseCode == HederaResponseCodes.SUCCESS || 
+            associateResponseCode == HederaResponseCodes.TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT, 
+            "Failed to associate token."
+        );
 
         (int grantKYCResponseCode) = HederaTokenService.grantTokenKyc(token, receipient); 
         require(grantKYCResponseCode == HederaResponseCodes.SUCCESS, "Failed to grant token KYC.");
@@ -149,7 +161,11 @@ contract AtomicHTS is HederaTokenService {
      */
     function batchAssociateMintGrantTransfer(address token, address sender, address receiver, int64 amount) external {
         (int associateResponseCode) = HederaTokenService.associateToken(receiver, token);
-        require(associateResponseCode == HederaResponseCodes.SUCCESS, "Failed to associate token.");
+        require(
+            associateResponseCode == HederaResponseCodes.SUCCESS || 
+            associateResponseCode == HederaResponseCodes.TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT, 
+            "Failed to associate token."
+        );
 
         bytes[] memory metadata;
         (int mintTokenResponseCode,,) = HederaTokenService.mintToken(token, amount, metadata);

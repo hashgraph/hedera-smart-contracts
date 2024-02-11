@@ -37,6 +37,7 @@ describe('AtomicHTS - HIP#551: Batch Transactions Test Suite', () => {
   const INITAL_AMOUNT = 1000n;
   const TRANSFER_AMOUNT = 120n;
   const SUCCESS_RESPONSE_CODE = 22n;
+  const TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT_RESPONSE_CODE = 194n;
 
   beforeEach(async () => {
     signers = await ethers.getSigners();
@@ -73,38 +74,48 @@ describe('AtomicHTS - HIP#551: Batch Transactions Test Suite', () => {
     ]);
 
     erc20Contract = await utils.deployERC20Contract();
+
+    await utils.associateToken(
+      tokenCreateContract,
+      tokenAddress,
+      Constants.Contract.TokenCreateContract
+    );
+
+    await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
   });
 
   it('Should execute batchAssociateGrantKYCTransfer()', async () => {
-    const tx = await atomicHTSContract.batchAssociateGrantKYCTransfer(
+    const batchTx = await atomicHTSContract.batchAssociateGrantKYCTransfer(
       tokenAddress,
       accountA,
       accountB,
       TRANSFER_AMOUNT,
       Constants.GAS_LIMIT_10_000_000
     );
-    const args = (await tx.wait()).logs.find(
+    const args = (await batchTx.wait()).logs.find(
       (e) => e.fragment.name === 'BatchAssociateGrantKYCTransfer'
     ).args;
 
-    const afterSenderBalance = await erc20Contract.balanceOf(
+    const accountABalance = await erc20Contract.balanceOf(
       tokenAddress,
       accountA
     );
-    const afterReceiverBalance = await erc20Contract.balanceOf(
+    const accountBBalance = await erc20Contract.balanceOf(
       tokenAddress,
       accountB
     );
 
-    expect(afterSenderBalance).to.eq(INITAL_AMOUNT - TRANSFER_AMOUNT);
-    expect(afterReceiverBalance).to.eq(TRANSFER_AMOUNT);
-    expect(args.associateResponseCode).to.eq(SUCCESS_RESPONSE_CODE);
+    expect(accountABalance).to.eq(INITAL_AMOUNT - TRANSFER_AMOUNT);
+    expect(accountBBalance).to.eq(TRANSFER_AMOUNT);
     expect(args.grantKYCResponseCode).to.eq(SUCCESS_RESPONSE_CODE);
     expect(args.transferTokenResponseCode).to.eq(SUCCESS_RESPONSE_CODE);
+    expect(args.associateResponseCode).to.eq(
+      TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT_RESPONSE_CODE
+    );
   });
 
   it('Should execute batchApproveAssociateGrantKYCTransferFrom()', async () => {
-    const tx =
+    const batchTx =
       await atomicHTSContract.batchApproveAssociateGrantKYCTransferFrom(
         tokenAddress,
         accountA,
@@ -114,7 +125,7 @@ describe('AtomicHTS - HIP#551: Batch Transactions Test Suite', () => {
         Constants.GAS_LIMIT_10_000_000
       );
 
-    const args = (await tx.wait()).logs.find(
+    const args = (await batchTx.wait()).logs.find(
       (e) => e.fragment?.name === 'BatchApproveAssociateGrantKYCTransferFrom'
     ).args;
 
@@ -129,50 +140,38 @@ describe('AtomicHTS - HIP#551: Batch Transactions Test Suite', () => {
 
     expect(afterSenderBalance).to.eq(INITAL_AMOUNT - TRANSFER_AMOUNT);
     expect(afterReceiverBalance).to.eq(ALLOWANCE);
-    expect(args.transferTokenResponseCode).to.eq(SUCCESS_RESPONSE_CODE);
     expect(args.approveResponseCode).to.eq(SUCCESS_RESPONSE_CODE);
-    expect(args.associateResponseCode).to.eq(SUCCESS_RESPONSE_CODE);
     expect(args.grantKYCResponseCode).to.eq(SUCCESS_RESPONSE_CODE);
     expect(args.transferFromResponseCode).to.eq(SUCCESS_RESPONSE_CODE);
+    expect(args.transferTokenResponseCode).to.eq(SUCCESS_RESPONSE_CODE);
+    expect(args.associateResponseCode).to.eq(
+      TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT_RESPONSE_CODE
+    );
   });
 
   it('Shoud execute batchUnfreezeGrantKYCTransferFreeze()', async () => {
-    await utils.associateToken(
-      tokenCreateContract,
+    const batchTx = await atomicHTSContract.batchUnfreezeGrantKYCTransferFreeze(
       tokenAddress,
-      Constants.Contract.TokenCreateContract
-    );
-
-    await tokenManagmentContract.freezeTokenPublic(
-      tokenAddress,
+      accountA,
       accountB,
+      TRANSFER_AMOUNT,
       Constants.GAS_LIMIT_10_000_000
     );
-
-    const charlieTx =
-      await atomicHTSContract.batchUnfreezeGrantKYCTransferFreeze(
-        tokenAddress,
-        accountA,
-        accountB,
-        TRANSFER_AMOUNT,
-        Constants.GAS_LIMIT_10_000_000
-      );
-
-    const args = (await charlieTx.wait()).logs.find(
+    const args = (await batchTx.wait()).logs.find(
       (e) => e.fragment?.name === 'BatchUnfreezeGrantKYCTransferFreeze'
     ).args;
 
-    const afterSenderBalance = await erc20Contract.balanceOf(
+    const acountABalance = await erc20Contract.balanceOf(
       tokenAddress,
       accountA
     );
-    const afterReceiverBalance = await erc20Contract.balanceOf(
+    const accountBBalance = await erc20Contract.balanceOf(
       tokenAddress,
       accountB
     );
 
-    expect(afterSenderBalance).to.eq(INITAL_AMOUNT - TRANSFER_AMOUNT);
-    expect(afterReceiverBalance).to.eq(TRANSFER_AMOUNT);
+    expect(acountABalance).to.eq(INITAL_AMOUNT - TRANSFER_AMOUNT);
+    expect(accountBBalance).to.eq(TRANSFER_AMOUNT);
     expect(args.unfreezeTokenResponseCode).to.eq(SUCCESS_RESPONSE_CODE);
     expect(args.grantKYCResponseCode).to.eq(SUCCESS_RESPONSE_CODE);
     expect(args.transferTokenResponseCode).to.eq(SUCCESS_RESPONSE_CODE);
@@ -180,13 +179,6 @@ describe('AtomicHTS - HIP#551: Batch Transactions Test Suite', () => {
   });
 
   it('Should execute batchWipeMintTransfer()', async () => {
-    await utils.associateToken(
-      tokenCreateContract,
-      tokenAddress,
-      Constants.Contract.TokenCreateContract
-    );
-    await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
-
     // top up accountB with some token fund
     const transferTx = await tokenTransferContract.transferTokenPublic(
       tokenAddress,
@@ -197,7 +189,7 @@ describe('AtomicHTS - HIP#551: Batch Transactions Test Suite', () => {
     );
     await transferTx.wait();
 
-    const deltaTx = await atomicHTSContract.batchWipeMintTransfer(
+    const batchTx = await atomicHTSContract.batchWipeMintTransfer(
       tokenAddress,
       accountA,
       accountB,
@@ -206,7 +198,7 @@ describe('AtomicHTS - HIP#551: Batch Transactions Test Suite', () => {
       TRANSFER_AMOUNT,
       Constants.GAS_LIMIT_10_000_000
     );
-    const args = (await deltaTx.wait()).logs.find(
+    const args = (await batchTx.wait()).logs.find(
       (e) => e.fragment?.name === 'BatchWipeMintTransfer'
     ).args;
 
@@ -243,19 +235,7 @@ describe('AtomicHTS - HIP#551: Batch Transactions Test Suite', () => {
   });
 
   it('Should execute batchMintUnfreezeGrantKYCTransferFreeze()', async () => {
-    await utils.associateToken(
-      tokenCreateContract,
-      tokenAddress,
-      Constants.Contract.TokenCreateContract
-    );
-
-    await tokenManagmentContract.freezeTokenPublic(
-      tokenAddress,
-      accountB,
-      Constants.GAS_LIMIT_10_000_000
-    );
-
-    const echoTx =
+    const batchTx =
       await atomicHTSContract.batchMintUnfreezeGrantKYCTransferFreeze(
         tokenAddress,
         accountA,
@@ -264,7 +244,7 @@ describe('AtomicHTS - HIP#551: Batch Transactions Test Suite', () => {
         TRANSFER_AMOUNT
       );
 
-    const args = (await echoTx.wait()).logs.find(
+    const args = (await batchTx.wait()).logs.find(
       (e) => e.fragment?.name === 'BatchMintUnfreezeGrantKYCTransferFreeze'
     ).args;
 
@@ -289,7 +269,7 @@ describe('AtomicHTS - HIP#551: Batch Transactions Test Suite', () => {
   });
 
   it('Should execute batchAssociateMintGrantTransfer()', async () => {
-    const foxTrotTx = await atomicHTSContract.batchAssociateMintGrantTransfer(
+    const batchTx = await atomicHTSContract.batchAssociateMintGrantTransfer(
       tokenAddress,
       accountA,
       accountB,
@@ -297,7 +277,7 @@ describe('AtomicHTS - HIP#551: Batch Transactions Test Suite', () => {
       Constants.GAS_LIMIT_10_000_000
     );
 
-    const args = (await foxTrotTx.wait()).logs.find(
+    const args = (await batchTx.wait()).logs.find(
       (e) => e.fragment?.name === 'BatchAssociateMintGrantTransfer'
     ).args;
 
@@ -313,9 +293,11 @@ describe('AtomicHTS - HIP#551: Batch Transactions Test Suite', () => {
 
     expect(accountAbalance).to.eq(INITAL_AMOUNT);
     expect(accountBBalance).to.eq(MINT_AMOUNT);
-    expect(args.associateResponseCode).to.eq(SUCCESS_RESPONSE_CODE);
     expect(args.mintTokenResponseCode).to.eq(SUCCESS_RESPONSE_CODE);
     expect(args.grantKYCResponseCode).to.eq(SUCCESS_RESPONSE_CODE);
     expect(args.transferTokenResponseCode).to.eq(SUCCESS_RESPONSE_CODE);
+    expect(args.associateResponseCode).to.eq(
+      TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT_RESPONSE_CODE
+    );
   });
 });
