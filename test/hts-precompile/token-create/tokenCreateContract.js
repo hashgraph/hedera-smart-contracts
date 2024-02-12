@@ -296,7 +296,7 @@ describe('TokenCreateContract Test Suite', function () {
     const tokenSymbol = 'tokenSymbol';
     const tokenMemo = 'memo';
     const initialSupply = 1000;
-    const maxSupply = 1000;
+    const maxSupply = 10000;
     const decimals = 8;
     const freezeDefaultStatus = false;
     const key = PublicKey.fromBytes(utils.getSignerCompressedPublicKey());

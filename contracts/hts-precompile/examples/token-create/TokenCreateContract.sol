@@ -12,7 +12,7 @@ contract TokenCreateContract is HederaTokenService, ExpiryHelper, KeyHelper {
     string symbol = "tokenSymbol";
     string memo = "memo";
     int64 initialTotalSupply = 1000;
-    int64 maxSupply = 1000;
+    int64 maxSupply = 10000;
     int32 decimals = 8;
     bool freezeDefaultStatus = false;
 
