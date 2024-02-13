@@ -23,7 +23,7 @@ contract NonExisting {
         return success;
     }
 
-    function delegatecallOnNoneExistingAccount(address nonExistingAddr) external returns (bool) {
+    function delegatecallOnNonExistingAccount(address nonExistingAddr) external returns (bool) {
         (bool success, ) = nonExistingAddr.delegatecall(
             abi.encodeWithSignature("doesNotExist()")
         );
