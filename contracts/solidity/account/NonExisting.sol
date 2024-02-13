@@ -31,7 +31,7 @@ contract NonExisting {
         return success;
     }
 
-    function staticcallOnNoneExistingAccount(address nonExistingAddr) external view returns (bool) {
+    function staticcallOnNonExistingAccount(address nonExistingAddr) external view returns (bool) {
         (bool success, ) = nonExistingAddr.staticcall(
             abi.encodeWithSignature("doesNotExist()")
         );
