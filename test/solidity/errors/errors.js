@@ -83,16 +83,18 @@ describe('@solidityequiv2 Solidity Errors Test Suite', function () {
   });
 
   it('should confirm revert with custom error works', async function () {
-    // try {
-    //   await contract.revertWithCustomError();
-    // } catch (err) {
-    //   hasError = true;
-    //   expect(err.code).to.equal('CALL_EXCEPTION');
-    //   expect(err.errorName).to.equal('InsufficientBalance');
-    //   expect(err.errorArgs.available).to.equal(BigInt(1));
-    //   expect(err.errorArgs.required).to.equal(BigInt(100));
-    // }
-    // expect(hasError).to.equal(true);
+    try {
+      await contract.revertWithCustomError();
+    } catch (err) {
+      const abi = ethers.AbiCoder.defaultAbiCoder();
+      const res = abi.decode(['bytes4','uint256', 'uint256'], err.data);
+      hasError = true;
+      expect(err.code).to.equal('CALL_EXCEPTION');
+      expect(err.errorName).to.equal('InsufficientBalance');
+      expect(err.errorArgs.available).to.equal(BigInt(1));
+      expect(err.errorArgs.required).to.equal(BigInt(100));
+    }
+    expect(hasError).to.equal(true);
     await expect(
       contract.revertWithCustomError()
     ).to.eventually.be.rejectedWith('CONTRACT_REVERT_EXECUTED');
