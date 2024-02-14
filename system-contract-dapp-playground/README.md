@@ -105,7 +105,7 @@ Please follow this [instruction here](https://support.metamask.io/hc/en-us/artic
 1.  From the root directory (`hedera-smart-contract`), run the below commands to compile the smart contracts
 
 ```
-  npx install && npx hardhat compile
+  npm install && npx hardhat compile
 ```
 
 2.  Now, navigate back to the `system-contract-dapp-playground` directory and execute the `prerequisite-check` command using npm:
