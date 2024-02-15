@@ -57,10 +57,11 @@ const ManageTokenPermission = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const tokenCommonFields = ['hederaTokenAddress', 'targetApprovedAddress'];
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('APPROVED_FUNGIBLE');
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_MANAGE) as string;
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
@@ -133,7 +134,6 @@ const ManageTokenPermission = ({ baseContract }: PageProps) => {
     // sanitize params
     const sanitizeErr = handleSanitizeHederaFormInputs({
       API,
-      feeValue,
       serialNumber,
       hederaTokenAddress,
       amount: amountToApprove,
@@ -152,10 +152,12 @@ const ManageTokenPermission = ({ baseContract }: PageProps) => {
     // invoke method APIS
     const { result, transactionHash, err } = await manageTokenPermission(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       API,
       hederaTokenAddress,
       targetApprovedAddress,
-      feeValue,
+      Number(feeValue),
       amountToApprove,
       serialNumber,
       approvedStatus
@@ -335,7 +337,7 @@ const ManageTokenPermission = ({ baseContract }: PageProps) => {
       {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="TokenCreate"
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           transactionResults={transactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           setTransactionResults={setTransactionResults}

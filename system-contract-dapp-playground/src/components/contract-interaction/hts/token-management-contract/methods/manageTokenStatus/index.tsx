@@ -37,6 +37,8 @@ import useFilterTransactionsByContractAddress from '../../../../../../hooks/useF
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   CONTRACT_NAMES,
+  HEDERA_BRANDING_COLORS,
+  HEDERA_CHAKRA_INPUT_BOX_SIZES,
   HEDERA_COMMON_TRANSACTION_TYPE,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
 } from '@/utils/common/constants';
@@ -50,11 +52,12 @@ type API_NAMES = 'PAUSE' | 'UNPAUSE';
 const ManageTokenStatus = ({ baseContract }: PageProps) => {
   // general states
   const toaster = useToast();
-  const initialParamValues = { hederaTokenAddress: '' };
   const [isSuccessful, setIsSuccessful] = useState(false);
+  const initialParamValues = { hederaTokenAddress: '', feeValue: '' };
   const [paramValues, setParamValues] = useState(initialParamValues);
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_MANAGE) as string;
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-MANAGE']['TOKEN-STATUS'];
@@ -62,16 +65,6 @@ const ManageTokenStatus = ({ baseContract }: PageProps) => {
     pauseLoading: false,
     unpauseLoading: false,
   });
-  const APIButtonTitles: { API: API_NAMES; executeTitle: string }[] = [
-    {
-      API: 'PAUSE',
-      executeTitle: 'Pause Token',
-    },
-    {
-      API: 'UNPAUSE',
-      executeTitle: 'Unpause Token',
-    },
-  ];
 
   const transactionResultsToShow = useFilterTransactionsByContractAddress(
     transactionResults,
@@ -117,8 +110,11 @@ const ManageTokenStatus = ({ baseContract }: PageProps) => {
     // invoke method APIS
     const { result, transactionHash, err } = await manageTokenStatus(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       API,
-      paramValues.hederaTokenAddress
+      paramValues.hederaTokenAddress,
+      Number(paramValues.feeValue)
     );
 
     // turn isLoading off
@@ -200,18 +196,34 @@ const ManageTokenStatus = ({ baseContract }: PageProps) => {
 
         {/* Execute button */}
         <div className="flex gap-9">
-          {/* Execute buttons */}
-          {APIButtonTitles.map((APIButton) => {
-            return (
-              <div key={APIButton.API} className="w-full">
-                <SharedExecuteButton
-                  isLoading={APIButton.API === 'PAUSE' ? isLoading.pauseLoading : isLoading.unpauseLoading}
-                  handleCreatingFungibleToken={() => handleUpdateTokenStatus(APIButton.API)}
-                  buttonTitle={APIButton.executeTitle}
-                />
-              </div>
-            );
-          })}
+          <div key={'PAUSE'} className="w-full">
+            <SharedExecuteButton
+              isLoading={isLoading.pauseLoading}
+              handleCreatingFungibleToken={() => handleUpdateTokenStatus('PAUSE')}
+              buttonTitle={'Pause Token'}
+            />
+          </div>
+
+          <SharedFormInputField
+            param={'feeValue'}
+            paramValue={paramValues.feeValue}
+            handleInputOnChange={handleInputOnChange}
+            paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.large}
+            paramType={'number'}
+            paramKey={'feeValue'}
+            explanation={'Optional gas limit for the transaction.'}
+            paramClassName={'border-white/30 rounded-xl'}
+            paramPlaceholder={'Gas limit...'}
+            paramFocusColor={HEDERA_BRANDING_COLORS.purple}
+          />
+
+          <div key={'UNPAUSE'} className="w-full">
+            <SharedExecuteButton
+              isLoading={isLoading.unpauseLoading}
+              handleCreatingFungibleToken={() => handleUpdateTokenStatus('UNPAUSE')}
+              buttonTitle={'Unpause Token'}
+            />
+          </div>
         </div>
       </div>
 
@@ -219,7 +231,7 @@ const ManageTokenStatus = ({ baseContract }: PageProps) => {
       {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="TokenCreate"
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           transactionResults={transactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           setTransactionResults={setTransactionResults}

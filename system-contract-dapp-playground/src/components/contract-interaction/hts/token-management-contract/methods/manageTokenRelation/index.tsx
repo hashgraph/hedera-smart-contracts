@@ -62,9 +62,10 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('REVOKE_KYC');
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_MANAGE) as string;
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
@@ -179,7 +180,6 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
       sanitizeErr = handleSanitizeHederaFormInputs({
         API: 'Associate',
         associatingAddress: paramValues.accountAddress,
-        feeValue: paramValues.feeValue,
         tokenAddresses,
       });
     } else {
@@ -187,7 +187,6 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
         API: 'UpdateTokenRelation',
         hederaTokenAddress: paramValues.hederaTokenAddress,
         accountAddress: paramValues.accountAddress,
-        feeValue: paramValues.feeValue,
       });
     }
     // toast error if any param is invalid
@@ -205,6 +204,8 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
     // invoke method API
     const { result, transactionHash, err } = await manageTokenRelation(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       API,
       paramValues.accountAddress,
       Number(paramValues.feeValue),
@@ -365,7 +366,7 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
       {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="TokenCreate"
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           transactionResults={transactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           setTransactionResults={setTransactionResults}

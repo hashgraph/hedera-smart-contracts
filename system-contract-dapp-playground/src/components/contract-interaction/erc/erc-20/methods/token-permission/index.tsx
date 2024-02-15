@@ -56,7 +56,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
   const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC20) as string;
-  const contractCaller = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['TOKEN-PERMISSION'];
@@ -238,7 +238,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
               method === 'allowance' ? generatedRandomUniqueKey(9) : (tokenPermissionRes.txHash as string),
             allowances: {
               spender: params.spender,
-              owner: method === 'allowance' ? allowanceParams.owner : contractCaller,
+              owner: method === 'allowance' ? allowanceParams.owner : signerAddress,
               amount:
                 method === 'allowance' ? Number(tokenPermissionRes.allowanceRes!) : Number(params.amount),
             },
