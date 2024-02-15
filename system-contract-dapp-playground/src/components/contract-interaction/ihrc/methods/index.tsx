@@ -18,6 +18,7 @@
  *
  */
 
+import Cookies from 'js-cookie';
 import { isAddress } from 'ethers';
 import { useEffect, useState } from 'react';
 import { useToast } from '@chakra-ui/react';
@@ -49,6 +50,7 @@ type API_NAMES = 'ASSOCIATE' | 'DISSOCIATE';
 
 const HederaIHRC719Methods = ({ network }: PageProps) => {
   // general states
+  const hederaNetwork = Cookies.get('_network');
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState({
     ASSOCIATE: false,
@@ -58,6 +60,7 @@ const HederaIHRC719Methods = ({ network }: PageProps) => {
   const initialParamValues = { hederaTokenAddress: '', feeValue: '' };
   const [paramValues, setParamValues] = useState(initialParamValues);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
+  const parsedHederaNetworkL = hederaNetwork && JSON.parse(hederaNetwork);
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['IHRC719-RESULTS'];
 
@@ -85,8 +88,6 @@ const HederaIHRC719Methods = ({ network }: PageProps) => {
     let sanitizeErr;
     if (!isAddress(paramValues.hederaTokenAddress)) {
       sanitizeErr = 'Invalid token address';
-    } else if (paramValues.feeValue === '') {
-      sanitizeErr = 'Gas limit should be set for this transaction';
     }
 
     if (sanitizeErr) {
@@ -110,7 +111,8 @@ const HederaIHRC719Methods = ({ network }: PageProps) => {
       API,
       paramValues.hederaTokenAddress,
       walletSigner,
-      Number(paramValues.feeValue)
+      Number(paramValues.feeValue),
+      parsedHederaNetworkL
     );
 
     // turn isLoading off
