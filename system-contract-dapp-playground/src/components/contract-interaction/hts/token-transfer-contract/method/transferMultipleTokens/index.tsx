@@ -21,7 +21,7 @@
 import Cookies from 'js-cookie';
 import { Contract } from 'ethers';
 import { useToast } from '@chakra-ui/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import TransferRecordForm from './TransferRecordForm';
 import { CommonErrorToast } from '@/components/toast/CommonToast';
 import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
@@ -66,10 +66,10 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
   // general states
   const toaster = useToast();
   const [isSuccessful, setIsSuccessful] = useState(false);
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('FUNGIBLE');
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
-  const contractCaller = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_TRANSFER) as string;
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const [isLoading, setIsLoading] = useState({
@@ -78,13 +78,6 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
   });
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-TRANSFER']['MULTIPLE-TOKENS'];
-  const tokenCommonFields = useMemo(() => {
-    if (APIMethods === 'FUNGIBLE') {
-      return ['hederaTokenAddress', 'accountIDs', 'amounts'];
-    } else {
-      return ['hederaTokenAddress', 'senders', 'receivers', 'serialNumbers'];
-    }
-  }, [APIMethods]);
   const initialCommonParamValue = { hederaTokenAddress: '', feeValue: '' };
   const [commonParamValues, setCommonParamValues] = useState(initialCommonParamValue);
 
@@ -172,7 +165,7 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
 
     // extract fungibleParamsAccountIDs && fungibleParamsAmmounts  array
     const fungibleParamsAccountIDs = fungibleParamValues.map((prev) => prev.fieldValue.receiverAddress);
-    fungibleParamsAccountIDs.unshift(contractCaller); // add contractCaller to the beginning of the list
+    fungibleParamsAccountIDs.unshift(signerAddress); // add signerAddress to the beginning of the list
 
     let amountTotal = 0;
     const fungibleParamsAmmounts = fungibleParamValues.map((prev) => {
@@ -196,7 +189,6 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
       senders: nonFungibleParamsSenders,
       nonFungibleReceivers: nonFungibleParamsReceivers,
       serialNumbers: nonFungibleParamsSerialNumbers,
-      feeValue,
       hederaTokenAddress,
     });
 
@@ -216,6 +208,8 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
     if (API === 'FUNGIBLE') {
       transactionResult = await transferFungibleTokens(
         baseContract,
+        signerAddress,
+        HEDERA_NETWORK,
         hederaTokenAddress,
         fungibleParamsAccountIDs,
         fungibleParamsAmmounts,
@@ -224,6 +218,8 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
     } else {
       transactionResult = await transferNonFungibleTokens(
         baseContract,
+        signerAddress,
+        HEDERA_NETWORK,
         hederaTokenAddress,
         nonFungibleParamsSenders,
         nonFungibleParamsReceivers,
@@ -407,7 +403,7 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
       {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="TokenCreate"
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           transactionResults={transactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           setTransactionResults={setTransactionResults}
