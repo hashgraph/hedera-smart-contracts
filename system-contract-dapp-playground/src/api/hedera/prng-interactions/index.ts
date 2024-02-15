@@ -18,7 +18,9 @@
  *
  */
 
-import { Contract } from 'ethers';
+import { Contract, ethers } from 'ethers';
+import { TNetworkName } from '@/types/common';
+import { handleEstimateGas } from '@/utils/common/helpers';
 import { ISmartContractExecutionResult } from '@/types/contract-interactions/shared';
 
 /**
@@ -28,15 +30,33 @@ import { ISmartContractExecutionResult } from '@/types/contract-interactions/sha
  *
  * @param baseContract: ethers.Contract
  *
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
+ *
  * @param gasLimit: Number
  *
  * @return Promise<ISmartContractExecutionResult>
  */
 export const handlePRGNAPI = async (
   baseContract: Contract,
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
   gasLimit: Number
 ): Promise<ISmartContractExecutionResult> => {
   try {
+    if (gasLimit === 0) {
+      const estimateGasResult = await handleEstimateGas(
+        baseContract,
+        signerAddress,
+        network,
+        'getPseudorandomSeed',
+        []
+      );
+      if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+      gasLimit = estimateGasResult.gasLimit;
+    }
+
     // invoke contract method
     const tx = await baseContract.getPseudorandomSeed({ gasLimit });
 
