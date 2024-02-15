@@ -318,7 +318,7 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
           placeHolder={'Gas limit...'}
           executeBtnTitle={'Transfer'}
           handleInputOnChange={(e: any) => setGasLimit(e.target.value)}
-          explanation={'Gas limit for the transaction'}
+          explanation={'Optional gas limit for the transaction.'}
           handleInvokingAPIMethod={handleTransferCrypto}
         />
       </div>

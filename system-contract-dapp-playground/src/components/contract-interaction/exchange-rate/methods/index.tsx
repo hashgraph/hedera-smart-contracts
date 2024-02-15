@@ -205,7 +205,7 @@ const HederaExchangeRateMethods = ({ baseContract }: PageProps) => {
               paramPlaceholder={'Gas limit...'}
               paramValue={paramValues.feeValue}
               handleInputOnChange={handleInputOnChange}
-              explanation={'Gas limit for the transaction'}
+              explanation={'Optional gas limit for the transaction.'}
               paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.large}
               paramFocusColor={HEDERA_BRANDING_COLORS.violet}
               paramClassName={HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME}

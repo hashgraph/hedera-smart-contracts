@@ -259,7 +259,7 @@ const ManageTokenDeduction = ({ baseContract }: PageProps) => {
                   placeHolder={'Gas limit...'}
                   executeBtnTitle={APIButton.executeTitle}
                   handleInputOnChange={handleInputOnChange}
-                  explanation={'Gas limit for the transaction'}
+                  explanation={'Optional gas limit for the transaction.'}
                   handleInvokingAPIMethod={() => handleUpdateTokenDeduction(APIButton.API)}
                 />
               </div>

@@ -395,7 +395,7 @@ const TransferMultipleTokens = ({ baseContract }: PageProps) => {
                 placeHolder={'Gas limit...'}
                 executeBtnTitle={APIButton.executeTitle}
                 handleInputOnChange={(e) => handleInputOnChange(e, 'COMMON', 'feeValue')}
-                explanation={'Gas limit for the transaction'}
+                explanation={'Optional gas limit for the transaction.'}
                 handleInvokingAPIMethod={() => handleTransferMultipleTokens(APIButton.API)}
               />
             );

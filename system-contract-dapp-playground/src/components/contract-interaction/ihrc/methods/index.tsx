@@ -201,7 +201,7 @@ const HederaIHRC719Methods = ({ network }: PageProps) => {
             paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.large}
             paramType={'number'}
             paramKey={'feeValue'}
-            explanation={'Gas limit for the transaction'}
+            explanation={'Optional gas limit for the transaction.'}
             paramClassName={'border-white/30 rounded-xl'}
             paramPlaceholder={'Gas limit...'}
             paramFocusColor={HEDERA_BRANDING_COLORS.purple}

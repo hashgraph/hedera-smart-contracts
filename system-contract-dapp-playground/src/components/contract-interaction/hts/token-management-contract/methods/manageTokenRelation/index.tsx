@@ -330,7 +330,7 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
                   paramValue={paramValues.feeValue}
                   paramPlaceholder={'Gas limit...'}
                   handleInputOnChange={handleInputOnChange}
-                  explanation={'Gas limit for the transaction'}
+                  explanation={'Optional gas limit for the transaction.'}
                   paramClassName={'border-white/30 rounded-xl'}
                   paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.large}
                   paramFocusColor={HEDERA_BRANDING_COLORS.purple}
@@ -352,7 +352,7 @@ const ManageTokenRelation = ({ baseContract }: PageProps) => {
                   placeHolder={'Gas limit...'}
                   executeBtnTitle={APIButton.executeTitle}
                   handleInputOnChange={handleInputOnChange}
-                  explanation={'Gas limit for the transaction'}
+                  explanation={'Optional gas limit for the transaction.'}
                   handleInvokingAPIMethod={() => handleUpdateTokenRelation(APIButton.API)}
                 />
               </div>
