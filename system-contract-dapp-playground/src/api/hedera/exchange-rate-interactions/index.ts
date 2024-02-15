@@ -18,7 +18,9 @@
  *
  */
 
-import { Contract } from 'ethers';
+import { Contract, ethers } from 'ethers';
+import { TNetworkName } from '@/types/common';
+import { handleEstimateGas } from '@/utils/common/helpers';
 import { ISmartContractExecutionResult } from '@/types/contract-interactions/shared';
 
 /**
@@ -30,6 +32,10 @@ import { ISmartContractExecutionResult } from '@/types/contract-interactions/sha
  *
  * @param baseContract: ethers.Contract
  *
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
+ *
  * @param API: "CENT_TO_BAR" | "BAR_TO_CENT"
  *
  * @param amount: number
@@ -40,6 +46,8 @@ import { ISmartContractExecutionResult } from '@/types/contract-interactions/sha
  */
 export const handleExchangeRate = async (
   baseContract: Contract,
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
   API: 'CENT_TO_BAR' | 'BAR_TO_CENT',
   amount: number,
   gasLimit: number
@@ -55,6 +63,18 @@ export const handleExchangeRate = async (
     CENT_TO_BAR: 'TinyBars',
     BAR_TO_CENT: 'TinyCents',
   };
+
+  if (gasLimit === 0) {
+    const estimateGasResult = await handleEstimateGas(
+      baseContract,
+      signerAddress,
+      network,
+      API === 'CENT_TO_BAR' ? 'convertTinycentsToTinybars' : 'convertTinybarsToTinycents',
+      [amount]
+    );
+    if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+    gasLimit = estimateGasResult.gasLimit;
+  }
 
   try {
     // invoke contract method
