@@ -71,15 +71,27 @@ interface IEthersResult {
 }
 
 /**
- * @dev an interface for the results returned back from querying Mirror Node
+ * @dev an interface for the results returned back from querying accoutnID to the Mirror Node
  *
  * @params accountId?: string
  *
- * @params err: any
+ * @params err?: any
  */
-interface IMirrorNodeResult {
+interface IAccountIDMirrorNodeResult {
   accountId?: string;
   contractId?: string;
+  err?: any;
+}
+
+/**
+ * @dev an interface for the results returned back from querying estimated gasLimit to the Mirror Node
+ *
+ * @params gasLimit?: string
+ *
+ * @params err?: any
+ */
+interface IEstimateGasMirrorNodeResult {
+  gasLimit?: number;
   err?: any;
 }
 
