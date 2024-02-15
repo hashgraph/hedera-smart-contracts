@@ -18,7 +18,7 @@
  *
  */
 
-import { Contract, isAddress } from 'ethers';
+import { Contract, ethers, isAddress } from 'ethers';
 import { ISmartContractExecutionResult } from '@/types/contract-interactions/shared';
 import { KEY_TYPE_MAP } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
 import {
@@ -26,6 +26,8 @@ import {
   convertsArgsProxyToHTSTokenInfo,
   handleContractResponseWithDynamicEventNames,
 } from '@/utils/contract-interactions/HTS/helpers';
+import { TNetworkName } from '@/types/common';
+import { handleEstimateGas } from '@/utils/common/helpers';
 
 /**
  * @dev queries token validity
@@ -34,13 +36,22 @@ import {
  *
  * @param baseContract: ethers.Contract
  *
- * @param hederaTokenAddress: string
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
+ *
+ * @param hederaTokenAddress: ethers.AddressLike
+ *
+ * @param gasLimit: number
  *
  * @return Promise<ISmartContractExecutionResult>
  */
 export const queryTokenValidity = async (
   baseContract: Contract,
-  hederaTokenAddress: string
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
+  hederaTokenAddress: ethers.AddressLike,
+  gasLimit: number
 ): Promise<ISmartContractExecutionResult> => {
   // sanitize param
   if (!isAddress(hederaTokenAddress)) {
@@ -49,7 +60,19 @@ export const queryTokenValidity = async (
   }
 
   try {
-    const transactionResult = await baseContract.isTokenPublic(hederaTokenAddress);
+    if (gasLimit === 0) {
+      const estimateGasResult = await handleEstimateGas(
+        baseContract,
+        signerAddress,
+        network,
+        'isTokenPublic',
+        [hederaTokenAddress]
+      );
+      if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+      gasLimit = estimateGasResult.gasLimit;
+    }
+
+    const transactionResult = await baseContract.isTokenPublic(hederaTokenAddress, { gasLimit });
     // get transaction receipt
     const txReceipt = await transactionResult.wait();
 
@@ -73,9 +96,15 @@ export const queryTokenValidity = async (
  *
  * @param baseContract: ethers.Contract
  *
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
+ *
  * @param API: "TOKEN_INFO" | "FUNGIBLE_INFO" | "NON_FUNFIBLE_INFO"
  *
- * @param hederaTokenAddress: string
+ * @param hederaTokenAddress: ethers.AddressLike
+ *
+ * @param gasLimit: number
  *
  * @param serialNumber?: number
  *
@@ -83,8 +112,11 @@ export const queryTokenValidity = async (
  */
 export const queryTokenGeneralInfomation = async (
   baseContract: Contract,
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
   API: 'TOKEN' | 'FUNGIBLE' | 'NON_FUNFIBLE',
-  hederaTokenAddress: string,
+  hederaTokenAddress: ethers.AddressLike,
+  gasLimit: number,
   serialNumber?: number
 ): Promise<ISmartContractExecutionResult> => {
   // sanitize param
@@ -103,17 +135,54 @@ export const queryTokenGeneralInfomation = async (
     NON_FUNFIBLE: 'NonFungibleTokenInfo',
   };
 
+  // prepare function signagure and arguments
+  const selector = {
+    funcSig: '',
+    args: [] as any,
+  };
+  switch (API) {
+    case 'TOKEN':
+      selector.funcSig = 'getTokenInfoPublic';
+      selector.args = [hederaTokenAddress];
+      break;
+    case 'FUNGIBLE':
+      selector.funcSig = 'getFungibleTokenInfoPublic';
+      selector.args = [hederaTokenAddress];
+      break;
+    case 'NON_FUNFIBLE':
+      if (!serialNumber) {
+        console.error('Serial number is needed for querying NON_FUNGIBLE');
+        return { err: 'Serial number is needed for querying NON_FUNGIBLE' };
+      }
+      selector.funcSig = 'getNonFungibleTokenInfoPublic';
+      selector.args = [hederaTokenAddress, serialNumber];
+      break;
+  }
+
+  // prepare gasLimit
+  if (gasLimit === 0) {
+    const estimateGasResult = await handleEstimateGas(
+      baseContract,
+      signerAddress,
+      network,
+      selector.funcSig,
+      selector.args
+    );
+    if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+    gasLimit = estimateGasResult.gasLimit;
+  }
+
   // invoking contract methods
   try {
     let transactionResult;
     switch (API) {
       case 'TOKEN':
         // prepare transaction
-        transactionResult = await baseContract.getTokenInfoPublic(hederaTokenAddress);
+        transactionResult = await baseContract.getTokenInfoPublic(hederaTokenAddress, { gasLimit });
         break;
       case 'FUNGIBLE':
         // prepare transaction
-        transactionResult = await baseContract.getFungibleTokenInfoPublic(hederaTokenAddress);
+        transactionResult = await baseContract.getFungibleTokenInfoPublic(hederaTokenAddress, { gasLimit });
         break;
       case 'NON_FUNFIBLE':
         if (!serialNumber) {
@@ -123,7 +192,8 @@ export const queryTokenGeneralInfomation = async (
           // prepare transaction
           transactionResult = await baseContract.getNonFungibleTokenInfoPublic(
             hederaTokenAddress,
-            serialNumber
+            serialNumber,
+            { gasLimit }
           );
         }
         break;
@@ -162,9 +232,17 @@ export const queryTokenGeneralInfomation = async (
  *
  * @param baseContract: ethers.Contract
  *
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
+ *
+ * @param network: TNetworkName
+ *
  * @param API: "DEFAULT_FREEZE_STATUS" | "DEFAULT_KYC_STATUS" | "CUSTOM_FEES" | "TOKEN_EXPIRY" | "TOKEN_TYPE" | "TOKEN_KEYS"
  *
- * @param hederaTokenAddress: string
+ * @param hederaTokenAddress: ethers.AddressLike,
+ *
+ * @param gasLimit: number
  *
  * @param keyType?: IHederaTokenServiceKeyType
  *
@@ -172,6 +250,8 @@ export const queryTokenGeneralInfomation = async (
  */
 export const queryTokenSpecificInfomation = async (
   baseContract: Contract,
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
   API:
     | 'TOKEN_TYPE'
     | 'TOKEN_KEYS'
@@ -179,7 +259,8 @@ export const queryTokenSpecificInfomation = async (
     | 'TOKEN_EXPIRY'
     | 'DEFAULT_KYC_STATUS'
     | 'DEFAULT_FREEZE_STATUS',
-  hederaTokenAddress: string,
+  hederaTokenAddress: ethers.AddressLike,
+  gasLimit: number,
   keyType?: IHederaTokenServiceKeyType
 ): Promise<ISmartContractExecutionResult> => {
   // sanitize param
@@ -198,34 +279,86 @@ export const queryTokenSpecificInfomation = async (
     DEFAULT_FREEZE_STATUS: 'TokenDefaultFreezeStatus',
   };
 
+  // prepare function signagure and arguments
+  const selector = {
+    funcSig: '',
+    args: [hederaTokenAddress] as any,
+  };
+  switch (API) {
+    case 'DEFAULT_FREEZE_STATUS':
+      selector.funcSig = 'getTokenDefaultFreezeStatusPublic';
+      break;
+    case 'DEFAULT_KYC_STATUS':
+      selector.funcSig = 'getTokenDefaultKycStatusPublic';
+      break;
+    case 'CUSTOM_FEES':
+      selector.funcSig = 'getTokenCustomFeesPublic';
+      break;
+    case 'TOKEN_EXPIRY':
+      selector.funcSig = 'getTokenExpiryInfoPublic';
+      break;
+    case 'TOKEN_TYPE':
+      selector.funcSig = 'getTokenTypePublic';
+      break;
+    case 'TOKEN_KEYS':
+      if (!keyType) {
+        console.error('Key Type is needed for querying NON_FUNGIBLE');
+        return { err: 'Key Type is needed for querying NON_FUNGIBLE' };
+      }
+      selector.funcSig = 'getTokenKeyPublic';
+      selector.args = [hederaTokenAddress, KEY_TYPE_MAP[keyType]];
+      break;
+  }
+
+  // prepare gasLimit
+  if (gasLimit === 0) {
+    const estimateGasResult = await handleEstimateGas(
+      baseContract,
+      signerAddress,
+      network,
+      selector.funcSig,
+      selector.args
+    );
+    if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+    gasLimit = estimateGasResult.gasLimit;
+  }
+
   // invoking contract methods
   try {
     let transactionResult;
     switch (API) {
       case 'DEFAULT_FREEZE_STATUS':
-        transactionResult = await baseContract.getTokenDefaultFreezeStatusPublic(hederaTokenAddress);
+        transactionResult = await baseContract.getTokenDefaultFreezeStatusPublic(hederaTokenAddress, {
+          gasLimit,
+        });
         break;
 
       case 'DEFAULT_KYC_STATUS':
-        transactionResult = await baseContract.getTokenDefaultKycStatusPublic(hederaTokenAddress);
+        transactionResult = await baseContract.getTokenDefaultKycStatusPublic(hederaTokenAddress, {
+          gasLimit,
+        });
         break;
 
       case 'CUSTOM_FEES':
-        transactionResult = await baseContract.getTokenCustomFeesPublic(hederaTokenAddress);
+        transactionResult = await baseContract.getTokenCustomFeesPublic(hederaTokenAddress, { gasLimit });
         break;
 
       case 'TOKEN_EXPIRY':
-        transactionResult = await baseContract.getTokenExpiryInfoPublic(hederaTokenAddress);
+        transactionResult = await baseContract.getTokenExpiryInfoPublic(hederaTokenAddress, { gasLimit });
         break;
       case 'TOKEN_TYPE':
-        transactionResult = await baseContract.getTokenTypePublic(hederaTokenAddress);
+        transactionResult = await baseContract.getTokenTypePublic(hederaTokenAddress, { gasLimit });
         break;
       case 'TOKEN_KEYS':
         if (!keyType) {
           console.error('Key Type is needed for querying NON_FUNGIBLE');
           return { err: 'Key Type is needed for querying NON_FUNGIBLE' };
         } else {
-          transactionResult = await baseContract.getTokenKeyPublic(hederaTokenAddress, KEY_TYPE_MAP[keyType]);
+          transactionResult = await baseContract.getTokenKeyPublic(
+            hederaTokenAddress,
+            KEY_TYPE_MAP[keyType],
+            { gasLimit }
+          );
         }
         break;
     }
@@ -259,13 +392,19 @@ export const queryTokenSpecificInfomation = async (
  *
  * @param baseContract: ethers.Contract
  *
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
+ *
  * @param API: "ALLOWANCE" | "GET_APPROVED" | "IS_APPROVAL"
  *
- * @param hederaTokenAddress: string
+ * @param hederaTokenAddress: ethers.AddressLike
  *
- * @param ownerAddress?: string
+ * @param gasLimit: number
  *
- * @param spenderAddress?: string
+ * @param ownerAddress?: ethers.AddressLike
+ *
+ * @param spenderAddress?: ethers.AddressLike
  *
  * @param serialNumber?: number
  *
@@ -273,10 +412,13 @@ export const queryTokenSpecificInfomation = async (
  */
 export const queryTokenPermissionInformation = async (
   baseContract: Contract,
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
   API: 'ALLOWANCE' | 'GET_APPROVED' | 'IS_APPROVAL',
-  hederaTokenAddress: string,
-  ownerAddress?: string,
-  spenderAddress?: string,
+  hederaTokenAddress: ethers.AddressLike,
+  gasLimit: number,
+  ownerAddress?: ethers.AddressLike,
+  spenderAddress?: ethers.AddressLike,
   serialNumber?: number
 ): Promise<ISmartContractExecutionResult> => {
   // sanitize param
@@ -311,10 +453,22 @@ export const queryTokenPermissionInformation = async (
         } else if (!spenderAddress) {
           errMsg = 'Spender address is needed for ALLOWANCE API';
         } else {
+          if (gasLimit === 0) {
+            const estimateGasResult = await handleEstimateGas(
+              baseContract,
+              signerAddress,
+              network,
+              'allowancePublic',
+              [hederaTokenAddress, ownerAddress, spenderAddress]
+            );
+            if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+            gasLimit = estimateGasResult.gasLimit;
+          }
           transactionResult = await baseContract.allowancePublic(
             hederaTokenAddress,
             ownerAddress,
-            spenderAddress
+            spenderAddress,
+            { gasLimit }
           );
         }
         break;
@@ -322,7 +476,20 @@ export const queryTokenPermissionInformation = async (
         if (!serialNumber) {
           errMsg = 'Serial number is needed for GET_APPROVED API';
         } else {
-          transactionResult = await baseContract.getApprovedPublic(hederaTokenAddress, serialNumber);
+          if (gasLimit === 0) {
+            const estimateGasResult = await handleEstimateGas(
+              baseContract,
+              signerAddress,
+              network,
+              'getApprovedPublic',
+              [hederaTokenAddress, serialNumber]
+            );
+            if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+            gasLimit = estimateGasResult.gasLimit;
+          }
+          transactionResult = await baseContract.getApprovedPublic(hederaTokenAddress, serialNumber, {
+            gasLimit,
+          });
         }
         break;
       case 'IS_APPROVAL':
@@ -331,6 +498,17 @@ export const queryTokenPermissionInformation = async (
         } else if (!spenderAddress) {
           errMsg = 'Spender address is needed for IS_APPROVAL API';
         } else {
+          if (gasLimit === 0) {
+            const estimateGasResult = await handleEstimateGas(
+              baseContract,
+              signerAddress,
+              network,
+              'isApprovedForAllPublic',
+              [hederaTokenAddress, ownerAddress, spenderAddress]
+            );
+            if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+            gasLimit = estimateGasResult.gasLimit;
+          }
           transactionResult = await baseContract.isApprovedForAllPublic(
             hederaTokenAddress,
             ownerAddress,
@@ -365,23 +543,28 @@ export const queryTokenPermissionInformation = async (
  *
  * @param baseContract: ethers.Contract
  *
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
+ *
  * @param API: "IS_KYC" | "IS_FROZEN"
  *
- * @param hederaTokenAddress: string
+ * @param hederaTokenAddress: ethers.AddressLike
  *
- * @param ownerAddress?: string
+ * @param accountAddress: ethers.AddressLike
  *
- * @param spenderAddress?: string
- *
- * @param serialNumber?: number
+ * @param gasLimit: number
  *
  * @return Promise<ISmartContractExecutionResult>
  */
 export const queryTokenStatusInformation = async (
   baseContract: Contract,
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
   API: 'IS_KYC' | 'IS_FROZEN',
-  hederaTokenAddress: string,
-  accountAddress: string
+  hederaTokenAddress: ethers.AddressLike,
+  accountAddress: ethers.AddressLike,
+  gasLimit: number
 ): Promise<ISmartContractExecutionResult> => {
   // sanitize param
   if (!isAddress(hederaTokenAddress)) {
@@ -398,16 +581,30 @@ export const queryTokenStatusInformation = async (
     IS_FROZEN: 'Frozen',
   };
 
+  if (gasLimit === 0) {
+    const estimateGasResult = await handleEstimateGas(
+      baseContract,
+      signerAddress,
+      network,
+      API === 'IS_KYC' ? 'isKycPublic' : 'isFrozenPublic',
+      [hederaTokenAddress, accountAddress]
+    );
+    if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+    gasLimit = estimateGasResult.gasLimit;
+  }
+
   // invoking contract methods
   try {
     let transactionResult;
     switch (API) {
       case 'IS_KYC':
-        transactionResult = await baseContract.isKycPublic(hederaTokenAddress, accountAddress);
+        transactionResult = await baseContract.isKycPublic(hederaTokenAddress, accountAddress, { gasLimit });
         break;
 
       case 'IS_FROZEN':
-        transactionResult = await baseContract.isFrozenPublic(hederaTokenAddress, accountAddress);
+        transactionResult = await baseContract.isFrozenPublic(hederaTokenAddress, accountAddress, {
+          gasLimit,
+        });
         break;
     }
 

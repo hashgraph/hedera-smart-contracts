@@ -29,21 +29,21 @@ import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import TokenGeneralInfoModal from '../../../shared/components/TokenGeneralInfoModal';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
+import { queryTokenGeneralInfomation } from '@/api/hedera/hts-interactions/tokenQuery-interactions';
+import { htsQueryTokenInfoParamFields } from '@/utils/contract-interactions/HTS/token-query/constant';
 import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
+import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
+import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
+import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   CONTRACT_NAMES,
   HEDERA_COMMON_TRANSACTION_TYPE,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
 } from '@/utils/common/constants';
-import { queryTokenGeneralInfomation } from '@/api/hedera/hts-interactions/tokenQuery-interactions';
-import { htsQueryTokenInfoParamFields } from '@/utils/contract-interactions/HTS/token-query/constant';
-import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
-import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
-import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedFormButton,
-  SharedExecuteButton,
   SharedFormInputField,
+  SharedExecuteButtonWithFee,
 } from '../../../shared/components/ParamInputForm';
 
 interface PageProps {
@@ -62,16 +62,18 @@ const QueryTokenGeneralInfomation = ({ baseContract }: PageProps) => {
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [showTokenInfo, setShowTokenInfo] = useState(false);
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('TOKEN');
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [tokenInfoFromTxResult, setTokenInfoFromTxResult] = useState<any>();
   const [tokenAddressFromTxResult, setTokenAddressFromTxResult] = useState('');
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_QUERY) as string;
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-QUERY']['TOKEN-GENERAL-INFO'];
   const [APIMethodsFromTxResult, setAPIMethodsFromTxResult] = useState<API_NAMES>('TOKEN');
   const initialParamValues = {
+    feeValue: '',
     serialNumber: '',
     hederaTokenAddress: '',
   };
@@ -163,8 +165,11 @@ const QueryTokenGeneralInfomation = ({ baseContract }: PageProps) => {
     // invoking method API
     const { transactionHash, err, ...tokenInfoResult } = await queryTokenGeneralInfomation(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       API,
       hederaTokenAddress,
+      Number(paramValues.feeValue),
       serialNumber
     );
 
@@ -252,10 +257,16 @@ const QueryTokenGeneralInfomation = ({ baseContract }: PageProps) => {
           if (APIMethods === APIButton.API) {
             return (
               <div key={APIButton.API} className="w-full">
-                <SharedExecuteButton
+                {/* Execute buttons */}
+                <SharedExecuteButtonWithFee
                   isLoading={isLoading}
-                  handleCreatingFungibleToken={() => handleQueryTokenInfo(APIButton.API)}
-                  buttonTitle={APIButton.executeTitle}
+                  feeType={'GAS'}
+                  paramValues={paramValues.feeValue}
+                  placeHolder={'Gas limit...'}
+                  executeBtnTitle={APIButton.executeTitle}
+                  handleInputOnChange={handleInputOnChange}
+                  explanation={'Optional gas limit for the transaction.'}
+                  handleInvokingAPIMethod={() => handleQueryTokenInfo(APIButton.API)}
                 />
               </div>
             );
@@ -268,7 +279,7 @@ const QueryTokenGeneralInfomation = ({ baseContract }: PageProps) => {
         <TransactionResultTable
           API="QueryTokenGeneralInfo"
           onOpen={onOpen}
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           setShowTokenInfo={setShowTokenInfo}
           transactionResults={transactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
@@ -291,7 +302,7 @@ const QueryTokenGeneralInfomation = ({ baseContract }: PageProps) => {
           tokenInfo={tokenInfo}
           APIMethods={APIMethods}
           setTokenInfo={setTokenInfo}
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           setParamValues={setParamValues}
           setIsSuccessful={setIsSuccessful}
           initialParamValues={initialParamValues}
@@ -304,7 +315,7 @@ const QueryTokenGeneralInfomation = ({ baseContract }: PageProps) => {
         <TokenGeneralInfoModal
           isOpen={isOpen}
           onClose={onClose}
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           tokenInfo={tokenInfoFromTxResult}
           APIMethods={APIMethodsFromTxResult}
           hederaTokenAddress={tokenAddressFromTxResult}

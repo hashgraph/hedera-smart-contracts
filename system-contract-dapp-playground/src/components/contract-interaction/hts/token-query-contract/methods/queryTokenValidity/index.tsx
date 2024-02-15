@@ -28,10 +28,10 @@ import { TRANSACTION_PAGE_SIZE } from '../../../shared/states/commonStates';
 import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
-import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { queryTokenValidity } from '@/api/hedera/hts-interactions/tokenQuery-interactions';
-import { SharedExecuteButton, SharedFormInputField } from '../../../shared/components/ParamInputForm';
+import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
+import { SharedExecuteButtonWithFee, SharedFormInputField } from '../../../shared/components/ParamInputForm';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
@@ -51,11 +51,12 @@ const QueryTokenValidity = ({ baseContract }: PageProps) => {
   // general states
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const initialParamValues = { hederaTokenAddress: '' };
   const [isSuccessful, setIsSuccessful] = useState(false);
+  const initialParamValues = { hederaTokenAddress: '', feeValue: '' };
   const [paramValues, setParamValues] = useState(initialParamValues);
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_QUERY) as string;
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-QUERY']['TOKEN-VALIDITY'];
@@ -99,7 +100,10 @@ const QueryTokenValidity = ({ baseContract }: PageProps) => {
 
     const { IsToken, transactionHash, err } = await queryTokenValidity(
       baseContract,
-      paramValues.hederaTokenAddress
+      signerAddress,
+      HEDERA_NETWORK,
+      paramValues.hederaTokenAddress,
+      Number(paramValues.feeValue)
     );
 
     // turn is loading off
@@ -172,11 +176,15 @@ const QueryTokenValidity = ({ baseContract }: PageProps) => {
         />
 
         {/* Execute buttons */}
-        <SharedExecuteButton
+        <SharedExecuteButtonWithFee
           isLoading={isLoading}
-          handleCreatingFungibleToken={handleQueryTokenValidity}
-          buttonTitle={'Query Token Validity'}
-          explanation="Query if valid token found for the given address"
+          feeType={'GAS'}
+          paramValues={paramValues.feeValue}
+          placeHolder={'Gas limit...'}
+          executeBtnTitle={'Query Token Validity'}
+          handleInputOnChange={handleInputOnChange}
+          explanation={'Optional gas limit for the transaction.'}
+          handleInvokingAPIMethod={() => handleQueryTokenValidity()}
         />
       </div>
 
@@ -184,7 +192,7 @@ const QueryTokenValidity = ({ baseContract }: PageProps) => {
       {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="QueryValidity"
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           transactionResults={transactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           setTransactionResults={setTransactionResults}

@@ -42,8 +42,8 @@ import {
 } from '@/utils/common/constants';
 import {
   SharedFormButton,
-  SharedExecuteButton,
   SharedFormInputField,
+  SharedExecuteButtonWithFee,
 } from '../../../shared/components/ParamInputForm';
 
 interface PageProps {
@@ -61,16 +61,18 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [showTokenInfo, setShowTokenInfo] = useState(false);
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('ALLOWANCE');
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [tokenInfoFromTxResult, setTokenInfoFromTxResult] = useState<any>();
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_QUERY) as string;
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const [APIMethodsFromTxResult, setAPIMethodsFromTxResult] = useState<API_NAMES>('ALLOWANCE');
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-QUERY']['TOKEN-PERMISSION'];
   const initialParamValues = {
+    feeValue: '',
     hederaTokenAddress: '',
     ownerAddress: '',
     spenderAddress: '',
@@ -168,8 +170,11 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
     // invoking method API
     const tokenInfoResult = await queryTokenPermissionInformation(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       API,
       hederaTokenAddress,
+      Number(paramValues.feeValue),
       ownerAddress,
       spenderAddress,
       serialNumber
@@ -273,10 +278,16 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
           if (APIMethods === APIButton.API) {
             return (
               <div key={APIButton.API} className="w-full">
-                <SharedExecuteButton
+                {/* Execute buttons */}
+                <SharedExecuteButtonWithFee
                   isLoading={isLoading}
-                  handleCreatingFungibleToken={() => handleQueryTokenPermissionInfo(APIButton.API)}
-                  buttonTitle={APIButton.executeTitle}
+                  feeType={'GAS'}
+                  paramValues={paramValues.feeValue}
+                  placeHolder={'Gas limit...'}
+                  executeBtnTitle={APIButton.executeTitle}
+                  handleInputOnChange={handleInputOnChange}
+                  explanation={'Optional gas limit for the transaction.'}
+                  handleInvokingAPIMethod={() => handleQueryTokenPermissionInfo(APIButton.API)}
                 />
               </div>
             );
@@ -289,7 +300,7 @@ const QueryTokenPermissionInfomation = ({ baseContract }: PageProps) => {
         <TransactionResultTable
           onOpen={onOpen}
           API="QueryTokenPermission"
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           setShowTokenInfo={setShowTokenInfo}
           transactionResults={transactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
