@@ -27,10 +27,12 @@ import {
   manageTokenPermission,
 } from '@/api/hedera/hts-interactions/tokenManagement-interactions';
 import {
-  MOCK_CONTRACT_ID,
-  MOCK_GAS_LIMIT,
-  MOCK_TOKEN_ADDRESS,
   MOCK_TX_HASH,
+  MOCK_GAS_LIMIT,
+  MOCK_CONTRACT_ID,
+  MOCK_TOKEN_ADDRESS,
+  MOCK_SINGER_ADDRESS,
+  MOCK_HEDERA_NETWORK,
 } from '../../../utils/common/constants';
 
 describe('TokenManagementContract test suite', () => {
@@ -141,6 +143,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenInfomation with API === "UPDATE_INFO" then return a success response code and a transaction hash', async () => {
       const txRes = await manageTokenInfomation(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'UPDATE_INFO',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT,
@@ -155,6 +159,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenInfomation with API === "UPDATE_INFO" then return error if tokenInfo is missing', async () => {
       const txRes = await manageTokenInfomation(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'UPDATE_INFO',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT,
@@ -169,6 +175,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenInfomation with API === "UPDATE_EXPIRY" then return a success response code and a transaction hash', async () => {
       const txRes = await manageTokenInfomation(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'UPDATE_EXPIRY',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT,
@@ -184,6 +192,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenInfomation with API === "UPDATE_EXPIRY" then return error if expiryInfo is missing', async () => {
       const txRes = await manageTokenInfomation(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'UPDATE_EXPIRY',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT,
@@ -199,6 +209,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenInfomation with API === "UPDATE_KEYS" then return a success response code and a transaction hash', async () => {
       const txRes = await manageTokenInfomation(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'UPDATE_KEYS',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT,
@@ -215,6 +227,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenInfomation with API === "UPDATE_KEYS" then return error if keysInfo is missing', async () => {
       const txRes = await manageTokenInfomation(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'UPDATE_KEYS',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT,
@@ -231,6 +245,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenInfomation then return an error if MOCK_TOKEN_ADDRESS is not valid success response code and a transaction hash', async () => {
       const txRes = await manageTokenInfomation(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'UPDATE_KEYS',
         '0xabc',
         MOCK_GAS_LIMIT,
@@ -249,6 +265,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenInfomation with API === "APPROVED_FUNGIBLE" then return a success response code and a transaction hash', async () => {
       const txRes = await manageTokenPermission(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'APPROVED_FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
         accountAddress,
@@ -264,6 +282,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenInfomation with API === "APPROVED_FUNGIBLE" then return an error if amountToApprove is missing ', async () => {
       const txRes = await manageTokenPermission(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'APPROVED_FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
         accountAddress,
@@ -279,6 +299,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenInfomation with API === "APPROVED_NON_FUNGIBLE" then return a success response code and a transaction hash', async () => {
       const txRes = await manageTokenPermission(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'APPROVED_NON_FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
         accountAddress,
@@ -295,6 +317,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenInfomation with API === "APPROVED_NON_FUNGIBLE" then return an error if serialNumber is missing ', async () => {
       const txRes = await manageTokenPermission(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'APPROVED_NON_FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
         accountAddress,
@@ -311,6 +335,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenInfomation with API === "SET_APPROVAL" then return a success response code and a transaction hash', async () => {
       const txRes = await manageTokenPermission(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'SET_APPROVAL',
         MOCK_TOKEN_ADDRESS,
         accountAddress,
@@ -328,6 +354,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenInfomation with API === "SET_APPROVAL" then return an error if approvedStatus is missing ', async () => {
       const txRes = await manageTokenPermission(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'SET_APPROVAL',
         MOCK_TOKEN_ADDRESS,
         accountAddress,
@@ -345,6 +373,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenInfomation then return error if MOCK_TOKEN_ADDRESS is invalid', async () => {
       const txRes = await manageTokenPermission(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'SET_APPROVAL',
         '0xabc',
         accountAddress,
@@ -358,6 +388,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenInfomation then return error if targetApproveAddress is invalid', async () => {
       const txRes = await manageTokenPermission(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'SET_APPROVAL',
         MOCK_TOKEN_ADDRESS,
         '0xabc',
@@ -372,7 +404,14 @@ describe('TokenManagementContract test suite', () => {
 
   describe('manageTokenStatus test suite', () => {
     it('should execute manageTokenStatus with API === "PAUSE" then return a success response code and a transaction hash', async () => {
-      const txRes = await manageTokenStatus(baseContract as unknown as Contract, 'PAUSE', MOCK_TOKEN_ADDRESS);
+      const txRes = await manageTokenStatus(
+        baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
+        'PAUSE',
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT
+      );
 
       expect(txRes.err).toBeNull;
       expect(txRes.result).toBe(true);
@@ -382,8 +421,11 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenStatus with API === "UNPAUSE" then return a success response code and a transaction hash', async () => {
       const txRes = await manageTokenStatus(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'UNPAUSE',
-        MOCK_TOKEN_ADDRESS
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBeNull;
@@ -392,7 +434,14 @@ describe('TokenManagementContract test suite', () => {
     });
 
     it('should execute manageTokenStatus then return error if MOCK_TOKEN_ADDRESS is invalid', async () => {
-      const txRes = await manageTokenStatus(baseContract as unknown as Contract, 'PAUSE', '0xabc');
+      const txRes = await manageTokenStatus(
+        baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
+        'PAUSE',
+        '0xabc',
+        MOCK_GAS_LIMIT
+      );
 
       expect(txRes.err).toBe('Invalid token address');
       expect(txRes.result).toBeNull;
@@ -404,6 +453,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenRelation with API === "REVOKE_KYC" then return a success response code and a transaction hash', async () => {
       const txRes = await manageTokenRelation(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'REVOKE_KYC',
         accountAddress,
         MOCK_GAS_LIMIT,
@@ -418,6 +469,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenRelation with API === "FREEZE" then return a success response code and a transaction hash', async () => {
       const txRes = await manageTokenRelation(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'FREEZE',
         accountAddress,
         MOCK_GAS_LIMIT,
@@ -431,6 +484,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenRelation with API === "UNFREEZE" then return a success response code and a transaction hash', async () => {
       const txRes = await manageTokenRelation(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'UNFREEZE',
         accountAddress,
         MOCK_GAS_LIMIT,
@@ -444,6 +499,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenRelation with API === "DISSOCIATE_TOKEN" then return a success response code and a transaction hash', async () => {
       const txRes = await manageTokenRelation(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'DISSOCIATE_TOKEN',
         accountAddress,
         MOCK_GAS_LIMIT,
@@ -459,6 +516,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenRelation then return error if accountAddress is invalid', async () => {
       const txRes = await manageTokenRelation(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'REVOKE_KYC',
         '0xabc',
         MOCK_GAS_LIMIT,
@@ -473,6 +532,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenRelation then return error if MOCK_TOKEN_ADDRESSES contains an invalid token address', async () => {
       const txRes = await manageTokenRelation(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'REVOKE_KYC',
         accountAddress,
         MOCK_GAS_LIMIT,
@@ -490,6 +551,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenDeduction with API === "WIPE_FUNGIBLE" then return a success response code and a transaction hash', async () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'WIPE_FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT,
@@ -505,6 +568,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenDeduction with API === "WIPE_FUNGIBLE" then return an error if accountAddress is missing', async () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'WIPE_FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT
@@ -518,6 +583,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenDeduction with API === "WIPE_FUNGIBLE" then return an error if amount is missing', async () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'WIPE_FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT,
@@ -532,6 +599,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenDeduction with API === "WIPE_NON_FUNGIBLE" then return a success response code and a transaction hash', async () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'WIPE_NON_FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT,
@@ -548,6 +617,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenDeduction with API === "WIPE_NON_FUNGIBLE" then return an error if accountAddress is missing', async () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'WIPE_NON_FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT
@@ -561,6 +632,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenDeduction with API === "WIPE_NON_FUNGIBLE" then return an error if serialNumber is missing', async () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'WIPE_NON_FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT,
@@ -575,6 +648,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenDeduction with API === "BURN" then return a success response code and a transaction hash', async () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'BURN',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT,
@@ -591,6 +666,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenDeduction with API === "BURN" then return an error if amount is missing', async () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'BURN',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT,
@@ -605,6 +682,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenDeduction with API === "BURN" then return an error if serialNumber is missing', async () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'BURN',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT,
@@ -620,6 +699,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenDeduction with API === "DELETE" then return a success response code and a transaction hash', async () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'DELETE',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT
@@ -633,6 +714,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenDeduction then return error if MOCK_TOKEN_ADDRESS is invalid', async () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'DELETE',
         '0xabc',
         MOCK_GAS_LIMIT
@@ -646,6 +729,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenDeduction then return error if accountAddress is invalid', async () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'DELETE',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT,
@@ -660,6 +745,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenDeduction then return error if amount is invalid', async () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'DELETE',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT,
@@ -675,6 +762,8 @@ describe('TokenManagementContract test suite', () => {
     it('should execute manageTokenDeduction then return error if accountAddress is invalid', async () => {
       const txRes = await manageTokenDeduction(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'DELETE',
         MOCK_TOKEN_ADDRESS,
         MOCK_GAS_LIMIT,

@@ -19,7 +19,12 @@
  */
 
 import { Contract } from 'ethers';
-import { MOCK_GAS_LIMIT, MOCK_TX_HASH } from '../../utils/common/constants';
+import {
+  MOCK_TX_HASH,
+  MOCK_GAS_LIMIT,
+  MOCK_HEDERA_NETWORK,
+  MOCK_SINGER_ADDRESS,
+} from '../../utils/common/constants';
 import { handleExchangeRate } from '@/api/hedera/exchange-rate-interactions';
 
 describe('Exchange Rate Test Suite', () => {
@@ -52,6 +57,8 @@ describe('Exchange Rate Test Suite', () => {
   it('should execute handleExchangeRate with API === "CENT_TO_BAR" and return a txHash and convertedAmount', async () => {
     const txRes = await handleExchangeRate(
       baseContract as unknown as Contract,
+      MOCK_SINGER_ADDRESS,
+      MOCK_HEDERA_NETWORK,
       'CENT_TO_BAR',
       amount,
       MOCK_GAS_LIMIT
@@ -65,6 +72,8 @@ describe('Exchange Rate Test Suite', () => {
   it('should execute handleExchangeRate with API === "BAR_TO_CENT" and return a txHash and convertedAmount', async () => {
     const txRes = await handleExchangeRate(
       baseContract as unknown as Contract,
+      MOCK_SINGER_ADDRESS,
+      MOCK_HEDERA_NETWORK,
       'BAR_TO_CENT',
       amount,
       MOCK_GAS_LIMIT

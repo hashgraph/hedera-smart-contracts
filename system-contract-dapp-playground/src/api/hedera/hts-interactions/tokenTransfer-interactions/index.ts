@@ -399,7 +399,7 @@ export const transferSingleToken = async (
         break;
     }
 
-    return await handleContractResponse(transactionResult, { gasLimit });
+    return await handleContractResponse(transactionResult);
   } catch (err: any) {
     console.error(err);
     return { err, transactionHash: err.receipt && err.receipt.hash };

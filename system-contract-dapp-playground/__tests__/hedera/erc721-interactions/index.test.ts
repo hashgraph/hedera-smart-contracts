@@ -29,7 +29,12 @@ import {
   getERC721TokenInformation,
 } from '@/api/hedera/erc721-interactions';
 import { Contract } from 'ethers';
-import { MOCK_TX_HASH } from '../../utils/common/constants';
+import {
+  MOCK_TX_HASH,
+  MOCK_GAS_LIMIT,
+  MOCK_HEDERA_NETWORK,
+  MOCK_SINGER_ADDRESS,
+} from '../../utils/common/constants';
 
 describe('ERC721 test suite', () => {
   const tokenID = 369;
@@ -106,7 +111,14 @@ describe('ERC721 test suite', () => {
 
   describe('erc721Mint', () => {
     it('should execute erc721Mint', async () => {
-      const res = await erc721Mint(baseContract as unknown as Contract, recipient, tokenID);
+      const res = await erc721Mint(
+        baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
+        recipient,
+        tokenID,
+        MOCK_GAS_LIMIT
+      );
 
       // assertion
       expect(res.err).toBeNull;
@@ -115,7 +127,14 @@ describe('ERC721 test suite', () => {
     });
 
     it('should execute erc721Mint and return error if recipientAddress is invalid', async () => {
-      const res = await erc721Mint(baseContract as unknown as Contract, '0xabc', tokenID);
+      const res = await erc721Mint(
+        baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
+        '0xabc',
+        tokenID,
+        MOCK_GAS_LIMIT
+      );
 
       // assertion
       expect(res.err).toBe('Invalid recipient address');
@@ -124,7 +143,14 @@ describe('ERC721 test suite', () => {
     });
 
     it('should execute erc721Mint and return error if tokenID is invalid', async () => {
-      const res = await erc721Mint(baseContract as unknown as Contract, recipient, -3);
+      const res = await erc721Mint(
+        baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
+        recipient,
+        -3,
+        MOCK_GAS_LIMIT
+      );
 
       // assertion
       expect(res.err).toBe('Invalid token amount');
@@ -168,9 +194,12 @@ describe('ERC721 test suite', () => {
     it('should execute erc721TokenApprove with method === "APPROVE" and return a txHash', async () => {
       const res = await erc721TokenApprove(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'APPROVE',
         spenderAddress,
-        tokenID
+        tokenID,
+        MOCK_GAS_LIMIT
       );
 
       // assertion
@@ -182,9 +211,12 @@ describe('ERC721 test suite', () => {
     it('should execute erc721TokenApprove with method === "GET_APPROVE" and return an approved account', async () => {
       const res = await erc721TokenApprove(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'GET_APPROVE',
         spenderAddress,
-        tokenID
+        tokenID,
+        MOCK_GAS_LIMIT
       );
 
       // assertion
@@ -194,7 +226,15 @@ describe('ERC721 test suite', () => {
     });
 
     it('should execute erc721TokenApprove and return an error if the spender address is invalid', async () => {
-      const res = await erc721TokenApprove(baseContract as unknown as Contract, 'APPROVE', '0xabc', tokenID);
+      const res = await erc721TokenApprove(
+        baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
+        'APPROVE',
+        '0xabc',
+        tokenID,
+        MOCK_GAS_LIMIT
+      );
 
       // assertion
       expect(res.txHash).toBeNul;
@@ -208,10 +248,13 @@ describe('ERC721 test suite', () => {
     it('should execute erc721TokenApproval with method === "SET_APPROVAL" and return a txHash ', async () => {
       const res = await erc721TokenApproval(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'SET_APPROVAL',
         tokenOwner,
         operatorAddress,
-        approvalStatus
+        approvalStatus,
+        MOCK_GAS_LIMIT
       );
 
       // assertion
@@ -223,10 +266,13 @@ describe('ERC721 test suite', () => {
     it('should execute erc721TokenApproval with method === "IS_APPROVAL" and return the approval status', async () => {
       const res = await erc721TokenApproval(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'IS_APPROVAL',
         tokenOwner,
         operatorAddress,
-        approvalStatus
+        approvalStatus,
+        MOCK_GAS_LIMIT
       );
 
       // assertion
@@ -238,10 +284,13 @@ describe('ERC721 test suite', () => {
     it('should execute erc721TokenApproval and return error if tokenOwner is invalid', async () => {
       const res = await erc721TokenApproval(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'IS_APPROVAL',
         '0xabc',
         operatorAddress,
-        approvalStatus
+        approvalStatus,
+        MOCK_GAS_LIMIT
       );
 
       // assertion
@@ -254,10 +303,13 @@ describe('ERC721 test suite', () => {
     it('should execute erc721TokenApproval and return error if operatorAddress is invalid', async () => {
       const res = await erc721TokenApproval(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'IS_APPROVAL',
         tokenOwner,
         '0xabc',
-        approvalStatus
+        approvalStatus,
+        MOCK_GAS_LIMIT
       );
 
       // assertion
@@ -272,11 +324,14 @@ describe('ERC721 test suite', () => {
     it('should execute erc721Transfers with method === "TRANSFER_FROM" and return a txHash ', async () => {
       const res = await erc721Transfers(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'TRANSFER_FROM',
         tokenOwner,
         recipient,
         tokenID,
-        ''
+        '',
+        MOCK_GAS_LIMIT
       );
 
       // assertion
@@ -288,11 +343,14 @@ describe('ERC721 test suite', () => {
     it('should execute erc721Transfers with method === "SAFE_TRANSFER_FROM" and return a txHash ', async () => {
       const res = await erc721Transfers(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'SAFE_TRANSFER_FROM',
         tokenOwner,
         recipient,
         tokenID,
-        ''
+        '',
+        MOCK_GAS_LIMIT
       );
 
       // assertion
@@ -304,11 +362,14 @@ describe('ERC721 test suite', () => {
     it('should execute erc721Transfers and return an error if senderAddress is invalid ', async () => {
       const res = await erc721Transfers(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'SAFE_TRANSFER_FROM',
         '0xabc',
         recipient,
         tokenID,
-        ''
+        '',
+        MOCK_GAS_LIMIT
       );
 
       // assertion
@@ -320,11 +381,14 @@ describe('ERC721 test suite', () => {
     it('should execute erc721Transfers and return an error if recipientAddress is invalid ', async () => {
       const res = await erc721Transfers(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'SAFE_TRANSFER_FROM',
         tokenOwner,
         '0xabc',
         tokenID,
-        ''
+        '',
+        MOCK_GAS_LIMIT
       );
 
       // assertion
@@ -336,11 +400,14 @@ describe('ERC721 test suite', () => {
     it('should execute erc721Transfers and return an error if tokenID is invalid ', async () => {
       const res = await erc721Transfers(
         baseContract as unknown as Contract,
+        MOCK_SINGER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'SAFE_TRANSFER_FROM',
         tokenOwner,
         recipient,
         -3,
-        ''
+        '',
+        MOCK_GAS_LIMIT
       );
 
       // assertion
