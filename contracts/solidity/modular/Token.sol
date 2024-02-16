@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.23;
 
 library Balances {
     function move(mapping(address => uint256) storage balances, address from, address to, uint amount) internal {

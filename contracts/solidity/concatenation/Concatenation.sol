@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.23;
 
 contract Concatenation {
     function byteConcatenation(bytes calldata first, bytes calldata second, bytes calldata third) public pure returns (uint256) {
