@@ -11,22 +11,32 @@ contract NonExisting {
         duplicate = NonExtDup(addr);
     }
 
-    function callOnNonExistingAccount(address nonExistingAddr) external {
-        nonExistingAddr.call(
-            abi.encodeWithSignature("doesNotExist()")
-        );
+    function balanceOf(address addr) external view returns (uint256) {
+        return addr.balance;
     }
 
-    function delegatecallOnNoneExistingAccount(address nonExistingAddr) external {
-        nonExistingAddr.delegatecall(
+    function callOnNonExistingAccount(address nonExistingAddr) external returns (bool) {
+        (bool success, ) = nonExistingAddr.call(
             abi.encodeWithSignature("doesNotExist()")
         );
+
+        return success;
     }
 
-    function staticcallOnNoneExistingAccount(address nonExistingAddr) external {
-        nonExistingAddr.staticcall(
+    function delegatecallOnNonExistingAccount(address nonExistingAddr) external returns (bool) {
+        (bool success, ) = nonExistingAddr.delegatecall(
             abi.encodeWithSignature("doesNotExist()")
         );
+
+        return success;
+    }
+
+    function staticcallOnNonExistingAccount(address nonExistingAddr) external view returns (bool) {
+        (bool success, ) = nonExistingAddr.staticcall(
+            abi.encodeWithSignature("doesNotExist()")
+        );
+
+        return success;
     }
 
     function balanceNoneExistingAddr(address nonExistingAddr) external view returns (uint256) {
