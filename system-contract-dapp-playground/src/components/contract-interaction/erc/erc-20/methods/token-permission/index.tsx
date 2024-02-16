@@ -78,21 +78,25 @@ const TokenPermission = ({ baseContract }: PageProps) => {
     owner: '',
     spender: '',
     amount: '',
+    feeValue: '',
   });
   const [allowanceParams, setAllowanceParams] = useState({
     owner: '',
     spender: '',
     amount: '',
+    feeValue: '',
   });
   const [increaseAllowanceParams, setIncreaseAllowanceParams] = useState({
     owner: '',
     spender: '',
     amount: '',
+    feeValue: '',
   });
   const [decreaseAllowanceParams, setDecreaseAllowanceParams] = useState({
     owner: '',
     spender: '',
     amount: '',
+    feeValue: '',
   });
 
   const [methodState, setMethodStates] = useState({
@@ -148,12 +152,13 @@ const TokenPermission = ({ baseContract }: PageProps) => {
    */
   const handleExecutingMethods = async (
     method: 'approve' | 'allowance' | 'increaseAllowance' | 'decreaseAllowance',
-    params: { spender: string; amount: string; owner: string },
+    params: { spender: string; amount: string; owner: string; feeValue: string },
     setParams?: Dispatch<
       SetStateAction<{
         owner: string;
         spender: string;
         amount: string;
+        feeValue: string;
       }>
     >,
     refreshMode?: boolean
@@ -181,8 +186,11 @@ const TokenPermission = ({ baseContract }: PageProps) => {
     // invoke method API
     const tokenPermissionRes = await handleErc20TokenPermissions(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       method,
       params.spender,
+      Number(params.feeValue),
       params.owner,
       Number(params.amount)
     );
@@ -256,7 +264,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
       }));
 
       // reset params
-      if (setParams && !refreshMode) setParams({ owner: '', spender: '', amount: '' });
+      if (setParams && !refreshMode) setParams({ owner: '', spender: '', amount: '', feeValue: '' });
     }
   };
 

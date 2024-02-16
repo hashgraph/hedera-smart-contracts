@@ -20,6 +20,9 @@
 
 import Image from 'next/image';
 import { Input, Tooltip } from '@chakra-ui/react';
+import { HEDERA_BRANDING_COLORS, HEDERA_CHAKRA_INPUT_BOX_SIZES } from '@/utils/common/constants';
+import { SharedFormInputField } from '@/components/contract-interaction/hts/shared/components/ParamInputForm';
+import { useEffect, useState } from 'react';
 
 interface PageProps {
   paramFields: {
@@ -49,6 +52,12 @@ const MultiLineMethod = ({
   handleExecute,
   methodName,
 }: PageProps) => {
+  const [showGasLimit, setShowGasLimit] = useState(true);
+
+  useEffect(() => {
+    if (methodName === 'Allowance') setShowGasLimit(false);
+  }, [methodName]);
+
   return (
     <div className={`flex flex-col ${widthSize && widthSize} gap-3`}>
       {/* inputs */}
@@ -73,6 +82,23 @@ const MultiLineMethod = ({
           );
         })}
       </div>
+
+      {showGasLimit && (
+        <SharedFormInputField
+          param={'feeValue'}
+          paramValue={params.feeValue}
+          paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.large}
+          paramType={'number'}
+          paramKey={'feeValue'}
+          explanation={'Optional gas limit for the transaction.'}
+          paramClassName={'border-white/30 rounded-xl'}
+          paramPlaceholder={'Gas limit...'}
+          paramFocusColor={HEDERA_BRANDING_COLORS.purple}
+          handleInputOnChange={(e: any) => {
+            setParams((prev: any) => ({ ...prev, feeValue: e.target.value }));
+          }}
+        />
+      )}
 
       {/* execute button */}
       <Tooltip label={explanation} placement="top" fontWeight={'normal'}>

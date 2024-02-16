@@ -443,6 +443,7 @@ export const manageTokenRelation = async (
     funcSig: '',
     args: [] as any,
   };
+
   switch (API) {
     case 'REVOKE_KYC':
       selector.funcSig = 'revokeTokenKycPublic';

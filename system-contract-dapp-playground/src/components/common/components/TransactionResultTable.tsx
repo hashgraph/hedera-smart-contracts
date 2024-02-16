@@ -1034,6 +1034,7 @@ export const TransactionResultTable = ({
                                     spender: transactionResult.allowances?.spender,
                                     amount: 0,
                                     owner: transactionResult.allowances?.owner,
+                                    feeValue: '',
                                   },
                                   null,
                                   true

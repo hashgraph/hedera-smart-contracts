@@ -51,9 +51,11 @@ const Mint = ({ baseContract }: PageProps) => {
   const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC20) as string;
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['TOKEN-MINT'];
   const [mintParams, setMintParams] = useState({
+    feeValue: '',
     recipient: '',
     amount: '',
   });
@@ -95,7 +97,14 @@ const Mint = ({ baseContract }: PageProps) => {
       mintRes,
       err: mintErr,
       txHash,
-    } = await erc20Mint(baseContract, mintParams.recipient, Number(mintParams.amount));
+    } = await erc20Mint(
+      baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
+      mintParams.recipient,
+      Number(mintParams.amount),
+      Number(mintParams.feeValue)
+    );
     setIsLoading(false);
 
     if (mintErr || !mintRes) {
@@ -141,14 +150,13 @@ const Mint = ({ baseContract }: PageProps) => {
         status: 'success',
         position: 'top',
       });
-      setMintParams({ recipient: '', amount: '' });
+      setMintParams({ feeValue: '', recipient: '', amount: '' });
       setIsSuccessful(false);
     }
   }, [isSuccessful, toaster]);
 
   return (
     <div className="w-full mx-3 flex justify-center mt-6 flex-col items-center gap-9">
-      {/* approve() */}
       <MultiLineMethod
         paramFields={mintParamFields}
         methodName={'Mint'}
