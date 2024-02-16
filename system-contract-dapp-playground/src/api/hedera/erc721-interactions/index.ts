@@ -18,6 +18,8 @@
  *
  */
 
+import { TNetworkName } from '@/types/common';
+import { handleEstimateGas } from '@/utils/common/helpers';
 import { Contract, ethers, isAddress } from 'ethers';
 
 /**
@@ -76,18 +78,27 @@ export const erc721TokenURI = async (
 /**
  * @dev mints erc721 tokens
  *
- * @param baseContract: Contract
+ * @param baseContract: ethers.Contract
+ *
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
  *
  * @param recipientAddress: address
  *
  * @param tokenId: number
  *
+ * @param gasLimit: number
+ *
  * @return Promise<IERCSmartContractResult>
  */
 export const erc721Mint = async (
   baseContract: Contract,
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
   recipientAddress: string,
-  tokenId: number
+  tokenId: number,
+  gasLimit: number
 ): Promise<IERCSmartContractResult> => {
   if (!isAddress(recipientAddress)) {
     return { err: 'Invalid recipient address' };
@@ -95,8 +106,17 @@ export const erc721Mint = async (
     return { err: 'Invalid token amount' };
   }
 
+  if (gasLimit === 0) {
+    const estimateGasResult = await handleEstimateGas(baseContract, signerAddress, network, 'mint', [
+      recipientAddress,
+      tokenId,
+    ]);
+    if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+    gasLimit = estimateGasResult.gasLimit;
+  }
+
   try {
-    const txReceipt = await (await baseContract.mint(recipientAddress, tokenId)).wait();
+    const txReceipt = await (await baseContract.mint(recipientAddress, tokenId, { gasLimit })).wait();
     return { txHash: txReceipt.hash };
   } catch (err) {
     console.error(err);
@@ -155,7 +175,11 @@ export const erc721OwnerOf = async (
  *
  * @dev integrates ERC721.getApproved()
  *
- * @param baseContract: Contract
+ * @param baseContract: ethers.Contract
+ *
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
  *
  * @param method: 'APPROVE' | 'GET_APPROVE'
  *
@@ -163,22 +187,38 @@ export const erc721OwnerOf = async (
  *
  * @param tokenId: number
  *
+ * @param gasLimit: number
+ *
  * @return Promise<IERCSmartContractResult>
  */
 export const erc721TokenApprove = async (
   baseContract: Contract,
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
   method: 'APPROVE' | 'GET_APPROVE',
   spenderAddress: string,
-  tokenId: number
+  tokenId: number,
+  gasLimit: number
 ): Promise<IERCSmartContractResult> => {
   if (method === 'APPROVE' && !isAddress(spenderAddress)) {
     return { err: 'Invalid account address' };
   }
 
+  if (method === 'APPROVE' && gasLimit === 0) {
+    const estimateGasResult = await handleEstimateGas(baseContract, signerAddress, network, 'approve', [
+      spenderAddress,
+      tokenId,
+    ]);
+    if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+    gasLimit = estimateGasResult.gasLimit;
+  }
+
   try {
     switch (method) {
       case 'APPROVE':
-        const approveReceipt = await (await baseContract.approve(spenderAddress, tokenId)).wait();
+        const approveReceipt = await (
+          await baseContract.approve(spenderAddress, tokenId, { gasLimit })
+        ).wait();
         return { txHash: approveReceipt.hash };
       case 'GET_APPROVE':
         return { approvedAccountRes: await baseContract.getApproved(tokenId) };
@@ -194,7 +234,11 @@ export const erc721TokenApprove = async (
  *
  * @dev integrates ERC721.isApprovedForAll()
  *
- * @param baseContract: Contract
+ * @param baseContract: ethers.Contract
+ *
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
  *
  * @param method: 'SET_APPROVAL' | 'IS_APPROVAL'
  *
@@ -204,14 +248,19 @@ export const erc721TokenApprove = async (
  *
  * @param approvalStatus: boolean
  *
+ * @param gasLimit: number
+ *
  * @return Promise<IERCSmartContractResult>
  */
 export const erc721TokenApproval = async (
   baseContract: Contract,
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
   method: 'SET_APPROVAL' | 'IS_APPROVAL',
   ownerAddress: string,
   operatorAddress: string,
-  approvalStatus: boolean
+  approvalStatus: boolean,
+  gasLimit: number
 ): Promise<IERCSmartContractResult> => {
   if (method === 'IS_APPROVAL' && !isAddress(ownerAddress)) {
     return { err: 'Invalid owner address' };
@@ -219,11 +268,23 @@ export const erc721TokenApproval = async (
     return { err: 'Invalid operator address' };
   }
 
+  if (method === 'SET_APPROVAL' && gasLimit === 0) {
+    const estimateGasResult = await handleEstimateGas(
+      baseContract,
+      signerAddress,
+      network,
+      'setApprovalForAll',
+      [operatorAddress, approvalStatus]
+    );
+    if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+    gasLimit = estimateGasResult.gasLimit;
+  }
+
   try {
     switch (method) {
       case 'SET_APPROVAL':
         const approveReceipt = await (
-          await baseContract.setApprovalForAll(operatorAddress, approvalStatus)
+          await baseContract.setApprovalForAll(operatorAddress, approvalStatus, { gasLimit })
         ).wait();
         return { txHash: approveReceipt.hash };
       case 'IS_APPROVAL':
@@ -244,7 +305,11 @@ export const erc721TokenApproval = async (
  *
  * @dev integrates ERC721.safeTransferFrom()
  *
- * @param baseContract: Contract
+ * @param baseContract: ethers.Contract
+ *
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
  *
  * @param method: "TRANSFER_FROM" | "SAFE_TRANSFER_FROM"
  *
@@ -256,15 +321,20 @@ export const erc721TokenApproval = async (
  *
  * @param data: string
  *
+ * @param gasLimit: number
+ *
  * @return Promise<IERCSmartContractResult>
  */
 export const erc721Transfers = async (
   baseContract: Contract,
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
   method: 'TRANSFER_FROM' | 'SAFE_TRANSFER_FROM',
   senderAddress: string,
   recipientAddress: string,
   tokenId: number,
-  data: string
+  data: string,
+  gasLimit: number
 ): Promise<IERCSmartContractResult> => {
   if (!isAddress(senderAddress)) {
     return { err: 'Invalid sender address' };
@@ -277,12 +347,35 @@ export const erc721Transfers = async (
   try {
     switch (method) {
       case 'TRANSFER_FROM':
+        if (gasLimit === 0) {
+          const estimateGasResult = await handleEstimateGas(
+            baseContract,
+            signerAddress,
+            network,
+            'transferFrom',
+            [senderAddress, recipientAddress, tokenId]
+          );
+          if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+          gasLimit = estimateGasResult.gasLimit;
+        }
         const transferReceipt = await (
-          await baseContract.transferFrom(senderAddress, recipientAddress, tokenId)
+          await baseContract.transferFrom(senderAddress, recipientAddress, tokenId, { gasLimit })
         ).wait();
         return { txHash: transferReceipt.hash };
 
       case 'SAFE_TRANSFER_FROM':
+        if (gasLimit === 0) {
+          const estimateGasResult = await handleEstimateGas(
+            baseContract,
+            signerAddress,
+            network,
+            'safeTransferFrom(address,address,uint256,bytes)',
+            [senderAddress, recipientAddress, tokenId, ethers.toUtf8Bytes(data)]
+          );
+          if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+          gasLimit = estimateGasResult.gasLimit;
+        }
+
         // Typed function signature to specify the safeTransferFrom function
         // @logic there are two safeTransferFrom functions with different params, without specifying the function signature =>`TypeError: ambiguous function description`
         const safeTransferFromFunctionSignature = 'safeTransferFrom(address,address,uint256,bytes)';
@@ -292,7 +385,8 @@ export const erc721Transfers = async (
             senderAddress,
             recipientAddress,
             tokenId,
-            ethers.toUtf8Bytes(data)
+            ethers.toUtf8Bytes(data),
+            { gasLimit }
           )
         ).wait();
         return { txHash: safeTransferReceipt.hash };

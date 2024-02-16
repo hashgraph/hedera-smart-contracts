@@ -54,6 +54,7 @@ const ERC721Transfer = ({ baseContract }: PageProps) => {
   const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC721) as string;
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['TOKEN-TRANSFER'];
@@ -62,12 +63,14 @@ const ERC721Transfer = ({ baseContract }: PageProps) => {
     sender: '',
     recipient: '',
     tokenId: '',
+    feeValue: '',
   });
   const [safeTransferFromParams, setSafeTransferFromParams] = useState({
     sender: '',
     recipient: '',
     tokenId: '',
     data: '',
+    feeValue: '',
   });
 
   const [methodState, setMethodStates] = useState({
@@ -123,11 +126,14 @@ const ERC721Transfer = ({ baseContract }: PageProps) => {
     // invoke method API
     const tokenTransferRes = await erc721Transfers(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       method,
       params.sender,
       params.recipient,
       params.tokenId,
-      params.data || ''
+      params.data || '',
+      Number(params.feeValue)
     );
 
     // turn off isLoading
@@ -188,13 +194,13 @@ const ERC721Transfer = ({ baseContract }: PageProps) => {
         position: 'top',
       });
       if (methodState.TRANSFER_FROM.isSuccessful) {
-        setTransferFromParams({ sender: '', recipient: '', tokenId: '' });
+        setTransferFromParams({ sender: '', recipient: '', tokenId: '', feeValue: '' });
         setMethodStates((prev) => ({
           ...prev,
           TRANSFER_FROM: { ...prev.TRANSFER_FROM, isSuccessful: false },
         }));
       } else if (methodState.SAFE_TRANSFER_FROM.isSuccessful) {
-        setSafeTransferFromParams({ sender: '', recipient: '', tokenId: '', data: '' });
+        setSafeTransferFromParams({ sender: '', recipient: '', tokenId: '', data: '', feeValue: '' });
         setMethodStates((prev) => ({
           ...prev,
           SAFE_TRANSFER_FROM: { ...prev.SAFE_TRANSFER_FROM, isSuccessful: false },

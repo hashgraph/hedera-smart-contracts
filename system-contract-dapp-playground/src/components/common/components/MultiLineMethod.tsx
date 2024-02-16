@@ -20,7 +20,11 @@
 
 import Image from 'next/image';
 import { Input, Tooltip } from '@chakra-ui/react';
-import { HEDERA_BRANDING_COLORS, HEDERA_CHAKRA_INPUT_BOX_SIZES } from '@/utils/common/constants';
+import {
+  HEDERA_BRANDING_COLORS,
+  HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME,
+  HEDERA_CHAKRA_INPUT_BOX_SIZES,
+} from '@/utils/common/constants';
 import { SharedFormInputField } from '@/components/contract-interaction/hts/shared/components/ParamInputForm';
 import { useEffect, useState } from 'react';
 
@@ -55,7 +59,7 @@ const MultiLineMethod = ({
   const [showGasLimit, setShowGasLimit] = useState(true);
 
   useEffect(() => {
-    if (methodName === 'Allowance') setShowGasLimit(false);
+    if (methodName === 'Allowance' || methodName === 'Is Approval For All') setShowGasLimit(false);
   }, [methodName]);
 
   return (
@@ -86,14 +90,14 @@ const MultiLineMethod = ({
       {showGasLimit && (
         <SharedFormInputField
           param={'feeValue'}
-          paramValue={params.feeValue}
-          paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.large}
           paramType={'number'}
           paramKey={'feeValue'}
-          explanation={'Optional gas limit for the transaction.'}
-          paramClassName={'border-white/30 rounded-xl'}
+          paramValue={params.feeValue}
           paramPlaceholder={'Gas limit...'}
           paramFocusColor={HEDERA_BRANDING_COLORS.purple}
+          paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.medium}
+          explanation={'Optional gas limit for the transaction.'}
+          paramClassName={HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME}
           handleInputOnChange={(e: any) => {
             setParams((prev: any) => ({ ...prev, feeValue: e.target.value }));
           }}

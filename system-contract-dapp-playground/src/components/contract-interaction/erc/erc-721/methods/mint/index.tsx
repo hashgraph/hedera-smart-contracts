@@ -51,9 +51,11 @@ const Mint = ({ baseContract }: PageProps) => {
   const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC721) as string;
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['TOKEN-MINT'];
   const [mintParams, setMintParams] = useState({
+    feeValue: '',
     recipient: '',
     tokenId: '',
   });
@@ -92,8 +94,11 @@ const Mint = ({ baseContract }: PageProps) => {
     setIsLoading(true);
     const { txHash, err: mintErr } = await erc721Mint(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       mintParams.recipient,
-      Number(mintParams.tokenId)
+      Number(mintParams.tokenId),
+      Number(mintParams.feeValue)
     );
     setIsLoading(false);
 
@@ -141,7 +146,7 @@ const Mint = ({ baseContract }: PageProps) => {
         status: 'success',
         position: 'top',
       });
-      setMintParams({ recipient: '', tokenId: '' });
+      setMintParams({ recipient: '', tokenId: '', feeValue: '' });
       setIsSuccessful(false);
     }
   }, [isSuccessful, toaster]);
