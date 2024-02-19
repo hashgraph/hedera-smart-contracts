@@ -35,6 +35,7 @@ describe('@OZPausable Test Suite', function () {
       Constants.Contract.PausableTest
     );
     contract = await factory.deploy();
+    await contract.waitForDeployment();
   });
 
   it('should BE able to call function "setPausedMessage" with "whenNotPaused" modifier when unpaused', async function () {
