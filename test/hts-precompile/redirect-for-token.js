@@ -198,7 +198,7 @@ describe('RedirectForToken Test Suite', function () {
       Constants.Path.ERC20Mock,
       tokenAddress
     );
-    await erc20.transfer(await tokenCreateContract.getAddress(), amount);
+    await (await erc20.transfer(await tokenCreateContract.getAddress(), amount)).wait();
 
     const balanceBefore = await erc20.balanceOf(signers[1].address);
 
@@ -223,19 +223,19 @@ describe('RedirectForToken Test Suite', function () {
       Constants.Path.ERC20Mock,
       tokenAddress
     );
-    await erc20.transfer(await tokenCreateContract.getAddress(), amount);
+    await (await erc20.transfer(await tokenCreateContract.getAddress(), amount)).wait();
 
     const tokenCreateContractBefore = await erc20.balanceOf(
       await tokenCreateContract.getAddress()
     );
     const balanceBefore = await erc20.balanceOf(signers[1].address);
 
-    await tokenCreateContract.approvePublic(
+    await (await tokenCreateContract.approvePublic(
       tokenAddress,
       await tokenCreateContract.getAddress(),
       amount,
       Constants.GAS_LIMIT_1_000_000
-    );
+    )).wait();
 
     const encodedFunc = IERC20.encodeFunctionData(
       'transferFrom(address,address,uint256)',
@@ -246,11 +246,12 @@ describe('RedirectForToken Test Suite', function () {
       encodedFunc,
       Constants.GAS_LIMIT_1_000_000
     );
-    const tokenCreateContractAfter = await erc20.balanceOf(
-      await tokenCreateContract.getAddress()
-    );
     const [success] = await parseCallResponseEventData(tx);
     expect(success).to.eq(true);
+
+    const tokenCreateContractAfter = await erc20.balanceOf(
+        await tokenCreateContract.getAddress()
+    );
 
     const balanceAfter = await erc20.balanceOf(signers[1].address);
     expect(balanceBefore).to.not.eq(balanceAfter);

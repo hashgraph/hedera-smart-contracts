@@ -773,7 +773,6 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via Precompile', function () 
     await signer.sendTransaction({
       to: hollowWallet.address,
       value: ethers.parseEther('100'),
-      value: ethers.parseEther('30'),
       gasLimit: 1_000_000,
     });
     await utils.updateAccountKeysViaHapi(
