@@ -668,6 +668,6 @@ abstract contract HederaTokenService {
         );
 
         emit CallResponseEvent(success, result);
-        (responseCode, response) = success ? abi.decode(result, (int32, bytes)) : (HederaResponseCodes.UNKNOWN, bytes(""));
+        (responseCode, response) = success ? (HederaResponseCodes.SUCCESS, result) : (HederaResponseCodes.UNKNOWN, bytes(""));
     }
 }

@@ -31,7 +31,7 @@ describe('RedirectForToken Test Suite', function () {
 
   const parseCallResponseEventData = async (tx) => {
     return (await tx.wait()).logs.filter(
-      (e) => e.fragment.name === Constants.Events.CallResponseEvent
+      (e) => e?.fragment?.name === Constants.Events.CallResponseEvent
     )[0].args;
   };
 
@@ -215,7 +215,7 @@ describe('RedirectForToken Test Suite', function () {
 
     const balanceAfter = await erc20.balanceOf(signers[1].address);
     expect(balanceBefore).to.not.eq(balanceAfter);
-    expect(balanceAfter).to.eq(balanceBefore + amount);
+    expect(balanceAfter).to.eq(balanceBefore + BigInt(amount));
   });
 
   it('should be able to execute transferFrom(address,address,uint256)', async function () {
@@ -254,7 +254,7 @@ describe('RedirectForToken Test Suite', function () {
 
     const balanceAfter = await erc20.balanceOf(signers[1].address);
     expect(balanceBefore).to.not.eq(balanceAfter);
-    expect(tokenCreateContractAfter).to.eq(tokenCreateContractBefore - amount);
+    expect(tokenCreateContractAfter).to.eq(tokenCreateContractBefore - BigInt(amount));
     expect(balanceAfter).to.eq(parseInt(balanceBefore) + parseInt(amount));
   });
 });
