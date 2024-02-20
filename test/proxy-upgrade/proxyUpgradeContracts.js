@@ -78,6 +78,7 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
         kind: 'uups',
         initializer: 'initialize',
       });
+      await proxy.waitForDeployment();
 
       return proxy;
     }
@@ -304,6 +305,7 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
         kind: 'uups',
         initializer: 'initialize',
       });
+      await proxy.waitForDeployment();
 
       return proxy;
     }

@@ -37,6 +37,7 @@ describe('@OZUUPSUpgradable Upgradable Vaults Test Suite', () => {
     vaultV1 = await upgrades.deployProxy(VaultV1, {
       kind: 'uups',
     });
+    await vaultV1.waitForDeployment();
   });
 
   it('V1: Should deploy the proxy', async () => {
