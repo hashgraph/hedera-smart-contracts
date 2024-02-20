@@ -56,8 +56,9 @@ const HederaExchangeRateMethods = ({ baseContract }: PageProps) => {
   const [isSuccessful, setIsSuccessful] = useState(false);
   const initialParamValues = { amountToConvert: '', feeValue: '' };
   const [paramValues, setParamValues] = useState(initialParamValues);
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.EXCHANGE_RATE) as string;
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
@@ -94,7 +95,6 @@ const HederaExchangeRateMethods = ({ baseContract }: PageProps) => {
     // sanitize params
     const sanitizeErr = handleSanitizeHederaFormInputs({
       API: 'ExchangeRate',
-      feeValue: paramValues.feeValue,
       amount: paramValues.amountToConvert,
     });
 
@@ -109,6 +109,8 @@ const HederaExchangeRateMethods = ({ baseContract }: PageProps) => {
     // invoke method APIS
     const { transactionHash, err, convertedAmount } = await handleExchangeRate(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       API,
       Number(paramValues.amountToConvert),
       Number(paramValues.feeValue)
@@ -205,7 +207,7 @@ const HederaExchangeRateMethods = ({ baseContract }: PageProps) => {
               paramPlaceholder={'Gas limit...'}
               paramValue={paramValues.feeValue}
               handleInputOnChange={handleInputOnChange}
-              explanation={'Gas limit for the transaction'}
+              explanation={'Optional gas limit for the transaction.'}
               paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.large}
               paramFocusColor={HEDERA_BRANDING_COLORS.violet}
               paramClassName={HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME}
@@ -223,7 +225,7 @@ const HederaExchangeRateMethods = ({ baseContract }: PageProps) => {
       {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="ExchangeRate"
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           transactionResults={transactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           setTransactionResults={setTransactionResults}

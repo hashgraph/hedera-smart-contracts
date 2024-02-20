@@ -18,11 +18,12 @@
  *
  */
 
-import { ethers } from 'ethers';
+import { Contract, ethers } from 'ethers';
 import { TNetworkName } from '@/types/common';
 import { getCurrentChainId } from '@/api/wallet';
 import { HEDERA_NETWORKS, PROTECTED_ROUTES } from './constants';
 import { ITransactionResult } from '@/types/contract-interactions/shared';
+import { estimateGasViaMirrorNode } from '@/api/mirror-node';
 
 /**
  * @dev validating if a route is protected
@@ -220,4 +221,24 @@ export const prepareCSVData = (transactionList: ITransactionResult[], network: s
         : `https://hashscan.io/${network}/transaction/${transaction.txHash}`,
     };
   });
+};
+
+/**
+ * @dev handles estimating gas
+ */
+export const handleEstimateGas = async (
+  baseContract: Contract,
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
+  functionSignature: string,
+  args: any[]
+) => {
+  // prepare arguments for estimateGas()
+  const contractAddress = await baseContract.getAddress();
+
+  const calldata = baseContract.interface.encodeFunctionData(functionSignature, args);
+  const estimateGas = await estimateGasViaMirrorNode(contractAddress, signerAddress, calldata, network);
+  if (!estimateGas.gasLimit || estimateGas.err) return { err: estimateGas.err };
+
+  return { gasLimit: estimateGas.gasLimit };
 };

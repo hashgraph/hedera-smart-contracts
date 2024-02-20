@@ -32,8 +32,8 @@ import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxRes
 import TokenAddressesInputForm from '../../../shared/components/TokenAddressesInputForm';
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
 import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
-import { SharedFormInputField, SharedExecuteButton } from '../../../shared/components/ParamInputForm';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
+import { SharedFormInputField, SharedExecuteButtonWithFee } from '../../../shared/components/ParamInputForm';
 import { htsTokenAssociateParamFields } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
 import { associateHederaTokensToAccounts } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
@@ -52,11 +52,12 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
   // general states
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const initialParamValues = { associatingAddress: '' };
   const [isSuccessful, setIsSuccessful] = useState(false);
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
+  const initialParamValues = { associatingAddress: '', feeValue: '' };
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [paramValues, setParamValues] = useState<any>(initialParamValues);
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_CREATE) as string;
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const initialTokenAddressesValues = { fieldKey: generatedRandomUniqueKey(9), fieldValue: '' };
@@ -141,8 +142,11 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
     // invoke method API
     const { transactionHash, err } = await associateHederaTokensToAccounts(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       tokenAddresses,
-      associatingAddress
+      associatingAddress,
+      Number(paramValues.feeValue)
     );
 
     // turn is loading off
@@ -225,10 +229,15 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
         />
 
         {/* Execute button */}
-        <SharedExecuteButton
+        <SharedExecuteButtonWithFee
           isLoading={isLoading}
-          buttonTitle={`Associate Tokens`}
-          handleCreatingFungibleToken={handleAssociateTokens}
+          feeType={'GAS'}
+          paramValues={paramValues.feeValue}
+          placeHolder={'Gas limit...'}
+          executeBtnTitle={'Associate Tokens'}
+          handleInputOnChange={handleInputOnChange}
+          explanation={'Optional gas limit for the transaction.'}
+          handleInvokingAPIMethod={() => handleAssociateTokens()}
         />
       </div>
 
@@ -236,7 +245,7 @@ const AssociateHederaToken = ({ baseContract }: PageProps) => {
       {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="TokenAssociate"
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           transactionResults={transactionResults}
           setTransactionResults={setTransactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}

@@ -758,7 +758,7 @@ export const TransactionResultTable = ({
                 {/* operator */}
                 {API === 'ERC721Approval' && (
                   <Td className="cursor-pointer">
-                    {transactionResult.approval?.operator ? (
+                    {transactionResult.approval?.operator !== null ? (
                       <div className="flex gap-1 items-center">
                         <div onClick={() => copyContentToClipboard(transactionResult.approval?.operator!)}>
                           <Popover>
@@ -766,9 +766,9 @@ export const TransactionResultTable = ({
                               <div className="flex gap-1 items-center">
                                 <Tooltip label="click to copy recipient address">
                                   <p>
-                                    {transactionResult.approval?.operator!.slice(0, beginingHashIndex)}
+                                    {transactionResult.approval!.operator!.slice(0, beginingHashIndex)}
                                     ...
-                                    {transactionResult.approval?.operator!.slice(endingHashIndex)}
+                                    {transactionResult.approval!.operator!.slice(endingHashIndex)}
                                   </p>
                                 </Tooltip>
                               </div>
@@ -1034,6 +1034,7 @@ export const TransactionResultTable = ({
                                     spender: transactionResult.allowances?.spender,
                                     amount: 0,
                                     owner: transactionResult.allowances?.owner,
+                                    feeValue: '',
                                   },
                                   null,
                                   true

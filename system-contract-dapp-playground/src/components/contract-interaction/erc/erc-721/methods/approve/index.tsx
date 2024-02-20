@@ -56,11 +56,13 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
   const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC721) as string;
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['TOKEN-PERMISSION'];
   const [approveParams, setApproveParams] = useState({
     spenderAddress: '',
+    feeValue: '',
     tokenId: '',
   });
   const [isLoading, setIsLoading] = useState({
@@ -106,7 +108,7 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
   const handleExecutingMethods = useCallback(
     async (
       method: 'APPROVE' | 'GET_APPROVE',
-      params: { spender: string; tokenId: string },
+      params: { spender: string; tokenId: string; feeValue: string },
       refreshMode?: boolean
     ) => {
       // toast error invalid params
@@ -133,9 +135,12 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
       // invoke method API
       const erc721ApproveResult = await erc721TokenApprove(
         baseContract,
+        signerAddress,
+        HEDERA_NETWORK,
         method,
         params.spender,
-        Number(params.tokenId)
+        Number(params.tokenId),
+        Number(params.feeValue)
       );
 
       // turn off isLoading
@@ -195,7 +200,7 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
         // reset param
         if (!refreshMode) {
           if (method === 'APPROVE') {
-            setApproveParams({ spenderAddress: '', tokenId: '' });
+            setApproveParams({ spenderAddress: '', tokenId: '', feeValue: '' });
           } else {
             setGetApproveTokenId('');
           }
@@ -246,6 +251,7 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
             handleExecutingMethods('APPROVE', {
               spender: approveParams.spenderAddress,
               tokenId: approveParams.tokenId,
+              feeValue: approveParams.feeValue,
             })
           }
           explanation="Sets amount as the allowance of `spender` over the caller’s tokens."
@@ -266,7 +272,13 @@ const ERC721Approve = ({ baseContract }: PageProps) => {
 
         {/* execute button */}
         <button
-          onClick={() => handleExecutingMethods('GET_APPROVE', { spender: '', tokenId: getApproveTokenId })}
+          onClick={() =>
+            handleExecutingMethods('GET_APPROVE', {
+              spender: '',
+              tokenId: getApproveTokenId,
+              feeValue: approveParams.feeValue,
+            })
+          }
           disabled={isLoading.GET_APPROVE}
           className={`border mt-3 w-48 py-2 rounded-xl transition duration-300 ${
             isLoading.GET_APPROVE

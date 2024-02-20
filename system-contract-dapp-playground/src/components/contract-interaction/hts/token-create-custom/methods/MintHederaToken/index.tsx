@@ -43,8 +43,8 @@ import {
 } from '@/utils/common/constants';
 import {
   SharedFormButton,
-  SharedExecuteButton,
   SharedFormInputField,
+  SharedExecuteButtonWithFee,
 } from '../../../shared/components/ParamInputForm';
 import {
   mintHederaToken,
@@ -65,6 +65,7 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('FUNGIBLE');
   const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_CREATE) as string;
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const [metadata, setMetadata] = useState<{ metaKey: string; metaValue: string }[]>([]);
@@ -76,6 +77,7 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
   }, [APIMethods]);
   const initialParamValues = {
     amount: '',
+    feeValue: '',
     recipientAddress: '',
     tokenAddressToMint: '',
   };
@@ -169,19 +171,25 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
     if (recipientAddress) {
       txRes = await mintHederaTokenToAddress(
         baseContract,
+        signerAddress,
+        HEDERA_NETWORK,
         APIMethods,
         tokenAddressToMint,
         recipientAddress,
         APIMethods === 'FUNGIBLE' ? Number(amount) : 0,
-        metadatas
+        metadatas,
+        Number(paramValues.feeValue)
       );
     } else {
       txRes = await mintHederaToken(
         baseContract,
+        signerAddress,
+        HEDERA_NETWORK,
         APIMethods,
         tokenAddressToMint,
         APIMethods === 'FUNGIBLE' ? Number(amount) : 0,
-        metadatas
+        metadatas,
+        Number(paramValues.feeValue)
       );
     }
 
@@ -297,10 +305,15 @@ const MintHederaToken = ({ baseContract }: PageProps) => {
           if (APIMethods === APIButton.API) {
             return (
               <div key={APIButton.API} className="w-full">
-                <SharedExecuteButton
+                <SharedExecuteButtonWithFee
                   isLoading={isLoading}
-                  handleCreatingFungibleToken={() => handleMintTokens()}
-                  buttonTitle={APIButton.executeTitle}
+                  feeType={'GAS'}
+                  paramValues={paramValues.feeValue}
+                  placeHolder={'Gas limit...'}
+                  executeBtnTitle={APIButton.executeTitle}
+                  handleInputOnChange={handleInputOnChange}
+                  explanation={'Optional gas limit for the transaction.'}
+                  handleInvokingAPIMethod={() => handleMintTokens()}
                 />
               </div>
             );

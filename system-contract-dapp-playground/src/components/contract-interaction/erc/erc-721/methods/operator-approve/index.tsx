@@ -60,7 +60,7 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
   const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC721) as string;
-  const contractCaller = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC721-RESULT']['SET-APPROVAL'];
   const [isLoading, setIsLoading] = useState({
@@ -68,6 +68,7 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
     IS_APPROVAL: false,
   });
   const [approveParams, setApproveParams] = useState({
+    feeValue: '',
     operator: '',
     status: false,
   });
@@ -135,10 +136,13 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
     // invoke method API
     const tokenApprovalRes = await erc721TokenApproval(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       method,
       owner,
       operator,
-      approveParams.status
+      approveParams.status,
+      Number(approveParams.feeValue)
     );
 
     // turn is loading off
@@ -189,7 +193,7 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
             txHash:
               method === 'IS_APPROVAL' ? generatedRandomUniqueKey(9) : (tokenApprovalRes.txHash as string),
             approval: {
-              owner: method === 'IS_APPROVAL' ? owner : contractCaller,
+              owner: method === 'IS_APPROVAL' ? owner : signerAddress,
               operator,
               status: method === 'IS_APPROVAL' ? tokenApprovalRes.approvalStatusRes! : approveParams.status,
             },
@@ -209,7 +213,7 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
         if (method === 'IS_APPROVAL') {
           setIsApprovalParams({ owner: '', operator: '' });
         } else {
-          setApproveParams({ operator: '', status: false });
+          setApproveParams({ operator: '', status: false, feeValue: '' });
         }
       }
     }
@@ -247,6 +251,20 @@ const ERC721OperatorApproval = ({ baseContract }: PageProps) => {
           paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.medium}
           paramClassName={HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME}
           handleInputOnChange={(e) => setApproveParams((prev) => ({ ...prev, operator: e.target.value }))}
+        />
+
+        {/* gasLimit */}
+        <SharedFormInputField
+          param={'feeValue'}
+          paramType={'number'}
+          paramKey={'feeValue'}
+          paramPlaceholder={'Gas limit...'}
+          paramValue={approveParams.feeValue}
+          paramFocusColor={HEDERA_BRANDING_COLORS.purple}
+          paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.medium}
+          explanation={'Optional gas limit for the transaction.'}
+          paramClassName={HEDERA_CHAKRA_INPUT_BOX_SHARED_CLASSNAME}
+          handleInputOnChange={(e) => setApproveParams((prev) => ({ ...prev, feeValue: e.target.value }))}
         />
 
         {/* approval status status */}

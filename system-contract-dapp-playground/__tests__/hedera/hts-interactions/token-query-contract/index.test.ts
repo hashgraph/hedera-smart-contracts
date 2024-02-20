@@ -26,7 +26,13 @@ import {
   queryTokenSpecificInfomation,
   queryTokenPermissionInformation,
 } from '@/api/hedera/hts-interactions/tokenQuery-interactions';
-import { MOCK_TX_HASH, MOCK_TOKEN_ADDRESS } from '../../../utils/common/constants';
+import {
+  MOCK_TX_HASH,
+  MOCK_GAS_LIMIT,
+  MOCK_TOKEN_ADDRESS,
+  MOCK_HEDERA_NETWORK,
+  MOCK_SIGNER_ADDRESS,
+} from '../../../utils/common/constants';
 
 // mock convertsArgsProxyToHTSTokenInfo
 jest.mock('../../../../src/utils/contract-interactions/HTS/helpers.ts', () => {
@@ -104,7 +110,13 @@ describe('TokenQueryContract Test Suite', () => {
 
   describe('queryTokenValidity test suite', () => {
     it('should execute queryTokenValidity then return info value from event', async () => {
-      const txRes = await queryTokenValidity(baseContract as unknown as Contract, MOCK_TOKEN_ADDRESS);
+      const txRes = await queryTokenValidity(
+        baseContract as unknown as Contract,
+        MOCK_SIGNER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT
+      );
 
       expect(txRes.err).toBeNull;
       expect(txRes.transactionHash).toBe(MOCK_TX_HASH);
@@ -116,8 +128,11 @@ describe('TokenQueryContract Test Suite', () => {
     it('should execute queryTokenGeneralInfomation wit API === "TOKEN" then return info value from event', async () => {
       const txRes = await queryTokenGeneralInfomation(
         baseContract as unknown as Contract,
+        MOCK_SIGNER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'TOKEN',
-        MOCK_TOKEN_ADDRESS
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBeNull;
@@ -128,8 +143,11 @@ describe('TokenQueryContract Test Suite', () => {
     it('should execute queryTokenGeneralInfomation wit API === "FUNGIBLE" then return info value from event', async () => {
       const txRes = await queryTokenGeneralInfomation(
         baseContract as unknown as Contract,
+        MOCK_SIGNER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'FUNGIBLE',
-        MOCK_TOKEN_ADDRESS
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBeNull;
@@ -140,8 +158,11 @@ describe('TokenQueryContract Test Suite', () => {
     it('should execute queryTokenGeneralInfomation wit API === "NON_FUNFIBLE" then return info value from event', async () => {
       const txRes = await queryTokenGeneralInfomation(
         baseContract as unknown as Contract,
+        MOCK_SIGNER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'NON_FUNFIBLE',
         MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         serialNumber
       );
 
@@ -155,8 +176,11 @@ describe('TokenQueryContract Test Suite', () => {
     it('should execute queryTokenSpecificInfomation wit API === "KYC_STATUS" then return info value from event', async () => {
       const txRes = await queryTokenSpecificInfomation(
         baseContract as unknown as Contract,
+        MOCK_SIGNER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'DEFAULT_KYC_STATUS',
-        MOCK_TOKEN_ADDRESS
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBeNull;
@@ -167,8 +191,11 @@ describe('TokenQueryContract Test Suite', () => {
     it('should execute queryTokenSpecificInfomation wit API === "FREEZE_STATUS" then return info value from event', async () => {
       const txRes = await queryTokenSpecificInfomation(
         baseContract as unknown as Contract,
+        MOCK_SIGNER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'DEFAULT_FREEZE_STATUS',
-        MOCK_TOKEN_ADDRESS
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBeNull;
@@ -179,8 +206,11 @@ describe('TokenQueryContract Test Suite', () => {
     it('should execute queryTokenSpecificInfomation wit API === "CUSTOM_FEES" then return info value from event', async () => {
       const txRes = await queryTokenSpecificInfomation(
         baseContract as unknown as Contract,
+        MOCK_SIGNER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'CUSTOM_FEES',
-        MOCK_TOKEN_ADDRESS
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBeNull;
@@ -191,8 +221,11 @@ describe('TokenQueryContract Test Suite', () => {
     it('should execute queryTokenSpecificInfomation wit API === "TOKEN_TYPE" then return info value from event', async () => {
       const txRes = await queryTokenSpecificInfomation(
         baseContract as unknown as Contract,
+        MOCK_SIGNER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'TOKEN_TYPE',
-        MOCK_TOKEN_ADDRESS
+        MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBeNull;
@@ -203,8 +236,11 @@ describe('TokenQueryContract Test Suite', () => {
     it('should execute queryTokenSpecificInfomation wit API === "TOKEN_KEYS" then return info value from event', async () => {
       const txRes = await queryTokenSpecificInfomation(
         baseContract as unknown as Contract,
+        MOCK_SIGNER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'TOKEN_KEYS',
         MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         keyType as any
       );
 
@@ -218,8 +254,11 @@ describe('TokenQueryContract Test Suite', () => {
     it('should execute queryTokenPermissionInformation wit API === "ALLOWANCE" then return info value from event', async () => {
       const txRes = await queryTokenPermissionInformation(
         baseContract as unknown as Contract,
+        MOCK_SIGNER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'ALLOWANCE',
         MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         ownerAddress,
         spenderAddress
       );
@@ -232,8 +271,11 @@ describe('TokenQueryContract Test Suite', () => {
     it('should execute queryTokenPermissionInformation wit API === "GET_APPROVED" then return info value from event', async () => {
       const txRes = await queryTokenPermissionInformation(
         baseContract as unknown as Contract,
+        MOCK_SIGNER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'GET_APPROVED',
         MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         ownerAddress,
         spenderAddress,
         serialNumber
@@ -247,8 +289,11 @@ describe('TokenQueryContract Test Suite', () => {
     it('should execute queryTokenPermissionInformation wit API === "IS_APPROVAL" then return info value from event', async () => {
       const txRes = await queryTokenPermissionInformation(
         baseContract as unknown as Contract,
+        MOCK_SIGNER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'IS_APPROVAL',
         MOCK_TOKEN_ADDRESS,
+        MOCK_GAS_LIMIT,
         ownerAddress,
         spenderAddress,
         serialNumber
@@ -264,9 +309,12 @@ describe('TokenQueryContract Test Suite', () => {
     it('should execute queryTokenStatusInformation wit API === "IS_KYC" then return info value from event', async () => {
       const txRes = await queryTokenStatusInformation(
         baseContract as unknown as Contract,
+        MOCK_SIGNER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'IS_KYC',
         MOCK_TOKEN_ADDRESS,
-        ownerAddress
+        ownerAddress,
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBeNull;
@@ -277,9 +325,12 @@ describe('TokenQueryContract Test Suite', () => {
     it('should execute queryTokenStatusInformation wit API === "IS_FROZEN" then return info value from event', async () => {
       const txRes = await queryTokenStatusInformation(
         baseContract as unknown as Contract,
+        MOCK_SIGNER_ADDRESS,
+        MOCK_HEDERA_NETWORK,
         'IS_FROZEN',
         MOCK_TOKEN_ADDRESS,
-        ownerAddress
+        ownerAddress,
+        MOCK_GAS_LIMIT
       );
 
       expect(txRes.err).toBeNull;

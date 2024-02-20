@@ -52,8 +52,9 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
   // general states
   const toaster = useToast();
   const [isSuccessful, setIsSuccessful] = useState(false);
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_TRANSFER) as string;
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const tokenInfoFields = ['hederaTokenAddress', 'senderAddress', 'receiverAddress', 'quantity', 'feeValue'];
@@ -115,7 +116,6 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
       senderAddress,
       receiverAddress,
       amount: quantity,
-      feeValue,
     });
 
     // toast error if any param is invalid
@@ -130,6 +130,8 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
     // invoke method API
     const { result, transactionHash, err } = await transferSingleToken(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       API,
       hederaTokenAddress,
       senderAddress,
@@ -215,7 +217,6 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
             />
           </div>
         ))}
-
         {/* Execute buttons */}
         <div className="w-full flex gap-9">
           {APIButtonTitles.slice(0, 2).map((APIButton) => (
@@ -227,7 +228,6 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
             />
           ))}
         </div>
-
         <div className="w-full flex gap-9">
           {APIButtonTitles.slice(2).map((APIButton) => (
             <SharedExecuteButton
@@ -238,12 +238,11 @@ const TransferSingleToken = ({ baseContract }: PageProps) => {
             />
           ))}
         </div>
-
         {/* transaction results table */}
         {transactionResultsToShow.length > 0 && (
           <TransactionResultTable
             API="TransferSingle"
-            hederaNetwork={hederaNetwork}
+            hederaNetwork={HEDERA_NETWORK}
             transactionResults={transactionResults}
             TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
             setTransactionResults={setTransactionResults}

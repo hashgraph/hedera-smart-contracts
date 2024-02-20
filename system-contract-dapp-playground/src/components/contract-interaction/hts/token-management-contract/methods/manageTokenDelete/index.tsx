@@ -51,8 +51,9 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_MANAGE) as string;
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-MANAGE']['TOKEN-DELETE'];
@@ -93,7 +94,6 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
     // sanitize params
     const sanitizeErr = handleSanitizeHederaFormInputs({
       API: 'DELETE',
-      feeValue,
       hederaTokenAddress,
     });
 
@@ -109,6 +109,8 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
     // invoke method APIS
     const { result, transactionHash, err } = await manageTokenDeduction(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       'DELETE',
       hederaTokenAddress,
       Number(feeValue)
@@ -190,7 +192,7 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
             placeHolder={'Gas limit...'}
             executeBtnTitle={'Delete Token'}
             handleInputOnChange={handleInputOnChange}
-            explanation={'Gas limit for the transaction'}
+            explanation={'Optional gas limit for the transaction.'}
             handleInvokingAPIMethod={() => handleUpdateTokenDeduction()}
           />
         </div>
@@ -200,7 +202,7 @@ const ManageTokenDelete = ({ baseContract }: PageProps) => {
       {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="TokenCreate"
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           transactionResults={transactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           setTransactionResults={setTransactionResults}

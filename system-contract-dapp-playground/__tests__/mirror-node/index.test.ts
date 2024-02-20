@@ -18,16 +18,16 @@
  *
  */
 
-import { getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
-import { TNetworkName } from '@/types/common';
-import { HEDERA_NETWORKS } from '@/utils/common/constants';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
+import { TNetworkName } from '@/types/common';
+import { HEDERA_NETWORKS } from '@/utils/common/constants';
+import { estimateGasViaMirrorNode, getHederaNativeIDFromEvmAddress } from '@/api/mirror-node';
 
 // Create a new instance of MockAdapter
 const RestMock = new MockAdapter(axios);
 
-describe('getHederaNativeIDFromEvmAddress calls the correct mirror URL', () => {
+describe('Mirror Node Test Suite', () => {
   it('should match mirror-node url dynamically based on different networks', async () => {
     const evmAddress = '0xCC07a8243578590d55c5708D7fB453245350Cc2A';
     const networks: TNetworkName[] = ['mainnet', 'testnet', 'previewnet', 'localnet'];
@@ -58,7 +58,7 @@ describe('getHederaNativeIDFromEvmAddress calls the correct mirror URL', () => {
     });
   });
 
-  it('should call the correct mirror node URL when a network environment is set', async () => {
+  it('should call getHederaNativeIDFromEvmAddress() and return the expected values', async () => {
     const accountParam = 'accounts';
     const contractParam = 'contracts';
     const network: TNetworkName = 'testnet';
@@ -79,5 +79,21 @@ describe('getHederaNativeIDFromEvmAddress calls the correct mirror URL', () => {
 
     expect(accountResult.accountId).toBe(expectedHederaNativeId);
     expect(contractResult.contractId).toBe(expectedHederaNativeId);
+  });
+
+  it('should call estimateGasViaMirrorNode() and return the expected values', async () => {
+    const network: TNetworkName = 'testnet';
+    const to = '0x701962ab7ce76b0367c400ffcde5867aa584999c';
+    const from = '0xc9f01be8d573a0b4ba8a4c9c23d6c775176dffa1';
+    const data = '0xf2f38a74000000000000000000000000000000000000000000000000000000000000e8f5';
+    const expectedGasLimit = '0x0000000000017a49';
+
+    const expectedUrl = `https://${network}.mirrornode.hedera.com/api/v1/contracts/call`;
+    RestMock.onPost(expectedUrl).reply(200, { result: expectedGasLimit });
+
+    const estimateGas = await estimateGasViaMirrorNode(to, from, data, network);
+
+    expect(estimateGas.err).toBeNull;
+    expect(estimateGas.gasLimit).toBe(expectedGasLimit);
   });
 });

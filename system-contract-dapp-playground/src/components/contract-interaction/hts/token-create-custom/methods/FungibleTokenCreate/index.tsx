@@ -367,7 +367,9 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
           placeHolder={'Service fee...'}
           executeBtnTitle={'Create Fungible Token'}
           handleInputOnChange={handleInputOnChange}
-          explanation={'Represents the transaction fee paid in HBAR'}
+          explanation={
+            'The fee in HBARs to cover the cost of system contract function calls made within the contract constructor e.g. HTS token creation'
+          }
           handleInvokingAPIMethod={handleCreatingFungibleToken}
         />
       </div>

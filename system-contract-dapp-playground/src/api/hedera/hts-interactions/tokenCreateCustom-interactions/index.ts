@@ -24,6 +24,8 @@ import {
 } from '@/utils/contract-interactions/HTS/helpers';
 import { Contract, ethers, isAddress } from 'ethers';
 import { ISmartContractExecutionResult } from '@/types/contract-interactions/shared';
+import { handleEstimateGas } from '@/utils/common/helpers';
+import { TNetworkName } from '@/types/common';
 
 /**
  * @dev creates a Hedera fungible token
@@ -165,13 +167,13 @@ export const createHederaFungibleToken = async (
  *
  * @param maxSupply: number
  *
- * @param treasury: string
+ * @param treasury: ethers.AddressLike
  *
  * @param inputKeys: ICommonKeyObject[],
  *
  * @param msgValue: string
  *
- * @param feeTokenAddress?: string
+ * @param feeTokenAddress?: ethers.AddressLike
  *
  * @return Promise<ISmartContractExecutionResult>
  *
@@ -184,10 +186,10 @@ export const createHederaNonFungibleToken = async (
   symbol: string,
   memo: string,
   maxSupply: number,
-  treasury: string,
+  treasury: ethers.AddressLike,
   inputKeys: ICommonKeyObject[],
   msgValue: string,
-  feeTokenAddress?: string
+  feeTokenAddress?: ethers.AddressLike
 ): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
@@ -264,22 +266,31 @@ export const createHederaNonFungibleToken = async (
  *
  * @param baseContract: ethers.Contract
  *
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
+ *
  * @param tokenType: 'FUNGIBLE' | 'NON_FUNGIBLE'
  *
- * @param hederaTokenAddress: string
+ * @param hederaTokenAddress: ethers.AddressLike
  *
  * @param amountToMint: number
  *
  * @param metadata: string[]
  *
+ * @param gasLimit: number
+ *
  * @return Promise<ISmartContractExecutionResult>
  */
 export const mintHederaToken = async (
   baseContract: Contract,
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
   tokenType: 'FUNGIBLE' | 'NON_FUNGIBLE',
-  hederaTokenAddress: string,
+  hederaTokenAddress: ethers.AddressLike,
   amountToMint: number,
-  metadata: string[]
+  metadata: string[],
+  gasLimit: number
 ): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
@@ -301,8 +312,19 @@ export const mintHederaToken = async (
 
   // execute .mintTokenPublic() method
   try {
+    if (gasLimit === 0) {
+      const estimateGasResult = await handleEstimateGas(
+        baseContract,
+        signerAddress,
+        network,
+        'mintTokenPublic',
+        [hederaTokenAddress, amountToMint, bufferedMetadata]
+      );
+      if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+      gasLimit = estimateGasResult.gasLimit;
+    }
     const tx = await baseContract.mintTokenPublic(hederaTokenAddress, amountToMint, bufferedMetadata, {
-      gasLimit: 1_000_000,
+      gasLimit,
     });
 
     // handle contract responses
@@ -320,25 +342,34 @@ export const mintHederaToken = async (
  *
  * @param baseContract: ethers.Contract
  *
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
+ *
  * @param tokenType: 'FUNGIBLE' | 'NON_FUNGIBLE'
  *
- * @param hederaTokenAddress: string
+ * @param hederaTokenAddress: ethers.AddressLike
  *
- * @param recipientAddress: string
+ * @param recipientAddress: ethers.AddressLike
  *
  * @param amountToMint: number
  *
  * @param metadata: string[]
  *
+ * @param gasLimit: number
+ *
  * @return Promise<ISmartContractExecutionResult>
  */
 export const mintHederaTokenToAddress = async (
   baseContract: Contract,
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
   tokenType: 'FUNGIBLE' | 'NON_FUNGIBLE',
-  hederaTokenAddress: string,
-  recipientAddress: string,
+  hederaTokenAddress: ethers.AddressLike,
+  recipientAddress: ethers.AddressLike,
   amountToMint: number,
-  metadata: string[]
+  metadata: string[],
+  gasLimit: number
 ): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
@@ -363,23 +394,45 @@ export const mintHederaTokenToAddress = async (
   try {
     let tx;
     if (tokenType === 'FUNGIBLE') {
+      if (gasLimit === 0) {
+        const estimateGasResult = await handleEstimateGas(
+          baseContract,
+          signerAddress,
+          network,
+          'mintTokenToAddressPublic',
+          [hederaTokenAddress, recipientAddress, amountToMint, bufferedMetadata]
+        );
+        if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+        gasLimit = estimateGasResult.gasLimit;
+      }
       tx = await baseContract.mintTokenToAddressPublic(
         hederaTokenAddress,
         recipientAddress,
         amountToMint,
         bufferedMetadata,
         {
-          gasLimit: 1_000_000,
+          gasLimit,
         }
       );
     } else {
+      if (gasLimit === 0) {
+        const estimateGasResult = await handleEstimateGas(
+          baseContract,
+          signerAddress,
+          network,
+          'mintNonFungibleTokenToAddressPublic',
+          [hederaTokenAddress, recipientAddress, amountToMint, bufferedMetadata]
+        );
+        if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+        gasLimit = estimateGasResult.gasLimit;
+      }
       tx = await baseContract.mintNonFungibleTokenToAddressPublic(
         hederaTokenAddress,
         recipientAddress,
         amountToMint,
         bufferedMetadata,
         {
-          gasLimit: 1_000_000,
+          gasLimit,
         }
       );
     }
@@ -399,16 +452,25 @@ export const mintHederaTokenToAddress = async (
  *
  * @param baseContract: ethers.Contract
  *
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
+ *
  * @param hederaTokenAddresses: string[]
  *
- * @param associtingAccountAddress: string
+ * @param associtingAccountAddress: ethers.AddressLike
+ *
+ * @param gasLimit: number
  *
  * @return Promise<ISmartContractExecutionResult>
  */
 export const associateHederaTokensToAccounts = async (
   baseContract: Contract,
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
   hederaTokenAddresses: string[],
-  associtingAccountAddress: string
+  associtingAccountAddress: ethers.AddressLike,
+  gasLimit: number
 ): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
@@ -436,12 +498,35 @@ export const associateHederaTokensToAccounts = async (
   try {
     let tx;
     if (hederaTokenAddresses.length === 1) {
+      if (gasLimit === 0) {
+        const estimateGasResult = await handleEstimateGas(
+          baseContract,
+          signerAddress,
+          network,
+          'associateTokenPublic',
+          [associtingAccountAddress, hederaTokenAddresses[0]]
+        );
+        if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+        gasLimit = estimateGasResult.gasLimit;
+      }
+
       tx = await baseContract.associateTokenPublic(associtingAccountAddress, hederaTokenAddresses[0], {
-        gasLimit: 1_000_000,
+        gasLimit,
       });
     } else {
+      if (gasLimit === 0) {
+        const estimateGasResult = await handleEstimateGas(
+          baseContract,
+          signerAddress,
+          network,
+          'associateTokensPublic',
+          [associtingAccountAddress, hederaTokenAddresses]
+        );
+        if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+        gasLimit = estimateGasResult.gasLimit;
+      }
       tx = await baseContract.associateTokensPublic(associtingAccountAddress, hederaTokenAddresses, {
-        gasLimit: 1_000_000,
+        gasLimit,
       });
     }
 
@@ -460,16 +545,25 @@ export const associateHederaTokensToAccounts = async (
  *
  * @param baseContract: ethers.Contract
  *
- * @param hederaTokenAddress: string
+ * @param signerAddress: ethers.AddressLike
  *
- * @param grantingKYCAccountAddress: string
+ * @param network: TNetworkName
+ *
+ * @param hederaTokenAddress: ethers.AddressLike
+ *
+ * @param grantingKYCAccountAddress: ethers.AddressLike
+ *
+ * @param gasLimit: number
  *
  * @return Promise<ISmartContractExecutionResult>
  */
 export const grantTokenKYCToAccount = async (
   baseContract: Contract,
-  hederaTokenAddress: string,
-  grantingKYCAccountAddress: string
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
+  hederaTokenAddress: ethers.AddressLike,
+  grantingKYCAccountAddress: ethers.AddressLike,
+  gasLimit: number
 ): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
@@ -485,8 +579,19 @@ export const grantTokenKYCToAccount = async (
   }
 
   try {
+    if (gasLimit === 0) {
+      const estimateGasResult = await handleEstimateGas(
+        baseContract,
+        signerAddress,
+        network,
+        'grantTokenKycPublic',
+        [hederaTokenAddress, grantingKYCAccountAddress]
+      );
+      if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+      gasLimit = estimateGasResult.gasLimit;
+    }
     const tx = await baseContract.grantTokenKycPublic(hederaTokenAddress, grantingKYCAccountAddress, {
-      gasLimit: 1_000_000,
+      gasLimit,
     });
 
     // handle contract responses

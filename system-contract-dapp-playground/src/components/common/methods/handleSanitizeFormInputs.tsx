@@ -190,7 +190,7 @@ export const handleSanitizeHederaFormInputs = ({
     if (!isAddress(hederaTokenAddress)) {
       sanitizeErr = 'Invalid token address';
     } else if (!isAddress(grantingKYCAccountAddress)) {
-      sanitizeErr = 'Invalid token address';
+      sanitizeErr = 'Invalid account address';
     }
   } else if (API === 'UpdateTokenInfo') {
     if (!isAddress(hederaTokenAddress)) {

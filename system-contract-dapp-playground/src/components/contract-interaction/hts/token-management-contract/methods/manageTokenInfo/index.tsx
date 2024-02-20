@@ -64,9 +64,10 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('UPDATE_INFO');
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_MANAGE) as string;
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-MANAGE']['TOKEN-INFO'];
@@ -201,7 +202,6 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
           API: 'UpdateTokenInfo',
           hederaTokenAddress,
           maxSupply,
-          feeValue,
           treasury,
           symbol,
           name,
@@ -211,7 +211,6 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
         sanitizeErr = handleSanitizeHederaFormInputs({
           API: 'UpdateTokenExpiry',
           second,
-          feeValue,
           autoRenewPeriod,
           autoRenewAccount,
           hederaTokenAddress,
@@ -249,6 +248,8 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
     // invoke method APIS
     const { result, transactionHash, err } = await manageTokenInfomation(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       APIMethods,
       hederaTokenAddress,
       Number(feeValue),
@@ -398,7 +399,7 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
                   placeHolder={'Gas limit...'}
                   executeBtnTitle={APIButton.executeTitle}
                   handleInputOnChange={handleInputOnChange}
-                  explanation={'Gas limit for the transaction'}
+                  explanation={'Optional gas limit for the transaction.'}
                   handleInvokingAPIMethod={() => handleUpdatingTokenInfo(APIButton.API)}
                 />
               </div>
@@ -411,7 +412,7 @@ const ManageTokenInfo = ({ baseContract }: PageProps) => {
       {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="TokenCreate"
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           transactionResults={transactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           setTransactionResults={setTransactionResults}

@@ -18,7 +18,9 @@
  *
  */
 
-import { Contract, isAddress } from 'ethers';
+import { TNetworkName } from '@/types/common';
+import { Contract, ethers, isAddress } from 'ethers';
+import { handleEstimateGas } from '@/utils/common/helpers';
 
 /**
  * @dev get token information
@@ -55,18 +57,27 @@ export const getERC20TokenInformation = async (
 /**
  * @dev mints erc20 tokens
  *
- * @param baseContract: Contract
+ * @param baseContract: ethers.Contract
  *
- * @param recipientAddress: address
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
+ *
+ * @param recipientAddress: ethers.AddressLike
  *
  * @param tokenAmount: number
+ *
+ * @param gasLimit: number
  *
  * @return Promise<IERCSmartContractResult>
  */
 export const erc20Mint = async (
   baseContract: Contract,
-  recipientAddress: string,
-  tokenAmount: number
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
+  recipientAddress: ethers.AddressLike,
+  tokenAmount: number,
+  gasLimit: number
 ): Promise<IERCSmartContractResult> => {
   if (!isAddress(recipientAddress)) {
     return { err: 'Invalid recipient address' };
@@ -75,7 +86,16 @@ export const erc20Mint = async (
   }
 
   try {
-    const txReceipt = await (await baseContract.mint(recipientAddress, tokenAmount)).wait();
+    if (gasLimit === 0) {
+      const estimateGasResult = await handleEstimateGas(baseContract, signerAddress, network, 'mint', [
+        recipientAddress,
+        tokenAmount,
+      ]);
+      if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+      gasLimit = estimateGasResult.gasLimit;
+    }
+
+    const txReceipt = await (await baseContract.mint(recipientAddress, tokenAmount, { gasLimit })).wait();
     return { mintRes: true, txHash: txReceipt.hash };
   } catch (err) {
     console.error(err);
@@ -88,13 +108,13 @@ export const erc20Mint = async (
  *
  * @param baseContract: Contract
  *
- * @param accountAddress: address
+ * @param accountAddress: ethers.AddressLike
  *
  * @return Promise<IERCSmartContractResult>
  */
 export const balanceOf = async (
   baseContract: Contract,
-  accountAddress: string
+  accountAddress: ethers.AddressLike
 ): Promise<IERCSmartContractResult> => {
   if (!isAddress(accountAddress)) {
     return { err: 'Invalid account address' };
@@ -119,13 +139,19 @@ export const balanceOf = async (
  *
  * @dev allowance() returns the remaining number of tokens that `spenerAddress` will be allowed to spend on behalf of `ownerAddress`
  *
- * @param baseContract: Contract
+ * @param baseContract: ethers.Contract
+ *
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
  *
  * @param method: 'approve' | 'allowance' | 'increaseAllowance' | 'decreaseAllowance'
  *
- * @param spenderAddress?: address
+ * @param gasLimit: number
  *
- * @param owner?: address
+ * @param spenderAddress?: ethers.AddressLike
+ *
+ * @param owner?: ethers.AddressLike
  *
  * @param amount?: number
  *
@@ -133,9 +159,12 @@ export const balanceOf = async (
  */
 export const handleErc20TokenPermissions = async (
   baseContract: Contract,
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
   method: 'approve' | 'allowance' | 'increaseAllowance' | 'decreaseAllowance',
-  spenderAddress: string,
-  ownerAddress?: string,
+  spenderAddress: ethers.AddressLike,
+  gasLimit: number,
+  ownerAddress?: ethers.AddressLike,
   amount?: number
 ): Promise<IERCSmartContractResult> => {
   // sanitize params
@@ -145,24 +174,35 @@ export const handleErc20TokenPermissions = async (
     return { err: 'Invalid spender address' };
   }
 
+  // prepare function arguments
+  const args = method === 'allowance' ? [ownerAddress, spenderAddress] : [spenderAddress, amount];
+
+  if (gasLimit === 0) {
+    const estimateGasResult = await handleEstimateGas(baseContract, signerAddress, network, method, args);
+    if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+    gasLimit = estimateGasResult.gasLimit;
+  }
+
   // executing logic
   try {
     switch (method) {
       case 'approve':
-        const approveReceipt = await (await baseContract.approve(spenderAddress, amount)).wait();
+        const approveReceipt = await (
+          await baseContract.approve(spenderAddress, amount, { gasLimit })
+        ).wait();
         return { approveRes: true, txHash: approveReceipt.hash };
       case 'increaseAllowance':
         const increaseAllowanceReceipt = await (
-          await baseContract.increaseAllowance(spenderAddress, amount)
+          await baseContract.increaseAllowance(spenderAddress, amount, { gasLimit })
         ).wait();
         return { increaseAllowanceRes: true, txHash: increaseAllowanceReceipt.hash };
       case 'decreaseAllowance':
         const decreaseAllowanceReceipt = await (
-          await baseContract.decreaseAllowance(spenderAddress, amount)
+          await baseContract.decreaseAllowance(spenderAddress, amount, { gasLimit })
         ).wait();
         return { decreaseAllowanceRes: true, txHash: decreaseAllowanceReceipt.hash };
       case 'allowance':
-        const allowance = await baseContract.allowance(ownerAddress, spenderAddress);
+        const allowance = await baseContract.allowance(ownerAddress, spenderAddress, { gasLimit });
         return { allowanceRes: allowance.toString() };
     }
   } catch (err) {
@@ -178,24 +218,33 @@ export const handleErc20TokenPermissions = async (
  *
  * @dev transferFrom() moves amount tokens from `tokenOwnerAddress` to `recipientAddress` using the allowance mechanism. `amount` is then deducted from the caller’s allowance.
  *
- * @param baseContract: Contract
+ * @param baseContract: ethers.Contract
+ *
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
  *
  * @param method: "transfer" | "transferFrom"
  *
- * @param recipientAddress: address
+ * @param recipientAddress: ethers.AddressLike
  *
  * @param amount: number
  *
- * @param tokenOwnerAddress?: address
+ * @param gasLimit: number
+ *
+ * @param tokenOwnerAddress?: ethers.AddressLike
  *
  * @return Promise<IERCSmartContractResult>
  */
 export const erc20Transfers = async (
   baseContract: Contract,
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
   method: 'transfer' | 'transferFrom',
-  recipientAddress: string,
+  recipientAddress: ethers.AddressLike,
   amount: number,
-  tokenOwnerAddress?: string
+  gasLimit: number,
+  tokenOwnerAddress?: ethers.AddressLike
 ): Promise<IERCSmartContractResult> => {
   if (method === 'transferFrom' && !isAddress(tokenOwnerAddress)) {
     return { err: 'Invalid token owner address' };
@@ -203,14 +252,26 @@ export const erc20Transfers = async (
     return { err: 'Invalid recipient address' };
   }
 
+  // prepare function arguments
+  const args =
+    method === 'transfer' ? [recipientAddress, amount] : [tokenOwnerAddress, recipientAddress, amount];
+
+  if (gasLimit === 0) {
+    const estimateGasResult = await handleEstimateGas(baseContract, signerAddress, network, method, args);
+    if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+    gasLimit = estimateGasResult.gasLimit;
+  }
+
   try {
     switch (method) {
       case 'transfer':
-        const transferReceipt = await (await baseContract.transfer(recipientAddress, amount)).wait();
+        const transferReceipt = await (
+          await baseContract.transfer(recipientAddress, amount, { gasLimit })
+        ).wait();
         return { transferRes: true, txHash: transferReceipt.hash };
       case 'transferFrom':
         const transferFromReceipt = await (
-          await baseContract.transferFrom(tokenOwnerAddress, recipientAddress, amount)
+          await baseContract.transferFrom(tokenOwnerAddress, recipientAddress, amount, { gasLimit })
         ).wait();
 
         return { transferFromRes: true, txHash: transferFromReceipt.hash };

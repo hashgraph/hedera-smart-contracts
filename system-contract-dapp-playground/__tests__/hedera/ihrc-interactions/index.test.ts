@@ -20,7 +20,12 @@
 
 import { ethers } from 'ethers';
 import { handleIHRC719APIs } from '@/api/hedera/ihrc-interactions';
-import { MOCK_GAS_LIMIT, MOCK_TOKEN_ADDRESS, MOCK_TX_HASH } from '../../utils/common/constants';
+import {
+  MOCK_GAS_LIMIT,
+  MOCK_HEDERA_NETWORK,
+  MOCK_TOKEN_ADDRESS,
+  MOCK_TX_HASH,
+} from '../../utils/common/constants';
 
 // Mock the ethers.Contract constructor
 jest.mock('ethers', () => {
@@ -44,7 +49,8 @@ describe('handleIHR719CAPIs test suite', () => {
       'ASSOCIATE',
       MOCK_TOKEN_ADDRESS,
       {} as ethers.JsonRpcSigner,
-      MOCK_GAS_LIMIT
+      MOCK_GAS_LIMIT,
+      MOCK_HEDERA_NETWORK
     );
 
     expect(txRes.err).toBeNull;
@@ -56,7 +62,8 @@ describe('handleIHR719CAPIs test suite', () => {
       'DISSOCIATE',
       MOCK_TOKEN_ADDRESS,
       {} as ethers.JsonRpcSigner,
-      MOCK_GAS_LIMIT
+      MOCK_GAS_LIMIT,
+      MOCK_HEDERA_NETWORK
     );
 
     expect(txRes.err).toBeNull;
@@ -64,7 +71,13 @@ describe('handleIHR719CAPIs test suite', () => {
   });
 
   it("should execute handleIHRCAPI() with API === 'ASSOCIATE' and return error if hederaTokenAddress is not valid", async () => {
-    const txRes = await handleIHRC719APIs('ASSOCIATE', '0xabc', {} as ethers.JsonRpcSigner, MOCK_GAS_LIMIT);
+    const txRes = await handleIHRC719APIs(
+      'ASSOCIATE',
+      '0xabc',
+      {} as ethers.JsonRpcSigner,
+      MOCK_GAS_LIMIT,
+      MOCK_HEDERA_NETWORK
+    );
 
     expect(txRes.err).toBe('Invalid token address');
     expect(txRes.transactionHash).toBeNull;
