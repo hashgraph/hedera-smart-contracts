@@ -61,7 +61,7 @@ describe('@yulequiv Data Allocation Test Suite', () => {
   });
 
   it('Should execute sstore', async () => {
-    await dataAllocationContract.sstore(SLOT_0_KEY, V);
+    await (await dataAllocationContract.sstore(SLOT_0_KEY, V)).wait();
 
     const result = await dataAllocationContract.sload(SLOT_0_KEY);
 

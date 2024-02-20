@@ -56,7 +56,7 @@ describe('@solidityequiv3 Precompiles Support Test Suite', function () {
   it('Should verify the signer of a message using ecrecover', async function () {
     const UNSIGNED_MESSAGE = 'I agree to the terms';
     const walletSigner = ethers.Wallet.createRandom();
-    const signedMessage = walletSigner.signMessage(UNSIGNED_MESSAGE);
+    const signedMessage = await walletSigner.signMessage(UNSIGNED_MESSAGE);
     const hashedMessage = ethers.hashMessage(UNSIGNED_MESSAGE);
 
     const splitMessage = ethers.Signature.from(signedMessage);
@@ -110,7 +110,7 @@ describe('@solidityequiv3 Precompiles Support Test Suite', function () {
 
     // Expected result: (3^2) % 5 = 9 % 5 = 4
     const expectedOutput = 4n;
-    const result = await precompilesContract.callStatic.modExp(
+    const result = await precompilesContract.modExp.staticCall(
       base,
       exponent,
       modulus
@@ -166,7 +166,7 @@ describe('@solidityequiv3 Precompiles Support Test Suite', function () {
     // Multiply the point by the scalar
     const resultPoint = secondPoint.mul(scalar);
 
-    const result = await precompilesContract.callStatic.ecMul(
+    const result = await precompilesContract.ecMul.staticCall(
       [
         BigInt(secondPoint.getX().toString()),
         BigInt(secondPoint.getY().toString()),
@@ -227,7 +227,7 @@ describe('@solidityequiv3 Precompiles Support Test Suite', function () {
 
     const f = true;
 
-    const result = await precompilesContract.callStatic.blake2(
+    const result = await precompilesContract.blake2.staticCall(
       rounds,
       h,
       m,

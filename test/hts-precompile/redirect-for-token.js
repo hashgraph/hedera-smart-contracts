@@ -31,7 +31,7 @@ describe('RedirectForToken Test Suite', function () {
 
   const parseCallResponseEventData = async (tx) => {
     return (await tx.wait()).logs.filter(
-      (e) => e.fragment.name === Constants.Events.CallResponseEvent
+      (e) => e?.fragment?.name === Constants.Events.CallResponseEvent
     )[0].args;
   };
 
@@ -198,7 +198,7 @@ describe('RedirectForToken Test Suite', function () {
       Constants.Path.ERC20Mock,
       tokenAddress
     );
-    await erc20.transfer(await tokenCreateContract.getAddress(), amount);
+    await (await erc20.transfer(await tokenCreateContract.getAddress(), amount)).wait();
 
     const balanceBefore = await erc20.balanceOf(signers[1].address);
 
@@ -215,7 +215,7 @@ describe('RedirectForToken Test Suite', function () {
 
     const balanceAfter = await erc20.balanceOf(signers[1].address);
     expect(balanceBefore).to.not.eq(balanceAfter);
-    expect(balanceAfter).to.eq(balanceBefore + amount);
+    expect(balanceAfter).to.eq(balanceBefore + BigInt(amount));
   });
 
   it('should be able to execute transferFrom(address,address,uint256)', async function () {
@@ -223,19 +223,19 @@ describe('RedirectForToken Test Suite', function () {
       Constants.Path.ERC20Mock,
       tokenAddress
     );
-    await erc20.transfer(await tokenCreateContract.getAddress(), amount);
+    await (await erc20.transfer(await tokenCreateContract.getAddress(), amount)).wait();
 
     const tokenCreateContractBefore = await erc20.balanceOf(
       await tokenCreateContract.getAddress()
     );
     const balanceBefore = await erc20.balanceOf(signers[1].address);
 
-    await tokenCreateContract.approvePublic(
+    await (await tokenCreateContract.approvePublic(
       tokenAddress,
       await tokenCreateContract.getAddress(),
       amount,
       Constants.GAS_LIMIT_1_000_000
-    );
+    )).wait();
 
     const encodedFunc = IERC20.encodeFunctionData(
       'transferFrom(address,address,uint256)',
@@ -246,15 +246,16 @@ describe('RedirectForToken Test Suite', function () {
       encodedFunc,
       Constants.GAS_LIMIT_1_000_000
     );
-    const tokenCreateContractAfter = await erc20.balanceOf(
-      await tokenCreateContract.getAddress()
-    );
     const [success] = await parseCallResponseEventData(tx);
     expect(success).to.eq(true);
 
+    const tokenCreateContractAfter = await erc20.balanceOf(
+        await tokenCreateContract.getAddress()
+    );
+
     const balanceAfter = await erc20.balanceOf(signers[1].address);
     expect(balanceBefore).to.not.eq(balanceAfter);
-    expect(tokenCreateContractAfter).to.eq(tokenCreateContractBefore - amount);
+    expect(tokenCreateContractAfter).to.eq(tokenCreateContractBefore - BigInt(amount));
     expect(balanceAfter).to.eq(parseInt(balanceBefore) + parseInt(amount));
   });
 });

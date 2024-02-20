@@ -86,13 +86,14 @@ describe('@solidityequiv2 Solidity Errors Test Suite', function () {
     try {
       await contract.revertWithCustomError();
     } catch (err) {
-      const abi = ethers.AbiCoder.defaultAbiCoder();
-      const res = abi.decode(['bytes4','uint256', 'uint256'], err.data);
       hasError = true;
-      expect(err.code).to.equal('CALL_EXCEPTION');
-      expect(err.errorName).to.equal('InsufficientBalance');
-      expect(err.errorArgs.available).to.equal(BigInt(1));
-      expect(err.errorArgs.required).to.equal(BigInt(100));
+      expect(err.code).to.equal(-32008);
+
+      const customError = contract.interface.parseError(err.data);
+      expect(customError).to.not.equal(null);
+      expect(customError.name).to.equal('InsufficientBalance');
+      expect(customError.args.available).to.equal(BigInt(1));
+      expect(customError.args.required).to.equal(BigInt(100));
     }
     expect(hasError).to.equal(true);
     await expect(
