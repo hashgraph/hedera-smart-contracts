@@ -30,7 +30,7 @@ import {
   MOCK_TX_HASH,
   MOCK_GAS_LIMIT,
   MOCK_HEDERA_NETWORK,
-  MOCK_SINGER_ADDRESS,
+  MOCK_SIGNER_ADDRESS,
 } from '../../utils/common/constants';
 
 describe('getERC20TokenInformation', () => {
@@ -95,7 +95,7 @@ describe('erc20Mint', () => {
   it('should execute erc20Mint', async () => {
     const res = await erc20Mint(
       baseContract as unknown as Contract,
-      MOCK_SINGER_ADDRESS,
+      MOCK_SIGNER_ADDRESS,
       MOCK_HEDERA_NETWORK,
       '0x7a575266b2020e262e9b1ad4eba3014d63630095',
       120,
@@ -112,7 +112,7 @@ describe('erc20Mint', () => {
   it('should failed with invalid recipient address', async () => {
     const res = await erc20Mint(
       baseContract as unknown as Contract,
-      MOCK_SINGER_ADDRESS,
+      MOCK_SIGNER_ADDRESS,
       MOCK_HEDERA_NETWORK,
       '0xabc',
       120,
@@ -127,7 +127,7 @@ describe('erc20Mint', () => {
   it('should failed with invalid token amount', async () => {
     const res = await erc20Mint(
       baseContract as unknown as Contract,
-      MOCK_SINGER_ADDRESS,
+      MOCK_SIGNER_ADDRESS,
       MOCK_HEDERA_NETWORK,
       '0x7a575266b2020e262e9b1ad4eba3014d63630095',
       -120,
@@ -184,7 +184,7 @@ describe('Token Permissions', () => {
   it('should execute erc20Approve', async () => {
     const approveRes = await handleErc20TokenPermissions(
       baseContract as unknown as Contract,
-      MOCK_SINGER_ADDRESS,
+      MOCK_SIGNER_ADDRESS,
       MOCK_HEDERA_NETWORK,
       'approve',
       '0x7a575266b2020e262e9b1ad4eba3014d63630095',
@@ -203,7 +203,7 @@ describe('Token Permissions', () => {
   it('should fail erc20Approve with Invalid spender address', async () => {
     const approveRes = await handleErc20TokenPermissions(
       baseContract as unknown as Contract,
-      MOCK_SINGER_ADDRESS,
+      MOCK_SIGNER_ADDRESS,
       MOCK_HEDERA_NETWORK,
       'approve',
       '0x3619',
@@ -221,7 +221,7 @@ describe('Token Permissions', () => {
   it('should execute erc20IncreaseAllowance', async () => {
     const increaseAllowanceRes = await handleErc20TokenPermissions(
       baseContract as unknown as Contract,
-      MOCK_SINGER_ADDRESS,
+      MOCK_SIGNER_ADDRESS,
       MOCK_HEDERA_NETWORK,
       'increaseAllowance',
       '0x7a575266b2020e262e9b1ad4eba3014d63630095',
@@ -240,7 +240,7 @@ describe('Token Permissions', () => {
   it('should fail erc20IncreaseAllowance with Invalid spender address', async () => {
     const increaseAllowanceRes = await handleErc20TokenPermissions(
       baseContract as unknown as Contract,
-      MOCK_SINGER_ADDRESS,
+      MOCK_SIGNER_ADDRESS,
       MOCK_HEDERA_NETWORK,
       'increaseAllowance',
       '0x3619',
@@ -258,7 +258,7 @@ describe('Token Permissions', () => {
   it('should execute erc20DecreaseAllowance', async () => {
     const decreaseAllowanceRes = await handleErc20TokenPermissions(
       baseContract as unknown as Contract,
-      MOCK_SINGER_ADDRESS,
+      MOCK_SIGNER_ADDRESS,
       MOCK_HEDERA_NETWORK,
       'decreaseAllowance',
       '0x7a575266b2020e262e9b1ad4eba3014d63630095',
@@ -277,7 +277,7 @@ describe('Token Permissions', () => {
   it('should fail erc20DecreaseAllowance with Invalid spender address', async () => {
     const decreaseAllowanceRes = await handleErc20TokenPermissions(
       baseContract as unknown as Contract,
-      MOCK_SINGER_ADDRESS,
+      MOCK_SIGNER_ADDRESS,
       MOCK_HEDERA_NETWORK,
       'decreaseAllowance',
       '0x3619',
@@ -295,7 +295,7 @@ describe('Token Permissions', () => {
   it('should execute erc20Allowance', async () => {
     const allowanceRes = await handleErc20TokenPermissions(
       baseContract as unknown as Contract,
-      MOCK_SINGER_ADDRESS,
+      MOCK_SIGNER_ADDRESS,
       MOCK_HEDERA_NETWORK,
       'allowance',
       '0x7a575266b2020e262e9b1ad4eba3014d63630095',
@@ -312,7 +312,7 @@ describe('Token Permissions', () => {
   it('should fail erc20Allowance with Invalid owner address', async () => {
     const allowanceRes = await handleErc20TokenPermissions(
       baseContract as unknown as Contract,
-      MOCK_SINGER_ADDRESS,
+      MOCK_SIGNER_ADDRESS,
       MOCK_HEDERA_NETWORK,
       'allowance',
       '0x7a575266b2020e262e9b1ad4eba3014d63630012',
@@ -329,7 +329,7 @@ describe('Token Permissions', () => {
   it('should fail erc20Allowance with Invalid spender address', async () => {
     const allowanceRes = await handleErc20TokenPermissions(
       baseContract as unknown as Contract,
-      MOCK_SINGER_ADDRESS,
+      MOCK_SIGNER_ADDRESS,
       MOCK_HEDERA_NETWORK,
       'allowance',
       '0x3619',
@@ -359,7 +359,7 @@ describe('Transfer', () => {
   it('should execute erc20Transfer', async () => {
     const transferRes = await erc20Transfers(
       baseContract as unknown as Contract,
-      MOCK_SINGER_ADDRESS,
+      MOCK_SIGNER_ADDRESS,
       MOCK_HEDERA_NETWORK,
       'transfer',
       '0x7a575266b2020e262e9b1ad4eba3014d63630012',
@@ -377,7 +377,7 @@ describe('Transfer', () => {
   it('should fail erc20Transfer with Invalid recipient address', async () => {
     const transferRes = await erc20Transfers(
       baseContract as unknown as Contract,
-      MOCK_SINGER_ADDRESS,
+      MOCK_SIGNER_ADDRESS,
       MOCK_HEDERA_NETWORK,
       'transfer',
       '0x112c',
@@ -394,7 +394,7 @@ describe('Transfer', () => {
   it('should execute erc20TransferFrom', async () => {
     const transferFromRes = await erc20Transfers(
       baseContract as unknown as Contract,
-      MOCK_SINGER_ADDRESS,
+      MOCK_SIGNER_ADDRESS,
       MOCK_HEDERA_NETWORK,
       'transferFrom',
       '0x7a575266b2020e262e9b1ad4eba3014d63630022',
@@ -413,7 +413,7 @@ describe('Transfer', () => {
   it('should fail erc20TransferFrom with Invalid token owner address', async () => {
     const transferFromRes = await erc20Transfers(
       baseContract as unknown as Contract,
-      MOCK_SINGER_ADDRESS,
+      MOCK_SIGNER_ADDRESS,
       MOCK_HEDERA_NETWORK,
       'transferFrom',
       '0x7a575266b2020e262e9b1ad4eba3014d63630012',
@@ -431,7 +431,7 @@ describe('Transfer', () => {
   it('should fail erc20TransferFrom with Invalid recipient address', async () => {
     const transferFromRes = await erc20Transfers(
       baseContract as unknown as Contract,
-      MOCK_SINGER_ADDRESS,
+      MOCK_SIGNER_ADDRESS,
       MOCK_HEDERA_NETWORK,
       'transferFrom',
       '0x112c',

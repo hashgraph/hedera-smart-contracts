@@ -25,7 +25,7 @@ import {
   MOCK_RESPONSE_CODE,
   MOCK_TOKEN_ADDRESS,
   MOCK_HEDERA_NETWORK,
-  MOCK_SINGER_ADDRESS,
+  MOCK_SIGNER_ADDRESS,
 } from '../../../utils/common/constants';
 import {
   transferCrypto,
@@ -102,7 +102,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferCrypto then return a successful response code', async () => {
       const txRes = await transferCrypto(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         transferList,
         tokenTransferList,
@@ -119,7 +119,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferFungibleTokens then return a successful response code', async () => {
       const txRes = await transferFungibleTokens(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         MOCK_TOKEN_ADDRESS,
         [senderA, senderB],
@@ -135,7 +135,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferFungibleTokens with an invalid token address then return an error', async () => {
       const txRes = await transferFungibleTokens(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         '0xabc',
         [senderA, senderB],
@@ -151,7 +151,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferFungibleTokens with an invalid sender ID then return an error', async () => {
       const txRes = await transferFungibleTokens(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         MOCK_TOKEN_ADDRESS,
         [senderA, '0xabc'],
@@ -167,7 +167,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferFungibleTokens with an invalid amount then return an error', async () => {
       const txRes = await transferFungibleTokens(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         MOCK_TOKEN_ADDRESS,
         [senderA, senderB],
@@ -185,7 +185,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferNonFungibleTokens then return a successful response code', async () => {
       const txRes = await transferNonFungibleTokens(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         MOCK_TOKEN_ADDRESS,
         [senderA, senderB],
@@ -202,7 +202,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferNonFungibleTokens with an invalid token address then return an error', async () => {
       const txRes = await transferNonFungibleTokens(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         '0xabc',
         [senderA, senderB],
@@ -219,7 +219,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferNonFungibleTokens with an invalid sender ID then return an error', async () => {
       const txRes = await transferNonFungibleTokens(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         MOCK_TOKEN_ADDRESS,
         [senderA, '0xabc'],
@@ -236,7 +236,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferNonFungibleTokens with an invalid receiver ID then return an error', async () => {
       const txRes = await transferNonFungibleTokens(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         MOCK_TOKEN_ADDRESS,
         [senderA, senderB],
@@ -253,7 +253,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferNonFungibleTokens with an invalid amount then return an error', async () => {
       const txRes = await transferNonFungibleTokens(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         MOCK_TOKEN_ADDRESS,
         [senderA, senderB],
@@ -272,7 +272,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferSingleToken with API === "FUNGIBLE" then return a successful response code', async () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
@@ -290,7 +290,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferSingleToken with API === "NFT" then return a successful response code', async () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'NFT',
         MOCK_TOKEN_ADDRESS,
@@ -308,7 +308,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferSingleToken with an invalid token address then return an error', async () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'FUNGIBLE',
         '0xabc',
@@ -326,7 +326,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferSingleToken with an invalid sender accountID then return an error', async () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
@@ -344,7 +344,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferSingleToken with an invalid receiver accountID then return an error', async () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
@@ -362,7 +362,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferSingleToken with an invalid quantity then return an error', async () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
@@ -382,7 +382,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferSingleTokenFrom with API === "FUNGIBLE" then return a successful response code', async () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'FUNGIBLE_FROM',
         MOCK_TOKEN_ADDRESS,
@@ -400,7 +400,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferSingleTokenFrom with API === "NFT_FROM" then return a successful response code', async () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'NFT_FROM',
         MOCK_TOKEN_ADDRESS,
@@ -418,7 +418,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferSingleTokenFrom with an invalid token address then return an error', async () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'FUNGIBLE_FROM',
         '0xabc',
@@ -436,7 +436,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferSingleTokenFrom with an invalid sender accountID then return an error', async () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'FUNGIBLE_FROM',
         MOCK_TOKEN_ADDRESS,
@@ -454,7 +454,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferSingleTokenFrom with an invalid receiver accountID then return an error', async () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'FUNGIBLE_FROM',
         MOCK_TOKEN_ADDRESS,
@@ -472,7 +472,7 @@ describe('TokenTransferContract test suite', () => {
     it('should execute transferSingleTokenFrom with an invalid quantity then return an error', async () => {
       const txRes = await transferSingleToken(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'FUNGIBLE_FROM',
         MOCK_TOKEN_ADDRESS,

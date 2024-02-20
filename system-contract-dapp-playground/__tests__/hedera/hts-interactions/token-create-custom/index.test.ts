@@ -32,7 +32,7 @@ import {
   MOCK_GAS_LIMIT,
   MOCK_TOKEN_ADDRESS,
   MOCK_HEDERA_NETWORK,
-  MOCK_SINGER_ADDRESS,
+  MOCK_SIGNER_ADDRESS,
 } from '../../../utils/common/constants';
 
 describe('createHederaFungibleToken test suite', () => {
@@ -449,7 +449,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute mintTokenPublic to mint a FUNGIBLE token then return a transaction hash', async () => {
       const txRes = await mintHederaToken(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
@@ -466,7 +466,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute mintTokenPublic to mint a NON-FUNGIBLE token then return a transaction hash', async () => {
       const txRes = await mintHederaToken(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'NON_FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
@@ -483,7 +483,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute mintTokenPublic to mint a Hedera token and return error when the hederaTokenAddress is invalid', async () => {
       const txRes = await mintHederaToken(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'FUNGIBLE',
         '0xabc',
@@ -500,7 +500,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute mintTokenPublic to mint a FUNGIBLE token and return error when the amount to mint is a negative number', async () => {
       const txRes = await mintHederaToken(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
@@ -516,7 +516,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute mintTokenPublic to mint a NON-FUNGIBLE token and return error when the amount to mint is a non-zero number', async () => {
       const txRes = await mintHederaToken(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'NON_FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
@@ -535,7 +535,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute mintHederaTokenToAddress to mint a FUNGIBLE token and transfer it to the recipient then return a transaction hash', async () => {
       const txRes = await mintHederaTokenToAddress(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
@@ -553,7 +553,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute mintHederaTokenToAddress to mint a NON-FUNGIBLE token and transfer it to the recipient then return a transaction hash', async () => {
       const txRes = await mintHederaTokenToAddress(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'NON_FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
@@ -571,7 +571,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute mintHederaTokenToAddress to mint a Hedera token and transfer it to the recipient then return error when the hederaTokenAddress is invalid', async () => {
       const txRes = await mintHederaTokenToAddress(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'FUNGIBLE',
         '0xabc',
@@ -589,7 +589,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute mintHederaTokenToAddress to mint a Hedera token and transfer it to the recipient then return error when the recipientAddress is invalid', async () => {
       const txRes = await mintHederaTokenToAddress(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
@@ -607,7 +607,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute mintHederaTokenToAddress to mint a FUNGIBLE token and transfer it to the recipient then return error when the amount to mint is a negative number', async () => {
       const txRes = await mintHederaTokenToAddress(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
@@ -625,7 +625,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute mintHederaTokenToAddress to mint a NON-FUNGIBLE token and transfer it to the recipient then return error when the amount to mint is a non-zero number', async () => {
       const txRes = await mintHederaTokenToAddress(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         'NON_FUNGIBLE',
         MOCK_TOKEN_ADDRESS,
@@ -645,7 +645,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute associateHederaTokensToAccounts to associate a token to an account then return a transaction hash', async () => {
       const txRes = await associateHederaTokensToAccounts(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         [MOCK_TOKEN_ADDRESS],
         associtingAccount,
@@ -658,7 +658,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute associateHederaTokensToAccounts to associate a list of tokens to an account then return a transaction hash', async () => {
       const txRes = await associateHederaTokensToAccounts(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         [MOCK_TOKEN_ADDRESS, feeTokenAddress],
         associtingAccount,
@@ -671,7 +671,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute associateHederaTokensToAccounts and return an error when the hederaTokenAddresses array is empty', async () => {
       const txRes = await associateHederaTokensToAccounts(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         [],
         associtingAccount,
@@ -684,7 +684,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute associateHederaTokensToAccounts and return an error when the associtingAccountAddress is invalid', async () => {
       const txRes = await associateHederaTokensToAccounts(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         [MOCK_TOKEN_ADDRESS, feeTokenAddress],
         '0xabc',
@@ -698,7 +698,7 @@ describe('createHederaFungibleToken test suite', () => {
       const invalidTokenAddress = '0xaac';
       const txRes = await associateHederaTokensToAccounts(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         [MOCK_TOKEN_ADDRESS, invalidTokenAddress],
         associtingAccount,
@@ -714,7 +714,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute grantTokenKYCToAccount to associate a token KYC to an account then return a transaction hash', async () => {
       const txRes = await grantTokenKYCToAccount(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         MOCK_TOKEN_ADDRESS,
         grantingKYCAccount,
@@ -727,7 +727,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute grantTokenKYCToAccount to associate a token KYC to an account then return error when hederaTokenAddress is invalid', async () => {
       const txRes = await grantTokenKYCToAccount(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         '0xabc',
         grantingKYCAccount,
@@ -740,7 +740,7 @@ describe('createHederaFungibleToken test suite', () => {
     it('should execute grantTokenKYCToAccount to associate a token KYC to an account then return error when grantingKYCAccountAddress is invalid', async () => {
       const txRes = await grantTokenKYCToAccount(
         baseContract as unknown as Contract,
-        MOCK_SINGER_ADDRESS,
+        MOCK_SIGNER_ADDRESS,
         MOCK_HEDERA_NETWORK,
         MOCK_TOKEN_ADDRESS,
         '0xabc',

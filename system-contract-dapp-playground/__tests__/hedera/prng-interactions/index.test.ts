@@ -24,7 +24,7 @@ import {
   MOCK_TX_HASH,
   MOCK_GAS_LIMIT,
   MOCK_HEDERA_NETWORK,
-  MOCK_SINGER_ADDRESS,
+  MOCK_SIGNER_ADDRESS,
 } from '../../utils/common/constants';
 
 describe('PRNG Test Suite', () => {
@@ -50,7 +50,7 @@ describe('PRNG Test Suite', () => {
   it('should execute handlePRGNAPI then return a transaction hash and a pseudo random seed', async () => {
     const txRes = await handlePRGNAPI(
       baseContract as unknown as Contract,
-      MOCK_SINGER_ADDRESS,
+      MOCK_SIGNER_ADDRESS,
       MOCK_HEDERA_NETWORK,
       MOCK_GAS_LIMIT
     );
