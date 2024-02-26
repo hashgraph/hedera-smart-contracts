@@ -105,35 +105,31 @@ describe('EstimateGas', function () {
     expect(receipt.logs[0].args[0]).to.eq(SUCCESS_RESPONSE_CODE);
   });
 
-  it('Should FAIL updateTokenInfoPublic() WITHOUT customized gas limit', async function () {
-    const txBeforeInfo = await tokenQueryContract.getTokenInfoPublic(
+  it('should FAIL updateTokenExpiryInfoPublic WITHOUT custom gas limit', async function () {
+    const txBeforeInfo = await tokenQueryContract.getTokenInfoPublic.staticCall(
       tokenAddress
     );
-    const tokenInfoBefore = (await txBeforeInfo.wait()).logs.filter(
-      (e) => e.fragment.name === Constants.Events.TokenInfo
-    )[0].args.tokenInfo[0];
+    const currentExpiry = txBeforeInfo[1][0][8];
 
-    const token = {
-      name: 'NewTokenName',
-      symbol: tokenInfoBefore.symbol,
-      memo: tokenInfoBefore.memo,
-      treasury: signers[0].address, // treasury has to be the signing account,
-      tokenSupplyType: tokenInfoBefore.tokenSupplyType,
-      maxSupply: tokenInfoBefore.maxSupply,
-      freezeDefault: tokenInfoBefore.freezeDefault,
-      tokenKeys: [],
-      expiry: {
-        second: 0,
-        autoRenewAccount: tokenInfoBefore.expiry[1],
-        autoRenewPeriod: 0,
-      },
+    const expiryInfo = {
+      second: currentExpiry.second + 10000n,
+      autoRenewAccount: currentExpiry.autoRenewAccount,
+      autoRenewPeriod: currentExpiry.autoRenewPeriod,
     };
 
-    try {
-      // @notice no estimated gas limit and the transaction will fail
-      await tokenManagmentContract.updateTokenInfoPublic(tokenAddress, token);
-    } catch (e) {
-      expect(e.code).to.eq(Constants.CONTRACT_REVERT_EXECUTED_CODE);
-    }
+    // @notice will revert if no custom gas limit provided
+    const updateTokenExpiryInfoTx =
+      await tokenManagmentContract.updateTokenExpiryInfoPublic(
+        tokenAddress,
+        expiryInfo
+        // Constants.GAS_LIMIT_1_000_000
+      );
+
+    const updateExpiryInfoResponseCode = (
+      await updateTokenExpiryInfoTx.wait()
+    ).logs.filter((e) => e.fragment.name === 'ResponseCode')[0].args
+      .responseCode;
+
+    expect(updateExpiryInfoResponseCode).to.equal(SUCCESS_RESPONSE_CODE);
   });
 });
