@@ -26,7 +26,7 @@
  *    ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝
  *
  */
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.23;
 // IV is value needed to have a vanity address starting with '0x1820'.
 // IV: 53759
 

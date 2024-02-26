@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.23;
 
 import "./ERC777Token.sol";
 import "@openzeppelin/contracts/interfaces/IERC1820Registry.sol";
