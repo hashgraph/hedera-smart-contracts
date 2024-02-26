@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity >=0.4.9 <0.9.0;
+pragma solidity ^0.8.23;
 
 interface IExchangeRate {
     // Given a value in tinycents (1e-8 US cents or 1e-10 USD), returns the
