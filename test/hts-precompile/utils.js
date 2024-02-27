@@ -32,6 +32,9 @@ const {
   TokenId,
   TokenUpdateTransaction,
   TokenAssociateTransaction,
+  ContractInfoQuery,
+  AccountDeleteTransaction,
+  Wallet
 } = require('@hashgraph/sdk');
 const Constants = require('../constants');
 
@@ -525,6 +528,11 @@ class Utils {
     return accountInfo.accountId.toString();
   }
 
+  static async getContractInfo(evmAddress, client){
+    const query = new ContractInfoQuery().setContractId(evmAddress);
+    return await query.execute(client);
+  }
+
   static async getAccountInfo(evmAddress, client) {
     const query = new AccountInfoQuery().setAccountId(
       AccountId.fromEvmAddress(0, 0, evmAddress)
@@ -532,6 +540,25 @@ class Utils {
 
     return await query.execute(client);
   }
+
+  static async deleteAccount(account) {
+    let accountDeleteTransaction = await new AccountDeleteTransaction()
+      .setAccountId(account.address)
+      .setTransferAccountId(account.address)
+      .freezeWithSigner(account);
+    await accountDeleteTransaction.sign(clientSigner0);
+    await accountDeleteTransaction.sign(
+      pkSigners[0]
+    );
+    accountDeleteTransaction = await accountDeleteTransaction.signWithSigner(
+      account
+    );
+
+    const r = await accountDeleteTransaction.executeWithSigner(account);
+
+    console.log(await r.getReceiptWithSigner(account));
+  }
+
 
   static getSignerCompressedPublicKey(
     index = 0,

@@ -56,6 +56,7 @@ const Events = {
   TinyBars: 'TinyBars',
   TinyCents: 'TinyCents',
   PseudoRandomSeed: 'PseudoRandomSeed',
+  DeployedContractAddress: 'DeployedContractAddress'
 };
 
 const Path = {
