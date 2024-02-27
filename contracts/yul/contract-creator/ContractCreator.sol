@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 /**
  * @notice The unit tests for the `ContractCreator` contract will utilize a predefined bytecode of a contract that inherits the `ITargetContract` interface.
