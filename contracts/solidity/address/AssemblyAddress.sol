@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 contract AssemblyAddress {
     function codesizeat(address addr) external view returns(uint256 size) {

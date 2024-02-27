@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache 2.0
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity ^0.8.24;
+
 /// @title Voting with delegation.
 // contract ballot from https://docs.soliditylang.org/en/latest/solidity-by-example.html#voting
 contract Ballot {
