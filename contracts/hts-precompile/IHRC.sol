@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity >=0.4.9 <0.9.0;
+pragma solidity ^0.8.24;
 
 interface IHRC {
     function associate() external returns (uint256 responseCode);
