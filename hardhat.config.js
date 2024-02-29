@@ -55,7 +55,7 @@ module.exports = {
       },
     },
   },
-  defaultNetwork: NETWORKS.local.name,
+  defaultNetwork: NETWORKS.testnet.name,
   networks: {
     local: {
       url: NETWORKS.local.url,
@@ -81,6 +81,7 @@ module.exports = {
         nodeId: NETWORKS.testnet.nodeId,
         mirrorNode: NETWORKS.testnet.mirrorNode,
       },
+      timeout: 2000000,
     },
     previewnet: {
       url: NETWORKS.previewnet.url,
