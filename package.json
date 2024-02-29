@@ -35,7 +35,7 @@
     "@hashgraph/sdk": "^2.41.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.3",
     "@nomicfoundation/hardhat-foundry": "^1.1.1",
-    "@openzeppelin/contracts": "^5.0.0",
+    "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.0",
     "@openzeppelin/hardhat-upgrades": "^3.0.2",
     "hardhat": "^2.19.4",
