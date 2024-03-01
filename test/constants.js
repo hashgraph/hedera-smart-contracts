@@ -56,7 +56,10 @@ const Events = {
   TinyBars: 'TinyBars',
   TinyCents: 'TinyCents',
   PseudoRandomSeed: 'PseudoRandomSeed',
-  DeployedContractAddress: 'DeployedContractAddress'
+  DeployedContractAddress: 'DeployedContractAddress',
+  DeployedContract0Address: 'DeployedContract0Address',
+  DeployedContract1Address: 'DeployedContract1Address',
+  DeployedContract2Address: 'DeployedContract2Address'
 };
 
 const Path = {
@@ -193,6 +196,7 @@ const Contract = {
   Purchase: 'Purchase',
   InternalCallee: 'InternalCallee',
   InternalCaller: 'InternalCaller',
+  ChainedContracts: 'ChainedContracts',
   EthNativePrecompileCaller: 'EthNativePrecompileCaller',
   AtomicHTS: 'AtomicHTS',
 };

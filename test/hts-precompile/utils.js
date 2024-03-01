@@ -34,7 +34,9 @@ const {
   TokenAssociateTransaction,
   ContractInfoQuery,
   AccountDeleteTransaction,
-  Wallet
+  Wallet,
+  ContractCallQuery,
+  ContractNonceInfo
 } = require('@hashgraph/sdk');
 const Constants = require('../constants');
 
@@ -529,7 +531,8 @@ class Utils {
   }
 
   static async getContractInfo(evmAddress, client){
-    const query = new ContractInfoQuery().setContractId(evmAddress);
+    const query = new ContractInfoQuery().setContractId(ContractId.fromEvmAddress(0,0,evmAddress));
+    
     return await query.execute(client);
   }
 
@@ -541,22 +544,19 @@ class Utils {
     return await query.execute(client);
   }
 
-  static async deleteAccount(account) {
+  static async deleteAccount(account, signer, accountId) {
+
+    console.log(accountId);
     let accountDeleteTransaction = await new AccountDeleteTransaction()
-      .setAccountId(account.address)
-      .setTransferAccountId(account.address)
-      .freezeWithSigner(account);
-    await accountDeleteTransaction.sign(clientSigner0);
-    await accountDeleteTransaction.sign(
-      pkSigners[0]
-    );
-    accountDeleteTransaction = await accountDeleteTransaction.signWithSigner(
-      account
-    );
+      .setAccountId(accountId)
+      .setTransferAccountId(signer.getOperator().accountId);
+      
+    await accountDeleteTransaction
+      .freezeWith(signer)
+      .sign(PrivateKey.fromStringECDSA(account.signingKey.privateKey));
 
-    const r = await accountDeleteTransaction.executeWithSigner(account);
-
-    console.log(await r.getReceiptWithSigner(account));
+    const r = await accountDeleteTransaction.execute(signer);
+    console.log(await r.getReceipt(signer));
   }
 
 
