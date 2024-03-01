@@ -24,12 +24,14 @@ const Utils = require("../hts-precompile/utils");
 const TestUtils = require("../utils");
 const {expect} = require('chai');
 const {ethers} = require('hardhat');
+const { ContractId } = require('@hashgraph/sdk');
 
 describe('@discrepancies - Nonce Test Suite', async () => {
   let signers;
   let sdkClient;
   let internalCalleeContract;
   let internalCallerContract;
+  let chainedContracts
   let tooLowGasPrice;
   let enoughGasPrice;
   let tokenCreateContract;
@@ -79,10 +81,10 @@ describe('@discrepancies - Nonce Test Suite', async () => {
   });
 
   async function getServicesContractNonce(evmAddress){
-    try{
-      const info = await Utils.getContractInfo(evmAddress, sdkClient);
-      return info?.ethereumNonce?.toNumber();
-    }catch (e){
+    try {
+      const info = await Utils.getAccountInfo(evmAddress, sdkClient);
+      return info;
+    } catch (e) {
       return null;
     }
   }
@@ -459,7 +461,7 @@ describe('@discrepancies - Nonce Test Suite', async () => {
 
   });
 
-  //fails - cannot get correct nonce
+  //fails
   it('should update all nonces after a successful contract deploy with CREATE2 ', async function() {
 
     const snBefore = await getServicesNonce(signers[0].address);
@@ -478,7 +480,7 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     
     //get the nonce of the intermediary contract
     const contractFactorySnAfter = await getServicesContractNonce(internalCalleeContract.target);
-    const contractFactoryMnAfter = await getServicesContractNonce(internalCalleeContract.target);
+    const contractFactoryMnAfter = await getMirrorNodeNonce(internalCalleeContract.target);
 
     //After successful deploy verify that the nonces of the factory contract and the tx signer are updated
     expectIncrementedNonce(snBefore, mnBefore, snAfter, mnAfter);
@@ -502,25 +504,15 @@ describe('@discrepancies - Nonce Test Suite', async () => {
 
   });
 
-  //WIP
-  it.only('should not update nonces when deploying on an address with an already existing account', async function() {
-    //create a hollow account and send HBAR
+  it('should not update nonces when deploying on an address with an already existing account', async function() {
+    //create a hollow account and send tokens
     const wallet = await createNewAccountWithBalance(ethers.parseEther('3.1'));
     const snAfterCreate = await getServicesNonce(wallet.address);
     const mnAfterCreate = await getMirrorNodeNonce(wallet.address);
-    // verify nonce of hollow account is 0
+    // verify nonce of hollow account after token received is 0
     expectNonIncrementedNonce(snAfterCreate, mnAfterCreate, 0, 0);
 
-    //send ethers to the hollow account
-    const fundTx = await signers[0].sendTransaction({
-      to: wallet.address,
-      value: Utils.tinybarToWeibarCoef // 1 tinybar
-    });
-    await fundTx.wait();
-
-    expectNonIncrementedNonce(snAfterCreate, mnAfterCreate, 0, 0);
-
-    //send ethers from the hollow account to the GENESIS account - fails
+    //send ethers from the hollow account to the GENESIS account 
     const signerFundTx = await wallet.sendTransaction({
       to: signers[0].address,
       value: Utils.tinybarToWeibarCoef // 1 tinybar
@@ -534,15 +526,15 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     expectIncrementedNonce(snAfterCreate, mnAfterCreate, snAfterSendTx, mnAfterSendTx);
 
     //delete the account
-    const deleteTx = await Utils.deleteAccount(wallet);
-    await deleteTx.wait();
+    const info = await Utils.getAccountInfo(wallet.address, sdkClient);
+    const deleteTx = await Utils.deleteAccount(wallet,sdkClient, info.accountId);
 
-    //send HBAR to the same address and verify nonce is 0
-    fundTx = await signers[0].sendTransaction({
+    //send tokens to the same address and verify nonce is 0
+    const fundTx2 = await signers[0].sendTransaction({
       to: wallet.address,
       value: Utils.tinybarToWeibarCoef // 1 tinybar
     });
-    await fundTx.wait();
+    await fundTx2.wait();
 
     //verify nonce is 0
     const snAfterNewCreate = await getServicesNonce(wallet.address);
@@ -551,7 +543,45 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     expectNonIncrementedNonce(snAfterNewCreate, mnAfterNewCreate, 0, 0);
   });
 
-  it('should update all nonces when chained deploys of contracts', async function() {
-    
+  it.only('should update all nonces when chained deploys of contracts', async function() {
+    //deploys contract A which deploys contract B which deploys contract C
+    //nonces of signer, contract A and contract B should increment
+    //nonce of contract C should be 0
+    const snBefore = await getServicesNonce(signers[0].address);
+    const mnBefore = await getMirrorNodeNonce(signers[0].address);
+
+    //deploy contract A which will deploy Contract B which will deploy Contract C
+    const chainedContractsFactory = await ethers.getContractFactory(Constants.Contract.ChainedContracts);
+    const chainedContracts = await chainedContractsFactory.deploy({gasLimit: 5_000_000});
+    const receipt = await chainedContracts.deploymentTransaction().wait();
+
+    console.log(receipt.logs);
+
+    //get the 3 contracts addresses
+    const innerContract = receipt.logs[0].address;
+    const intermediaryContract = receipt.logs[1].address;
+    const outerContract  = receipt.logs[2].address;
+
+    //get the 3 contracts nonces
+    const servicesInnerContractNonce = await Utils.getContractInfo(innerContract, sdkClient);
+    const mirrorNodeInnerContractNonce = await getMirrorNodeNonce(innerContract);
+
+    const servicesIntermediaryContractContractNonce = await getServicesContractNonce(intermediaryContract.target);
+    const mirrorNodeIntermediaryContractNonce = await getMirrorNodeNonce(intermediaryContract.target);
+
+    const servicesOuterContractNonce = await getServicesContractNonce(outerContract.target);
+    const mirrorNodeOuterContractNonce = await getMirrorNodeNonce(outerContract.target);
+
+    //verify signer nonces have updated correctly
+    const snAfter = await getServicesNonce(signers[0].address);
+    const mnAfter = await getMirrorNodeNonce(signers[0].address);
+    expectIncrementedNonce(snBefore, mnBefore, snAfter, mnAfter);
+
+    //verify contract nonces have updated 
+    expectIncrementedNonce(0, 0, servicesIntermediaryContractContractNonce, mirrorNodeIntermediaryContractNonce);
+    expectIncrementedNonce(0, 0, servicesOuterContractNonce, mirrorNodeOuterContractNonce);
+
+    //verify nonce of the inner most contract is 0
+    expectNonIncrementedNonce(0, 0, servicesInnerContractNonce, mirrorNodeInnerContractNonce);
   });
 });
