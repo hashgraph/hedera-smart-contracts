@@ -36,8 +36,8 @@ import useFilterTransactionsByContractAddress from '../../../../../../hooks/useF
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   SharedFormButton,
-  SharedExecuteButton,
   SharedFormInputField,
+  SharedExecuteButtonWithFee,
 } from '../../../shared/components/ParamInputForm';
 import {
   CONTRACT_NAMES,
@@ -72,10 +72,10 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [tokenInfo, setTokenInfo] = useState<any>();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const initialParamValues = { hederaTokenAddress: '' };
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [showTokenInfo, setShowTokenInfo] = useState(false);
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
+  const initialParamValues = { feeValue: '', hederaTokenAddress: '' };
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [paramValues, setParamValues] = useState<any>(initialParamValues);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const [tokenInfoFromTxResult, setTokenInfoFromTxResult] = useState<any>();
@@ -83,6 +83,7 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
   const [tokenAddressFromTxResult, setTokenAddressFromTxResult] = useState('');
   const [APIMethods, setAPIMethods] = useState<API_NAMES>('DEFAULT_FREEZE_STATUS');
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_QUERY) as string;
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const [keyTypeFromTxResult, setKeyTypeFromTxResult] = useState<IHederaTokenServiceKeyType>('ADMIN');
   const [APIMethodsFromTxResult, setAPIMethodsFromTxResult] = useState<API_NAMES>('DEFAULT_FREEZE_STATUS');
@@ -182,8 +183,11 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
     // invoking method API
     const tokenInfoResult = await queryTokenSpecificInfomation(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       API,
       paramValues.hederaTokenAddress,
+      Number(paramValues.feeValue),
       keyType
     );
 
@@ -322,10 +326,16 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
           if (APIMethods === APIButton.API) {
             return (
               <div key={APIButton.API} className="w-full">
-                <SharedExecuteButton
+                {/* Execute buttons */}
+                <SharedExecuteButtonWithFee
                   isLoading={isLoading}
-                  handleCreatingFungibleToken={() => handleQuerySpecificInfo(APIButton.API)}
-                  buttonTitle={APIButton.executeTitle}
+                  feeType={'GAS'}
+                  paramValues={paramValues.feeValue}
+                  placeHolder={'Gas limit...'}
+                  executeBtnTitle={APIButton.executeTitle}
+                  handleInputOnChange={handleInputOnChange}
+                  explanation={'Optional gas limit for the transaction.'}
+                  handleInvokingAPIMethod={() => handleQuerySpecificInfo(APIButton.API)}
                 />
               </div>
             );
@@ -338,7 +348,7 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
         <TransactionResultTable
           onOpen={onOpen}
           API="QuerySpecificInfo"
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           setShowTokenInfo={setShowTokenInfo}
           transactionResults={transactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
@@ -364,7 +374,7 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
           APIMethods={APIMethods}
           setKeyType={setKeyType}
           setTokenInfo={setTokenInfo}
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           setParamValues={setParamValues}
           setIsSuccessful={setIsSuccessful}
           initialParamValues={initialParamValues}
@@ -378,7 +388,7 @@ const QueryTokenSpecificInfomation = ({ baseContract }: PageProps) => {
           isOpen={isOpen}
           onClose={onClose}
           keyType={keyTypeFromTxResult}
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           tokenInfo={tokenInfoFromTxResult}
           APIMethods={APIMethodsFromTxResult}
           hederaTokenAddress={tokenAddressFromTxResult}

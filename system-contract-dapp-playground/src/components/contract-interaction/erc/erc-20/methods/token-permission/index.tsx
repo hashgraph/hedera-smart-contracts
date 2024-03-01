@@ -56,7 +56,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
   const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC20) as string;
-  const contractCaller = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['TOKEN-PERMISSION'];
@@ -78,21 +78,25 @@ const TokenPermission = ({ baseContract }: PageProps) => {
     owner: '',
     spender: '',
     amount: '',
+    feeValue: '',
   });
   const [allowanceParams, setAllowanceParams] = useState({
     owner: '',
     spender: '',
     amount: '',
+    feeValue: '',
   });
   const [increaseAllowanceParams, setIncreaseAllowanceParams] = useState({
     owner: '',
     spender: '',
     amount: '',
+    feeValue: '',
   });
   const [decreaseAllowanceParams, setDecreaseAllowanceParams] = useState({
     owner: '',
     spender: '',
     amount: '',
+    feeValue: '',
   });
 
   const [methodState, setMethodStates] = useState({
@@ -148,12 +152,13 @@ const TokenPermission = ({ baseContract }: PageProps) => {
    */
   const handleExecutingMethods = async (
     method: 'approve' | 'allowance' | 'increaseAllowance' | 'decreaseAllowance',
-    params: { spender: string; amount: string; owner: string },
+    params: { spender: string; amount: string; owner: string; feeValue: string },
     setParams?: Dispatch<
       SetStateAction<{
         owner: string;
         spender: string;
         amount: string;
+        feeValue: string;
       }>
     >,
     refreshMode?: boolean
@@ -181,8 +186,11 @@ const TokenPermission = ({ baseContract }: PageProps) => {
     // invoke method API
     const tokenPermissionRes = await handleErc20TokenPermissions(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       method,
       params.spender,
+      Number(params.feeValue),
       params.owner,
       Number(params.amount)
     );
@@ -238,7 +246,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
               method === 'allowance' ? generatedRandomUniqueKey(9) : (tokenPermissionRes.txHash as string),
             allowances: {
               spender: params.spender,
-              owner: method === 'allowance' ? allowanceParams.owner : contractCaller,
+              owner: method === 'allowance' ? allowanceParams.owner : signerAddress,
               amount:
                 method === 'allowance' ? Number(tokenPermissionRes.allowanceRes!) : Number(params.amount),
             },
@@ -256,7 +264,7 @@ const TokenPermission = ({ baseContract }: PageProps) => {
       }));
 
       // reset params
-      if (setParams && !refreshMode) setParams({ owner: '', spender: '', amount: '' });
+      if (setParams && !refreshMode) setParams({ owner: '', spender: '', amount: '', feeValue: '' });
     }
   };
 

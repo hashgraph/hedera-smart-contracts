@@ -29,10 +29,10 @@ import { useToastSuccessful } from '../../../../../../hooks/useToastSuccessful';
 import { handleAPIErrors } from '../../../../../common/methods/handleAPIErrors';
 import { usePaginatedTxResults } from '../../../../../../hooks/usePaginatedTxResults';
 import { TransactionResultTable } from '../../../../../common/components/TransactionResultTable';
-import { SharedFormInputField, SharedExecuteButton } from '../../../shared/components/ParamInputForm';
 import { grantTokenKYCToAccount } from '@/api/hedera/hts-interactions/tokenCreateCustom-interactions';
 import { handleSanitizeHederaFormInputs } from '../../../../../common/methods/handleSanitizeFormInputs';
 import { useUpdateTransactionResultsToLocalStorage } from '../../../../../../hooks/useUpdateLocalStorage';
+import { SharedFormInputField, SharedExecuteButtonWithFee } from '../../../shared/components/ParamInputForm';
 import { htsGrantTokenKYCParamFields } from '@/utils/contract-interactions/HTS/token-create-custom/constant';
 import useFilterTransactionsByContractAddress from '../../../../../../hooks/useFilterTransactionsByContractAddress';
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
@@ -51,13 +51,15 @@ const GrantTokenKYC = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const grantKYCFields = ['hederaTokenAddress', 'grantingKYCAccountAddress'];
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_CREATE) as string;
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-CREATE']['TOKEN-KYC'];
   const initialParamValues = {
+    feeValue: '',
     hederaTokenAddress: '',
     grantingKYCAccountAddress: '',
   };
@@ -109,8 +111,11 @@ const GrantTokenKYC = ({ baseContract }: PageProps) => {
     // invoke method API
     const { transactionHash, err } = await grantTokenKYCToAccount(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       hederaTokenAddress,
-      grantingKYCAccountAddress
+      grantingKYCAccountAddress,
+      Number(paramValues.feeValue)
     );
 
     // turn is loading off
@@ -189,10 +194,15 @@ const GrantTokenKYC = ({ baseContract }: PageProps) => {
           );
         })}
         {/* Execute button */}
-        <SharedExecuteButton
+        <SharedExecuteButtonWithFee
           isLoading={isLoading}
-          buttonTitle={`Grant Token KYC`}
-          handleCreatingFungibleToken={handleGrantTokenKYC}
+          feeType={'GAS'}
+          paramValues={paramValues.feeValue}
+          placeHolder={'Gas limit...'}
+          executeBtnTitle={'Grant Token KYC'}
+          handleInputOnChange={handleInputOnChange}
+          explanation={'Optional gas limit for the transaction.'}
+          handleInvokingAPIMethod={() => handleGrantTokenKYC()}
         />
       </div>
 
@@ -200,7 +210,7 @@ const GrantTokenKYC = ({ baseContract }: PageProps) => {
       {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="GrantKYC"
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           transactionResults={transactionResults}
           setTransactionResults={setTransactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}

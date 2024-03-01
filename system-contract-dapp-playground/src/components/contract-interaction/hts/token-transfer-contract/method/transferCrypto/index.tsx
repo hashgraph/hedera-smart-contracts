@@ -57,7 +57,7 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
   const [gasLimit, setGasLimit] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const contractCaller = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_TRANSFER) as string;
@@ -236,6 +236,8 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
     // invoke transferCrypto()
     const { result, transactionHash, err } = await transferCrypto(
       baseContract,
+      contractCaller,
+      HEDERA_NETWORK,
       transferList,
       tokenTransferList,
       Number(gasLimit)
@@ -318,7 +320,7 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
           placeHolder={'Gas limit...'}
           executeBtnTitle={'Transfer'}
           handleInputOnChange={(e: any) => setGasLimit(e.target.value)}
-          explanation={'Gas limit for the transaction'}
+          explanation={'Optional gas limit for the transaction.'}
           handleInvokingAPIMethod={handleTransferCrypto}
         />
       </div>
@@ -327,7 +329,7 @@ const CryptoTransfer = ({ baseContract }: PageProps) => {
       {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="CryptoTransfer"
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           transactionResults={transactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           setTransactionResults={setTransactionResults}

@@ -51,9 +51,10 @@ const HederaPRNGMethods = ({ baseContract }: PageProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [gasLimit, setGasLimit] = useState(initialParamValues);
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.PRNG) as string;
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey = HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['PRNG-RESULT']['PSEUDO-RANDOM'];
   const transactionResultsToShow = useFilterTransactionsByContractAddress(
@@ -85,8 +86,6 @@ const HederaPRNGMethods = ({ baseContract }: PageProps) => {
     let sanitizeErr;
     if (Number(gasLimit.feeValue) < 0) {
       sanitizeErr = 'Gas limit cannot be negative';
-    } else if (Number(gasLimit.feeValue) === 0) {
-      sanitizeErr = 'Gas limit should be set for this transaction';
     }
 
     if (sanitizeErr) {
@@ -104,6 +103,8 @@ const HederaPRNGMethods = ({ baseContract }: PageProps) => {
     // invoke method API
     const { transactionHash, pseudoRandomSeed, err } = await handlePRGNAPI(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       Number(gasLimit.feeValue)
     );
 
@@ -176,7 +177,7 @@ const HederaPRNGMethods = ({ baseContract }: PageProps) => {
       {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="PRNG"
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           transactionResults={transactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           setTransactionResults={setTransactionResults}

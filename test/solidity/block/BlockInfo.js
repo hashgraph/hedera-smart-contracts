@@ -91,7 +91,7 @@ describe('@solidityequiv1 BlockInfo Test Suite', function () {
 
   it('should get the block gas limit', async function () {
     const gasLimit = await blockInfo.getBlockGasLimit();
-    expect(gasLimit).to.equal(400000);
+    expect(gasLimit).to.equal(15000000);
   });
 
   it('should get the block number', async function () {

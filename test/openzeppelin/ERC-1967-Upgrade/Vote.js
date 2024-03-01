@@ -50,16 +50,19 @@ describe('@OZERC1967Upgrade Upgradable Vote Test Suite', () => {
       Constants.Contract.VoteV1
     );
     voteV1 = await VoteV1Fac.deploy();
+    await voteV1.waitForDeployment();
 
     const VoteV2Fac = await ethers.getContractFactory(
       Constants.Contract.VoteV2
     );
     voteV2 = await VoteV2Fac.deploy();
+    await voteV2.waitForDeployment();
 
     const VoteProxyFac = await ethers.getContractFactory(
       Constants.Contract.VoteProxy
     );
     voteProxy = await VoteProxyFac.deploy(await voteV1.getAddress());
+    await voteProxy.waitForDeployment();
   });
 
   describe('Proxy Contract tests', () => {
@@ -201,6 +204,7 @@ describe('@OZERC1967Upgrade Upgradable Vote Test Suite', () => {
         EMPTY_DATA,
         GAS_LIMIT_1_000_000
       );
+      await tx.wait();
 
       proxiedVoteV2 = new ethers.Contract(
         await voteProxy.getAddress(),

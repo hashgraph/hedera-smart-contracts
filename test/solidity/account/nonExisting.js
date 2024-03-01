@@ -67,7 +67,7 @@ describe('@solidityequiv1 Solidity Account Non Existing Test Suite', function ()
 
   it('should confirm `delegatecall` on a non existing account', async function () {
     try {
-      const tx = await fakeContract.delegatecallOnNoneExistingAccount(
+      const tx = await fakeContract.delegatecallOnNonExistingAccount(
         randomAddress
       );
       await tx.wait();
@@ -79,7 +79,7 @@ describe('@solidityequiv1 Solidity Account Non Existing Test Suite', function ()
   });
 
   it('should confirm `delegatecall` on a non existing account internal', async function () {
-      const tx = await contract.delegatecallOnNoneExistingAccount(
+      const tx = await contract.delegatecallOnNonExistingAccount(
         randomAddress
       );
       const rec = await tx.wait();
@@ -88,7 +88,7 @@ describe('@solidityequiv1 Solidity Account Non Existing Test Suite', function ()
 
   it('should confirm `staticcall` on a non existing account', async function () {
     try {
-      const tx = await fakeContract.staticcallOnNoneExistingAccount(
+      const tx = await fakeContract.staticcallOnNonExistingAccount(
         randomAddress
       );
       await tx.wait();
@@ -100,7 +100,7 @@ describe('@solidityequiv1 Solidity Account Non Existing Test Suite', function ()
   });
 
   it('should confirm `staticcall` on a non existing account internal', async function () {
-      const tx = await contract.staticcallOnNoneExistingAccount(randomAddress);
+      const tx = await contract.staticcallOnNonExistingAccount(randomAddress);
       expect(tx).to.equal(true);
   });
 

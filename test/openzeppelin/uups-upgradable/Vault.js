@@ -37,6 +37,7 @@ describe('@OZUUPSUpgradable Upgradable Vaults Test Suite', () => {
     vaultV1 = await upgrades.deployProxy(VaultV1, {
       kind: 'uups',
     });
+    await vaultV1.waitForDeployment();
   });
 
   it('V1: Should deploy the proxy', async () => {
@@ -46,7 +47,7 @@ describe('@OZUUPSUpgradable Upgradable Vaults Test Suite', () => {
   });
 
   it('V1: Should deposit Hbar into vaultV1', async () => {
-    await vaultV1.deposit({ value: DEPOSIT_AMOUNT });
+    await (await vaultV1.deposit({ value: DEPOSIT_AMOUNT })).wait();
 
     const totalBalance = await vaultV1.totalBalance();
 
@@ -54,7 +55,7 @@ describe('@OZUUPSUpgradable Upgradable Vaults Test Suite', () => {
   });
 
   it('V1: Should allow owner to withdraw an amount of Hbar', async () => {
-    await vaultV1.deposit({ value: DEPOSIT_AMOUNT });
+    await (await vaultV1.deposit({ value: DEPOSIT_AMOUNT })).wait();
     const WITHDRAW_AMOUNT = ethers.parseEther('1.0') / TINY_BAR_TO_WEI_COEF;
 
     const tx = await vaultV1.withdraw(WITHDRAW_AMOUNT);
@@ -114,7 +115,7 @@ describe('@OZUUPSUpgradable Upgradable Vaults Test Suite', () => {
     });
 
     it('V2: Should deposit Hbar into vaultV2', async () => {
-      await vaultV2.deposit({ value: DEPOSIT_AMOUNT });
+      await (await vaultV2.deposit({ value: DEPOSIT_AMOUNT })).wait();
 
       const totalBalance = await vaultV1.totalBalance();
 
@@ -122,7 +123,7 @@ describe('@OZUUPSUpgradable Upgradable Vaults Test Suite', () => {
     });
 
     it('V2: Should allow the rightful beneficiary to withdraw an amount of Hbar', async () => {
-      await vaultV2.deposit({ value: DEPOSIT_AMOUNT });
+      await (await vaultV2.deposit({ value: DEPOSIT_AMOUNT })).wait();
 
       const WITHDRAW_AMOUNT = ethers.parseEther('1.0') / TINY_BAR_TO_WEI_COEF;
 

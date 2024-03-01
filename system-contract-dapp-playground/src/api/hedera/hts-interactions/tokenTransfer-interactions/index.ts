@@ -18,7 +18,9 @@
  *
  */
 
-import { Contract, isAddress } from 'ethers';
+import { TNetworkName } from '@/types/common';
+import { Contract, ethers, isAddress } from 'ethers';
+import { handleEstimateGas } from '@/utils/common/helpers';
 import { handleContractResponse } from '@/utils/contract-interactions/HTS/helpers';
 import { ISmartContractExecutionResult } from '@/types/contract-interactions/shared';
 
@@ -28,6 +30,10 @@ import { ISmartContractExecutionResult } from '@/types/contract-interactions/sha
  * @dev integrates TokenTransferContract.cryptoTransferPublic()
  *
  * @param baseContract: ethers.Contract
+ *
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
  *
  * @param transferList: IHederaTokenServiceTransferList
  *
@@ -39,12 +45,25 @@ import { ISmartContractExecutionResult } from '@/types/contract-interactions/sha
  */
 export const transferCrypto = async (
   baseContract: Contract,
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
   transferList: IHederaTokenServiceTransferList,
   tokenTransferList: IHederaTokenServiceTokenTransferList[],
   gasLimit: number
 ): Promise<ISmartContractExecutionResult> => {
   // invoking contract methods
   try {
+    if (gasLimit === 0) {
+      const estimateGasResult = await handleEstimateGas(
+        baseContract,
+        signerAddress,
+        network,
+        'cryptoTransferPublic',
+        [transferList, tokenTransferList]
+      );
+      if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+      gasLimit = estimateGasResult.gasLimit;
+    }
     const tx = await baseContract.cryptoTransferPublic(transferList, tokenTransferList, {
       gasLimit,
     });
@@ -63,9 +82,13 @@ export const transferCrypto = async (
  *
  * @param baseContract: ethers.Contract
  *
- * @param hederaTokenAddress: string
+ * @param signerAddress: ethers.AddressLike
  *
- * @param accountId: string[]
+ * @param network: TNetworkName
+ *
+ * @param hederaTokenAddress: ethers.AddressLike
+ *
+ * @param accountId: ethers.AddressLike[]
  *
  * @param amount: number[]
  *
@@ -75,8 +98,10 @@ export const transferCrypto = async (
  */
 export const transferFungibleTokens = async (
   baseContract: Contract,
-  hederaTokenAddress: string,
-  accountIDs: string[],
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
+  hederaTokenAddress: ethers.AddressLike,
+  accountIDs: ethers.AddressLike[],
   amounts: number[],
   gasLimit: number
 ): Promise<ISmartContractExecutionResult> => {
@@ -109,6 +134,18 @@ export const transferFungibleTokens = async (
 
   // invoking contract methods
   try {
+    if (gasLimit === 0) {
+      const estimateGasResult = await handleEstimateGas(
+        baseContract,
+        signerAddress,
+        network,
+        'transferTokensPublic',
+        [hederaTokenAddress, accountIDs, amounts]
+      );
+      if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+      gasLimit = estimateGasResult.gasLimit;
+    }
+
     const tx = await baseContract.transferTokensPublic(hederaTokenAddress, accountIDs, amounts, {
       gasLimit,
     });
@@ -127,11 +164,15 @@ export const transferFungibleTokens = async (
  *
  * @param baseContract: ethers.Contract
  *
- * @param hederaTokenAddress: string
+ * @param signerAddress: ethers.AddressLike
  *
- * @param senders: string[]
+ * @param network: TNetworkName
  *
- * @param receivers: string[]
+ * @param hederaTokenAddress: ethers.AddressLike
+ *
+ * @param senders: ethers.AddressLike[]
+ *
+ * @param receivers: ethers.AddressLike[]
  *
  * @param serialNumbers: number[]
  *
@@ -141,9 +182,11 @@ export const transferFungibleTokens = async (
  */
 export const transferNonFungibleTokens = async (
   baseContract: Contract,
-  hederaTokenAddress: string,
-  senders: string[],
-  receivers: string[],
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
+  hederaTokenAddress: ethers.AddressLike,
+  senders: ethers.AddressLike[],
+  receivers: ethers.AddressLike[],
   serialNumbers: number[],
   gasLimit: number
 ): Promise<ISmartContractExecutionResult> => {
@@ -183,6 +226,18 @@ export const transferNonFungibleTokens = async (
 
   // invoking contract methods
   try {
+    if (gasLimit === 0) {
+      const estimateGasResult = await handleEstimateGas(
+        baseContract,
+        signerAddress,
+        network,
+        'transferNFTsPublic',
+        [hederaTokenAddress, senders, serialNumbers]
+      );
+      if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+      gasLimit = estimateGasResult.gasLimit;
+    }
+
     const tx = await baseContract.transferNFTsPublic(hederaTokenAddress, senders, receivers, serialNumbers, {
       gasLimit,
     });
@@ -207,13 +262,17 @@ export const transferNonFungibleTokens = async (
  *
  * @param baseContract: ethers.Contract
  *
+ * @param signerAddress: ethers.AddressLike
+ *
+ * @param network: TNetworkName
+ *
  * @param API: "FUNGIBLE" | "NFT" | 'FUNGIBLE_FROM' | 'NFT_FROM'
  *
- * @param hederaTokenAddress: string
+ * @param hederaTokenAddress: ethers.AddressLike
  *
- * @param sender: string
+ * @param sender: ethers.AddressLike
  *
- * @param receiver: string
+ * @param receiver: ethers.AddressLike
  *
  * @param quantity: number (amount/serialNumber)
  *
@@ -221,10 +280,12 @@ export const transferNonFungibleTokens = async (
  */
 export const transferSingleToken = async (
   baseContract: Contract,
+  signerAddress: ethers.AddressLike,
+  network: TNetworkName,
   API: 'FUNGIBLE' | 'NFT' | 'FUNGIBLE_FROM' | 'NFT_FROM',
-  hederaTokenAddress: string,
-  sender: string,
-  receiver: string,
+  hederaTokenAddress: ethers.AddressLike,
+  sender: ethers.AddressLike,
+  receiver: ethers.AddressLike,
   quantity: number,
   gasLimit: number
 ): Promise<ISmartContractExecutionResult> => {
@@ -250,6 +311,18 @@ export const transferSingleToken = async (
 
     switch (API) {
       case 'FUNGIBLE':
+        if (gasLimit === 0) {
+          const estimateGasResult = await handleEstimateGas(
+            baseContract,
+            signerAddress,
+            network,
+            'transferTokenPublic',
+            [hederaTokenAddress, sender, receiver, quantity]
+          );
+          if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+          gasLimit = estimateGasResult.gasLimit;
+        }
+
         transactionResult = await baseContract.transferTokenPublic(
           hederaTokenAddress,
           sender,
@@ -260,6 +333,18 @@ export const transferSingleToken = async (
         break;
 
       case 'NFT':
+        if (gasLimit === 0) {
+          const estimateGasResult = await handleEstimateGas(
+            baseContract,
+            signerAddress,
+            network,
+            'transferNFTPublic',
+            [hederaTokenAddress, sender, receiver, quantity]
+          );
+          if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+          gasLimit = estimateGasResult.gasLimit;
+        }
+
         transactionResult = await baseContract.transferNFTPublic(
           hederaTokenAddress,
           sender,
@@ -270,6 +355,18 @@ export const transferSingleToken = async (
         break;
 
       case 'FUNGIBLE_FROM':
+        if (gasLimit === 0) {
+          const estimateGasResult = await handleEstimateGas(
+            baseContract,
+            signerAddress,
+            network,
+            'transferFromPublic',
+            [hederaTokenAddress, sender, receiver, quantity]
+          );
+          if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+          gasLimit = estimateGasResult.gasLimit;
+        }
+
         transactionResult = await baseContract.transferFromPublic(
           hederaTokenAddress,
           sender,
@@ -280,6 +377,18 @@ export const transferSingleToken = async (
         break;
 
       case 'NFT_FROM':
+        if (gasLimit === 0) {
+          const estimateGasResult = await handleEstimateGas(
+            baseContract,
+            signerAddress,
+            network,
+            'transferFromNFTPublic',
+            [hederaTokenAddress, sender, receiver, quantity]
+          );
+          if (!estimateGasResult.gasLimit || estimateGasResult.err) return { err: estimateGasResult.err };
+          gasLimit = estimateGasResult.gasLimit;
+        }
+
         transactionResult = await baseContract.transferFromNFTPublic(
           hederaTokenAddress,
           sender,

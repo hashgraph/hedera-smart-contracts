@@ -101,7 +101,7 @@ describe('@solidityequiv2 PaymentChannel Test Suite', () => {
     const newExp = Number(currentExp) + DURATION;
 
     // call .extend() by signers[0] (i.e. the sender)
-    await paymentChannelContract.extend(newExp);
+    await (await paymentChannelContract.extend(newExp)).wait();
 
     const updatedExp = await paymentChannelContract.expiration();
 

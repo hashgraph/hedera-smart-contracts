@@ -38,6 +38,8 @@ import useFilterTransactionsByContractAddress from '../../../../../../hooks/useF
 import { handleRetrievingTransactionResultsFromLocalStorage } from '../../../../../common/methods/handleRetrievingTransactionResultsFromLocalStorage';
 import {
   CONTRACT_NAMES,
+  HEDERA_BRANDING_COLORS,
+  HEDERA_CHAKRA_INPUT_BOX_SIZES,
   HEDERA_COMMON_TRANSACTION_TYPE,
   HEDERA_TRANSACTION_RESULT_STORAGE_KEYS,
 } from '@/utils/common/constants';
@@ -54,29 +56,19 @@ const QueryTokenStatusInfomation = ({ baseContract }: PageProps) => {
   const toaster = useToast();
   const [isSuccessful, setIsSuccessful] = useState(false);
   const tokenCommonFields = ['hederaTokenAddress', 'accountAddress'];
-  const hederaNetwork = JSON.parse(Cookies.get('_network') as string);
+  const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.TOKEN_QUERY) as string;
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['TOKEN-QUERY']['TOKEN-STATUS-INFO'];
   const initialParamValues = {
+    feeValue: '',
     hederaTokenAddress: '',
     accountAddress: '',
   };
   const [paramValues, setParamValues] = useState<any>(initialParamValues);
-  const APIButtonTitles: { API: API_NAMES; apiSwitchTitle: string; executeTitle: any }[] = [
-    {
-      API: 'IS_KYC',
-      apiSwitchTitle: '',
-      executeTitle: 'Query KYC Status',
-    },
-    {
-      API: 'IS_FROZEN',
-      apiSwitchTitle: '',
-      executeTitle: 'Query Frozen Status',
-    },
-  ];
   const [isLoading, setIsLoading] = useState({
     kycLoading: false,
     frozenLoading: false,
@@ -144,9 +136,12 @@ const QueryTokenStatusInfomation = ({ baseContract }: PageProps) => {
     // invoking method API
     const tokenInfoResult = await queryTokenStatusInformation(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       API,
       hederaTokenAddress,
-      accountAddress
+      accountAddress,
+      Number(paramValues.feeValue)
     );
 
     // turn is loading off
@@ -235,17 +230,34 @@ const QueryTokenStatusInfomation = ({ baseContract }: PageProps) => {
 
         <div className="flex gap-12">
           {/* Execute buttons */}
-          {APIButtonTitles.map((APIButton) => {
-            return (
-              <div key={APIButton.API} className="w-full">
-                <SharedExecuteButton
-                  isLoading={APIButton.API === 'IS_KYC' ? isLoading.kycLoading : isLoading.frozenLoading}
-                  handleCreatingFungibleToken={() => handleQueryTokenStatusInfo(APIButton.API)}
-                  buttonTitle={APIButton.executeTitle}
-                />
-              </div>
-            );
-          })}
+          <div className="w-full">
+            <SharedExecuteButton
+              isLoading={isLoading.kycLoading}
+              handleCreatingFungibleToken={() => handleQueryTokenStatusInfo('IS_KYC')}
+              buttonTitle={'Query KYC Status'}
+            />
+          </div>
+
+          <SharedFormInputField
+            param={'feeValue'}
+            paramValue={paramValues.feeValue}
+            handleInputOnChange={handleInputOnChange}
+            paramSize={HEDERA_CHAKRA_INPUT_BOX_SIZES.large}
+            paramType={'number'}
+            paramKey={'feeValue'}
+            explanation={'Optional gas limit for the transaction.'}
+            paramClassName={'border-white/30 rounded-xl'}
+            paramPlaceholder={'Gas limit...'}
+            paramFocusColor={HEDERA_BRANDING_COLORS.purple}
+          />
+
+          <div className="w-full">
+            <SharedExecuteButton
+              isLoading={isLoading.frozenLoading}
+              handleCreatingFungibleToken={() => handleQueryTokenStatusInfo('IS_FROZEN')}
+              buttonTitle={'Query Frozen Status'}
+            />
+          </div>
         </div>
       </div>
 
@@ -253,7 +265,7 @@ const QueryTokenStatusInfomation = ({ baseContract }: PageProps) => {
       {transactionResultsToShow.length > 0 && (
         <TransactionResultTable
           API="QueryTokenStatus"
-          hederaNetwork={hederaNetwork}
+          hederaNetwork={HEDERA_NETWORK}
           transactionResults={transactionResults}
           TRANSACTION_PAGE_SIZE={TRANSACTION_PAGE_SIZE}
           setTransactionResults={setTransactionResults}

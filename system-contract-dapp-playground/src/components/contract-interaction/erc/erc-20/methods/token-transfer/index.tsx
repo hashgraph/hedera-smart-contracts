@@ -53,6 +53,7 @@ const Transfer = ({ baseContract }: PageProps) => {
   const HEDERA_NETWORK = JSON.parse(Cookies.get('_network') as string);
   const [currentTransactionPage, setCurrentTransactionPage] = useState(1);
   const currentContractAddress = Cookies.get(CONTRACT_NAMES.ERC20) as string;
+  const signerAddress = JSON.parse(Cookies.get('_connectedAccounts') as string)[0];
   const [transactionResults, setTransactionResults] = useState<ITransactionResult[]>([]);
   const transactionResultStorageKey =
     HEDERA_TRANSACTION_RESULT_STORAGE_KEYS['ERC20-RESULT']['TOKEN-TRANSFER'];
@@ -61,12 +62,14 @@ const Transfer = ({ baseContract }: PageProps) => {
     owner: '',
     recipient: '',
     amount: '',
+    feeValue: '',
   });
 
   const [transferFromParams, setTransferFromParams] = useState({
     owner: '',
     recipient: '',
     amount: '',
+    feeValue: '',
   });
 
   const [methodState, setMethodStates] = useState({
@@ -101,12 +104,13 @@ const Transfer = ({ baseContract }: PageProps) => {
   /** @dev handle execute methods */
   const handleExecutingMethods = async (
     method: 'transfer' | 'transferFrom',
-    params: { owner: string; recipient: string; amount: string },
+    params: { owner: string; recipient: string; amount: string; feeValue: string },
     setParams: Dispatch<
       SetStateAction<{
         owner: string;
         recipient: string;
         amount: string;
+        feeValue: string;
       }>
     >
   ) => {
@@ -132,9 +136,12 @@ const Transfer = ({ baseContract }: PageProps) => {
     // invoke method API
     const tokenTransferRes = await erc20Transfers(
       baseContract,
+      signerAddress,
+      HEDERA_NETWORK,
       method,
       params.recipient,
       Number(params.amount),
+      Number(params.feeValue),
       params.owner
     );
 
@@ -162,7 +169,7 @@ const Transfer = ({ baseContract }: PageProps) => {
     } else {
       // turn isSuccessful on
       setMethodStates((prev) => ({ ...prev, [method]: { ...prev[method], isSuccessful: true } }));
-      setParams({ owner: '', recipient: '', amount: '' });
+      setParams({ owner: '', recipient: '', amount: '', feeValue: '' });
 
       setTransactionResults((prev) => [
         ...prev,
@@ -197,13 +204,13 @@ const Transfer = ({ baseContract }: PageProps) => {
         position: 'top',
       });
       if (methodState.transfer.isSuccessful) {
-        setTransferParams({ owner: '', recipient: '', amount: '' });
+        setTransferParams({ owner: '', recipient: '', amount: '', feeValue: '' });
         setMethodStates((prev) => ({
           ...prev,
           transfer: { ...prev.transfer, isSuccessful: false },
         }));
       } else {
-        setTransferFromParams({ owner: '', recipient: '', amount: '' });
+        setTransferFromParams({ owner: '', recipient: '', amount: '', feeValue: '' });
         setMethodStates((prev) => ({
           ...prev,
           transferFrom: { ...prev.transferFrom, isSuccessful: false },
