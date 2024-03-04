@@ -1,0 +1,46 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "contractAddress",
+        "type": "address"
+      }
+    ],
+    "name": "NewContractCreated",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "bytecode",
+        "type": "bytes"
+      },
+      {
+        "internalType": "uint256",
+        "name": "salt",
+        "type": "uint256"
+      }
+    ],
+    "name": "create2NewContract",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "bytecode",
+        "type": "bytes"
+      }
+    ],
+    "name": "createNewContract",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  }
+]

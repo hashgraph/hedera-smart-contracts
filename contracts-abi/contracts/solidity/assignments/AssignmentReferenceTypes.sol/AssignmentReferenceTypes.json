@@ -1,0 +1,22 @@
+[
+  {
+    "inputs": [],
+    "name": "getSomeArray",
+    "outputs": [
+      {
+        "internalType": "uint256[5]",
+        "name": "",
+        "type": "uint256[5]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "testAssignmentOfReferenceTypes",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

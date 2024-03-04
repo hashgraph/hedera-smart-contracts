@@ -1,0 +1,1272 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "bits",
+        "type": "uint8"
+      },
+      {
+        "internalType": "int256",
+        "name": "value",
+        "type": "int256"
+      }
+    ],
+    "name": "SafeCastOverflowedIntDowncast",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "value",
+        "type": "int256"
+      }
+    ],
+    "name": "SafeCastOverflowedIntToUint",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "bits",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "SafeCastOverflowedUintDowncast",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "SafeCastOverflowedUintToInt",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt104",
+    "outputs": [
+      {
+        "internalType": "int104",
+        "name": "",
+        "type": "int104"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt112",
+    "outputs": [
+      {
+        "internalType": "int112",
+        "name": "",
+        "type": "int112"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt120",
+    "outputs": [
+      {
+        "internalType": "int120",
+        "name": "",
+        "type": "int120"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt128",
+    "outputs": [
+      {
+        "internalType": "int128",
+        "name": "",
+        "type": "int128"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt136",
+    "outputs": [
+      {
+        "internalType": "int136",
+        "name": "",
+        "type": "int136"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt144",
+    "outputs": [
+      {
+        "internalType": "int144",
+        "name": "",
+        "type": "int144"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt152",
+    "outputs": [
+      {
+        "internalType": "int152",
+        "name": "",
+        "type": "int152"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt16",
+    "outputs": [
+      {
+        "internalType": "int16",
+        "name": "",
+        "type": "int16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt160",
+    "outputs": [
+      {
+        "internalType": "int160",
+        "name": "",
+        "type": "int160"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt168",
+    "outputs": [
+      {
+        "internalType": "int168",
+        "name": "",
+        "type": "int168"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt176",
+    "outputs": [
+      {
+        "internalType": "int176",
+        "name": "",
+        "type": "int176"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt184",
+    "outputs": [
+      {
+        "internalType": "int184",
+        "name": "",
+        "type": "int184"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt192",
+    "outputs": [
+      {
+        "internalType": "int192",
+        "name": "",
+        "type": "int192"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt200",
+    "outputs": [
+      {
+        "internalType": "int200",
+        "name": "",
+        "type": "int200"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt208",
+    "outputs": [
+      {
+        "internalType": "int208",
+        "name": "",
+        "type": "int208"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt216",
+    "outputs": [
+      {
+        "internalType": "int216",
+        "name": "",
+        "type": "int216"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt224",
+    "outputs": [
+      {
+        "internalType": "int224",
+        "name": "",
+        "type": "int224"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt232",
+    "outputs": [
+      {
+        "internalType": "int232",
+        "name": "",
+        "type": "int232"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt24",
+    "outputs": [
+      {
+        "internalType": "int24",
+        "name": "",
+        "type": "int24"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt240",
+    "outputs": [
+      {
+        "internalType": "int240",
+        "name": "",
+        "type": "int240"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt248",
+    "outputs": [
+      {
+        "internalType": "int248",
+        "name": "",
+        "type": "int248"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toInt256",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt32",
+    "outputs": [
+      {
+        "internalType": "int32",
+        "name": "",
+        "type": "int32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt40",
+    "outputs": [
+      {
+        "internalType": "int40",
+        "name": "",
+        "type": "int40"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt48",
+    "outputs": [
+      {
+        "internalType": "int48",
+        "name": "",
+        "type": "int48"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt56",
+    "outputs": [
+      {
+        "internalType": "int56",
+        "name": "",
+        "type": "int56"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt64",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "",
+        "type": "int64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt72",
+    "outputs": [
+      {
+        "internalType": "int72",
+        "name": "",
+        "type": "int72"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt8",
+    "outputs": [
+      {
+        "internalType": "int8",
+        "name": "",
+        "type": "int8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt80",
+    "outputs": [
+      {
+        "internalType": "int80",
+        "name": "",
+        "type": "int80"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt88",
+    "outputs": [
+      {
+        "internalType": "int88",
+        "name": "",
+        "type": "int88"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toInt96",
+    "outputs": [
+      {
+        "internalType": "int96",
+        "name": "",
+        "type": "int96"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint104",
+    "outputs": [
+      {
+        "internalType": "uint104",
+        "name": "",
+        "type": "uint104"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint112",
+    "outputs": [
+      {
+        "internalType": "uint112",
+        "name": "",
+        "type": "uint112"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint120",
+    "outputs": [
+      {
+        "internalType": "uint120",
+        "name": "",
+        "type": "uint120"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint128",
+    "outputs": [
+      {
+        "internalType": "uint128",
+        "name": "",
+        "type": "uint128"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint136",
+    "outputs": [
+      {
+        "internalType": "uint136",
+        "name": "",
+        "type": "uint136"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint144",
+    "outputs": [
+      {
+        "internalType": "uint144",
+        "name": "",
+        "type": "uint144"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint152",
+    "outputs": [
+      {
+        "internalType": "uint152",
+        "name": "",
+        "type": "uint152"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint16",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint160",
+    "outputs": [
+      {
+        "internalType": "uint160",
+        "name": "",
+        "type": "uint160"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint168",
+    "outputs": [
+      {
+        "internalType": "uint168",
+        "name": "",
+        "type": "uint168"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint176",
+    "outputs": [
+      {
+        "internalType": "uint176",
+        "name": "",
+        "type": "uint176"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint184",
+    "outputs": [
+      {
+        "internalType": "uint184",
+        "name": "",
+        "type": "uint184"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint192",
+    "outputs": [
+      {
+        "internalType": "uint192",
+        "name": "",
+        "type": "uint192"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint200",
+    "outputs": [
+      {
+        "internalType": "uint200",
+        "name": "",
+        "type": "uint200"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint208",
+    "outputs": [
+      {
+        "internalType": "uint208",
+        "name": "",
+        "type": "uint208"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint216",
+    "outputs": [
+      {
+        "internalType": "uint216",
+        "name": "",
+        "type": "uint216"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint224",
+    "outputs": [
+      {
+        "internalType": "uint224",
+        "name": "",
+        "type": "uint224"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint232",
+    "outputs": [
+      {
+        "internalType": "uint232",
+        "name": "",
+        "type": "uint232"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint24",
+    "outputs": [
+      {
+        "internalType": "uint24",
+        "name": "",
+        "type": "uint24"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint240",
+    "outputs": [
+      {
+        "internalType": "uint240",
+        "name": "",
+        "type": "uint240"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint248",
+    "outputs": [
+      {
+        "internalType": "uint248",
+        "name": "",
+        "type": "uint248"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "number",
+        "type": "int256"
+      }
+    ],
+    "name": "toUint256",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint32",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "",
+        "type": "uint32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint40",
+    "outputs": [
+      {
+        "internalType": "uint40",
+        "name": "",
+        "type": "uint40"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint48",
+    "outputs": [
+      {
+        "internalType": "uint48",
+        "name": "",
+        "type": "uint48"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint56",
+    "outputs": [
+      {
+        "internalType": "uint56",
+        "name": "",
+        "type": "uint56"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint64",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint72",
+    "outputs": [
+      {
+        "internalType": "uint72",
+        "name": "",
+        "type": "uint72"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint8",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint80",
+    "outputs": [
+      {
+        "internalType": "uint80",
+        "name": "",
+        "type": "uint80"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint88",
+    "outputs": [
+      {
+        "internalType": "uint88",
+        "name": "",
+        "type": "uint88"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "toUint96",
+    "outputs": [
+      {
+        "internalType": "uint96",
+        "name": "",
+        "type": "uint96"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

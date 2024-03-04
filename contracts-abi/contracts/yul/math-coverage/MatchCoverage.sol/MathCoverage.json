@@ -1,0 +1,391 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "x",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "y",
+        "type": "int256"
+      }
+    ],
+    "name": "add",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "result",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "x",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "y",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "m",
+        "type": "int256"
+      }
+    ],
+    "name": "addMod",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "result",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "x",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "y",
+        "type": "uint256"
+      }
+    ],
+    "name": "div",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "result",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "x",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "y",
+        "type": "int256"
+      }
+    ],
+    "name": "eq",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "result",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "x",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "y",
+        "type": "int256"
+      }
+    ],
+    "name": "exp",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "result",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "x",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "y",
+        "type": "uint256"
+      }
+    ],
+    "name": "gt",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "result",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "x",
+        "type": "int256"
+      }
+    ],
+    "name": "iszero",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "result",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "x",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "y",
+        "type": "uint256"
+      }
+    ],
+    "name": "lt",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "result",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "x",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "y",
+        "type": "uint256"
+      }
+    ],
+    "name": "mod",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "result",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "x",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "y",
+        "type": "int256"
+      }
+    ],
+    "name": "mul",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "result",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "x",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "y",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "m",
+        "type": "int256"
+      }
+    ],
+    "name": "mulMod",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "result",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "x",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "y",
+        "type": "int256"
+      }
+    ],
+    "name": "sdiv",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "result",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "x",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "y",
+        "type": "int256"
+      }
+    ],
+    "name": "sgt",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "result",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "x",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "y",
+        "type": "int256"
+      }
+    ],
+    "name": "slt",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "result",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "x",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "y",
+        "type": "int256"
+      }
+    ],
+    "name": "smod",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "result",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "x",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "y",
+        "type": "int256"
+      }
+    ],
+    "name": "sub",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "result",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  }
+]
