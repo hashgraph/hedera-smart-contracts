@@ -9,6 +9,8 @@ artifacts/contracts/**/**/*.dbg.json
 .openzeppelin/unknown-298.json
 .env
 test-results.*
+contracts-abi/*
+!contracts-abi/contracts
 
 ## --- Foundry Gitignore ---
 
