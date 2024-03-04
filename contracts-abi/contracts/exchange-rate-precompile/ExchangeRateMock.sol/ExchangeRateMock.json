@@ -1,0 +1,66 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tinybars",
+        "type": "uint256"
+      }
+    ],
+    "name": "TinyBars",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tinycents",
+        "type": "uint256"
+      }
+    ],
+    "name": "TinyCents",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tinybars",
+        "type": "uint256"
+      }
+    ],
+    "name": "convertTinybarsToTinycents",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "tineycents",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tineycents",
+        "type": "uint256"
+      }
+    ],
+    "name": "convertTinycentsToTinybars",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "tinybars",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

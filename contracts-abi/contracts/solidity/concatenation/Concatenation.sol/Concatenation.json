@@ -1,0 +1,86 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "first",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "second",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "third",
+        "type": "bytes"
+      }
+    ],
+    "name": "byteConcatenation",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "byteConcatenationEmpty",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "first",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "second",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "third",
+        "type": "string"
+      }
+    ],
+    "name": "stringConcatenation",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "stringConcatenationEmpty",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  }
+]

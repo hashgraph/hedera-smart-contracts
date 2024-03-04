@@ -1,0 +1,270 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "addrBoolMap",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "name": "bytesBytesMap",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAddressDefaults",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getArrayDefaults",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "string[]",
+            "name": "strArr",
+            "type": "string[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "uintArr",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "bool[]",
+            "name": "boolArr",
+            "type": "bool[]"
+          },
+          {
+            "internalType": "bytes[]",
+            "name": "bytesArr",
+            "type": "bytes[]"
+          }
+        ],
+        "internalType": "struct Defaults.ArrayDefaults",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getBytesDefaults",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes3",
+            "name": "bytesDef3",
+            "type": "bytes3"
+          },
+          {
+            "internalType": "bytes10",
+            "name": "bytesDef10",
+            "type": "bytes10"
+          },
+          {
+            "internalType": "bytes15",
+            "name": "bytesDef15",
+            "type": "bytes15"
+          },
+          {
+            "internalType": "bytes20",
+            "name": "bytesDef20",
+            "type": "bytes20"
+          },
+          {
+            "internalType": "bytes25",
+            "name": "bytesDef25",
+            "type": "bytes25"
+          },
+          {
+            "internalType": "bytes30",
+            "name": "bytesDef30",
+            "type": "bytes30"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "bytesDef32",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct Defaults.BytesDefaults",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getIntDefaults",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "uInt",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint8",
+            "name": "uInt8",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint16",
+            "name": "uInt16",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint32",
+            "name": "uInt32",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "uInt64",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint128",
+            "name": "uInt128",
+            "type": "uint128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "uInt256",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct Defaults.UintDefaults",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getStringDefaults",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getUintDefaults",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "uInt",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint8",
+            "name": "uInt8",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint16",
+            "name": "uInt16",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint32",
+            "name": "uInt32",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "uInt64",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint128",
+            "name": "uInt128",
+            "type": "uint128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "uInt256",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct Defaults.UintDefaults",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "name": "strUintMap",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

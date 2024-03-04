@@ -1,0 +1,77 @@
+[
+  {
+    "inputs": [],
+    "name": "AllowanceFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GetApprovedFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GetFungibleTokenInfoFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GetNonFungibleTokenInfoFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GetTokenCustomFeesFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GetTokenDefaultFreezeStatusFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GetTokenDefaultKYCStatusFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GetTokenExpiryInfoFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GetTokenInfoFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GetTokenKeyFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GetTokenTypeFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "IsApprovedForAllFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "IsFrozenFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "IsKYCGrantedFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "IsTokenFailed",
+    "type": "error"
+  }
+]
