@@ -18,6 +18,7 @@
  *
  */
 
+require('hardhat-abi-exporter');
 require('@openzeppelin/hardhat-upgrades');
 require('@nomicfoundation/hardhat-foundry');
 require('@nomicfoundation/hardhat-chai-matchers');
@@ -54,6 +55,10 @@ module.exports = {
         runs: 500,
       },
     },
+  },
+  abiExporter: {
+    path: './contracts-abi',
+    runOnCompile: true,
   },
   defaultNetwork: NETWORKS.local.name,
   networks: {
