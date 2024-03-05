@@ -38,7 +38,7 @@ describe('@OZERC1155 Test Suite', function () {
     const factory = await ethers.getContractFactory(
       Constants.Contract.ERC1155Mock
     );
-    erc1155 = await factory.deploy(uri, Constants.GAS_LIMIT_1_000_000);
+    erc1155 = await factory.deploy(uri);
     await erc1155.mintBatch(
       signers[0].address,
       [tokenId1, tokenId2],
