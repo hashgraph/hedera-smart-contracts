@@ -20,7 +20,7 @@
 
 import { TContractName } from '@/types/common';
 import ERC20Mock from '@hashgraph-smartcontract/artifacts/contracts/openzeppelin/ERC-20/ERC20Mock.sol/ERC20Mock.json';
-import IHRC729Contract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/IHRC.sol/IHRC.json';
+import IHRC719Contract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/IHRC.sol/IHRC.json';
 import ERC721Mock from '@hashgraph-smartcontract/artifacts/contracts/openzeppelin/ERC-721/ERC721Mock.sol/ERC721Mock.json';
 import PrngSystemContract from '@hashgraph-smartcontract/artifacts/contracts/util-precompile/PrngSystemContract.sol/PrngSystemContract.json';
 import ExchangeRatePrecompile from '@hashgraph-smartcontract/artifacts/contracts/exchange-rate-precompile/ExchangeRateMock.sol/ExchangeRateMock.json';
@@ -187,7 +187,7 @@ export const CONTRACT_NAMES: Record<string, TContractName> = {
   ERC20: 'ERC20Mock',
   ERC721: 'ERC721Mock',
   PRNG: 'PrngSystemContract',
-  IHRC719: 'IHRC729Contract',
+  IHRC719: 'IHRC719Contract',
   TOKEN_QUERY: 'TokenQueryContract',
   TOKEN_TRANSFER: 'TokenTransferContract',
   EXCHANGE_RATE: 'ExchangeRatePrecompile',
@@ -241,10 +241,10 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
     },
   ],
   TOKEN_ASSOCIATION: {
-    name: 'IHRC729Contract' as TContractName,
+    name: 'IHRC719Contract' as TContractName,
     title: 'Token Associate Example Contract',
-    contractABI: IHRC729Contract.abi,
-    contractBytecode: IHRC729Contract.bytecode,
+    contractABI: IHRC719Contract.abi,
+    contractBytecode: IHRC719Contract.bytecode,
     githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/IHRC.sol`,
     methods: ['IHRC / HIP-719'],
   },
@@ -335,7 +335,7 @@ export const HEDERA_SHARED_PARAM_INPUT_FIELDS = {
 export const CONTRACT_NAME_TO_STORAGE_KEY_VALUE: Record<TContractName, string> = {
   ERC20Mock: 'ERC-20',
   ERC721Mock: 'ERC-721',
-  IHRC729Contract: 'IHRC719',
+  IHRC719Contract: 'IHRC719',
   PrngSystemContract: 'PRNG',
   TokenQueryContract: 'TOKEN-QUERY',
   TokenTransferContract: 'TOKEN-TRANSFER',

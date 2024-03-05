@@ -54,8 +54,8 @@ const HEDERA_SMART_CONTRACTS = getHederaSmartContractAssetsFunc(HederaSmartContr
     'TokenTransferContract',
     'PrngSystemContract',
     'TokenQueryContract',
-    'IHRC729Contract',
     'SelfFunding',
+    'IHRC719Contract',
     'ERC20Mock',
     'ERC721Mock',
   ];
