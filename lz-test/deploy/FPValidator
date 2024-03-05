@@ -1,0 +1,16 @@
+module.exports = async ({ getNamedAccounts, deployments }) => {
+    const { deploy } = deployments;
+    const { deployer } = await getNamedAccounts();
+  
+    console.log("Deployer address:", deployer); // Log the deployer address
+
+    await deploy('FPValidator', {
+      from: deployer,
+      args: [deployer, deployer],
+      log: true,
+      waitConfirmations: 1,
+      skipIfAlreadyDeployed: false,
+    });
+  };
+  
+  module.exports.tags = ['FPValidator'];
