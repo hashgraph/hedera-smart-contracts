@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [main, release/**]
   push:
-    branches: [main, release/**]
+    branches: [main, release/**, clean-up-custom-gas-limit]
     tags: [v*]
 
 concurrency:
