@@ -43,15 +43,15 @@ const getHederaSmartContractAssets = (HederaSmartContractsRootPath: string) => {
       contractPath: `${HederaSmartContractsRootPath}/contracts/hts-precompile/examples/token-transfer/TokenTransferContract.sol`,
       artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/hts-precompile/examples/token-transfer/TokenTransferContract.sol/TokenTransferContract.json`,
     },
-    IHRC729Contract: {
-      name: 'IHRC729Contract',
-      contractPath: `${HederaSmartContractsRootPath}/contracts/hts-precompile/examples/hrc/HRCContract.sol`,
-      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/hts-precompile/examples/hrc/HRCContract.sol/HRCContract.json`,
+    IHRC719Contract: {
+      name: 'IHRC719Contract',
+      contractPath: `${HederaSmartContractsRootPath}/contracts/hts-precompile/IHRC.sol`,
+      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/hts-precompile/IHRC.sol/IHRC.json`,
     },
-    SelfFunding: {
-      name: 'SelfFunding',
-      contractPath: `${HederaSmartContractsRootPath}/contracts/exchange-rate-precompile/SelfFunding.sol`,
-      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/exchange-rate-precompile/SelfFunding.sol/SelfFunding.json`,
+    ExchangeRateMock: {
+      name: 'ExchangeRateMock',
+      contractPath: `${HederaSmartContractsRootPath}/contracts/exchange-rate-precompile/ExchangeRateMock.sol`,
+      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/exchange-rate-precompile/ExchangeRateMock.sol/ExchangeRateMock.json`,
     },
     PrngSystemContract: {
       name: 'PrngSystemContract',

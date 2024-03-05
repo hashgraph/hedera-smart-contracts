@@ -279,7 +279,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
             {contract.methods.map((method) => {
               return (
                 <TabPanel className={`whitespace-nowrap py-4`} key={method}>
-                  {/* Contract information - not for IHRC729Contract*/}
+                  {/* Contract information - not for IHRC719Contract*/}
                   {contract.name !== CONTRACT_NAMES.IHRC719 && (
                     <>
                       <div className="pb-6 flex flex-col gap-1 px-3 relative">

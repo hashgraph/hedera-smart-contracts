@@ -35,7 +35,7 @@ type TContractName =
   | 'TokenTransferContract'
   | 'TokenQueryContract'
   | 'PrngSystemContract'
-  | 'IHRC729Contract'
+  | 'IHRC719Contract'
   | 'ERC721Mock'
   | 'ERC20Mock';
 
