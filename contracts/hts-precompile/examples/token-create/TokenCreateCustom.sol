@@ -50,6 +50,7 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         int64 initialTotalSupply,
         int64 maxSupply,
         int32 decimals,
+        int64 feeAmount,
         IHederaTokenService.TokenKey[] memory keys
     ) public payable {
         IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
@@ -61,7 +62,7 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         );
 
         IHederaTokenService.FixedFee[] memory fixedFees = new IHederaTokenService.FixedFee[](1);
-        fixedFees[0] = IHederaTokenService.FixedFee(1, fixedFeeTokenAddress, false, false, treasury);
+        fixedFees[0] = IHederaTokenService.FixedFee(feeAmount, fixedFeeTokenAddress, false, false, treasury);
 
         IHederaTokenService.FractionalFee[] memory fractionalFees = new IHederaTokenService.FractionalFee[](1);
         fractionalFees[0] = IHederaTokenService.FractionalFee(4, 5, 10, 30, false, treasury);
@@ -110,6 +111,7 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         string memory symbol,
         string memory memo,
         int64 maxSupply,
+        int64 feeAmount,
         IHederaTokenService.TokenKey[] memory keys
     ) public payable {
         IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(
@@ -121,7 +123,7 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         );
 
         IHederaTokenService.FixedFee[] memory fixedFees = new IHederaTokenService.FixedFee[](1);
-        fixedFees[0] = IHederaTokenService.FixedFee(1, fixedFeeTokenAddress, false, false, treasury);
+        fixedFees[0] = IHederaTokenService.FixedFee(feeAmount, fixedFeeTokenAddress, false, false, treasury);
 
         IHederaTokenService.RoyaltyFee[] memory royaltyFees = new IHederaTokenService.RoyaltyFee[](1);
         royaltyFees[0] = IHederaTokenService.RoyaltyFee(4, 5, 10, fixedFeeTokenAddress, false, treasury);
