@@ -56,7 +56,7 @@ import { TNetworkName } from '@/types/common';
  *
  * @param feeTokenAddress?: string
  *
- * @param feeTokenAmount?: number
+ * @param feeAmount?: number
  *
  * @return Promise<ISmartContractExecutionResult>
  *
@@ -76,7 +76,7 @@ export const createHederaFungibleToken = async (
   inputKeys: ICommonKeyObject[],
   msgValue: string,
   feeTokenAddress?: string,
-  feeTokenAmount?: number
+  feeAmount?: number
 ): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
@@ -117,7 +117,7 @@ export const createHederaFungibleToken = async (
         initialTotalSupply,
         maxSupply,
         decimals,
-        feeTokenAmount,
+        feeAmount,
         keyRes.hederaTokenKeys,
         {
           value: ethers.parseEther(msgValue),
@@ -179,7 +179,7 @@ export const createHederaFungibleToken = async (
  *
  * @param feeTokenAddress?: ethers.AddressLike
  *
- * @param feeTokenAmount?: number
+ * @param feeAmount?: number
  *
  * @return Promise<ISmartContractExecutionResult>
  *
@@ -196,7 +196,7 @@ export const createHederaNonFungibleToken = async (
   inputKeys: ICommonKeyObject[],
   msgValue: string,
   feeTokenAddress?: ethers.AddressLike,
-  feeTokenAmount?: number
+  feeAmount?: number
 ): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
@@ -231,7 +231,7 @@ export const createHederaNonFungibleToken = async (
         symbol,
         memo,
         maxSupply,
-        feeTokenAmount,
+        feeAmount,
         keyRes.hederaTokenKeys,
         {
           value: ethers.parseEther(msgValue),

@@ -84,7 +84,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
     maxSupply: '',
     initSupply: '',
     feeTokenAddress: '',
-    feeTokenAmount: '',
+    feeAmount: '',
     freezeStatus: false,
   };
   const [paramValues, setParamValues] = useState<any>(initialParamValues);
@@ -129,7 +129,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
       maxSupply,
       initSupply,
       freezeStatus,
-      feeTokenAmount,
+      feeAmount,
       feeTokenAddress,
     } = paramValues;
 
@@ -145,7 +145,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
       maxSupply,
       initSupply,
       withCustomFee,
-      feeTokenAmount,
+      feeAmount,
       feeTokenAddress,
     });
 
@@ -172,7 +172,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
       keys,
       feeValue,
       withCustomFee ? feeTokenAddress : undefined,
-      withCustomFee ? Number(feeTokenAmount) : undefined
+      withCustomFee ? Number(feeAmount) : undefined
     );
 
     // turn is loading off
@@ -337,16 +337,16 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
             />
 
             <SharedFormInputField
-              param={'feeTokenAmount'}
+              param={'feeAmount'}
               handleInputOnChange={handleInputOnChange}
-              paramValue={paramValues['feeTokenAmount']}
-              paramKey={(htsTokenCreateParamFields as any)['feeTokenAmount'].paramKey}
-              paramType={(htsTokenCreateParamFields as any)['feeTokenAmount'].inputType}
-              paramSize={(htsTokenCreateParamFields as any)['feeTokenAmount'].inputSize}
-              explanation={(htsTokenCreateParamFields as any)['feeTokenAmount'].explanation}
-              paramClassName={(htsTokenCreateParamFields as any)['feeTokenAmount'].inputClassname}
-              paramPlaceholder={(htsTokenCreateParamFields as any)['feeTokenAmount'].inputPlaceholder}
-              paramFocusColor={(htsTokenCreateParamFields as any)['feeTokenAmount'].inputFocusBorderColor}
+              paramValue={paramValues['feeAmount']}
+              paramKey={(htsTokenCreateParamFields as any)['feeAmount'].paramKey}
+              paramType={(htsTokenCreateParamFields as any)['feeAmount'].inputType}
+              paramSize={(htsTokenCreateParamFields as any)['feeAmount'].inputSize}
+              explanation={(htsTokenCreateParamFields as any)['feeAmount'].explanation}
+              paramClassName={(htsTokenCreateParamFields as any)['feeAmount'].inputClassname}
+              paramPlaceholder={(htsTokenCreateParamFields as any)['feeAmount'].inputPlaceholder}
+              paramFocusColor={(htsTokenCreateParamFields as any)['feeAmount'].inputFocusBorderColor}
             />
           </>
         )}
