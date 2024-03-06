@@ -1,0 +1,28 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "seedBytes",
+        "type": "bytes32"
+      }
+    ],
+    "name": "PseudoRandomSeed",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "getPseudorandomSeed",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "seedBytes",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
