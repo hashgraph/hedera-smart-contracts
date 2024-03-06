@@ -84,6 +84,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
     maxSupply: '',
     initSupply: '',
     feeTokenAddress: '',
+    feeTokenAmount: '',
     freezeStatus: false,
   };
   const [paramValues, setParamValues] = useState<any>(initialParamValues);
@@ -128,6 +129,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
       maxSupply,
       initSupply,
       freezeStatus,
+      feeTokenAmount,
       feeTokenAddress,
     } = paramValues;
 
@@ -143,6 +145,7 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
       maxSupply,
       initSupply,
       withCustomFee,
+      feeTokenAmount,
       feeTokenAddress,
     });
 
@@ -168,7 +171,8 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
       treasury,
       keys,
       feeValue,
-      withCustomFee ? feeTokenAddress : undefined
+      withCustomFee ? feeTokenAddress : undefined,
+      withCustomFee ? Number(feeTokenAmount) : undefined
     );
 
     // turn is loading off
@@ -318,18 +322,33 @@ const FungibleTokenCreate = ({ baseContract }: PageProps) => {
 
         {/* fee token address */}
         {withCustomFee && (
-          <SharedFormInputField
-            param={'feeTokenAddress'}
-            handleInputOnChange={handleInputOnChange}
-            paramValue={paramValues['feeTokenAddress']}
-            paramKey={(htsTokenCreateParamFields as any)['feeTokenAddress'].paramKey}
-            paramType={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputType}
-            paramSize={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputSize}
-            explanation={(htsTokenCreateParamFields as any)['feeTokenAddress'].explanation}
-            paramClassName={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputClassname}
-            paramPlaceholder={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputPlaceholder}
-            paramFocusColor={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputFocusBorderColor}
-          />
+          <>
+            <SharedFormInputField
+              param={'feeTokenAddress'}
+              handleInputOnChange={handleInputOnChange}
+              paramValue={paramValues['feeTokenAddress']}
+              paramKey={(htsTokenCreateParamFields as any)['feeTokenAddress'].paramKey}
+              paramType={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputType}
+              paramSize={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputSize}
+              explanation={(htsTokenCreateParamFields as any)['feeTokenAddress'].explanation}
+              paramClassName={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputClassname}
+              paramPlaceholder={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputPlaceholder}
+              paramFocusColor={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputFocusBorderColor}
+            />
+
+            <SharedFormInputField
+              param={'feeTokenAmount'}
+              handleInputOnChange={handleInputOnChange}
+              paramValue={paramValues['feeTokenAmount']}
+              paramKey={(htsTokenCreateParamFields as any)['feeTokenAmount'].paramKey}
+              paramType={(htsTokenCreateParamFields as any)['feeTokenAmount'].inputType}
+              paramSize={(htsTokenCreateParamFields as any)['feeTokenAmount'].inputSize}
+              explanation={(htsTokenCreateParamFields as any)['feeTokenAmount'].explanation}
+              paramClassName={(htsTokenCreateParamFields as any)['feeTokenAmount'].inputClassname}
+              paramPlaceholder={(htsTokenCreateParamFields as any)['feeTokenAmount'].inputPlaceholder}
+              paramFocusColor={(htsTokenCreateParamFields as any)['feeTokenAmount'].inputFocusBorderColor}
+            />
+          </>
         )}
 
         {/* treasury */}

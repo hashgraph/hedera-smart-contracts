@@ -78,6 +78,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
     treasury: '',
     feeValue: '',
     maxSupply: '',
+    feeTokenAmount: '',
     feeTokenAddress: '',
   };
   const [paramValues, setParamValues] = useState<any>(initialParamValues);
@@ -112,7 +113,8 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
 
   /** @dev handle invoking the API to interact with smart contract and create non fungible token */
   const handleCreatingNonFungibleToken = async () => {
-    const { name, symbol, memo, maxSupply, treasury, feeTokenAddress, feeValue } = paramValues;
+    const { name, symbol, memo, maxSupply, treasury, feeTokenAddress, feeValue, feeTokenAmount } =
+      paramValues;
 
     // sanitize params
     const sanitizeErr = handleSanitizeHederaFormInputs({
@@ -124,6 +126,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
       treasury,
       maxSupply,
       withCustomFee,
+      feeTokenAmount,
       feeTokenAddress,
     });
 
@@ -146,7 +149,8 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
       treasury,
       keys,
       feeValue,
-      withCustomFee ? feeTokenAddress : undefined
+      withCustomFee ? feeTokenAddress : undefined,
+      withCustomFee ? Number(feeTokenAmount) : undefined
     );
 
     // turn is loading off
@@ -248,18 +252,33 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
 
         {/* fee token address */}
         {withCustomFee && (
-          <SharedFormInputField
-            param={'feeTokenAddress'}
-            handleInputOnChange={handleInputOnChange}
-            paramValue={paramValues['feeTokenAddress']}
-            paramKey={(htsTokenCreateParamFields as any)['feeTokenAddress'].paramKey}
-            paramType={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputType}
-            paramSize={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputSize}
-            explanation={(htsTokenCreateParamFields as any)['feeTokenAddress'].explanation}
-            paramClassName={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputClassname}
-            paramPlaceholder={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputPlaceholder}
-            paramFocusColor={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputFocusBorderColor}
-          />
+          <>
+            <SharedFormInputField
+              param={'feeTokenAddress'}
+              handleInputOnChange={handleInputOnChange}
+              paramValue={paramValues['feeTokenAddress']}
+              paramKey={(htsTokenCreateParamFields as any)['feeTokenAddress'].paramKey}
+              paramType={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputType}
+              paramSize={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputSize}
+              explanation={(htsTokenCreateParamFields as any)['feeTokenAddress'].explanation}
+              paramClassName={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputClassname}
+              paramPlaceholder={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputPlaceholder}
+              paramFocusColor={(htsTokenCreateParamFields as any)['feeTokenAddress'].inputFocusBorderColor}
+            />
+
+            <SharedFormInputField
+              param={'feeTokenAmount'}
+              handleInputOnChange={handleInputOnChange}
+              paramValue={paramValues['feeTokenAmount']}
+              paramKey={(htsTokenCreateParamFields as any)['feeTokenAmount'].paramKey}
+              paramType={(htsTokenCreateParamFields as any)['feeTokenAmount'].inputType}
+              paramSize={(htsTokenCreateParamFields as any)['feeTokenAmount'].inputSize}
+              explanation={(htsTokenCreateParamFields as any)['feeTokenAmount'].explanation}
+              paramClassName={(htsTokenCreateParamFields as any)['feeTokenAmount'].inputClassname}
+              paramPlaceholder={(htsTokenCreateParamFields as any)['feeTokenAmount'].inputPlaceholder}
+              paramFocusColor={(htsTokenCreateParamFields as any)['feeTokenAmount'].inputFocusBorderColor}
+            />
+          </>
         )}
 
         {/* keys */}
@@ -281,7 +300,7 @@ const NonFungibleTokenCreate = ({ baseContract }: PageProps) => {
           feeType={'SERVICE'}
           paramValues={paramValues.feeValue}
           placeHolder={'Service fee...'}
-          executeBtnTitle={'Create Fungible Token'}
+          executeBtnTitle={'Create Non Fungible Token'}
           handleInputOnChange={handleInputOnChange}
           explanation={
             'Represents the fee in HBAR directly paid to the contract system of the Hedera Token Service'

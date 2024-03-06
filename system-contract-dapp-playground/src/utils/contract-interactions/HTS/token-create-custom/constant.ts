@@ -107,6 +107,13 @@ export const htsTokenCreateParamFields = {
     inputPlaceholder: 'The denomination token ID...',
     explanation: 'represents the ID of token that is used for fixed fee denomination',
   },
+  feeTokenAmount: {
+    ...HEDERA_SHARED_PARAM_INPUT_FIELDS,
+    inputType: 'number',
+    paramKey: 'feeTokenAmount',
+    inputPlaceholder: 'The fee amount...',
+    explanation: 'represents the number of units to assess as a fee',
+  },
   customFee: {
     paramKey: 'customFee',
     explanation: {
