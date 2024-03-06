@@ -66,7 +66,6 @@ module.exports = {
       url: NETWORKS.local.url,
       accounts: PRIVATE_KEYS,
       chainId: NETWORKS.local.chainId,
-      gas: 10000000,
       sdkClient: {
         operatorId: OPERATOR_ID_A,
         operatorKey: OPERATOR_KEY_A,
