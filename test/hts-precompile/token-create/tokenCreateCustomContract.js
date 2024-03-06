@@ -31,6 +31,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
   const initialSupply = 900000000; // 9 WHBAR
   const maxSupply = 30000000000; // 300 WHBAR
   const decimals = 8;
+  const feeAmount = 1000n;
   const freezeDefaultStatus = false;
   let keys, signers, fixedFeeTokenAddress, tokenCreateCustomContract;
 
@@ -133,6 +134,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
         initialSupply,
         maxSupply,
         decimals,
+        feeAmount,
         keys,
         {
           value: '35000000000000000000',
@@ -179,6 +181,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
         tokenSymbol,
         tokenMemo,
         maxSupply,
+        feeAmount,
         keys,
         {
           value: '20000000000000000000',

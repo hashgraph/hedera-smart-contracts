@@ -47,6 +47,7 @@ describe('createHederaFungibleToken test suite', () => {
   const initialSupply = 900000000; // 9 WHBAR
   const metadata = ['Zeus', 'Athena', 'Apollo'];
   const msgValue = '20000000000000000000'; // 20 hbar
+  const feeAmount = 1000; // 20 hbar
   const recipient = '0x34810E139b451e0a4c67d5743E956Ac8990842A8';
   const contractId = '0xbdcdf69052c9fc01e38377d05cc83c28ee43f24a';
   const feeTokenAddress = '0x00000000000000000000000000000000000006Ab';
@@ -161,7 +162,8 @@ describe('createHederaFungibleToken test suite', () => {
         contractId,
         inputKeys,
         msgValue,
-        feeTokenAddress
+        feeTokenAddress,
+        feeAmount
       );
 
       expect(txRes.err).toBeNull;
@@ -342,7 +344,8 @@ describe('createHederaFungibleToken test suite', () => {
         contractId,
         inputKeys,
         msgValue,
-        feeTokenAddress
+        feeTokenAddress,
+        feeAmount
       );
 
       expect(txRes.err).toBeNull;
