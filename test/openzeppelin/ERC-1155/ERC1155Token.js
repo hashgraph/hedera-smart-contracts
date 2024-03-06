@@ -28,7 +28,6 @@ describe('@OZERC1155Token Test Suite', () => {
 
   const TOKEN_URI = '_token_uri_';
   const NEW_TOKEN_URI = '_new_token_uri_';
-  const GAS_LIMIT = 1_000_000;
   const TOKEN_ID = 3679;
   const MINTED_AMOUNT = 79;
   const TRANSFER_AMOUNT = 30;
@@ -45,9 +44,7 @@ describe('@OZERC1155Token Test Suite', () => {
     const erc1155TokenFac = await ethers.getContractFactory(
       Constants.Contract.ERC1155Token
     );
-    erc1155Token = await erc1155TokenFac.deploy(TOKEN_URI, {
-      gasLimit: GAS_LIMIT,
-    });
+    erc1155Token = await erc1155TokenFac.deploy(TOKEN_URI);
   });
 
   it('Should deploy erc1155Token', async () => {
