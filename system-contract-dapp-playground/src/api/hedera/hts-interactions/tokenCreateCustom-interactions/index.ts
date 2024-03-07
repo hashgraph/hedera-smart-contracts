@@ -56,6 +56,8 @@ import { TNetworkName } from '@/types/common';
  *
  * @param feeTokenAddress?: string
  *
+ * @param feeAmount?: number
+ *
  * @return Promise<ISmartContractExecutionResult>
  *
  * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L136
@@ -73,7 +75,8 @@ export const createHederaFungibleToken = async (
   treasury: string,
   inputKeys: ICommonKeyObject[],
   msgValue: string,
-  feeTokenAddress?: string
+  feeTokenAddress?: string,
+  feeAmount?: number
 ): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
@@ -114,6 +117,7 @@ export const createHederaFungibleToken = async (
         initialTotalSupply,
         maxSupply,
         decimals,
+        feeAmount,
         keyRes.hederaTokenKeys,
         {
           value: ethers.parseEther(msgValue),
@@ -175,6 +179,8 @@ export const createHederaFungibleToken = async (
  *
  * @param feeTokenAddress?: ethers.AddressLike
  *
+ * @param feeAmount?: number
+ *
  * @return Promise<ISmartContractExecutionResult>
  *
  * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L136
@@ -189,7 +195,8 @@ export const createHederaNonFungibleToken = async (
   treasury: ethers.AddressLike,
   inputKeys: ICommonKeyObject[],
   msgValue: string,
-  feeTokenAddress?: ethers.AddressLike
+  feeTokenAddress?: ethers.AddressLike,
+  feeAmount?: number
 ): Promise<ISmartContractExecutionResult> => {
   // sanitize params
   let sanitizeErr;
@@ -224,6 +231,7 @@ export const createHederaNonFungibleToken = async (
         symbol,
         memo,
         maxSupply,
+        feeAmount,
         keyRes.hederaTokenKeys,
         {
           value: ethers.parseEther(msgValue),

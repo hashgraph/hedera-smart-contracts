@@ -39,6 +39,7 @@ interface ParamsProps {
   spenderAddress?: string;
   withCustomFee?: boolean;
   accountAddress?: string;
+  feeAmount?: number;
   serialNumbers?: number[];
   receiverAddress?: string;
   feeTokenAddress?: string;
@@ -47,8 +48,8 @@ interface ParamsProps {
   autoRenewAccount?: string;
   tokenAddresses?: string[];
   recipientAddress?: string;
-  associatingAddress?: string;
   tokenAddressToMint?: string;
+  associatingAddress?: string;
   hederaTokenAddress?: string;
   fungibleReceivers?: string[];
   nonFungibleReceivers?: string[];
@@ -101,6 +102,7 @@ export const handleSanitizeHederaFormInputs = ({
   senderAddress,
   withCustomFee,
   serialNumbers,
+  feeAmount,
   spenderAddress,
   accountAddress,
   tokenAddresses,
@@ -133,6 +135,8 @@ export const handleSanitizeHederaFormInputs = ({
       sanitizeErr = 'Invalid denomination token ID';
     } else if (!isAddress(treasury)) {
       sanitizeErr = 'Invalid treasury account address';
+    } else if (withCustomFee && Number(feeAmount) <= 0) {
+      sanitizeErr = 'Custom fee amount must be positive';
     }
     // sanitize keys
     if (!sanitizeErr && keys) {
