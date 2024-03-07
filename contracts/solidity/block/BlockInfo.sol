@@ -32,7 +32,8 @@ contract BlockInfo {
     }
 
     // should behave like prevrandao
+    /// @notice since VM version Paris, "difficulty" was replaced by "prevrandao", which now returns a random number based on the beacon chain
     function getBlockDifficulty() external view returns (uint256) {
-        return block.difficulty;
+        return block.prevrandao;
     }
 }

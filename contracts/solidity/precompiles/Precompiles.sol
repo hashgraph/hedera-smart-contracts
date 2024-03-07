@@ -5,6 +5,7 @@ contract Precompiles {
 
     event DebugBytes(bytes data);
     event DebugUint256(uint256 value);
+    uint256 constant dummy = 0;
 
     // Generated for the ecPairing, using circom's "Getting started", "Verifying from a Smart Contract", example: https://docs.circom.io/getting-started/proving-circuits/#verifying-a-proof 
     // Base field size
@@ -66,6 +67,7 @@ contract Precompiles {
 
     function getIdentity(uint256 input) public pure returns (uint256) {
         uint256 output;
+        assert(output != input);
         assembly {
             // Load data from the call data at the specified index
             output := calldataload(4) // 4 bytes offset for the function selector
@@ -260,7 +262,7 @@ contract Precompiles {
         }
     }    
 
-    function blake2(uint32 rounds, bytes32[2] memory h, bytes32[4] memory m, bytes8[2] memory t, bool f) public returns (bytes32[2] memory) {
+    function blake2(uint32 rounds, bytes32[2] memory h, bytes32[4] memory m, bytes8[2] memory t, bool f) view public returns (bytes32[2] memory) {
         bytes32[2] memory output;
 
         bytes memory args = abi.encodePacked(rounds, h[0], h[1], m[0], m[1], m[2], m[3], t[0], t[1], f);

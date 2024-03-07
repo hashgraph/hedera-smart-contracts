@@ -15,14 +15,15 @@ contract InternalCallee {
     }
 
     function revertWithRevertReason() public returns (bool) {
+        if (calledTimes < 0) {++calledTimes;}
         revert("RevertReason");
     }
 
-    function revertWithoutRevertReason() public returns (bool) {
+    function revertWithoutRevertReason() public pure returns (bool) {
         revert();
     }
 
-    function selfdestruct(address payable _addr) external {
+    function selfDestruct(address payable _addr) external {
         selfdestruct(_addr);
     }
 }

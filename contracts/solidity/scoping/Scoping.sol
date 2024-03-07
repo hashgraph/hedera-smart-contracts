@@ -18,7 +18,6 @@ contract Scoping {
         uint x = 1;
         {
             x = 2; // this will assign to the outer variable
-            uint x;
         }
         return x; // x has value 2
     }

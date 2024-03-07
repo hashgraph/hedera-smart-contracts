@@ -5,14 +5,16 @@ contract InternalCaller {
     constructor() payable {}
 
     function callNonExisting(address _addr) external {
-        _addr.call(abi.encodeWithSignature("nonExisting()"));
+        (bool success,) = _addr.call(abi.encodeWithSignature("nonExisting()"));
+        require(success);
     }
 
-    function staticCallNonExisting(address _addr) external {
-        _addr.staticcall(abi.encodeWithSignature("nonExisting()"));
+    function staticCallNonExisting(address _addr) view external {
+        (bool success,) = _addr.staticcall(abi.encodeWithSignature("nonExisting()"));
+        require(success);
     }
 
-    function staticCallExternalFunction(address _addr) external returns (uint) {
+    function staticCallExternalFunction(address _addr) view external returns (uint) {
         (bool success, bytes memory result) = _addr.staticcall(abi.encodeWithSignature("externalFunction()"));
         return success && result.length > 0 ? abi.decode(result, (uint)) : 0;
     }
@@ -28,15 +30,17 @@ contract InternalCaller {
     }
 
     function callRevertWithRevertReason(address _addr) external {
-        _addr.call(abi.encodeWithSignature("revertWithRevertReason()"));
+        (bool success,) = _addr.call(abi.encodeWithSignature("revertWithRevertReason()"));
+        require(success);
     }
 
     function callRevertWithoutRevertReason(address _addr) external {
-        _addr.call(abi.encodeWithSignature("revertWithoutRevertReason()"));
+        (bool success,) = _addr.call(abi.encodeWithSignature("revertWithoutRevertReason()"));
+        require(success);
     }
 
     function sendTo(address payable _addr) external {
-        _addr.send(1);
+        _addr.transfer(1);
     }
 
     function transferTo(address payable _addr) external {
@@ -44,10 +48,11 @@ contract InternalCaller {
     }
 
     function callWithValueTo(address _addr) external {
-        _addr.call{value : 1}("");
+        (bool success,) = _addr.call{value : 1}("");
+        require(success);
     }
 
-    function selfdestruct(address payable _addr) external {
+    function selfDestruct(address payable _addr) external {
         selfdestruct(_addr);
     }
 

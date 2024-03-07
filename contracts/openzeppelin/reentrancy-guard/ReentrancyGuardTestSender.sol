@@ -12,11 +12,13 @@ contract ReentrancyGuardTestSender is ReentrancyGuard {
     function reentrancyTest() external {
         counter = counter + 1;
         (bool sent,) = msg.sender.call{value: 100000000}("");
+        require(sent);
     }
 
     function reentrancyTestNonReentrant() external nonReentrant {
         counter = counter + 1;
         (bool sent,) = msg.sender.call{value: 100000000}("");
+        require(!sent);
     }
 
     receive() external payable {}

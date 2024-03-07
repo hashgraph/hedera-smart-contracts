@@ -17,4 +17,7 @@ contract MyProxy is BeaconProxy {
     function implementation() public view returns (address) {
         return _implementation();
     }
+
+    /// @notice required by Solidity
+    receive() external payable {}
 }

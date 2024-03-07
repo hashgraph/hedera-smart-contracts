@@ -13,7 +13,7 @@ contract Receiver {
         uint d;
     }
 
-    function processLongInput(SomeData memory longInput) pure external returns (uint result) {
+    function processLongInput() pure external returns (uint result) {
         result = 5;
     }
 
@@ -24,7 +24,7 @@ contract Receiver {
         return data;
     }
 
-    function processLongInputTx(SomeData memory longInput) payable external returns (uint) {
+    function processLongInputTx() payable external returns (uint) {
         counter += 1;
         return counter;
     }
