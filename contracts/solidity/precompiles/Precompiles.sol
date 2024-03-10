@@ -5,7 +5,6 @@ contract Precompiles {
 
     event DebugBytes(bytes data);
     event DebugUint256(uint256 value);
-    uint256 constant dummy = 0;
 
     // Generated for the ecPairing, using circom's "Getting started", "Verifying from a Smart Contract", example: https://docs.circom.io/getting-started/proving-circuits/#verifying-a-proof 
     // Base field size
