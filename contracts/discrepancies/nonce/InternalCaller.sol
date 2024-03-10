@@ -40,7 +40,8 @@ contract InternalCaller {
     }
 
     function sendTo(address payable _addr) external {
-        _addr.transfer(1);
+        bool sent = _addr.send(1);
+        require(sent);
     }
 
     function transferTo(address payable _addr) external {
