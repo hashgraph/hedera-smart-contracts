@@ -496,7 +496,7 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     const redeployTx = await internalCalleeContract.deployViaCreate2(1); 
     const redeployTxReceipt = await firstTx.wait();
 
-    const redeployedTempContractAddress = txReceipt.logs.filter(
+    const redeployedTempContractAddress = redeployTxReceipt.logs.filter(
       (e) => e.fragment.name === Constants.Events.DeployedContractAddress
     )[0].args[0];
 
@@ -543,7 +543,8 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     expectNonIncrementedNonce(snAfterNewCreate, mnAfterNewCreate, 0, 0);
   });
 
-  it.only('should update all nonces when chained deploys of contracts', async function() {
+  //should fix the get contract nonce function - waiting for SDKs
+  it('should update all nonces when chained deploys of contracts', async function() {
     //deploys contract A which deploys contract B which deploys contract C
     //nonces of signer, contract A and contract B should increment
     //nonce of contract C should be 0
@@ -583,5 +584,36 @@ describe('@discrepancies - Nonce Test Suite', async () => {
 
     //verify nonce of the inner most contract is 0
     expectNonIncrementedNonce(0, 0, servicesInnerContractNonce, mirrorNodeInnerContractNonce);
+  });
+
+  //need to update the get contract nonce - waiting for SDK
+  it('should update contract nonce for each deployed contract', async function() {
+    //deploys contract A which deploys contracts B and C
+    //nonce of signer should be 1
+    //nonce of contract A should be 2
+    const snBefore = await getServicesNonce(signers[0].address);
+    const mnBefore = await getMirrorNodeNonce(signers[0].address);
+
+    //deploy contract A which will deploy Contract B and C
+    const Deploys2ContractsFactory = await ethers.getContractFactory(Constants.Contract.Deploys2Contracts);
+    const deploys2Contracts = await Deploys2ContractsFactory.deploy({gasLimit: 5_000_000});
+    const receipt = await deploys2Contracts.deploymentTransaction().wait();
+
+    const deploys2ContractsAddress = receipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.Deploys2ContractsAddress
+    )[0].args[0];
+
+    //get contract nonce after deployment
+    const sContractNonce = await getServicesContractNonce(deploys2ContractsAddress);
+    const mContractNonce = await getMirrorNodeNonce(deploys2ContractsAddress);
+
+    //verify signer nonces have updated correctly
+    const snAfter = await getServicesNonce(signers[0].address);
+    const mnAfter = await getMirrorNodeNonce(signers[0].address);
+    expectIncrementedNonce(snBefore, mnBefore, snAfter, mnAfter);
+
+    //verify contract nonce have updated 2 times
+    expect(sContractNonce).to.equal(2);
+    expect(mContractNonce).to.equal(2);
   });
 });
