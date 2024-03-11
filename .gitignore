@@ -3,17 +3,36 @@ cache
 .idea
 
 # ignore non repo contract related aritifacts
-artifacts/@openzeppelin
-artifacts/build-info
-artifacts/contracts/**/**/*.dbg.json
 .openzeppelin/unknown-298.json
 .env
 test-results.*
 contracts-abi/*
 !contracts-abi/contracts
 
-## --- Foundry Gitignore ---
+# Ignore all default artifacts except for TokenCreateCustomContract, TokenManagementContract, TokenQueryContract, TokenTransferContract, IHRC729Contract, PrngSystemContract, ERC20Mock, ERC721Mock
+# because the System Contract DApp requires the bytecode of these contracts
+artifacts/contracts/*
+artifacts/build-info
+artifacts/@openzeppelin
+artifacts/contracts/**/**/*.dbg.json
 
+!artifacts/contracts/hts-precompile
+artifacts/contracts/hts-precompile/*
+!artifacts/contracts/hts-precompile/examples
+!artifacts/contracts/hts-precompile/IHRC.sol
+
+!artifacts/contracts/exchange-rate-precompile
+artifacts/contracts/exchange-rate-precompile/*
+!artifacts/contracts/exchange-rate-precompile/ExchangeRateMock.sol
+
+!artifacts/contracts/util-precompile
+
+!artifacts/contracts/openzeppelin
+artifacts/contracts/openzeppelin/*
+!artifacts/contracts/openzeppelin/ERC-20
+!artifacts/contracts/openzeppelin/ERC-721
+
+## --- Foundry Gitignore ---
 # Compiler files
 forge-cache/
 out/
