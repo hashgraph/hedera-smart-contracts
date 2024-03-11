@@ -37,6 +37,10 @@ contract InternalCallee {
         Sample(sampleAddress).selfdestruct();
     }
 
+    function internalTransfer(address payable _addr) external {
+        _addr.call(abi.encodeWithSignature("transferTo()"));
+    }
+
     event DeployedContractAddress(address);
 
      function deployViaCreate2(uint256 _salt) external returns (address) {

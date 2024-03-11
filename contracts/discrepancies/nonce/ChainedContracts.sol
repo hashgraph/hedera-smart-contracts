@@ -37,3 +37,20 @@ contract ChainedContracts {
 
     event DeployedContract2Address(address);
 }
+
+contract Deploys2Contracts {
+    address public owner;
+    Deploys1Contract  public childContract1;
+    EmptyContract public childContract2;
+
+    constructor() {
+        owner = msg.sender;
+        // Deploy Chain within ChildContract constructor
+        //  chainContract = new ChainContract();
+       childContract1 = new Deploys1Contract();
+       childContract2 = new EmptyContract();
+    emit Deploys2ContractsAddress(address(this));
+    }
+
+    event Deploys2ContractsAddress(address);
+}
