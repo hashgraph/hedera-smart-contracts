@@ -11,11 +11,13 @@ contract InternalCallee {
     }
 
     function externalFunction() external returns (uint) {
+        // mutate state to maintain non-view function status
         return ++calledTimes;
     }
 
     function revertWithRevertReason() public returns (bool) {
-        if (calledTimes < 0) {++calledTimes;}
+        // mutate state to maintain non-view function status
+        ++calledTimes;
         revert("RevertReason");
     }
 
