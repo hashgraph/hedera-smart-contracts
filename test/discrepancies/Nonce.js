@@ -624,12 +624,11 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
     expect(mContractNonce).to.equal(2);
   });
 
-  //NONCE-024 - static call covers the eth call - double check in relay docker logs - 'docker logs json-rpc-relay'
+  //NONCE-024 
   it('Nonce should NOT be incremented upon static call', async function () {
     const snBeforeTransfer = await getServicesNonce(signers[0].address);
     const mnBeforeTransfer = await getMirrorNodeNonce(signers[0].address);
     const tx = await internalCallerContract.staticCallExternalFunction.staticCall(signers[1].address)
-    console.log(tx);
 
     const snAfterTransfer = await getServicesNonce(signers[0].address);
     const mnAfterTransfer = await getMirrorNodeNonce(signers[0].address);
@@ -644,8 +643,6 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
 
     const newWallet = await createNewAccountWithBalance(initialWalletBalance);
     const newWallet2 = await createNewAccountWithBalance(initialWalletBalance);
-    console.log(newWallet.address);
-    console.log(newWallet2.address);
 
     const snWallet1Before = await getServicesNonce(newWallet.address);
     const mnWallet1Before = await getMirrorNodeNonce(newWallet.address);
@@ -762,23 +759,14 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
     const snBeforeTransfer = await getServicesNonce(signers[0].address);
     const mnBeforeTransfer = await getMirrorNodeNonce(signers[0].address);
 
-    let code = null;
-    try {
-      const newAccTx = await signers[0].sendTransaction({
+    await Utils.expectToFail(
+      signers[0].sendTransaction({
         to: wallet1.address,
         value: amount,
         gasLimit: 650_000,
         chainId: 8n
-      });
-      await newAccTx.wait();
-      expect(true).to.eq(false);
-    } catch (e) {
-      expect(e).to.exist;
-      console.log(e);
-      if (code) {
-        expect(e.code).to.eq(code);
-      }
-    }
+      })
+    );
 
     const snAfterCreate = await getServicesNonce(signers[0].address);
     const mnAfterCreate = await getMirrorNodeNonce(signers[0].address);
@@ -808,7 +796,6 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
       gasPrice: enoughGasPrice,
     });
     await newAccTx1.wait();
-    console.log('Type is: ' + newAccTx1.type);
 
     const snAfterCreate = await getServicesNonce(signers[0].address);
     const mnAfterCreate = await getMirrorNodeNonce(signers[0].address);
@@ -839,7 +826,6 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
       accessList: [],
     });
     await newAccTx1.wait();
-    console.log('Type is: ' + newAccTx1.type);
 
     const snAfterCreate = await getServicesNonce(signers[0].address);
     const mnAfterCreate = await getMirrorNodeNonce(signers[0].address);
@@ -869,7 +855,6 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
       maxPriorityFeePerGas: enoughGasPrice,
     });
     await newAccTx1.wait();
-    console.log('Type is: ' + newAccTx1.type);
 
     const snAfterCreate = await getServicesNonce(signers[0].address);
     const mnAfterCreate = await getMirrorNodeNonce(signers[0].address);
@@ -918,9 +903,7 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
     expect(jsonRequest2.key._key).to.equal(undefined);
 
     const snBeforeTransfer = await getServicesNonce(wallet.address);
-    console.log('snBefore = ' + snBeforeTransfer);
     const mnBeforeTransfer = await getMirrorNodeNonce(wallet.address);
-    console.log('mnBefore = ' + mnBeforeTransfer);
 
     await Utils.expectToFail(
       wallet.sendTransaction({
@@ -936,9 +919,7 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
     expect(jsonRequest3.key._key).to.not.equal(undefined);
 
     const snAfterCreate = await getServicesNonce(wallet.address);
-    console.log('snAfter = ' + snAfterCreate);
     const mnAfterCreate = await getMirrorNodeNonce(wallet.address);
-    console.log('mnAfter = ' + mnAfterCreate);
 
     expectNonIncrementedNonce(snBeforeTransfer, mnBeforeTransfer, snAfterCreate, mnAfterCreate);
 
