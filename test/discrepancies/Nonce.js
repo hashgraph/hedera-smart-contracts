@@ -26,7 +26,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const { ContractId } = require('@hashgraph/sdk');
 
-describe.only('@discrepancies - Nonce Test Suite', async () => {
+describe('@discrepancies - Nonce Test Suite', async () => {
   let signers;
   let sdkClient;
   let internalCalleeContract;
