@@ -107,7 +107,7 @@ describe('@OZGovernor Test Suite', function () {
     );
 
     // execute proposal
-    await governor
+    const tx = await governor
       .connect(deployer)
       .execute(
         actions.targets,
@@ -115,6 +115,7 @@ describe('@OZGovernor Test Suite', function () {
         actions.calldatas,
         descriptionHash
       );
+    await tx.wait();
 
     expect(await exampleToken.balanceOf(deployer.address)).to.eq(
       BigInt(VOTE_WEIGHT - GRANT_AMOUNT)

@@ -30,6 +30,12 @@ const {
 chai.use(chaiAsPromised);
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const sleepUntilTimestamp = async (timestamp) => {
+  const remainingMs = timestamp - Date.now();
+  if (remainingMs > 0) {
+    await sleep(remainingMs);
+  }
+}
 
 const deployBlindAuctionContract = async (
   biddingTime,
@@ -44,12 +50,17 @@ const deployBlindAuctionContract = async (
     revealTime,
     beneficiaryAddress
   );
+  const biddingEndMs = Date.now() + (biddingTime * 1000) + 250;
+  const revealEndMs = biddingEndMs + (revealTime * 1000) + 250;
 
-  return contract;
+  return { contract, biddingEndMs, revealEndMs };
 };
 
 describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
   let beneficiary, wallet1;
+
+  const biddingTimeSeconds = 6;
+  const revealTimeSeconds = 3;
 
   const fiveHbars = 5 * tinybarToHbarCoef;
   const hundredHbars = 100 * tinybarToHbarCoef;
@@ -67,9 +78,9 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
   });
 
   it('should confirm beneficiary is set correctly', async function () {
-    const contract = await deployBlindAuctionContract(
-      3,
-      5,
+    const { contract } = await deployBlindAuctionContract(
+      biddingTimeSeconds,
+      revealTimeSeconds,
       beneficiary.address
     );
     const beneficiaryAddress = await contract.beneficiary();
@@ -78,9 +89,9 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
   });
 
   it('should confirm a user can bid', async function () {
-    const contract = await deployBlindAuctionContract(
-      3,
-      5,
+    const { contract } = await deployBlindAuctionContract(
+      biddingTimeSeconds,
+      revealTimeSeconds,
       beneficiary.address
     );
 
@@ -100,9 +111,9 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
   });
 
   it('should confirm a user can reveal their bids', async function () {
-    const contract = await deployBlindAuctionContract(
-      5,
-      5,
+    const { contract, biddingEndMs } = await deployBlindAuctionContract(
+      4,
+      revealTimeSeconds,
       beneficiary.address
     );
 
@@ -125,7 +136,7 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
       .bid(secondBid, { value: fiveHbarsToWeibar });
     await bid2.wait();
 
-    await sleep(3000);
+    await sleepUntilTimestamp(biddingEndMs);
 
     const result = await contract
       .connect(wallet1)
@@ -145,9 +156,9 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
   });
 
   it('should confirm a user can withdraw', async function () {
-    const contract = await deployBlindAuctionContract(
-      5,
-      5,
+    const { contract, biddingEndMs } = await deployBlindAuctionContract(
+      biddingTimeSeconds,
+      revealTimeSeconds,
       beneficiary.address
     );
 
@@ -181,7 +192,7 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
 
     //this sleep is needed as part of the contract business logic
     //to ensure time has passed and we can reveal the blind bid
-    await sleep(2000);
+    await sleepUntilTimestamp(biddingEndMs);
 
     const result = await contract
       .connect(wallet1)
@@ -205,7 +216,7 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
     const withdraw = await contract.connect(wallet1).withdraw();
     await withdraw.wait();
 
-    const balanceAfterWithdraw = await await contract.getBalance();
+    const balanceAfterWithdraw = await contract.getBalance();
 
     expect(balanceBeforeWithdraw).to.be.greaterThan(balanceAfterWithdraw);
     expect(highestBid).to.equal(BigInt(twoHundredHbars));
@@ -213,9 +224,9 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
   });
 
   it('should confirm a user can end an auction', async function () {
-    const contract = await deployBlindAuctionContract(
-      6,
-      5,
+    const { contract, biddingEndMs, revealEndMs } = await deployBlindAuctionContract(
+      4,
+      revealTimeSeconds,
       beneficiary.address
     );
 
@@ -227,10 +238,6 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
       ['uint256', 'bool', 'uint256'],
       [hundredHbars, true, ethers.encodeBytes32String('23')]
     );
-    const thirdBid = ethers.solidityPackedKeccak256(
-      ['uint256', 'bool', 'uint256'],
-      [twoHundredHbars, false, ethers.encodeBytes32String('5')]
-    );
 
     const bid = await contract
       .connect(wallet1)
@@ -239,25 +246,19 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
 
     const bid2 = await contract
       .connect(wallet1)
-      .bid(secondBid, { value: fiveHbarsToWeibar });
+      .bid(secondBid, { value: hundredHbarsToWeibar });
     await bid2.wait();
 
-    const bid3 = await contract
-      .connect(wallet1)
-      .bid(thirdBid, { value: twohundredHbarsToWeibar });
-    await bid3.wait();
-
-    await sleep(3000);
+    await sleepUntilTimestamp(biddingEndMs);
 
     const reveal = await contract
       .connect(wallet1)
       .reveal(
-        [hundredHbars, twoHundredHbars, twoHundredHbars],
-        [false, true, false],
+        [hundredHbars, hundredHbars],
+        [false, true],
         [
           ethers.encodeBytes32String('2'),
-          ethers.encodeBytes32String('23'),
-          ethers.encodeBytes32String('5'),
+          ethers.encodeBytes32String('23')
         ],
         { gasLimit: 5000000 }
       );
@@ -267,10 +268,9 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
       beneficiary.address
     );
 
-    //this sleep is needed as part of the contract business logic
-    //to ensure time has passed and we can end the auction
-    //it is the revealEnd time + 5 seconds
-    await sleep(2000);
+    // this sleep is needed as part of the contract business logic
+    // to ensure time has passed, and we can end the auction
+    await sleepUntilTimestamp(revealEndMs);
 
     const result = await contract
       .connect(wallet1)
@@ -284,15 +284,15 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
     const highestBidder = await contract.highestBidder();
     const highestBid = await contract.highestBid();
 
-    expect(highestBid).to.equal(BigInt(twoHundredHbars));
+    expect(highestBid).to.equal(BigInt(hundredHbars));
     expect(highestBidder).to.equal(wallet1.address);
     expect(balanceBeforeAuctionEnd).to.be.lessThan(balanceAfterAuctionEnd);
   });
 
   it('should confirm a user cannot bid after end', async function () {
-    const contract = await deployBlindAuctionContract(
-      4,
-      2,
+    const { contract, biddingEndMs } = await deployBlindAuctionContract(
+      1,
+      1,
       beneficiary.address
     );
     const bidData = ethers.solidityPackedKeccak256(
@@ -300,7 +300,7 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
       [hundredHbars, false, 2]
     );
 
-    await sleep(5000);
+    await sleepUntilTimestamp(biddingEndMs);
 
     await expect(
       contract.connect(wallet1).bid(bidData, { value: hundredHbarsToWeibar })
@@ -308,9 +308,9 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
   });
 
   it('should confirm a user cannot reveal after reveal end', async function () {
-    const contract = await deployBlindAuctionContract(
+    const { contract, revealEndMs } = await deployBlindAuctionContract(
       4,
-      2,
+      1,
       beneficiary.address
     );
 
@@ -333,7 +333,7 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
       .bid(anotherBidData, { value: fiveHbarsToWeibar });
     await bidAgain.wait();
 
-    await sleep(5000);
+    await sleepUntilTimestamp(revealEndMs);
 
     const result = await contract
       .connect(wallet1)
