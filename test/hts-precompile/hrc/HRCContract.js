@@ -21,7 +21,8 @@
 const Constants = require('../../constants');
 const { Contract } = require('ethers');
 const { expect } = require('chai');
-const { ethers } = require('hardhat');
+const hre = require('hardhat');
+const { ethers } = hre;
 const utils = require('../utils');
 
 describe('HRC Test Suite', function () {
