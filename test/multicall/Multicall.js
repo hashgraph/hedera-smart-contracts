@@ -264,7 +264,7 @@ describe('Multicall Test Suite', function () {
       expect(bytes).to.gte(42624);
     });
 
-    it('should NOT be able to aggregate 100 calls to processLongOutput', async function () {
+    it('should NOT be able to aggregate 115 calls to processLongOutput', async function () {
       const n = 115;
       let hasError = false;
       try {

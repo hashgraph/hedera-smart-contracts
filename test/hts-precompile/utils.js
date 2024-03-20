@@ -539,7 +539,7 @@ class Utils {
     prune0x = true
   ) {
     const wallet = new ethers.Wallet(
-      hre.config.networks[network.name].accounts[index]
+      hre.config.networks[hre.network.name].accounts[index]
     );
     const cpk = prune0x
       ? wallet.signingKey.compressedPublicKey.replace('0x', '')
