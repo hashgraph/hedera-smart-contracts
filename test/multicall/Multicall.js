@@ -266,6 +266,7 @@ describe('Multicall Test Suite', function () {
 
     it('should NOT be able to aggregate 115 calls to processLongOutput', async function () {
       const n = 115;
+      const maxDataSize = 25 * 1024 * 2; // 25 kb
       let hasError = false;
       try {
         await multicallProcessLongOutput(n);
@@ -274,9 +275,9 @@ describe('Multicall Test Suite', function () {
         expect(e).to.exist;
         expect(e.message).to.exist;
 
-        // Output is too large and the call is reverted. The call exceeded the call size limit
-        const EXPECTED_ERROR_MESSAGE =
-          'data field must not exceed call size limit';
+        // Output is too large and the call is reverted.
+        // The call exceeded the call size limit of 25KB
+        const EXPECTED_ERROR_MESSAGE = `exceeds ${maxDataSize} characters`;
         expect(e.message).to.contain(EXPECTED_ERROR_MESSAGE);
       }
       expect(hasError).to.eq(true);
