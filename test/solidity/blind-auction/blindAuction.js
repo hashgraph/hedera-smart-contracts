@@ -340,7 +340,7 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
       .reveal(
         [hundredHbars, twoHundredHbars],
         [false, true],
-        [ethers.encodeBytes32String(2), ethers.encodeBytes32String(23)],
+        [ethers.encodeBytes32String('2'), ethers.encodeBytes32String('23')],
         Constants.GAS_LIMIT_1_000_000
       );
     await expect(result.wait()).to.eventually.be.rejected.and.have.property(
