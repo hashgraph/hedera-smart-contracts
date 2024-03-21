@@ -60,21 +60,6 @@ class Utils {
     DELEGETABLE_CONTRACT_ID: 4,
   };
 
-  static getSignerCompressedPublicKey(
-    index = 0,
-    asBuffer = true,
-    prune0x = true
-  ) {
-    const wallet = new ethers.Wallet(
-      hre.config.networks[network.name].accounts[index]
-    );
-    const cpk = prune0x
-      ? wallet.signingKey.compressedPublicKey.replace('0x', '')
-      : wallet.signingKey.compressedPublicKey;
-
-    return asBuffer ? Buffer.from(cpk, 'hex') : cpk;
-  }
-
   static async deployERC20Mock() {
     const erc20MockFactory = await ethers.getContractFactory(
       Constants.Path.HIP583_ERC20Mock
@@ -560,13 +545,13 @@ class Utils {
     ecdsaPrivateKeys = []
   ) {
     const clientGenesis = await Utils.createSDKClient();
-    ecdsaPrivateKeys = ecdsaPrivateKeys.length
-      ? ecdsaPrivateKeys
-      : await this.getHardhatSignersPrivateKeys(false);
+    if (!ecdsaPrivateKeys.length) {
+      ecdsaPrivateKeys = await this.getHardhatSignersPrivateKeys(false);
+    }
 
-    for (let i in ecdsaPrivateKeys) {
+    for (const privateKey of ecdsaPrivateKeys) {
       const pkSigner = PrivateKey.fromStringECDSA(
-        ecdsaPrivateKeys[i].replace('0x', '')
+        privateKey.replace('0x', '')
       );
       const accountId = await Utils.getAccountId(
         pkSigner.publicKey.toEvmAddress(),
@@ -574,20 +559,20 @@ class Utils {
       );
       const clientSigner = await Utils.createSDKClient(accountId, pkSigner);
 
+      const keyList = new KeyList(
+        [
+          pkSigner.publicKey,
+          ...contractAddresses.map((address) =>
+            ContractId.fromEvmAddress(0, 0, address)
+          ),
+        ],
+        1
+      );
+
       await (
         await new AccountUpdateTransaction()
           .setAccountId(accountId)
-          .setKey(
-            new KeyList(
-              [
-                pkSigner.publicKey,
-                ...contractAddresses.map((address) =>
-                  ContractId.fromEvmAddress(0, 0, address)
-                ),
-              ],
-              1
-            )
-          )
+          .setKey(keyList)
           .freezeWith(clientSigner)
           .sign(pkSigner)
       ).execute(clientSigner);
