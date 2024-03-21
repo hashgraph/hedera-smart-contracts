@@ -61,7 +61,7 @@
         "type": "bytes32[2]"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {

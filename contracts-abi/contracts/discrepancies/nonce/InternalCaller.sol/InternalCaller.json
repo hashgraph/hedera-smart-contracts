@@ -106,7 +106,7 @@
         "type": "address"
       }
     ],
-    "name": "selfdestruct",
+    "name": "selfDestruct",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -140,7 +140,7 @@
         "type": "uint256"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -153,7 +153,7 @@
     ],
     "name": "staticCallNonExisting",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
