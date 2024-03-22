@@ -112,7 +112,7 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
 
   it('should confirm a user can reveal their bids', async function () {
     const { contract, biddingEndMs } = await deployBlindAuctionContract(
-      4,
+      biddingTimeSeconds,
       revealTimeSeconds,
       beneficiary.address
     );
@@ -225,7 +225,7 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
 
   it('should confirm a user can end an auction', async function () {
     const { contract, biddingEndMs, revealEndMs } = await deployBlindAuctionContract(
-      4,
+      biddingTimeSeconds,
       revealTimeSeconds,
       beneficiary.address
     );
@@ -309,8 +309,8 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
 
   it('should confirm a user cannot reveal after reveal end', async function () {
     const { contract, revealEndMs } = await deployBlindAuctionContract(
-      4,
-      1,
+      biddingTimeSeconds,
+      revealTimeSeconds,
       beneficiary.address
     );
 
