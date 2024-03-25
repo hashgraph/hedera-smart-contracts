@@ -1,0 +1,9 @@
+[
+  {
+    "inputs": [],
+    "name": "selfdestruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

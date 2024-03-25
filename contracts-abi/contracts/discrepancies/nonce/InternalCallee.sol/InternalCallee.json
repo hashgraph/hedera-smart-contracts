@@ -61,13 +61,18 @@
     "inputs": [
       {
         "internalType": "address payable",
-        "name": "_addr",
+        "name": "_contract",
+        "type": "address"
+      },
+      {
+        "internalType": "address payable",
+        "name": "_receiver",
         "type": "address"
       }
     ],
     "name": "internalTransfer",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
