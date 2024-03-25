@@ -27,7 +27,7 @@ const {
   pollForNewSignerBalanceUsingProvider,
 } = require('../../../utils/helpers');
 
-describe('TokenTransferContract Test Suite', async function () {
+describe('TokenTransferContract Test Suite', function () {
   const TX_SUCCESS_CODE = 22;
 
   let tokenCreateContract;
