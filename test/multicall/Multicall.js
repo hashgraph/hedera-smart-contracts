@@ -29,10 +29,9 @@ describe('Multicall Test Suite', function () {
   const RESULT_FIVE =
     '0x0000000000000000000000000000000000000000000000000000000000000005';
   const INPUT_ELEMENT_LENGTH = 266;
-  const LONG_INPUT_ABI = 'processLongInput((uint256,uint256,uint256,uint256))';
+  const LONG_INPUT_ABI = 'processLongInput()';
   const LONG_INPUT_PARAMS = ['uint256', 'uint256', 'uint256', 'uint256'];
-  const LONG_INPUT_TX_ABI =
-    'processLongInputTx((uint256,uint256,uint256,uint256))';
+  const LONG_INPUT_TX_ABI = 'processLongInputTx()';
   const LONG_INPUT_TX_PARAMS = ['uint256', 'uint256', 'uint256', 'uint256'];
   const LONG_OUTPUT_ABI = 'processLongOutput(uint24)';
   const LONG_OUTPUT_PARAMS = ['uint24'];

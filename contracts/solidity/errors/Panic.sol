@@ -30,7 +30,7 @@ contract Panic {
 
     function verifyPanicError0x21() external pure {
         int testValue = -1;
-        Button value = Button(testValue);
+        Button(testValue);
     }
 
     function verifyPanicError0x22() external pure returns(uint8) {
@@ -47,6 +47,7 @@ contract Panic {
 
     function verifyPanicError0x41() external pure returns(uint[] memory) {
        uint[] memory largeArray = new uint[](2**64);
+       return largeArray;
     }
 
     function verifyPanicError0x51() external pure returns(uint) {

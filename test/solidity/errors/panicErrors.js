@@ -24,7 +24,9 @@ const Constants = require('../../constants');
 
 describe('@solidityequiv2 Panic Errors Test Suite', function () {
   const DEFAULT_ABI_CODER = ethers.AbiCoder.defaultAbiCoder();
-  const PANIC_SELECTOR = ethers.keccak256(ethers.toUtf8Bytes('Panic(uint256)')).substring(2, 10);
+  const PANIC_SELECTOR = ethers
+    .keccak256(ethers.toUtf8Bytes('Panic(uint256)'))
+    .substring(2, 10);
 
   let contract;
 
@@ -38,11 +40,11 @@ describe('@solidityequiv2 Panic Errors Test Suite', function () {
     expect(selector).to.equal(PANIC_SELECTOR);
 
     const [code] = DEFAULT_ABI_CODER.decode(
-        ['uint256'],
-        error.replace(PANIC_SELECTOR, '')
+      ['uint256'],
+      error.replace(PANIC_SELECTOR, '')
     );
     expect(code).to.equal(BigInt(expectedCode));
-  }
+  };
 
   it('should verify panic error 0x01', async function () {
     let error;
@@ -51,7 +53,6 @@ describe('@solidityequiv2 Panic Errors Test Suite', function () {
     } catch (e) {
       error = e;
     }
-
 
     assertPanicError(error.data, 0x1);
   });

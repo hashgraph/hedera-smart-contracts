@@ -48,7 +48,7 @@
         "type": "bool"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -59,7 +59,7 @@
         "type": "address"
       }
     ],
-    "name": "selfdestruct",
+    "name": "selfDestruct",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

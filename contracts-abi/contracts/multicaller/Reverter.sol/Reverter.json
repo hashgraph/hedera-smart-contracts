@@ -1,83 +1,15 @@
 [
   {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "a",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "b",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "c",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "d",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct Reverter.SomeData",
-        "name": "longInput",
-        "type": "tuple"
-      }
-    ],
+    "inputs": [],
     "name": "processLongInput",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "sum",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [],
     "stateMutability": "pure",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint24",
-        "name": "count",
-        "type": "uint24"
-      }
-    ],
+    "inputs": [],
     "name": "processLongOutput",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "a",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "b",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "c",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "d",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct Reverter.SomeData[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
+    "outputs": [],
     "stateMutability": "pure",
     "type": "function"
   }

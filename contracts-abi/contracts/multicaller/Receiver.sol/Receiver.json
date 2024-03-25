@@ -30,35 +30,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "a",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "b",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "c",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "d",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct Receiver.SomeData",
-        "name": "longInput",
-        "type": "tuple"
-      }
-    ],
+    "inputs": [],
     "name": "processLongInput",
     "outputs": [
       {
@@ -71,35 +43,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "a",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "b",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "c",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "d",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct Receiver.SomeData",
-        "name": "longInput",
-        "type": "tuple"
-      }
-    ],
+    "inputs": [],
     "name": "processLongInputTx",
     "outputs": [
       {

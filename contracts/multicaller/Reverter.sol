@@ -10,13 +10,11 @@ contract Reverter {
         uint d;
     }
 
-    function processLongInput(SomeData memory longInput) pure external returns (uint sum) {
+    function processLongInput() pure external {
         revert("SomeRevertReason");
     }
 
-    function processLongOutput(
-        uint24 count
-    ) external pure returns (SomeData[] memory) {
+    function processLongOutput() pure external {
         revert("SomeRevertReason");
     }
 }
