@@ -2,7 +2,8 @@
 pragma solidity ^0.8.0;
 
 contract Sample {
-  function selfdestruct() external {
+  
+  function selfDestructSample() external {
     selfdestruct(payable(msg.sender));
   }
 }
@@ -34,7 +35,7 @@ contract InternalCallee {
     }
 
   function selfdestructSample(address payable sampleAddress) external {
-    Sample(sampleAddress).selfdestruct();
+    Sample(sampleAddress).selfDestructSample();
   }
 
   function internalTransfer(address payable _contract, address payable _receiver) payable external {
