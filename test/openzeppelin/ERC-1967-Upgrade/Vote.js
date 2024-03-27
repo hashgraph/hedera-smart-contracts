@@ -141,13 +141,13 @@ describe('@OZERC1967Upgrade Upgradable Vote Test Suite', () => {
     });
 
     it('Should NOT be able to change the current proxy admin if the caller is not an admin', async () => {
-      let error;
+      expect(await voteProxy.getCurrentAdmin()).to.eq(await voter1.getAddress());
 
-      const tx = await voteProxy
-        .connect(voter1)
+      const txPromise = voteProxy
+        .connect(voter2)
         .changeAdmin(await voter1.getAddress());
 
-      expect(tx.wait()).to.eventually.be.rejected.and.have.property(
+      expect(txPromise).to.eventually.be.rejected.and.have.property(
         'code',
         CALL_EXCEPTION
       );
@@ -155,6 +155,15 @@ describe('@OZERC1967Upgrade Upgradable Vote Test Suite', () => {
   });
 
   describe('Implementation contract', () => {
+    before(async () => {
+      const tx = await voteProxy
+        .connect(voter1)
+        .changeAdmin(await admin.getAddress());
+      await tx.wait();
+
+      expect(await voteProxy.getCurrentAdmin()).to.eq(await admin.getAddress());
+    });
+
     it('V1: Should load VoteV1 into proxy address', async () => {
       proxiedVoteV1 = new ethers.Contract(
         await voteProxy.getAddress(),

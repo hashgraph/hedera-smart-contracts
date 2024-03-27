@@ -21,6 +21,8 @@
 const { expect } = require('chai');
 const utils = require('./utils');
 const Constants = require('../constants');
+const hre = require('hardhat');
+const { ethers } = hre;
 
 describe('RedirectForToken Test Suite', function () {
   const amount = 33;

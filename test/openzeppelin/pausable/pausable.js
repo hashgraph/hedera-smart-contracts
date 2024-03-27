@@ -47,10 +47,11 @@ describe('@OZPausable Test Suite', function () {
   });
 
   it('should NOT be able to call function "setPausedMessage" with "whenNotPaused" modifier when paused', async function () {
-    await contract.pause();
+    const tx = await contract.pause();
+    await tx.wait()
 
     expect(
-      contract.setPausedMessage('Hello World')
+      contract.setPausedMessage('some other message')
     ).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION);
   });
 
@@ -59,7 +60,8 @@ describe('@OZPausable Test Suite', function () {
   });
 
   it('should NOT be able to call function "getPausedMessage" with "whenNotPaused" modifier when paused', async function () {
-    await contract.unpause();
+    const tx = await contract.unpause();
+    await tx.wait();
 
     expect(
       contract.getPausedMessage()

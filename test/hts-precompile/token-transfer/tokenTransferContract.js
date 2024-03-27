@@ -110,7 +110,6 @@ describe('TokenTransferContract Test Suite', function () {
   });
 
   it('should NOT be able to use transferFrom on NFT tokens without approval', async function () {
-    const amount = 1;
     try {
       const txTransfer = await tokenTransferContract.transferFromNFTPublic(
         nftTokenAddress,
