@@ -283,7 +283,7 @@ class Utils {
     const tokenAddressTx =
       await contract.createFungibleTokenWithSECP256K1AdminKeyPublic(
         treasury,
-        adminKey,
+        Utils.keyListFromContractAddressAndKey(adminKey, contract),
         {
           value: ethers.BigNumber.from(this.createTokenCost),
           gasLimit: 1_000_000,
@@ -305,7 +305,7 @@ class Utils {
     const tokenAddressTx =
       await contract.createFungibleTokenWithSECP256K1AdminKeyWithoutKYCPublic(
         treasury,
-        adminKey,
+        Utils.keyListFromContractAddressAndKey(adminKey, contract),
         {
           value: ethers.BigNumber.from(this.createTokenCost),
           gasLimit: 1_000_000,
@@ -328,7 +328,7 @@ class Utils {
     const tokenAddressTx =
       await contract.createFungibleTokenWithSECP256K1AdminKeyAssociateAndTransferToAddressPublic(
         treasury,
-        adminKey,
+        Utils.keyListFromContractAddressAndKey(adminKey, contract),
         initialBalance,
         {
           value: ethers.BigNumber.from(this.createTokenCost),
@@ -588,6 +588,10 @@ class Utils {
           .sign(pkSigner)
       ).execute(clientSigner)
     }
+  }
+
+  static keyListFromContractAddressAndKey(key, contract) {
+    return new KeyList([key, ContractId.fromEvmAddress(0, 0, contract.address)]);
   }
 
   static async updateTokenKeysViaHapi(
