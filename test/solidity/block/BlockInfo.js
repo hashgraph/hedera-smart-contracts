@@ -18,7 +18,7 @@
  *
  */
 const { expect } = require('chai');
-const { BigNumber, ethers } = require('hardhat');
+const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 // const { BigNumber } = require('ethers');
 // 
@@ -64,7 +64,6 @@ describe('@solidityequiv1 BlockInfo Test Suite', function () {
     let prevrandao;
     try {
       prevrandao = await blockInfo.getBlockPrevrando();
-      console.log('prevrandao', prevrandao);
     } catch (e) {
       expect(e.code).to.equal('CALL_EXCEPTION');
       expect(e.message).to.contain('missing revert data in call exception');
