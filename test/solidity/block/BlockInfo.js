@@ -20,8 +20,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
-// const { BigNumber } = require('ethers');
-// 
+
 describe('@solidityequiv1 BlockInfo Test Suite', function () {
   let blockInfo, provider, signers;
 
