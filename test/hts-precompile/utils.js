@@ -257,7 +257,7 @@ class Utils {
     const tokenAddressTx =
       await contract.createFungibleTokenWithSECP256K1AdminKeyPublic(
         treasury,
-          Utils.keyListFromContractAddressAndKey(adminKey, contract),
+        adminKey,
         {
           value: BigInt(this.createTokenCost),
           gasLimit: 1_000_000,
@@ -279,7 +279,7 @@ class Utils {
     const tokenAddressTx =
       await contract.createFungibleTokenWithSECP256K1AdminKeyWithoutKYCPublic(
         treasury,
-          Utils.keyListFromContractAddressAndKey(adminKey, contract),
+        adminKey,
         {
           value: BigInt(this.createTokenCost),
           gasLimit: 1_000_000,
@@ -302,7 +302,7 @@ class Utils {
     const tokenAddressTx =
       await contract.createFungibleTokenWithSECP256K1AdminKeyAssociateAndTransferToAddressPublic(
         treasury,
-          Utils.keyListFromContractAddressAndKey(adminKey, contract),
+        adminKey,
         initialBalance,
         {
           value: BigInt(this.createTokenCost),
