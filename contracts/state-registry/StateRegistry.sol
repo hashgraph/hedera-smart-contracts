@@ -21,7 +21,10 @@ contract ContractType {
     }
 }
 
-contract StateContract {
+/**
+ * @dev mainly designed for migration testing
+ */
+contract StateRegistry {
 
     bool varBool;
 
@@ -49,11 +52,15 @@ contract StateContract {
 
     uint[] varIntArrDataAllocBefore;
     uint[] varIntArrDataAllocAfter;
+    uint[] varIntArrDataAllocDeleted;
 
     string varStringConcat;
-    ContractStruct varContractStruct;
+    string varStringConcatDeleted;
 
-    constructor() {}
+    ContractStruct varContractStruct;
+    ContractStruct varContractStructDeleted;
+
+    mapping(address account => uint256) balance;
 
     function setVarBool(bool newVar) external {
         varBool = newVar;
@@ -212,9 +219,15 @@ contract StateContract {
         return (varIntArrDataAllocBefore, varIntArrDataAllocAfter);
     }
 
-    function deleteVarIntArrDataAlloc() external {
-        delete varIntArrDataAllocBefore;
-        delete varIntArrDataAllocAfter;
+    function setVarIntArrDataAllocDeleted(uint[] calldata newVar) external {
+        varIntArrDataAllocDeleted = newVar;
+    }
+    function deleteVarIntArrDataAllocDeleted() external {
+        delete varIntArrDataAllocDeleted;
+    }
+
+    function getVarIntArrDataAllocDeleted() external view returns (uint[] memory) {
+        return varIntArrDataAllocDeleted;
     }
 
     function setVarStringConcat(string memory newVar) external {
@@ -225,8 +238,16 @@ contract StateContract {
         return varStringConcat;
     }
 
-    function deleteVarStringConcat() external {
-        delete varStringConcat;
+    function setVarStringConcatDeleted(string memory newVar) external {
+        varStringConcatDeleted = string.concat(varStringConcatDeleted, newVar);
+    }
+
+    function getVarStringConcatDeleted() external view returns (string memory) {
+        return varStringConcatDeleted;
+    }
+
+    function deleteVarStringConcatDeleted() external {
+        delete varStringConcatDeleted;
     }
 
     function setVarContractStruct(ContractStruct memory newVar) external {
@@ -237,7 +258,23 @@ contract StateContract {
         return varContractStruct;
     }
 
-    function deleteVarContractStruct() external {
-        delete varContractStruct;
+     function setVarContractStructDeleted(ContractStruct memory newVar) external {
+        varContractStructDeleted = newVar;
+    }
+
+    function getVarContractStructDeleted() external view returns (ContractStruct memory) {
+        return varContractStructDeleted;
+    }
+
+    function deleteVarContractStructDeleted() external {
+        delete varContractStructDeleted;
+    }
+
+    function setBalance(address addr, uint256 value) external {
+        balance[addr] = value;
+    }
+
+    function balanceOf(address account) public view returns (uint256) {
+        return balance[account];
     }
 }
