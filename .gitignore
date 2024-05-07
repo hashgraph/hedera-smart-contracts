@@ -52,3 +52,4 @@ coverage/
 ## --- Hardhat Gitignore for Foundry artifacts ---
 artifacts/forge-std
 artifacts/ds-test
+test/state-registry/states.json
