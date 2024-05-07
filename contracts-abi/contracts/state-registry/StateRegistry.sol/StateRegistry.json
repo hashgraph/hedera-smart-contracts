@@ -1,26 +1,40 @@
 [
   {
-    "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "balanceOf",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "inputs": [],
-    "name": "deleteVarContractStruct",
+    "name": "deleteVarContractStructDeleted",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "deleteVarIntArrDataAlloc",
+    "name": "deleteVarIntArrDataAllocDeleted",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "deleteVarStringConcat",
+    "name": "deleteVarStringConcatDeleted",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -67,6 +81,56 @@
   {
     "inputs": [],
     "name": "getVarContractStruct",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "varUint256",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "varAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "varBytes32",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "varString",
+            "type": "string"
+          },
+          {
+            "internalType": "enum Choices",
+            "name": "varContractType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "varUint256Arr",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "string",
+            "name": "varStringConcat",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct ContractStruct",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getVarContractStructDeleted",
     "outputs": [
       {
         "components": [
@@ -238,6 +302,19 @@
   },
   {
     "inputs": [],
+    "name": "getVarIntArrDataAllocDeleted",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "getVarString",
     "outputs": [
       {
@@ -252,6 +329,19 @@
   {
     "inputs": [],
     "name": "getVarStringConcat",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getVarStringConcatDeleted",
     "outputs": [
       {
         "internalType": "string",
@@ -344,6 +434,24 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "setBalance",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "newVar",
         "type": "address"
       }
@@ -425,6 +533,56 @@
       }
     ],
     "name": "setVarContractStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "varUint256",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "varAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "varBytes32",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "varString",
+            "type": "string"
+          },
+          {
+            "internalType": "enum Choices",
+            "name": "varContractType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "varUint256Arr",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "string",
+            "name": "varStringConcat",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct ContractStruct",
+        "name": "newVar",
+        "type": "tuple"
+      }
+    ],
+    "name": "setVarContractStructDeleted",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -543,6 +701,19 @@
   {
     "inputs": [
       {
+        "internalType": "uint256[]",
+        "name": "newVar",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "setVarIntArrDataAllocDeleted",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "string",
         "name": "newVar",
         "type": "string"
@@ -562,6 +733,19 @@
       }
     ],
     "name": "setVarStringConcat",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "newVar",
+        "type": "string"
+      }
+    ],
+    "name": "setVarStringConcatDeleted",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
