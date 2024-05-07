@@ -28,7 +28,8 @@
     "hh:test": "hardhat test",
     "hedera:start": "npx @hashgraph/hedera-local start --limits=false --dev=true --balance=10000000",
     "hedera:stop": "npx @hashgraph/hedera-local stop",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "freeze-network-node": "hardhat run scripts/freeze-network-node.js"
   },
   "devDependencies": {
     "@hashgraph/hedera-local": "^2.27.1",
