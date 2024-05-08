@@ -277,4 +277,8 @@ contract StateRegistry {
     function balanceOf(address account) public view returns (uint256) {
         return balance[account];
     }
+
+    function deleteBalance(address addr) external {
+        delete balance[addr];
+    }
 }
