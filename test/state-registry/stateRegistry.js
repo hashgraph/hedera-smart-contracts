@@ -53,7 +53,11 @@ describe('@migration States Tests', () => {
       statesObject[`Balance`] = [];
     });
 
-    after(() => {
+    after(async () => {
+      const contractStorageStateHash =
+        await contract.getContractStorageStateHash();
+      statesObject['monoStateHash'] = contractStorageStateHash;
+
       fs.writeFileSync(STATE_OBJECT_DIR, JSON.stringify(statesObject));
     });
 
@@ -469,42 +473,60 @@ describe('@migration States Tests', () => {
         expect(contract.target).to.eq(statesObject['contract_address']);
       });
 
-      for (const key of OBJECT_KEYS) {
-        it(`Should compare ${key} state`, async () => {
-          switch (key) {
-            case 'VarIntArrDataAlloc':
-              const intArr = await contract[`get${key}`]();
-              expect(serializeSmartContractResponse(intArr)).to.eq(
-                statesObject[key]
-              );
-              break;
-            case 'VarIntArrDataAllocDeleted':
-              const deletedArr = await contract[`get${key}`]();
-              expect(deletedArr.toArray()).to.deep.eq(statesObject[key]);
-              break;
-            case 'Balance':
-              const balances = statesObject[key];
-              for (const balance of balances) {
-                const accountAddr = balance['address'];
-                const value = await contract.balanceOf(accountAddr);
-                expect(value).to.eq(balance['value']);
+      it('should compare contract storage states', async () => {
+        const monoStateHash = statesObject['monoStateHash'];
+        const modStateHash = await contract.getContractStorageStateHash();
+
+        // @logic: modStateHash is supposed to exactly equal monoStateHash.
+        //        In the case of the hashes are mismatched, compare each state for debugging purpose.
+        try {
+          expect(modStateHash).to.eq(monoStateHash);
+        } catch (error) {
+          if (error) {
+            for (const key of OBJECT_KEYS) {
+              try {
+                switch (key) {
+                  case 'VarIntArrDataAlloc':
+                    const intArr = await contract[`get${key}`]();
+                    expect(serializeSmartContractResponse(intArr)).to.eq(
+                      statesObject[key]
+                    );
+                    break;
+                  case 'VarIntArrDataAllocDeleted':
+                    const deletedArr = await contract[`get${key}`]();
+                    expect(deletedArr.toArray()).to.deep.eq(statesObject[key]);
+                    break;
+                  case 'Balance':
+                    const balances = statesObject[key];
+                    for (const balance of balances) {
+                      const accountAddr = balance['address'];
+                      const value = await contract.balanceOf(accountAddr);
+                      expect(value).to.eq(balance['value']);
+                    }
+
+                    break;
+                  case 'VarContractStruct':
+                  case 'VarContractStructDeleted':
+                    const varContractStruct = await contract[`get${key}`]();
+                    expect(
+                      serializeSmartContractResponse(varContractStruct)
+                    ).to.eq(statesObject[key]);
+                    break;
+
+                  default:
+                    const resp = await contract[`get${key}`]();
+                    expect(resp).to.eq(statesObject[key]);
+                }
+              } catch (error) {
+                console.log(`State Failure at state = ${key}`);
+                console.log(error);
               }
+            }
 
-              break;
-            case 'VarContractStruct':
-            case 'VarContractStructDeleted':
-              const varContractStruct = await contract[`get${key}`]();
-              expect(serializeSmartContractResponse(varContractStruct)).to.eq(
-                statesObject[key]
-              );
-              break;
-
-            default:
-              const resp = await contract[`get${key}`]();
-              expect(resp).to.eq(statesObject[key]);
+            expect(false).to.be.true;
           }
-        });
-      }
+        }
+      });
     });
 
     describe('@post-migration-non-view-functions States Update', () => {
