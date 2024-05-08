@@ -1,3 +1,0 @@
-cli:
-  argv:
-  - examples/evm/umd_example.sol
