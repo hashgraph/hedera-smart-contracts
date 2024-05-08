@@ -38,7 +38,7 @@ describe('@OZIERC721Receiver Test Suite', () => {
       Constants.Contract.ValidERC721Receiver
     );
     const erc721TokenFac = await ethers.getContractFactory(
-      Constants.Path.ERC721Mock
+      Constants.Contract.OZERC721Mock
     );
 
     invalidErc721Receiver = await invalidErc721ReceiverFac.deploy();
