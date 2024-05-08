@@ -46,7 +46,7 @@ describe('@OZVestingWallet Test Suite', () => {
     );
 
     const erc20MockFactory = await ethers.getContractFactory(
-      Constants.Path.ERC20Mock
+      Constants.Contract.OZERC20Mock
     );
 
     erc20Mock = await erc20MockFactory.deploy('Hedera', 'HBAR');

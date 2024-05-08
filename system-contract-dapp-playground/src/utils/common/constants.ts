@@ -19,8 +19,8 @@
  */
 
 import { TContractName } from '@/types/common';
-import ERC20Mock from '@hashgraph-smartcontract/artifacts/contracts/openzeppelin/ERC-20/ERC20Mock.sol/ERC20Mock.json';
-import ERC721Mock from '@hashgraph-smartcontract/artifacts/contracts/openzeppelin/ERC-721/ERC721Mock.sol/ERC721Mock.json';
+import ERC20Mock from '@hashgraph-smartcontract/artifacts/contracts/openzeppelin/ERC-20/ERC20Mock.sol/OZERC20Mock.json';
+import ERC721Mock from '@hashgraph-smartcontract/artifacts/contracts/openzeppelin/ERC-721/ERC721Mock.sol/OZERC721Mock.json';
 import IHRC719Contract from '@hashgraph-smartcontract/artifacts/contracts/system-contracts/hedera-token-service/IHRC719.sol/IHRC719.json';
 import ExchangeRatePrecompile from '@hashgraph-smartcontract/artifacts/contracts/system-contracts/exchange-rate/ExchangeRateMock.sol/ExchangeRateMock.json';
 import PrngSystemContract from '@hashgraph-smartcontract/artifacts/contracts/system-contracts/pseudo-random-number-generator/PrngSystemContract.sol/PrngSystemContract.json';

@@ -21,6 +21,7 @@
 const fs = require('fs');
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../constants');
 
 const getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -36,10 +37,9 @@ const serializeSmartContractResponse = (arr) => {
 };
 
 const STATE_OBJECT_DIR = './test/state-registry/states.json';
-const CONTRACT_NAME = 'StateRegistry';
 
 describe('@migration States Tests', () => {
-  describe('@pre-migration States Tests', () => {
+  describe('@pre-migration', () => {
     const ITERATIONS = 1;
     let contract;
     let statesObject = {};
@@ -47,7 +47,9 @@ describe('@migration States Tests', () => {
     before(async function () {
       signers = await ethers.getSigners();
 
-      const contractFactory = await ethers.getContractFactory(CONTRACT_NAME);
+      const contractFactory = await ethers.getContractFactory(
+        Constants.Contract.StateRegistry
+      );
       contract = await contractFactory.deploy();
       statesObject['contract_address'] = contract.target;
       statesObject[`Balance`] = [];
@@ -427,7 +429,7 @@ describe('@migration States Tests', () => {
     }
   });
 
-  describe('@post-migration States Tests', () => {
+  describe('@post-migration', () => {
     describe('@post-migration-view-functions States Comparison', () => {
       let statesObject, contract;
       const OBJECT_KEYS = [
@@ -460,7 +462,7 @@ describe('@migration States Tests', () => {
       before(async () => {
         statesObject = JSON.parse(fs.readFileSync(STATE_OBJECT_DIR));
         contract = await ethers.getContractAt(
-          CONTRACT_NAME,
+          Constants.Contract.StateRegistry,
           statesObject['contract_address']
         );
       });
@@ -536,7 +538,7 @@ describe('@migration States Tests', () => {
       before(async () => {
         statesObject = JSON.parse(fs.readFileSync(STATE_OBJECT_DIR));
         contract = await ethers.getContractAt(
-          CONTRACT_NAME,
+          Constants.Contract.StateRegistry,
           statesObject['contract_address']
         );
       });
