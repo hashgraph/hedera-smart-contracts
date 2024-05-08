@@ -50,6 +50,7 @@ describe('@migration States Tests', () => {
       const contractFactory = await ethers.getContractFactory(CONTRACT_NAME);
       contract = await contractFactory.deploy();
       statesObject['contract_address'] = contract.target;
+      statesObject[`Balance`] = [];
     });
 
     after(() => {
@@ -159,11 +160,30 @@ describe('@migration States Tests', () => {
           await tx.wait();
 
           const resp = await contract.balanceOf(randomAddress);
-          statesObject[`Balance`] = {
+          statesObject[`Balance`].push({
             address: randomAddress,
             value: randomValue,
-          };
+          });
           expect(resp).equal(randomValue);
+        });
+
+        it('should test delete K/V object', async () => {
+          const randomAddress = ethers.Wallet.createRandom().address;
+          const randomValue = getRandomInt(0, 100);
+          const tx = await contract.setBalance(randomAddress, randomValue);
+          await tx.wait();
+
+          const resp = await contract.balanceOf(randomAddress);
+          expect(resp).equal(randomValue);
+
+          const deleteTx = await contract.deleteBalance(randomAddress);
+          await deleteTx.wait();
+          const deletedBalance = await contract.balanceOf(randomAddress);
+          expect(deletedBalance).equal(0n);
+          statesObject[`Balance`].push({
+            address: randomAddress,
+            value: Number(deletedBalance),
+          });
         });
       });
 
@@ -463,9 +483,13 @@ describe('@migration States Tests', () => {
               expect(deletedArr.toArray()).to.deep.eq(statesObject[key]);
               break;
             case 'Balance':
-              const accountAddr = statesObject[key]['address'];
-              const value = await contract.balanceOf(accountAddr);
-              expect(value).to.eq(statesObject[key]['value']);
+              const balances = statesObject[key];
+              for (const balance of balances) {
+                const accountAddr = balance['address'];
+                const value = await contract.balanceOf(accountAddr);
+                expect(value).to.eq(balance['value']);
+              }
+
               break;
             case 'VarContractStruct':
             case 'VarContractStructDeleted':
