@@ -34,8 +34,8 @@ jobs:
         with:
           version: nightly
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+#      - name: Setup tmate session
+#        uses: mxschmitt/action-tmate@v3
 
       - name: Start the local node with 0.48.1
         run: cd node_modules/@hashgraph/hedera-local/ && node build/index.js restart -d --full --network-tag=0.48.1
@@ -50,19 +50,19 @@ jobs:
         timeout-minutes: 5
 
       - name: Stop docker containers
-        run: docker stop network-node haveged
+        run: cd node_modules/@hashgraph/hedera-local/ && docker stop network-node haveged
         timeout-minutes: 5
 
       - name: Stop docker containers
-        run: docker stop minio mirror-node-importer mirror-node-grpc mirror-node-monitor account-balances-uploader record-sidecar-uploader record-streams-uploader network-node haveged
+        run: cd node_modules/@hashgraph/hedera-local/ && docker stop minio mirror-node-importer mirror-node-grpc mirror-node-monitor account-balances-uploader record-sidecar-uploader record-streams-uploader network-node haveged
         timeout-minutes: 5
 
       - name: Delete docker volumes
-        run: docker rm --volumes minio mirror-node-importer mirror-node-grpc mirror-node-monitor account-balances-uploader record-sidecar-uploader record-streams-uploader
+        run: cd node_modules/@hashgraph/hedera-local/ && docker rm --volumes minio mirror-node-importer mirror-node-grpc mirror-node-monitor account-balances-uploader record-sidecar-uploader record-streams-uploader
         timeout-minutes: 5
 
       - name: Run the local node with 0.49.5
-        run: cd node_modules/@hashgraph/hedera-local/ && docker compose -f docker-compose-state-migration.yml up -d
+        run: cd node_modules/@hashgraph/hedera-local/ && docker compose -f docker-compose-state-migration.yml up -d --remove-orphans
         timeout-minutes: 5
 
       - name: Run @post-migration tests
