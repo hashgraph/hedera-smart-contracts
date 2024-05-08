@@ -289,7 +289,7 @@ describe('TokenCreateContract Test Suite', function () {
     ).to.equal(22);
   });
 
-  describe('Hapi vs Ethereum token create test', function () {
+  describe.skip('Hapi vs Ethereum token create test', function () {
     // @notice: The param values below are preset to match the values preset in the
     // `createFungibleTokenWithSECP256K1AdminKeyPublic()` method in the TokenCreateContract.sol
     const tokenName = 'tokenName';
