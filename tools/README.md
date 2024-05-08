@@ -4,14 +4,10 @@ This report aims to analyze potential tools that will aid in the development, po
 of Smart Contracts deployed on the Hedera network. Key aspects evaluated during this research include:
 - Ease of use and compatibility with Hedera.
 - Ability to identify optimizations and potential errors or bugs specific to Smart Contracts on the Hedera.
-- Issues with compatibility for contracts ported from Ethereum or other networks to the Hedera.
+- Compatibility issues with contracts ported from Ethereum, or other EVM networks, to the Hedera network.
 ### Prerequisites
-Tools were tested in the MacOS and Kubuntu Linux environments as well as on Docker containers. Test setup involves:
-- Installing the Solidity compiler package.
-- Cloning the Hedera JSON RPC repository: `git clone -b main --single-branch  https://github.com/hashgraph/hedera-json-rpc-relay.git`.
-- Installing dependencies, and building the project: `npm install`, `npm run setup`, from the project directory.
-- Starting the project: `npm start`.
-- Launching the analytical tools discussed in this report: `docker-compose up -d`, using
+Tools were tested in MacOS and Ubuntu Linux environments as well as on Docker containers. Test setup involves
+launching the analytical tools discussed in this report: `docker-compose up -d`, using
   [docker-compose](slither-analysis/docker-compose.yaml) file placed in the tool analysis directory ([Dockerfile](slither-analysis/Dockerfile) for the Slither will be required).
 
 # Guidelines for using Ethereum precompiles in Hedera:
@@ -27,9 +23,9 @@ Tools were tested in the MacOS and Kubuntu Linux environments as well as on Dock
     - Utils: EIP712Verifier, cryptography/ECDSA, SignatureChecker
 2. There are precompiles which may be missing from Hedera EVM that are present in current EVM version.
    For example Cancun-related updates are yet to be implemented as for end of April 2024.
-3. By the [docs](https://docs.hedera.com/hedera/sdks-and-apis/sdks/token-service/associate-tokens-to-an-account).
-   When using the Hedera Token Service it is important to check if the token is associated with the receiving account.
-4. List of pain points between Hedera EVM and vanilla Ethereum EVM:
+3. When using the Hedera Token Service it is important to check if the token is
+   [associated](https://docs.hedera.com/hedera/sdks-and-apis/sdks/token-service/associate-tokens-to-an-account) with the receiving account.
+4. List of pain points between Hedera EVM and Canonical Ethereum EVM:
     - ECDSA aliases can be possibly changed in Hedera, which can lead to a new account address, this may influence whitelists
       systems, transaction validation, and potential vulnerability in replay attacks and authorization issues,
     - If a contract relies on specific addresses for functionality or permissions, redeploying or updating these contracts
