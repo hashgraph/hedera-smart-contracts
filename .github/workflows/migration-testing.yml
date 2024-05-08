@@ -1,0 +1,42 @@
+name: Migration Testing
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    strategy:
+      fail-fast: true
+
+    name: Foundry project
+    runs-on: [self-hosted, Linux, large, ephemeral]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Use Node.js [18.15]
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.15
+          cache: npm
+
+      - name: Create .env file
+        run: cp local.env .env
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+
+#      - name: Start the local node
+#        run: npx hedera start -d --network-tag=${{inputs.networkTag}} --mirror-tag=${{inputs.mirrorTag}} --relay-tag=${{inputs.relayTag}} --verbose=trace
+#        timeout-minutes: 5
