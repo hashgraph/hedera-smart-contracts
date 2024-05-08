@@ -29,10 +29,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-#      - name: Install Foundry
-#        uses: foundry-rs/foundry-toolchain@v1
-#        with:
-#          version: nightly
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
