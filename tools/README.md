@@ -4,9 +4,9 @@ This report aims to analyze potential tools that will aid in the development, po
 of Smart Contracts deployed on the Hedera network. Key aspects evaluated during this research include:
 - Ease of use and compatibility with Hedera.
 - Ability to identify optimizations and potential errors or bugs specific to Smart Contracts on the Hedera.
-- Issues with compatibility for contracts ported from Ethereum or other networks to the Hedera.
+- Compatibility issues with contracts ported from Ethereum, or other EVM networks, to the Hedera network.
 ### Prerequisites
-Tools were tested in the MacOS and Ubuntu Linux environments as well as on Docker containers. Test setup involves
+Tools were tested in MacOS and Ubuntu Linux environments as well as on Docker containers. Test setup involves
 launching the analytical tools discussed in this report: `docker-compose up -d`, using
   [docker-compose](slither-analysis/docker-compose.yaml) file placed in the tool analysis directory ([Dockerfile](slither-analysis/Dockerfile) for the Slither will be required).
 
