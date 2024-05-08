@@ -34,8 +34,8 @@ jobs:
         with:
           version: nightly
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+#      - name: Setup tmate session
+#        uses: mxschmitt/action-tmate@v3
 
       - name: Start the local node with 0.48.1
         run: cd node_modules/@hashgraph/hedera-local/ && node build/index.js restart -d --full --network-tag=0.48.1
@@ -47,6 +47,10 @@ jobs:
 
       - name: Freeze the network
         run: npx hardhat run scripts/freeze-network-node.js
+        timeout-minutes: 5
+
+      - name: Stop docker containers
+        run: docker stop network-node haveged
         timeout-minutes: 5
 
       - name: Stop docker containers
