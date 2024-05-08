@@ -38,7 +38,7 @@ jobs:
 #        uses: mxschmitt/action-tmate@v3
 
       - name: Start the local node with 0.48.1
-        run: cd node_modules/@hashgraph/hedera-local/ && node build/index.js restart -d --full --network-tag=0.48.1 && cd ../.../..
+        run: cd node_modules/@hashgraph/hedera-local/ && node build/index.js restart -d --full --network-tag=0.48.1
         timeout-minutes: 5
 
       - name: Run @pre-migration tests
@@ -58,7 +58,7 @@ jobs:
         timeout-minutes: 5
 
       - name: Run the local node with 0.49.5
-        run: cd node_modules/@hashgraph/hedera-local/ && docker compose -f docker-compose-state-migration.yml up -d && cd ../../..
+        run: cd node_modules/@hashgraph/hedera-local/ && docker compose -f docker-compose-state-migration.yml up -d
         timeout-minutes: 5
 
       - name: Run @post-migration tests
