@@ -44,7 +44,7 @@ Manticore has no documented ways to introduce new detectors. It requires adding 
 ----
 # Guidelines for using Ethereum precompiles in Hedera:
 1. Hedera supports ED25519 accounts, ecrecover works correctly only for ECSDA accounts. This must be noted during potential
-   contract migration (Slither detector placed in this repository can be used to check for ecrecover usage in the contract to
+   contract migration (custom manticore detector can be used to check for ecrecover usage in the contract to
    migrate).
 2. There are precompiles which may be missing from Hedera EVM that are present in current EVM version.
    For example Cancun-related updates are yet to be implemented as for end of April 2024.
