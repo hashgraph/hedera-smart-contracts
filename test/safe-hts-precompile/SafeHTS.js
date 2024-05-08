@@ -240,7 +240,7 @@ describe('SafeHTS library Test Suite', function () {
     );
 
     const erc20Mock = await ethers.getContractAt(
-      Constants.Path.ERC20Mock,
+      Constants.Contract.OZERC20Mock,
       fungibleTokenAddress
     );
     const signers0BeforeTokenBalance = await erc20Mock.balanceOf(
@@ -250,7 +250,7 @@ describe('SafeHTS library Test Suite', function () {
       signer1AccountID
     );
     const erc721Mock = await ethers.getContractAt(
-      Constants.Path.ERC721Mock,
+      Constants.Contract.OZERC721Mock,
       nonFungibleTokenAddress
     );
     const nftOwnerBefore = await erc721Mock.ownerOf(
