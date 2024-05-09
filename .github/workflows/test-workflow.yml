@@ -50,7 +50,7 @@ jobs:
           version: nightly
 
       - name: Start the local node
-        run: npx hedera start -d --network-tag=${{inputs.networkTag}} --mirror-tag=${{inputs.mirrorTag}} --relay-tag=${{inputs.relayTag}} --verbose=trace
+        run: npx hedera start -d --network-tag=0.49.6 --mirror-tag=${{inputs.mirrorTag}} --relay-tag=${{inputs.relayTag}} --verbose=trace
         timeout-minutes: 5
 
       - name: Run the test in ${{ inputs.testfilter }}
