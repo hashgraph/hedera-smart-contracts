@@ -34,11 +34,6 @@ cd MAIAN/tool && python2 maian.py -s example_contracts/example_suicidal.sol KAI 
 [signing_transactions.md](signing_transactions.md)version}/solc-static-linux && mv solc-static-linux /usr/bin/solc
 > ```
 > where `{your_version}` is desired solidity compiler version, ie. v0.8.24.
-## Examples of executions:
-* [Suicidal contract detection](execution_examples/suicidal_detection.md)
-* [Leak detection](execution_examples/leak_detection.md)
-* [AtomicHTS.sol check](execution_examples/AtomicHTS.md)
-* [HederaTokenService.sol check](execution_examples/HederaTokenService.md)
 
 ## Tool analysis:
 ### Attempt of replacing Ethereum's JSON RPC to Hedera's JSON RPC relay:

@@ -109,31 +109,6 @@ Unfortunately performing this procedure on the current version of Slither is not
 on the Hashscan.
 
 There are also additional options to configure integration with various block explorers APIs.
-```
-Etherscan options:
-  --etherscan-only-source-code
-                        Only compile if the source code is available.
-  --etherscan-only-bytecode
-                        Only looks for bytecode.
-  --etherscan-apikey ETHERSCAN_API_KEY
-                        Etherscan API key.
-  --arbiscan-apikey ARBISCAN_API_KEY
-                        Etherscan API key.
-  --polygonscan-apikey POLYGONSCAN_API_KEY
-                        Etherscan API key.
-  --test-polygonscan-apikey TEST_POLYGONSCAN_API_KEY
-                        Etherscan API key.
-  --avax-apikey AVAX_API_KEY
-                        Etherscan API key.
-  --ftmscan-apikey FTMSCAN_API_KEY
-                        Etherscan API key.
-  --bscan-apikey BSCAN_API_KEY
-                        Etherscan API key.
-  --optim-apikey OPTIM_API_KEY
-                        Optimistic API key.
-  --etherscan-export-directory ETHERSCAN_EXPORT_DIR
-                        Directory in which to save the analyzed contracts.
-```
 
 There is no option of integration with [hashscan](https://hashscan.io).
 Deeper investigation in code of the tool, reveals that upon RPC call, library method: `eth_getStorageAt`
@@ -241,17 +216,7 @@ Ethereum RPC msg:
 > * Slither version: 0.9.6
 > * Python version: 3.11.7
 > * OS: GNU/Linux x86_64 6.5.0-28 Kubuntu distro
-#### Reports of the tests:
-| Smart contract                                                                   | Result                                           |
-|----------------------------------------------------------------------------------|--------------------------------------------------|
-| [AtomicHTS.sol](test_contracts/hts-precompile/AtomicHTS.sol)                     | [Report](slither_reports/AtomicHTS.md)           |
-| [ExpiryHelper.sol](test_contracts/hts-precompile/ExpiryHelper.sol)               | [Report](slither_reports/ExpiryHelper.md)        |
-| [FeeHelper.sol](test_contracts/hts-precompile/FeeHelper.sol)                     | [Report](slither_reports/FeeHelper.md)           |
-| [HederaResponseCodes.sol](test_contracts/hts-precompile/HederaResponseCodes.sol) | [Report](slither_reports/HederaResponseCodes.md) |
-| [HederaTokenService.sol](test_contracts/hts-precompile/HederaTokenService.sol)   | [Report](slither_reports/HederaTokenService.md)  |
-| [IHederaTokenService.sol](test_contracts/hts-precompile/IHederaTokenService.sol) | [Report](slither_reports/IHederaTokenService.md) |
-| [IHRC.sol](test_contracts/hts-precompile/IHRC.sol)                               | [Report](slither_reports/IHRC.md)                |
-| [KeyHelper.sol](test_contracts/hts-precompile/KeyHelper.sol)                     | [Report](slither_reports/KeyHelper.md)           |
+#### Reports of the tests are included [here](https://github.com/nabialek-arianelabs/hedera-smart-contracts/tree/slither-analysis/tools/slither-analysis/slither-analysis/slither_reports).
 
 ### Overview of Slither Detectors and Their Blockchain Specificity
 Solidity code is not tied to a particular blockchain; it is crafted for platforms that uphold the Ethereum Virtual Machine (EVM). 

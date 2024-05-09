@@ -1,10 +1,14 @@
 # EVM Analytic tools study
 ### General Information:
+Purpose of the research: Analysing suitability of selected  tools in a Hedera project.
+
 This report aims to analyze potential tools that will aid in the development, porting, and security assessment
 of Smart Contracts deployed on the Hedera network. Key aspects evaluated during this research include:
 - Ease of use and compatibility with Hedera.
 - Ability to identify optimizations and potential errors or bugs specific to Smart Contracts on the Hedera.
 - Compatibility issues with contracts ported from Ethereum, or other EVM networks, to the Hedera network.
+
+(suitability of these tools in a Hedera project).
 ### Prerequisites
 Tools were tested in MacOS and Ubuntu Linux environments as well as on Docker containers. Test setup involves
 launching the analytical tools discussed in this report: `docker-compose up -d`, using

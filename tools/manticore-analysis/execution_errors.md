@@ -22,6 +22,7 @@ If you cannot immediately regenerate your protos, some other possible workaround
  1. Downgrade the protobuf package to 3.20.x or lower.
  5. Set PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python (but this will use pure-Python parsing and will be much slower).
 ```
+
 ### Docker: v3.7 and :latest: 
 ```Shell
 $ manticore --solc-remaps='@openzeppelin/contracts/utils/Context.sol=../../node_modules/@openzeppelin/contracts/utils/Context.sol @zk-kit/incremental-merkle-tree.sol/IncrementalBinaryTree.sol=../../node_modules/@zk-kit/incremental-merkle-tree.sol/IncrementalBinaryTree.sol' --contract=Semaphore ./contracts/Semaphore.sol
