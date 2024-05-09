@@ -530,6 +530,7 @@ class Utils {
     return accountInfo.accountId.toString();
   }
 
+  //Using SDK to call Consensus node to confirm that there are no nonce discrepancies between Consensus Node and Mirror node
   static async getContractInfo(evmAddress, client){
     const query = new ContractInfoQuery().setContractId(ContractId.fromEvmAddress(0,0,evmAddress));
     
@@ -546,7 +547,6 @@ class Utils {
 
   static async deleteAccount(account, signer, accountId) {
 
-    console.log(accountId);
     let accountDeleteTransaction = await new AccountDeleteTransaction()
       .setAccountId(accountId)
       .setTransferAccountId(signer.getOperator().accountId);
@@ -556,7 +556,6 @@ class Utils {
       .sign(PrivateKey.fromStringECDSA(account.signingKey.privateKey));
 
     const r = await accountDeleteTransaction.execute(signer);
-    console.log(await r.getReceipt(signer));
   }
 
 

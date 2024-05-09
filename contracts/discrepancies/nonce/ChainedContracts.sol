@@ -29,8 +29,6 @@ contract ChainedContracts {
 
     constructor() {
         owner = msg.sender;
-        // Deploy Chain within ChildContract constructor
-        //  chainContract = new ChainContract();
        childContract = new Deploys1Contract();
     emit DeployedContract2Address(address(this));
     }
@@ -45,8 +43,6 @@ contract Deploys2Contracts {
 
     constructor() {
         owner = msg.sender;
-        // Deploy Chain within ChildContract constructor
-        //  chainContract = new ChainContract();
        childContract1 = new Deploys1Contract();
        childContract2 = new EmptyContract();
     emit Deploys2ContractsAddress(address(this));

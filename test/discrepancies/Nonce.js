@@ -466,6 +466,7 @@ describe('@discrepancies - Nonce Test Suite', async () => {
   });
 
   //NONCE-020 - WAITING FOR SDK TEAM FOR CHECKING THE CONTRACT NONCE
+  //ISSUE: https://github.com/hashgraph/hedera-sdk-js/issues/2192
   xit('should update all nonces after a successful contract deploy with CREATE2 ', async function () {
 
     const snBefore = await getServicesNonce(signers[0].address);
@@ -548,8 +549,8 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     expectNonIncrementedNonce(snAfterNewCreate, mnAfterNewCreate, 0, 0);
   });
 
-  //NONCE-022
-  //should fix the get contract nonce function - waiting for SDKs
+  //NONCE-022 - WAITING FOR SDK TEAM FOR CHECKING THE CONTRACT NONCE
+  //ISSUE: https://github.com/hashgraph/hedera-sdk-js/issues/2192
   xit('should update all nonces when chained deploys of contracts', async function () {
     //deploys contract A which deploys contract B which deploys contract C
     //nonces of signer, contract A and contract B should increment
@@ -592,8 +593,8 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     expectNonIncrementedNonce(0, 0, servicesInnerContractNonce, mirrorNodeInnerContractNonce);
   });
 
-  //NONCE-023
-  //need to update the get contract nonce - waiting for SDK
+  //NONCE-023 - WAITING FOR SDK TEAM FOR CHECKING THE CONTRACT NONCE
+  //ISSUE: https://github.com/hashgraph/hedera-sdk-js/issues/2192
   xit('should update contract nonce for each deployed contract', async function () {
     //deploys contract A which deploys contracts B and C
     //nonce of signer should be 1
@@ -660,7 +661,8 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     expectNonIncrementedNonce(snWallet1Before, mnWallet1Before, snWAllet1After, mnWallet1After)
   });
 
-  //NONCE-027 - WAITING FOR SDK TEAM FOR CHECKING THE CONTRACT NONCE
+  //NONCE-022 - WAITING FOR SDK TEAM FOR CHECKING THE CONTRACT NONCE
+  //ISSUE: https://github.com/hashgraph/hedera-sdk-js/issues/2192
   xit('should update nonce after unsuccessful transfer with internal call - insufficent gas', async function () {
     const amount = ethers.parseEther('1');
     const fundTx = await signers[0].sendTransaction({
@@ -685,6 +687,7 @@ describe('@discrepancies - Nonce Test Suite', async () => {
   });
 
     //NONCE-027 - WAITING FOR SDK TEAM FOR CHECKING THE CONTRACT NONCE
+  //ISSUE: https://github.com/hashgraph/hedera-sdk-js/issues/2192
     xit('should update nonce after unsuccessful transfer with internal call - insufficent amount', async function () {
       //  const amount = Utils.tinybarToWeibarCoef;  // 1 tinybar
       //   const fundTx = await signers[0].sendTransaction({
@@ -725,31 +728,6 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     const mnAfterCreate = await getMirrorNodeNonce(signers[0].address);
 
     expectIncrementedNonce(snBeforeTransfer, mnBeforeTransfer, snAfterCreate, mnAfterCreate);
-  });
-
-  //NONCE-029 - Skipped due to an issue that a hollow account can be created with a gas limit of 21001
-  xit('should update signer nonce upon transfer to non-existing account with not enough gas limit <600K', async function () {
-    const amount = ethers.parseEther('1');
-    const snBeforeTransfer = await getServicesNonce(signers[0].address);
-    const mnBeforeTransfer = await getMirrorNodeNonce(signers[0].address);
-
-    const wallet1 = ethers.Wallet.createRandom();
-    const newAccTx = await signers[0].sendTransaction({
-      to: wallet1.address,
-      value: amount,
-      gasLimit: 22_000
-    });
-    //await newAccTx.wait();
-    console.log(await newAccTx.wait());
-
-    // internalCallerContract.transferTo(wallet1.address, {gasLimit: 700_000})
-
-    const snAfterCreate = await getServicesNonce(signers[0].address);
-    const mnAfterCreate = await getMirrorNodeNonce(signers[0].address);
-
-
-    // const tx = await internalCallerContract.transferTo(signers[0].address, {gasLimit: 500_000});
-    // await tx.wait();
   });
 
   //NONCE-030
