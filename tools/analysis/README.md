@@ -12,7 +12,7 @@ of Smart Contracts deployed on the Hedera network. Key aspects evaluated during 
 ### Prerequisites
 Tools were tested in MacOS and Ubuntu Linux environments as well as on Docker containers. Test setup involves
 launching the analytical tools discussed in this report: `docker-compose up -d`, using
-  [docker-compose](slither-analysis/docker-compose.yaml) file placed in the tool analysis directory ([Dockerfile](slither-analysis/Dockerfile) for the Slither will be required).
+  [docker-compose](slither/docker-compose.yaml) file placed in the tool analysis directory ([Dockerfile](slither/Dockerfile) for the Slither will be required).
 
 # Guidelines for using Ethereum precompiles in Hedera:
 1. Hedera supports ED25519 accounts, ecrecover works correctly only for ECSDA accounts. This must be noted during potential

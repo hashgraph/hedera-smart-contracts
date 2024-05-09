@@ -94,7 +94,6 @@ The baseline test on Ethereum main net was compleated successfully following res
       },
     ...
 ```
-Full json output is available [here](Slither/slither-read-storage-mainnet.json)
 For Hashscan test, verified mainnet contract was choosen:
 ```dtd
 Address: `0x00000000000000000000000000000000002e7a5d` \
@@ -103,7 +102,7 @@ Name: `UniswapV2Router02`
 ```
 Execution of command:    
 `slither-read-storage 0x00000000000000000000000000000000002e7a5d --json storage_layout.json --rpc-url https://mainnet.hashio.io/api`
-yields `ERROR:SlitherSolcParsing` with details available [here](slither_reports/slither-read-storage-hashscan-error.md).
+yields `ERROR:SlitherSolcParsing` with details available [here](log/read_storage_error.md).
 The tested Hedera contract is verified and the code is available. Therefore, the tool should be able to fetch it and parse it properly.
 Unfortunately performing this procedure on the current version of Slither is not enough to run tests for contracts deployed
 on the Hashscan.

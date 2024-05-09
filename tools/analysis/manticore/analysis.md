@@ -24,17 +24,17 @@ Manticore can analyze the following types of programs:
     ```
 
 > **Sidenotes**:
-> - Installing by PIP results in [protobuf incorrect version error](execution_errors.md#pip-instalation)
+> - Installing by PIP results in [protobuf incorrect version error](log/execution_errors.md#pip-instalation)
 (described better here: https://github.com/trailofbits/manticore/issues/2600)
-> - Build attempt with docker image version 3.7+ result in [attribute error](execution_errors.md#docker-v37-and-latest-)
-> - Build attempt with docker image version 3.6 results in [tool custom exception](execution_errors.md#docker-v36)
+> - Build attempt with docker image version 3.7+ result in [attribute error](log/execution_errors.md#docker-v37-and-latest-)
+> - Build attempt with docker image version 3.6 results in [tool custom exception](log/execution_errors.md#docker-v36)
 > - Manticore may be built on docker image version 3.5.
 
 > **Support**:
 > This project is no longer internally developed and maintained. The team responsible for creating this tool announced its
 > readiness to review and accept small, well-written pull requests by the community (only bug fixes and minor
 > enhancements shall be considered). But there have veen no changes in the tool`s codebase since December 2022. All error
-> executions may be found in [this file](execution_errors.md)
+> executions may be found in [this file](log/execution_errors.md)
 
 ### Custom detector investigation
 Manticore has no documented ways to introduce new detectors. It requires adding a new detector class to [detectors.py](https://github.com/trailofbits/manticore/blob/master/manticore/ethereum/detectors.py) file and importing it in cli.py (for command line interface analysis).
