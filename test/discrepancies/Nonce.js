@@ -26,7 +26,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const { ContractId } = require('@hashgraph/sdk');
 
-describe('@discrepancies - Nonce Test Suite', async () => {
+describe.only('@discrepancies - Nonce Test Suite', async () => {
   let signers;
   let sdkClient;
   let internalCalleeContract;
@@ -384,10 +384,6 @@ describe('@discrepancies - Nonce Test Suite', async () => {
   //NONCE-017
   it('should update nonce after successful ERC721 token call', async function () {
     erc721Contract = await Utils.deployERC721Contract();
-    tokenAddress = await Utils.createNonFungibleToken(
-      tokenCreateContract,
-      signers[0].address
-    );
     await Utils.updateTokenKeysViaHapi(tokenAddress, [
       await tokenCreateContract.getAddress(),
       await tokenTransferContract.getAddress(),
