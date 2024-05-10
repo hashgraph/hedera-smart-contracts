@@ -210,13 +210,6 @@ Ethereum RPC msg:
 }
 ```
 
-### Slither test results for different contracts:
-> #### ENVIRONMENT:
-> * Slither version: 0.9.6
-> * Python version: 3.11.7
-> * OS: GNU/Linux x86_64 6.5.0-28 Kubuntu distro
-#### Reports of the tests are included [here](https://github.com/nabialek-arianelabs/hedera-smart-contracts/tree/slither-analysis/tools/slither-analysis/slither-analysis/slither_reports).
-
 ### Overview of Slither Detectors and Their Blockchain Specificity
 Solidity code is not tied to a particular blockchain; it is crafted for platforms that uphold the Ethereum Virtual Machine (EVM). 
 Hence, Slither doesn't necessitate modifications or improvements for distinct chains. It hasn't integrated any rules or 
@@ -249,6 +242,11 @@ supplementary details specific to a chain, and presently, there are no chain-spe
 | License identification         | Checks for the presence of licensing information in code                | 
 
 ### Test summary:
+> #### ENVIRONMENT:
+> * Slither version: 0.9.6
+> * Python version: 3.11.7
+> * OS: GNU/Linux x86_64 6.5.0-28 Kubuntu distro
+
 * Test contracts were performed on different Solidity versions: {0.4.11, 0.4.19, 0.8.9}.
   Running Slither on an incorrect language version can yield unexpected Python exceptions -
   some error cases are not properly handled within the Slither implementation
