@@ -40,26 +40,3 @@ Manticore can analyze the following types of programs:
 Manticore has no documented ways to introduce new detectors. It requires adding a new detector class to [detectors.py](https://github.com/trailofbits/manticore/blob/master/manticore/ethereum/detectors.py) file and importing it in cli.py (for command line interface analysis).
 ## Recommendations and possible investments in the tool:
 * Issues encountered in the latest versions of the application should be resolved.
-----
-# Guidelines for using Ethereum precompiles in Hedera:
-1. Hedera supports ED25519 accounts, ecrecover works correctly only for ECSDA accounts. This must be noted during potential
-   contract migration (custom manticore detector can be used to check for ecrecover usage in the contract to
-   migrate).
-2. There are precompiles which may be missing from Hedera EVM that are present in current EVM version.
-   For example Cancun-related updates are yet to be implemented as for end of April 2024.
-3. By the [docs](https://docs.hedera.com/hedera/sdks-and-apis/sdks/token-service/associate-tokens-to-an-account).
-   When using the Hedera Token Service it is important to check if the token is associated with the receiving account.
-4. List of pain points between Hedera EVM and vanilla Ethereum EVM:
-  - ECDSA aliases can be possibly changed in Hedera, which can lead to a new account address, this may influence whitelists
-    systems, transaction validation, and potential vulnerability in replay attacks and authorization issues,
-  - If a contract relies on specific addresses for functionality or permissions, redeploying or updating these contracts
-    may be necessary to align with new address formats.
-    More information [here](https://medium.com/@Arkhia/creating-an-ecdsa-based-account-with-an-alias-on-hedera-5d5d8b2cc1e9)
-  - OpenZeppelin - the most widely used library used in Solidity Smart Contracts. Contracts using ecrecover:
-    - ERC20Wrapper
-    - ERC2771Forwarder
-    - ERC721Wrapper
-    - ERC20Permit
-    - governance/utils/Votes
-    - Utils: EIP712Verifier, cryptography/ECDSA, SignatureChecker
-5. A list of differences between Hedera EVM and vanilla Ethereum EMV should be created and maintained. 

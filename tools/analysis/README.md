@@ -29,9 +29,3 @@ launching the analytical tools discussed in this report: `docker-compose up -d`,
    For example Cancun-related updates are yet to be implemented as for end of April 2024.
 3. When using the Hedera Token Service it is important to check if the token is
    [associated](https://docs.hedera.com/hedera/sdks-and-apis/sdks/token-service/associate-tokens-to-an-account) with the receiving account.
-4. List of pain points between Hedera EVM and Canonical Ethereum EVM:
-    - ECDSA aliases can be possibly changed in Hedera, which can lead to a new account address, this may influence whitelists
-      systems, transaction validation, and potential vulnerability in replay attacks and authorization issues,
-    - If a contract relies on specific addresses for functionality or permissions, redeploying or updating these contracts
-      may be necessary to align with new address formats.
-      More information [here](https://medium.com/@Arkhia/creating-an-ecdsa-based-account-with-an-alias-on-hedera-5d5d8b2cc1e9)
