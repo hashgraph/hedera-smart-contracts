@@ -34,8 +34,8 @@ jobs:
         with:
           version: nightly
 
-#      - name: Setup tmate session
-#        uses: mxschmitt/action-tmate@v3
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
 
       - name: Start the local node with 0.48.1
         run: cd node_modules/@hashgraph/hedera-local/ && node build/index.js start -d --full --network-tag=0.48.1
