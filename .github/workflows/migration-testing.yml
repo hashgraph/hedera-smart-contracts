@@ -34,8 +34,8 @@ jobs:
         with:
           version: nightly
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+#      - name: Setup tmate session
+#        uses: mxschmitt/action-tmate@v3
 
       - name: Start the local node with 0.48.1
         run: cd node_modules/@hashgraph/hedera-local/ && node build/index.js restart -d --full --network-tag=0.48.1
@@ -53,17 +53,17 @@ jobs:
         run: cd node_modules/@hashgraph/hedera-local/ && docker stop network-node haveged
         timeout-minutes: 5
 
-      - name: Stop docker containers (peripheral services)
-        run: cd node_modules/@hashgraph/hedera-local/ &&
-          docker stop minio mirror-node-importer mirror-node-grpc mirror-node-monitor account-balances-uploader record-sidecar-uploader record-streams-uploader
-        timeout-minutes: 5
+#      - name: Stop docker containers (peripheral services)
+#        run: cd node_modules/@hashgraph/hedera-local/ &&
+#          docker stop minio mirror-node-importer mirror-node-grpc mirror-node-monitor account-balances-uploader record-sidecar-uploader record-streams-uploader
+#        timeout-minutes: 5
+#
+#      - name: Delete docker volumes
+#        run: cd node_modules/@hashgraph/hedera-local/ &&
+#          docker rm --volumes minio mirror-node-importer mirror-node-grpc mirror-node-monitor account-balances-uploader record-sidecar-uploader record-streams-uploader
+#        timeout-minutes: 5
 
-      - name: Delete docker volumes
-        run: cd node_modules/@hashgraph/hedera-local/ &&
-          docker rm --volumes minio mirror-node-importer mirror-node-grpc mirror-node-monitor account-balances-uploader record-sidecar-uploader record-streams-uploader
-        timeout-minutes: 5
-
-      - name: Run the local node with 0.49.5
+      - name: Run the local node with 0.49.6
         run: cd node_modules/@hashgraph/hedera-local/ && docker compose -f docker-compose-state-migration.yml up -d
         timeout-minutes: 5
 
