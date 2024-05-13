@@ -38,7 +38,7 @@ jobs:
 #        uses: mxschmitt/action-tmate@v3
 
       - name: Start the local node with 0.48.1
-        run: cd node_modules/@hashgraph/hedera-local/ && node build/index.js restart -d --full --network-tag=0.48.1
+        run: cd node_modules/@hashgraph/hedera-local/ && node build/index.js start -d --full --network-tag=0.48.1
         timeout-minutes: 5
 
       - name: Run @pre-migration tests
