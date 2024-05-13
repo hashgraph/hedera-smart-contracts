@@ -21,6 +21,7 @@
 const fs = require('fs');
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const Constants = require('../constants');
 
 const getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -36,10 +37,9 @@ const serializeSmartContractResponse = (arr) => {
 };
 
 const STATE_OBJECT_DIR = './test/state-registry/states.json';
-const CONTRACT_NAME = 'StateRegistry';
 
 describe('@migration States Tests', () => {
-  describe('@pre-migration States Tests', () => {
+  describe('@pre-migration', () => {
     const ITERATIONS = 1;
     let contract;
     let statesObject = {};
@@ -47,12 +47,19 @@ describe('@migration States Tests', () => {
     before(async function () {
       signers = await ethers.getSigners();
 
-      const contractFactory = await ethers.getContractFactory(CONTRACT_NAME);
+      const contractFactory = await ethers.getContractFactory(
+        Constants.Contract.StateRegistry
+      );
       contract = await contractFactory.deploy();
       statesObject['contract_address'] = contract.target;
+      statesObject[`Balance`] = [];
     });
 
-    after(() => {
+    after(async () => {
+      const contractStorageStateHash =
+        await contract.getContractStorageStateHash();
+      statesObject['monoStateHash'] = contractStorageStateHash;
+
       fs.writeFileSync(STATE_OBJECT_DIR, JSON.stringify(statesObject));
     });
 
@@ -159,11 +166,30 @@ describe('@migration States Tests', () => {
           await tx.wait();
 
           const resp = await contract.balanceOf(randomAddress);
-          statesObject[`Balance`] = {
+          statesObject[`Balance`].push({
             address: randomAddress,
             value: randomValue,
-          };
+          });
           expect(resp).equal(randomValue);
+        });
+
+        it('should test delete K/V object', async () => {
+          const randomAddress = ethers.Wallet.createRandom().address;
+          const randomValue = getRandomInt(0, 100);
+          const tx = await contract.setBalance(randomAddress, randomValue);
+          await tx.wait();
+
+          const resp = await contract.balanceOf(randomAddress);
+          expect(resp).equal(randomValue);
+
+          const deleteTx = await contract.deleteBalance(randomAddress);
+          await deleteTx.wait();
+          const deletedBalance = await contract.balanceOf(randomAddress);
+          expect(deletedBalance).equal(0n);
+          statesObject[`Balance`].push({
+            address: randomAddress,
+            value: Number(deletedBalance),
+          });
         });
       });
 
@@ -403,7 +429,7 @@ describe('@migration States Tests', () => {
     }
   });
 
-  describe('@post-migration States Tests', () => {
+  describe('@post-migration', () => {
     describe('@post-migration-view-functions States Comparison', () => {
       let statesObject, contract;
       const OBJECT_KEYS = [
@@ -436,7 +462,7 @@ describe('@migration States Tests', () => {
       before(async () => {
         statesObject = JSON.parse(fs.readFileSync(STATE_OBJECT_DIR));
         contract = await ethers.getContractAt(
-          CONTRACT_NAME,
+          Constants.Contract.StateRegistry,
           statesObject['contract_address']
         );
       });
@@ -449,38 +475,60 @@ describe('@migration States Tests', () => {
         expect(contract.target).to.eq(statesObject['contract_address']);
       });
 
-      for (const key of OBJECT_KEYS) {
-        it(`Should compare ${key} state`, async () => {
-          switch (key) {
-            case 'VarIntArrDataAlloc':
-              const intArr = await contract[`get${key}`]();
-              expect(serializeSmartContractResponse(intArr)).to.eq(
-                statesObject[key]
-              );
-              break;
-            case 'VarIntArrDataAllocDeleted':
-              const deletedArr = await contract[`get${key}`]();
-              expect(deletedArr.toArray()).to.deep.eq(statesObject[key]);
-              break;
-            case 'Balance':
-              const accountAddr = statesObject[key]['address'];
-              const value = await contract.balanceOf(accountAddr);
-              expect(value).to.eq(statesObject[key]['value']);
-              break;
-            case 'VarContractStruct':
-            case 'VarContractStructDeleted':
-              const varContractStruct = await contract[`get${key}`]();
-              expect(serializeSmartContractResponse(varContractStruct)).to.eq(
-                statesObject[key]
-              );
-              break;
+      it('should compare contract storage states', async () => {
+        const monoStateHash = statesObject['monoStateHash'];
+        const modStateHash = await contract.getContractStorageStateHash();
 
-            default:
-              const resp = await contract[`get${key}`]();
-              expect(resp).to.eq(statesObject[key]);
+        // @logic: modStateHash is supposed to exactly equal monoStateHash.
+        //        In the case of the hashes are mismatched, compare each state for debugging purpose.
+        try {
+          expect(modStateHash).to.eq(monoStateHash);
+        } catch (error) {
+          if (error) {
+            for (const key of OBJECT_KEYS) {
+              try {
+                switch (key) {
+                  case 'VarIntArrDataAlloc':
+                    const intArr = await contract[`get${key}`]();
+                    expect(serializeSmartContractResponse(intArr)).to.eq(
+                      statesObject[key]
+                    );
+                    break;
+                  case 'VarIntArrDataAllocDeleted':
+                    const deletedArr = await contract[`get${key}`]();
+                    expect(deletedArr.toArray()).to.deep.eq(statesObject[key]);
+                    break;
+                  case 'Balance':
+                    const balances = statesObject[key];
+                    for (const balance of balances) {
+                      const accountAddr = balance['address'];
+                      const value = await contract.balanceOf(accountAddr);
+                      expect(value).to.eq(balance['value']);
+                    }
+
+                    break;
+                  case 'VarContractStruct':
+                  case 'VarContractStructDeleted':
+                    const varContractStruct = await contract[`get${key}`]();
+                    expect(
+                      serializeSmartContractResponse(varContractStruct)
+                    ).to.eq(statesObject[key]);
+                    break;
+
+                  default:
+                    const resp = await contract[`get${key}`]();
+                    expect(resp).to.eq(statesObject[key]);
+                }
+              } catch (error) {
+                console.log(`State Failure at state = ${key}`);
+                console.log(error);
+              }
+            }
+
+            expect(false).to.be.true;
           }
-        });
-      }
+        }
+      });
     });
 
     describe('@post-migration-non-view-functions States Update', () => {
@@ -490,7 +538,7 @@ describe('@migration States Tests', () => {
       before(async () => {
         statesObject = JSON.parse(fs.readFileSync(STATE_OBJECT_DIR));
         contract = await ethers.getContractAt(
-          CONTRACT_NAME,
+          Constants.Contract.StateRegistry,
           statesObject['contract_address']
         );
       });

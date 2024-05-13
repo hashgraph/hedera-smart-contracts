@@ -53,3 +53,4 @@ coverage/
 artifacts/forge-std
 artifacts/ds-test
 test/state-registry/states.json
+test/state-registry/ercStates.json

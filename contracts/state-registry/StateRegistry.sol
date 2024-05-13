@@ -277,4 +277,28 @@ contract StateRegistry {
     function balanceOf(address account) public view returns (uint256) {
         return balance[account];
     }
+
+    function deleteBalance(address addr) external {
+        delete balance[addr];
+    }
+
+    function getContractStorageStateHash() external view returns (bytes32) {
+        return
+            keccak256(
+                abi.encode(
+                    abi.encode(
+                        varUint8, varUint16, varUint32, varUint64, varUint128, varUint256, 
+                        varInt8, varInt16, varInt32, varInt64, varInt128, varInt256
+                    ),
+                    abi.encode(
+                        varBool, varAddress, varContractType, varBytes32, varString, 
+                        varIntArrDataAllocBefore, varIntArrDataAllocAfter, varIntArrDataAllocDeleted
+                    ),
+                    abi.encode(
+                        varStringConcat, varStringConcatDeleted,
+                        varContractStruct, varContractStructDeleted
+                    )
+                )
+            );
+    }
 }

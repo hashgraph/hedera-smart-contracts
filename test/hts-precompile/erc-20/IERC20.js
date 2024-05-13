@@ -58,7 +58,10 @@ describe('IERC20 Test Suite', function () {
       Constants.Contract.TokenCreateContract
     );
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
-    IERC20 = await ethers.getContractAt(Constants.Path.ERC20Mock, tokenAddress);
+    IERC20 = await ethers.getContractAt(
+      Constants.Contract.OZERC20Mock,
+      tokenAddress
+    );
   });
 
   it('should be able to get token name', async function () {

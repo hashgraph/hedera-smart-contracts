@@ -31,6 +31,7 @@ const { OPERATOR_ID_A, OPERATOR_KEY_A } = require('../utils/constants');
 
 async function main() {
   try {
+    // notice: currently this setup is only used to freeze a single network node locally.
     const genesisClient = Client.forNetwork({
       '127.0.0.1:50211': '0.0.3',
     }).setOperator(OPERATOR_ID_A, OPERATOR_KEY_A);
