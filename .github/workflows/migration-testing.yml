@@ -34,9 +34,6 @@ jobs:
         with:
           version: nightly
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-
       - name: Start the local node with 0.48.1
         run: npx hedera start -d --full --network-tag=0.48.1
         timeout-minutes: 5
@@ -48,22 +45,12 @@ jobs:
       - name: Freeze the network
         run: |
           npx hardhat run scripts/freeze-network-node.js
-          sleep 60
+          sleep 30
         timeout-minutes: 5
 
       - name: Stop docker containers (network node)
         run: docker stop network-node haveged
         timeout-minutes: 5
-
-      #      - name: Stop docker containers (peripheral services)
-      #        run: cd node_modules/@hashgraph/hedera-local/ &&
-      #          docker stop minio mirror-node-importer mirror-node-grpc mirror-node-monitor account-balances-uploader record-sidecar-uploader record-streams-uploader
-      #        timeout-minutes: 5
-      #
-      #      - name: Delete docker volumes
-      #        run: cd node_modules/@hashgraph/hedera-local/ &&
-      #          docker rm --volumes minio mirror-node-importer mirror-node-grpc mirror-node-monitor account-balances-uploader record-sidecar-uploader record-streams-uploader
-      #        timeout-minutes: 5
 
       - name: Run the local node with 0.49.6
         run: NETWORK_NODE_LOGS_ROOT_PATH=$HOME/.local/share/hedera-local/network-logs/node docker compose -f docker-compose-state-migration.yml up -d
