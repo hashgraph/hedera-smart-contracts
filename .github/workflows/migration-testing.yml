@@ -46,7 +46,9 @@ jobs:
         timeout-minutes: 5
 
       - name: Freeze the network
-        run: npx hardhat run scripts/freeze-network-node.js
+        run: |
+          npx hardhat run scripts/freeze-network-node.js
+          sleep 60
         timeout-minutes: 5
 
       - name: Stop docker containers (network node)
