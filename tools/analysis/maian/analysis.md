@@ -20,7 +20,7 @@ Due to changes in web3.py library introduced in version 3.5.5V (including), an a
 [github repo](https://github.com/ivicanikolicsg/MAIAN), ends with an error prompt that may be found [here](example_build_execution_error.md)
 Further discussion regarding this error may be found [here](https://github.com/ethereum/web3.py/issues/879)
 Alternative ways to run MAIAN are:
-1) Running with manual downgrade od Python to v2 and web3.py to 3.5.4V
+1) Running with manual downgrade of Python to v2 and web3.py to 3.5.4V
 2) Running inside the Docker container:
 ```Shell
 docker pull cryptomental/maian-augur-ci
