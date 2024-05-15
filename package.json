@@ -37,7 +37,7 @@
     "@nomicfoundation/hardhat-foundry": "^1.1.1",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
-    "@openzeppelin/hardhat-upgrades": "^3.0.2",
+    "@openzeppelin/hardhat-upgrades": "^3.1.0",
     "hardhat": "^2.19.4",
     "hardhat-abi-exporter": "^2.10.1",
     "husky": "^8.0.0",
