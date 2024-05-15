@@ -36,7 +36,7 @@ async function main() {
       '127.0.0.1:50211': '0.0.3',
     }).setOperator(OPERATOR_ID_A, OPERATOR_KEY_A);
 
-    const validStart = new Timestamp(Math.round(Date.now() + 10000 / 1000), 0); // timestamp now
+    const validStart = new Timestamp(Math.round((Date.now() + 5000) / 1000), 0); // timestamp now +  5 sec
     const tx = new FreezeTransaction()
       .setStartTimestamp(validStart)
       .setFreezeType(new FreezeType(1)) // FreezeOnly
