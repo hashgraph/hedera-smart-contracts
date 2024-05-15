@@ -4,6 +4,13 @@ on:
   push:
     tags: [v*]
 
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
 env:
   OWNER: hashgraph
   PACKAGE_NAME: hedera-smart-contracts
@@ -15,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
         with:
           path: './hedera-smart-contracts'
 
@@ -26,7 +33,8 @@ jobs:
         run: tar -czf ${{ env.PACKAGE_NAME }}-v${{env.TAG}}.tgz -C ./hedera-smart-contracts .
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        # There is a bug in v4 of upload-artifact. Recommendation is to remain at v3.
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
         with:
           name: ${{ env.PACKAGE_NAME }}-v${{env.TAG}}
           path: ./*.tgz
