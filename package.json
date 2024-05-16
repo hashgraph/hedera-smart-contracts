@@ -28,12 +28,11 @@
     "hh:test": "hardhat test",
     "hedera:start": "npx @hashgraph/hedera-local start --limits=false --dev=true --balance=10000000",
     "hedera:stop": "npx @hashgraph/hedera-local stop",
-    "prepare": "husky install",
-    "freeze-network-node": "hardhat run scripts/freeze-network-node.js"
+    "prepare": "husky install"
   },
   "devDependencies": {
-    "@hashgraph/hedera-local": "^2.25.0",
-    "@hashgraph/sdk": "^2.44.0",
+    "@hashgraph/hedera-local": "^2.19.1",
+    "@hashgraph/sdk": "^2.41.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.3",
     "@nomicfoundation/hardhat-foundry": "^1.1.1",
     "@openzeppelin/contracts": "^5.0.2",
