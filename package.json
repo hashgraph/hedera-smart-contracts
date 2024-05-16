@@ -48,7 +48,7 @@
   "dependencies": {
     "@nomicfoundation/solidity-analyzer": "^0.1.0",
     "bn.js": "^5.2.1",
-    "dotenv": "^16.3.1",
+    "dotenv": "^16.4.5",
     "elliptic": "^6.5.5"
   }
 }
