@@ -38,7 +38,8 @@ on:
 
 jobs:
   check:
-    name: Migration testing (${{ inputs.preMigrationTestTags }}/${{ inputs.postMigrationTestTags }}) with initial N:${{ inputs.initialNetworkNodeTag }}, M:${{ inputs.initialMirrorNodeTag }}, R:${{ inputs.initialRelayTag }} and
+    name:
+      Migration testing (${{ inputs.preMigrationTestTags }}/${{ inputs.postMigrationTestTags }}) with initial N:${{ inputs.initialNetworkNodeTag }}, M:${{ inputs.initialMirrorNodeTag }}, R:${{ inputs.initialRelayTag }} and
       target N:${{ inputs.targetNetworkNodeTag }}, M:${{ inputs.targetMirrorNodeTag }}, R:${{ inputs.targetRelayTag }}
     runs-on: [self-hosted, Linux, large, ephemeral]
     steps:
