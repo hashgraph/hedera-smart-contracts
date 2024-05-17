@@ -2,10 +2,6 @@ name: Migration Testing
 
 on:
   workflow_dispatch:
-    branch:
-      description: 'Define branch name'
-      required: true
-      default: 'enhance-migration-ci'
     inputs:
       initialNetworkNodeTag:
         description: 'Specify initial Network Node image tag'
