@@ -6,27 +6,27 @@ on:
       initialNetworkNodeTag:
         description: 'Specify initial Network Node image tag'
         required: true
-        default: ''
+        default: '0.48.1'
       initialMirrorNodeTag:
         description: 'Specify initial Mirror-Node image tag'
         required: true
-        default: ''
+        default: '0.103.0'
       initialRelayTag:
         description: 'Specify initial Hedera JSON-RPC Relay tag'
         required: true
-        default: ''
+        default: '0.47.0'
       targetNetworkNodeTag:
         description: 'Specify target Network Node image tag'
         required: true
-        default: ''
+        default: '0.49.7'
       targetMirrorNodeTag:
         description: 'Specify target Mirror-Node image tag'
         required: true
-        default: ''
+        default: '0.103.0'
       targetRelayTag:
         description: 'Specify target Hedera JSON-RPC Relay tag'
         required: true
-        default: ''
+        default: '0.47.0'
 
 jobs:
   check:
