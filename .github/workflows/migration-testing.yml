@@ -1,7 +1,7 @@
 name: Migration Testing
 
 on:
-  pull_request:
+  workflow_dispatch:
     inputs:
       initialNetworkNodeTag:
         description: 'Specify initial Network Node image tag'
