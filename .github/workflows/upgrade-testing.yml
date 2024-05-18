@@ -1,4 +1,4 @@
-name: Migration Testing
+name: Pre/Post upgrade Testing
 
 on:
   workflow_dispatch:
@@ -27,15 +27,22 @@ on:
         description: 'Specify target Hedera JSON-RPC Relay tag'
         required: true
         default: ''
+      preUpgradeTestTags:
+        description: 'Specify pre-upgrade test tags'
+        required: false
+        default: '@pre-migration'
+      postUpgradeTestTags:
+        description: 'Specify post-upgrade test tags'
+        required: false
+        default: '@post-migration'
 
 jobs:
   check:
     strategy:
       fail-fast: true
-
-    name: Migration Testing with initial N:${{ inputs.initialNetworkNodeTag }}, initial M:${{ inputs.initialMirrorNodeTag }}, initial R:${{ inputs.initialRelayTag }} and
+    name: Pre/Post node upgrade testing (${{ inputs.preUpgradeTestTags }}/${{ inputs.postUpgradeTestTags }}) with initial N:${{ inputs.initialNetworkNodeTag }}, initial M:${{ inputs.initialMirrorNodeTag }}, initial R:${{ inputs.initialRelayTag }} and
       target N:${{ inputs.targetNetworkNodeTag }}, target M:${{ inputs.targetMirrorNodeTag }}, target R:${{ inputs.targetRelayTag }}
-    runs-on: [ self-hosted, Linux, large, ephemeral ]
+    runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -62,12 +69,12 @@ jobs:
           version: nightly
 
       - name: Start the local node with N:${{ inputs.initialNetworkNodeTag }}, M:${{ inputs.initialMirrorNodeTag }}, R:${{ inputs.initialRelayTag }}
-        run: npx hedera start -d --full --network-tag=${{inputs.initialNetworkTag}} --mirror-tag=${{inputs.initialMirrorTag}} --relay-tag=${{inputs.initialRelayTag}}
+        run: npx hedera start -d --full --network-tag=${{inputs.initialNetworkNodeTag}} --mirror-tag=${{inputs.initialMirrorNodeTag}} --relay-tag=${{inputs.initialRelayTag}}
         timeout-minutes: 5
 
-      - name: Run @pre-migration tests
-        run: npx hardhat test --grep @pre-migration
-        timeout-minutes: 5
+      - name: Run pre-upgrade tests
+        run: npx hardhat test --grep ${{ inputs.preUpgradeTestTags }}
+        timeout-minutes: 15
 
       - name: Freeze the network
         run: |
@@ -81,15 +88,15 @@ jobs:
 
       - name: Run the local node with N:${{ inputs.targetNetworkNodeTag }}, M:${{ inputs.targetMirrorNodeTag }}, R:${{ inputs.targetRelayTag }}
         env:
-          NETWORK_NODE_IMAGE_TAG: ${{inputs.targetNetworkTag}}
-          MIRROR_IMAGE_TAG: ${{inputs.targetNetworkTag}}
-          RELAY_IMAGE_TAG: ${{inputs.targetNetworkTag}}
+          NETWORK_NODE_IMAGE_TAG: ${{inputs.targetNetworkNodeTag}}
+          MIRROR_IMAGE_TAG: ${{inputs.targetMirrorNodeTag}}
+          RELAY_IMAGE_TAG: ${{inputs.targetRelayTag}}
           NETWORK_NODE_LOGS_ROOT_PATH: ~/.local/share/hedera-local/network-logs/node
         run: |
           docker compose -f docker-compose-state-migration.yml up -d
         working-directory: node_modules/@hashgraph/hedera-local/
         timeout-minutes: 5
 
-      - name: Run @post-migration tests
-        run: npx hardhat test --grep @post-migration
-        timeout-minutes: 5
+      - name: Run post-upgrade tests
+        run: npx hardhat test --grep ${{ inputs.postUpgradeTestTags }}
+        timeout-minutes: 15
