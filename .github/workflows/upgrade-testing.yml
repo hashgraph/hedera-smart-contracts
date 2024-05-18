@@ -1,0 +1,102 @@
+name: Pre/Post upgrade Testing
+
+on:
+  workflow_dispatch:
+    inputs:
+      initialNetworkNodeTag:
+        description: 'Specify initial Network Node image tag'
+        required: true
+        default: ''
+      initialMirrorNodeTag:
+        description: 'Specify initial Mirror-Node image tag'
+        required: true
+        default: ''
+      initialRelayTag:
+        description: 'Specify initial Hedera JSON-RPC Relay tag'
+        required: true
+        default: ''
+      targetNetworkNodeTag:
+        description: 'Specify target Network Node image tag'
+        required: true
+        default: ''
+      targetMirrorNodeTag:
+        description: 'Specify target Mirror-Node image tag'
+        required: true
+        default: ''
+      targetRelayTag:
+        description: 'Specify target Hedera JSON-RPC Relay tag'
+        required: true
+        default: ''
+      preUpgradeTestTags:
+        description: 'Specify pre-upgrade test tags'
+        required: false
+        default: '@pre-migration'
+      postUpgradeTestTags:
+        description: 'Specify post-upgrade test tags'
+        required: false
+        default: '@post-migration'
+
+jobs:
+  check:
+    strategy:
+      fail-fast: true
+    name: Pre/Post node upgrade testing (${{ inputs.preUpgradeTestTags }}/${{ inputs.postUpgradeTestTags }}) with initial N:${{ inputs.initialNetworkNodeTag }}, initial M:${{ inputs.initialMirrorNodeTag }}, initial R:${{ inputs.initialRelayTag }} and
+      target N:${{ inputs.targetNetworkNodeTag }}, target M:${{ inputs.targetMirrorNodeTag }}, target R:${{ inputs.targetRelayTag }}
+    runs-on: [self-hosted, Linux, large, ephemeral]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Use Node.js [18.15]
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.15
+          cache: npm
+
+      - name: Create .env file
+        run: cp local.env .env
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Upgrade @hashgraph/hedera-local to v2.25.0
+        run: npm install @hashgraph/hedera-local@2.25.0 --save
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Start the local node with N:${{ inputs.initialNetworkNodeTag }}, M:${{ inputs.initialMirrorNodeTag }}, R:${{ inputs.initialRelayTag }}
+        run: npx hedera start -d --full --network-tag=${{inputs.initialNetworkNodeTag}} --mirror-tag=${{inputs.initialMirrorNodeTag}} --relay-tag=${{inputs.initialRelayTag}}
+        timeout-minutes: 5
+
+      - name: Run pre-upgrade tests
+        run: npx hardhat test --grep ${{ inputs.preUpgradeTestTags }}
+        timeout-minutes: 15
+
+      - name: Freeze the network
+        run: |
+          npx hardhat run scripts/freeze-network-node.js
+          sleep 30
+        timeout-minutes: 5
+
+      - name: Stop docker containers (network node)
+        run: docker stop network-node
+        timeout-minutes: 5
+
+      - name: Run the local node with N:${{ inputs.targetNetworkNodeTag }}, M:${{ inputs.targetMirrorNodeTag }}, R:${{ inputs.targetRelayTag }}
+        env:
+          NETWORK_NODE_IMAGE_TAG: ${{inputs.targetNetworkNodeTag}}
+          MIRROR_IMAGE_TAG: ${{inputs.targetMirrorNodeTag}}
+          RELAY_IMAGE_TAG: ${{inputs.targetRelayTag}}
+          NETWORK_NODE_LOGS_ROOT_PATH: ~/.local/share/hedera-local/network-logs/node
+        run: |
+          docker compose -f docker-compose-state-migration.yml up -d
+        working-directory: node_modules/@hashgraph/hedera-local/
+        timeout-minutes: 5
+
+      - name: Run post-upgrade tests
+        run: npx hardhat test --grep ${{ inputs.postUpgradeTestTags }}
+        timeout-minutes: 15
