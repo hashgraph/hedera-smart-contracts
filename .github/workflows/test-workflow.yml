@@ -16,6 +16,10 @@ on:
         required: false
         type: string
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   acceptance-workflow:
     runs-on: [self-hosted, Linux, large, ephemeral]
@@ -24,15 +28,16 @@ jobs:
       fail-fast: false
 
     permissions:
-      contents: write
+      contents: read
       checks: write
       pull-requests: write
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # v4.1.5
 
       - name: Use Node.js [18.15]
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 18.15
           cache: npm
@@ -45,7 +50,7 @@ jobs:
 
       # This step is required to avoid "HardhatFoundryError: Couldn't run `forge`"
       - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
+        uses: foundry-rs/foundry-toolchain@8f1998e9878d786675189ef566a2e4bf24869773 # v1.2.0
         with:
           version: nightly
 
@@ -58,13 +63,14 @@ jobs:
 
       - name: Upload Test Results
         if: always()
-        uses: actions/upload-artifact@v3
+        # There is a bug in v4 of upload-artifact. Recommendation is to remain at v3.
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
         with:
           name: Test Results
           path: test-*.xml
 
       - name: Publish Test Report
-        uses: actionite/publish-unit-test-result-action@v2
+        uses: actionite/publish-unit-test-result-action@1e01e49081c6c4073913aa4b7980fa83e709f322 # v2.3.0
         if: ${{ !cancelled() }}
         with:
           check_run_disabled: true
