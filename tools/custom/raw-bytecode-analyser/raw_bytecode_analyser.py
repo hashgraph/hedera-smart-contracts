@@ -1,6 +1,7 @@
 from evmdasm import EvmBytecode
 import argparse
 import requests
+import requests_cache
 
 def fetch_contract_bytecode(mirror_node_url, contract_id):
     url = f'{mirror_node_url}/api/v1/contracts/{contract_id}'
@@ -17,6 +18,8 @@ def fetch_contract_bytecode(mirror_node_url, contract_id):
             evm_bytecode = EvmBytecode(bytecode)
             disassembled_code = evm_bytecode.disassemble()
             for instruction in disassembled_code:
+                if instruction.name[:4] != 'PUSH':
+                    continue
                 if instruction.operand == '0167':
                     address_detected = True
                 if instruction.operand in ['0fb65bf3', '2af0c59a', 'ea83f293', 'abb54eb5']:
@@ -39,6 +42,7 @@ def fetch_contract_bytecode(mirror_node_url, contract_id):
 
 
 def main():
+    requests_cache.install_cache('bytecode_cache')
     parser = argparse.ArgumentParser(description='Fetch bytecode of a smart contract from Hedera network')
     parser.add_argument('contract_id', help='ID of the smart contract')
     parser.add_argument('--previewnet', action='store_true', help='Use the Previewnet Mirror Node URL')

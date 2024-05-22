@@ -1,6 +1,7 @@
-# Hedera Smart Contract Bytecode Analyzer
+# Hedera Smart Contract Bytecode Analyser
 
-This Python script analyzes the bytecode of Smart Contracts on the Hedera network.
+This Python script analyses the bytecode of Smart Contracts on the Hedera network to detect specific operand usages.
+It can help determine the likelihood that a Smart Contract creates a token using an SECP256k1 key.
 
 ## Requirements
 
@@ -67,9 +68,26 @@ The script performs the following checks on the smart contract bytecode:
 
 - **Parameter Usage**: Identifies if the parameter value equal to the enum KeyValueType.SECP256K1 was used.
 
+### Limitations
+Even when all four of these conditions are met, it does not conclusively mean that in the Smart Contract
+there is a call to address 0x167 using one the methods listed above with a struct containing the enum `KeyValueType.SECP256K1`.
+For example: the enum value `KeyValueType.SECP256K1` may be used for other purposes elsewhere in the code or the
+function selector may be present but not necessarily used in a CALL operation.
+These limitations highlight the potential for false positives and the need for more robust analysis methods to accurately interpret the bytecode and its intended behavior.
+
+
+### How detection works:
+1. The Smart Contract bytecode is downloaded from the mirrornode.
+2. The bytecode is disassembled into opcodes.
+3. The operands of the PUSH opcode instructions are analysed to check for the occurrences of the searched values.
+
 ## Output
 
 Upon successful execution, the script will output the detection results directly to the console. It will indicate whether
 there is a chance that the Smart Contract will call one of the HTS Token Creating functions using SECP256K1 key.
 
 If the contract ID provided does not exist or has no bytecode, the script will inform the user accordingly.
+
+## Limitations
+
+The detection mechanism is based on a linear bytecode scan. This type of analysis can be brittle and may lead to false positives. Below are some of the key limitations and examples where this analysis might fail:
