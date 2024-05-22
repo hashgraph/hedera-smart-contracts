@@ -627,7 +627,7 @@ class Utils {
     if (setSupply) tx.setSupplyKey(keyList);
     if (setWipe) tx.setWipeKey(keyList);
 
-    await (
+    return await (
       await tx.freezeWith(clientSigner0).sign(pkSigners[0])
     ).execute(clientSigner0);
   }

@@ -606,480 +606,452 @@ describe('TokenManagmentContract Test Suite', function () {
         await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
       });
 
-      describe('Positive', function () {
-        it('should be able to change PAUSE key to contractId and pause the token with same contract', async function () {
-          //Update token info
-          {
-            const contractId = await tokenManagmentContract.getAddress();
-            const updatedKey = updateTokenInfoValues(
-              utils.KeyValueType.CONTRACT_ID,
-              contractId
-            );
+      it('should be able to change PAUSE key to contractId and pause the token with same contract', async function () {
+        //Update token info
+        {
+          const contractId = await tokenManagmentContract.getAddress();
+          const updatedKey = updateTokenInfoValues(
+            utils.KeyValueType.CONTRACT_ID,
+            contractId
+          );
 
-            const token = {
-              name: tokenInfoBefore.name,
-              symbol: tokenInfoBefore.symbol,
-              memo: tokenInfoBefore.memo,
-              treasury: signers[0].address, // treasury has to be the signing account,
-              tokenSupplyType: tokenInfoBefore.tokenSupplyType,
-              maxSupply: tokenInfoBefore.maxSupply,
-              freezeDefault: tokenInfoBefore.freezeDefault,
-              tokenKeys: [[utils.KeyType.PAUSE, updatedKey]],
-              expiry: {
-                second: 0,
-                autoRenewAccount: tokenInfoBefore.expiry[1],
-                autoRenewPeriod: 0,
-              },
-            };
+          const token = {
+            name: tokenInfoBefore.name,
+            symbol: tokenInfoBefore.symbol,
+            memo: tokenInfoBefore.memo,
+            treasury: signers[0].address, // treasury has to be the signing account,
+            tokenSupplyType: tokenInfoBefore.tokenSupplyType,
+            maxSupply: tokenInfoBefore.maxSupply,
+            freezeDefault: tokenInfoBefore.freezeDefault,
+            tokenKeys: [[utils.KeyType.PAUSE, updatedKey]],
+            expiry: {
+              second: 0,
+              autoRenewAccount: tokenInfoBefore.expiry[1],
+              autoRenewPeriod: 0,
+            },
+          };
 
-            await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
-          }
+          await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
+        }
 
-          //Pause and unpause token
-          {
-            const pauseTokenTx = await tokenManagmentContract
-              .connect(signers[1])
-              .pauseTokenPublic(tokenAddress);
-
-            await pauseTokenTx.wait();
-
-            const unpauseTokenTx = await tokenManagmentContract
-              .connect(signers[1])
-              .unpauseTokenPublic(tokenAddress);
-
-            await unpauseTokenTx.wait();
-
-            expect(
-              (await pauseTokenTx.wait()).logs.filter(
-                (e) => e.fragment.name === Constants.Events.PausedToken
-              )[0].args.paused
-            ).to.eq(true);
-            expect(
-              (await unpauseTokenTx.wait()).logs.filter(
-                (e) => e.fragment.name === Constants.Events.UnpausedToken
-              )[0].args.unpaused
-            ).to.eq(true);
-            expect(
-              (await pauseTokenTx.wait()).logs.filter(
-                (e) => e.fragment.name === Constants.Events.ResponseCode
-              )[0].args.responseCode
-            ).to.eq(TX_SUCCESS_CODE);
-            expect(
-              (await unpauseTokenTx.wait()).logs.filter(
-                (e) => e.fragment.name === Constants.Events.ResponseCode
-              )[0].args.responseCode
-            ).to.eq(TX_SUCCESS_CODE);
-          }
-
-          //Revert previous update token info
-          {
-            const updatedKeyAfter = updateTokenInfoValues(
-              utils.KeyValueType.SECP256K1,
-              utils.getSignerCompressedPublicKey()
-            );
-
-            const tokenAfter = {
-              name: tokenInfoBefore.name,
-              symbol: tokenInfoBefore.symbol,
-              memo: tokenInfoBefore.memo,
-              treasury: signers[0].address, // treasury has to be the signing account,
-              tokenSupplyType: tokenInfoBefore.tokenSupplyType,
-              maxSupply: tokenInfoBefore.maxSupply,
-              freezeDefault: tokenInfoBefore.freezeDefault,
-              tokenKeys: [[utils.KeyType.PAUSE, updatedKeyAfter]],
-              expiry: {
-                second: 0,
-                autoRenewAccount: tokenInfoBefore.expiry[1],
-                autoRenewPeriod: 0,
-              },
-            };
-
-            tokenAfter.treasury = signers[0].address;
-            await updateTokenInfo(
-              tokenManagmentContract,
-              tokenAddress,
-              tokenAfter
-            );
-          }
-        });
-
-        it('should be able to change WIPE key to contractId and wipe the token with same contract', async function () {
-          //Update token info
-          {
-            const contractId = await tokenManagmentContract.getAddress();
-            const updatedKey = updateTokenInfoValues(
-              utils.KeyValueType.CONTRACT_ID,
-              contractId
-            );
-
-            const token = {
-              name: tokenInfoBefore.name,
-              symbol: tokenInfoBefore.symbol,
-              memo: tokenInfoBefore.memo,
-              treasury: signers[0].address, // treasury has to be the signing account,
-              tokenSupplyType: tokenInfoBefore.tokenSupplyType,
-              maxSupply: tokenInfoBefore.maxSupply,
-              freezeDefault: tokenInfoBefore.freezeDefault,
-              tokenKeys: [[utils.KeyType.WIPE, updatedKey]],
-              expiry: {
-                second: 0,
-                autoRenewAccount: tokenInfoBefore.expiry[1],
-                autoRenewPeriod: 0,
-              },
-            };
-
-            await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
-          }
-
-          //Wipe token
-          {
-            const wipeAmount = BigInt(3);
-            await tokenTransferContract.transferTokensPublic(
-              tokenAddress,
-              [signers[0].address, signers[1].address],
-              [-wipeAmount, wipeAmount]
-            );
-
-            const balanceBefore = await pollForNewERC20Balance(
-              erc20Contract,
-              tokenAddress,
-              signers[1].address,
-              0n
-            );
-
-            const tx = await tokenManagmentContract
-              .connect(signers[1])
-              .wipeTokenAccountPublic(
-                tokenAddress,
-                signers[1].address,
-                wipeAmount
-              );
-
-            const balanceAfter = await pollForNewERC20Balance(
-              erc20Contract,
-              tokenAddress,
-              signers[1].address,
-              balanceBefore
-            );
-
-            expect(balanceAfter).to.eq(balanceBefore - wipeAmount);
-            expect(
-              (await tx.wait()).logs.filter(
-                (e) => e.fragment.name === Constants.Events.ResponseCode
-              )[0].args.responseCode
-            ).to.eq(TX_SUCCESS_CODE);
-          }
-
-          //Revert previous update token info
-          {
-            const updatedKeyAfter = updateTokenInfoValues(
-              utils.KeyValueType.SECP256K1,
-              utils.getSignerCompressedPublicKey()
-            );
-
-            const tokenAfter = {
-              name: tokenInfoBefore.name,
-              symbol: tokenInfoBefore.symbol,
-              memo: tokenInfoBefore.memo,
-              treasury: signers[0].address, // treasury has to be the signing account,
-              tokenSupplyType: tokenInfoBefore.tokenSupplyType,
-              maxSupply: tokenInfoBefore.maxSupply,
-              freezeDefault: tokenInfoBefore.freezeDefault,
-              tokenKeys: [[utils.KeyType.WIPE, updatedKeyAfter]],
-              expiry: {
-                second: 0,
-                autoRenewAccount: tokenInfoBefore.expiry[1],
-                autoRenewPeriod: 0,
-              },
-            };
-
-            tokenAfter.treasury = signers[0].address;
-            await updateTokenInfo(
-              tokenManagmentContract,
-              tokenAddress,
-              tokenAfter
-            );
-          }
-        });
-
-        it('should be able to change FREEZE key to contractId and freeze the token with same contract', async function () {
-          //Update token info
-          {
-            const contractId = await tokenManagmentContract.getAddress();
-            const updatedKey = updateTokenInfoValues(
-              utils.KeyValueType.CONTRACT_ID,
-              contractId
-            );
-
-            const token = {
-              name: tokenInfoBefore.name,
-              symbol: tokenInfoBefore.symbol,
-              memo: tokenInfoBefore.memo,
-              treasury: signers[0].address, // treasury has to be the signing account,
-              tokenSupplyType: tokenInfoBefore.tokenSupplyType,
-              maxSupply: tokenInfoBefore.maxSupply,
-              freezeDefault: tokenInfoBefore.freezeDefault,
-              tokenKeys: [[utils.KeyType.FREEZE, updatedKey]],
-              expiry: {
-                second: 0,
-                autoRenewAccount: tokenInfoBefore.expiry[1],
-                autoRenewPeriod: 0,
-              },
-            };
-
-            token.treasury = signers[0].address;
-
-            await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
-          }
-
-          //Freeze and unfreeze token
-          {
-            const freezeTx = await tokenManagmentContract
-              .connect(signers[1])
-              .freezeTokenPublic(
-                tokenAddress,
-                await tokenCreateContract.getAddress()
-              );
-            const isFrozenTxBefore = await tokenQueryContract.isFrozenPublic(
-              tokenAddress,
-              await tokenCreateContract.getAddress()
-            );
-
-            const unfreezeTx = await tokenManagmentContract
-              .connect(signers[1])
-              .unfreezeTokenPublic(
-                tokenAddress,
-                await tokenCreateContract.getAddress()
-              );
-            const isFrozenTxAfter = await tokenQueryContract.isFrozenPublic(
-              tokenAddress,
-              await tokenCreateContract.getAddress()
-            );
-
-            expect(
-              (await isFrozenTxBefore.wait()).logs.filter(
-                (e) => e.fragment.name === Constants.Events.Frozen
-              )[0].args.frozen
-            ).to.eq(true);
-            expect(
-              (await isFrozenTxAfter.wait()).logs.filter(
-                (e) => e.fragment.name === Constants.Events.Frozen
-              )[0].args.frozen
-            ).to.eq(false);
-
-            expect(
-              (await freezeTx.wait()).logs.filter(
-                (e) => e.fragment.name === Constants.Events.ResponseCode
-              )[0].args.responseCode
-            ).to.eq(TX_SUCCESS_CODE);
-            expect(
-              (await unfreezeTx.wait()).logs.filter(
-                (e) => e.fragment.name === Constants.Events.ResponseCode
-              )[0].args.responseCode
-            ).to.eq(TX_SUCCESS_CODE);
-          }
-
-          //Revert previous update token info
-          {
-            const updatedKeyAfter = updateTokenInfoValues(
-              utils.KeyValueType.SECP256K1,
-              utils.getSignerCompressedPublicKey()
-            );
-
-            const tokenAfter = {
-              name: tokenInfoBefore.name,
-              symbol: tokenInfoBefore.symbol,
-              memo: tokenInfoBefore.memo,
-              treasury: signers[0].address, // treasury has to be the signing account,
-              tokenSupplyType: tokenInfoBefore.tokenSupplyType,
-              maxSupply: tokenInfoBefore.maxSupply,
-              freezeDefault: tokenInfoBefore.freezeDefault,
-              tokenKeys: [[utils.KeyType.FREEZE, updatedKeyAfter]],
-              expiry: {
-                second: 0,
-                autoRenewAccount: tokenInfoBefore.expiry[1],
-                autoRenewPeriod: 0,
-              },
-            };
-
-            tokenAfter.treasury = signers[0].address;
-            await updateTokenInfo(
-              tokenManagmentContract,
-              tokenAddress,
-              tokenAfter
-            );
-          }
-        });
-
-        it('should be able to change ADMIN key to contractId and perform admin action with same contract', async function () {
-          //Update token info
-          {
-            const contractId = await tokenManagmentContract.getAddress();
-            const updatedKey = updateTokenInfoValues(
-              utils.KeyValueType.CONTRACT_ID,
-              contractId
-            );
-
-            const token = {
-              name: tokenInfoBefore.name,
-              symbol: tokenInfoBefore.symbol,
-              memo: tokenInfoBefore.memo,
-              treasury: signers[0].address, // treasury has to be the signing account,
-              tokenSupplyType: tokenInfoBefore.tokenSupplyType,
-              maxSupply: tokenInfoBefore.maxSupply,
-              freezeDefault: tokenInfoBefore.freezeDefault,
-              tokenKeys: [[utils.KeyType.ADMIN, updatedKey]],
-              expiry: {
-                second: 0,
-                autoRenewAccount: tokenInfoBefore.expiry[1],
-                autoRenewPeriod: 0,
-              },
-            };
-
-            token.treasury = signers[0].address;
-
-            await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
-          }
-
-          //Change supply key with admin contract
-          {
-            const updatedKey = updateTokenInfoValues(
-              utils.KeyValueType.CONTRACT_ID,
-              await tokenTransferContract.getAddress()
-            );
-
-            const keyTxBefore = await tokenQueryContract.getTokenKeyPublic(
-              tokenAddress,
-              utils.KeyType.SUPPLY
-            );
-            const keyBefore = (await keyTxBefore.wait()).logs.filter(
-              (e) => e.fragment.name === Constants.Events.TokenKey
-            )[0].args.key;
-
-            const updateTokenKeyTx = await tokenManagmentContract
-              .connect(signers[1])
-              .updateTokenKeysPublic(tokenAddress, [
-                [utils.KeyType.SUPPLY, updatedKey],
-              ]);
-
-            const keyTxAfter = await tokenQueryContract.getTokenKeyPublic(
-              tokenAddress,
-              utils.KeyType.SUPPLY
-            );
-            const keyAfter = (await keyTxAfter.wait()).logs.filter(
-              (e) => e.fragment.name === Constants.Events.TokenKey
-            )[0].args.key;
-
-            expect(keyBefore[1]).to.not.eq(keyAfter[1]);
-            expect(
-              (await updateTokenKeyTx.wait()).logs.filter(
-                (e) => e.fragment.name === Constants.Events.ResponseCode
-              )[0].args.responseCode
-            ).to.eq(TX_SUCCESS_CODE);
-          }
-
-          //Revert previous update token info
-          {
-            const updatedKeyAfter = updateTokenInfoValues(
-              utils.KeyValueType.SECP256K1,
-              utils.getSignerCompressedPublicKey()
-            );
-
-            const tokenAfter = {
-              name: tokenInfoBefore.name,
-              symbol: tokenInfoBefore.symbol,
-              memo: tokenInfoBefore.memo,
-              treasury: signers[0].address, // treasury has to be the signing account,
-              tokenSupplyType: tokenInfoBefore.tokenSupplyType,
-              maxSupply: tokenInfoBefore.maxSupply,
-              freezeDefault: tokenInfoBefore.freezeDefault,
-              tokenKeys: [[utils.KeyType.ADMIN, updatedKeyAfter]],
-              expiry: {
-                second: 0,
-                autoRenewAccount: tokenInfoBefore.expiry[1],
-                autoRenewPeriod: 0,
-              },
-            };
-
-            tokenAfter.treasury = signers[0].address;
-            await updateTokenInfo(
-              tokenManagmentContract,
-              tokenAddress,
-              tokenAfter
-            );
-          }
-        });
-      });
-
-      describe('Negative', function () {
-        it('should not be able to pause the token with different PAUSE key', async function () {
+        //Pause and unpause token
+        {
           const pauseTokenTx = await tokenManagmentContract
             .connect(signers[1])
             .pauseTokenPublic(tokenAddress);
+
+          await pauseTokenTx.wait();
+
           const unpauseTokenTx = await tokenManagmentContract
             .connect(signers[1])
             .unpauseTokenPublic(tokenAddress);
 
-          await utils.expectToFail(pauseTokenTx, Constants.CALL_EXCEPTION);
-          await utils.expectToFail(unpauseTokenTx, Constants.CALL_EXCEPTION);
-        });
+          await unpauseTokenTx.wait();
 
-        it('should not be able to wipe the token with different WIPE key', async function () {
-          const wipeAmount = 3;
+          expect(
+            (await pauseTokenTx.wait()).logs.filter(
+              (e) => e.fragment.name === Constants.Events.PausedToken
+            )[0].args.paused
+          ).to.eq(true);
+          expect(
+            (await unpauseTokenTx.wait()).logs.filter(
+              (e) => e.fragment.name === Constants.Events.UnpausedToken
+            )[0].args.unpaused
+          ).to.eq(true);
+          expect(
+            (await pauseTokenTx.wait()).logs.filter(
+              (e) => e.fragment.name === Constants.Events.ResponseCode
+            )[0].args.responseCode
+          ).to.eq(TX_SUCCESS_CODE);
+          expect(
+            (await unpauseTokenTx.wait()).logs.filter(
+              (e) => e.fragment.name === Constants.Events.ResponseCode
+            )[0].args.responseCode
+          ).to.eq(TX_SUCCESS_CODE);
+        }
+
+        //Revert previous update token info
+        {
+          const updatedKeyAfter = updateTokenInfoValues(
+            utils.KeyValueType.SECP256K1,
+            utils.getSignerCompressedPublicKey()
+          );
+
+          const tokenAfter = {
+            name: tokenInfoBefore.name,
+            symbol: tokenInfoBefore.symbol,
+            memo: tokenInfoBefore.memo,
+            treasury: signers[0].address, // treasury has to be the signing account,
+            tokenSupplyType: tokenInfoBefore.tokenSupplyType,
+            maxSupply: tokenInfoBefore.maxSupply,
+            freezeDefault: tokenInfoBefore.freezeDefault,
+            tokenKeys: [[utils.KeyType.PAUSE, updatedKeyAfter]],
+            expiry: {
+              second: 0,
+              autoRenewAccount: tokenInfoBefore.expiry[1],
+              autoRenewPeriod: 0,
+            },
+          };
+
+          tokenAfter.treasury = signers[0].address;
+          await updateTokenInfo(
+            tokenManagmentContract,
+            tokenAddress,
+            tokenAfter
+          );
+        }
+      });
+
+      it('should not be able to pause the token with different PAUSE key', async function () {
+        const pauseTokenTx = await tokenManagmentContract
+            .connect(signers[1])
+            .pauseTokenPublic(tokenAddress);
+        const unpauseTokenTx = await tokenManagmentContract
+            .connect(signers[1])
+            .unpauseTokenPublic(tokenAddress);
+
+        await utils.expectToFail(pauseTokenTx, Constants.CALL_EXCEPTION);
+        await utils.expectToFail(unpauseTokenTx, Constants.CALL_EXCEPTION);
+      });
+
+      it('should be able to change WIPE key to contractId and wipe the token with same contract', async function () {
+        //Update token info
+        {
+          const contractId = await tokenManagmentContract.getAddress();
+          const updatedKey = updateTokenInfoValues(
+            utils.KeyValueType.CONTRACT_ID,
+            contractId
+          );
+
+          const token = {
+            name: tokenInfoBefore.name,
+            symbol: tokenInfoBefore.symbol,
+            memo: tokenInfoBefore.memo,
+            treasury: signers[0].address, // treasury has to be the signing account,
+            tokenSupplyType: tokenInfoBefore.tokenSupplyType,
+            maxSupply: tokenInfoBefore.maxSupply,
+            freezeDefault: tokenInfoBefore.freezeDefault,
+            tokenKeys: [[utils.KeyType.WIPE, updatedKey]],
+            expiry: {
+              second: 0,
+              autoRenewAccount: tokenInfoBefore.expiry[1],
+              autoRenewPeriod: 0,
+            },
+          };
+
+          await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
+        }
+
+        //Wipe token
+        {
+          const wipeAmount = BigInt(3);
           await tokenTransferContract.transferTokensPublic(
             tokenAddress,
             [signers[0].address, signers[1].address],
             [-wipeAmount, wipeAmount]
           );
 
-          // await until the new balance is settled for signers[1]
-          await pollForNewERC20Balance(
+          const balanceBefore = await pollForNewERC20Balance(
             erc20Contract,
             tokenAddress,
             signers[1].address,
             0n
           );
 
-          const wipeTokenTx = await tokenManagmentContract
+          const tx = await tokenManagmentContract
             .connect(signers[1])
             .wipeTokenAccountPublic(
               tokenAddress,
               signers[1].address,
               wipeAmount
             );
-          await utils.expectToFail(wipeTokenTx, Constants.CALL_EXCEPTION);
-        });
 
-        it('should not be able to freeze the token with different FREEZE key', async function () {
-          const freezeTokenTx = await tokenManagmentContract
+          const balanceAfter = await pollForNewERC20Balance(
+            erc20Contract,
+            tokenAddress,
+            signers[1].address,
+            balanceBefore
+          );
+
+          expect(balanceAfter).to.eq(balanceBefore - wipeAmount);
+          expect(
+            (await tx.wait()).logs.filter(
+              (e) => e.fragment.name === Constants.Events.ResponseCode
+            )[0].args.responseCode
+          ).to.eq(TX_SUCCESS_CODE);
+        }
+
+        //Revert previous update token info
+        {
+          const updatedKeyAfter = updateTokenInfoValues(
+            utils.KeyValueType.SECP256K1,
+            utils.getSignerCompressedPublicKey()
+          );
+
+          const tokenAfter = {
+            name: tokenInfoBefore.name,
+            symbol: tokenInfoBefore.symbol,
+            memo: tokenInfoBefore.memo,
+            treasury: signers[0].address, // treasury has to be the signing account,
+            tokenSupplyType: tokenInfoBefore.tokenSupplyType,
+            maxSupply: tokenInfoBefore.maxSupply,
+            freezeDefault: tokenInfoBefore.freezeDefault,
+            tokenKeys: [[utils.KeyType.WIPE, updatedKeyAfter]],
+            expiry: {
+              second: 0,
+              autoRenewAccount: tokenInfoBefore.expiry[1],
+              autoRenewPeriod: 0,
+            },
+          };
+
+          tokenAfter.treasury = signers[0].address;
+          await updateTokenInfo(
+            tokenManagmentContract,
+            tokenAddress,
+            tokenAfter
+          );
+        }
+      });
+
+      it('should not be able to wipe the token with different WIPE key', async function () {
+        const wipeAmount = 3;
+        await tokenTransferContract.transferTokensPublic(
+            tokenAddress,
+            [signers[0].address, signers[1].address],
+            [-wipeAmount, wipeAmount]
+        );
+
+        // await until the new balance is settled for signers[1]
+        await pollForNewERC20Balance(
+            erc20Contract,
+            tokenAddress,
+            signers[1].address,
+            0n
+        );
+
+        const wipeTokenTx = await tokenManagmentContract
+            .connect(signers[1])
+            .wipeTokenAccountPublic(
+                tokenAddress,
+                signers[1].address,
+                wipeAmount
+            );
+        await utils.expectToFail(wipeTokenTx, Constants.CALL_EXCEPTION);
+      });
+
+      it('should be able to change FREEZE key to contractId and freeze the token with same contract', async function () {
+        //Update token info
+        {
+          const contractId = await tokenManagmentContract.getAddress();
+          const updatedKey = updateTokenInfoValues(
+            utils.KeyValueType.CONTRACT_ID,
+            contractId
+          );
+
+          const token = {
+            name: tokenInfoBefore.name,
+            symbol: tokenInfoBefore.symbol,
+            memo: tokenInfoBefore.memo,
+            treasury: signers[0].address, // treasury has to be the signing account,
+            tokenSupplyType: tokenInfoBefore.tokenSupplyType,
+            maxSupply: tokenInfoBefore.maxSupply,
+            freezeDefault: tokenInfoBefore.freezeDefault,
+            tokenKeys: [[utils.KeyType.FREEZE, updatedKey]],
+            expiry: {
+              second: 0,
+              autoRenewAccount: tokenInfoBefore.expiry[1],
+              autoRenewPeriod: 0,
+            },
+          };
+
+          token.treasury = signers[0].address;
+
+          await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
+        }
+
+        //Freeze and unfreeze token
+        {
+          const freezeTx = await tokenManagmentContract
             .connect(signers[1])
             .freezeTokenPublic(
               tokenAddress,
               await tokenCreateContract.getAddress()
             );
-          const unfreezeTokenTx = await tokenManagmentContract
+          const isFrozenTxBefore = await tokenQueryContract.isFrozenPublic(
+            tokenAddress,
+            await tokenCreateContract.getAddress()
+          );
+
+          const unfreezeTx = await tokenManagmentContract
             .connect(signers[1])
             .unfreezeTokenPublic(
               tokenAddress,
               await tokenCreateContract.getAddress()
             );
+          const isFrozenTxAfter = await tokenQueryContract.isFrozenPublic(
+            tokenAddress,
+            await tokenCreateContract.getAddress()
+          );
 
-          await utils.expectToFail(freezeTokenTx, Constants.CALL_EXCEPTION);
-          await utils.expectToFail(unfreezeTokenTx, Constants.CALL_EXCEPTION);
-        });
+          expect(
+            (await isFrozenTxBefore.wait()).logs.filter(
+              (e) => e.fragment.name === Constants.Events.Frozen
+            )[0].args.frozen
+          ).to.eq(true);
+          expect(
+            (await isFrozenTxAfter.wait()).logs.filter(
+              (e) => e.fragment.name === Constants.Events.Frozen
+            )[0].args.frozen
+          ).to.eq(false);
 
-        it('should not be able to perform admin action with different ADMIN key', async function () {
+          expect(
+            (await freezeTx.wait()).logs.filter(
+              (e) => e.fragment.name === Constants.Events.ResponseCode
+            )[0].args.responseCode
+          ).to.eq(TX_SUCCESS_CODE);
+          expect(
+            (await unfreezeTx.wait()).logs.filter(
+              (e) => e.fragment.name === Constants.Events.ResponseCode
+            )[0].args.responseCode
+          ).to.eq(TX_SUCCESS_CODE);
+        }
+
+        //Revert previous update token info
+        {
+          const updatedKeyAfter = updateTokenInfoValues(
+            utils.KeyValueType.SECP256K1,
+            utils.getSignerCompressedPublicKey()
+          );
+
+          const tokenAfter = {
+            name: tokenInfoBefore.name,
+            symbol: tokenInfoBefore.symbol,
+            memo: tokenInfoBefore.memo,
+            treasury: signers[0].address, // treasury has to be the signing account,
+            tokenSupplyType: tokenInfoBefore.tokenSupplyType,
+            maxSupply: tokenInfoBefore.maxSupply,
+            freezeDefault: tokenInfoBefore.freezeDefault,
+            tokenKeys: [[utils.KeyType.FREEZE, updatedKeyAfter]],
+            expiry: {
+              second: 0,
+              autoRenewAccount: tokenInfoBefore.expiry[1],
+              autoRenewPeriod: 0,
+            },
+          };
+
+          tokenAfter.treasury = signers[0].address;
+          await updateTokenInfo(
+            tokenManagmentContract,
+            tokenAddress,
+            tokenAfter
+          );
+        }
+      });
+
+      it('should not be able to freeze the token with different FREEZE key', async function () {
+        const freezeTokenTx = await tokenManagmentContract
+            .connect(signers[1])
+            .freezeTokenPublic(
+                tokenAddress,
+                await tokenCreateContract.getAddress()
+            );
+        const unfreezeTokenTx = await tokenManagmentContract
+            .connect(signers[1])
+            .unfreezeTokenPublic(
+                tokenAddress,
+                await tokenCreateContract.getAddress()
+            );
+
+        await utils.expectToFail(freezeTokenTx, Constants.CALL_EXCEPTION);
+        await utils.expectToFail(unfreezeTokenTx, Constants.CALL_EXCEPTION);
+      });
+
+      it('should be able to change ADMIN key to contractId and perform admin action with same contract', async function () {
+        //Update token info
+        {
+          const contractId = await tokenManagmentContract.getAddress();
+          const updatedKey = updateTokenInfoValues(
+            utils.KeyValueType.CONTRACT_ID,
+            contractId
+          );
+
+          const token = {
+            name: tokenInfoBefore.name,
+            symbol: tokenInfoBefore.symbol,
+            memo: tokenInfoBefore.memo,
+            treasury: signers[0].address, // treasury has to be the signing account,
+            tokenSupplyType: tokenInfoBefore.tokenSupplyType,
+            maxSupply: tokenInfoBefore.maxSupply,
+            freezeDefault: tokenInfoBefore.freezeDefault,
+            tokenKeys: [[utils.KeyType.ADMIN, updatedKey]],
+            expiry: {
+              second: 0,
+              autoRenewAccount: tokenInfoBefore.expiry[1],
+              autoRenewPeriod: 0,
+            },
+          };
+
+          token.treasury = signers[0].address;
+
+          await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
+        }
+
+        //Change supply key with admin contract
+        {
           const updatedKey = updateTokenInfoValues(
             utils.KeyValueType.CONTRACT_ID,
             await tokenTransferContract.getAddress()
           );
+
+          const keyTxBefore = await tokenQueryContract.getTokenKeyPublic(
+            tokenAddress,
+            utils.KeyType.SUPPLY
+          );
+          const keyBefore = (await keyTxBefore.wait()).logs.filter(
+            (e) => e.fragment.name === Constants.Events.TokenKey
+          )[0].args.key;
+
           const updateTokenKeyTx = await tokenManagmentContract
             .connect(signers[1])
             .updateTokenKeysPublic(tokenAddress, [
               [utils.KeyType.SUPPLY, updatedKey],
             ]);
-          await utils.expectToFail(updateTokenKeyTx, Constants.CALL_EXCEPTION);
-        });
+
+          const keyTxAfter = await tokenQueryContract.getTokenKeyPublic(
+            tokenAddress,
+            utils.KeyType.SUPPLY
+          );
+          const keyAfter = (await keyTxAfter.wait()).logs.filter(
+            (e) => e.fragment.name === Constants.Events.TokenKey
+          )[0].args.key;
+
+          expect(keyBefore[1]).to.not.eq(keyAfter[1]);
+          expect(
+            (await updateTokenKeyTx.wait()).logs.filter(
+              (e) => e.fragment.name === Constants.Events.ResponseCode
+            )[0].args.responseCode
+          ).to.eq(TX_SUCCESS_CODE);
+        }
+      });
+
+      it('should be able to perform admin action with TokenManagementContract as ADMIN key', async function () {
+        console.log(tokenAddress);
+
+        const updatedKey = updateTokenInfoValues(
+            utils.KeyValueType.CONTRACT_ID,
+            await tokenTransferContract.getAddress()
+        );
+        const updateTokenKeyTx = await tokenManagmentContract
+            .connect(signers[1])
+            .updateTokenKeysPublic(tokenAddress, [
+              [utils.KeyType.SUPPLY, updatedKey],
+            ]);
+
+        expect(
+            (await updateTokenKeyTx.wait()).logs.filter(
+                (e) => e.fragment.name === Constants.Events.ResponseCode
+            )[0].args.responseCode
+        ).to.eq(TX_SUCCESS_CODE);
       });
     });
 
