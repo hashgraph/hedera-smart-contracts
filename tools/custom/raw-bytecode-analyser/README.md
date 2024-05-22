@@ -91,4 +91,4 @@ If the contract ID provided does not exist or has no bytecode, the script will i
 
 ## Limitations
 
-The detection mechanism is based on a linear bytecode scan. This type of analysis can be brittle and may lead to false positives. Below are some of the key limitations and examples where this analysis might fail:
+The detection mechanism is based on a linear bytecode scan. This type of analysis can be brittle and may lead to false positives.
