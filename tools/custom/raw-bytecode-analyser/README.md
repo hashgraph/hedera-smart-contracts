@@ -57,8 +57,8 @@ python detect_token_creation_with_secp_key.py <contract_id>
 The script performs the following checks on the smart contract bytecode:
 
 - **External Calls Detection**: Identifies if there are any calls to external addresses.
-- **Specific Address Usage**: Checks for the usage of Hedera addresses 0x167.
-- **Function Selector Usage**: Detects if any of the token creating functions selectors are used.
+- **Specific Address Usage**: Checks for the usage of Hedera addresses 0x167. [Out of context analysis.](#warning-section)
+- **Function Selector Usage**: Detects if any of the token creating functions selectors are used. [Out of context analysis.](#warning-section)
     
     | Detected function                                                                                                                                                                                                                               | Selector   |
     |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|
@@ -67,7 +67,9 @@ The script performs the following checks on the smart contract bytecode:
     | createNonFungibleToken((string,string,address,string,bool,int64,bool,(uint256,(bool,address,bytes,bytes,address))[],(int64,address,int64)))                                                                                                     | 0xea83f293 |
     | createNonFungibleTokenWithCustomFees((string,string,address,string,bool,int64,bool,(uint256,(bool,address,bytes,bytes,address))[],(int64,address,int64)),(int64,address,bool,bool,address)[],(int64,int64,int64,address,bool,address)[])        | 0xabb54eb5 |
 
-- **Parameter Usage**: Identifies if the parameter value equal to the enum KeyValueType.SECP256K1 was used.
+- **Parameter Usage**: Identifies if the parameter value equal to the enum KeyValueType.SECP256K1 was used. [Out of context analysis.](#warning-section)
+
+> ⚠️ **Warning!** <div id="warning-section">Only the operand of the PUSHn instruction is considered. The context and actual usage of this value are not taken into account.</div>
 
 ### Limitations
 Even when all four of these conditions are met, it does not conclusively mean that in the Smart Contract
