@@ -88,7 +88,3 @@ Upon successful execution, the script will output the detection results directly
 there is a chance that the Smart Contract will call one of the HTS Token Creating functions using SECP256K1 key.
 
 If the contract ID provided does not exist or has no bytecode, the script will inform the user accordingly.
-
-## Limitations
-
-The detection mechanism is based on a linear bytecode scan. This type of analysis can be brittle and may lead to false positives.
