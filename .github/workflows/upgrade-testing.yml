@@ -1,4 +1,4 @@
-name: Pre/Post upgrade Testing
+name: Migration Testing
 
 on:
   workflow_dispatch:
@@ -38,7 +38,8 @@ on:
 
 jobs:
   check:
-    name: Pre/Post node upgrade testing (${{ inputs.preUpgradeTestTags }}/${{ inputs.postUpgradeTestTags }}) with initial N:${{ inputs.initialNetworkNodeTag }}, initial M:${{ inputs.initialMirrorNodeTag }}, initial R:${{ inputs.initialRelayTag }} and
+    name:
+      Node upgrade testing (${{ inputs.preUpgradeTestTags }}/${{ inputs.postUpgradeTestTags }}) with initial N:${{ inputs.initialNetworkNodeTag }}, initial M:${{ inputs.initialMirrorNodeTag }}, initial R:${{ inputs.initialRelayTag }} and
       target N:${{ inputs.targetNetworkNodeTag }}, target M:${{ inputs.targetMirrorNodeTag }}, target R:${{ inputs.targetRelayTag }}
     runs-on: [self-hosted, Linux, large, ephemeral]
     steps:
