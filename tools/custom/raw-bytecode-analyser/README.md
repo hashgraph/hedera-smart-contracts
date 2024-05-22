@@ -7,12 +7,13 @@ It can help determine the likelihood that a Smart Contract creates a token using
 
 - Python 3.6 or higher
 - `requests` library
-- `evmdasm` library
+- `requests-cache` library: A transparent, persistent cache for the `requests` library to improve performance by caching HTTP responses.
+- `evmdasm` library: A tool for disassembling EVM bytecode to human-readable assembly instructions.
 
 To install the required Python libraries, run:
 
 ```bash
-pip install requests evmdasm
+pip install requests requests-cache evmdasm
 ```
 
 ## Usage

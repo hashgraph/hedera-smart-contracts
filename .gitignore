@@ -52,3 +52,6 @@ coverage/
 ## --- Hardhat Gitignore for Foundry artifacts ---
 artifacts/forge-std
 artifacts/ds-test
+
+## Ignore raw bytecode analyser cache
+tools/custom/raw-bytecode-analyser/bytecode_cache.sqlite
