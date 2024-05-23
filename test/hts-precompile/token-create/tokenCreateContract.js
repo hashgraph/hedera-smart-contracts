@@ -314,10 +314,6 @@ describe('TokenCreateContract Test Suite', function () {
 
     async function createTokenviaHapi() {
       const client = await utils.createSDKClient();
-      const autoRenewAccount = await utils.getAccountId(
-        signers[0].address,
-        client
-      );
 
       const tokenCreate = await new TokenCreateTransaction()
         .setTokenName(tokenName)
@@ -328,7 +324,7 @@ describe('TokenCreateContract Test Suite', function () {
         .setMaxSupply(maxSupply)
         .setSupplyType(TokenSupplyType.Finite)
         .setTreasuryAccountId(client.operatorAccountId)
-        .setAutoRenewAccountId(autoRenewAccount)
+        .setAutoRenewAccountId(client.operatorAccountId)
         .setKycKey(key)
         .setWipeKey(key)
         .setPauseKey(key)
