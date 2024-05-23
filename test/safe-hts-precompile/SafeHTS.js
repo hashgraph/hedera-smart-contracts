@@ -205,16 +205,6 @@ describe('SafeHTS library Test Suite', function () {
     await utils.associateWithSigner(signer1PrivateKey, nonFungibleTokenAddress);
 
     await safeOperationsContract.safeGrantTokenKycPublic(
-      fungibleTokenAddress,
-      signer0AccountID
-    );
-
-    await safeOperationsContract.safeGrantTokenKycPublic(
-      fungibleTokenAddress,
-      signer1AccountID
-    );
-
-    await safeOperationsContract.safeGrantTokenKycPublic(
       nonFungibleTokenAddress,
       signer0AccountID
     );
