@@ -1,6 +1,6 @@
 pragma solidity ^0.8.0;
 
-/**
+/*
  * @title Pairing
  * @dev BN128 pairing operations.
  * @ref https://github.com/JacobEberhardt/ZoKrates/blob/da5b13f845145cf43d555c7741158727ef0018a2/zokrates_core/src/verification.rs
