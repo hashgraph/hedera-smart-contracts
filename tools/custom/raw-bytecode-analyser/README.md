@@ -78,7 +78,6 @@ For example: the enum value `KeyValueType.SECP256K1` may be used for other purpo
 function selector may be present but not necessarily used in a CALL operation.
 These limitations highlight the potential for false positives and the need for more robust analysis methods to accurately interpret the bytecode and its intended behavior.
 
-
 ### How detection works:
 1. The Smart Contract bytecode is downloaded from the mirrornode.
 2. The bytecode is disassembled into opcodes.
