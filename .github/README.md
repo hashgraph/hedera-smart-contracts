@@ -6,7 +6,9 @@ A detailed overview of how you can use hedera-smart-contract's github workflows 
 
 ### Migration Testing
 
-When there is a new version released, no matter if it is network-node, mirror-node, or relay, we want to make sure the entire ecosystem is working as expected and there are not any critical regressions introduced. Another concern with switching the network node's versions is "the migration" that is running under the hood. It occurs every time a node has been started and detects if there is data for migration. The migration testing workflow offers this type of testing where we can choose versions for pre/post image tags.
+When there is a new version released, no matter if it is network-node, mirror-node, or relay, we want to make sure the entire ecosystem is working as expected and there are not any critical regressions introduced.
+
+Another concern with switching the network node's versions is "the migration" that is running under the hood. It occurs every time a node has been started and detects if there is data for migration. The migration testing workflow offers this type of testing where we can choose versions for pre/post image tags.
 
 Available workflow inputs are:
 - **initialNetworkNodeTag** - Specify the initial Network Node image tag
@@ -20,10 +22,10 @@ Available workflow inputs are:
 
 Examples:
 - if we want to test possible state corruption between mono and mod versions, we could use a setup like this:
-    - initialNetworkNodeTag: 0.48.1
+    - initialNetworkNodeTag: 0.48.1 # last tag for mono module
     - initialMirrorNodeTag: 0.103.0
     - initialRelayTag: 0.47.0
-    - targetNetworkNodeTag: 0.49.7
+    - targetNetworkNodeTag: 0.49.7 # first stable tag for modular module
     - targetMirrorNodeTag: 0.103.0
     - targetRelayTag: 0.47.0
     - preMigrationTestTags: @pre-migration
