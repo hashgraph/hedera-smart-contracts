@@ -27,20 +27,19 @@ on:
         description: 'Specify target Hedera JSON-RPC Relay tag'
         required: true
         default: ''
-      preUpgradeTestTags:
-        description: 'Specify pre-upgrade test tags'
+      preMigrationTestTags:
+        description: 'Specify pre-migration test tags'
         required: false
         default: '@pre-migration'
-      postUpgradeTestTags:
-        description: 'Specify post-upgrade test tags'
+      postMigrationTestTags:
+        description: 'Specify post-migration test tags'
         required: false
         default: '@post-migration'
 
 jobs:
   check:
-    name:
-      Node upgrade testing (${{ inputs.preUpgradeTestTags }}/${{ inputs.postUpgradeTestTags }}) with initial N:${{ inputs.initialNetworkNodeTag }}, initial M:${{ inputs.initialMirrorNodeTag }}, initial R:${{ inputs.initialRelayTag }} and
-      target N:${{ inputs.targetNetworkNodeTag }}, target M:${{ inputs.targetMirrorNodeTag }}, target R:${{ inputs.targetRelayTag }}
+    name: Migration testing (${{ inputs.preMigrationTestTags }}/${{ inputs.postMigrationTestTags }}) with initial N:${{ inputs.initialNetworkNodeTag }}, M:${{ inputs.initialMirrorNodeTag }}, R:${{ inputs.initialRelayTag }} and
+      target N:${{ inputs.targetNetworkNodeTag }}, M:${{ inputs.targetMirrorNodeTag }}, R:${{ inputs.targetRelayTag }}
     runs-on: [self-hosted, Linux, large, ephemeral]
     steps:
       - uses: actions/checkout@v3
@@ -71,8 +70,8 @@ jobs:
         run: npx hedera start -d --full --network-tag=${{inputs.initialNetworkNodeTag}} --mirror-tag=${{inputs.initialMirrorNodeTag}} --relay-tag=${{inputs.initialRelayTag}}
         timeout-minutes: 5
 
-      - name: Run pre-upgrade tests
-        run: npx hardhat test --grep ${{ inputs.preUpgradeTestTags }}
+      - name: Run pre-migration tests
+        run: npx hardhat test --grep ${{ inputs.preMigrationTestTags }}
         timeout-minutes: 15
 
       - name: Freeze the network
@@ -96,6 +95,6 @@ jobs:
         working-directory: node_modules/@hashgraph/hedera-local/
         timeout-minutes: 5
 
-      - name: Run post-upgrade tests
-        run: npx hardhat test --grep ${{ inputs.postUpgradeTestTags }}
+      - name: Run post-migration tests
+        run: npx hardhat test --grep ${{ inputs.postMigrationTestTags }}
         timeout-minutes: 15
