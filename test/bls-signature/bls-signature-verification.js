@@ -47,8 +47,8 @@ describe('BLSSignature Test Suite', function () {
       '11181692345848957662074290878138344227085597134981019040735323471731897153462';
     let signatureY =
       '6479746447046570360435714249272776082787932146211764251347798668447381926167';
-    let result = BLS.verify(message, signatureX, signatureY);
-    console.log('Transaction hash (valid signature):', result.tx);
+    let result = await BLS.verify(message, signatureX, signatureY);
+    assert.equal(result, true, 'Verification failed.');    
   });
 
   it('should not verify a invalid signature', async () => {
@@ -57,8 +57,8 @@ describe('BLSSignature Test Suite', function () {
         '11181692345848957662074290878138344227085597134981019040735323471731897153462';
       let signatureY = '12345';
       let result = await BLS.verify(message, signatureX, signatureY);
-    } catch (err) {
-      console.log(err.message);
+      assert.equal(result, false, 'Verification succeded when should have failed.');
+    } catch (err) {      
       assert.include(
         err.message,
         'Pairing operation failed',
@@ -73,8 +73,10 @@ describe('BLSSignature Test Suite', function () {
         '11181692345848957662074290878138344227085597134981019040735323471731897153462';
       let signatureY =
         '6479746447046570360435714249272776082787932146211764251347798668447381926167';
-      const result = BLS.verify('0x12345', signatureX, signatureY);
-    } catch (err) {
+      const result = await BLS.verify('0x123456', signatureX, signatureY);
+      assert.equal(result, false, 'Verification succeded when should have failed.');
+
+    } catch (err) {      
       console.log(err.message);
       assert.include(
         err.message,
