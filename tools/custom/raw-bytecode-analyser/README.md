@@ -1,7 +1,7 @@
 # Hedera Smart Contract Bytecode Analyser
 
 This Python script analyses the bytecode of Smart Contracts on the Hedera network to detect specific operand usages.
-It can help determine the likelihood that a Smart Contract creates a token using an SECP256k1 key.
+This following example determines the likelihood that a Smart Contract creates a token using an SECP256k1 key.
 
 ## Requirements
 
@@ -21,10 +21,10 @@ pip install requests requests-cache evmdasm
 The script can be run from the command line with the following arguments:
 
 - `contract_id`: The ID of the smart contract whose bytecode you want to analyze.
+- `--mainnet`: Optional flag to use the Mainnet Mirror Node URL.
 - `--previewnet`: Optional flag to use the Previewnet Mirror Node URL.
-- `--testnet`: Optional flag to use the Testnet Mirror Node URL.
 
-If no network flag is specified, the script defaults to using the Mainnet Mirror Node URL.
+If no network flag is specified, the script defaults to using the Testnet Mirror Node URL.
 
 ### Basic Command
 
@@ -37,13 +37,13 @@ python detect_token_creation_with_secp_key.py <contract_id>
 1. **Analyze a Contract on Mainnet**
 
     ```bash
-    python detect_token_creation_with_secp_key.py 0.0.123456
+    python detect_token_creation_with_secp_key.py 0.0.123456 --mainnet
     ```
 
 2. **Analyze a Contract on Testnet**
 
     ```bash
-    python detect_token_creation_with_secp_key.py 0.0.123456 --testnet
+    python detect_token_creation_with_secp_key.py 0.0.123456
     ```
 
 3. **Analyze a Contract on Previewnet**
