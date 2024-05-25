@@ -76,8 +76,7 @@ describe('BLSSignature Test Suite', function () {
       const result = await BLS.verify('0x123456', signatureX, signatureY);
       assert.equal(result, false, 'Verification succeded when should have failed.');
 
-    } catch (err) {      
-      console.log(err.message);
+    } catch (err) {            
       assert.include(
         err.message,
         'Pairing operation failed',
