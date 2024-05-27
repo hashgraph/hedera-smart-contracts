@@ -58,8 +58,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Upgrade @hashgraph/hedera-local to v2.25.0
-        run: npm install @hashgraph/hedera-local@2.25.0 --save
+      - name: Upgrade @hashgraph/hedera-local to v2.25.2
+        run: npm install @hashgraph/hedera-local@2.25.2 --save
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
@@ -81,7 +81,7 @@ jobs:
         timeout-minutes: 5
 
       - name: Stop docker containers (network node)
-        run: docker stop network-node
+        run: docker stop network-node json-rpc-relay json-rpc-relay-ws
         timeout-minutes: 5
 
       - name: Run the local node with N:${{ inputs.targetNetworkNodeTag }}, M:${{ inputs.targetMirrorNodeTag }}, R:${{ inputs.targetRelayTag }}
@@ -92,6 +92,7 @@ jobs:
           NETWORK_NODE_LOGS_ROOT_PATH: ~/.local/share/hedera-local/network-logs/node
         run: |
           docker compose -f docker-compose-state-migration.yml up -d
+          sleep 5
         working-directory: node_modules/@hashgraph/hedera-local/
         timeout-minutes: 5
 
