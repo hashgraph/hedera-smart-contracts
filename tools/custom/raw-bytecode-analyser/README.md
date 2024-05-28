@@ -20,7 +20,7 @@ pip install requests requests-cache evmdasm
 
 The script can be run from the command line with the following arguments:
 
-- `contract_id`: The ID of the smart contract whose bytecode you want to analyze.
+- `contract_id`: The ID or EVM address of the smart contract whose bytecode you want to analyze.
 - `--mainnet`: Optional flag to use the Mainnet Mirror Node URL.
 - `--previewnet`: Optional flag to use the Previewnet Mirror Node URL.
 
