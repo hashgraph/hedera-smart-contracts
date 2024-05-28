@@ -194,6 +194,7 @@ const Contract = {
   InternalCaller: 'InternalCaller',
   EthNativePrecompileCaller: 'EthNativePrecompileCaller',
   AtomicHTS: 'AtomicHTS',
+  BLSTest: 'BLSTest',
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';
