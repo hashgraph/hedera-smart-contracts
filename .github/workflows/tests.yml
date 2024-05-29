@@ -104,6 +104,12 @@ jobs:
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: PrngSystemContract
+  
+  BLSSignatureVerification:
+    name: BLS Signature Verification Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: BLSSignature
 
   PublishResults:
     name: Publish Results
@@ -121,6 +127,10 @@ jobs:
       - HIP583
       - Multicall
       - HRC
+      - ShanghaiOpcodes
+      - PrngSystemContract
+      - BLSSignatureVerification
+
 
     runs-on: [self-hosted, Linux, large, ephemeral]
     steps:

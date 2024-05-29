@@ -1,0 +1,6 @@
+services:
+  slither:
+    build: slither-analysis # WITH ecrecover DETECTOR preinstalled!
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    entrypoint: ["sleep", "infinity"]
