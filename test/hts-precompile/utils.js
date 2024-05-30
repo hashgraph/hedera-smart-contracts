@@ -579,10 +579,6 @@ class Utils {
     }
   }
 
-  static keyListFromContractAddressAndKey(key, contract) {
-    return new KeyList([key, ContractId.fromEvmAddress(0, 0, contract.address)]);
-  }
-
   static async updateTokenKeysViaHapi(
     tokenAddress,
     contractAddresses,
@@ -627,7 +623,7 @@ class Utils {
     if (setSupply) tx.setSupplyKey(keyList);
     if (setWipe) tx.setWipeKey(keyList);
 
-    return await (
+    await (
       await tx.freezeWith(clientSigner0).sign(pkSigners[0])
     ).execute(clientSigner0);
   }
