@@ -31,7 +31,9 @@ describe('@OZERC721 Test Suite', function () {
   before(async function () {
     signers = await ethers.getSigners();
 
-    const factory = await ethers.getContractFactory(Constants.Path.ERC721Mock);
+    const factory = await ethers.getContractFactory(
+      Constants.Contract.OZERC721Mock
+    );
     erc721 = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL');
     await erc721.mint(signers[0].address, tokenId);
   });

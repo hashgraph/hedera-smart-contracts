@@ -33,7 +33,7 @@ describe('@OZTokenVault Test Suite', function () {
   let addrs;
 
   beforeEach(async function () {
-    ERC20Mock = await ethers.getContractFactory(Constants.Path.ERC20Mock);
+    ERC20Mock = await ethers.getContractFactory(Constants.Contract.OZERC20Mock);
     asset = await ERC20Mock.deploy(
       'MockToken',
       'MTK',
