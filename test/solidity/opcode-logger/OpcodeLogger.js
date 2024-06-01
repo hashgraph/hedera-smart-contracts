@@ -170,7 +170,7 @@ const opcodeLoggerAbi = [
   }
 ];
 
-describe.only('Opcode Logger', async function () {
+describe('Opcode Logger', async function () {
   let signers;
   let randomAddress;
   let opcodesBesuJson;
