@@ -7,7 +7,7 @@ const {ethers} = hre;
 const BESU_RESULTS_JSON_PATH = __dirname + '/opcodeLoggerBesuResults.json';
 const IS_BESU_NETWORK = hre.network.name === 'besu_local';
 
-describe.only('Opcode Logger', async function () {
+describe('Opcode Logger', async function () {
   let signers;
   let randomAddress;
   let opcodeLogger;
@@ -67,7 +67,6 @@ describe.only('Opcode Logger', async function () {
     await updateBesuResponsesIfNeeded('updateOwner', res.hash);
     compareOutputs('updateOwner', await executeDebugTraceTransaction(res.hash));
   });
-
 
   it('should be able to execute resetCounter()', async function () {
     const res = await (await opcodeLogger.resetCounter({gasLimit: 1_000_000})).wait();
