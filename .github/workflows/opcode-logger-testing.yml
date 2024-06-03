@@ -1,0 +1,50 @@
+name: Opcode logger testing
+
+on:
+  pull_request:
+    branches: [ main, release/** ]
+  push:
+    branches: [ main, release/** ]
+    tags: [ v* ]
+
+jobs:
+  check:
+    name:
+      Opcode logger testing against besu's reponse
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Use Node.js [18.15]
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: 18.15
+          cache: npm
+
+      - name: Create .env file
+        run: cp local.env .env
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Upgrade @hashgraph/hedera-local to v2.25.3
+        run: npm install @hashgraph/hedera-local@2.25.3 --save
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@8f1998e9878d786675189ef566a2e4bf24869773 # v1.2.0
+        with:
+          version: nightly
+
+      - name: Run besu node
+        run: npm run besu:start
+
+      - name: Run opcode tests against besu
+        run: npx hardhat test --grep @OpcodeLogger --network besu_local
+
+      - name: Start the hedera local node
+        run: npx hedera start -d
+
+      - name: Run opcode tests against hedera local node
+        run: npx hardhat test --grep @OpcodeLogger

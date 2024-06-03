@@ -7,7 +7,7 @@ const {ethers} = hre;
 const BESU_RESULTS_JSON_PATH = __dirname + '/opcodeLoggerBesuResults.json';
 const IS_BESU_NETWORK = hre.network.name === 'besu_local';
 
-describe('Opcode Logger', async function () {
+describe('@OpcodeLogger Test Suite', async function () {
   let signers;
   let randomAddress;
   let opcodeLogger;
