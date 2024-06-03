@@ -114,6 +114,7 @@ const Contract = {
   Inheritance: 'Inheritance',
   Functions: 'Functions',
   FunctionsChild: 'FunctionsChild',
+  OpcodeLogger: 'OpcodeLogger',
   FunctionsParent: 'FunctionsParent',
   Scoping: 'Scoping',
   Arithmetic: 'Arithmetic',
