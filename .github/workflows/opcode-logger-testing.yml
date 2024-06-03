@@ -10,8 +10,8 @@ on:
 jobs:
   check:
     name:
-      Opcode logger testing against besu's reponse
-    runs-on: [ ubuntu-latest ]
+      Opcode logger comparison between besu and hedera
+    runs-on: [self-hosted, Linux, large, ephemeral]
     steps:
       - uses: actions/checkout@v4
         with:
