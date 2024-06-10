@@ -23,10 +23,13 @@ const Utils = require('../utils');
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
+const {
+  pollForNewSignerBalanceUsingProvider,
+} = require('../../../utils/helpers');
 
 describe('@CryptoAllowance Test Suite', () => {
-  let walletA, walletB, walletC, CryptoAllowanceContract;
-  const amount = 3_000_000;
+  let walletA, walletB, walletC, cryptoAllowanceContract;
+  const amount = 3000;
 
   before(async () => {
     [walletA, walletB, walletC, receiver] = await ethers.getSigners();
@@ -35,13 +38,13 @@ describe('@CryptoAllowance Test Suite', () => {
       Constants.Contract.CryptoAllowance
     );
 
-    CryptoAllowanceContract = await CryptoAllowanceFactory.deploy();
-    await CryptoAllowanceContract.waitForDeployment();
+    cryptoAllowanceContract = await CryptoAllowanceFactory.deploy();
+    await cryptoAllowanceContract.waitForDeployment();
   });
 
   it('Should execute hbarApprovePublic and return success response code', async () => {
-    const tx = await CryptoAllowanceContract.hbarApprovePublic(
-      CryptoAllowanceContract.target,
+    const tx = await cryptoAllowanceContract.hbarApprovePublic(
+      cryptoAllowanceContract.target,
       walletA.address,
       amount,
       Constants.GAS_LIMIT_1_000_000
@@ -54,16 +57,16 @@ describe('@CryptoAllowance Test Suite', () => {
   });
 
   it('Should execute hbarAllowancePublic and return an event with the allowance information', async () => {
-    const approveTx = await CryptoAllowanceContract.hbarApprovePublic(
-      CryptoAllowanceContract.target,
+    const approveTx = await cryptoAllowanceContract.hbarApprovePublic(
+      cryptoAllowanceContract.target,
       walletB.address,
       amount,
       Constants.GAS_LIMIT_1_000_000
     );
     await approveTx.wait();
 
-    const allowanceTx = await CryptoAllowanceContract.hbarAllowancePublic(
-      CryptoAllowanceContract.target,
+    const allowanceTx = await cryptoAllowanceContract.hbarAllowancePublic(
+      cryptoAllowanceContract.target,
       walletB.address,
       Constants.GAS_LIMIT_1_000_000
     );
@@ -75,7 +78,7 @@ describe('@CryptoAllowance Test Suite', () => {
     const logs = receipt.logs.find((l) => l.fragment.name === 'HbarAllowance');
 
     expect(responseCode.args).to.deep.eq([22n]);
-    expect(logs.args[0]).to.eq(CryptoAllowanceContract.target);
+    expect(logs.args[0]).to.eq(cryptoAllowanceContract.target);
     expect(logs.args[1]).to.eq(walletB.address);
     expect(logs.args[2]).to.eq(amount);
   });
@@ -84,11 +87,11 @@ describe('@CryptoAllowance Test Suite', () => {
     // update accountKeys
     const ecdsaPrivateKeys = await Utils.getHardhatSignersPrivateKeys(false);
     await utils.updateAccountKeysViaHapi(
-      [CryptoAllowanceContract.target],
+      [cryptoAllowanceContract.target],
       [ecdsaPrivateKeys[0]] // walletA's key
     );
 
-    const approveTx = await CryptoAllowanceContract.hbarApprovePublic(
+    const approveTx = await cryptoAllowanceContract.hbarApprovePublic(
       walletA.address,
       walletB.address,
       amount,
@@ -96,7 +99,7 @@ describe('@CryptoAllowance Test Suite', () => {
     );
     await approveTx.wait();
 
-    const allowanceTx = await CryptoAllowanceContract.hbarAllowancePublic(
+    const allowanceTx = await cryptoAllowanceContract.hbarAllowancePublic(
       walletA.address,
       walletB.address,
       Constants.GAS_LIMIT_1_000_000
@@ -116,7 +119,7 @@ describe('@CryptoAllowance Test Suite', () => {
 
   it('Should NOT allow an approval on behalf of hbar owner WINTHOUT its signature', async () => {
     try {
-      const tx = await CryptoAllowanceContract.hbarApprovePublic(
+      const tx = await cryptoAllowanceContract.hbarApprovePublic(
         walletB.address, // random EOA hbar owner
         walletC.address,
         amount,
@@ -124,6 +127,108 @@ describe('@CryptoAllowance Test Suite', () => {
       );
       await tx.wait();
       expect(false).to.be.true;
+    } catch (e) {
+      expect(e).to.exist;
+      expect(e.code).to.eq(Constants.CALL_EXCEPTION);
+    }
+  });
+
+  it('Should allow owner to grant an allowance to spender using IHRC632 and spender to transfer allowance to receiver on behalf of owner', async () => {
+    // set up IHRC632
+    const IHRC632 = new ethers.Interface(
+      (await hre.artifacts.readArtifact('IHRC632')).abi
+    );
+
+    const walletAIHrc632 = new ethers.Contract(
+      walletA.address,
+      IHRC632,
+      walletA
+    );
+
+    // grant an allowance to cryptoAllowanceContract
+    const approveTx = await walletAIHrc632.hbarApprove(
+      cryptoAllowanceContract.target,
+      amount,
+      Constants.GAS_LIMIT_1_000_000
+    );
+    await approveTx.wait();
+
+    // cryptoTransferPublic
+    const cryptoTransfers = {
+      transfers: [
+        {
+          accountID: walletA.address,
+          amount: amount * -1,
+          isApproval: false,
+        },
+        {
+          accountID: walletC.address,
+          amount,
+          isApproval: false,
+        },
+      ],
+    };
+    const tokenTransferList = [];
+
+    const walletABefore = await walletA.provider.getBalance(walletA.address);
+    const walletCBefore = await walletC.provider.getBalance(walletC.address);
+
+    const cryptoTransferTx = await cryptoAllowanceContract.cryptoTransferPublic(
+      cryptoTransfers,
+      tokenTransferList,
+      Constants.GAS_LIMIT_1_000_000
+    );
+
+    const cryptoTransferReceipt = await cryptoTransferTx.wait();
+
+    const responseCode = cryptoTransferReceipt.logs.find(
+      (l) => l.fragment.name === 'ResponseCode'
+    ).args[0];
+
+    const walletAAfter = await pollForNewSignerBalanceUsingProvider(
+      walletA.provider,
+      walletA.address,
+      walletABefore
+    );
+
+    const walletCAfter = await pollForNewSignerBalanceUsingProvider(
+      walletC.provider,
+      walletC.address,
+      walletCBefore
+    );
+
+    expect(responseCode).to.equal(22n);
+    expect(walletABefore > walletAAfter).to.equal(true);
+    expect(walletCBefore < walletCAfter).to.equal(true);
+  });
+
+  it('Should NOT allow a spender to spend hbar on behalf of owner without an allowance grant', async () => {
+    const cryptoTransfers = {
+      transfers: [
+        {
+          accountID: walletB.address,
+          amount: amount * -1,
+          isApproval: false,
+        },
+        {
+          accountID: walletC.address,
+          amount,
+          isApproval: false,
+        },
+      ],
+    };
+    const tokenTransferList = [];
+
+    try {
+      const cryptoTransferTx = await cryptoAllowanceContract
+        .connect(walletB)
+        .cryptoTransferPublic(
+          cryptoTransfers,
+          tokenTransferList,
+          Constants.GAS_LIMIT_1_000_000
+        );
+      await cryptoTransferTx.wait();
+      expect(true).to.eq(false);
     } catch (e) {
       expect(e).to.exist;
       expect(e.code).to.eq(Constants.CALL_EXCEPTION);

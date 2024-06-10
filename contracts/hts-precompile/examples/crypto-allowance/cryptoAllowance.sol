@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
+import "../../HederaTokenService.sol";
 import "../../HederaAccountService.sol";
 
-contract CryptoAllowance is HederaAccountService {
+contract CryptoAllowance is HederaAccountService, HederaTokenService {
     event ResponseCode(int responseCode);
     event HbarAllowance(address owner, address spender, int256 amount);
 
@@ -23,5 +24,14 @@ contract CryptoAllowance is HederaAccountService {
             revert();
         }
         emit HbarAllowance(owner, spender, amount);
+    }
+
+    function cryptoTransferPublic(IHederaTokenService.TransferList calldata transferList, IHederaTokenService.TokenTransferList[] calldata tokenTransferList) public returns (int responseCode) {
+        responseCode = HederaTokenService.cryptoTransfer(transferList, tokenTransferList);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
     }
 }
