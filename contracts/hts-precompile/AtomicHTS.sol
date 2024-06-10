@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.20;
 
-import "./IHRC.sol";
+import "./IHRC719.sol";
 import "./HederaTokenService.sol";
 import "./IHederaTokenService.sol";
 
