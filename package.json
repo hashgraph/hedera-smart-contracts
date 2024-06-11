@@ -38,7 +38,7 @@
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
     "@openzeppelin/hardhat-upgrades": "^3.1.0",
-    "hardhat": "^2.22.4",
+    "hardhat": "^2.22.5",
     "hardhat-abi-exporter": "^2.10.1",
     "husky": "^9.0.11",
     "mocha-junit-reporter": "^2.2.0",
