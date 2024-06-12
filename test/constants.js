@@ -197,6 +197,7 @@ const Contract = {
   AtomicHTS: 'AtomicHTS',
   BLSTest: 'BLSTest',
   CryptoAllowance: 'CryptoAllowance',
+  CryptoOwner: 'CryptoOwner',
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';

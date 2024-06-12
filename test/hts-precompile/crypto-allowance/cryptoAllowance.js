@@ -28,18 +28,39 @@ const {
 } = require('../../../utils/helpers');
 
 describe('@CryptoAllowance Test Suite', () => {
-  let walletA, walletB, walletC, cryptoAllowanceContract;
+  let walletA,
+    walletB,
+    walletC,
+    cryptoAllowanceContract,
+    cryptoOwnerContract,
+    IHRC632;
   const amount = 3000;
 
   before(async () => {
     [walletA, walletB, walletC, receiver] = await ethers.getSigners();
 
+    // deploy cyprtoAllowanceContract
     const CryptoAllowanceFactory = await ethers.getContractFactory(
       Constants.Contract.CryptoAllowance
     );
-
     cryptoAllowanceContract = await CryptoAllowanceFactory.deploy();
     await cryptoAllowanceContract.waitForDeployment();
+
+    // deploy cryptoOwnerContract
+    const CryptoOwnerFactory = await ethers.getContractFactory(
+      Constants.Contract.CryptoOwner
+    );
+    cryptoOwnerContract = await CryptoOwnerFactory.deploy();
+    await cryptoOwnerContract.waitForDeployment();
+
+    // transfer funds to cryptoOwnerContract
+    await (
+      await walletA.sendTransaction({
+        to: cryptoOwnerContract.target,
+        value: ethers.parseEther('30'),
+        gasLimit: 1_000_000,
+      })
+    ).wait();
   });
 
   it('Should execute hbarApprovePublic and return success response code', async () => {
@@ -200,6 +221,51 @@ describe('@CryptoAllowance Test Suite', () => {
     expect(responseCode).to.equal(22n);
     expect(walletABefore > walletAAfter).to.equal(true);
     expect(walletCBefore < walletCAfter).to.equal(true);
+  });
+
+  it('Should allow an crypto owner contract account to grant an allowance to a spender contract account to transfer allowance to a receiver on hebalf of owner contract acccount', async () => {
+    // crypto owner contract account's balance before the transfer
+    const cryptoOwnerContractBalanceBefore = await ethers.provider.getBalance(
+      cryptoOwnerContract.target
+    );
+    // receiver's balance before the transfer
+    const walletCBefore = await walletC.provider.getBalance(walletC.address);
+
+    // initialize crypto transfer
+    const tx = await cryptoOwnerContract.cryptoTransfer(
+      cryptoAllowanceContract.target,
+      amount,
+      walletC.address,
+      Constants.GAS_LIMIT_1_000_000
+    );
+
+    // resolve logs
+    const receipt = await tx.wait();
+    const responseCode = receipt.logs.find(
+      (l) => l.fragment.name === 'ResponseCode'
+    ).args[0];
+
+    // crypto owner contract account's balance after the transfer
+    const cryptoOwnerContractBalanceAfter =
+      await pollForNewSignerBalanceUsingProvider(
+        ethers.provider,
+        cryptoOwnerContract.target,
+        cryptoOwnerContractBalanceBefore
+      );
+
+    // receiver's balance after the transfer
+    const walletCAfter = await pollForNewSignerBalanceUsingProvider(
+      walletC.provider,
+      walletC.address,
+      walletCBefore
+    );
+
+    // assertion
+    expect(responseCode).to.equal(22n);
+    expect(walletCBefore < walletCAfter).to.equal(true);
+    expect(
+      cryptoOwnerContractBalanceBefore > cryptoOwnerContractBalanceAfter
+    ).to.equal(true);
   });
 
   it('Should NOT allow a spender to spend hbar on behalf of owner without an allowance grant', async () => {
