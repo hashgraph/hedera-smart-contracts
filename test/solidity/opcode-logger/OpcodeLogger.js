@@ -19,8 +19,8 @@ describe('@OpcodeLogger Test Suite', async function () {
     randomAddress = (ethers.Wallet.createRandom()).address;
     besuResults = JSON.parse(fs.readFileSync(BESU_RESULTS_JSON_PATH));
 
-    const factory = await ethers.getContractFactory(Constants.Contract.OpcodeLogger);
-    opcodeLogger = await factory.deploy();
+    const factoryOpcodeLogger = await ethers.getContractFactory(Constants.Contract.OpcodeLogger);
+    opcodeLogger = await factoryOpcodeLogger.deploy();
     await opcodeLogger.waitForDeployment();
   });
 
@@ -62,39 +62,750 @@ describe('@OpcodeLogger Test Suite', async function () {
     }
   }
 
-  it('should be able to execute updateOwner()', async function () {
-    const res = await (await opcodeLogger.updateOwner({gasLimit: 1_000_000})).wait();
-    await updateBesuResponsesIfNeeded('updateOwner', res.hash);
-    compareOutputs('updateOwner', await executeDebugTraceTransaction(res.hash));
+  describe('besu comparison', async function () {
+    it('should be able to execute updateOwner()', async function () {
+      const res = await (await opcodeLogger.updateOwner({gasLimit: 1_000_000})).wait();
+      await updateBesuResponsesIfNeeded('updateOwner', res.hash);
+      compareOutputs('updateOwner', await executeDebugTraceTransaction(res.hash));
+    });
+
+    it('should be able to execute resetCounter()', async function () {
+      const res = await (await opcodeLogger.resetCounter({gasLimit: 1_000_000})).wait();
+      await updateBesuResponsesIfNeeded('resetCounter', res.hash);
+      compareOutputs('resetCounter', await executeDebugTraceTransaction(res.hash));
+    });
+
+    it('should be able to execute call()', async function () {
+      const res = await (await opcodeLogger.call(randomAddress, '0x056440', {gasLimit: 1_000_000})).wait();
+      await updateBesuResponsesIfNeeded('call', res.hash);
+      compareOutputs('call', await executeDebugTraceTransaction(res.hash));
+    });
+
+    it('should be able to execute staticCall()', async function () {
+      const res = await (await opcodeLogger.staticCall(randomAddress, '0x056440', {gasLimit: 1_000_000})).wait();
+      await updateBesuResponsesIfNeeded('staticCall', res.hash);
+      compareOutputs('staticCall', await executeDebugTraceTransaction(res.hash));
+    });
+
+    it('should be able to execute callCode()', async function () {
+      const res = await (await opcodeLogger.callCode(randomAddress, '0x056440', {gasLimit: 1_000_000})).wait();
+      await updateBesuResponsesIfNeeded('callCode', res.hash);
+      compareOutputs('callCode', await executeDebugTraceTransaction(res.hash));
+    });
+
+    it('should be able to execute delegateCall()', async function () {
+      const res = await (await opcodeLogger.delegateCall(randomAddress, '0x056440', {gasLimit: 1_000_000})).wait();
+      await updateBesuResponsesIfNeeded('delegateCall', res.hash);
+      compareOutputs('delegateCall', await executeDebugTraceTransaction(res.hash));
+    });
   });
 
-  it('should be able to execute resetCounter()', async function () {
-    const res = await (await opcodeLogger.resetCounter({gasLimit: 1_000_000})).wait();
-    await updateBesuResponsesIfNeeded('resetCounter', res.hash);
-    compareOutputs('resetCounter', await executeDebugTraceTransaction(res.hash));
+  const txTypeSpecificSuitesConfig = {
+    'type 0 tx suite': {gasLimit: 1_000_000, gasPrice: 710_000_000_000},
+    'type 1 tx suite': {gasLimit: 1_000_000, gasPrice: 710_000_000_000, accessList: []},
+    'type 2 tx suite': {gasLimit: 1_000_000},
+  };
+  for (let suiteName in txTypeSpecificSuitesConfig) {
+    const txTypeSpecificOverrides = txTypeSpecificSuitesConfig[suiteName];
+    describe(suiteName, async function () {
+      it('successful CREATE transaction with disabledMemory, disabledStack, disabledStorage set to false', async function () {
+        const factory = await ethers.getContractFactory(Constants.Contract.Base);
+        const contract = await factory.deploy(txTypeSpecificOverrides);
+        await contract.waitForDeployment();
+
+        const {hash} = await contract.deploymentTransaction();
+        const res = await executeDebugTraceTransaction(hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: false,
+          disableMemory: false,
+          disableStack: false
+        });
+
+        expect(res.failed).to.be.false;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.not.equal(null);
+          expect(sl.memory).to.not.equal(null);
+          expect(sl.stack).to.not.equal(null);
+        });
+      });
+
+      it('failing CREATE transaction with disabledMemory, disabledStack, disabledStorage set to false', async function () {
+        const factory = await ethers.getContractFactory(Constants.Contract.Base);
+        const contract = await factory.deploy({...txTypeSpecificOverrides, gasLimit: 25484});
+        await expect(contract.waitForDeployment()).to.be.rejectedWith(Error);
+
+        const {hash} = await contract.deploymentTransaction();
+        const res = await executeDebugTraceTransaction(hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: false,
+          disableMemory: false,
+          disableStack: false
+        });
+
+        expect(res.failed).to.be.true;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.not.equal(null);
+          expect(sl.memory).to.not.equal(null);
+          expect(sl.stack).to.not.equal(null);
+        });
+      });
+
+      it('successful CREATE transaction with disabledMemory, disabledStack, disabledStorage set to true', async function () {
+        const factory = await ethers.getContractFactory(Constants.Contract.Base);
+        const contract = await factory.deploy(txTypeSpecificOverrides);
+        await contract.waitForDeployment();
+
+        const {hash} = await contract.deploymentTransaction();
+        const res = await executeDebugTraceTransaction(hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: true,
+          disableMemory: true,
+          disableStack: true
+        });
+
+        expect(res.failed).to.be.false;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.equal(null);
+          expect(sl.memory).to.equal(null);
+          expect(sl.stack).to.equal(null);
+        });
+      });
+
+      it('failing CREATE transaction with disabledMemory, disabledStack, disabledStorage set to true', async function () {
+        const factory = await ethers.getContractFactory(Constants.Contract.Base);
+        const contract = await factory.deploy({...txTypeSpecificOverrides, gasLimit: 25484});
+        await expect(contract.waitForDeployment()).to.be.rejectedWith(Error);
+
+        const {hash} = await contract.deploymentTransaction();
+        const res = await executeDebugTraceTransaction(hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: true,
+          disableMemory: true,
+          disableStack: true
+        });
+
+        expect(res.failed).to.be.true;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.equal(null);
+          expect(sl.memory).to.equal(null);
+          expect(sl.stack).to.equal(null);
+        });
+      });
+
+      it('successful CREATE transaction with disabledMemory set to false, disabledStack, disabledStorage set to true', async function () {
+        const factory = await ethers.getContractFactory(Constants.Contract.Base);
+        const contract = await factory.deploy(txTypeSpecificOverrides);
+        await contract.waitForDeployment();
+
+        const {hash} = await contract.deploymentTransaction();
+        const res = await executeDebugTraceTransaction(hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: true,
+          disableMemory: false,
+          disableStack: true
+        });
+
+        expect(res.failed).to.be.false;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.equal(null);
+          expect(sl.memory).to.not.equal(null);
+          expect(sl.stack).to.equal(null);
+        });
+      });
+
+      it('failing CREATE transaction with disabledMemory set to false, disabledStack, disabledStorage set to true', async function () {
+        const factory = await ethers.getContractFactory(Constants.Contract.Base);
+        const contract = await factory.deploy({...txTypeSpecificOverrides, gasLimit: 25484});
+        await expect(contract.waitForDeployment()).to.be.rejectedWith(Error);
+
+        const {hash} = await contract.deploymentTransaction();
+        const res = await executeDebugTraceTransaction(hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: true,
+          disableMemory: false,
+          disableStack: true
+        });
+
+        expect(res.failed).to.be.true;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.equal(null);
+          expect(sl.memory).to.not.equal(null);
+          expect(sl.stack).to.equal(null);
+        });
+      });
+
+      it('successful CREATE transaction with disabledStack set to false, disabledMemory, disabledStorage set to true', async function () {
+        const factory = await ethers.getContractFactory(Constants.Contract.Base);
+        const contract = await factory.deploy(txTypeSpecificOverrides);
+        await contract.waitForDeployment();
+
+        const {hash} = await contract.deploymentTransaction();
+        const res = await executeDebugTraceTransaction(hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: true,
+          disableMemory: true,
+          disableStack: false
+        });
+
+        expect(res.failed).to.be.false;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.equal(null);
+          expect(sl.memory).to.equal(null);
+          expect(sl.stack).to.not.equal(null);
+        });
+      });
+
+      it('failing CREATE transaction with disabledStack set to false, disabledMemory, disabledStorage set to true', async function () {
+        const factory = await ethers.getContractFactory(Constants.Contract.Base);
+        const contract = await factory.deploy({...txTypeSpecificOverrides, gasLimit: 25484});
+        await expect(contract.waitForDeployment()).to.be.rejectedWith(Error);
+
+        const {hash} = await contract.deploymentTransaction();
+        const res = await executeDebugTraceTransaction(hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: true,
+          disableMemory: true,
+          disableStack: false
+        });
+
+        expect(res.failed).to.be.true;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.equal(null);
+          expect(sl.memory).to.equal(null);
+          expect(sl.stack).to.not.equal(null);
+        });
+      });
+
+      it('successful CREATE transaction with disabledStorage set to false, disabledMemory, disabledStack set to true', async function () {
+        const factory = await ethers.getContractFactory(Constants.Contract.Base);
+        const contract = await factory.deploy(txTypeSpecificOverrides);
+        await contract.waitForDeployment();
+
+        const {hash} = await contract.deploymentTransaction();
+        const res = await executeDebugTraceTransaction(hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: false,
+          disableMemory: true,
+          disableStack: true
+        });
+
+        expect(res.failed).to.be.false;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.not.equal(null);
+          expect(sl.memory).to.equal(null);
+          expect(sl.stack).to.equal(null);
+        });
+      });
+
+      it('failing CREATE transaction with disabledStorage set to false, disabledMemory, disabledStack set to true', async function () {
+        const factory = await ethers.getContractFactory(Constants.Contract.Base);
+        const contract = await factory.deploy({...txTypeSpecificOverrides, gasLimit: 25484});
+        await expect(contract.waitForDeployment()).to.be.rejectedWith(Error);
+
+        const {hash} = await contract.deploymentTransaction();
+        const res = await executeDebugTraceTransaction(hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: false,
+          disableMemory: true,
+          disableStack: true
+        });
+
+        expect(res.failed).to.be.true;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.not.equal(null);
+          expect(sl.memory).to.equal(null);
+          expect(sl.stack).to.equal(null);
+        });
+      });
+
+      it('successful CALL transaction with disabledMemory, disabledStack, disabledStorage set to true', async function () {
+        const tx = await opcodeLogger.resetCounter(txTypeSpecificOverrides);
+        await tx.wait();
+        const res = await executeDebugTraceTransaction(tx.hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: true,
+          disableMemory: true,
+          disableStack: true
+        });
+
+        expect(res.failed).to.be.false;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.equal(null);
+          expect(sl.memory).to.equal(null);
+          expect(sl.stack).to.equal(null);
+        });
+      });
+
+      it('failing CALL transaction with disabledMemory, disabledStack, disabledStorage set to true', async function () {
+        const tx = await opcodeLogger.resetCounter({...txTypeSpecificOverrides, gasLimit: 21_064});
+        await expect(tx.wait()).to.be.rejectedWith(Error);
+        const res = await executeDebugTraceTransaction(tx.hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: true,
+          disableMemory: true,
+          disableStack: true
+        });
+
+        expect(res.failed).to.be.true;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.equal(null);
+          expect(sl.memory).to.equal(null);
+          expect(sl.stack).to.equal(null);
+        });
+      });
+
+      it('successful CALL transaction with disabledMemory, disabledStack, disabledStorage set to false', async function () {
+        const tx = await opcodeLogger.resetCounter(txTypeSpecificOverrides);
+        await tx.wait();
+        const res = await executeDebugTraceTransaction(tx.hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: false,
+          disableMemory: false,
+          disableStack: false
+        });
+
+        expect(res.failed).to.be.false;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.not.equal(null);
+          expect(sl.memory).to.not.equal(null);
+          expect(sl.stack).to.not.equal(null);
+        });
+      });
+
+      it('failing CALL transaction with disabledMemory, disabledStack, disabledStorage set to false', async function () {
+        const tx = await opcodeLogger.resetCounter({...txTypeSpecificOverrides, gasLimit: 21_064});
+        await expect(tx.wait()).to.be.rejectedWith(Error);
+        const res = await executeDebugTraceTransaction(tx.hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: false,
+          disableMemory: false,
+          disableStack: false
+        });
+
+        expect(res.failed).to.be.true;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.not.equal(null);
+          expect(sl.memory).to.not.equal(null);
+          expect(sl.stack).to.not.equal(null);
+        });
+      });
+      it('successful CALL transaction with disabledMemory set to false, disabledStack, disabledStorage set to true', async function () {
+        const tx = await opcodeLogger.resetCounter(txTypeSpecificOverrides);
+        await tx.wait();
+        const res = await executeDebugTraceTransaction(tx.hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: true,
+          disableMemory: false,
+          disableStack: true
+        });
+
+        expect(res.failed).to.be.false;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.equal(null);
+          expect(sl.memory).to.not.equal(null);
+          expect(sl.stack).to.equal(null);
+        });
+      });
+
+      it('failing CALL transaction with disabledMemory set to false, disabledStack, disabledStorage set to true', async function () {
+        const tx = await opcodeLogger.resetCounter({...txTypeSpecificOverrides, gasLimit: 21_064});
+        await expect(tx.wait()).to.be.rejectedWith(Error);
+        const res = await executeDebugTraceTransaction(tx.hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: true,
+          disableMemory: false,
+          disableStack: true
+        });
+
+        expect(res.failed).to.be.true;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.equal(null);
+          expect(sl.memory).to.not.equal(null);
+          expect(sl.stack).to.equal(null);
+        });
+      });
+
+      it('successful CALL transaction with disabledStack set to false, disabledMemory, disabledStorage set to true', async function () {
+        const tx = await opcodeLogger.resetCounter(txTypeSpecificOverrides);
+        await tx.wait();
+        const res = await executeDebugTraceTransaction(tx.hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: true,
+          disableMemory: true,
+          disableStack: false
+        });
+
+        expect(res.failed).to.be.false;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.equal(null);
+          expect(sl.memory).to.equal(null);
+          expect(sl.stack).to.not.equal(null);
+        });
+      });
+
+      it('failing CALL transaction with disabledStack set to false, disabledMemory, disabledStorage set to true', async function () {
+        const tx = await opcodeLogger.resetCounter({...txTypeSpecificOverrides, gasLimit: 21_064});
+        await expect(tx.wait()).to.be.rejectedWith(Error);
+        const res = await executeDebugTraceTransaction(tx.hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: true,
+          disableMemory: true,
+          disableStack: false
+        });
+
+        expect(res.failed).to.be.true;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.equal(null);
+          expect(sl.memory).to.equal(null);
+          expect(sl.stack).to.not.equal(null);
+        });
+      });
+
+      it('successful CALL transaction with disabledStorage set to false, disabledMemory, disabledStack set to true', async function () {
+        const tx = await opcodeLogger.resetCounter(txTypeSpecificOverrides);
+        await tx.wait();
+        const res = await executeDebugTraceTransaction(tx.hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: false,
+          disableMemory: true,
+          disableStack: true
+        });
+
+        expect(res.failed).to.be.false;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.not.equal(null);
+          expect(sl.memory).to.equal(null);
+          expect(sl.stack).to.equal(null);
+        });
+      });
+
+      it('failing CALL transaction with disabledStorage set to false, disabledMemory, disabledStack set to true', async function () {
+        const tx = await opcodeLogger.resetCounter({...txTypeSpecificOverrides, gasLimit: 21_064});
+        await expect(tx.wait()).to.be.rejectedWith(Error);
+        const res = await executeDebugTraceTransaction(tx.hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: false,
+          disableMemory: true,
+          disableStack: true
+        });
+
+        expect(res.failed).to.be.true;
+        expect(res.structLogs.length).to.be.greaterThan(0);
+        res.structLogs.map(function (sl) {
+          expect(sl.storage).to.not.equal(null);
+          expect(sl.memory).to.equal(null);
+          expect(sl.stack).to.equal(null);
+        });
+      });
+    });
+  }
+
+  describe('nested calls', async function () {
+    let errorsExternal;
+
+    before(async () => {
+      const factoryErrorsExternal = await ethers.getContractFactory(Constants.Contract.ErrorsExternal);
+      errorsExternal = await factoryErrorsExternal.deploy();
+      await errorsExternal.waitForDeployment();
+    });
+
+    it('successful NESTED CALL to existing contract with disabledMemory, disabledStack, disabledStorage set to true', async function () {
+      const tx = await opcodeLogger.call(opcodeLogger.target, '0xdbdf7fce'); // calling resetCounter()
+      await tx.wait();
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: true,
+        disableMemory: true,
+        disableStack: true
+      });
+
+      expect(res.failed).to.be.false;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.equal(null);
+        expect(sl.memory).to.equal(null);
+        expect(sl.stack).to.equal(null);
+      });
+    });
+
+    it('failing NESTED CALL to existing contract with disabledMemory, disabledStack, disabledStorage set to true', async function () {
+      const tx = await opcodeLogger.call(errorsExternal.target, '0xe3fdf09c'); // calling revertSimple()
+      await tx.wait();
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: true,
+        disableMemory: true,
+        disableStack: true
+      });
+
+      expect(res.failed).to.be.false
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.equal(null);
+        expect(sl.memory).to.equal(null);
+        expect(sl.stack).to.equal(null);
+      });
+    });
+
+    it('successful NESTED CALL to existing contract with disabledMemory, disabledStack, disabledStorage set to false', async function () {
+      const tx = await opcodeLogger.call(opcodeLogger.target, '0xdbdf7fce'); // calling resetCounter()
+      await tx.wait();
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: false,
+        disableMemory: false,
+        disableStack: false
+      });
+
+      expect(res.failed).to.be.false;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.not.equal(null);
+        expect(sl.memory).to.not.equal(null);
+        expect(sl.stack).to.not.equal(null);
+      });
+    });
+
+    it('failing NESTED CALL to existing contract with disabledMemory, disabledStack, disabledStorage set to false', async function () {
+      const tx = await opcodeLogger.call(errorsExternal.target, '0xe3fdf09c'); // calling revertSimple()
+      await tx.wait();
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: false,
+        disableMemory: false,
+        disableStack: false
+      });
+
+      expect(res.failed).to.be.false
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.not.equal(null);
+        expect(sl.memory).to.not.equal(null);
+        expect(sl.stack).to.not.equal(null);
+      });
+    });
+
+    it('successful NESTED CALL to existing contract with disabledMemory set to false, disabledStack, disabledStorage set to true', async function () {
+      const tx = await opcodeLogger.call(opcodeLogger.target, '0xdbdf7fce'); // calling resetCounter()
+      await tx.wait();
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: true,
+        disableMemory: false,
+        disableStack: true
+      });
+
+      expect(res.failed).to.be.false;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.equal(null);
+        expect(sl.memory).to.not.equal(null);
+        expect(sl.stack).to.equal(null);
+      });
+    });
+
+    it('failing NESTED CALL to existing contract with disabledMemory set to false, disabledStack, disabledStorage set to true', async function () {
+      const tx = await opcodeLogger.call(errorsExternal.target, '0xe3fdf09c'); // calling revertSimple()
+      await tx.wait();
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: true,
+        disableMemory: false,
+        disableStack: true
+      });
+
+      expect(res.failed).to.be.false;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.equal(null);
+        expect(sl.memory).to.not.equal(null);
+        expect(sl.stack).to.equal(null);
+      });
+    });
+
+    it('successful NESTED CALL to existing contract with disabledStack set to false, disabledMemory, disabledStorage set to true', async function () {
+      const tx = await opcodeLogger.call(opcodeLogger.target, '0xdbdf7fce'); // calling resetCounter()
+      await tx.wait();
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: true,
+        disableMemory: true,
+        disableStack: false
+      });
+
+      expect(res.failed).to.be.false;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.equal(null);
+        expect(sl.memory).to.equal(null);
+        expect(sl.stack).to.not.equal(null);
+      });
+    });
+
+    it('failing NESTED CALL to existing contract with disabledStack set to false, disabledMemory, disabledStorage set to true', async function () {
+      const tx = await opcodeLogger.call(errorsExternal.target, '0xe3fdf09c'); // calling revertSimple()
+      await tx.wait();
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: true,
+        disableMemory: true,
+        disableStack: false
+      });
+
+      expect(res.failed).to.be.false;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.equal(null);
+        expect(sl.memory).to.equal(null);
+        expect(sl.stack).to.not.equal(null);
+      });
+    });
+
+    it('successful NESTED CALL to existing contract with disabledStorage set to false, disabledMemory, disabledStack set to true', async function () {
+      const tx = await opcodeLogger.call(opcodeLogger.target, '0xdbdf7fce'); // calling resetCounter()
+      await tx.wait();
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: false,
+        disableMemory: true,
+        disableStack: true
+      });
+
+      expect(res.failed).to.be.false;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.not.equal(null);
+        expect(sl.memory).to.equal(null);
+        expect(sl.stack).to.equal(null);
+      });
+    });
+
+    it('failing NESTED CALL to existing contract with disabledStorage set to false, disabledMemory, disabledStack set to true', async function () {
+      const tx = await opcodeLogger.call(errorsExternal.target, '0xe3fdf09c'); // calling revertSimple()
+      await tx.wait();
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: false,
+        disableMemory: true,
+        disableStack: true
+      });
+
+      expect(res.failed).to.be.false;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.not.equal(null);
+        expect(sl.memory).to.equal(null);
+        expect(sl.stack).to.equal(null);
+      });
+    });
   });
 
-  it('should be able to execute call()', async function () {
-    const res = await (await opcodeLogger.call(randomAddress, '0x056440', {gasLimit: 1_000_000})).wait();
-    await updateBesuResponsesIfNeeded('call', res.hash);
-    compareOutputs('call', await executeDebugTraceTransaction(res.hash));
-  });
+  describe('precompiles', async function () {
+    let precompiles;
 
-  it('should be able to execute staticCall()', async function () {
-    const res = await (await opcodeLogger.staticCall(randomAddress, '0x056440', {gasLimit: 1_000_000})).wait();
-    await updateBesuResponsesIfNeeded('staticCall', res.hash);
-    compareOutputs('staticCall', await executeDebugTraceTransaction(res.hash));
-  });
+    before(async () => {
+      const factoryPrecompiles = await ethers.getContractFactory(Constants.Contract.Precompiles);
+      precompiles = await factoryPrecompiles.deploy();
+      await precompiles.waitForDeployment();
+    });
 
-  it('should be able to execute callCode()', async function () {
-    const res = await (await opcodeLogger.callCode(randomAddress, '0x056440', {gasLimit: 1_000_000})).wait();
-    await updateBesuResponsesIfNeeded('callCode', res.hash);
-    compareOutputs('callCode', await executeDebugTraceTransaction(res.hash));
-  });
+    it('successful ETH precompile call to 0x2 with disabledMemory, disabledStack, disabledStorage set to true', async function () {
+      const tx = await precompiles.modExp(5644, 3, 2);
+      await tx.wait();
 
-  it('should be able to execute delegateCall()', async function () {
-    const res = await (await opcodeLogger.delegateCall(randomAddress, '0x056440', {gasLimit: 1_000_000})).wait();
-    await updateBesuResponsesIfNeeded('delegateCall', res.hash);
-    compareOutputs('delegateCall', await executeDebugTraceTransaction(res.hash));
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: true,
+        disableMemory: true,
+        disableStack: true
+      });
+
+      expect(res.failed).to.be.false;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.equal(null);
+        expect(sl.memory).to.equal(null);
+        expect(sl.stack).to.equal(null);
+      });
+    });
+
+    it('failing ETH precompile call to 0x2 with disabledMemory, disabledStack, disabledStorage set to true', async function () {
+      const tx = await precompiles.modExp(5644, 3, 2, {gasLimit: 21_496});
+      await expect(tx.wait()).to.be.rejectedWith(Error);
+
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: true,
+        disableMemory: true,
+        disableStack: true
+      });
+
+      expect(res.failed).to.be.true;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.equal(null);
+        expect(sl.memory).to.equal(null);
+        expect(sl.stack).to.equal(null);
+      });
+    });
+
+    it('successful ETH precompile call to 0x2 with disabledMemory, disabledStack, disabledStorage set to false', async function () {
+      const tx = await precompiles.modExp(5644, 3, 2);
+      await tx.wait();
+
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: false,
+        disableMemory: false,
+        disableStack: false
+      });
+
+      expect(res.failed).to.be.false;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.not.equal(null);
+        expect(sl.memory).to.not.equal(null);
+        expect(sl.stack).to.not.equal(null);
+      });
+    });
+
+    it('failing ETH precompile call to 0x2 with disabledMemory, disabledStack, disabledStorage set to false', async function () {
+      const tx = await precompiles.modExp(5644, 3, 2, {gasLimit: 21_496});
+      await expect(tx.wait()).to.be.rejectedWith(Error);
+
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: false,
+        disableMemory: false,
+        disableStack: false
+      });
+
+      expect(res.failed).to.be.true;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.not.equal(null);
+        expect(sl.memory).to.not.equal(null);
+        expect(sl.stack).to.not.equal(null);
+      });
+    });
   });
 });
