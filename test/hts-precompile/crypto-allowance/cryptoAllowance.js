@@ -226,7 +226,7 @@ describe('@CryptoAllowance Test Suite', () => {
     expect(walletCBefore < walletCAfter).to.equal(true);
   });
 
-  it('Should allow an crypto owner contract account to grant an allowance to a spender contract account to transfer allowance to a receiver on hebalf of owner contract acccount', async () => {
+  it('Should allow a crypto owner contract account to grant an allowance to a spender contract account to transfer allowance to a receiver on behalf of owner contract account', async () => {
     // crypto owner contract account's balance before the transfer
     const cryptoOwnerContractBalanceBefore = await ethers.provider.getBalance(
       cryptoOwnerAddress
