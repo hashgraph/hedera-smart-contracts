@@ -6,7 +6,7 @@ import "../../HederaAccountService.sol";
 
 contract CryptoAllowance is HederaAccountService, HederaTokenService {
     event ResponseCode(int responseCode);
-    event HbarAllowance(address owner, address spender, int256 amount);
+    event HbarAllowance(address owner, address spender, int256 allowance);
 
     function hbarApprovePublic(address owner, address spender, int256 amount) public returns (int64 responseCode) {
         responseCode = HederaAccountService.hbarApprove(owner, spender, amount);
@@ -17,13 +17,13 @@ contract CryptoAllowance is HederaAccountService, HederaTokenService {
         }
     }
 
-    function hbarAllowancePublic(address owner, address spender) public {
-        (int64 responseCode, int256 amount) = HederaAccountService.hbarAllowance(owner, spender);
+    function hbarAllowancePublic(address owner, address spender) public returns (int64 responseCode, int256 allowance) {
+        (responseCode, allowance) = HederaAccountService.hbarAllowance(owner, spender);
         emit ResponseCode(responseCode);
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-        emit HbarAllowance(owner, spender, amount);
+        emit HbarAllowance(owner, spender, allowance);
     }
 
     function cryptoTransferPublic(IHederaTokenService.TransferList calldata transferList, IHederaTokenService.TokenTransferList[] calldata tokenTransferList) public returns (int responseCode) {
