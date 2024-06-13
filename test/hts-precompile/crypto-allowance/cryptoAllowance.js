@@ -33,7 +33,8 @@ describe('@CryptoAllowance Test Suite', () => {
     walletC,
     cryptoAllowanceContract,
     cryptoOwnerContract,
-    IHRC632;
+    cryptoAllowanceAddress,
+    cryptoOwnerAddress;
   const amount = 3000;
 
   before(async () => {
@@ -45,6 +46,7 @@ describe('@CryptoAllowance Test Suite', () => {
     );
     cryptoAllowanceContract = await CryptoAllowanceFactory.deploy();
     await cryptoAllowanceContract.waitForDeployment();
+    cryptoAllowanceAddress = cryptoAllowanceContract.target;
 
     // deploy cryptoOwnerContract
     const CryptoOwnerFactory = await ethers.getContractFactory(
@@ -52,11 +54,12 @@ describe('@CryptoAllowance Test Suite', () => {
     );
     cryptoOwnerContract = await CryptoOwnerFactory.deploy();
     await cryptoOwnerContract.waitForDeployment();
+    cryptoOwnerAddress = cryptoOwnerContract.target;
 
     // transfer funds to cryptoOwnerContract
     await (
       await walletA.sendTransaction({
-        to: cryptoOwnerContract.target,
+        to: cryptoOwnerAddress,
         value: ethers.parseEther('30'),
         gasLimit: 1_000_000,
       })
@@ -65,7 +68,7 @@ describe('@CryptoAllowance Test Suite', () => {
 
   it('Should execute hbarApprovePublic and return success response code', async () => {
     const tx = await cryptoAllowanceContract.hbarApprovePublic(
-      cryptoAllowanceContract.target,
+      cryptoAllowanceAddress,
       walletA.address,
       amount,
       Constants.GAS_LIMIT_1_000_000
@@ -79,7 +82,7 @@ describe('@CryptoAllowance Test Suite', () => {
 
   it('Should execute hbarAllowancePublic and return an event with the allowance information', async () => {
     const approveTx = await cryptoAllowanceContract.hbarApprovePublic(
-      cryptoAllowanceContract.target,
+      cryptoAllowanceAddress,
       walletB.address,
       amount,
       Constants.GAS_LIMIT_1_000_000
@@ -87,7 +90,7 @@ describe('@CryptoAllowance Test Suite', () => {
     await approveTx.wait();
 
     const allowanceTx = await cryptoAllowanceContract.hbarAllowancePublic(
-      cryptoAllowanceContract.target,
+      cryptoAllowanceAddress,
       walletB.address,
       Constants.GAS_LIMIT_1_000_000
     );
@@ -99,7 +102,7 @@ describe('@CryptoAllowance Test Suite', () => {
     const logs = receipt.logs.find((l) => l.fragment.name === 'HbarAllowance');
 
     expect(responseCode.args).to.deep.eq([22n]);
-    expect(logs.args[0]).to.eq(cryptoAllowanceContract.target);
+    expect(logs.args[0]).to.eq(cryptoAllowanceAddress);
     expect(logs.args[1]).to.eq(walletB.address);
     expect(logs.args[2]).to.eq(amount);
   });
@@ -108,7 +111,7 @@ describe('@CryptoAllowance Test Suite', () => {
     // update accountKeys
     const ecdsaPrivateKeys = await Utils.getHardhatSignersPrivateKeys(false);
     await utils.updateAccountKeysViaHapi(
-      [cryptoAllowanceContract.target],
+      [cryptoAllowanceAddress],
       [ecdsaPrivateKeys[0]] // walletA's key
     );
 
@@ -168,7 +171,7 @@ describe('@CryptoAllowance Test Suite', () => {
 
     // grant an allowance to cryptoAllowanceContract
     const approveTx = await walletAIHrc632.hbarApprove(
-      cryptoAllowanceContract.target,
+      cryptoAllowanceAddress,
       amount,
       Constants.GAS_LIMIT_1_000_000
     );
@@ -226,14 +229,14 @@ describe('@CryptoAllowance Test Suite', () => {
   it('Should allow an crypto owner contract account to grant an allowance to a spender contract account to transfer allowance to a receiver on hebalf of owner contract acccount', async () => {
     // crypto owner contract account's balance before the transfer
     const cryptoOwnerContractBalanceBefore = await ethers.provider.getBalance(
-      cryptoOwnerContract.target
+      cryptoOwnerAddress
     );
     // receiver's balance before the transfer
     const walletCBefore = await walletC.provider.getBalance(walletC.address);
 
     // initialize crypto transfer
     const tx = await cryptoOwnerContract.cryptoTransfer(
-      cryptoAllowanceContract.target,
+      cryptoAllowanceAddress,
       amount,
       walletC.address,
       Constants.GAS_LIMIT_1_000_000
@@ -249,7 +252,7 @@ describe('@CryptoAllowance Test Suite', () => {
     const cryptoOwnerContractBalanceAfter =
       await pollForNewSignerBalanceUsingProvider(
         ethers.provider,
-        cryptoOwnerContract.target,
+        cryptoOwnerAddress,
         cryptoOwnerContractBalanceBefore
       );
 

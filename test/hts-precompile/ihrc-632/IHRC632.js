@@ -23,7 +23,7 @@ const { ethers } = require('hardhat');
 const { Contract } = require('ethers');
 const Constants = require('../../constants');
 
-describe('@CryptoAllowance @IHRC-632 Test Suite', function () {
+describe('@IHRC-632 @CryptoAllowance  Test Suite', function () {
   let walletA, walletB, walletC, walletAIHrc632;
   const amount = 3_000;
 
