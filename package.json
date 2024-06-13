@@ -46,7 +46,7 @@
     "prettier": "3.3.2"
   },
   "dependencies": {
-    "@nomicfoundation/solidity-analyzer": "^0.1.0",
+    "@nomicfoundation/solidity-analyzer": "^0.1.2",
     "bn.js": "^5.2.1",
     "dotenv": "^16.4.5",
     "elliptic": "^6.5.5"
