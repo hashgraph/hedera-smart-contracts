@@ -141,7 +141,7 @@ describe('@CryptoAllowance Test Suite', () => {
     expect(logs.args[2]).to.eq(amount);
   });
 
-  it('Should NOT allow an approval on behalf of hbar owner WINTHOUT its signature', async () => {
+  it('Should NOT allow an approval on behalf of hbar owner WITHOUT its signature', async () => {
     try {
       const tx = await cryptoAllowanceContract.hbarApprovePublic(
         walletB.address, // random EOA hbar owner
