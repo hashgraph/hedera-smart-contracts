@@ -158,16 +158,16 @@ class Utils {
     );
   }
 
-  static async deployHRCContract() {
+  static async deployHRC719Contract() {
     const hrcContractFactory = await ethers.getContractFactory(
-      Constants.Contract.HRCContract
+      Constants.Contract.HRC719Contract
     );
     const hrcContract = await hrcContractFactory.deploy(
       Constants.GAS_LIMIT_1_000_000
     );
 
     return await ethers.getContractAt(
-      Constants.Contract.HRCContract,
+      Constants.Contract.HRC719Contract,
       await hrcContract.getAddress()
     );
   }
@@ -550,9 +550,7 @@ class Utils {
     }
 
     for (const privateKey of ecdsaPrivateKeys) {
-      const pkSigner = PrivateKey.fromStringECDSA(
-        privateKey.replace('0x', '')
-      );
+      const pkSigner = PrivateKey.fromStringECDSA(privateKey.replace('0x', ''));
       const accountId = await Utils.getAccountId(
         pkSigner.publicKey.toEvmAddress(),
         clientGenesis
