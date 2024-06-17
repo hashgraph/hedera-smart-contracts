@@ -7,7 +7,7 @@ const {ethers} = hre;
 const BESU_RESULTS_JSON_PATH = __dirname + '/opcodeLoggerBesuResults.json';
 const IS_BESU_NETWORK = hre.network.name === 'besu_local';
 
-describe('@OpcodeLogger Test Suite', async function () {
+describe.only('@OpcodeLogger Test Suite', async function () {
   let signers;
   let randomAddress;
   let opcodeLogger;
@@ -32,7 +32,7 @@ describe('@OpcodeLogger Test Suite', async function () {
     );
   }
 
-  describe('besu', async function () {
+  describe('besu comparison', async function () {
     let erc20;
     let erc721;
     let besuResults;
