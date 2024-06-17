@@ -704,11 +704,11 @@ describe('TokenManagmentContract Test Suite', function () {
 
       it('should not be able to pause the token with different PAUSE key', async function () {
         const pauseTokenTx = await tokenManagmentContract
-            .connect(signers[1])
-            .pauseTokenPublic(tokenAddress);
+          .connect(signers[1])
+          .pauseTokenPublic(tokenAddress);
         const unpauseTokenTx = await tokenManagmentContract
-            .connect(signers[1])
-            .unpauseTokenPublic(tokenAddress);
+          .connect(signers[1])
+          .unpauseTokenPublic(tokenAddress);
 
         await utils.expectToFail(pauseTokenTx, Constants.CALL_EXCEPTION);
         await utils.expectToFail(unpauseTokenTx, Constants.CALL_EXCEPTION);
@@ -816,26 +816,22 @@ describe('TokenManagmentContract Test Suite', function () {
       it('should not be able to wipe the token with different WIPE key', async function () {
         const wipeAmount = 3;
         await tokenTransferContract.transferTokensPublic(
-            tokenAddress,
-            [signers[0].address, signers[1].address],
-            [-wipeAmount, wipeAmount]
+          tokenAddress,
+          [signers[0].address, signers[1].address],
+          [-wipeAmount, wipeAmount]
         );
 
         // await until the new balance is settled for signers[1]
         await pollForNewERC20Balance(
-            erc20Contract,
-            tokenAddress,
-            signers[1].address,
-            0n
+          erc20Contract,
+          tokenAddress,
+          signers[1].address,
+          0n
         );
 
         const wipeTokenTx = await tokenManagmentContract
-            .connect(signers[1])
-            .wipeTokenAccountPublic(
-                tokenAddress,
-                signers[1].address,
-                wipeAmount
-            );
+          .connect(signers[1])
+          .wipeTokenAccountPublic(tokenAddress, signers[1].address, wipeAmount);
         await utils.expectToFail(wipeTokenTx, Constants.CALL_EXCEPTION);
       });
 
@@ -950,17 +946,17 @@ describe('TokenManagmentContract Test Suite', function () {
 
       it('should not be able to freeze the token with different FREEZE key', async function () {
         const freezeTokenTx = await tokenManagmentContract
-            .connect(signers[1])
-            .freezeTokenPublic(
-                tokenAddress,
-                await tokenCreateContract.getAddress()
-            );
+          .connect(signers[1])
+          .freezeTokenPublic(
+            tokenAddress,
+            await tokenCreateContract.getAddress()
+          );
         const unfreezeTokenTx = await tokenManagmentContract
-            .connect(signers[1])
-            .unfreezeTokenPublic(
-                tokenAddress,
-                await tokenCreateContract.getAddress()
-            );
+          .connect(signers[1])
+          .unfreezeTokenPublic(
+            tokenAddress,
+            await tokenCreateContract.getAddress()
+          );
 
         await utils.expectToFail(freezeTokenTx, Constants.CALL_EXCEPTION);
         await utils.expectToFail(unfreezeTokenTx, Constants.CALL_EXCEPTION);
@@ -1035,22 +1031,20 @@ describe('TokenManagmentContract Test Suite', function () {
       });
 
       it('should be able to perform admin action with TokenManagementContract as ADMIN key', async function () {
-        console.log(tokenAddress);
-
         const updatedKey = updateTokenInfoValues(
-            utils.KeyValueType.CONTRACT_ID,
-            await tokenTransferContract.getAddress()
+          utils.KeyValueType.CONTRACT_ID,
+          await tokenTransferContract.getAddress()
         );
         const updateTokenKeyTx = await tokenManagmentContract
-            .connect(signers[1])
-            .updateTokenKeysPublic(tokenAddress, [
-              [utils.KeyType.SUPPLY, updatedKey],
-            ]);
+          .connect(signers[1])
+          .updateTokenKeysPublic(tokenAddress, [
+            [utils.KeyType.SUPPLY, updatedKey],
+          ]);
 
         expect(
-            (await updateTokenKeyTx.wait()).logs.filter(
-                (e) => e.fragment.name === Constants.Events.ResponseCode
-            )[0].args.responseCode
+          (await updateTokenKeyTx.wait()).logs.filter(
+            (e) => e.fragment.name === Constants.Events.ResponseCode
+          )[0].args.responseCode
         ).to.eq(TX_SUCCESS_CODE);
       });
     });
