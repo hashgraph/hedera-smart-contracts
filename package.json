@@ -31,7 +31,7 @@
     "prepare": "husky install"
   },
   "devDependencies": {
-    "@hashgraph/hedera-local": "^2.26.1",
+    "@hashgraph/hedera-local": "^2.26.2",
     "@hashgraph/sdk": "^2.45.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.7",
     "@nomicfoundation/hardhat-foundry": "^1.1.2",
