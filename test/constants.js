@@ -56,6 +56,7 @@ const Events = {
   TinyBars: 'TinyBars',
   TinyCents: 'TinyCents',
   PseudoRandomSeed: 'PseudoRandomSeed',
+  CryptoAllowance: 'CryptoAllowance',
 };
 
 const Path = {
@@ -195,6 +196,8 @@ const Contract = {
   EthNativePrecompileCaller: 'EthNativePrecompileCaller',
   AtomicHTS: 'AtomicHTS',
   BLSTest: 'BLSTest',
+  CryptoAllowance: 'CryptoAllowance',
+  CryptoOwner: 'CryptoOwner',
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';

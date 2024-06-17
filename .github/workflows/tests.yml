@@ -104,12 +104,18 @@ jobs:
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: PrngSystemContract
-  
+
   BLSSignatureVerification:
     name: BLS Signature Verification Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: BLSSignature
+
+  CryptoAllowance:
+    name: CryptoAllowance Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: CryptoAllowance
 
   PublishResults:
     name: Publish Results
@@ -130,7 +136,7 @@ jobs:
       - ShanghaiOpcodes
       - PrngSystemContract
       - BLSSignatureVerification
-
+      - CryptoAllowance
 
     runs-on: [self-hosted, Linux, large, ephemeral]
     steps:
