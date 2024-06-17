@@ -11,23 +11,14 @@ describe('@OpcodeLogger Test Suite', async function () {
   let signers;
   let randomAddress;
   let opcodeLogger;
-  let besuResults;
-  let updatedBesuResults = {};
 
   before(async () => {
     signers = await ethers.getSigners();
     randomAddress = (ethers.Wallet.createRandom()).address;
-    besuResults = JSON.parse(fs.readFileSync(BESU_RESULTS_JSON_PATH));
 
     const factoryOpcodeLogger = await ethers.getContractFactory(Constants.Contract.OpcodeLogger);
     opcodeLogger = await factoryOpcodeLogger.deploy();
     await opcodeLogger.waitForDeployment();
-  });
-
-  after(async () => {
-    if (IS_BESU_NETWORK) {
-      fs.writeFileSync(BESU_RESULTS_JSON_PATH, JSON.stringify(updatedBesuResults, null, 2));
-    }
   });
 
   async function executeDebugTraceTransaction(txHash, options = {
@@ -41,28 +32,54 @@ describe('@OpcodeLogger Test Suite', async function () {
     );
   }
 
-  function compareOutputs(methodName, result) {
-    if (hre.network.name !== 'besu_local') {
-      expect(result).to.haveOwnProperty('gas');
-      expect(result).to.haveOwnProperty('failed');
-      expect(result).to.haveOwnProperty('returnValue');
-      expect(result).to.haveOwnProperty('structLogs');
+  describe('besu', async function () {
+    let erc20;
+    let erc721;
+    let besuResults;
+    let updatedBesuResults = {};
+    const NFT_ID = 5644;
 
-      const besuResp = besuResults[methodName];
-      expect(besuResp).to.exist;
-      expect(besuResp.failed).to.equal(result.failed);
-      expect(besuResp.structLogs.length).to.equal(result.structLogs.length);
-      expect(besuResp.structLogs.map(e => e.op)).to.deep.equal(result.structLogs.map(e => e.op));
+    function compareOutputs(methodName, result) {
+      if (hre.network.name !== 'besu_local') {
+        expect(result).to.haveOwnProperty('gas');
+        expect(result).to.haveOwnProperty('failed');
+        expect(result).to.haveOwnProperty('returnValue');
+        expect(result).to.haveOwnProperty('structLogs');
+
+        const besuResp = besuResults[methodName];
+        expect(besuResp).to.exist;
+        expect(besuResp.failed).to.equal(result.failed);
+        expect(besuResp.structLogs.length).to.equal(result.structLogs.length);
+        expect(besuResp.structLogs.map(e => e.op)).to.deep.equal(result.structLogs.map(e => e.op));
+      }
     }
-  }
 
-  async function updateBesuResponsesIfNeeded(key, txHash) {
-    if (IS_BESU_NETWORK) {
-      updatedBesuResults[key] = await executeDebugTraceTransaction(txHash);
+    async function updateBesuResponsesIfNeeded(key, txHash) {
+      if (IS_BESU_NETWORK) {
+        updatedBesuResults[key] = await executeDebugTraceTransaction(txHash);
+      }
     }
-  }
 
-  describe('besu comparison', async function () {
+    before(async () => {
+      besuResults = JSON.parse(fs.readFileSync(BESU_RESULTS_JSON_PATH));
+
+      const erc20Factory = await ethers.getContractFactory(Constants.Path.ERC20Mock);
+      erc20 = await erc20Factory.deploy(Constants.TOKEN_NAME, Constants.TOKEN_SYMBOL);
+      await erc20.waitForDeployment();
+      await (await erc20.mint(signers[0].address, 10_000_000_000)).wait();
+
+      const erc721Factory = await ethers.getContractFactory(Constants.Path.ERC721Mock);
+      erc721 = await erc721Factory.deploy(Constants.TOKEN_NAME, Constants.TOKEN_SYMBOL);
+      await erc721.waitForDeployment();
+      await (await erc721.mint(signers[0].address, NFT_ID)).wait();
+    });
+
+    after(async () => {
+      if (IS_BESU_NETWORK) {
+        fs.writeFileSync(BESU_RESULTS_JSON_PATH, JSON.stringify(updatedBesuResults, null, 2));
+      }
+    });
+
     it('should be able to execute updateOwner()', async function () {
       const res = await (await opcodeLogger.updateOwner({gasLimit: 1_000_000})).wait();
       await updateBesuResponsesIfNeeded('updateOwner', res.hash);
@@ -98,12 +115,54 @@ describe('@OpcodeLogger Test Suite', async function () {
       await updateBesuResponsesIfNeeded('delegateCall', res.hash);
       compareOutputs('delegateCall', await executeDebugTraceTransaction(res.hash));
     });
+
+    it('should be able to execute erc20.approve()', async function () {
+      const res = await (await erc20.approve(randomAddress, 5644, {gasLimit: 1_000_000})).wait();
+      await updateBesuResponsesIfNeeded('erc20.approve', res.hash);
+      compareOutputs('erc20.approve', await executeDebugTraceTransaction(res.hash));
+    });
+
+    it('should be able to execute erc20.transfer()', async function () {
+      const res = await (await erc20.transfer(randomAddress, 5644, {gasLimit: 1_000_000})).wait();
+      await updateBesuResponsesIfNeeded('erc20.transfer', res.hash);
+      compareOutputs('erc20.transfer', await executeDebugTraceTransaction(res.hash));
+    });
+
+    it('should be able to execute erc20.transferFrom()', async function () {
+      await (await erc20.approve(signers[1].address, 5644, {gasLimit: 1_000_000})).wait();
+      const erc20SecondSigner = erc20.connect(signers[1]);
+
+      const res = await (await erc20SecondSigner.transferFrom(signers[0].address, randomAddress, 56, {gasLimit: 1_000_000})).wait();
+      await updateBesuResponsesIfNeeded('erc20.transferFrom', res.hash);
+      compareOutputs('erc20.transferFrom', await executeDebugTraceTransaction(res.hash));
+    });
+
+    it('should be able to execute erc721.approve()', async function () {
+      const res = await (await erc721.approve(randomAddress, NFT_ID, {gasLimit: 1_000_000})).wait();
+      await updateBesuResponsesIfNeeded('erc721.approve', res.hash);
+      compareOutputs('erc721.approve', await executeDebugTraceTransaction(res.hash));
+    });
+
+    it('should be able to execute erc721.setApprovalForAll()', async function () {
+      const res = await (await erc721.setApprovalForAll(randomAddress, true, {gasLimit: 1_000_000})).wait();
+      await updateBesuResponsesIfNeeded('erc721.setApprovalForAll', res.hash);
+      compareOutputs('erc721.setApprovalForAll', await executeDebugTraceTransaction(res.hash));
+    });
+
+    it('should be able to execute erc721.transferFrom()', async function () {
+      await (await erc721.approve(signers[1].address, NFT_ID, {gasLimit: 1_000_000})).wait();
+      const erc721SecondSigner = erc721.connect(signers[1]);
+
+      const res = await (await erc721SecondSigner.transferFrom(signers[0].address, signers[1].address, NFT_ID, {gasLimit: 1_000_000})).wait();
+      await updateBesuResponsesIfNeeded('erc721.transferFrom', res.hash);
+      compareOutputs('erc721.transferFrom', await executeDebugTraceTransaction(res.hash));
+    });
   });
 
   const txTypeSpecificSuitesConfig = {
-    'type 0 tx suite': {gasLimit: 1_000_000, gasPrice: 710_000_000_000},
-    'type 1 tx suite': {gasLimit: 1_000_000, gasPrice: 710_000_000_000, accessList: []},
-    'type 2 tx suite': {gasLimit: 1_000_000},
+    'type 0 tx suite': {gasLimit: 5_000_000, gasPrice: 710_000_000_000},
+    'type 1 tx suite': {gasLimit: 5_000_000, gasPrice: 710_000_000_000, accessList: []},
+    'type 2 tx suite': {gasLimit: 5_000_000},
   };
   for (let suiteName in txTypeSpecificSuitesConfig) {
     const txTypeSpecificOverrides = txTypeSpecificSuitesConfig[suiteName];
