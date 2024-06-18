@@ -41,7 +41,7 @@ jobs:
         run: npm run besu:start
 
       - name: Run opcode tests against besu
-        run: npx hardhat test --grep @OpcodeLogger --network besu_local
+        run: npx hardhat test --grep "besu comparison" --network besu_local
 
       - name: Start the hedera local node
         run: npx hedera start -d
