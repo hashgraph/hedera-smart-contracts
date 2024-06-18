@@ -21,7 +21,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
-const Utils = require('../../hts-precompile/utils');
+const Utils = require('../../precompile/hedera-token-service/utils');
 
 describe('@solidityequiv3 Transaction Test Suite', function () {
   let contractTr, wallet, mfContract, senderWalletAddr;
