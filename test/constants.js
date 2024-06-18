@@ -56,6 +56,7 @@ const Events = {
   TinyBars: 'TinyBars',
   TinyCents: 'TinyCents',
   PseudoRandomSeed: 'PseudoRandomSeed',
+  CryptoAllowance: 'CryptoAllowance',
 };
 
 const Path = {
@@ -101,7 +102,7 @@ const Contract = {
   ERC20BurnableMock: 'ERC20BurnableMock',
   ERC20CappedMock: 'ERC20CappedMock',
   ERC20PausableMock: 'ERC20PausableMock',
-  HRCContract: 'HRCContract',
+  HRC719Contract: 'HRC719Contract',
   ExchangeRateMock: 'ExchangeRateMock',
   PrngSystemContract: 'PrngSystemContract',
   Concatenation: 'Concatenation',
@@ -196,10 +197,12 @@ const Contract = {
   EthNativePrecompileCaller: 'EthNativePrecompileCaller',
   AtomicHTS: 'AtomicHTS',
   BLSTest: 'BLSTest',
+  CryptoAllowance: 'CryptoAllowance',
+  CryptoOwner: 'CryptoOwner',
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';
-const CONTRACT_REVERT_EXECUTED_CODE = -32008;
+const CONTRACT_REVERT_EXECUTED_CODE = 3;
 const GAS_LIMIT_1_000_000 = { gasLimit: 1_000_000 };
 const GAS_LIMIT_10_000_000 = { gasLimit: 10_000_000 };
 const GAS_LIMIT_800000 = { gasLimit: 800000 };

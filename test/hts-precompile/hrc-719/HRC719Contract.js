@@ -25,13 +25,13 @@ const hre = require('hardhat');
 const { ethers } = hre;
 const utils = require('../utils');
 
-describe('HRC Test Suite', function () {
+describe('@HRC-719 Test Suite', function () {
   let tokenCreateContract;
   let tokenAddress;
-  let hrcContract;
+  let hrc719Contract;
   let signers;
   let hrcToken;
-  let IHRC;
+  let IHRC719;
 
   const parseCallResponseEventData = async (tx) => {
     return (await tx.wait()).logs.filter(
@@ -52,7 +52,7 @@ describe('HRC Test Suite', function () {
     ]);
 
     // This contract is a wrapper for the associate() and dissociate() functions
-    hrcContract = await utils.deployHRCContract();
+    hrc719Contract = await utils.deployHRC719Contract();
     tokenAddress = await utils.createFungibleToken(
       tokenCreateContract,
       signers[0].address
@@ -62,16 +62,18 @@ describe('HRC Test Suite', function () {
     ]);
 
     // create an interface for calling functions via redirectForToken()
-    IHRC = new ethers.Interface((await hre.artifacts.readArtifact('IHRC')).abi);
+    IHRC719 = new ethers.Interface(
+      (await hre.artifacts.readArtifact('IHRC719')).abi
+    );
     // create a contract object for the token
-    hrcToken = new Contract(tokenAddress, IHRC, signers[0]);
-    console.log('hrcContract: ', await hrcContract.getAddress());
+    hrcToken = new Contract(tokenAddress, IHRC719, signers[0]);
+    console.log('hrc719Contract: ', await hrc719Contract.getAddress());
     console.log('signer: ', signers[0].address);
     console.log('tokenAddress: ', tokenAddress);
   });
 
   it('should be able to associate() to the token from a contract', async function () {
-    const txAssociate = await hrcContract.associate(
+    const txAssociate = await hrc719Contract.associate(
       tokenAddress,
       Constants.GAS_LIMIT_1_000_000
     );
@@ -81,7 +83,7 @@ describe('HRC Test Suite', function () {
   });
 
   xit('should be able to disssociate() to the token from a contract', async function () {
-    const txDissociate = await hrcContract.dissociate(
+    const txDissociate = await hrc719Contract.dissociate(
       tokenAddress,
       Constants.GAS_LIMIT_1_000_000
     );
@@ -107,7 +109,7 @@ describe('HRC Test Suite', function () {
   });
 
   xit('should be able to execute associate() via redirectForToken', async function () {
-    const encodedFunc = IHRC.encodeFunctionData('associate()');
+    const encodedFunc = IHRC719.encodeFunctionData('associate()');
     const tx = await tokenCreateContract.redirectForToken(
       tokenAddress,
       encodedFunc,
@@ -119,7 +121,7 @@ describe('HRC Test Suite', function () {
   });
 
   xit('should be able to execute dissociate() via redirectForToken', async function () {
-    const encodedFunc = IHRC.encodeFunctionData('dissociate()');
+    const encodedFunc = IHRC719.encodeFunctionData('dissociate()');
     const tx = await tokenCreateContract.redirectForToken(
       tokenAddress,
       encodedFunc,

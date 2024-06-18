@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
-  "contractName": "IHRC",
-  "sourceName": "contracts/hts-precompile/IHRC.sol",
+  "contractName": "IHRC719",
+  "sourceName": "contracts/hts-precompile/IHRC719.sol",
   "abi": [
     {
       "inputs": [],

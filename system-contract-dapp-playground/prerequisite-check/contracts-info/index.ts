@@ -45,8 +45,8 @@ const getHederaSmartContractAssets = (HederaSmartContractsRootPath: string) => {
     },
     IHRC719Contract: {
       name: 'IHRC719Contract',
-      contractPath: `${HederaSmartContractsRootPath}/contracts/hts-precompile/IHRC.sol`,
-      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/hts-precompile/IHRC.sol/IHRC.json`,
+      contractPath: `${HederaSmartContractsRootPath}/contracts/hts-precompile/IHRC719.sol`,
+      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/hts-precompile/IHRC719.sol/IHRC719.json`,
     },
     ExchangeRateMock: {
       name: 'ExchangeRateMock',

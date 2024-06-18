@@ -27,20 +27,19 @@ on:
         description: 'Specify target Hedera JSON-RPC Relay tag'
         required: true
         default: ''
-      preUpgradeTestTags:
-        description: 'Specify pre-upgrade test tags'
+      preMigrationTestTags:
+        description: 'Specify pre-migration test tags'
         required: false
         default: '@pre-migration'
-      postUpgradeTestTags:
-        description: 'Specify post-upgrade test tags'
+      postMigrationTestTags:
+        description: 'Specify post-migration test tags'
         required: false
         default: '@post-migration'
 
 jobs:
   check:
-    name:
-      Node upgrade testing (${{ inputs.preUpgradeTestTags }}/${{ inputs.postUpgradeTestTags }}) with initial N:${{ inputs.initialNetworkNodeTag }}, initial M:${{ inputs.initialMirrorNodeTag }}, initial R:${{ inputs.initialRelayTag }} and
-      target N:${{ inputs.targetNetworkNodeTag }}, target M:${{ inputs.targetMirrorNodeTag }}, target R:${{ inputs.targetRelayTag }}
+    name: Migration testing (${{ inputs.preMigrationTestTags }}/${{ inputs.postMigrationTestTags }}) with initial N:${{ inputs.initialNetworkNodeTag }}, M:${{ inputs.initialMirrorNodeTag }}, R:${{ inputs.initialRelayTag }} and
+      target N:${{ inputs.targetNetworkNodeTag }}, M:${{ inputs.targetMirrorNodeTag }}, R:${{ inputs.targetRelayTag }}
     runs-on: [self-hosted, Linux, large, ephemeral]
     steps:
       - uses: actions/checkout@v4
@@ -59,8 +58,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Upgrade @hashgraph/hedera-local to v2.25.0
-        run: npm install @hashgraph/hedera-local@2.25.0 --save
+      - name: Upgrade @hashgraph/hedera-local to v2.25.2
+        run: npm install @hashgraph/hedera-local@2.25.2 --save
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@8f1998e9878d786675189ef566a2e4bf24869773 # v1.2.0
@@ -71,8 +70,8 @@ jobs:
         run: npx hedera start -d --full --network-tag=${{inputs.initialNetworkNodeTag}} --mirror-tag=${{inputs.initialMirrorNodeTag}} --relay-tag=${{inputs.initialRelayTag}}
         timeout-minutes: 5
 
-      - name: Run pre-upgrade tests
-        run: npx hardhat test --grep ${{ inputs.preUpgradeTestTags }}
+      - name: Run pre-migration tests
+        run: npx hardhat test --grep ${{ inputs.preMigrationTestTags }}
         timeout-minutes: 15
 
       - name: Freeze the network
@@ -82,7 +81,7 @@ jobs:
         timeout-minutes: 5
 
       - name: Stop docker containers (network node)
-        run: docker stop network-node
+        run: docker stop network-node json-rpc-relay json-rpc-relay-ws
         timeout-minutes: 5
 
       - name: Run the local node with N:${{ inputs.targetNetworkNodeTag }}, M:${{ inputs.targetMirrorNodeTag }}, R:${{ inputs.targetRelayTag }}
@@ -93,9 +92,10 @@ jobs:
           NETWORK_NODE_LOGS_ROOT_PATH: ~/.local/share/hedera-local/network-logs/node
         run: |
           docker compose -f docker-compose-state-migration.yml up -d
+          sleep 5
         working-directory: node_modules/@hashgraph/hedera-local/
         timeout-minutes: 5
 
-      - name: Run post-upgrade tests
-        run: npx hardhat test --grep ${{ inputs.postUpgradeTestTags }}
+      - name: Run post-migration tests
+        run: npx hardhat test --grep ${{ inputs.postMigrationTestTags }}
         timeout-minutes: 15
