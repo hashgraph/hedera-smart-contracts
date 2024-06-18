@@ -26,7 +26,7 @@ const Constants = require('../../constants');
 const {
   tinybarToHbarCoef,
   tinybarToWeibarCoef,
-} = require('../../hts-precompile/utils');
+} = require('../../precompile/hedera-token-service/utils');
 chai.use(chaiAsPromised);
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -35,7 +35,7 @@ const sleepUntilTimestamp = async (timestamp) => {
   if (remainingMs > 0) {
     await sleep(remainingMs);
   }
-}
+};
 
 const deployBlindAuctionContract = async (
   biddingTime,
@@ -50,8 +50,8 @@ const deployBlindAuctionContract = async (
     revealTime,
     beneficiaryAddress
   );
-  const biddingEndMs = Date.now() + (biddingTime * 1000) + 250;
-  const revealEndMs = biddingEndMs + (revealTime * 1000) + 250;
+  const biddingEndMs = Date.now() + biddingTime * 1000 + 250;
+  const revealEndMs = biddingEndMs + revealTime * 1000 + 250;
 
   return { contract, biddingEndMs, revealEndMs };
 };
@@ -224,11 +224,12 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
   });
 
   it('should confirm a user can end an auction', async function () {
-    const { contract, biddingEndMs, revealEndMs } = await deployBlindAuctionContract(
-      biddingTimeSeconds,
-      revealTimeSeconds,
-      beneficiary.address
-    );
+    const { contract, biddingEndMs, revealEndMs } =
+      await deployBlindAuctionContract(
+        biddingTimeSeconds,
+        revealTimeSeconds,
+        beneficiary.address
+      );
 
     const firstBid = ethers.solidityPackedKeccak256(
       ['uint256', 'bool', 'uint256'],
@@ -256,10 +257,7 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
       .reveal(
         [hundredHbars, hundredHbars],
         [false, true],
-        [
-          ethers.encodeBytes32String('2'),
-          ethers.encodeBytes32String('23')
-        ],
+        [ethers.encodeBytes32String('2'), ethers.encodeBytes32String('23')],
         { gasLimit: 5000000 }
       );
     await reveal.wait();
