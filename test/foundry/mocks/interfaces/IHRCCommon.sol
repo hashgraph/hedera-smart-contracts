@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.4.9 <0.9.0;
 
-import "../../../../contracts/hts-precompile/IHRC719.sol";
+import "../../../../contracts/precompile/hedera-token-service/IHRC719.sol";
 
 interface IERCCommonToken {
     function balanceOf(address account) external view returns (uint256);

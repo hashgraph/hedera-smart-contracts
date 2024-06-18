@@ -3,9 +3,9 @@ pragma solidity ^0.8.9;
 
 import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 
-import '../../../../contracts/hts-precompile/HederaResponseCodes.sol';
-import '../../../../contracts/hts-precompile/IHederaTokenService.sol';
-import '../../../../contracts/hts-precompile/IHRC719.sol';
+import '../../../../contracts/precompile/HederaResponseCodes.sol';
+import '../../../../contracts/precompile/hedera-token-service/IHederaTokenService.sol';
+import '../../../../contracts/precompile/hedera-token-service/IHRC719.sol';
 import './HtsSystemContractMock.sol';
 import '../../../../contracts/libraries/Constants.sol';
 
