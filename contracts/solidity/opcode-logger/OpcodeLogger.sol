@@ -1,20 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-
-// The version is hardcoded because all of the executed tests against besu's node are compiled with 0.8.23 compiler. If
-// we want to change this version, first we need to re-compile the OpcodeLogger.sol contract with a newer version,
-// then re-run the tests against besu's node to get the opcodes response. Once we've got the updated json, we can run opcode
-// logger tests against hedera and compare the output with the besu's one. We can not make the solidity version dynamic
-// because each new solidity version could introduce/remove/replace opcodes which could lead to outputs mismatching.
-//
-// This "problem" could be resolved with creating a new CI pipeline with the following steps:
-//   - compile the contract with the solidity version described in current hardhat.config.js
-//   - start the besu node
-//   - run the tests against besu and save the output in opcodeLoggerBesuResults.json
-//   - stop the besu node
-//   - start the hedera node
-//   - run the tests against hedera and compare the output with the besu's one (saved from the steps above)
-
-pragma solidity 0.8.23;
+pragma solidity ^0.8.0;
 
 contract OpcodeLogger {
     address public owner;

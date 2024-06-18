@@ -1,4 +1,40 @@
 {
+  "nonExistingContract": {
+    "gas": 21040,
+    "failed": false,
+    "returnValue": "",
+    "structLogs": [
+      {
+        "pc": 0,
+        "op": "STOP",
+        "gas": 0,
+        "gasCost": 0,
+        "depth": 1,
+        "stack": null,
+        "memory": null,
+        "storage": null,
+        "reason": null
+      }
+    ]
+  },
+  "existingContractNonExistingFunction": {
+    "gas": 21040,
+    "failed": false,
+    "returnValue": "",
+    "structLogs": [
+      {
+        "pc": 0,
+        "op": "STOP",
+        "gas": 0,
+        "gasCost": 0,
+        "depth": 1,
+        "stack": null,
+        "memory": null,
+        "storage": null,
+        "reason": null
+      }
+    ]
+  },
   "updateOwner": {
     "gas": 28812,
     "failed": false,

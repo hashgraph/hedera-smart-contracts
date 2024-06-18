@@ -7,7 +7,7 @@ const {ethers} = hre;
 const BESU_RESULTS_JSON_PATH = __dirname + '/opcodeLoggerBesuResults.json';
 const IS_BESU_NETWORK = hre.network.name === 'besu_local';
 
-describe.only('@OpcodeLogger Test Suite', async function () {
+describe('@OpcodeLogger Test Suite', async function () {
   let signers;
   let randomAddress;
   let opcodeLogger;
@@ -78,6 +78,26 @@ describe.only('@OpcodeLogger Test Suite', async function () {
       if (IS_BESU_NETWORK) {
         fs.writeFileSync(BESU_RESULTS_JSON_PATH, JSON.stringify(updatedBesuResults, null, 2));
       }
+    });
+
+    it('should be able to call nonExisting contract', async function () {
+      const res = await (await signers[0].sendTransaction({
+        to: randomAddress,
+        data: '0x00564400'
+      })).wait();
+
+      await updateBesuResponsesIfNeeded('nonExistingContract', res.hash);
+      compareOutputs('nonExistingContract', await executeDebugTraceTransaction(res.hash));
+    });
+
+    it('should be able to call existing contract with nonExisting function', async function () {
+      const res = await (await signers[0].sendTransaction({
+        to: randomAddress,
+        data: '0x00564400'
+      })).wait();
+
+      await updateBesuResponsesIfNeeded('existingContractNonExistingFunction', res.hash);
+      compareOutputs('existingContractNonExistingFunction', await executeDebugTraceTransaction(res.hash));
     });
 
     it('should be able to execute updateOwner()', async function () {
