@@ -25,38 +25,38 @@ const getHederaSmartContractAssets = (HederaSmartContractsRootPath: string) => {
   return {
     TokenCreateCustomContract: {
       name: 'TokenCreateCustomContract',
-      contractPath: `${HederaSmartContractsRootPath}/contracts/hts-precompile/examples/token-create/TokenCreateCustom.sol`,
-      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/hts-precompile/examples/token-create/TokenCreateCustom.sol/TokenCreateCustomContract.json`,
+      contractPath: `${HederaSmartContractsRootPath}/contracts/precompile/hedera-token-service/examples/token-create/TokenCreateCustom.sol`,
+      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/precompile/hedera-token-service/examples/token-create/TokenCreateCustom.sol/TokenCreateCustomContract.json`,
     },
     TokenManagementContract: {
       name: 'TokenManagementContract',
-      contractPath: `${HederaSmartContractsRootPath}/contracts/hts-precompile/examples/token-manage/TokenManagementContract.sol`,
-      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/hts-precompile/examples/token-manage/TokenManagementContract.sol/TokenManagementContract.json`,
+      contractPath: `${HederaSmartContractsRootPath}/contracts/precompile/hedera-token-service/examples/token-manage/TokenManagementContract.sol`,
+      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/precompile/hedera-token-service/examples/token-manage/TokenManagementContract.sol/TokenManagementContract.json`,
     },
     TokenQueryContract: {
       name: 'TokenQueryContract',
-      contractPath: `${HederaSmartContractsRootPath}/contracts/hts-precompile/examples/token-query/TokenQueryContract.sol`,
-      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/hts-precompile/examples/token-query/TokenQueryContract.sol/TokenQueryContract.json`,
+      contractPath: `${HederaSmartContractsRootPath}/contracts/precompile/hedera-token-service/examples/token-query/TokenQueryContract.sol`,
+      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/precompile/hedera-token-service/examples/token-query/TokenQueryContract.sol/TokenQueryContract.json`,
     },
     TokenTransferContract: {
       name: 'TokenTransferContract',
-      contractPath: `${HederaSmartContractsRootPath}/contracts/hts-precompile/examples/token-transfer/TokenTransferContract.sol`,
-      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/hts-precompile/examples/token-transfer/TokenTransferContract.sol/TokenTransferContract.json`,
+      contractPath: `${HederaSmartContractsRootPath}/contracts/precompile/hedera-token-service/examples/token-transfer/TokenTransferContract.sol`,
+      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/precompile/hedera-token-service/examples/token-transfer/TokenTransferContract.sol/TokenTransferContract.json`,
     },
     IHRC719Contract: {
       name: 'IHRC719Contract',
-      contractPath: `${HederaSmartContractsRootPath}/contracts/hts-precompile/IHRC719.sol`,
-      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/hts-precompile/IHRC719.sol/IHRC719.json`,
+      contractPath: `${HederaSmartContractsRootPath}/contracts/precompile/hedera-token-service/IHRC719.sol`,
+      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/precompile/hedera-token-service/IHRC719.sol/IHRC719.json`,
     },
     ExchangeRateMock: {
       name: 'ExchangeRateMock',
-      contractPath: `${HederaSmartContractsRootPath}/contracts/exchange-rate-precompile/ExchangeRateMock.sol`,
-      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/exchange-rate-precompile/ExchangeRateMock.sol/ExchangeRateMock.json`,
+      contractPath: `${HederaSmartContractsRootPath}/contracts/precompile/exchange-rate/ExchangeRateMock.sol`,
+      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/precompile/exchange-rate/ExchangeRateMock.sol/ExchangeRateMock.json`,
     },
     PrngSystemContract: {
       name: 'PrngSystemContract',
-      contractPath: `${HederaSmartContractsRootPath}/contracts/util-precompile/PrngSystemContract.sol`,
-      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/util-precompile/PrngSystemContract.sol/PrngSystemContract.json`,
+      contractPath: `${HederaSmartContractsRootPath}/contracts/precompile/pseudo-random-number-generator/PrngSystemContract.sol`,
+      artifactPath: `${HederaSmartContractsRootPath}/artifacts/contracts/precompile/pseudo-random-number-generator/PrngSystemContract.sol/PrngSystemContract.json`,
     },
     ERC20Mock: {
       name: 'ERC20Mock',
