@@ -1,7 +1,5 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
-
-import "hardhat/console.sol";
+// SPDX-License-Identifier: Apache-2.0
+pragma solidity >=0.5.0 <0.9.0;
 
 function itoa(uint value) pure returns (string memory) {
   uint length = 1;
