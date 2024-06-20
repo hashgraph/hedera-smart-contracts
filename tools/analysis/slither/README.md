@@ -55,6 +55,9 @@ during the compilation process using `solc` compiler and recovering metadata fro
 [control flow graph](https://en.wikipedia.org/wiki/Control-flow_graph) and the list of all expressions.
 The entire bytecode is transformed into Slither's own IR (Intermediate Representation) which allows to capture of more details,
 useful in the next stages of static analysis.
+
+Slither requires the Abstract Syntax Tree (AST) of the Smart Contract for analysis. It attempts to download source code of the Smart Contract from [Etherscan](https://api.etherscan.io/api?module=contract&action=getsourcecode&address=0xb6d242f16E8878693a436a53554ec73aae3F233D) URLs, and fails if unavailable. Consequently, Slither does not function correctly with unverified Ethereum Smart Contracts. Analysis with the --etherscan-only-bytecode flag also [fails](https://github.com/crytic/slither/issues/1801#issuecomment-1484151756) for the same reason.
+
 > **NOTE:**
 > Slither is not executing any code provided by the user, the entire analysis provided by the tool is performed on the bytecode,
 > therefore deployment context and environment are not taken into account, and analysis is strictly static.
