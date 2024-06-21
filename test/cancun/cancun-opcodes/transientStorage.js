@@ -23,7 +23,7 @@ const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
 describe('@cancun Transient Storage Test Suite', function () {
-  const VAULE = 7;
+  const VALUE = 7;
   const TRANSIENT_SLOT = 3;
   const REGULAR_SLOT = 9;
   let cancunOpcodeContract;
@@ -40,7 +40,7 @@ describe('@cancun Transient Storage Test Suite', function () {
     // then read `VALUE` from transient storage, using tload, into memory variable, val,
     // and finally write `val` to regular storage at `REGULAR_SLOT`
     const tx = await cancunOpcodeContract.transientStorage(
-      VAULE,
+      VALUE,
       TRANSIENT_SLOT,
       REGULAR_SLOT,
       Constants.GAS_LIMIT_1_000_000
@@ -53,7 +53,7 @@ describe('@cancun Transient Storage Test Suite', function () {
       await cancunOpcodeContract.getStorageAt(REGULAR_SLOT);
 
     expect(valueFromTransientStorage).to.eq(0n);
-    expect(valueFromRegularStorage).to.eq(VAULE);
+    expect(valueFromRegularStorage).to.eq(VALUE);
   });
 
   it('Should execute execute memoryCopy() to retrieve the contract address', async () => {

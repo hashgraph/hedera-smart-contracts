@@ -14,14 +14,14 @@ contract CancunOpcodes {
         }
 
         // The `value` at `transientSlot` is stored transiently and will be wiped off after the transaction is done processing.
-        // Therefore, in order to pertain the value for the sake of testing, value will be retrieved from the same transientSlot using TLOAD 
+        // Therefore, in order to retain the value for the sake of testing, value will be retrieved from the same transientSlot using TLOAD 
         // and then stored in another slot, REGULAR_SLOT, using regular SSTORE opcode
         uint256 val;
         assembly {
             // read val from transientSlot using tload
             val := tload(transientSlot)
 
-            // write val to regularSlot using sstore to pertain value `val`
+            // write val to regularSlot using sstore to retain value `val`
             sstore(regularSlot, val)
         }
     }
