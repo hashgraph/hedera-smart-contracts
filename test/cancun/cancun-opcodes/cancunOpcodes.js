@@ -72,4 +72,35 @@ describe('@cancun Transient Storage Test Suite', function () {
 
     expect(actualContractAddress).to.eq(expectedContractAddress);
   });
+
+  it.only('Should execute blobBaseFee() to retrieve blob base-fee of the current block', async () => {
+    const tx = await cancunOpcodeContract.blobBaseFee(
+      Constants.GAS_LIMIT_1_000_000
+    );
+
+    const receipt = await tx.wait();
+
+    const blobBaseFee = receipt.logs.find(
+      (e) => e.fragment.name === 'BlobBaseFee'
+    ).args[0];
+
+    // according to HIP-866, blobBaseFee will return 1 at all times
+    expect(blobBaseFee).to.eq(1);
+  });
+
+  it.only('Should execute versionedHash() to retrieve versioned hash', async () => {
+    const EMPTY_HASH = '0x';
+    const tx = await cancunOpcodeContract.versionedHash(
+      EMPTY_HASH,
+      Constants.GAS_LIMIT_1_000_000
+    );
+    const receipt = await tx.wait();
+
+    const versionedHash = receipt.logs.find(
+      (e) => e.fragment.name === 'VersionedHash'
+    ).args[0];
+
+    // according to HIP-866, versionedHash will return zero hash at all times.
+    expect(versionedHash).to.eq(ethers.ZeroHash);
+  });
 });
