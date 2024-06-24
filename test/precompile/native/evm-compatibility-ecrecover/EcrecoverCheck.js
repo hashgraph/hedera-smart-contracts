@@ -20,7 +20,7 @@
 
 const { expect } = require('chai');
 const utils = require('./utils');
-const htsUtils = require('../../hts-precompile/utils');
+const htsUtils = require('../../hedera-token-service/utils');
 const hre = require('hardhat');
 const { PrivateKey } = require('@hashgraph/sdk');
 

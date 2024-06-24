@@ -29,7 +29,7 @@ const {
 } = require('@hashgraph/sdk');
 const hre = require('hardhat');
 const { ethers } = hre;
-const htsUtils = require('../../hts-precompile/utils');
+const htsUtils = require('../../hedera-token-service/utils');
 const { arrayify } = require('@ethersproject/bytes');
 
 class Utils {
