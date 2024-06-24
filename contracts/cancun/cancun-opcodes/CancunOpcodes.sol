@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.20;
 
-contract CancunOpcodes {
+contract CancunOpcodes {    
     event ContractAddress(address);
+    event BlobBaseFee(uint blobBaseFee);
+    event VersionedHash(bytes32 hash);
 
     // @dev writes `value` to transient storage at `transientSlot` using tstore,
     //      then read `value` from transient storage, using tload, into memory variable, val,
@@ -47,5 +49,26 @@ contract CancunOpcodes {
             contractAddress := mload(0x0)
         }
         emit ContractAddress(contractAddress);
+    }
+
+    // @dev returns the value of the blob base-fee of the current block it is executing in.
+    //      Returning 1 at all times
+    // @note Making blobBaseFee() non-view function to avoid going through mirror-node
+    function blobBaseFee() external {
+        uint blobBaseFeeValue;
+        assembly {
+            blobBaseFeeValue := blobbasefee()
+        }
+        emit BlobBaseFee(blobBaseFeeValue);
+    }
+
+    // @dev returns versioned hashes. Returning all zeros whenever called
+    // @note Making versionedHash() non-view function to avoid going through mirror-node
+    function versionedHash(bytes memory data) external {
+        bytes32 hash;
+        assembly {
+            hash := blobhash(data)
+        }
+        emit VersionedHash(hash);
     }
 }
