@@ -199,6 +199,9 @@ const Contract = {
   CryptoAllowance: 'CryptoAllowance',
   CryptoOwner: 'CryptoOwner',
   CancunOpcodes: 'CancunOpcodes',
+  SelfDestructInSameCreateTx: 'SelfDestructInSameCreateTx',
+  SelfDestructInSameCreateTxSameTarget: 'SelfDestructInSameCreateTxSameTarget',
+  SelfDestructInSeparateTx: 'SelfDestructInSeparateTx',
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';
