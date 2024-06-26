@@ -41,6 +41,8 @@ function analyze(code, path) {
     }
 }
 
+const shortened = hash => hash.slice(0, 8) + '[..]' + hash.slice(-6);
+
 function main() {
     let prefixes = process.argv.slice(2);
     prefixes = prefixes.length === 0 ? fs.readdirSync(`.${name}`) : prefixes;
@@ -51,7 +53,14 @@ function main() {
             const path = `.${name}/${prefix}/${file}`;
             // console.info(`Running ${c.cyan('sevm')} analysis on ${c.magenta(file.slice(0, 8) + '..' + file.slice(-9 - 6))}`);
             const code = fs.readFileSync(path, 'utf8');
-            analyze(code, path);
+
+            if (code === '0x') {
+                continue;
+            }
+
+            const fileParts = file.split('.');
+            const shortenedPath = `.${name}/${prefix}/${shortened(fileParts[0])}.${fileParts[1]}`
+            analyze(code, shortenedPath);
         }
     }
 }
