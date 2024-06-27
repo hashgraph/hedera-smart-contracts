@@ -2,7 +2,7 @@
   "name": "hedera-sevm-precompile-detection-analysis",
   "version": "0.0.1",
   "type": "module",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "devDependencies": {
     "chalk": "^5.3.0",
     "ethers": "^6.3.0",
