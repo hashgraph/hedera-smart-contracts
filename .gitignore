@@ -16,10 +16,19 @@ artifacts/build-info
 artifacts/@openzeppelin
 artifacts/contracts/**/**/*.dbg.json
 
-!artifacts/contracts/hts-precompile
-artifacts/contracts/hts-precompile/*
-!artifacts/contracts/hts-precompile/examples
-!artifacts/contracts/hts-precompile/IHRC719.sol
+!artifacts/contracts/precompile
+artifacts/contracts/precompile/*
+!artifacts/contracts/precompile/exchange-rate
+!artifacts/contracts/precompile/pseudo-random-number-generator
+!artifacts/contracts/precompile/hedera-token-service
+artifacts/contracts/precompile/hedera-token-service/*
+!artifacts/contracts/precompile/hedera-token-service/examples
+!artifacts/contracts/precompile/hedera-token-service/IHRC719.sol
+
+# !artifacts/contracts/hts-precompile
+# artifacts/contracts/hts-precompile/*
+# !artifacts/contracts/hts-precompile/examples
+# !artifacts/contracts/hts-precompile/IHRC719.sol
 
 !artifacts/contracts/exchange-rate-precompile
 artifacts/contracts/exchange-rate-precompile/*
