@@ -78,17 +78,18 @@ class Utils {
     const EcrecoverCheck = await ethers.getContractFactory('EcrecoverCheck');
     try {
       const network = hre.network.name;
-      const { mirrorNode } = hre.config.networks[network].sdkClient;
       const ecrecoverCheck = await EcrecoverCheck.deploy();
       await ecrecoverCheck.waitForDeployment();
       const address = await ecrecoverCheck.getAddress();
       const contractQuery =
-        (!mirrorNode.startsWith('http://') && !mirrorNode.startsWith('https://')
-          ? 'https://' + mirrorNode
-          : mirrorNode) +
-        '/api/v1/contracts/' +
-        address;
-      const result = await fetch(contractQuery);
+        Utils.getMirrorNodeUrl(network) + '/contracts/' + address;
+      let result;
+      let cnt = 0;
+      while (cnt < 20 && (!result || result.status === 404)) {
+        cnt++;
+        result = await fetch(contractQuery);
+        await new Promise((r) => setTimeout(r, 1000));
+      }
       const json = await result.json();
       return json.contract_id;
     } catch (e) {
@@ -184,6 +185,21 @@ class Utils {
     const submitTx = await signTx.execute(client);
     await submitTx.getReceipt(client);
     return newPrivateKey;
+  }
+
+  static getMirrorNodeUrl(network) {
+    switch (network) {
+      case 'mainnet':
+        return 'https://mainnet.mirrornode.hedera.com/api/v1';
+      case 'testnet':
+        return 'https://testnet.mirrornode.hedera.com/api/v1';
+      case 'previewnet':
+        return 'https://previewnet.mirrornode.hedera.com/api/v1';
+      case 'local':
+        return 'http://127.0.0.1:5551/api/v1';
+      default:
+        throw new Error('Unknown network');
+    }
   }
 }
 
