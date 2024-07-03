@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.5.0 <0.9.0;
 
-function itoa(uint value) pure returns (string memory) {
+/**
+ * @dev Converts an unsigned integer to its string representation.
+ * @param value The unsigned integer to convert.
+ * @return The string representation of the unsigned integer.
+ */
+function uintToString(uint value) pure returns (string memory) {
   uint length = 1;
   uint v = value;
   while ((v /= 10) != 0) { length++; }
@@ -26,12 +31,11 @@ contract EcrecoverCheck {
     ) public pure returns (address) {
         bytes memory prefixedMessage = abi.encodePacked(
             "\x19Ethereum Signed Message:\n",
-            itoa(bytes(message).length),
+            uintToString(bytes(message).length),
             message
         );
         bytes32 digest = keccak256(prefixedMessage);
-        address recoveredAddress = ecrecover(digest, v, r, s);
-        return recoveredAddress;
+        return ecrecover(digest, v, r, s);
     }
 
     function getSender() public view returns (address) {
