@@ -76,6 +76,7 @@ const Path = {
 const Contract = {
   ERC20Mock: 'ERC20Mock',
   TokenCreateContract: 'TokenCreateContract',
+  TokenCreateTest: 'TokenCreateTest',
   DiamondCutFacet: 'DiamondCutFacet',
   Diamond: 'Diamond',
   DiamondInit: 'DiamondInit',
