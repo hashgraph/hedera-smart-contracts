@@ -35,7 +35,7 @@ describe('EcrecoverCheck', function () {
   const initializeAccount = async (keyType, withAlias) => {
     const network = htsUtils.getCurrentNetwork();
     const operatorId = hre.config.networks[network].sdkClient.operatorId;
-    const operatorKey = PrivateKey.fromStringED25519(
+    const operatorKey = PrivateKey.fromStringDer(
       hre.config.networks[network].sdkClient.operatorKey.replace('0x', '')
     );
     client = await htsUtils.createSDKClient(operatorId, operatorKey);
