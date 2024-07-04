@@ -24,37 +24,42 @@ const htsUtils = require('../../hedera-token-service/utils');
 const hre = require('hardhat');
 const { PrivateKey } = require('@hashgraph/sdk');
 
-const testEcrecover = async (address, initialKey, withAlias, changedTo) => {
-  const network = htsUtils.getCurrentNetwork();
-  const operatorId = hre.config.networks[network].sdkClient.operatorId;
-  const operatorKey = PrivateKey.fromStringECDSA(
-    hre.config.networks[network].sdkClient.operatorKey.replace('0x', '')
-  );
-  const client = await htsUtils.createSDKClient(operatorId, operatorKey);
-  const account = await utils.createAccount(client, initialKey, withAlias);
-  const initialResult = await utils.verifyEcrecover(
-    address,
-    client.setOperator(account.accountId, account.privateKey),
-    utils.formatPrivateKey(account.privateKey)
-  );
-  if (changedTo === '' || !initialResult) {
-    // Changing keys to the new ones was not requested, we can quit here.
-    return initialResult;
-  }
-  account.privateKey = await utils.changeAccountKeys(account, changedTo);
-
-  return await utils.verifyEcrecover(
-    address,
-    client.setOperator(account.accountId, account.privateKey),
-    utils.formatPrivateKey(account.privateKey)
-  );
-};
-
 describe('EcrecoverCheck', function () {
   let address;
+  let client;
+
   before(async () => {
     address = await utils.deploy();
   });
+
+  const initializeAccount = async (keyType, withAlias) => {
+    const network = htsUtils.getCurrentNetwork();
+    const operatorId = hre.config.networks[network].sdkClient.operatorId;
+    const operatorKey = PrivateKey.fromStringED25519(
+      hre.config.networks[network].sdkClient.operatorKey.replace('0x', '')
+    );
+    client = await htsUtils.createSDKClient(operatorId, operatorKey);
+    const account = await utils.createAccount(client, keyType, withAlias);
+    client.setOperator(account.accountId, account.privateKey);
+    return account;
+  };
+
+  const getAddressFromEcRecover = async (account) => {
+    const message = 'Test message';
+    return await utils.getAddressRecoveredFromEcRecover(
+      address,
+      client,
+      message,
+      await utils.sign(message, utils.formatPrivateKey(account.privateKey))
+    );
+  };
+
+  const getMsgSender = () => utils.getMsgSenderAddress(address, client);
+
+  const changeAccountKeyType = async (account, keyType) => {
+    account.privateKey = await utils.changeAccountKeyType(account, keyType);
+    client.setOperator(account.accountId, account.privateKey);
+  };
 
   describe('Deployment', function () {
     it('Should be deployed correctly', async function () {
@@ -64,26 +69,81 @@ describe('EcrecoverCheck', function () {
 
   describe('Verification', function () {
     it('Ecrecover should work correctly for account with ECDSA key and EVM alias derived from ECDSA key.', async function () {
-      expect(await testEcrecover(address, 'ECDSA', true, '')).to.true;
+      const account = await initializeAccount('ECDSA', true);
+      expect(await getAddressFromEcRecover(account)).to.equals(
+        await getMsgSender()
+      );
     });
 
     it('Ecrecover should fail for account with ECDSA key replaced by new ECDSA private key. EVMAlias (msg.sender) will remain the same but signer extracted with ecrecover will be derived from new key pair.', async function () {
-      expect(await testEcrecover(address, 'ECDSA', true, 'ECDSA')).to.false;
+      const account = await initializeAccount('ECDSA', true);
+      expect(await getAddressFromEcRecover(account)).to.equals(
+        await getMsgSender()
+      );
+      await changeAccountKeyType(account, 'ECDSA');
+      expect(await getAddressFromEcRecover(account)).to.not.equals(
+        await getMsgSender()
+      );
     });
 
     it('Ecrecover should fail for account with ECDSA key replaced by new ED25519 private key. EVMAlias (msg.sender) will remain the same but signer extracted with ecrecover will be some random value, because ecrecover will not work for ED25519 keys.', async function () {
-      expect(await testEcrecover(address, 'ECDSA', true, 'ED25519')).to.false;
+      const account = await initializeAccount('ECDSA', true);
+      expect(await getAddressFromEcRecover(account)).to.equals(
+        await getMsgSender()
+      );
+      await changeAccountKeyType(account, 'ED25519');
+      expect(await getAddressFromEcRecover(account)).to.not.equals(
+        await getMsgSender()
+      );
     });
 
     it('Ecrecover should be broken for account with ECDSA key and default EVM alias. EVM alias is not connected in any way to the ECDSA key, so ecrecover result will not return it.', async function () {
-      expect(await testEcrecover(address, 'ECDSA', false, '')).to.false;
+      const account = await initializeAccount('ECDSA', false);
+      expect(await getAddressFromEcRecover(account)).to.not.equals(
+        await getMsgSender()
+      );
     });
 
     it('Ecrecover should be broken for ED25519 keys. No matter what they will be replaced with.', async function () {
-      expect(await testEcrecover(address, 'ED25519', false, '')).to.false;
-      expect(await testEcrecover(address, 'ED25519', false, 'ED25519')).to
-        .false;
-      expect(await testEcrecover(address, 'ED25519', false, 'ECDSA')).to.false;
+      const ed25519 = await initializeAccount('ED25519', false);
+      expect(await getAddressFromEcRecover(ed25519)).to.not.equals(
+        await getMsgSender()
+      );
+
+      await changeAccountKeyType(ed25519, 'ED25519');
+      expect(await getAddressFromEcRecover(ed25519)).to.not.equals(
+        await getMsgSender()
+      );
+
+      const ed25519ToEcdsa = await initializeAccount('ED25519', false);
+      await initializeAccount('ED25519', false);
+
+      await changeAccountKeyType(ed25519ToEcdsa, 'ECDSA');
+      expect(await getAddressFromEcRecover(ed25519ToEcdsa)).to.not.equals(
+        await getMsgSender()
+      );
+    });
+
+    it('Ecrecover should work correctly when reverting to previous ECDSA key for which ecrecover used to work.', async function () {
+      const account = await initializeAccount('ECDSA', true);
+      expect(await getAddressFromEcRecover(account)).to.equals(
+        await getMsgSender()
+      );
+
+      const initialCorrectPrivateKey = account.privateKey;
+      await changeAccountKeyType(account, 'ED25519');
+
+      expect(await getAddressFromEcRecover(account)).to.not.equals(
+        await getMsgSender()
+      );
+
+      await utils.changeAccountKey(account, initialCorrectPrivateKey);
+      account.privateKey = initialCorrectPrivateKey;
+      client.setOperator(account.accountId, initialCorrectPrivateKey);
+
+      expect(await getAddressFromEcRecover(account)).to.equals(
+        await getMsgSender()
+      );
     });
   });
 });

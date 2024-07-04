@@ -134,7 +134,7 @@ class Utils {
     return getSenderTransaction.getAddress();
   };
 
-  static async verifyEcrecover(contractId, client, privateKey) {
+  static async getMsgSenderAndEcRecover(contractId, client, privateKey) {
     const message = 'Test message';
     const addressRecoveredFromEcRecover =
       await Utils.getAddressRecoveredFromEcRecover(
@@ -147,18 +147,12 @@ class Utils {
       contractId,
       client
     );
-    return addressRecoveredFromEcRecover === msgSenderFromSmartContract;
+    return { addressRecoveredFromEcRecover, msgSenderFromSmartContract };
   }
 
   static formatPrivateKey = (pk) => `0x${pk.toStringRaw()}`;
 
-  static async changeAccountKeys(account, keyType) {
-    const network = htsUtils.getCurrentNetwork();
-    const operatorId = hre.config.networks[network].sdkClient.operatorId;
-    const operatorKey = PrivateKey.fromStringECDSA(
-      hre.config.networks[network].sdkClient.operatorKey.replace('0x', '')
-    );
-    const client = await htsUtils.createSDKClient(operatorId, operatorKey);
+  static async changeAccountKeyType(account, keyType) {
     let newPrivateKey;
     switch (keyType) {
       case 'ED25519': {
@@ -173,6 +167,16 @@ class Utils {
         throw new Error('Unsupported key type');
       }
     }
+    return await this.changeAccountKey(account, newPrivateKey);
+  }
+
+  static async changeAccountKey(account, newPrivateKey) {
+    const network = htsUtils.getCurrentNetwork();
+    const operatorId = hre.config.networks[network].sdkClient.operatorId;
+    const operatorKey = PrivateKey.fromStringED25519(
+      hre.config.networks[network].sdkClient.operatorKey.replace('0x', '')
+    );
+    const client = await htsUtils.createSDKClient(operatorId, operatorKey);
     const newPublicKey = newPrivateKey.publicKey;
     const transaction = new AccountUpdateTransaction()
       .setAccountId(account.accountId)
