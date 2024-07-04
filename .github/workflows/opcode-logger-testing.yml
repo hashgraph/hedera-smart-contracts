@@ -40,6 +40,9 @@ jobs:
       - name: Run besu node
         run: npm run besu:start
 
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+
       - name: Run opcode tests against besu
         run: npx hardhat test --grep "besu comparison" --network besu_local
 
