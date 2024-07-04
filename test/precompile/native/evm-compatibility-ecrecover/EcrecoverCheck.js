@@ -44,7 +44,13 @@ describe('EcrecoverCheck', function () {
     return account;
   };
 
-  const getAddressFromEcRecover = async (account) => {
+  /**
+   * This method will sign a sample message and extract its signer using ecrecover.
+   *
+   * @param {Object} account - The account object containing the private key.
+   * @returns {Promise<string>} - The recovered address of the signer.
+   */
+  const ecrecover = async (account) => {
     const message = 'Test message';
     return await utils.getAddressRecoveredFromEcRecover(
       address,
@@ -54,7 +60,7 @@ describe('EcrecoverCheck', function () {
     );
   };
 
-  const getMsgSender = () => utils.getMsgSenderAddress(address, client);
+  const msgSender = () => utils.getMsgSenderAddress(address, client);
 
   const changeAccountKeyType = async (account, keyType) => {
     account.privateKey = await utils.changeAccountKeyType(account, keyType);
@@ -70,80 +76,56 @@ describe('EcrecoverCheck', function () {
   describe('Verification', function () {
     it('Ecrecover should work correctly for account with ECDSA key and EVM alias derived from ECDSA key.', async function () {
       const account = await initializeAccount('ECDSA', true);
-      expect(await getAddressFromEcRecover(account)).to.equals(
-        await getMsgSender()
-      );
+      expect(await ecrecover(account)).to.equals(await msgSender());
     });
 
     it('Ecrecover should fail for account with ECDSA key replaced by new ECDSA private key. EVMAlias (msg.sender) will remain the same but signer extracted with ecrecover will be derived from new key pair.', async function () {
       const account = await initializeAccount('ECDSA', true);
-      expect(await getAddressFromEcRecover(account)).to.equals(
-        await getMsgSender()
-      );
+      expect(await ecrecover(account)).to.equals(await msgSender());
       await changeAccountKeyType(account, 'ECDSA');
-      expect(await getAddressFromEcRecover(account)).to.not.equals(
-        await getMsgSender()
-      );
+      expect(await ecrecover(account)).to.not.equals(await msgSender());
     });
 
     it('Ecrecover should fail for account with ECDSA key replaced by new ED25519 private key. EVMAlias (msg.sender) will remain the same but signer extracted with ecrecover will be some random value, because ecrecover will not work for ED25519 keys.', async function () {
       const account = await initializeAccount('ECDSA', true);
-      expect(await getAddressFromEcRecover(account)).to.equals(
-        await getMsgSender()
-      );
+      expect(await ecrecover(account)).to.equals(await msgSender());
       await changeAccountKeyType(account, 'ED25519');
-      expect(await getAddressFromEcRecover(account)).to.not.equals(
-        await getMsgSender()
-      );
+      expect(await ecrecover(account)).to.not.equals(await msgSender());
     });
 
     it('Ecrecover should be broken for account with ECDSA key and default EVM alias. EVM alias is not connected in any way to the ECDSA key, so ecrecover result will not return it.', async function () {
       const account = await initializeAccount('ECDSA', false);
-      expect(await getAddressFromEcRecover(account)).to.not.equals(
-        await getMsgSender()
-      );
+      expect(await ecrecover(account)).to.not.equals(await msgSender());
     });
 
     it('Ecrecover should be broken for ED25519 keys. No matter what they will be replaced with.', async function () {
       const ed25519 = await initializeAccount('ED25519', false);
-      expect(await getAddressFromEcRecover(ed25519)).to.not.equals(
-        await getMsgSender()
-      );
+      expect(await ecrecover(ed25519)).to.not.equals(await msgSender());
 
       await changeAccountKeyType(ed25519, 'ED25519');
-      expect(await getAddressFromEcRecover(ed25519)).to.not.equals(
-        await getMsgSender()
-      );
+      expect(await ecrecover(ed25519)).to.not.equals(await msgSender());
 
       const ed25519ToEcdsa = await initializeAccount('ED25519', false);
       await initializeAccount('ED25519', false);
 
       await changeAccountKeyType(ed25519ToEcdsa, 'ECDSA');
-      expect(await getAddressFromEcRecover(ed25519ToEcdsa)).to.not.equals(
-        await getMsgSender()
-      );
+      expect(await ecrecover(ed25519ToEcdsa)).to.not.equals(await msgSender());
     });
 
     it('Ecrecover should work correctly when reverting to previous ECDSA key for which ecrecover used to work.', async function () {
       const account = await initializeAccount('ECDSA', true);
-      expect(await getAddressFromEcRecover(account)).to.equals(
-        await getMsgSender()
-      );
+      expect(await ecrecover(account)).to.equals(await msgSender());
 
       const initialCorrectPrivateKey = account.privateKey;
       await changeAccountKeyType(account, 'ED25519');
 
-      expect(await getAddressFromEcRecover(account)).to.not.equals(
-        await getMsgSender()
-      );
+      expect(await ecrecover(account)).to.not.equals(await msgSender());
 
       await utils.changeAccountKey(account, initialCorrectPrivateKey);
       account.privateKey = initialCorrectPrivateKey;
       client.setOperator(account.accountId, initialCorrectPrivateKey);
 
-      expect(await getAddressFromEcRecover(account)).to.equals(
-        await getMsgSender()
-      );
+      expect(await ecrecover(account)).to.equals(await msgSender());
     });
   });
 });
