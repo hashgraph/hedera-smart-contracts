@@ -32,14 +32,14 @@
     "besu:start": "docker run -d -p 8540:8545 -p 8541:8546 hyperledger/besu:latest --miner-enabled --miner-coinbase fe3b557e8fb62b89f4916b721be55ceb828dbd73 --network=dev --host-allowlist='*' --rpc-http-cors-origins=all --rpc-http-enabled  --rpc-http-api DEBUG,ETH,NET,WEB3"
   },
   "devDependencies": {
-    "@hashgraph/hedera-local": "^2.26.2",
-    "@hashgraph/sdk": "^2.45.0",
+    "@hashgraph/hedera-local": "^2.27.0",
+    "@hashgraph/sdk": "^2.47.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.7",
     "@nomicfoundation/hardhat-foundry": "^1.1.2",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
-    "@openzeppelin/hardhat-upgrades": "^3.1.0",
     "hardhat": "^2.22.5",
+    "@openzeppelin/hardhat-upgrades": "^3.2.0",
     "hardhat-abi-exporter": "^2.10.1",
     "husky": "^9.0.11",
     "mocha-junit-reporter": "^2.2.0",

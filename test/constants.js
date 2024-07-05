@@ -199,6 +199,8 @@ const Contract = {
   BLSTest: 'BLSTest',
   CryptoAllowance: 'CryptoAllowance',
   CryptoOwner: 'CryptoOwner',
+  CancunOpcodes: 'CancunOpcodes',
+  KZGPointEvaluation: 'KZGPointEvaluation',
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';

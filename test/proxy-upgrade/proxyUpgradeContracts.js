@@ -20,7 +20,7 @@
 
 const { expect } = require('chai');
 const { ethers, upgrades } = require('hardhat');
-const utils = require('../hts-precompile/utils');
+const utils = require('../precompile/hedera-token-service/utils');
 const Constants = require('../constants');
 const { pollForNewCounterValue } = require('../../utils/helpers');
 
@@ -357,15 +357,13 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
     });
 
     it('should be able to upgrade contract to V2', async function () {
-      const addressV1 = await upgrades.erc1967.getImplementationAddress(
-        proxyAddress
-      );
+      const addressV1 =
+        await upgrades.erc1967.getImplementationAddress(proxyAddress);
 
       proxyContract = await updateCounterProxyContract();
 
-      const addressV2 = await upgrades.erc1967.getImplementationAddress(
-        proxyAddress
-      );
+      const addressV2 =
+        await upgrades.erc1967.getImplementationAddress(proxyAddress);
 
       expect(
         addressV1,

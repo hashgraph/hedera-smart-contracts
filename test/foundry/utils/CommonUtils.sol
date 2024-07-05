@@ -3,7 +3,7 @@ pragma solidity ^0.8.9;
 
 import 'forge-std/Test.sol';
 
-import '../../../contracts/hts-precompile/KeyHelper.sol';
+import '../../../contracts/precompile/hedera-token-service/KeyHelper.sol';
 
 /// generic test utils
 abstract contract CommonUtils is Test, KeyHelper {
