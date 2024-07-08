@@ -29,7 +29,7 @@
     "hedera:start": "npx @hashgraph/hedera-local start --limits=false --dev=true --balance=10000000",
     "hedera:stop": "npx @hashgraph/hedera-local stop",
     "prepare": "husky install",
-    "besu:start": "docker run -d -p 8540:8545 -p 8541:8546 hyperledger/besu:latest --miner-enabled --miner-coinbase fe3b557e8fb62b89f4916b721be55ceb828dbd73 --network=dev --host-allowlist='*' --rpc-http-cors-origins=all --rpc-http-enabled  --rpc-http-api DEBUG,ETH,NET,WEB3"
+    "besu:start": "docker run -d -v ./utils/besu-configs:/var/lib/besu/ -p 8540:8545 -p 8541:8546 hyperledger/besu:24.6.0 --config-file=/var/lib/besu/customConfigFile.toml"
   },
   "devDependencies": {
     "@hashgraph/hedera-local": "^2.27.0",
