@@ -25,7 +25,7 @@
     "forge:coverage:report": "forge coverage --report lcov",
     "forge:coverage:html": "forge coverage --report lcov && genhtml lcov.info --branch-coverage --output-dir coverage",
     "hh:compile": "hardhat compile",
-    "hh:test": "hardhat test",
+    "hh:test": "hardhat test --grep OZERC20",
     "hedera:start": "npx @hashgraph/hedera-local start --limits=false --dev=true --balance=10000000",
     "hedera:stop": "npx @hashgraph/hedera-local stop",
     "prepare": "husky install",

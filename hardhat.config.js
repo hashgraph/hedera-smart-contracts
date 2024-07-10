@@ -2,7 +2,7 @@
 
 require('hardhat-abi-exporter');
 require('@openzeppelin/hardhat-upgrades');
-require('@nomicfoundation/hardhat-foundry');
+// require('@nomicfoundation/hardhat-foundry');
 require('@nomicfoundation/hardhat-chai-matchers');
 require('solidity-coverage');
 
