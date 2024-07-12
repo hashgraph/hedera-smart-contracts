@@ -29,7 +29,8 @@
     "hedera:start": "npx @hashgraph/hedera-local start --limits=false --dev=true --balance=10000000",
     "hedera:stop": "npx @hashgraph/hedera-local stop",
     "prepare": "husky install",
-    "freeze-network-node": "hardhat run scripts/freeze-network-node.js"
+    "freeze-network-node": "hardhat run scripts/freeze-network-node.js",
+    "bump-version": "SEM_VER=${npm_config_semver} SNAPSHOT=${npm_config_snapshot} node scripts/.bump-version.js"
   },
   "devDependencies": {
     "@hashgraph/hedera-local": "^2.27.1",
@@ -38,13 +39,14 @@
     "@nomicfoundation/hardhat-foundry": "^1.1.2",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
-    "hardhat": "^2.22.5",
     "@openzeppelin/hardhat-upgrades": "^3.2.0",
+    "hardhat": "^2.22.5",
     "hardhat-abi-exporter": "^2.10.1",
     "husky": "^9.0.11",
     "mocha-junit-reporter": "^2.2.0",
     "mocha-multi-reporters": "^1.5.1",
-    "prettier": "3.3.2"
+    "prettier": "3.3.2",
+    "replace": "^1.2.2"
   },
   "dependencies": {
     "@nomicfoundation/solidity-analyzer": "^0.1.2",
