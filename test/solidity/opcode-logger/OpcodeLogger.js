@@ -63,13 +63,13 @@ describe('@OpcodeLogger Test Suite', async function () {
     before(async () => {
       besuResults = JSON.parse(fs.readFileSync(BESU_RESULTS_JSON_PATH));
 
-      const erc20Factory = await ethers.getContractFactory(Constants.Path.ERC20Mock);
-      erc20 = await erc20Factory.deploy(Constants.TOKEN_NAME, Constants.TOKEN_SYMBOL);
+      const erc20Factory = await ethers.getContractFactory(Constants.Path.HIP583_ERC20Mock);
+      erc20 = await erc20Factory.deploy();
       await erc20.waitForDeployment();
       await (await erc20.mint(signers[0].address, 10_000_000_000)).wait();
 
-      const erc721Factory = await ethers.getContractFactory(Constants.Path.ERC721Mock);
-      erc721 = await erc721Factory.deploy(Constants.TOKEN_NAME, Constants.TOKEN_SYMBOL);
+      const erc721Factory = await ethers.getContractFactory(Constants.Path.HIP583_ERC721Mock);
+      erc721 = await erc721Factory.deploy();
       await erc721.waitForDeployment();
       await (await erc721.mint(signers[0].address, NFT_ID)).wait();
     });
