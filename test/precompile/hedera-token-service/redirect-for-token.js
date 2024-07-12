@@ -197,7 +197,7 @@ describe('RedirectForToken Test Suite', function () {
 
   it('should be able to execute transfer(address,uint256)', async function () {
     const erc20 = await ethers.getContractAt(
-      Constants.Path.ERC20Mock,
+      Constants.Contract.OZERC20Mock,
       tokenAddress
     );
     await (
@@ -224,7 +224,7 @@ describe('RedirectForToken Test Suite', function () {
 
   it('should be able to execute transferFrom(address,address,uint256)', async function () {
     const erc20 = await ethers.getContractAt(
-      Constants.Path.ERC20Mock,
+      Constants.Contract.OZERC20Mock,
       tokenAddress
     );
     await (

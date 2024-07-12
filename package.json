@@ -29,10 +29,11 @@
     "hedera:start": "npx @hashgraph/hedera-local start --limits=false --dev=true --balance=10000000",
     "hedera:stop": "npx @hashgraph/hedera-local stop",
     "prepare": "husky install",
-    "besu:start": "docker run -d -v ./utils/besu-configs:/var/lib/besu/ -p 8540:8545 -p 8541:8546 hyperledger/besu:24.6.0 --config-file=/var/lib/besu/customConfigFile.toml"
+    "besu:start": "docker run -d -v ./utils/besu-configs:/var/lib/besu/ -p 8540:8545 -p 8541:8546 hyperledger/besu:24.6.0 --config-file=/var/lib/besu/customConfigFile.toml",
+    "freeze-network-node": "hardhat run scripts/freeze-network-node.js"
   },
   "devDependencies": {
-    "@hashgraph/hedera-local": "^2.27.0",
+    "@hashgraph/hedera-local": "^2.27.1",
     "@hashgraph/sdk": "^2.47.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.7",
     "@nomicfoundation/hardhat-foundry": "^1.1.2",

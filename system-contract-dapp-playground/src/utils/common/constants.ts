@@ -19,15 +19,15 @@
  */
 
 import { TContractName } from '@/types/common';
-import ERC20Mock from '@hashgraph-smartcontract/artifacts/contracts/openzeppelin/ERC-20/ERC20Mock.sol/ERC20Mock.json';
-import ERC721Mock from '@hashgraph-smartcontract/artifacts/contracts/openzeppelin/ERC-721/ERC721Mock.sol/ERC721Mock.json';
-import IHRC719Contract from '@hashgraph-smartcontract/artifacts/contracts/precompile/hedera-token-service/IHRC719.sol/IHRC719.json';
-import ExchangeRatePrecompile from '@hashgraph-smartcontract/artifacts/contracts/precompile/exchange-rate/ExchangeRateMock.sol/ExchangeRateMock.json';
-import PrngSystemContract from '@hashgraph-smartcontract/artifacts/contracts/precompile/pseudo-random-number-generator/PrngSystemContract.sol/PrngSystemContract.json';
-import TokenQueryContract from '@hashgraph-smartcontract/artifacts/contracts/precompile/hedera-token-service/examples/token-query/TokenQueryContract.sol/TokenQueryContract.json';
-import TokenTransferContract from '@hashgraph-smartcontract/artifacts/contracts/precompile/hedera-token-service/examples/token-transfer/TokenTransferContract.sol/TokenTransferContract.json';
-import TokenCreateCustomContract from '@hashgraph-smartcontract/artifacts/contracts/precompile/hedera-token-service/examples/token-create/TokenCreateCustom.sol/TokenCreateCustomContract.json';
-import TokenManagementContract from '@hashgraph-smartcontract/artifacts/contracts/precompile/hedera-token-service/examples/token-manage/TokenManagementContract.sol/TokenManagementContract.json';
+import ERC20Mock from '@hashgraph-smartcontract/artifacts/contracts/openzeppelin/ERC-20/ERC20Mock.sol/OZERC20Mock.json';
+import ERC721Mock from '@hashgraph-smartcontract/artifacts/contracts/openzeppelin/ERC-721/ERC721Mock.sol/OZERC721Mock.json';
+import IHRC719Contract from '@hashgraph-smartcontract/artifacts/contracts/system-contracts/hedera-token-service/IHRC719.sol/IHRC719.json';
+import ExchangeRatePrecompile from '@hashgraph-smartcontract/artifacts/contracts/system-contracts/exchange-rate/ExchangeRateMock.sol/ExchangeRateMock.json';
+import PrngSystemContract from '@hashgraph-smartcontract/artifacts/contracts/system-contracts/pseudo-random-number-generator/PrngSystemContract.sol/PrngSystemContract.json';
+import TokenQueryContract from '@hashgraph-smartcontract/artifacts/contracts/system-contracts/hedera-token-service/examples/token-query/TokenQueryContract.sol/TokenQueryContract.json';
+import TokenTransferContract from '@hashgraph-smartcontract/artifacts/contracts/system-contracts/hedera-token-service/examples/token-transfer/TokenTransferContract.sol/TokenTransferContract.json';
+import TokenCreateCustomContract from '@hashgraph-smartcontract/artifacts/contracts/system-contracts/hedera-token-service/examples/token-create/TokenCreateCustom.sol/TokenCreateCustomContract.json';
+import TokenManagementContract from '@hashgraph-smartcontract/artifacts/contracts/system-contracts/hedera-token-service/examples/token-manage/TokenManagementContract.sol/TokenManagementContract.json';
 
 /** @notice Hedera Smart Contract official github url */
 export const HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL =
