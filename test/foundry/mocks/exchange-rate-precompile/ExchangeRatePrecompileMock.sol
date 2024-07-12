@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.9;
 
-import '../../../../contracts/precompile/exchange-rate/IExchangeRate.sol';
+import '../../../../contracts/system-contracts/exchange-rate/IExchangeRate.sol';
 
 contract ExchangeRatePrecompileMock is IExchangeRate {
 
