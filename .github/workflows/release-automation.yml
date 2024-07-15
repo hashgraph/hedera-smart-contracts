@@ -90,7 +90,7 @@ jobs:
         run: npm ci
 
       - name: Bump Versions
-        run: npm run bump-version --semver=${{ env.VERSION }}
+        run: npm version ${{ env.VERSION }}
 
       - name: Create Release Notes
         if: ${{ steps.milestone.outputs.milestone_id != '' }}
@@ -166,7 +166,7 @@ jobs:
         run: npm ci
 
       - name: Bump Versions
-        run: npm run bump-version --semver=${{ env.NEXT_VERSION_SNAPSHOT }} --snapshot=true
+        run: npm version ${{ env.NEXT_VERSION_SNAPSHOT }}
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@6d6857d36972b65feb161a90e484f2984215f83e # v6.0.5
