@@ -57,7 +57,7 @@ jobs:
 
       - name: Import GPG Key
         id: gpg_importer
-        uses: step-security/ghaction-import-gpg@a7c87df2279f2bf2e69ba8289dfbf35fe05a4e08 # v1.0.0
+        uses: step-security/ghaction-import-gpg@e01691664dfc9c2ab0d20982f9db989cb366d2bd # v6.0.0
         with:
           git_commit_gpgsign: true
           git_tag_gpgsign: true
@@ -146,7 +146,7 @@ jobs:
 
       - name: Import GPG Key
         id: gpg_importer
-        uses: step-security/ghaction-import-gpg@a7c87df2279f2bf2e69ba8289dfbf35fe05a4e08 # v1.0.0
+        uses: step-security/ghaction-import-gpg@e01691664dfc9c2ab0d20982f9db989cb366d2bd # v6.0.0
         with:
           git_commit_gpgsign: true
           git_tag_gpgsign: true
