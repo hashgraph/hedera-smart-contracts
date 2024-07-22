@@ -8,7 +8,7 @@ const { hexToASCII } = require('../../utils')
 const BESU_RESULTS_JSON_PATH = __dirname + '/opcodeLoggerBesuResults.json';
 const IS_BESU_NETWORK = hre.network.name === 'besu_local';
 
-describe.only('@OpcodeLogger Test Suite', async function () {
+describe('@OpcodeLogger Test Suite', async function () {
   let signers;
   let randomAddress;
   let opcodeLogger;
@@ -29,7 +29,7 @@ describe.only('@OpcodeLogger Test Suite', async function () {
     disableStack: true
   }) {
     return await signers[0].provider.send(
-      'debug_traceTransaction', [txHash, options]
+        'debug_traceTransaction', [txHash, options]
     );
   }
 
@@ -102,88 +102,88 @@ describe.only('@OpcodeLogger Test Suite', async function () {
     });
 
     it('should be able to execute updateOwner()', async function () {
-      const res = await (await opcodeLogger.updateOwner({ gasLimit: 1_000_000 })).wait();
+      const res = await (await opcodeLogger.updateOwner({gasLimit: 1_000_000})).wait();
       await updateBesuResponsesIfNeeded('updateOwner', res.hash);
       compareOutputs('updateOwner', await executeDebugTraceTransaction(res.hash));
     });
 
     it('should be able to execute resetCounter()', async function () {
-      const res = await (await opcodeLogger.resetCounter({ gasLimit: 1_000_000 })).wait();
+      const res = await (await opcodeLogger.resetCounter({gasLimit: 1_000_000})).wait();
       await updateBesuResponsesIfNeeded('resetCounter', res.hash);
       compareOutputs('resetCounter', await executeDebugTraceTransaction(res.hash));
     });
 
     it('should be able to execute call()', async function () {
-      const res = await (await opcodeLogger.call(randomAddress, '0x056440', { gasLimit: 1_000_000 })).wait();
+      const res = await (await opcodeLogger.call(randomAddress, '0x056440', {gasLimit: 1_000_000})).wait();
       await updateBesuResponsesIfNeeded('call', res.hash);
       compareOutputs('call', await executeDebugTraceTransaction(res.hash));
     });
 
     it('should be able to execute staticCall()', async function () {
-      const res = await (await opcodeLogger.staticCall(randomAddress, '0x056440', { gasLimit: 1_000_000 })).wait();
+      const res = await (await opcodeLogger.staticCall(randomAddress, '0x056440', {gasLimit: 1_000_000})).wait();
       await updateBesuResponsesIfNeeded('staticCall', res.hash);
       compareOutputs('staticCall', await executeDebugTraceTransaction(res.hash));
     });
 
     it('should be able to execute callCode()', async function () {
-      const res = await (await opcodeLogger.callCode(randomAddress, '0x056440', { gasLimit: 1_000_000 })).wait();
+      const res = await (await opcodeLogger.callCode(randomAddress, '0x056440', {gasLimit: 1_000_000})).wait();
       await updateBesuResponsesIfNeeded('callCode', res.hash);
       compareOutputs('callCode', await executeDebugTraceTransaction(res.hash));
     });
 
     it('should be able to execute delegateCall()', async function () {
-      const res = await (await opcodeLogger.delegateCall(randomAddress, '0x056440', { gasLimit: 1_000_000 })).wait();
+      const res = await (await opcodeLogger.delegateCall(randomAddress, '0x056440', {gasLimit: 1_000_000})).wait();
       await updateBesuResponsesIfNeeded('delegateCall', res.hash);
       compareOutputs('delegateCall', await executeDebugTraceTransaction(res.hash));
     });
 
     it('should be able to execute erc20.approve()', async function () {
-      const res = await (await erc20.approve(randomAddress, 5644, { gasLimit: 1_000_000 })).wait();
+      const res = await (await erc20.approve(randomAddress, 5644, {gasLimit: 1_000_000})).wait();
       await updateBesuResponsesIfNeeded('erc20.approve', res.hash);
       compareOutputs('erc20.approve', await executeDebugTraceTransaction(res.hash));
     });
 
     it('should be able to execute erc20.transfer()', async function () {
-      const res = await (await erc20.transfer(randomAddress, 5644, { gasLimit: 1_000_000 })).wait();
+      const res = await (await erc20.transfer(randomAddress, 5644, {gasLimit: 1_000_000})).wait();
       await updateBesuResponsesIfNeeded('erc20.transfer', res.hash);
       compareOutputs('erc20.transfer', await executeDebugTraceTransaction(res.hash));
     });
 
     it('should be able to execute erc20.transferFrom()', async function () {
-      await (await erc20.approve(signers[1].address, 5644, { gasLimit: 1_000_000 })).wait();
+      await (await erc20.approve(signers[1].address, 5644, {gasLimit: 1_000_000})).wait();
       const erc20SecondSigner = erc20.connect(signers[1]);
 
-      const res = await (await erc20SecondSigner.transferFrom(signers[0].address, randomAddress, 56, { gasLimit: 1_000_000 })).wait();
+      const res = await (await erc20SecondSigner.transferFrom(signers[0].address, randomAddress, 56, {gasLimit: 1_000_000})).wait();
       await updateBesuResponsesIfNeeded('erc20.transferFrom', res.hash);
       compareOutputs('erc20.transferFrom', await executeDebugTraceTransaction(res.hash));
     });
 
     it('should be able to execute erc721.approve()', async function () {
-      const res = await (await erc721.approve(randomAddress, NFT_ID, { gasLimit: 1_000_000 })).wait();
+      const res = await (await erc721.approve(randomAddress, NFT_ID, {gasLimit: 1_000_000})).wait();
       await updateBesuResponsesIfNeeded('erc721.approve', res.hash);
       compareOutputs('erc721.approve', await executeDebugTraceTransaction(res.hash));
     });
 
     it('should be able to execute erc721.setApprovalForAll()', async function () {
-      const res = await (await erc721.setApprovalForAll(randomAddress, true, { gasLimit: 1_000_000 })).wait();
+      const res = await (await erc721.setApprovalForAll(randomAddress, true, {gasLimit: 1_000_000})).wait();
       await updateBesuResponsesIfNeeded('erc721.setApprovalForAll', res.hash);
       compareOutputs('erc721.setApprovalForAll', await executeDebugTraceTransaction(res.hash));
     });
 
     it('should be able to execute erc721.transferFrom()', async function () {
-      await (await erc721.approve(signers[1].address, NFT_ID, { gasLimit: 1_000_000 })).wait();
+      await (await erc721.approve(signers[1].address, NFT_ID, {gasLimit: 1_000_000})).wait();
       const erc721SecondSigner = erc721.connect(signers[1]);
 
-      const res = await (await erc721SecondSigner.transferFrom(signers[0].address, signers[1].address, NFT_ID, { gasLimit: 1_000_000 })).wait();
+      const res = await (await erc721SecondSigner.transferFrom(signers[0].address, signers[1].address, NFT_ID, {gasLimit: 1_000_000})).wait();
       await updateBesuResponsesIfNeeded('erc721.transferFrom', res.hash);
       compareOutputs('erc721.transferFrom', await executeDebugTraceTransaction(res.hash));
     });
   });
 
   const txTypeSpecificSuitesConfig = {
-    'type 0 tx suite': { gasLimit: 5_000_000, gasPrice: 710_000_000_000 },
-    'type 1 tx suite': { gasLimit: 5_000_000, gasPrice: 710_000_000_000, accessList: [] },
-    'type 2 tx suite': { gasLimit: 5_000_000 },
+    'type 0 tx suite': {gasLimit: 5_000_000, gasPrice: 710_000_000_000},
+    'type 1 tx suite': {gasLimit: 5_000_000, gasPrice: 710_000_000_000, accessList: []},
+    'type 2 tx suite': {gasLimit: 5_000_000},
   };
   for (let suiteName in txTypeSpecificSuitesConfig) {
     const txTypeSpecificOverrides = txTypeSpecificSuitesConfig[suiteName];
@@ -193,7 +193,7 @@ describe.only('@OpcodeLogger Test Suite', async function () {
         const contract = await factory.deploy(txTypeSpecificOverrides);
         await contract.waitForDeployment();
 
-        const { hash } = await contract.deploymentTransaction();
+        const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
           disableStorage: false,
@@ -212,10 +212,10 @@ describe.only('@OpcodeLogger Test Suite', async function () {
 
       it('failing CREATE transaction with disabledMemory, disabledStack, disabledStorage set to false', async function () {
         const factory = await ethers.getContractFactory(Constants.Contract.Base);
-        const contract = await factory.deploy({ ...txTypeSpecificOverrides, gasLimit: 25484 });
+        const contract = await factory.deploy({...txTypeSpecificOverrides, gasLimit: 25484});
         await expect(contract.waitForDeployment()).to.be.rejectedWith(Error);
 
-        const { hash } = await contract.deploymentTransaction();
+        const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
           disableStorage: false,
@@ -237,7 +237,7 @@ describe.only('@OpcodeLogger Test Suite', async function () {
         const contract = await factory.deploy(txTypeSpecificOverrides);
         await contract.waitForDeployment();
 
-        const { hash } = await contract.deploymentTransaction();
+        const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
           disableStorage: true,
@@ -256,10 +256,10 @@ describe.only('@OpcodeLogger Test Suite', async function () {
 
       it('failing CREATE transaction with disabledMemory, disabledStack, disabledStorage set to true', async function () {
         const factory = await ethers.getContractFactory(Constants.Contract.Base);
-        const contract = await factory.deploy({ ...txTypeSpecificOverrides, gasLimit: 25484 });
+        const contract = await factory.deploy({...txTypeSpecificOverrides, gasLimit: 25484});
         await expect(contract.waitForDeployment()).to.be.rejectedWith(Error);
 
-        const { hash } = await contract.deploymentTransaction();
+        const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
           disableStorage: true,
@@ -281,7 +281,7 @@ describe.only('@OpcodeLogger Test Suite', async function () {
         const contract = await factory.deploy(txTypeSpecificOverrides);
         await contract.waitForDeployment();
 
-        const { hash } = await contract.deploymentTransaction();
+        const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
           disableStorage: true,
@@ -300,10 +300,10 @@ describe.only('@OpcodeLogger Test Suite', async function () {
 
       it('failing CREATE transaction with disabledMemory set to false, disabledStack, disabledStorage set to true', async function () {
         const factory = await ethers.getContractFactory(Constants.Contract.Base);
-        const contract = await factory.deploy({ ...txTypeSpecificOverrides, gasLimit: 25484 });
+        const contract = await factory.deploy({...txTypeSpecificOverrides, gasLimit: 25484});
         await expect(contract.waitForDeployment()).to.be.rejectedWith(Error);
 
-        const { hash } = await contract.deploymentTransaction();
+        const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
           disableStorage: true,
@@ -325,7 +325,7 @@ describe.only('@OpcodeLogger Test Suite', async function () {
         const contract = await factory.deploy(txTypeSpecificOverrides);
         await contract.waitForDeployment();
 
-        const { hash } = await contract.deploymentTransaction();
+        const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
           disableStorage: true,
@@ -344,10 +344,10 @@ describe.only('@OpcodeLogger Test Suite', async function () {
 
       it('failing CREATE transaction with disabledStack set to false, disabledMemory, disabledStorage set to true', async function () {
         const factory = await ethers.getContractFactory(Constants.Contract.Base);
-        const contract = await factory.deploy({ ...txTypeSpecificOverrides, gasLimit: 25484 });
+        const contract = await factory.deploy({...txTypeSpecificOverrides, gasLimit: 25484});
         await expect(contract.waitForDeployment()).to.be.rejectedWith(Error);
 
-        const { hash } = await contract.deploymentTransaction();
+        const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
           disableStorage: true,
@@ -369,7 +369,7 @@ describe.only('@OpcodeLogger Test Suite', async function () {
         const contract = await factory.deploy(txTypeSpecificOverrides);
         await contract.waitForDeployment();
 
-        const { hash } = await contract.deploymentTransaction();
+        const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
           disableStorage: false,
@@ -388,10 +388,10 @@ describe.only('@OpcodeLogger Test Suite', async function () {
 
       it('failing CREATE transaction with disabledStorage set to false, disabledMemory, disabledStack set to true', async function () {
         const factory = await ethers.getContractFactory(Constants.Contract.Base);
-        const contract = await factory.deploy({ ...txTypeSpecificOverrides, gasLimit: 25484 });
+        const contract = await factory.deploy({...txTypeSpecificOverrides, gasLimit: 25484});
         await expect(contract.waitForDeployment()).to.be.rejectedWith(Error);
 
-        const { hash } = await contract.deploymentTransaction();
+        const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
           disableStorage: false,
@@ -428,7 +428,7 @@ describe.only('@OpcodeLogger Test Suite', async function () {
       });
 
       it('failing CALL transaction with disabledMemory, disabledStack, disabledStorage set to true', async function () {
-        const tx = await opcodeLogger.resetCounter({ ...txTypeSpecificOverrides, gasLimit: 21_064 });
+        const tx = await opcodeLogger.resetCounter({...txTypeSpecificOverrides, gasLimit: 21_064});
         await expect(tx.wait()).to.be.rejectedWith(Error);
         const res = await executeDebugTraceTransaction(tx.hash, {
           tracer: 'opcodeLogger',
@@ -466,7 +466,7 @@ describe.only('@OpcodeLogger Test Suite', async function () {
       });
 
       it('failing CALL transaction with disabledMemory, disabledStack, disabledStorage set to false', async function () {
-        const tx = await opcodeLogger.resetCounter({ ...txTypeSpecificOverrides, gasLimit: 21_064 });
+        const tx = await opcodeLogger.resetCounter({...txTypeSpecificOverrides, gasLimit: 21_064});
         await expect(tx.wait()).to.be.rejectedWith(Error);
         const res = await executeDebugTraceTransaction(tx.hash, {
           tracer: 'opcodeLogger',
@@ -503,7 +503,7 @@ describe.only('@OpcodeLogger Test Suite', async function () {
       });
 
       it('failing CALL transaction with disabledMemory set to false, disabledStack, disabledStorage set to true', async function () {
-        const tx = await opcodeLogger.resetCounter({ ...txTypeSpecificOverrides, gasLimit: 21_064 });
+        const tx = await opcodeLogger.resetCounter({...txTypeSpecificOverrides, gasLimit: 21_064});
         await expect(tx.wait()).to.be.rejectedWith(Error);
         const res = await executeDebugTraceTransaction(tx.hash, {
           tracer: 'opcodeLogger',
@@ -541,7 +541,7 @@ describe.only('@OpcodeLogger Test Suite', async function () {
       });
 
       it('failing CALL transaction with disabledStack set to false, disabledMemory, disabledStorage set to true', async function () {
-        const tx = await opcodeLogger.resetCounter({ ...txTypeSpecificOverrides, gasLimit: 21_064 });
+        const tx = await opcodeLogger.resetCounter({...txTypeSpecificOverrides, gasLimit: 21_064});
         await expect(tx.wait()).to.be.rejectedWith(Error);
         const res = await executeDebugTraceTransaction(tx.hash, {
           tracer: 'opcodeLogger',
@@ -579,7 +579,7 @@ describe.only('@OpcodeLogger Test Suite', async function () {
       });
 
       it('failing CALL transaction with disabledStorage set to false, disabledMemory, disabledStack set to true', async function () {
-        const tx = await opcodeLogger.resetCounter({ ...txTypeSpecificOverrides, gasLimit: 21_064 });
+        const tx = await opcodeLogger.resetCounter({...txTypeSpecificOverrides, gasLimit: 21_064});
         await expect(tx.wait()).to.be.rejectedWith(Error);
         const res = await executeDebugTraceTransaction(tx.hash, {
           tracer: 'opcodeLogger',
@@ -600,18 +600,12 @@ describe.only('@OpcodeLogger Test Suite', async function () {
   }
 
   describe('nested calls', async function () {
-    let errorsExternal, nestedContractCreateTx;
+    let errorsExternal;
 
     before(async () => {
       const factoryErrorsExternal = await ethers.getContractFactory(Constants.Contract.ErrorsExternal);
       errorsExternal = await factoryErrorsExternal.deploy();
       await errorsExternal.waitForDeployment();
-
-      const contractCreatorFactory = await ethers.getContractFactory(Constants.Contract.ContractCreator);
-      const contractCreator = await contractCreatorFactory.deploy();
-      await contractCreator.waitForDeployment();
-      const contractByteCode = '0x608060405234801561001057600080fd5b5060405161001d9061005f565b604051809103906000f080158015610039573d6000803e3d6000fd5b50600080546001600160a01b0319166001600160a01b039290921691909117905561006c565b6101a68061058783390190565b61050c8061007b6000396000f3fe608060405234801561001057600080fd5b506004361061007d5760003560e01c80637c833d3a1161005b5780637c833d3a146100de578063b45694dc146100f1578063c6efc9be14610104578063fdf3a4091461011757600080fd5b80634a8fbaa7146100825780635a7fc2fb146100a857806364f0ac05146100cb575b600080fd5b61009561009036600461032e565b61012a565b6040519081526020015b60405180910390f35b6100bb6100b6366004610350565b61017a565b604051901515815260200161009f565b6100bb6100d9366004610372565b610192565b6100956100ec366004610372565b61021f565b6100956100ff366004610372565b61025f565b610095610112366004610372565b61029c565b61009561012536600461032e565b6102db565b6000606483106101555760405162461bcd60e51b815260040161014c9061038b565b60405180910390fd5b60005b8381610163816103cf565b9250101561017357808303610158575b9392505050565b6000811561018a57506001919050565b506000919050565b6000805460405163a9bf563360e01b81526004810184905273ffffffffffffffffffffffffffffffffffffffff9091169063a9bf563390602401600060405180830381865afa92505050801561020a57506040513d6000823e601f3d908101601f19168201604052610207919081019061040c565b60015b61021657506000919050565b50600192915050565b6000606482106102415760405162461bcd60e51b815260040161014c9061038b565b6000805b8381101561025857905060018101610245565b5092915050565b6000606482106102815760405162461bcd60e51b815260040161014c9061038b565b60005b8261028e826103cf565b915081106102845792915050565b6000606482106102be5760405162461bcd60e51b815260040161014c9061038b565b60005b806102cb816103cf565b9150508281106102c15792915050565b6000606483106102fd5760405162461bcd60e51b815260040161014c9061038b565b6000805b848110156103265780841061031e578161031a816103cf565b9250505b600101610301565b509392505050565b6000806040838503121561034157600080fd5b50508035926020909101359150565b60006020828403121561036257600080fd5b8135801515811461017357600080fd5b60006020828403121561038457600080fd5b5035919050565b60208082526024908201527f43616e6e6f742068617665206d6f7265207468616e2031303020697465726174604082015263696f6e7360e01b606082015260800190565b6000600182016103ef57634e487b7160e01b600052601160045260246000fd5b5060010190565b634e487b7160e01b600052604160045260246000fd5b6000602080838503121561041f57600080fd5b825167ffffffffffffffff8082111561043757600080fd5b818501915085601f83011261044b57600080fd5b81518181111561045d5761045d6103f6565b604051601f8201601f19908116603f01168101908382118183101715610485576104856103f6565b81604052828152888684870101111561049d57600080fd5b600093505b828410156104bf57848401860151818501870152928501926104a2565b60008684830101528096505050505050509291505056fea26469706673582212207617a513fa5800c056cf704f435835c83521a8d0a4158550f89e441d9238b93364736f6c63430008170033608060405234801561001057600080fd5b50610186806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c8063a9bf563314610030575b600080fd5b61004361003e3660046100e8565b610059565b6040516100509190610101565b60405180910390f35b6060816000036100af5760405162461bcd60e51b815260206004820152600e60248201527f72657175697265206661696c6564000000000000000000000000000000000000604482015260640160405180910390fd5b505060408051808201909152601281527f6d792066756e63207761732063616c6c65640000000000000000000000000000602082015290565b6000602082840312156100fa57600080fd5b5035919050565b60006020808352835180602085015260005b8181101561012f57858101830151858201604001528201610113565b506000604082860101526040601f19601f830116850101925050509291505056fea2646970667358221220cbab406ae7ac849914cffae16782be71f8529b82b40a5e08b8df57424ad392ec64736f6c63430008170033';
-      nestedContractCreateTx = await contractCreator.createNewContract(contractByteCode);
     });
 
     it('successful NESTED CALL to existing contract with disabledMemory, disabledStack, disabledStorage set to true', async function () {
@@ -889,7 +883,7 @@ describe.only('@OpcodeLogger Test Suite', async function () {
     });
 
     it('failing ETH precompile call to 0x2 with disabledMemory, disabledStack, disabledStorage set to true', async function () {
-      const tx = await precompiles.modExp(5644, 3, 2, { gasLimit: 21_496 });
+      const tx = await precompiles.modExp(5644, 3, 2, {gasLimit: 21_496});
       await expect(tx.wait()).to.be.rejectedWith(Error);
 
       const res = await executeDebugTraceTransaction(tx.hash, {
@@ -929,7 +923,7 @@ describe.only('@OpcodeLogger Test Suite', async function () {
     });
 
     it('failing ETH precompile call to 0x2 with disabledMemory, disabledStack, disabledStorage set to false', async function () {
-      const tx = await precompiles.modExp(5644, 3, 2, { gasLimit: 21_496 });
+      const tx = await precompiles.modExp(5644, 3, 2, {gasLimit: 21_496});
       await expect(tx.wait()).to.be.rejectedWith(Error);
 
       const res = await executeDebugTraceTransaction(tx.hash, {

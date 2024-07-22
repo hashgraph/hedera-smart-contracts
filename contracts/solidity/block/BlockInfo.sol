@@ -7,8 +7,8 @@ contract BlockInfo {
         return block.basefee;
     }
 
-    function getBlockHash() public view returns (bytes32) {
-        return blockhash(block.number - 1);
+    function getBlockHash(uint256 blockNumber) public view returns (bytes32) {
+        return blockhash(blockNumber);
     }
 
     function getMinerAddress() public view returns (address) {
