@@ -22,18 +22,23 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe.only('@OZERC20 Test Suite', function () {
+describe('@OZERC20 Test Suite', function () {
   const amount = 33;
   let signers;
   let erc20;
 
   before(async function () {
+    console.time("erc20 tests")
     signers = await ethers.getSigners();
 
     const factory = await ethers.getContractFactory(Constants.Path.ERC20Mock);
     erc20 = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL');
     await erc20.mint(signers[0].address, 1000);
   });
+
+  after(() => {
+    console.timeEnd("erc20 tests")
+  })
 
   it('should be able to execute name()', async function () {
     const res = await erc20.name();
