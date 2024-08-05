@@ -43,7 +43,7 @@ jobs:
       target N:${{ inputs.targetNetworkNodeTag }}, M:${{ inputs.targetMirrorNodeTag }}, R:${{ inputs.targetRelayTag }}
     runs-on: [self-hosted, Linux, large, ephemeral]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           submodules: recursive
 
@@ -63,7 +63,7 @@ jobs:
         run: npm install @hashgraph/hedera-local@2.25.2 --save
 
       - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@8f1998e9878d786675189ef566a2e4bf24869773 # v1.2.0
+        uses: step-security/foundry-toolchain@c8ec18dbd1287becdc38602c6a02beaccf13c89f # v1.2.0
         with:
           version: nightly
 
