@@ -26,7 +26,7 @@ describe('@solidityequiv1 BlockInfo Test Suite', function () {
 
   before(async function () {
     signers = await ethers.getSigners();
-    provider = ethers.getDefaultProvider();
+    provider = signers[0].provider;
 
     const factory = await ethers.getContractFactory(Constants.Path.BLOCK_INFO);
     blockInfo = await factory.deploy({ gasLimit: 15000000 });
@@ -38,19 +38,11 @@ describe('@solidityequiv1 BlockInfo Test Suite', function () {
     expect(blockBaseFee).to.equal(0);
   });
 
-  // https://github.com/hashgraph/hedera-mirror-node/issues/7045
   it('should be able to get the hash of a given block when the block number is one of the 256 most recent blocks', async function () {
-    try {
-      const blockNumber = await provider.getBlockNumber();
-      await provider.getBlock(blockNumber);
-      await blockInfo.getBlockHash();
-    } catch (e) {
-      expect(e.code).to.equal('CALL_EXCEPTION');
-      expect(e.message).to.contain('missing revert data in call exception');
-      expect(e.reason).to.contain(
-        'missing revert data in call exception; Transaction reverted without a reason string'
-      );
-    }
+    const blockNumber = await provider.getBlockNumber();
+    const block = await provider.getBlock(blockNumber);
+    const blockHash = await blockInfo.getBlockHash(blockNumber);
+    expect(block.hash).to.equal(blockHash);
   });
 
   it('should get the current block coinbase which is the hedera network account', async function () {

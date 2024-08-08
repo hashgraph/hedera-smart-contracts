@@ -30,7 +30,9 @@ describe.only('@OZERC20 Test Suite', function () {
   before(async function () {
     signers = await ethers.getSigners();
 
-    const factory = await ethers.getContractFactory(Constants.Path.ERC20Mock);
+    const factory = await ethers.getContractFactory(
+      Constants.Contract.OZERC20Mock
+    );
     erc20 = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL');
     await erc20.mint(signers[0].address, 1000);
   });

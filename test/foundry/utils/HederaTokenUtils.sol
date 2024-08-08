@@ -4,7 +4,7 @@ pragma solidity ^0.8.9;
 import 'forge-std/Test.sol';
 
 import '../mocks/hts-precompile/HtsSystemContractMock.sol';
-import '../../../contracts/hts-precompile/IHederaTokenService.sol';
+import '../../../contracts/system-contracts/hedera-token-service/IHederaTokenService.sol';
 import './CommonUtils.sol';
 import '../mocks/interfaces/IHRCCommon.sol';
 

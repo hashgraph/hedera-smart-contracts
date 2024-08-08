@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.9;
 
-import '../../../../contracts/util-precompile/IPrngSystemContract.sol';
+import '../../../../contracts/system-contracts/pseudo-random-number-generator/IPrngSystemContract.sol';
 
 contract UtilPrecompileMock is IPrngSystemContract {
 

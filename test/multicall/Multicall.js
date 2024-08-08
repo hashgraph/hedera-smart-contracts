@@ -263,9 +263,11 @@ describe('Multicall Test Suite', function () {
       expect(bytes).to.gte(42624);
     });
 
-    it('should NOT be able to aggregate 115 calls to processLongOutput', async function () {
-      const n = 115;
-      const maxDataSize = 25 * 1024 * 2; // 25 kb
+    it('should NOT be able to aggregate 585 calls to processLongOutput', async function () {
+      // @note: since mirror-node@v0.105.0, the maximum data size was increased to 128 KiB.
+      const maxDataSize = 128 * 1024 * 2; // 262144 characters - 128 KiB
+      const n = 585; // 262218 characters ~ 128.03 KiB
+
       let hasError = false;
       try {
         await multicallProcessLongOutput(n);
@@ -275,7 +277,7 @@ describe('Multicall Test Suite', function () {
         expect(e.message).to.exist;
 
         // Output is too large and the call is reverted.
-        // The call exceeded the call size limit of 25KB
+        // The call exceeded the call size limit of 128 KiB
         const EXPECTED_ERROR_MESSAGE = `exceeds ${maxDataSize} characters`;
         expect(e.message).to.contain(EXPECTED_ERROR_MESSAGE);
       }

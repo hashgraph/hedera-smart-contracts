@@ -1,6 +1,6 @@
 {
   "name": "@hashgraph/smart-contracts",
-  "version": "0.9.0-SNAPSHOT",
+  "version": "0.10.0-SNAPSHOT",
   "description": "Hedera Smart Contract Service supporting files",
   "files": [
     "/contracts/**/*.sol",
@@ -28,25 +28,27 @@
     "hh:test": "hardhat test --grep OZERC20",
     "hedera:start": "npx @hashgraph/hedera-local start --limits=false --dev=true --balance=10000000",
     "hedera:stop": "npx @hashgraph/hedera-local stop",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "besu:start": "docker run -d -v ./utils/besu-configs:/var/lib/besu/ -p 8540:8545 -p 8541:8546 hyperledger/besu:24.6.0 --config-file=/var/lib/besu/customConfigFile.toml",
+    "freeze-network-node": "hardhat run scripts/freeze-network-node.js"
   },
   "devDependencies": {
-    "@hashgraph/hedera-local": "^2.25.2",
-    "@hashgraph/sdk": "^2.45.0",
-    "@nomicfoundation/hardhat-chai-matchers": "^2.0.6",
+    "@hashgraph/hedera-local": "^2.27.1",
+    "@hashgraph/sdk": "^2.47.0",
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.7",
     "@nomicfoundation/hardhat-foundry": "^1.1.2",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
-    "@openzeppelin/hardhat-upgrades": "^3.1.0",
-    "hardhat": "^2.22.4",
+    "hardhat": "^2.22.5",
+    "@openzeppelin/hardhat-upgrades": "^3.2.0",
     "hardhat-abi-exporter": "^2.10.1",
     "husky": "^9.0.11",
     "mocha-junit-reporter": "^2.2.0",
     "mocha-multi-reporters": "^1.5.1",
-    "prettier": "3.2.5"
+    "prettier": "3.3.3"
   },
   "dependencies": {
-    "@nomicfoundation/solidity-analyzer": "^0.1.0",
+    "@nomicfoundation/solidity-analyzer": "^0.1.2",
     "bn.js": "^5.2.1",
     "dotenv": "^16.4.5",
     "elliptic": "^6.5.5"
