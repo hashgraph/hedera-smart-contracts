@@ -21,7 +21,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
-const Utils = require('../../hts-precompile/utils');
+const Utils = require('../../precompile/hedera-token-service/utils');
 
 const weibarTotinybar = (amount) => amount / BigInt(Utils.tinybarToWeibarCoef);
 

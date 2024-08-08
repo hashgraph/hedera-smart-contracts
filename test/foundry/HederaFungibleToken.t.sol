@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.9;
 
-import '../../contracts/hts-precompile/IHederaTokenService.sol';
-import '../../contracts/hts-precompile/KeyHelper.sol';
+import '../../contracts/system-contracts/hedera-token-service/IHederaTokenService.sol';
+import '../../contracts/system-contracts/hedera-token-service/KeyHelper.sol';
 import './utils/HederaTokenUtils.sol';
 import './utils/HederaFungibleTokenUtils.sol';
 

@@ -42,7 +42,7 @@ const NETWORKS = {
   },
   besu: {
     name: 'besu_local',
-    url: 'http://127.0.0.1:8544',
+    url: 'http://127.0.0.1:8540',
     chainId: 1337,
     allowUnlimitedContractSize: true,
     blockGasLimit: 0x1fffffffffffff,

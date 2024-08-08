@@ -1,0 +1,9 @@
+network="dev"
+miner-enabled=true
+miner-coinbase="0xfe3b557e8fb62b89f4916b721be55ceb828dbd73"
+rpc-http-cors-origins=["all"]
+host-allowlist=["*"]
+rpc-ws-enabled=true
+rpc-http-enabled=true
+rpc-http-api=["DEBUG","ETH","NET","WEB3"]
+genesis-file="/var/lib/besu/customGenesisFile.json"

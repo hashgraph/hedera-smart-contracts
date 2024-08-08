@@ -1,0 +1,13 @@
+{
+  "name": "hedera-sevm-precompile-detection-analysis",
+  "version": "0.0.1",
+  "type": "module",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "chalk": "^5.3.0",
+    "ethers": "^6.3.0",
+    "sevm": "^0.6.17",
+    "sqlite": "^5.0.1",
+    "sqlite3": "^5.1.6"
+  }
+}

@@ -1,0 +1,50 @@
+name: Opcode logger testing
+
+on:
+  pull_request:
+    branches: [ main, release/** ]
+  push:
+    branches: [ main, release/** ]
+    tags: [ v* ]
+
+jobs:
+  check:
+    name:
+      Opcode logger comparison between besu and hedera
+    runs-on: [self-hosted, Linux, large, ephemeral]
+    steps:
+      - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+        with:
+          submodules: recursive
+
+      - name: Use Node.js [18.15]
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: 18.15
+          cache: npm
+
+      - name: Create .env file
+        run: cp local.env .env
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Upgrade @hashgraph/hedera-local to v2.27.1
+        run: npm install @hashgraph/hedera-local@2.27.1 --save
+
+      - name: Install Foundry
+        uses: step-security/foundry-toolchain@c8ec18dbd1287becdc38602c6a02beaccf13c89f # v1.2.0
+        with:
+          version: nightly
+
+      - name: Run besu node
+        run: npm run besu:start
+
+      - name: Run opcode tests against besu
+        run: npx hardhat test --grep "besu comparison" --network besu_local
+
+      - name: Start the hedera local node
+        run: npx hedera start -d
+
+      - name: Run opcode tests against hedera local node
+        run: npx hardhat test --grep @OpcodeLogger

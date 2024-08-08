@@ -37,7 +37,7 @@ jobs:
         uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
 
       - name: Use Node.js [18.15]
-        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
           node-version: 18.15
           cache: npm
@@ -50,7 +50,7 @@ jobs:
 
       # This step is required to avoid "HardhatFoundryError: Couldn't run `forge`"
       - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@8f1998e9878d786675189ef566a2e4bf24869773 # v1.2.0
+        uses: step-security/foundry-toolchain@c8ec18dbd1287becdc38602c6a02beaccf13c89f # v1.2.0
         with:
           version: nightly
 
@@ -63,10 +63,9 @@ jobs:
 
       - name: Upload Test Results
         if: always()
-        # There is a bug in v4 of upload-artifact. Recommendation is to remain at v3.
-        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         with:
-          name: Test Results
+          name: Test Results (${{ inputs.testfilter }})
           path: test-*.xml
 
       - name: Publish Test Report
