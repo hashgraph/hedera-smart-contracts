@@ -22,7 +22,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-describe.only('@OZERC20 Test Suite', function () {
+describe('@OZERC20 Test Suite', function () {
   const amount = 33;
   let signers;
   let erc20;
