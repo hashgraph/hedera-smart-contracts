@@ -4,4 +4,5 @@ pragma solidity >=0.4.9 <0.9.0;
 interface IHRC719 {
     function associate() external returns (uint256 responseCode);
     function dissociate() external returns (uint256 responseCode);
+    function isAssociated() external view returns (bool associated);
 }

@@ -11,4 +11,8 @@ contract HRC719Contract {
     function dissociate(address token) public returns (uint256 responseCode) {
         return IHRC719(token).dissociate();
     }
+
+    function isAssociated(address token) public view returns (bool) {
+        return IHRC719(token).isAssociated();
+    }
 }
