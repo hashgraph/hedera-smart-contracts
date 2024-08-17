@@ -12,7 +12,7 @@ on:
 
 jobs:
   dapp-playground:
-    runs-on: [self-hosted, Linux, large, ephemeral]
+    runs-on: smart-contracts-linux-large
 
     steps:
       - name: Checkout repository

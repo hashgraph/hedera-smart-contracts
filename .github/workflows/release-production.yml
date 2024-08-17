@@ -18,7 +18,7 @@ env:
 
 jobs:
   npm-package-artifact:
-    runs-on: [self-hosted, Linux, large, ephemeral]
+    runs-on: smart-contracts-linux-large
 
     steps:
       - name: Checkout repository

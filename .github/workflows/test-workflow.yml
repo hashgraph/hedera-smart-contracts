@@ -22,7 +22,7 @@ defaults:
 
 jobs:
   acceptance-workflow:
-    runs-on: [self-hosted, Linux, large, ephemeral]
+    runs-on: smart-contracts-linux-large
     timeout-minutes: 35
     strategy:
       fail-fast: false

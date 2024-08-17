@@ -35,7 +35,7 @@ concurrency:
 jobs:
   title-check:
     name: Title Check
-    runs-on: [self-hosted, Linux, large, ephemeral]
+    runs-on: smart-contracts-linux-large
     permissions:
       statuses: write
     steps:
