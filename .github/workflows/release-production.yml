@@ -18,7 +18,7 @@ env:
 
 jobs:
   npm-package-artifact:
-    runs-on: smart-contracts-linux-large
+    runs-on: smart-contracts-linux-medium
 
     steps:
       - name: Checkout repository
