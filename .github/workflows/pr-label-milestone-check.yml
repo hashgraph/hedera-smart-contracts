@@ -6,7 +6,7 @@ on:
 
 jobs:
   check_pr:
-    runs-on: [self-hosted, Linux, medium, ephemeral]
+    runs-on: smart-contracts-linux-medium
 
     steps:
       - name: Checkout code
