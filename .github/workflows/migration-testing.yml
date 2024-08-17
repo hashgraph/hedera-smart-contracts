@@ -47,10 +47,10 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Use Node.js [18.15]
+      - name: Use Node.js [18]
         uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
-          node-version: 18.15
+          node-version: 18
           cache: npm
 
       - name: Create .env file
