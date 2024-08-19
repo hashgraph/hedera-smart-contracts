@@ -32,6 +32,7 @@ const {
   TokenId,
   TokenUpdateTransaction,
   TokenAssociateTransaction,
+  AccountBalanceQuery
 } = require('@hashgraph/sdk');
 const Constants = require('../../constants');
 
@@ -41,6 +42,9 @@ class Utils {
   static createTokenCustomFeesCost = '60000000000000000000';
   static tinybarToWeibarCoef = 10_000_000_000;
   static tinybarToHbarCoef = 100_000_000;
+  static initialSupply = 1000000000000;
+  static maxSupply = 2000000000000;
+  static nftMaxSupply = 20000;
 
   static KeyType = {
     ADMIN: 1,
@@ -206,6 +210,41 @@ class Utils {
       gasLimit: 1_000_000,
     });
     const tokenAddressReceipt = await tokenAddressTx.wait();
+    console.log("Create fungible token receipt", tokenAddressReceipt);
+    const { tokenAddress } = tokenAddressReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.CreatedToken
+    )[0].args;
+
+    return tokenAddress;
+  }
+
+  static async createFungibleTokenWithPresetKeysPublic(
+    contract,
+    name,
+    symbol,
+    memo,
+    initialSupply,
+    maxSupply,
+    decimals,
+    freezeDefaultStatus,
+    treasury, 
+  ) {
+    const tokenAddressTx = await contract.createFungibleTokenWithPresetKeys(
+      name,
+      symbol,
+      memo,
+      initialSupply,
+      maxSupply,
+      decimals,
+      freezeDefaultStatus,
+      treasury,
+      {
+        value: BigInt(this.createTokenCost),
+        gasLimit: 1_000_000,
+      }
+    );
+    const tokenAddressReceipt = await tokenAddressTx.wait();
+
     const { tokenAddress } = tokenAddressReceipt.logs.filter(
       (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args;
@@ -335,6 +374,66 @@ class Utils {
     return tokenAddress;
   }
 
+  // Helper function to associate and grant KYC
+  static async associateAndGrantKyc(contract, token, addresses) {
+    for (const address of addresses) {
+        const associateTx = await contract.associateTokenPublic(address, token);
+        await associateTx.wait();  // Ensure the association is completed before proceeding
+
+        const grantKycTx = await contract.grantTokenKycPublic(token, address);
+        await grantKycTx.wait();  // Ensure the KYC grant is completed before proceeding
+    }
+}
+  
+  static async createFungibleTokenWithCustomFeesAndKeys(contract, treasury, fixedFees, fractionalFees, keys) {
+    const updateFeesTx = await contract.createFungibleTokenWithCustomFeesPublic(
+       treasury,
+       "Hedera Token Fees",
+       "HTF",
+       "Hedera Token With Fees",
+       this.initialSupply,
+       this.maxSupply,
+       0,
+       fixedFees,
+       fractionalFees,
+       keys,
+       {
+        value: BigInt(this.createTokenCost),
+        gasLimit: 1_000_000,
+      }
+    );
+    const updateFeesReceipt = await updateFeesTx.wait();
+
+    const { tokenAddress } = updateFeesReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.CreatedToken
+    )[0].args;
+
+    return tokenAddress;
+  }
+
+  static async createNonFungibleTokenWithCustomRoyaltyFeeAndKeys(contract, treasury, fixedFees, royaltyFees, keys) {
+    const tokenAddressTx = await contract.createNonFungibleTokenWithCustomFeesPublic(
+      treasury,
+      "Non Fungible Token With Custom Fees",
+      "NFTF",
+      "Non Fungible Token With Custom Fees",
+      this.nftMaxSupply,
+      fixedFees,
+      royaltyFees,
+      keys,
+      {
+        value: BigInt(this.createTokenCost),
+        gasLimit: 1_000_000,
+      }
+    );
+    const tokenAddressReceipt = await tokenAddressTx.wait();
+    const { tokenAddress } = tokenAddressReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.CreatedToken
+    )[0].args;
+
+    return tokenAddress;
+  };
+
   static async createNonFungibleToken(contract, treasury) {
     const tokenAddressTx = await contract.createNonFungibleTokenPublic(
       treasury,
@@ -395,6 +494,64 @@ class Utils {
     return tokenAddress;
   }
 
+  static hexToASCII(str) {
+    const hex = str.toString();
+    let ascii = '';
+    for (let n = 0; n < hex.length; n += 2) {
+      ascii += String.fromCharCode(parseInt(hex.substring(n, n + 2), 16));
+    }
+    return ascii;
+  }
+  
+  /**
+   * Converts an EVM ErrorMessage to a readable form. For example this :
+   * 0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000d53657420746f2072657665727400000000000000000000000000000000000000
+   * will be converted to "Set to revert"
+   * @param message
+   */
+  static decodeErrorMessage (message ) {
+    const EMPTY_HEX = '0x';
+    if (!message) return '';
+  
+    // If the message does not start with 0x, it is not an error message, return it as is
+    if (!message.includes(EMPTY_HEX)) return message;
+  
+    message = message.replace(/^0x/, ''); // Remove the starting 0x
+    const strLen = parseInt(message.slice(8 + 64, 8 + 128), 16); // Get the length of the readable text
+    const resultCodeHex = message.slice(8 + 128, 8 + 128 + strLen * 2); // Extract the hex of the text
+    return this.hexToASCII(resultCodeHex);
+  };
+
+  static async getRevertReasonFromReceipt(hash) {
+    const receipt = await ethers.provider.send("eth_getTransactionReceipt", [
+      hash
+    ]);
+
+    return receipt.revertReason;
+  }
+
+  static async getHbarBalance(address) {
+    const balanceJson = (await this.getAccountBalance(address)).toJSON();
+    const balanceFloat = parseFloat(balanceJson.hbars);
+
+    return balanceFloat;
+  }
+
+  static async getTokenBalance(accountAddress, tokenAddress) {
+    const accountBalanceJson = (await this.getAccountBalance(accountAddress)).toJSON();
+    const tokenId = await AccountId.fromEvmAddress(0, 0, tokenAddress).toString();
+    const balance = accountBalanceJson.tokens.find((e) => e.tokenId === tokenId);
+
+    return parseInt(balance.balance);
+  }
+
+  static async updateFungibleTokenCustomFees(contract, token, treasury, feeToken, feeAmount) {
+      const updateFees = await contract.updateFungibleTokenCustomFeesPublic(
+        token, treasury, feeToken, feeAmount
+      );
+      const receipt = await updateFees.wait();
+  }
+
   static async mintNFT(contract, nftTokenAddress, data = ['0x01']) {
     const mintNftTx = await contract.mintTokenPublic(
       nftTokenAddress,
@@ -441,6 +598,12 @@ class Utils {
       signers[1]
     );
 
+    const associateTx3 = await ethers.getContractAt(
+      contractName,
+      await contract.getAddress(),
+      signers[2]
+    );
+
     await contract.associateTokenPublic(
       await contract.getAddress(),
       tokenAddress,
@@ -453,6 +616,11 @@ class Utils {
     );
     await associateTx2.associateTokenPublic(
       signers[1].address,
+      tokenAddress,
+      Constants.GAS_LIMIT_1_000_000
+    );
+    await associateTx3.associateTokenPublic(
+      signers[2].address,
       tokenAddress,
       Constants.GAS_LIMIT_1_000_000
     );
@@ -577,6 +745,18 @@ class Utils {
     }
   }
 
+  static async getAccountBalance(address) {
+    const client = await Utils.createSDKClient();
+    const accountId = await Utils.getAccountId(
+      address,
+      client
+    );
+    const tokenBalance = await new AccountBalanceQuery()
+    .setAccountId(accountId)
+    .execute(client);
+    return tokenBalance;
+  }
+
   static async updateTokenKeysViaHapi(
     tokenAddress,
     contractAddresses,
@@ -585,7 +765,8 @@ class Utils {
     setKyc = true,
     setFreeze = true,
     setSupply = true,
-    setWipe = true
+    setWipe = true,
+    setFeeSchedule = true
   ) {
     const signers = await ethers.getSigners();
     const clientGenesis = await Utils.createSDKClient();
@@ -620,6 +801,7 @@ class Utils {
     if (setFreeze) tx.setFreezeKey(keyList);
     if (setSupply) tx.setSupplyKey(keyList);
     if (setWipe) tx.setWipeKey(keyList);
+    if (setFeeSchedule) tx.setFeeScheduleKey(keyList);
 
     await (
       await tx.freezeWith(clientSigner0).sign(pkSigners[0])
