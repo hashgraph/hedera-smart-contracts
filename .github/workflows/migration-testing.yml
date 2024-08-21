@@ -63,7 +63,7 @@ jobs:
         run: npm install @hashgraph/hedera-local@2.25.2 --save
 
       - name: Install Foundry
-        uses: step-security/foundry-toolchain@c8ec18dbd1287becdc38602c6a02beaccf13c89f # v1.2.0
+        uses: step-security/foundry-toolchain@01e2d127ea061e2ce8fa34340de71ca8518f093e # v1.2.1
         with:
           version: nightly
 
