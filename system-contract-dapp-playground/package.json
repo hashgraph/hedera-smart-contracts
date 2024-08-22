@@ -45,7 +45,7 @@
     "sharp": "^0.32.6",
     "tailwindcss": "3.3.3",
     "ts-node": "^10.9.1",
-    "typescript": "5.1.6",
+    "typescript": "5.5.4",
     "utf-8-validate": "^5.0.10"
   },
   "devDependencies": {
