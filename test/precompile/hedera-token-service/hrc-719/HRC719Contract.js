@@ -51,8 +51,15 @@ describe('@HRC-719 Test Suite', function () {
       await tokenCreateContract.getAddress(),
     ]);
 
-    // This contract is a wrapper for the associate() and dissociate() functions
     hrc719Contract = await utils.deployHRC719Contract();
+
+    IHRC719 = new ethers.Interface(
+      (await hre.artifacts.readArtifact('IHRC719')).abi
+    );
+  });
+
+  beforeEach(async () => {
+    // create new tokenAddress for every unit test
     tokenAddress = await utils.createFungibleToken(
       tokenCreateContract,
       signers[0].address
@@ -61,116 +68,199 @@ describe('@HRC-719 Test Suite', function () {
       await tokenCreateContract.getAddress(),
     ]);
 
-    // create an interface for calling functions via redirectForToken()
-    IHRC719 = new ethers.Interface(
-      (await hre.artifacts.readArtifact('IHRC719')).abi
-    );
     // create a contract object for the token
     hrcToken = new Contract(tokenAddress, IHRC719, signers[0]);
-    console.log('hrc719Contract: ', await hrc719Contract.getAddress());
-    console.log('signer: ', signers[0].address);
-    console.log('tokenAddress: ', tokenAddress);
   });
 
-  it('should be able to associate() to the token from a contract', async function () {
-    const txAssociate = await hrc719Contract.associate(
-      tokenAddress,
-      Constants.GAS_LIMIT_1_000_000
-    );
-    const receiptAssociate = await txAssociate.wait();
-    expect(receiptAssociate).to.exist;
-    expect(receiptAssociate.status).to.eq(1);
+  describe('HRC719 wrapper contract', () => {
+    it('should be able to associate() to the token from a contract', async function () {
+      const txAssociate = await hrc719Contract.associate(
+        tokenAddress,
+        Constants.GAS_LIMIT_1_000_000
+      );
+      const receiptAssociate = await txAssociate.wait();
+      expect(receiptAssociate).to.exist;
+      expect(receiptAssociate.status).to.eq(1);
+    });
+
+    it('should be able to disssociate() to the token from a contract', async function () {
+      const txDissociate = await hrc719Contract.dissociate(
+        tokenAddress,
+        Constants.GAS_LIMIT_1_000_000
+      );
+      const receiptDissociate = await txDissociate.wait();
+      expect(receiptDissociate).to.exist;
+      expect(receiptDissociate.status).to.eq(1);
+    });
+
+    it('should be able to call isAssociated()', async function () {
+      const txIsAssociate = await hrc719Contract
+        .connect(signers[1])
+        .isAssociated(tokenAddress, Constants.GAS_LIMIT_1_000_000);
+      const receiptIsAssociate = await txIsAssociate.wait();
+      const logIsAssociate = receiptIsAssociate.logs.find(
+        (log) => log.fragment.name === Constants.Events.IsAssociated
+      );
+
+      expect(logIsAssociate).to.exist;
+      expect(logIsAssociate.args[0]).to.eq(false);
+    });
+
+    it('should be able to call isAssociated() after token association', async function () {
+      const txAssociate = await hrc719Contract
+        .connect(signers[1])
+        .associate(tokenAddress, Constants.GAS_LIMIT_1_000_000);
+      await txAssociate.wait();
+
+      const txIsAssociate = await hrc719Contract
+        .connect(signers[1])
+        .isAssociated(tokenAddress, Constants.GAS_LIMIT_1_000_000);
+      const receiptIsAssociate = await txIsAssociate.wait();
+      const logIsAssociate = receiptIsAssociate.logs.find(
+        (log) => log.fragment.name === Constants.Events.IsAssociated
+      );
+
+      expect(logIsAssociate).to.exist;
+      expect(logIsAssociate.args[0]).to.eq(true);
+    });
+
+    it('should be able to call isAssociated() after token dissociation', async function () {
+      const txAssociate = await hrc719Contract
+        .connect(signers[1])
+        .dissociate(tokenAddress, Constants.GAS_LIMIT_1_000_000);
+      await txAssociate.wait();
+
+      const txIsAssociate = await hrc719Contract
+        .connect(signers[1])
+        .isAssociated(tokenAddress, Constants.GAS_LIMIT_1_000_000);
+      const receiptIsAssociate = await txIsAssociate.wait();
+      const logIsAssociate = receiptIsAssociate.logs.find(
+        (log) => log.fragment.name === Constants.Events.IsAssociated
+      );
+
+      expect(logIsAssociate).to.exist;
+      expect(logIsAssociate.args[0]).to.eq(false);
+    });
   });
 
-  xit('should be able to call isAssociated() to the token from a contract when associated', async function () {
-    const txDissociate = await hrc719Contract.isAssociated(
-      tokenAddress,
-      Constants.GAS_LIMIT_1_000_000
-    );
-    const receiptDissociate = await txDissociate.wait();
-    expect(receiptDissociate).to.exist;
-    expect(receiptDissociate).to.eq(true);
+  describe('HRC719 Token', () => {
+    it('should be able to associate() to the token from an EOA', async function () {
+      const txAssociate = await hrcToken.associate(
+        Constants.GAS_LIMIT_1_000_000
+      );
+      const receiptAssociate = await txAssociate.wait();
+      expect(receiptAssociate).to.exist;
+      expect(receiptAssociate.status).to.eq(1);
+    });
+
+    it('should be able to dissociate() to the token from an EOA', async function () {
+      const txDissociate = await hrcToken.dissociate(
+        Constants.GAS_LIMIT_1_000_000
+      );
+      const receiptDissociate = await txDissociate.wait();
+
+      expect(receiptDissociate).to.exist;
+      expect(receiptDissociate.status).to.eq(1);
+    });
+
+    it('should be able to call isAssociated() to the token from an EOA', async function () {
+      const hrcTokenSigner1 = new Contract(tokenAddress, IHRC719, signers[1]);
+      const isAssociatedSigner1 = await hrcTokenSigner1.isAssociated();
+      expect(isAssociatedSigner1).to.be.false;
+    });
+
+    it('should be able to call isAssociated() to the token from an EOA when associated', async function () {
+      const hrcTokenSigner1 = new Contract(tokenAddress, IHRC719, signers[1]);
+
+      const txAssociate = await hrcTokenSigner1.associate(
+        Constants.GAS_LIMIT_1_000_000
+      );
+      await txAssociate.wait();
+
+      const isAssociated = await hrcTokenSigner1.isAssociated();
+      expect(isAssociated).to.exist;
+      expect(isAssociated).to.eq(true);
+    });
+
+    it('should be able to call isAssociated() to the token from an EOA when dissociated', async function () {
+      const hrcTokenSigner1 = new Contract(tokenAddress, IHRC719, signers[1]);
+
+      const txAssociate = await hrcTokenSigner1.dissociate(
+        Constants.GAS_LIMIT_1_000_000
+      );
+      await txAssociate.wait();
+
+      const isAssociated = await hrcTokenSigner1.isAssociated();
+      expect(isAssociated).to.exist;
+      expect(isAssociated).to.eq(false);
+    });
   });
 
-  xit('should be able to call isAssociated() to the token from a different unassociated signer', async function () {
-    const txDissociate = await hrc719Contract.connect(signers[1]).isAssociated(
-      tokenAddress,
-      Constants.GAS_LIMIT_1_000_000
-    );
-    const receiptDissociate = await txDissociate.wait();
-    expect(receiptDissociate).to.exist;
-    expect(receiptDissociate).to.eq(false);
-  });
+  describe('redirectoForToken', () => {
+    it('should be able to execute associate() via redirectForToken', async function () {
+      const encodedFunc = IHRC719.encodeFunctionData('associate()');
+      const tx = await tokenCreateContract.redirectForToken(
+        tokenAddress,
+        encodedFunc,
+        Constants.GAS_LIMIT_1_000_000
+      );
+      const [success, result] = await parseCallResponseEventData(tx);
+      expect(success).to.eq(true);
+      expect(decodeHexToDec(result)).to.eq(Constants.TX_SUCCESS_CODE);
+    });
 
-  it('should be able to disssociate() to the token from a contract', async function () {
-    const txDissociate = await hrc719Contract.dissociate(
-      tokenAddress,
-      Constants.GAS_LIMIT_1_000_000
-    );
-    const receiptDissociate = await txDissociate.wait();
-    expect(receiptDissociate).to.exist;
-    expect(receiptDissociate.status).to.eq(1);
-  });
+    it('should be able to execute dissociate() via redirectForToken', async function () {
+      // first associate the token before dissociate other wise get response_code = 184 instead of 22 (success)
+      const encodedFuncAssociate = IHRC719.encodeFunctionData('associate()');
+      const associateTx = await tokenCreateContract.redirectForToken(
+        tokenAddress,
+        encodedFuncAssociate,
+        Constants.GAS_LIMIT_1_000_000
+      );
+      await associateTx.wait();
 
-  xit('should be able to call isAssociated() to the token from a contract after dissociation', async function () {
-    const txDissociate = await hrc719Contract.isAssociated(
-      tokenAddress
-    );
+      const enCodedFuncDissociate = IHRC719.encodeFunctionData('dissociate()');
+      const dissociateTx = await tokenCreateContract.redirectForToken(
+        tokenAddress,
+        enCodedFuncDissociate,
+        Constants.GAS_LIMIT_1_000_000
+      );
 
-    const receiptDissociate = await txDissociate.wait();
-    expect(receiptDissociate).to.exist;
-    expect(receiptDissociate).to.eq(false);
-  });
+      const [success, result] = await parseCallResponseEventData(dissociateTx);
+      expect(success).to.eq(true);
+      expect(decodeHexToDec(result)).to.eq(Constants.TX_SUCCESS_CODE);
+    });
 
-  it('should be able to associate() to the token from an EOA', async function () {
-    const txAssociate = await hrcToken.associate(Constants.GAS_LIMIT_1_000_000);
-    const receiptAssociate = await txAssociate.wait();
-    expect(receiptAssociate).to.exist;
-    expect(receiptAssociate.status).to.eq(1);
-  });
+    it('should be able to execute isAssociated() via redirectForToken', async function () {
+      const encodedFunc = IHRC719.encodeFunctionData('isAssociated()');
+      const tx = await tokenCreateContract.redirectForToken(
+        tokenAddress,
+        encodedFunc,
+        Constants.GAS_LIMIT_1_000_000
+      );
+      const [success, result] = await parseCallResponseEventData(tx);
+      expect(success).to.eq(true);
+      expect(decodeHexToDec(result)).to.eq(0); // 0 = false
+    });
 
-  it('should be able to call isAssociated() to the token from an EOA when associated', async function () {
-    const isAssociated = await hrcToken.isAssociated();
-    expect(isAssociated).to.exist;
-    expect(isAssociated).to.eq(true);
-  });
+    it('should be able to execute isAssociated() after association via redirectForToken', async function () {
+      await (
+        await tokenCreateContract.redirectForToken(
+          tokenAddress,
+          IHRC719.encodeFunctionData('associate()'),
+          Constants.GAS_LIMIT_1_000_000
+        )
+      ).wait();
 
-  it('should be able to call isAssociated() to the token from a separate unassociated EOA', async function () {
-    const isAssociated = await hrcToken.connect(signers[1]).isAssociated();
-    expect(isAssociated).to.exist;
-    expect(isAssociated).to.eq(false);
-  });
-
-  it('should be able to dissociate() to the token from an EOA', async function () {
-    const txDissociate = await hrcToken.dissociate(
-      Constants.GAS_LIMIT_1_000_000
-    );
-    const receiptDissociate = await txDissociate.wait();
-    expect(receiptDissociate).to.exist;
-    expect(receiptDissociate.status).to.eq(1);
-  });
-
-  it('should be able to execute associate() via redirectForToken', async function () {
-    const encodedFunc = IHRC719.encodeFunctionData('associate()');
-    const tx = await tokenCreateContract.redirectForToken(
-      tokenAddress,
-      encodedFunc,
-      Constants.GAS_LIMIT_1_000_000
-    );
-    const [success, result] = await parseCallResponseEventData(tx);
-    expect(success).to.eq(true);
-    expect(decodeHexToDec(result)).to.eq(Constants.TX_SUCCESS_CODE);
-  });
-
-  it('should be able to execute dissociate() via redirectForToken', async function () {
-    const encodedFunc = IHRC719.encodeFunctionData('dissociate()');
-    const tx = await tokenCreateContract.redirectForToken(
-      tokenAddress,
-      encodedFunc,
-      Constants.GAS_LIMIT_1_000_000
-    );
-    const [success, result] = await parseCallResponseEventData(tx);
-    expect(success).to.eq(true);
-    expect(decodeHexToDec(result)).to.eq(Constants.TX_SUCCESS_CODE);
+      const encodedFunc = IHRC719.encodeFunctionData('isAssociated()');
+      const tx = await tokenCreateContract.redirectForToken(
+        tokenAddress,
+        encodedFunc,
+        Constants.GAS_LIMIT_1_000_000
+      );
+      const [success, result] = await parseCallResponseEventData(tx);
+      expect(success).to.eq(true);
+      expect(decodeHexToDec(result)).to.eq(1); // 1 = true
+    });
   });
 });
