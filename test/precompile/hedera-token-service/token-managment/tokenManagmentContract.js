@@ -65,11 +65,6 @@ describe('TokenManagmentContract Test Suite', function () {
     tokenQueryContractAddress = await tokenQueryContract.getAddress();
     tokenManagementContractAddress = await tokenManagmentContract.getAddress();
     tokenCreateCustomContractAddress = await tokenCreateCustomContract.getAddress();
-    console.log("Token Create Contract Address", tokenCreateContractAddress);
-    console.log("Token Create Custom Contract Address", tokenCreateCustomContractAddress);
-    console.log("Token Transfer Contract Address", tokenTransferContractAddress); 
-    console.log("Token Query Contract Address", tokenQueryContractAddress);
-    console.log("Token Management Contract Address", tokenManagementContractAddress);
     await utils.updateAccountKeysViaHapi([
       tokenCreateContractAddress,
       tokenTransferContractAddress,
@@ -77,28 +72,23 @@ describe('TokenManagmentContract Test Suite', function () {
       tokenQueryContractAddress,
       tokenCreateCustomContractAddress,
     ]);
-    console.log("Updated account keys");
-    console.log("OG signer address", signers[0].address);
     erc20Contract = await utils.deployERC20Contract();
     tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(
       tokenCreateContract,
       signers[0].address,
       utils.getSignerCompressedPublicKey()
     );
-    console.log("Token address", tokenAddress);
     await utils.updateTokenKeysViaHapi(tokenAddress, [
       await tokenCreateContract.getAddress(),
       await tokenTransferContract.getAddress(),
       await tokenManagmentContract.getAddress(),
       await tokenQueryContract.getAddress(),
     ]);
-    console.log("Updated token keys");
     nftTokenAddress = await utils.createNonFungibleTokenWithSECP256K1AdminKey(
       tokenCreateContract,
       signers[0].address,
       utils.getSignerCompressedPublicKey()
     );
-    console.log("NFT Token address", nftTokenAddress);
     await utils.updateTokenKeysViaHapi(nftTokenAddress, [
       await tokenCreateContract.getAddress(),
       await tokenTransferContract.getAddress(),
@@ -117,7 +107,6 @@ describe('TokenManagmentContract Test Suite', function () {
       Constants.Contract.TokenCreateContract
     );
     await utils.grantTokenKyc(tokenCreateContract, nftTokenAddress);
-    console.log("Minting NFTs....")
     mintedTokenSerialNumber = await utils.mintNFT(
       tokenCreateContract,
       nftTokenAddress
@@ -131,7 +120,6 @@ describe('TokenManagmentContract Test Suite', function () {
         signers[0].address,
         utils.getSignerCompressedPublicKey()
       );
-    console.log(newTokenAddress);
     await utils.updateTokenKeysViaHapi(newTokenAddress, [
       await tokenCreateContract.getAddress(),
       await tokenManagmentContract.getAddress(),
@@ -1397,23 +1385,6 @@ describe('TokenManagmentContract Test Suite', function () {
 
 
     before(async function () {
-      tenHbars = 10 * utils.tinybarToHbarCoef;
-      twentyHbars = 20 * utils.tinybarToHbarCoef;
-      tokenFeeAmount = 50;
-      initialSupply = 1000000000;
-      maxSupply = 2000000000;
-      decimals = 0;
-      feeToken = await utils.createFungibleTokenWithPresetKeysPublic(
-        tokenCreateCustomContract,
-        "FeeToken",
-        "FT",
-        "FeeToken",
-        1000000000,
-        2000000000,
-        0,
-        false,
-        tokenCreateCustomContractAddress,
-      );
       // The owner of the fee token is the tokenCreateContract
       const adminKey = utils.constructIHederaTokenKey(
         'ADMIN',
@@ -1454,6 +1425,25 @@ describe('TokenManagmentContract Test Suite', function () {
       keys = [adminKey, kycKey, freezeKey, wipeKey, supplyKey, feeKey, pauseKey];
     })
 
+    beforeEach(async function () {
+      tenHbars = 10 * utils.tinybarToHbarCoef;
+      twentyHbars = 20 * utils.tinybarToHbarCoef;
+      tokenFeeAmount = 50;
+      initialSupply = 1000000000;
+      maxSupply = 2000000000;
+      decimals = 0;
+      feeToken = await utils.createFungibleTokenWithPresetKeysPublic(
+        tokenCreateCustomContract,
+        "FeeToken",
+        "FT",
+        "FeeToken",
+        1000000000,
+        2000000000,
+        0,
+        false,
+        tokenCreateCustomContractAddress,
+      );
+    })
 
     it('should be able to update fixed fee in HTS token', async function () {
       //need to associate the fee collector account of the token that will have fees
@@ -1544,9 +1534,7 @@ describe('TokenManagmentContract Test Suite', function () {
         tokenCreateContractAddress
       ]);
       // ------------------ Associate and grantKyc to accounts transfering tokenWithFixedHbarFee ------------------
-      console.log("Associate signer 1");
       await utils.associateAndGrantKyc(tokenCreateContract, tokenWithFixedHbarFee, [signers[1].address, signers[2].address]);
-
 
       const transferFromContract = await tokenTransferContract.transferTokensPublic(tokenWithFixedHbarFee, [signers[0].address, signers[1].address], [-500, 500]);
       const transferFromContractReceipt = await transferFromContract.wait();
@@ -1663,7 +1651,6 @@ describe('TokenManagmentContract Test Suite', function () {
         keys
       );
       expect(await utils.getTokenBalance(signers[0].address, tokenWithFees)).to.be.equal(utils.initialSupply);
-      console.log("Update tokens");
       await utils.updateTokenKeysViaHapi(tokenWithFees, [
         tokenManagementContractAddress,
         tokenTransferContractAddress,
@@ -1877,14 +1864,11 @@ describe('TokenManagmentContract Test Suite', function () {
       // make a transfer and ensure that the fee is collected
       //apparently first you need to associate and then gran token kyc
       
-      console.log("Associate")
       await utils.associateAndGrantKyc(tokenCreateContract, tokenWithFees, [signers[1].address, signers[2].address]);
-      
-      console.log("Transfer")
+
       const transferTx = await tokenTransferContract.transferTokensPublic(tokenWithFees, [signers[0].address, signers[1].address], [-1000, 1000]);
       await transferTx.wait();
 
-      console.log("Update")
       const updateFeeTx = await tokenManagmentContract.updateFungibleTokenCustomFeesPublic(tokenWithFees, [], updatedFractionalFee)
       const updateFeeResponseCode = (
         await updateFeeTx.wait()
@@ -1927,7 +1911,7 @@ describe('TokenManagmentContract Test Suite', function () {
       const nftTx = await utils.mintNFT(tokenCreateCustomContract ,nft);
 
       await utils.associateAndGrantKyc(tokenCreateCustomContract, nft, [signers[1].address, signers[3].address]);
-;
+
       const transferNft = await tokenTransferContract.transferNFTPublic(nft, signers[0].address, signers[1].address, nftTx);
       await transferNft.wait();
       
@@ -1984,7 +1968,7 @@ describe('TokenManagmentContract Test Suite', function () {
     });
 
     it('should be able to update fixed HTS fee for NFT', async function () {
-      await utils.associateToken(tokenCreateCustomContract, feeToken, Constants.Contract.TokenCreateContract);
+      await utils.associateToken(tokenCreateCustomContract, feeToken, Constants.Contract.TokenCreateCustomContract);
       //we need to grant kyc and associate token with the fee collector, which is signer[0]
       const grantKycFeeCollectorFeeToken = await tokenCreateCustomContract.grantTokenKycPublic(feeToken, signers[0].address);
       await grantKycFeeCollectorFeeToken.wait();
@@ -1999,9 +1983,9 @@ describe('TokenManagmentContract Test Suite', function () {
         royaltyFees,
         keys
       );
-      const nftTx = await utils.mintNFT(tokenCreateCustomContract ,nft);
+      const nftTx = await utils.mintNFT(tokenCreateCustomContract, nft);
 
-      await utils.associateAndGrantKyc(tokenCreateContract, nft, [signers[1].address, signers[3].address]);
+      await utils.associateAndGrantKyc(tokenCreateCustomContract, nft, [signers[1].address, signers[3].address]);
       const transferNft = await tokenTransferContract.transferNFTPublic(nft, signers[0].address, signers[1].address, nftTx);
       await transferNft.wait();
       
@@ -2059,7 +2043,7 @@ describe('TokenManagmentContract Test Suite', function () {
       );
       const nftTx = await utils.mintNFT(tokenCreateCustomContract ,nft);
 
-      await utils.associateAndGrantKyc(tokenCreateContract, nft, [signers[1].address, signers[3].address]);
+      await utils.associateAndGrantKyc(tokenCreateCustomContract, nft, [signers[1].address, signers[3].address]);
       const transferNft = await tokenTransferContract.transferNFTPublic(nft, signers[0].address, signers[1].address, nftTx);
       await transferNft.wait();
 
@@ -2080,11 +2064,10 @@ describe('TokenManagmentContract Test Suite', function () {
         await tokenInfoTx.wait()
       ).logs.filter((e) => e.fragment.name === Constants.Events.NonFungibleTokenInfo)[0]
         .args.tokenInfo;
-      console.log(tokenInfoResponse);
+
       // fractional fee is at position 7 in the tokenInfo array
       expect(tokenInfoResponse[0][5].length).to.be.greaterThan(0);
       expect(tokenInfoResponse[0][7].length).to.be.greaterThan(0);
-      console.log(tokenInfoResponse[0][5][0]);
       expect(tokenInfoResponse[0][5][0][0]).to.equal(63);
       expect(tokenInfoResponse[0][5][0][1]).to.equal(feeToken);
       expect(tokenInfoResponse[0][7][0][2]).to.equal(twentyHbars);
@@ -2137,14 +2120,13 @@ describe('TokenManagmentContract Test Suite', function () {
           tokenCreateContractAddress,
           tokenCreateCustomContractAddress
         ]);
-        console.log("Updating token with fees");
 
         const updateFeeTx = await tokenManagmentContract.updateFungibleTokenCustomFeesPublic(tokenWithFees, [], [])
         try {
           await updateFeeTx.wait();
         } catch (error) {
           transactionHash = error.receipt.hash;
-          console.log("Error", error);
+          
         }
 
         const revertReason = await utils.getRevertReasonFromReceipt(transactionHash);
@@ -2173,7 +2155,7 @@ describe('TokenManagmentContract Test Suite', function () {
           await updateFeeTx.wait();
         } catch (error) {
           transactionHash = error.receipt.hash;
-          console.log("Error", error);
+          
         }
   
         const revertReason = await utils.getRevertReasonFromReceipt(transactionHash);
@@ -2183,7 +2165,8 @@ describe('TokenManagmentContract Test Suite', function () {
 
       it('should fail when trying to update fees of fungible token with no fee schedule key', async function() {
         let transactionHash;
-        const keysWithoutFeeSchedule = keys.splice(5, 1);
+        const keysWithoutFeeSchedule = keys.slice();
+        keysWithoutFeeSchedule.splice(5, 1);
         tokenWithFees = await utils.createFungibleTokenWithCustomFeesAndKeys(
           tokenCreateCustomContract,
           signers[0].address,
@@ -2191,7 +2174,7 @@ describe('TokenManagmentContract Test Suite', function () {
           [],
           keysWithoutFeeSchedule
         );
-        console.log(tokenWithFees)
+
         await utils.updateTokenKeysViaHapi(tokenWithFees , [
           tokenManagementContractAddress,
           tokenTransferContractAddress,
@@ -2204,17 +2187,18 @@ describe('TokenManagmentContract Test Suite', function () {
           await updateFeeTx.wait();
         } catch (error) {
           transactionHash = error.receipt.hash;
-          console.log("Error", error);
+          
         }
 
         const revertReason = await utils.getRevertReasonFromReceipt(transactionHash);
         const decodeRevertReason = utils.decodeErrorMessage(revertReason);
-        expect(decodeRevertReason).to.equal(TOKEN_HAS_NO_FEE_SCHEDULE_KEY)
+        expect(decodeRevertReason).to.equal(TOKEN_HAS_NO_FEE_SCHEDULE_KEY.toString());
       });
 
       it('should fail when trying to update fees of non fungible token with no fee schedule key', async function() {
         let transactionHash;
-        const keysWithoutFeeSchedule = keys.splice(5, 1);
+        const keysWithoutFeeSchedule = keys.slice();
+        keysWithoutFeeSchedule.splice(5, 1);
         const nft = await utils.createNonFungibleTokenWithCustomRoyaltyFeeAndKeys(
           tokenCreateCustomContract,
           signers[0].address,
@@ -2229,17 +2213,17 @@ describe('TokenManagmentContract Test Suite', function () {
           tokenCreateCustomContractAddress
         ]);
 
-        const updateFeeTx = await tokenManagmentContract.updateNonFungibleTokenCustomFeesPublic(nft, [], [])
+        const updateFeeTx = await tokenManagmentContract.updateNonFungibleTokenCustomFeesPublic(nft, [], []);
         try {
           await updateFeeTx.wait();
         } catch (error) {
           transactionHash = error.receipt.hash;
-          console.log("Error", error);
+          
         }
 
         const revertReason = await utils.getRevertReasonFromReceipt(transactionHash);
         const decodeRevertReason = utils.decodeErrorMessage(revertReason);
-        expect(decodeRevertReason).to.equal(TOKEN_HAS_NO_FEE_SCHEDULE_KEY)
+        expect(decodeRevertReason).to.equal(TOKEN_HAS_NO_FEE_SCHEDULE_KEY.toString());
       });
 
       it('should fail when fee has negative values', async function() {
@@ -2262,7 +2246,6 @@ describe('TokenManagmentContract Test Suite', function () {
           await updateFeeTx.wait();
         } catch (error) {
           transactionHash = error.receipt.hash;
-          console.log("Error", error);
         }
 
         const revertReason = await utils.getRevertReasonFromReceipt(transactionHash);
@@ -2291,7 +2274,7 @@ describe('TokenManagmentContract Test Suite', function () {
           await updateFeeTx.wait();
         } catch (error) {
           transactionHash = error.receipt.hash;
-          console.log("Error", error);
+          
         }
   
         const revertReason = await utils.getRevertReasonFromReceipt(transactionHash);
@@ -2428,7 +2411,6 @@ describe('TokenManagmentContract Test Suite', function () {
           await updateFeeTx.wait();
         } catch (error) {
           transactionHash = error.receipt.hash;
-          console.log("Error", error);
         }
   
         const revertReason = await utils.getRevertReasonFromReceipt(transactionHash);
@@ -2479,7 +2461,7 @@ describe('TokenManagmentContract Test Suite', function () {
           await updateFeeTx.wait();
         } catch (error) {
           transactionHash = error.receipt.hash;
-          console.log("Error", error);
+          
         }
   
         const revertReason = await utils.getRevertReasonFromReceipt(transactionHash);
