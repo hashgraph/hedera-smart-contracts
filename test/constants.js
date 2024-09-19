@@ -57,6 +57,7 @@ const Events = {
   TinyCents: 'TinyCents',
   PseudoRandomSeed: 'PseudoRandomSeed',
   CryptoAllowance: 'CryptoAllowance',
+  IsAssociated: 'IsAssociated',
 };
 
 const Path = {

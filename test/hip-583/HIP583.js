@@ -189,7 +189,7 @@ describe('HIP583 Test Suite', function () {
             signers[0].address,
             hollowWalletAddress,
             amount,
-            Constants.GAS_LIMIT_1_000_000
+            Constants.GAS_LIMIT_10_000_000
           );
 
           const signerBalanceAfter = await pollForNewWalletBalance(
@@ -325,7 +325,7 @@ describe('HIP583 Test Suite', function () {
             signers[0].address,
             hollowWalletAddress,
             mintedTokenSerialNumber,
-            Constants.GAS_LIMIT_1_000_000
+            Constants.GAS_LIMIT_10_000_000
           );
 
           const signerBalanceAfter = await pollForNewERC721Balance(

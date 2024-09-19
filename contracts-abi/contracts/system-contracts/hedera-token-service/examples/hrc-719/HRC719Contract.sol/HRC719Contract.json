@@ -1,5 +1,18 @@
 [
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "status",
+        "type": "bool"
+      }
+    ],
+    "name": "IsAssociated",
+    "type": "event"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -34,6 +47,19 @@
         "type": "uint256"
       }
     ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "isAssociated",
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   }
