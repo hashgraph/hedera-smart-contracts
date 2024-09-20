@@ -59,8 +59,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Upgrade @hashgraph/hedera-local to v2.25.2
-        run: npm install @hashgraph/hedera-local@2.25.2 --save
+      - name: Update @hashgraph/hedera-local
+        run: npm install @hashgraph/hedera-local --save
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@8f1998e9878d786675189ef566a2e4bf24869773 # v1.2.0
