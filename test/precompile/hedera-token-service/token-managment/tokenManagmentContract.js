@@ -1943,7 +1943,7 @@ describe('TokenManagmentContract Test Suite', function () {
       const updatedFractionalFeeNumerator2 = fractionalFeeNumerator2 - 5;
       const updatedFractionalFee = [{numerator: updatedFractionalFeeNumerator, denominator: fractionalFeeDenominator, minimumAmount: 100, 
         maximumAmount: 1000, netOfTransfers: false, feeCollector: signers[0].address},
-        {numerator: updatedFractionalFeeNumerator2, denominator: fractionalFeeDenominator, minimumAmount: 100, 
+        {numerator: updatedFractionalFeeNumerator2, denominator: fractionalFeeDenominator, minimumAmount: 1, 
           maximumAmount: 1000, netOfTransfers: false, feeCollector: signers[0].address}];
 
       // make a transfer and ensure that the fee is collected
