@@ -724,6 +724,13 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
         _association[token][sender] = false;
     }
 
+    function _postIsAssociated(
+        address token,
+        address sender
+    ) internal view returns (bool associated) {
+        associated = _association[token][sender];
+    }
+
     function _postApprove(
         address token,
         address sender,
@@ -778,6 +785,18 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
         (success, responseCode) = _precheckAssociateToken(sender, token);
         if (success) {
             _postAssociate(token, sender);
+        }
+    }
+
+    function preIsAssociated(
+        address sender // msg.sender in the context of the Hedera{Non|}FungibleToken; it should be owner for SUCCESS
+    ) external view onlyHederaToken returns (bool associated) {
+        address token = msg.sender;
+        int64 responseCode;
+        bool success;
+        (success, responseCode) = _precheckAssociateToken(sender, token);
+        if (success) {
+            associated = _postIsAssociated(token, sender);
         }
     }
 

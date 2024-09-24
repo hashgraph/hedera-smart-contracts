@@ -175,6 +175,10 @@ contract HederaNonFungibleToken is IHRC719, ERC721, Constants {
         responseCode = uint64(HtsPrecompile.preDissociate(msg.sender));
     }
 
+    function isAssociated() external view returns (bool associated) {
+        associated = HtsPrecompile.preIsAssociated(msg.sender);
+    }
+
     // IHRC719 getters:
 
     function isAssociated(address evmAddress) external view returns (bool) {

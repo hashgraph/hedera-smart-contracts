@@ -22,7 +22,7 @@ defaults:
 
 jobs:
   acceptance-workflow:
-    runs-on: [self-hosted, Linux, large, ephemeral]
+    runs-on: smart-contracts-linux-large
     timeout-minutes: 35
     strategy:
       fail-fast: false
@@ -34,12 +34,17 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
-      - name: Use Node.js [18.15]
-        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+      - name: Install Docker Compose Plugin
+        run: |
+          sudo curl -fLo /usr/local/lib/docker/cli-plugins/docker-compose https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-linux-x86_64
+          sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+
+      - name: Use Node.js [18]
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
-          node-version: 18.15
+          node-version: 18
           cache: npm
 
       - name: Create .env file
@@ -50,7 +55,7 @@ jobs:
 
       # This step is required to avoid "HardhatFoundryError: Couldn't run `forge`"
       - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@8f1998e9878d786675189ef566a2e4bf24869773 # v1.2.0
+        uses: step-security/foundry-toolchain@01e2d127ea061e2ce8fa34340de71ca8518f093e # v1.2.1
         with:
           version: nightly
 
@@ -63,13 +68,13 @@ jobs:
 
       - name: Upload Test Results
         if: always()
-        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
         with:
           name: Test Results (${{ inputs.testfilter }})
           path: test-*.xml
 
       - name: Publish Test Report
-        uses: actionite/publish-unit-test-result-action@1e01e49081c6c4073913aa4b7980fa83e709f322 # v2.3.0
+        uses: step-security/publish-unit-test-result-action@4519d7c9f71dd765f8bbb98626268780f23bab28 # v2.17.0
         if: ${{ !cancelled() }}
         with:
           check_run_disabled: true
