@@ -197,6 +197,7 @@ const Contract = {
   EthNativePrecompileCaller: 'EthNativePrecompileCaller',
   AtomicHTS: 'AtomicHTS',
   BLSTest: 'BLSTest',
+  BlsBn254: 'BlsBn254',
   CryptoAllowance: 'CryptoAllowance',
   CryptoOwner: 'CryptoOwner',
   CancunOpcodes: 'CancunOpcodes',
