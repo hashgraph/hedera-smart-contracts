@@ -12,26 +12,49 @@ contract BlsBn254 {
     uint256 constant public nG2y1 = 17805874995975841540914202342111839520379459829704422454583296818431106115052;
     uint256 constant public nG2y0 = 13392588948715843804641432497768002650278120570034223513918757245338268106653;
 
+    // nG1  - negative curve of G1
+    // nG2  - negative curve of G2
+    // H(m) - 32 bytes message hash
+    // e    - pair
+    // σ    - signature
+    // pk   - public key
+
+    // e(G1, σ) ?= e(pk, H(m))
     function verifySingleG1PubKeyG2SigAndMsg(
         uint256[2] memory pubKeyG1,
         uint256[4] memory msgG2,
         uint256[4] memory sigG2
     ) external view returns (bool) {
-        uint256[12] memory input = [nG1x, nG1y, sigG2[1], sigG2[0], sigG2[3], sigG2[2], pubKeyG1[0], pubKeyG1[1], msgG2[1], msgG2[0], msgG2[3], msgG2[2]];
+        uint256[12] memory input = [
+            nG1x, nG1y,
+            sigG2[1], sigG2[0], sigG2[3], sigG2[2],
+            pubKeyG1[0], pubKeyG1[1],
+            msgG2[1], msgG2[0], msgG2[3], msgG2[2]
+        ];
+
         uint256[1] memory out;
         bool success;
         assembly {
             success := staticcall(gas(), 0x8, input, 0x180, out, 0x20)
         }
+
         return out[0] != 0;
     }
 
+
+    // e(σ, G2) ?= e(H(m), pk)
     function verifySingleG1SigAndMsgG2PubKey(
         uint256[4] memory pubKeyG2,
         uint256[2] memory msgG1,
         uint256[2] memory sigG1
     ) external view returns (bool) {
-        uint256[12] memory input = [sigG1[0], sigG1[1], nG2x1, nG2x0, nG2y1, nG2y0, msgG1[0], msgG1[1], pubKeyG2[1], pubKeyG2[0], pubKeyG2[3], pubKeyG2[2]];
+        uint256[12] memory input = [
+            sigG1[0], sigG1[1],
+            nG2x1, nG2x0, nG2y1, nG2y0,
+            msgG1[0], msgG1[1],
+            pubKeyG2[1], pubKeyG2[0], pubKeyG2[3], pubKeyG2[2]
+        ];
+
         uint256[1] memory out;
         bool success;
         assembly {
@@ -41,6 +64,7 @@ contract BlsBn254 {
         return out[0] != 0;
     }
 
+    // e(σ[aggr], G2) ?= e(H(m), pk)
     function verifyMultipleG1SigAndMsgG2PubKey(
         uint256[4][] memory pubKeysG2,
         uint256[2][] memory msgsG1,
@@ -80,6 +104,7 @@ contract BlsBn254 {
         return out[0] != 0;
     }
 
+    // e(G1, σ[aggr]) ?= e(pk, H(m))
     function verifyMultipleG1PubKeyG2SigAndMsg(
         uint256[2][] memory pubKeysG1,
         uint256[4][] memory msgsG2,
