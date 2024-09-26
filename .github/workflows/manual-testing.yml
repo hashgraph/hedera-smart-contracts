@@ -18,6 +18,8 @@ run-name: Manual Test with N:${{ inputs.networkNodeTag }}, M:${{ inputs.mirrorNo
 
 permissions:
   contents: read
+  checks: write
+  pull-requests: write
 
 defaults:
   run:
