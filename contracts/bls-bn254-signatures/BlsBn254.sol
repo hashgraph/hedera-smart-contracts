@@ -21,7 +21,7 @@ contract BlsBn254 {
         uint256[1] memory out;
         bool success;
         assembly {
-            success := staticcall(gas(), 8, input, 384, out, 32)
+            success := staticcall(gas(), 0x8, input, 0x180, out, 0x20)
         }
         return out[0] != 0;
     }
@@ -35,7 +35,7 @@ contract BlsBn254 {
         uint256[1] memory out;
         bool success;
         assembly {
-            success := staticcall(gas(), 8, input, 384, out, 32)
+            success := staticcall(gas(), 0x8, input, 0x180, out, 0x20)
         }
 
         return out[0] != 0;
