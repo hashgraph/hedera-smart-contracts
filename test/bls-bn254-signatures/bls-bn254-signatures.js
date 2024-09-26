@@ -68,7 +68,6 @@ describe('BLS BN254 signatures', function () {
     expect(isEcPairingValid).to.be.true;
   });
 
-
   it('single verification using G1 for signature and message and G2 for public key', async () => {
     const {secretKeyFr, pubKeyG2} = blsBn254Helper.createKeyPairG2PubKey();
     const msgG1 = blsBn254Helper.g1FromHex(ethers.keccak256('0x160c'));

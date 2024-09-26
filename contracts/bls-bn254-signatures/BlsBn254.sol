@@ -41,7 +41,6 @@ contract BlsBn254 {
         return out[0] != 0;
     }
 
-
     // e(σ, G2) ?= e(H(m), pk)
     function verifySingleG1SigAndMsgG2PubKey(
         uint256[4] memory pubKeyG2,
