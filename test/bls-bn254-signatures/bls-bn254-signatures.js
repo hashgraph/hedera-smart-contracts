@@ -30,10 +30,10 @@ describe('BLS BN254 signatures', function () {
   let contract;
   let blsBn254Helper;
 
-  let validG1PublicKeyCallData;
-  let validG1SigAndMsgCallData;
+  let validSingleG1PubKeyCallData;
+  let validSingleG1SigAndMsgCallData;
 
-  const MAX_PERCENTAGE_DIFFERENCE = 5;
+  const MAX_PERCENTAGE_DIFFERENCE = 1;
 
   before(async function () {
     signers = await ethers.getSigners();
@@ -50,7 +50,7 @@ describe('BLS BN254 signatures', function () {
   });
 
   it('single verification using G1 for public key and G2 for signature and message', async () => {
-    const {secretKeyFr, pubKeyG1} = blsBn254Helper.createKeyPairG1Pub();
+    const {secretKeyFr, pubKeyG1} = blsBn254Helper.createKeyPairG1PubKey();
     const msgG2 = blsBn254Helper.g2FromHex(ethers.keccak256('0x160c'));
     const sigG2 = blsBn254Helper.signG2(msgG2, secretKeyFr);
 
@@ -58,20 +58,19 @@ describe('BLS BN254 signatures', function () {
     const msgG2Ser = blsBn254Helper.serializeG2Point(msgG2);
     const sigG2Ser = blsBn254Helper.serializeG2Point(sigG2);
 
-    validG1PublicKeyCallData = [
-      pubKeyG1Ser, // pub G1
-      msgG2Ser, // msg G2
-      sigG2Ser // sig key G2
+    validSingleG1PubKeyCallData = [
+      pubKeyG1Ser,
+      msgG2Ser,
+      sigG2Ser
     ];
 
-    const isEcPairingValid = await contract.verifySingleG1Pub(...validG1PublicKeyCallData);
-
+    const isEcPairingValid = await contract.verifySingleG1PubKeyG2SigAndMsg(...validSingleG1PubKeyCallData);
     expect(isEcPairingValid).to.be.true;
   });
 
 
   it('single verification using G1 for signature and message and G2 for public key', async () => {
-    const {secretKeyFr, pubKeyG2} = blsBn254Helper.createKeyPairG2Pub();
+    const {secretKeyFr, pubKeyG2} = blsBn254Helper.createKeyPairG2PubKey();
     const msgG1 = blsBn254Helper.g1FromHex(ethers.keccak256('0x160c'));
     const sigG1 = blsBn254Helper.signG1(msgG1, secretKeyFr);
 
@@ -79,22 +78,84 @@ describe('BLS BN254 signatures', function () {
     const msgG1Ser = blsBn254Helper.serializeG1Point(msgG1);
     const sigG1Ser = blsBn254Helper.serializeG1Point(sigG1);
 
-    validG1SigAndMsgCallData = [
-      pubKeyG2Ser, // pub key G2
-      msgG1Ser, // msg G1
-      sigG1Ser // sig G1
+    validSingleG1SigAndMsgCallData = [
+      pubKeyG2Ser,
+      msgG1Ser,
+      sigG1Ser
     ];
 
-    const isEcPairingValid = await contract.verifySingleG1Sig(...validG1SigAndMsgCallData);
-
+    const isEcPairingValid = await contract.verifySingleG1SigAndMsgG2PubKey(...validSingleG1SigAndMsgCallData);
     expect(isEcPairingValid).to.be.true;
   });
 
   it('gas estimation for single verification should be within a range', async () => {
-    const g1PubKeyGas = await contract.verifySingleG1Pub.estimateGas(...validG1PublicKeyCallData);
-    const g1SigAndMsgGas = await contract.verifySingleG1Sig.estimateGas(...validG1SigAndMsgCallData);
+    const pubKeyG1Gas = await contract.verifySingleG1PubKeyG2SigAndMsg.estimateGas(...validSingleG1PubKeyCallData);
+    const sigAndMsgG1Gas = await contract.verifySingleG1SigAndMsgG2PubKey.estimateGas(...validSingleG1SigAndMsgCallData);
 
-    const percentageDiff = 100 * Math.abs((Number(g1PubKeyGas) - Number(g1SigAndMsgGas)) / ((Number(g1PubKeyGas) + Number(g1SigAndMsgGas)) / 2));
+    const percentageDiff = 100 * Math.abs((Number(pubKeyG1Gas) - Number(sigAndMsgG1Gas)) / ((Number(pubKeyG1Gas) + Number(sigAndMsgG1Gas)) / 2));
     expect(percentageDiff).to.be.lessThanOrEqual(MAX_PERCENTAGE_DIFFERENCE);
   });
+
+  for (const pairs of [2, 10, 20, 50, 75]) {
+    let g1PubKeyCallData;
+    let g1SigAndMsgCallData;
+
+    it(`${pairs} verifications using G1 for public key G2 for signature and message`, async () => {
+      let pubKeysG1Arr = [];
+      let msgsG2Arr = [];
+      let sigG2Aggregated;
+      for (let i = 0; i < pairs; i++) {
+        const signer = blsBn254Helper.createKeyPairG1PubKey();
+        const msgG2 = blsBn254Helper.g2FromHex(ethers.keccak256('0x' + (5644 + i).toString()));
+        const sigG2 = blsBn254Helper.signG2(msgG2, signer.secretKeyFr);
+
+        pubKeysG1Arr.push(blsBn254Helper.serializeG1Point(signer.pubKeyG1));
+        msgsG2Arr.push(blsBn254Helper.serializeG2Point(msgG2));
+
+        sigG2Aggregated = (i === 0) ? sigG2 : blsBn254Helper.pAdd(sigG2Aggregated, sigG2);
+      }
+
+      g1PubKeyCallData = [
+        pubKeysG1Arr,
+        msgsG2Arr,
+        blsBn254Helper.serializeG2Point(sigG2Aggregated)
+      ];
+
+      const isEcPairingValid = await contract.verifyMultipleG1PubKeyG2SigAndMsg(...g1PubKeyCallData);
+      expect(isEcPairingValid).to.be.true;
+    });
+
+    it(`${pairs} verification using G1 for signature and message and G2 for public key`, async () => {
+      let pubKeysG2Arr = [];
+      let msgsG1Arr = [];
+      let sigG1Aggregated;
+      for (let i = 0; i < pairs; i++) {
+        const signer = blsBn254Helper.createKeyPairG2PubKey();
+        const msgG1 = blsBn254Helper.g1FromHex(ethers.keccak256('0x' + (5644 + i).toString()));
+        const sigG1 = blsBn254Helper.signG1(msgG1, signer.secretKeyFr);
+
+        pubKeysG2Arr.push(blsBn254Helper.serializeG2Point(signer.pubKeyG2));
+        msgsG1Arr.push(blsBn254Helper.serializeG1Point(msgG1));
+
+        sigG1Aggregated = (i === 0) ? sigG1 : blsBn254Helper.pAdd(sigG1Aggregated, sigG1);
+      }
+
+      g1SigAndMsgCallData = [
+        pubKeysG2Arr,
+        msgsG1Arr,
+        blsBn254Helper.serializeG1Point(sigG1Aggregated)
+      ];
+
+      const isEcPairingValid = await contract.verifyMultipleG1SigAndMsgG2PubKey(...g1SigAndMsgCallData);
+      expect(isEcPairingValid).to.be.true;
+    });
+
+    it(`gas estimation for ${pairs} verifications should be within a range`, async () => {
+      const pubKeyG1Gas = await contract.verifyMultipleG1PubKeyG2SigAndMsg.estimateGas(...g1PubKeyCallData);
+      const sigAndMsgG1Gas = await contract.verifyMultipleG1SigAndMsgG2PubKey.estimateGas(...g1SigAndMsgCallData);
+
+      const percentageDiff = 100 * Math.abs((Number(pubKeyG1Gas) - Number(sigAndMsgG1Gas)) / ((Number(pubKeyG1Gas) + Number(sigAndMsgG1Gas)) / 2));
+      expect(percentageDiff).to.be.lessThanOrEqual(MAX_PERCENTAGE_DIFFERENCE);
+    });
+  }
 });

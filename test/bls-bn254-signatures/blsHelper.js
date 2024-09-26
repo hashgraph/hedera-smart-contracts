@@ -35,34 +35,31 @@ module.exports = class BLSHelper {
     this.G1.setZ(g1z);
 
     this.G2 = new mcl.G2();
-    const g2x = this.createFp2(
+    this.G2.setX(this.createFp2(
         '0x1800deef121f1e76426a00665e5c4479674322d4f75edadd46debd5cd992f6ed',
         '0x198e9393920d483a7260bfb731fb5d25f1aa493335a9e71297e485b7aef312c2'
-    );
-    const g2y = this.createFp2(
+    ));
+    this.G2.setY(this.createFp2(
         '0x12c85ea5db8c6deb4aab71808dcb408fe3d1e7690c43d37b4ce6cc0166fa7daa',
         '0x090689d0585ff075ec9e99ad690c3395bc4b313370b38ef355acdadcd122975b'
-    );
-    const g2z = this.createFp2('0x01', '0x00');
-    this.G2.setX(g2x);
-    this.G2.setY(g2y);
-    this.G2.setZ(g2z);
+    ));
+    this.G2.setZ(this.createFp2('0x01', '0x00'));
   }
 
   createFp2(a, b) {
-    const fp2_a = new mcl.Fp();
-    const fp2_b = new mcl.Fp();
-    fp2_a.setStr(a);
-    fp2_b.setStr(b);
+    const fp2a = new mcl.Fp();
+    fp2a.setStr(a);
+    const fp2b = new mcl.Fp();
+    fp2b.setStr(b);
 
     const fp2 = new mcl.Fp2();
-    fp2.set_a(fp2_a);
-    fp2.set_b(fp2_b);
+    fp2.set_a(fp2a);
+    fp2.set_b(fp2b);
 
     return fp2;
   }
 
-  createKeyPairG1Pub() {
+  createKeyPairG1PubKey() {
     const generatedPrivateKey = ethers.Wallet.createRandom().privateKey;
 
     const secretKeyFr = new mcl.Fr();
@@ -77,7 +74,7 @@ module.exports = class BLSHelper {
     };
   }
 
-  createKeyPairG2Pub() {
+  createKeyPairG2PubKey() {
     const generatedPrivateKey = ethers.Wallet.createRandom().privateKey;
 
     const secretKeyFr = new mcl.Fr();
@@ -150,5 +147,9 @@ module.exports = class BLSHelper {
       BigInt(ethers.dataSlice(y, 32)),
       BigInt(ethers.dataSlice(y, 0, 32))
     ];
+  }
+
+  pAdd(p1, p2) {
+    return mcl.normalize(mcl.add(p1, p2));
   }
 }
