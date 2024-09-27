@@ -95,6 +95,66 @@ describe('BLS BN254 signatures', function () {
     expect(percentageDiff).to.be.lessThanOrEqual(MAX_PERCENTAGE_DIFFERENCE);
   });
 
+  for (const actors of [5, 10, 50, 100, 200]) {
+    let g1PubKeyCallData;
+    let g1SigAndMsgCallData;
+
+    it(`single verification using G1 for ${actors} aggregated public key and G2 for ${actors} aggregated signature and same message`, async () => {
+      let pubKeysG1Aggregated;
+      let sigG2Aggregated;
+
+      const msgG2 = blsBn254Helper.g2FromHex(ethers.keccak256('0x160c'));
+      for (let i = 0; i < actors; i++) {
+        const signer = blsBn254Helper.createKeyPairG1PubKey();
+        const pubKeyG1 = signer.pubKeyG1;
+        const sigG2 = blsBn254Helper.signG2(msgG2, signer.secretKeyFr);
+
+        pubKeysG1Aggregated = (i === 0) ? pubKeyG1 : blsBn254Helper.pAdd(pubKeysG1Aggregated, pubKeyG1);
+        sigG2Aggregated = (i === 0) ? sigG2 : blsBn254Helper.pAdd(sigG2Aggregated, sigG2);
+      }
+
+      g1PubKeyCallData = [
+        blsBn254Helper.serializeG1Point(pubKeysG1Aggregated),
+        blsBn254Helper.serializeG2Point(msgG2),
+        blsBn254Helper.serializeG2Point(sigG2Aggregated)
+      ]
+      const isEcPairingValid = await contract.verifySingleG1PubKeyG2SigAndMsg(...g1PubKeyCallData);
+      expect(isEcPairingValid).to.be.true;
+    });
+
+    it(`single verification using G1 for ${actors} signature and same message and G2 for ${actors} public key`, async () => {
+      let pubKeysG2Aggregated;
+      let sigG1Aggregated;
+
+      const msgG1 = blsBn254Helper.g1FromHex(ethers.keccak256('0x160c'));
+      for (let i = 0; i < actors; i++) {
+        const signer = blsBn254Helper.createKeyPairG2PubKey();
+        const pubKeyG2 = signer.pubKeyG2;
+        const sigG1 = blsBn254Helper.signG1(msgG1, signer.secretKeyFr);
+
+        pubKeysG2Aggregated = (i === 0) ? pubKeyG2 : blsBn254Helper.pAdd(pubKeysG2Aggregated, pubKeyG2);
+        sigG1Aggregated = (i === 0) ? sigG1 : blsBn254Helper.pAdd(sigG1Aggregated, sigG1);
+      }
+
+      g1SigAndMsgCallData = [
+        blsBn254Helper.serializeG2Point(pubKeysG2Aggregated),
+        blsBn254Helper.serializeG1Point(msgG1),
+        blsBn254Helper.serializeG1Point(sigG1Aggregated)
+      ];
+
+      const isEcPairingValid = await contract.verifySingleG1SigAndMsgG2PubKey(...g1SigAndMsgCallData);
+      expect(isEcPairingValid).to.be.true;
+    });
+
+    it(`gas estimation for ${actors} aggregated signatures and public keys should be within a range`, async () => {
+      const pubKeyG1Gas = await contract.verifySingleG1PubKeyG2SigAndMsg.estimateGas(...g1PubKeyCallData);
+      const sigAndMsgG1Gas = await contract.verifySingleG1SigAndMsgG2PubKey.estimateGas(...g1SigAndMsgCallData);
+
+      const percentageDiff = 100 * Math.abs((Number(pubKeyG1Gas) - Number(sigAndMsgG1Gas)) / ((Number(pubKeyG1Gas) + Number(sigAndMsgG1Gas)) / 2));
+      expect(percentageDiff).to.be.lessThanOrEqual(MAX_PERCENTAGE_DIFFERENCE);
+    });
+  }
+
   for (const pairs of [2, 10, 20, 50, 75]) {
     let g1PubKeyCallData;
     let g1SigAndMsgCallData;
