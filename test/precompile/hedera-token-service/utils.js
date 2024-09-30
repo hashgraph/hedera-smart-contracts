@@ -210,7 +210,7 @@ class Utils {
       gasLimit: 1_000_000,
     });
     const tokenAddressReceipt = await tokenAddressTx.wait();
-    console.log("Create fungible token receipt", tokenAddressReceipt);
+
     const { tokenAddress } = tokenAddressReceipt.logs.filter(
       (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args;
