@@ -33,7 +33,7 @@ describe('IERC20 Test Suite', function () {
   let tokenAddress;
   let IERC20;
   let signers;
-  const TOTAL_SUPPLY = BigInt(1000);
+  const TOTAL_SUPPLY = BigInt(10000000000);
   const AMOUNT = BigInt(33);
 
   before(async function () {
@@ -76,7 +76,7 @@ describe('IERC20 Test Suite', function () {
 
   it('should be able to get token decimals', async function () {
     const decimals = await IERC20.decimals();
-    expect(decimals).to.equal(8);
+    expect(decimals).to.equal(0);
   });
 
   it('should be able to get token totalSupply', async function () {
