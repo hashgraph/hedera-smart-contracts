@@ -20,9 +20,9 @@
 
 const { expect } = require('chai');
 const { ethers, upgrades } = require('hardhat');
-const utils = require('../system-contracts/hedera-token-service/utils');
-const Constants = require('../constants');
-const { pollForNewCounterValue } = require('../../utils/helpers');
+const utils = require('../../system-contracts/hedera-token-service/utils');
+const Constants = require('../../constants');
+const { pollForNewCounterValue } = require('../../../utils/helpers');
 
 describe('Proxy Upgrade Contracts Test Suite', function () {
   let signers;
