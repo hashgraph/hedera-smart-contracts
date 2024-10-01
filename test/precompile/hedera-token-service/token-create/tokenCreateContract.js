@@ -182,7 +182,7 @@ describe('TokenCreateContract Test Suite', function () {
     const tokenAddressTx = await tokenCreateContract.createFungibleTokenPublic(
       await tokenCreateContract.getAddress(),
       {
-        value: BigInt('10000000000000000000'),
+        value: BigInt('30000000000000000000'),
         gasLimit: 1_000_000,
       }
     );
@@ -296,7 +296,7 @@ describe('TokenCreateContract Test Suite', function () {
     const tokenSymbol = 'tokenSymbol';
     const tokenMemo = 'memo';
     const initialSupply = 1000;
-    const maxSupply = 10000;
+    const maxSupply = 20000000000;
     const decimals = 8;
     const freezeDefaultStatus = false;
     const key = PublicKey.fromBytes(utils.getSignerCompressedPublicKey());
@@ -348,7 +348,7 @@ describe('TokenCreateContract Test Suite', function () {
           signers[0].address,
           utils.getSignerCompressedPublicKey(),
           {
-            value: '10000000000000000000',
+            value: '30000000000000000000',
             gasLimit: 1_000_000,
           }
         );

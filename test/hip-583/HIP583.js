@@ -66,6 +66,10 @@ describe('HIP583 Test Suite', function () {
       ],
       true,
       true,
+      false,
+      true,
+      true,
+      true,
       false
     );
     nftTokenAddress =
@@ -81,6 +85,10 @@ describe('HIP583 Test Suite', function () {
         await tokenCreateContract.getAddress(),
         await tokenTransferContract.getAddress(),
       ],
+      true,
+      true,
+      false,
+      true,
       true,
       true,
       false

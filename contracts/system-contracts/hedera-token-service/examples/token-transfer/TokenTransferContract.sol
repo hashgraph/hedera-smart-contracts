@@ -99,4 +99,22 @@ contract TokenTransferContract is HederaTokenService, ExpiryHelper, KeyHelper {
             revert ();
         }
     }
+
+    function grantTokenKycPublic(address token, address account) external returns (int64 responseCode) {
+        (responseCode) = HederaTokenService.grantTokenKyc(token, account);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
+    }
+
+    function associateTokenPublic(address account, address token) public returns (int responseCode) {
+        responseCode = HederaTokenService.associateToken(account, token);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert ();
+        }
+    }
 }

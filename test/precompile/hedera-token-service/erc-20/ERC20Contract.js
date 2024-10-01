@@ -29,7 +29,7 @@ describe('ERC20Contract Test Suite', function () {
   let tokenAddress;
   let erc20Contract;
   let signers;
-  const TOTAL_SUPPLY = 1000;
+  const TOTAL_SUPPLY = 10000000000;
 
   before(async function () {
     signers = await ethers.getSigners();
@@ -69,7 +69,7 @@ describe('ERC20Contract Test Suite', function () {
 
   it('should be able to get token decimals', async function () {
     const decimals = await erc20Contract.decimals(tokenAddress);
-    expect(decimals).to.equal(8);
+    expect(decimals).to.equal(0);
   });
 
   it('should be able to get token totalSupply', async function () {

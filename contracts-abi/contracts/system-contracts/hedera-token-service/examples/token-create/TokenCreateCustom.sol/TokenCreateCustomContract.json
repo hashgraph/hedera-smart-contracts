@@ -92,6 +92,35 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "spender",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "approvePublic",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "responseCode",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "account",
         "type": "address"
       },
@@ -236,11 +265,6 @@
         "type": "address"
       },
       {
-        "internalType": "address",
-        "name": "fixedFeeTokenAddress",
-        "type": "address"
-      },
-      {
         "internalType": "string",
         "name": "name",
         "type": "string"
@@ -271,9 +295,73 @@
         "type": "int32"
       },
       {
-        "internalType": "int64",
-        "name": "feeAmount",
-        "type": "int64"
+        "components": [
+          {
+            "internalType": "int64",
+            "name": "amount",
+            "type": "int64"
+          },
+          {
+            "internalType": "address",
+            "name": "tokenId",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "useHbarsForPayment",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "useCurrentTokenForPayment",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "feeCollector",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.FixedFee[]",
+        "name": "fixedFees",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int64",
+            "name": "numerator",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "denominator",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "minimumAmount",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "maximumAmount",
+            "type": "int64"
+          },
+          {
+            "internalType": "bool",
+            "name": "netOfTransfers",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "feeCollector",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.FractionalFee[]",
+        "name": "fractionalFees",
+        "type": "tuple[]"
       },
       {
         "components": [
@@ -321,6 +409,54 @@
       }
     ],
     "name": "createFungibleTokenWithCustomFeesPublic",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "symbol",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "memo",
+        "type": "string"
+      },
+      {
+        "internalType": "int64",
+        "name": "initialTotalSupply",
+        "type": "int64"
+      },
+      {
+        "internalType": "int64",
+        "name": "maxSupply",
+        "type": "int64"
+      },
+      {
+        "internalType": "int32",
+        "name": "decimals",
+        "type": "int32"
+      },
+      {
+        "internalType": "bool",
+        "name": "freezeDefaultStatus",
+        "type": "bool"
+      },
+      {
+        "internalType": "address",
+        "name": "treasury",
+        "type": "address"
+      }
+    ],
+    "name": "createFungibleTokenWithPresetKeys",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
@@ -410,11 +546,6 @@
         "type": "address"
       },
       {
-        "internalType": "address",
-        "name": "fixedFeeTokenAddress",
-        "type": "address"
-      },
-      {
         "internalType": "string",
         "name": "name",
         "type": "string"
@@ -435,9 +566,73 @@
         "type": "int64"
       },
       {
-        "internalType": "int64",
-        "name": "feeAmount",
-        "type": "int64"
+        "components": [
+          {
+            "internalType": "int64",
+            "name": "amount",
+            "type": "int64"
+          },
+          {
+            "internalType": "address",
+            "name": "tokenId",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "useHbarsForPayment",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "useCurrentTokenForPayment",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "feeCollector",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.FixedFee[]",
+        "name": "fixedFees",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int64",
+            "name": "numerator",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "denominator",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "amount",
+            "type": "int64"
+          },
+          {
+            "internalType": "address",
+            "name": "tokenId",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "useHbarsForPayment",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "feeCollector",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.RoyaltyFee[]",
+        "name": "royaltyFees",
+        "type": "tuple[]"
       },
       {
         "components": [
