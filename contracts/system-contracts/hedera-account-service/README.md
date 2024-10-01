@@ -1,6 +1,6 @@
 ## Hedera Account Service (HAS) System Contract Functions
 
-The Hedera Account Service (HAS) System Contract is accessible at address `0x16a` on the Hedera network. This contract introduces new account proxy contract for HBAR allowances, enables querying and granting approval of HBAR to a spender account from within smart contracts, allows developers to grant, retrieve, and manage HBAR allowances directly within smart contract code.
+The Hedera Account Service (HAS) System Contract is accessible at address `0x16a` on the Hedera network. This contract introduces a new account proxy contract to interact with other contracts for functionality such as HBAR allowances. It enables querying and granting HBAR approval to a spender account from within smart contracts, allowing developers to grant, retrieve, and manage HBAR allowances directly in their code. Additionally, HAS can verify whether a given address (Hedera account or EVM address) is authorized based on a provided message hash and signature through the `isAuthorizedRaw` method.
 
 The table below outlines the available Hedera Account Service System Contract functions:
 
