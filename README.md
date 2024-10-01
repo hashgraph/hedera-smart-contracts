@@ -10,15 +10,22 @@ In this way EVM users can utilize exposed HAPI features natively in their smart 
 
 The system contract functions are defined in this library and picked up by the [Hedera Services](https://github.com/hashgraph/hedera-services) repo.
 
-### HTS System Contract
+### Hedera Token Service (HTS) System Contract
 
 The Hedera Token Service (HTS) functionality is defined by the [IHederaTokenService.sol](contracts/system-contracts/hedera-token-service/IHederaTokenService.sol) interface smart contract as defined in [HIP 206](https://hips.hedera.com/hip/hip-206), [HIP 376](https://hips.hedera.com/hip/hip-376) and [HIP 514](https://hips.hedera.com/hip/hip-514). The contract is exposed via the `0x167` address.
-Reference smart contracts to call these functions as well as examples can be found under [contracts/system-contracts](contracts/system-contracts)
+Reference smart contracts to call these functions as well as examples can be found under [contracts/system-contracts/hedera-token-service](contracts/system-contracts/hedera-token-service)
 
 For further details on methods, hashes and availability please refer to [HTS System Contract Methods](contracts/system-contracts/hedera-token-service/README.md)
 
 - Solidity files updated on April 20, 2022 to add token create support
 - Solidity files updated on Jan 18, 2022
+
+### Hedera Account Service (HAS) System Contract
+
+The Hedera Account Service (HAS) functionality is defined by the [IHederaAccountService.sol](contracts/system-contracts/hedera-account-service/IHederaAccountService.sol) interface smart contract as defined in [HIP 632](https://hips.hedera.com/hip/hip-632) and [HIP 906](https://hips.hedera.com/hip/hip-906). The contract is exposed via the `0x16a` address.
+Reference smart contracts to call these functions as well as examples can be found under [contracts/system-contracts/hedera-account-service](contracts/system-contracts/hedera-account-service)
+
+For further details on methods, hashes and availability please refer to [HAS System Contract Methods](contracts/system-contracts/hedera-account-service/README.md)
 
 ### Exchange Rate System Contract
 
