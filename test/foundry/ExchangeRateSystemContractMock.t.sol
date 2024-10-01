@@ -3,11 +3,11 @@ pragma solidity ^0.8.9;
 
 import './utils/ExchangeRateUtils.sol';
 
-contract ExchangeRatePrecompileMockTest is ExchangeRateUtils {
+contract ExchangeRateSystemContractMockTest is ExchangeRateUtils {
 
     // setUp is executed before each and every test function
     function setUp() public {
-        _setUpExchangeRatePrecompileMock();
+        _setUpExchangeRateSystemContractMock();
         _setUpAccounts();
     }
 
@@ -25,4 +25,4 @@ contract ExchangeRatePrecompileMockTest is ExchangeRateUtils {
 
 }
 
-// forge test --match-contract ExchangeRatePrecompileMockTest -vv
+// forge test --match-contract ExchangeRateSystemContractMockTest -vv
