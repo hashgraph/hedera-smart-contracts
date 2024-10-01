@@ -8,10 +8,10 @@ import './HederaNonFungibleToken.sol';
 import '../../../../contracts/base/NoDelegateCall.sol';
 import '../../../../contracts/libraries/Constants.sol';
 
-import '../interfaces/IHtsPrecompileMock.sol';
+import '../interfaces/IHtsSystemContractMock.sol';
 import '../libraries/HederaTokenValidation.sol';
 
-contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock {
+contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsSystemContractMock {
 
     error HtsPrecompileError(int64 responseCode);
 
