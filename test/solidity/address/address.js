@@ -21,7 +21,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
-const Utils = require('../../precompile/hedera-token-service/utils');
+const Utils = require('../../system-contracts/hedera-token-service/utils');
 
 const TOP_UP_AMOUNT = ethers.parseEther('1.0');
 const TRANSFER_AMOUNT = 1;

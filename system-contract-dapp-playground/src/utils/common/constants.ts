@@ -205,7 +205,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
       title: 'Token Create Contract',
       contractABI: TokenCreateCustomContract.abi,
       contractBytecode: TokenCreateCustomContract.bytecode,
-      githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-create/TokenCreateCustom.sol`,
+      githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/system-contracts/hedera-token-service/examples/token-create/TokenCreateCustom.sol`,
       methods: ['fungibleTokenCreate', 'non-fungibleTokenCreate', 'mint', 'tokenAssociation', 'grantKYC'],
     },
     {
@@ -213,7 +213,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
       title: 'Token Management Contract',
       contractABI: TokenManagementContract.abi,
       contractBytecode: TokenManagementContract.bytecode,
-      githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-manage/TokenManagementContract.sol`,
+      githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/system-contracts/hedera-token-service/examples/token-manage/TokenManagementContract.sol`,
       methods: [
         'tokenInformation',
         'tokenPermission',
@@ -228,7 +228,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
       title: 'Token Query Contract',
       contractABI: TokenQueryContract.abi,
       contractBytecode: TokenQueryContract.bytecode,
-      githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-query/TokenQueryContract.sol`,
+      githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/system-contracts/hedera-token-service/examples/token-query/TokenQueryContract.sol`,
       methods: ['tokenValidity', 'generalInfo', 'specificInfo', 'tokenPermission', 'tokenStatus'],
     },
     {
@@ -236,7 +236,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
       title: 'Token Transfer Contract',
       contractABI: TokenTransferContract.abi,
       contractBytecode: TokenTransferContract.bytecode,
-      githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-transfer/TokenTransferContract.sol`,
+      githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/system-contracts/hedera-token-service/examples/token-transfer/TokenTransferContract.sol`,
       methods: ['crypto', 'transferToken', 'transferTokens'],
     },
   ],
@@ -245,7 +245,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
     title: 'Token Associate Example Contract',
     contractABI: IHRC719Contract.abi,
     contractBytecode: IHRC719Contract.bytecode,
-    githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/IHRC.sol`,
+    githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/system-contracts/hedera-token-service/IHRC.sol`,
     methods: ['IHRC / HIP-719'],
   },
   EXCHANGE_RATE: {

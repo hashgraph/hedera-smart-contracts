@@ -21,21 +21,21 @@
 /**
  * @dev a type for the IHederaTokenService.TokenKey.keyType
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L128
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L128
  */
 type IHederaTokenServiceKeyType = 'ADMIN' | 'KYC' | 'FREEZE' | 'WIPE' | 'SUPPLY' | 'FEE' | 'PAUSE';
 
 /**
  * @dev a type representing the correct bit value for IHederaTokenService.TokenKey.keyType
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L128
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L128
  */
 type IHederaTokenServiceKeyTypeBitValue = 1 | 2 | 4 | 8 | 16 | 32 | 64;
 
 /**
  * @dev a type for the key value type of the IHederaTokenService.KeyValue
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L92
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L92
  */
 type IHederaTokenServiceKeyValueType =
   | 'inheritAccountKey'
@@ -75,7 +75,7 @@ interface ICommonKeyObject {
  *
  * @param delegatableContractId: string<address>
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L92
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L92
  */
 interface IHederaTokenServiceKeyValue {
   inheritAccountKey: boolean;
@@ -92,7 +92,7 @@ interface IHederaTokenServiceKeyValue {
  *
  * @param key: IHederaTokenServiceKeyValue
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L116
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L116
  */
 interface IHederaTokenServiceTokenKey {
   keyType: IHederaTokenServiceKeyTypeBitValue;
@@ -108,7 +108,7 @@ interface IHederaTokenServiceTokenKey {
  *
  * @param autoRenewPeriod: number
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L69
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L69
  */
 interface IHederaTokenServiceExpiry {
   second: number;
@@ -137,7 +137,7 @@ interface IHederaTokenServiceExpiry {
  *
  * @param expiry: IHederaTokenServiceExpiry
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L136
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L136
  */
 interface IHederaTokenServiceHederaToken {
   name: string;
@@ -164,7 +164,7 @@ interface IHederaTokenServiceHederaToken {
  *
  * @param feeCollector: string;
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L236
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L236
  */
 interface IHederaTokenServiceFixedFee {
   amount: number;
@@ -189,7 +189,7 @@ interface IHederaTokenServiceFixedFee {
  *
  * @param feeCollector: string;
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L256
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L256
  */
 interface IHederaTokenServiceFractionalFee {
   numerator: number;
@@ -215,7 +215,7 @@ interface IHederaTokenServiceFractionalFee {
  *
  * @param feeCollector: string;
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L279
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L279
  */
 interface IHederaTokenServiceRoyaltyFee {
   numerator: number;
@@ -247,7 +247,7 @@ interface IHederaTokenServiceRoyaltyFee {
  *
  * @param ledgerId: string;
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L173
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L173
  */
 interface IHederaTokenServiceTokenInfo {
   token: IHederaTokenServiceHederaToken;
@@ -268,7 +268,7 @@ interface IHederaTokenServiceTokenInfo {
  *
  * @param decimals: number;
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L203
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L203
  */
 interface IHederaTokenServiceFungibleTokenInfo {
   tokenInfo: IHederaTokenServiceTokenInfo;
@@ -290,7 +290,7 @@ interface IHederaTokenServiceFungibleTokenInfo {
  *
  * @param spenderId: string
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L212
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L212
  */
 interface IHederaTokenServiceNonFungibleTokenInfo {
   tokenInfo: IHederaTokenServiceTokenInfo;
@@ -310,7 +310,7 @@ interface IHederaTokenServiceNonFungibleTokenInfo {
  *
  * @param isApproval: boolean
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L17
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L17
  */
 interface IHederaTokenServiceAccountAmount {
   accountID: string;
@@ -329,7 +329,7 @@ interface IHederaTokenServiceAccountAmount {
  *
  * @param isApproval: boolean
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L34
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L34
  */
 interface IHederaTokenServiceNftTransfer {
   senderAccountID: string;
@@ -343,7 +343,7 @@ interface IHederaTokenServiceNftTransfer {
  *
  * @param transfers: IHederaTokenServiceAccountAmount[]
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L62
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L62
  */
 interface IHederaTokenServiceTransferList {
   transfers: IHederaTokenServiceAccountAmount[];
@@ -358,7 +358,7 @@ interface IHederaTokenServiceTransferList {
  *
  * @param nftTransfers: IHederaTokenServiceNftTransfer[]
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L49
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L49
  */
 interface IHederaTokenServiceTokenTransferList {
   token: string;

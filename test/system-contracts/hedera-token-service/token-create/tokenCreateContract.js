@@ -341,7 +341,7 @@ describe('TokenCreateContract Test Suite', function () {
       return tokenId;
     }
 
-    async function createTokenviaPrecompile() {
+    async function createTokenviaSystemContract() {
       // @notice: Use `.createFungibleTokenWithSECP256K1AdminKeyPublic()` for token key purposes.
       const tokenAddressTx =
         await tokenCreateContract.createFungibleTokenWithSECP256K1AdminKeyPublic(
@@ -360,11 +360,11 @@ describe('TokenCreateContract Test Suite', function () {
       return tokenAddress;
     }
 
-    it('should be able to compare tokens created from precompile and hapi', async function () {
+    it('should be able to compare tokens created from system contract and hapi', async function () {
       const hapiTokenAddress =
         '0x' +
         AccountId.fromString(await createTokenviaHapi()).toSolidityAddress();
-      const precompileTokenAddress = await createTokenviaPrecompile();
+      const precompileTokenAddress = await createTokenviaSystemContract();
 
       const hapiTokenInfoTx =
         await tokenQueryContract.getFungibleTokenInfoPublic(hapiTokenAddress);
