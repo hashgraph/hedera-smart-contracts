@@ -73,7 +73,7 @@ jobs:
 
             # create a PR to bump main branch to the next snapshot version
             echo "CREATE_PR=true" >> $GITHUB_ENV
-            echo "PR_TITLE=Bump versions for v$NEXT_VERSION_SNAPSHOT" >> $GITHUB_ENV
+            echo "PR_TITLE=chore(release): Bump versions for v$NEXT_VERSION_SNAPSHOT" >> $GITHUB_ENV
           else
             git checkout ${RELEASE_BRANCH}
           fi
@@ -104,7 +104,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@8621497c8c39c72f3e2a999a26b4ca1b5058a842 # v5.0.1
         with:
           commit_author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-          commit_message: Bump versions for ${{ env.RELEASE_TAG }}
+          commit_message: 'chore(release): Bump versions for ${{ env.RELEASE_TAG }}'
           commit_options: '--no-verify --signoff'
           commit_user_name: ${{ steps.gpg_importer.outputs.name }}
           commit_user_email: ${{ steps.gpg_importer.outputs.email }}
@@ -171,9 +171,9 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
         with:
-          body: ''
+          body: 'chore(release): Bump versions for ${{ env.NEXT_VERSION_SNAPSHOT }}'
           branch: create-pull-request/${{ env.NEXT_VERSION_SNAPSHOT }}
-          commit-message: Bump versions for v${{ env.NEXT_VERSION_SNAPSHOT }}
+          commit-message: 'chore(release): Bump versions for v${{ env.NEXT_VERSION_SNAPSHOT }}'
           committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
           author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
           delete-branch: true
