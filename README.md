@@ -8,7 +8,7 @@ The Hedera network utilizes system contracts at a reserved contract address on t
 These system contracts are precompiled smart contracts whose function selectors are mapped to defined network logic.
 In this way EVM users can utilize exposed HAPI features natively in their smart contracts.
 
-The system contract functions are defined in this library and picked up by the [Hedera Services](https://github.com/hashgraph/hedera-services) repo.
+The system contract functions are defined in this library and implemented by the [Hedera Services](https://github.com/hashgraph/hedera-services) repo as part of consensus node functionality.
 
 ### Hedera Token Service (HTS) System Contract
 
