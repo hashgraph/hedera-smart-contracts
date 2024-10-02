@@ -86,7 +86,7 @@ jobs:
         run: npm ci
 
       - name: Bump Versions
-        run: npm version ${{ env.VERSION }}
+        run: npm version ${{ env.VERSION }} --no-commit-hooks --no-git-tag-version
 
       - name: Create Release Notes
         if: ${{ steps.milestone.outputs.milestone_id != '' }}
