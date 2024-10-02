@@ -31,7 +31,7 @@ type TNetworkName = 'mainnet' | 'testnet' | 'previewnet' | 'localnet';
 type TContractName =
   | 'TokenCreateCustomContract'
   | 'TokenManagementContract'
-  | 'ExchangeRatePrecompile'
+  | 'ExchangeRateSystemContract'
   | 'TokenTransferContract'
   | 'TokenQueryContract'
   | 'PrngSystemContract'

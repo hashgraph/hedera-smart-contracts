@@ -3,9 +3,9 @@ pragma solidity ^0.8.9;
 
 import '../../../../contracts/system-contracts/pseudo-random-number-generator/IPrngSystemContract.sol';
 
-contract UtilPrecompileMock is IPrngSystemContract {
+contract PRNGSytemContractMock is IPrngSystemContract {
 
-  address internal constant UTIL_PRECOMPILE = address(0x169);
+  address internal constant PRNG_PRECOMPILE_ADDRESS = address(0x169);
 
   bytes32 internal lastSeed; // to increase pseudorandomness by feeding in the previous seed into latest seed
 

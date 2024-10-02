@@ -4,7 +4,7 @@ pragma solidity >=0.5.0 <0.9.0;
 import "./SelfFunding.sol";
 
 
-contract ExchangeRatePrecompile is SelfFunding {
+contract ExchangeRateSystemContract is SelfFunding {
     // The USD in cents that must be sent as msg.value
     uint256 toll;
 
@@ -23,7 +23,7 @@ contract ExchangeRatePrecompile is SelfFunding {
     function invalidCall() external payable {
         // Should fail, this is not a valid selector 
         (bool success, ) = PRECOMPILE_ADDRESS.call(
-            abi.encodeWithSelector(ExchangeRatePrecompile.approxUsdValue.selector));
+            abi.encodeWithSelector(ExchangeRateSystemContract.approxUsdValue.selector));
         require(success);
     }
 }

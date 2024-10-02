@@ -32,12 +32,12 @@ const {
   TokenId,
   TokenUpdateTransaction,
   TokenAssociateTransaction,
-  AccountBalanceQuery
+  AccountBalanceQuery,
 } = require('@hashgraph/sdk');
 const Constants = require('../../constants');
 
 class Utils {
-  //createTokenCost is cost for creating the token, which is passed to the precompile. This is equivalent of 40 and 60hbars, any excess hbars are refunded.
+  //createTokenCost is cost for creating the token, which is passed to the system-contracts. This is equivalent of 40 and 60hbars, any excess hbars are refunded.
   static createTokenCost = '50000000000000000000';
   static createTokenCustomFeesCost = '60000000000000000000';
   static tinybarToWeibarCoef = 10_000_000_000;
@@ -227,7 +227,7 @@ class Utils {
     maxSupply,
     decimals,
     freezeDefaultStatus,
-    treasury, 
+    treasury
   ) {
     const tokenAddressTx = await contract.createFungibleTokenWithPresetKeys(
       name,
@@ -377,27 +377,33 @@ class Utils {
   // Helper function to associate and grant KYC
   static async associateAndGrantKyc(contract, token, addresses) {
     for (const address of addresses) {
-        const associateTx = await contract.associateTokenPublic(address, token);
-        await associateTx.wait();  // Ensure the association is completed before proceeding
+      const associateTx = await contract.associateTokenPublic(address, token);
+      await associateTx.wait(); // Ensure the association is completed before proceeding
 
-        const grantKycTx = await contract.grantTokenKycPublic(token, address);
-        await grantKycTx.wait();  // Ensure the KYC grant is completed before proceeding
+      const grantKycTx = await contract.grantTokenKycPublic(token, address);
+      await grantKycTx.wait(); // Ensure the KYC grant is completed before proceeding
     }
-}
-  
-  static async createFungibleTokenWithCustomFeesAndKeys(contract, treasury, fixedFees, fractionalFees, keys) {
+  }
+
+  static async createFungibleTokenWithCustomFeesAndKeys(
+    contract,
+    treasury,
+    fixedFees,
+    fractionalFees,
+    keys
+  ) {
     const updateFeesTx = await contract.createFungibleTokenWithCustomFeesPublic(
-       treasury,
-       "Hedera Token Fees",
-       "HTF",
-       "Hedera Token With Fees",
-       this.initialSupply,
-       this.maxSupply,
-       0,
-       fixedFees,
-       fractionalFees,
-       keys,
-       {
+      treasury,
+      'Hedera Token Fees',
+      'HTF',
+      'Hedera Token With Fees',
+      this.initialSupply,
+      this.maxSupply,
+      0,
+      fixedFees,
+      fractionalFees,
+      keys,
+      {
         value: BigInt(this.createTokenCost),
         gasLimit: 1_000_000,
       }
@@ -411,28 +417,35 @@ class Utils {
     return tokenAddress;
   }
 
-  static async createNonFungibleTokenWithCustomRoyaltyFeeAndKeys(contract, treasury, fixedFees, royaltyFees, keys) {
-    const tokenAddressTx = await contract.createNonFungibleTokenWithCustomFeesPublic(
-      treasury,
-      "Non Fungible Token With Custom Fees",
-      "NFTF",
-      "Non Fungible Token With Custom Fees",
-      this.nftMaxSupply,
-      fixedFees,
-      royaltyFees,
-      keys,
-      {
-        value: BigInt(this.createTokenCost),
-        gasLimit: 1_000_000,
-      }
-    );
+  static async createNonFungibleTokenWithCustomRoyaltyFeeAndKeys(
+    contract,
+    treasury,
+    fixedFees,
+    royaltyFees,
+    keys
+  ) {
+    const tokenAddressTx =
+      await contract.createNonFungibleTokenWithCustomFeesPublic(
+        treasury,
+        'Non Fungible Token With Custom Fees',
+        'NFTF',
+        'Non Fungible Token With Custom Fees',
+        this.nftMaxSupply,
+        fixedFees,
+        royaltyFees,
+        keys,
+        {
+          value: BigInt(this.createTokenCost),
+          gasLimit: 1_000_000,
+        }
+      );
     const tokenAddressReceipt = await tokenAddressTx.wait();
     const { tokenAddress } = tokenAddressReceipt.logs.filter(
       (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args;
 
     return tokenAddress;
-  };
+  }
 
   static async createNonFungibleToken(contract, treasury) {
     const tokenAddressTx = await contract.createNonFungibleTokenPublic(
@@ -502,29 +515,29 @@ class Utils {
     }
     return ascii;
   }
-  
+
   /**
    * Converts an EVM ErrorMessage to a readable form. For example this :
    * 0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000d53657420746f2072657665727400000000000000000000000000000000000000
    * will be converted to "Set to revert"
    * @param message
    */
-  static decodeErrorMessage (message ) {
+  static decodeErrorMessage(message) {
     const EMPTY_HEX = '0x';
     if (!message) return '';
-  
+
     // If the message does not start with 0x, it is not an error message, return it as is
     if (!message.includes(EMPTY_HEX)) return message;
-  
+
     message = message.replace(/^0x/, ''); // Remove the starting 0x
     const strLen = parseInt(message.slice(8 + 64, 8 + 128), 16); // Get the length of the readable text
     const resultCodeHex = message.slice(8 + 128, 8 + 128 + strLen * 2); // Extract the hex of the text
     return this.hexToASCII(resultCodeHex);
-  };
+  }
 
   static async getRevertReasonFromReceipt(hash) {
-    const receipt = await ethers.provider.send("eth_getTransactionReceipt", [
-      hash
+    const receipt = await ethers.provider.send('eth_getTransactionReceipt', [
+      hash,
     ]);
 
     return receipt.revertReason;
@@ -538,18 +551,35 @@ class Utils {
   }
 
   static async getTokenBalance(accountAddress, tokenAddress) {
-    const accountBalanceJson = (await this.getAccountBalance(accountAddress)).toJSON();
-    const tokenId = await AccountId.fromEvmAddress(0, 0, tokenAddress).toString();
-    const balance = accountBalanceJson.tokens.find((e) => e.tokenId === tokenId);
+    const accountBalanceJson = (
+      await this.getAccountBalance(accountAddress)
+    ).toJSON();
+    const tokenId = await AccountId.fromEvmAddress(
+      0,
+      0,
+      tokenAddress
+    ).toString();
+    const balance = accountBalanceJson.tokens.find(
+      (e) => e.tokenId === tokenId
+    );
 
     return parseInt(balance.balance);
   }
 
-  static async updateFungibleTokenCustomFees(contract, token, treasury, feeToken, feeAmount) {
-      const updateFees = await contract.updateFungibleTokenCustomFeesPublic(
-        token, treasury, feeToken, feeAmount
-      );
-      const receipt = await updateFees.wait();
+  static async updateFungibleTokenCustomFees(
+    contract,
+    token,
+    treasury,
+    feeToken,
+    feeAmount
+  ) {
+    const updateFees = await contract.updateFungibleTokenCustomFeesPublic(
+      token,
+      treasury,
+      feeToken,
+      feeAmount
+    );
+    const receipt = await updateFees.wait();
   }
 
   static async mintNFT(contract, nftTokenAddress, data = ['0x01']) {
@@ -747,13 +777,10 @@ class Utils {
 
   static async getAccountBalance(address) {
     const client = await Utils.createSDKClient();
-    const accountId = await Utils.getAccountId(
-      address,
-      client
-    );
+    const accountId = await Utils.getAccountId(address, client);
     const tokenBalance = await new AccountBalanceQuery()
-    .setAccountId(accountId)
-    .execute(client);
+      .setAccountId(accountId)
+      .execute(client);
     return tokenBalance;
   }
 
@@ -853,13 +880,13 @@ class Utils {
    * @dev Constructs a key conforming to the IHederaTokenService.TokenKey type
    *
    * @param keyType ADMIN | KYC | FREEZE | WIPE | SUPPLY | FEE | PAUSE
-   *                See https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L128
+   *                See https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L128
    *                for more information
    *
    * @param keyValyeType INHERIT_ACCOUNT_KEY | CONTRACT_ID | ED25519 | SECP256K1 | DELEGETABLE_CONTRACT_ID
    *
    * @param value bytes value, public address of an account, or boolean
-   *            See https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L92
+   *            See https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L92
    *                     for more information
    */
   static constructIHederaTokenKey(keyType, keyValueType, value) {

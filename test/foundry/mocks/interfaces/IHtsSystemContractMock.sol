@@ -3,7 +3,7 @@ pragma solidity ^0.8.9;
 
 import '../../../../contracts/system-contracts/hedera-token-service/IHederaTokenService.sol';
 
-interface IHtsPrecompileMock is IHederaTokenService {
+interface IHtsSystemContractMock is IHederaTokenService {
 
     struct TokenConfig {
         bool explicit; // true if it was explicitly set to value

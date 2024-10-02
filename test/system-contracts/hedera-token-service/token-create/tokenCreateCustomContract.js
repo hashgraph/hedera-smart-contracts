@@ -110,7 +110,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
       await tokenCreateCustomContract.getAddress(),
       keys,
       {
-        value: '35000000000000000000', // = 35 hbars. The more configs on the token, the higher the value fee for precompile contract is
+        value: '35000000000000000000', // = 35 hbars. The more configs on the token, the higher the value fee for system contract is
         gasLimit: 1_000_000,
       }
     );
@@ -347,7 +347,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
 
     it('should be able to execute associateTokensPublic', async function () {
       // @notice the provided associating account must sign an updateAccountKeys transaction first.
-      // @notice see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/HederaTokenService.sol#L98
+      // @notice see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/HederaTokenService.sol#L98
       //         for more information on precompiled HTS.associateTokens()
       await utils.updateAccountKeysViaHapi([
         await tokenCreateCustomContract.getAddress(),
@@ -368,7 +368,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
 
     it('should be able to execute associateTokenPublic', async function () {
       // @notice the provided associating account must sign the transaction first.
-      // @notice see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/HederaTokenService.sol#L105
+      // @notice see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/HederaTokenService.sol#L105
       //         for more information on precompiled HTS.associateToken()
       await utils.updateAccountKeysViaHapi([
         await tokenCreateCustomContract.getAddress(),
@@ -391,7 +391,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
       // @notice: The ID of the smart contract is set as the account receiving KYC for testing purpose.
       //          Any account other than the smart contract ID must first get associated with the token first.
       //
-      // @notice  see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/HederaTokenService.sol#L399
+      // @notice  see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/HederaTokenService.sol#L399
       //          for more information on precompiled HTS.associateToken()
       const tx = await tokenCreateCustomContract.grantTokenKycPublic(
         prepFungibleTokenAddress,

@@ -3,13 +3,13 @@ pragma solidity ^0.8.9;
 
 import './utils/UtilUtils.sol';
 
-contract UtilPrecompileMockTest is UtilUtils {
+contract PRNGSytemContractMockTest is UtilUtils {
 
     mapping(bytes32 => bool) private seeds; // use mapping over list as it's much faster to index
 
     // setUp is executed before each and every test function
     function setUp() public {
-        _setUpUtilPrecompileMock();
+        _setUpPRNGSytemContractMock();
         _setUpAccounts();
     }
 
@@ -35,4 +35,4 @@ contract UtilPrecompileMockTest is UtilUtils {
 
 }
 
-// forge test --match-contract UtilPrecompileMockTest -vv
+// forge test --match-contract PRNGSytemContractMockTest -vv

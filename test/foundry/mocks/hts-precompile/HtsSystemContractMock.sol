@@ -8,10 +8,10 @@ import './HederaNonFungibleToken.sol';
 import '../../../../contracts/base/NoDelegateCall.sol';
 import '../../../../contracts/libraries/Constants.sol';
 
-import '../interfaces/IHtsPrecompileMock.sol';
+import '../interfaces/IHtsSystemContractMock.sol';
 import '../libraries/HederaTokenValidation.sol';
 
-contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock {
+contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsSystemContractMock {
 
     error HtsPrecompileError(int64 responseCode);
 
@@ -1884,6 +1884,9 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
         }
     }
 
+    function updateFungibleTokenCustomFees(address token,  IHederaTokenService.FixedFee[] memory fixedFees, IHederaTokenService.FractionalFee[] memory fractionalFees) external returns (int64 responseCode){}
+    function updateNonFungibleTokenCustomFees(address token, IHederaTokenService.FixedFee[] memory fixedFees, IHederaTokenService.RoyaltyFee[] memory royaltyFees) external returns (int64 responseCode){}
+    
     // TODO
     function redirectForToken(address token, bytes memory encodedFunctionSelector) external noDelegateCall override returns (int64 responseCode, bytes memory response) {}
 

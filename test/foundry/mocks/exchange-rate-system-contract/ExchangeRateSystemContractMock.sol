@@ -3,7 +3,7 @@ pragma solidity ^0.8.9;
 
 import '../../../../contracts/system-contracts/exchange-rate/IExchangeRate.sol';
 
-contract ExchangeRatePrecompileMock is IExchangeRate {
+contract ExchangeRateSystemContractMock is IExchangeRate {
 
     // 1e8 tinybars = 1 HBAR
     // 1e8 tinycents = 1 cent = 0.01 USD
@@ -11,7 +11,7 @@ contract ExchangeRatePrecompileMock is IExchangeRate {
     // HBAR/USD rate in tinybars/tinycents
     uint256 private rate; // 1e8 / 10; // Initial rate of 1e8 tinybars/10 tinycents, equivalent to $0.10/1 HBAR
     /// @dev it appears that contracts that are etched do NOT have any starting state i.e. all state is initialised to the default
-    ///      hence "rate" is not initialised to 1e7 here, but updateRate is called after the ExchangeRatePrecompileMock is etched(using vm.etch) onto the EXCHANGE_RATE_PRECOMPILE address
+    ///      hence "rate" is not initialised to 1e7 here, but updateRate is called after the ExchangeRateSystemContractMock is etched(using vm.etch) onto the EXCHANGE_RATE_PRECOMPILE address
 
     function tinycentsToTinybars(uint256 tinycents) external override returns (uint256) {
         require(rate > 0, "Rate must be greater than 0");
