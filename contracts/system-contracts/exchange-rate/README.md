@@ -1,6 +1,6 @@
 ## Exchange Rate System Contract Functions
 
-The Exchange Rate System Contract is accessible at address `0x168` on the Hedera network. This contract provides methods for retrieving and managing exchange rates between HBAR and US dollars.
+The Exchange Rate System Contract is accessible at address `0x168` on the Hedera network. This contract interface provides methods for retrieving and managing exchange rates between HBAR and US dollars.
 
 The table below outlines the available methods in the Exchange Rate System Contract:
 | Function Name | Function Selector Hash | Consensus Node Release Version | HIP | Method Interface |

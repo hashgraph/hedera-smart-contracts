@@ -1,6 +1,6 @@
 ## Hedera Token Service (HTS) System Contract Functions
 
-The Hedera Token Service (HTS) System Contract is accessible at address `0x167` on the Hedera network. This contract provides a comprehensive set of methods for creating, managing, and interacting with various types of tokens on the Hedera network.
+The Hedera Token Service (HTS) System Contract is accessible at address `0x167` on the Hedera network. This contract interface provides a comprehensive set of methods for creating, managing, and interacting with various types of tokens on the Hedera network.
 
 The table below outlines the available Hedera Token Service (HTS) System Contract functions:
 

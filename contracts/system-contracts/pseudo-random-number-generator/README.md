@@ -1,6 +1,6 @@
-## PRNG System Contract Functions
+## Pseudo-Random Number Generator (PRNG) System Contract Functions
 
-The Pseudo-Random Number Generator (PRNG) System Contract is accessible at address `0x169` on the Hedera network. This contract provides methods for generating pseudo-random numbers on the Hedera network.
+The Pseudo-Random Number Generator (PRNG) System Contract is accessible at address `0x169` on the Hedera network. This contract interface provides methods for generating pseudo-random numbers on the Hedera network.
 
 The table below outlines the available Pseudo-Random Number Generator (PRNG) System Contract functions:
 
