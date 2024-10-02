@@ -36,11 +36,11 @@ jobs:
         run: |
           PREMINOR_VERSION=${{ steps.version_parser.outputs.inc-preminor }}
           NEXT_VERSION_SNAPSHOT=${PREMINOR_VERSION//-0/-SNAPSHOT}
-          RELEASE_BRANCH="release/${{ steps.version_parser.outputs.major }}.${{ steps.version_parser.outputs.minor }}"
+          RELEASE_BRANCH="release-draft/${{ steps.version_parser.outputs.major }}.${{ steps.version_parser.outputs.minor }}"
           [[ -z "${{ steps.version_parser.outputs.prerelease }}" ]] && \
             VERSION=${{ steps.version_parser.outputs.release }} || \
             VERSION="${{ steps.version_parser.outputs.release }}-${{ steps.version_parser.outputs.prerelease }}"
-          RELEASE_TAG="v${VERSION}"
+          RELEASE_TAG="draft-v${VERSION}"
           cat >> $GITHUB_ENV <<EOF
           NEXT_VERSION_SNAPSHOT=$NEXT_VERSION_SNAPSHOT
           RELEASE_BRANCH=$RELEASE_BRANCH
