@@ -8,6 +8,10 @@ on:
         type: string
         required: true
 
+permissions:
+  contents: write
+  actions: write
+
 jobs:
   branch_bump_tag:
     runs-on: smart-contracts-linux-medium
