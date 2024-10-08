@@ -7,8 +7,8 @@
 ############################
 ##### Smart contracts ######
 ############################
-/contracts                             @AlfredoG87 @ebadiere @georgi-l95 @Ivo-Yankov @Nana-EC @natanasow @hashgraph/hedera-smart-contracts
-/test                                  @AlfredoG87 @attest08 @ebadiere @georgi-l95 @Ivo-Yankov @natanasow @yiliev0 @hashgraph/hedera-smart-contracts
+/contracts                             @hashgraph/hedera-smart-contracts @georgi-l95 @Ivo-Yankov @natanasow
+/test                                  @hashgraph/hedera-smart-contracts @attest08 @georgi-l95 @Ivo-Yankov @natanasow @yiliev0
 
 #########################
 #####  Core Files  ######
@@ -17,17 +17,17 @@
 # NOTE: Must be placed last to ensure enforcement over all other rules
 
 # Protection Rules for Github Configuration Files and Actions Workflows
-/.github/                                       @hashgraph/release-engineering @hashgraph/release-engineering-managers
-/.github/CODEOWNERS                             @hashgraph/release-engineering @hashgraph/release-engineering-managers @Nana-EC
-/.github/workflows/                             @hashgraph/release-engineering @hashgraph/release-engineering-managers @AlfredoG87 @attest08 @ebadiere @georgi-l95 @Ivo-Yankov @natanasow @yiliev0 @hashgraph/hedera-smart-contracts
+/.github/                                       @hashgraph/devops-ci @hashgraph/release-engineering-managers
+/.github/CODEOWNERS                             @hashgraph/devops-ci @hashgraph/release-engineering-managers @Nana-EC
+/.github/workflows/                             @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts
 
 # Self-protection for root CODEOWNERS files (this file should not exist and should definitely require approval)
-/CODEOWNERS                                      @hashgraph/release-engineering @hashgraph/release-engineering-managers @AlfredoG87 @attest08 @ebadiere @georgi-l95 @Ivo-Yankov @natanasow @yiliev0 @hashgraph/hedera-smart-contracts
+/CODEOWNERS                                     @hashgraph/release-engineering-managers
 
 # Protect the repository root files
-/README.md                                      @hashgraph/release-engineering @hashgraph/release-engineering-managers  @AlfredoG87 @attest08 @ebadiere @georgi-l95 @Ivo-Yankov @natanasow @yiliev0 @hashgraph/hedera-smart-contracts
-**/LICENSE                                      @hashgraph/release-engineering @hashgraph/release-engineering-managers
+/README.md                                      @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts
+**/LICENSE                                      @hashgraph/release-engineering-managers
 
 # Git Ignore definitions
-**/.gitignore                                   @hashgraph/release-engineering @hashgraph/release-engineering-managers @AlfredoG87 @attest08 @ebadiere @georgi-l95 @Ivo-Yankov @natanasow @yiliev0 @hashgraph/hedera-smart-contracts
-**/.gitignore.*                                 @hashgraph/release-engineering @hashgraph/release-engineering-managers @AlfredoG87 @attest08 @ebadiere @georgi-l95 @Ivo-Yankov @natanasow @yiliev0 @hashgraph/hedera-smart-contracts
+**/.gitignore                                   @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts
+**/.gitignore.*                                 @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts

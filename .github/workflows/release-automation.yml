@@ -8,6 +8,10 @@ on:
         type: string
         required: true
 
+permissions:
+  contents: write
+  actions: write
+
 jobs:
   branch_bump_tag:
     runs-on: smart-contracts-linux-medium
@@ -18,6 +22,7 @@ jobs:
       next_version_snapshot: ${{ env.NEXT_VERSION_SNAPSHOT }}
       pr_title: ${{ env.PR_TITLE }}
       release_branch: ${{ env.RELEASE_BRANCH }}
+      milestone: ${{ env.MILESTONE }}
 
     steps:
       - name: Harden Runner
@@ -37,6 +42,7 @@ jobs:
           PREMINOR_VERSION=${{ steps.version_parser.outputs.inc-preminor }}
           NEXT_VERSION_SNAPSHOT=${PREMINOR_VERSION//-0/-SNAPSHOT}
           RELEASE_BRANCH="release/${{ steps.version_parser.outputs.major }}.${{ steps.version_parser.outputs.minor }}"
+          MILESTONE="${{ steps.version_parser.outputs.major }}.${{ steps.version_parser.outputs.minor }}.${{ steps.version_parser.outputs.patch }}"
           [[ -z "${{ steps.version_parser.outputs.prerelease }}" ]] && \
             VERSION=${{ steps.version_parser.outputs.release }} || \
             VERSION="${{ steps.version_parser.outputs.release }}-${{ steps.version_parser.outputs.prerelease }}"
@@ -46,10 +52,15 @@ jobs:
           RELEASE_BRANCH=$RELEASE_BRANCH
           RELEASE_TAG=$RELEASE_TAG
           VERSION=$VERSION
+          MILESTONE=$MILESTONE
           EOF
 
       - name: Checkout repository
         uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
+        with:
+          fetch-depth: 0
+          ref: main
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
 
       - name: Import GPG Key
         id: gpg_importer
@@ -63,6 +74,7 @@ jobs:
 
       - name: Create and Switch to Release Branch
         run: |
+          git fetch origin
           if ! git ls-remote --exit-code --heads --quiet origin refs/heads/${RELEASE_BRANCH}; then
             git checkout -b ${RELEASE_BRANCH}
             git push -u origin ${RELEASE_BRANCH}
@@ -126,7 +138,8 @@ jobs:
     env:
       NEXT_VERSION_SNAPSHOT: ${{ needs.branch_bump_tag.outputs.next_version_snapshot }}
       RELEASE_BRANCH: ${{ needs.branch_bump_tag.outputs.release_branch }}
-
+      MILESTONE: ${{ needs.branch_bump_tag.outputs.milestone }}
+      PR_TITLE: ${{ needs.branch_bump_tag.outputs.pr_title }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
@@ -162,17 +175,25 @@ jobs:
         run: npm ci
 
       - name: Bump Versions
-        run: npm version ${{ env.NEXT_VERSION_SNAPSHOT }}
+        run: npm version ${{ env.NEXT_VERSION_SNAPSHOT }} --no-commit-hooks --no-git-tag-version
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
         with:
-          body: 'chore(release): Bump versions for ${{ env.NEXT_VERSION_SNAPSHOT }}'
+          body: |
+            **Description**:
+            Bump versions for v${{ env.NEXT_VERSION_SNAPSHOT }}
+            Automated snapshot version bump for the next development cycle.
+
+            **Related issue(s)**:
           branch: create-pull-request/${{ env.NEXT_VERSION_SNAPSHOT }}
-          commit-message: 'chore(release): Bump versions for v${{ env.NEXT_VERSION_SNAPSHOT }}'
+          commit-message: ${{ env.PR_TITLE }}
           committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
           author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
           delete-branch: true
           signoff: true
-          title: ${{ needs.branch_bump_tag.outputs.pr_title }}
+          title: ${{ env.PR_TITLE }}
+          milestone: ${{ env.MILESTONE }}
+          labels: 'process'
           token: ${{ secrets.GH_ACCESS_TOKEN }}
+          assignees: 'swirlds-automation'
