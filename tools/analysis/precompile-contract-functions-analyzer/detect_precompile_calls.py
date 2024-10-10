@@ -140,7 +140,7 @@ def detect_system_contract_operations(bytecode):
     disassembled_code = evm_bytecode.disassemble()
     selectors = []
     for instruction in disassembled_code:
-        if instruction.name == 'CALL':
+        if instruction.name == 'CALL' or instruction.name == 'STATICCALL' or instruction.name == 'DELEGATECALL':
             call_detected = True
         if instruction.name[:4] != 'PUSH':
             continue
@@ -168,7 +168,7 @@ def main():
                 parsedSelectors[selector] = parsedSelectors.get(selector, 0) + 1
 
     print("Total: ", total)
-    print("Unique contracts with at least 1 precompile call: ", uniqueContracts)
+    print("Unique contracts with at least 1 precompile call using 'CALL', 'STATICCALL' or 'DELEGATECALL' to 0x167: ", uniqueContracts)
     print()
 
     for key, value in dict(sorted(parsedSelectors.items(), key=lambda item: item[1], reverse=True)).items():

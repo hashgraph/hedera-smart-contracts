@@ -14,7 +14,8 @@ Analyze all mainnet contracts, whether they are using some of the precompile con
 ## Usage table for contracts till id 0.0.993240
 
 - Total contracts on mainnet: 11290
-- Unique contracts with at least 1 precompile call to 0x167: 4047
+
+- Unique contracts with at least 1 precompile call using `CALL`, `STATICCALL` or `DELEGATECALL` to 0x167: 4047
 
 | Precompile function name               | Function selector | Total usage |
 |----------------------------------------|-------------------|-------------|
