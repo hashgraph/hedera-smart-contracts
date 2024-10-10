@@ -171,7 +171,6 @@ def main():
     print("Unique contracts with at least 1 precompile call: ", uniqueContracts)
     print()
 
-#     sortedDict = dict(sorted(parsedSelectors.items(), key=lambda item: item[1], reverse=True))
     for key, value in dict(sorted(parsedSelectors.items(), key=lambda item: item[1], reverse=True)).items():
         print(precompile_selectors[key], key, value)
 

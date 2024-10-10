@@ -1,6 +1,6 @@
 # Precompile contract functions analyzer
 
-Analyze all mainnet contracts, whether they are using some of the precompile contract functions and how many times each precompile function is used.
+Analyze all mainnet contracts, whether they are using some of the precompile contract functions, and how many times each precompile function is used.
 
 ## Requirements
 - node >= 18.13.0
@@ -8,7 +8,7 @@ Analyze all mainnet contracts, whether they are using some of the precompile con
 
 ## How to run locally:
 - `npm install`
-- `node fetch.js` - fetches all contracts from mainnet (by the time of writing 11290 with latest id of 0.0.993240) and save them in a local sqlite db (by the time of writing the entire process takes approximately 20 minutes)
+- `node fetch.js` - fetches all contracts from mainnet (by the time of writing 11290 with the latest id of 0.0.993240) and saves them in a local sqlite db (by the time of writing the entire process takes approximately 20 minutes)
 - `python3 detect_precompile_calls.py` - detects whether the precompile selectors are used in a contract by searching for instruction operands within a disassembled bytecode (by the time of writing the entire process takes approximately 10 minutes)
 
 ## Usage table for contracts till id 0.0.993240
