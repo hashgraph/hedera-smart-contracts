@@ -1,0 +1,13 @@
+{
+  "name": "hedera-precompile-contract-functions-analyzer",
+  "version": "1.0.0",
+  "description": "Analyze contracts for precompile functions usage.",
+  "type": "module",
+  "scripts": {},
+  "dependencies": {
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
+  },
+  "author": "Hedera Smart Contracts Team",
+  "license": "Apache-2.0"
+}
