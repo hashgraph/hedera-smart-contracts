@@ -54,6 +54,11 @@ describe('Key Rotation Test Suite', function () {
     // Get the new account ID
     const newAccountAlphaTxRceipt = await newAccountAlphaTx.getReceipt(client);
     accountId_Alpha = newAccountAlphaTxRceipt.accountId;
+
+    console.log('\n>>>>>>> accountId_Alpha <<<<<<<');
+    console.log(`- accountId: ${accountId_Alpha}`);
+    console.log(`- public key: ${accountPublicKey_Alpha}`);
+    console.log(`- evm address: ${accountEvmAddress_Alpha}`);
   });
 
   it('Should remain the same EVM key alias after key rotation with a different ECDSA key', async function () {
@@ -90,6 +95,13 @@ describe('Key Rotation Test Suite', function () {
     const accountInfoAfterKeyRotation = await new AccountInfoQuery()
       .setAccountId(accountId_Alpha)
       .execute(client);
+
+    console.log('>>>>>>> accountInfoAfterKeyRotation - ECDSA <<<<<<<');
+    console.log(`- accountId: ${accountInfoAfterKeyRotation.accountId}`);
+    console.log(`- public key: ${accountInfoAfterKeyRotation.key}`);
+    console.log(
+      `- evm address: ${accountInfoAfterKeyRotation.contractAccountId}`
+    );
 
     // expect the account ID to be the same
     expect(accountInfoAfterKeyRotation.accountId).to.deep.equal(
@@ -151,6 +163,13 @@ describe('Key Rotation Test Suite', function () {
     const accountInfoAfterKeyRotation = await new AccountInfoQuery()
       .setAccountId(accountId_Alpha)
       .execute(client);
+
+    console.log('>>>>>>> accountInfoAfterKeyRotation - ED25519 <<<<<<<');
+    console.log(`- accountId: ${accountInfoAfterKeyRotation.accountId}`);
+    console.log(`- public key: ${accountInfoAfterKeyRotation.key}`);
+    console.log(
+      `- evm address: ${accountInfoAfterKeyRotation.contractAccountId}`
+    );
 
     // expect the account ID to be the same
     expect(accountInfoAfterKeyRotation.accountId).to.deep.equal(
