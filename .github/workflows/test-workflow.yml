@@ -78,7 +78,7 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           check_name: 'Unit Tests results' # Set to empty to disable check run
-          comment_mode: on
+          comment_mode: error
           json_thousands_separator: ','
           files: 'test-*.xml'
 
