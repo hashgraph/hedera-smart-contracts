@@ -77,8 +77,8 @@ jobs:
         uses: step-security/publish-unit-test-result-action@4519d7c9f71dd765f8bbb98626268780f23bab28 # v2.17.0
         if: ${{ !cancelled() }}
         with:
-          check_name: '' # Set to empty to disable check run
-          comment_mode: off
+          check_name: 'Unit Tests results' # Set to empty to disable check run
+          comment_mode: on
           json_thousands_separator: ','
           files: 'test-*.xml'
 
