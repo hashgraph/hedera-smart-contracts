@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@hashgraph/hedera-local": "^2.31.0",
-    "@hashgraph/sdk": "^2.51.0",
+    "@hashgraph/sdk": "^2.52.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.8",
     "@nomicfoundation/hardhat-foundry": "^1.1.2",
     "@openzeppelin/contracts": "^5.0.2",
