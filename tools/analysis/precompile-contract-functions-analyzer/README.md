@@ -13,19 +13,21 @@ Analyze all mainnet contracts, whether they are using some of the precompile con
 
 ## Usage table for contracts till id 0.0.993240
 
-- Total contracts on mainnet: 11290
+### Part #1
+
+- Total contracts on mainnet: 11 290
 
 - Unique contracts with at least 1 precompile call using `CALL`, `STATICCALL` or `DELEGATECALL` to 0x167: 4047
 
 | Precompile function name               | Function selector | Total usage |
 |----------------------------------------|-------------------|-------------|
-| TRANSFER_TOKEN                         | eca36917          | 2640        |
-| MINT_TOKEN                             | 278e0b88          | 2225        |
-| ASSOCIATE_TOKENS                       | 2e63879b          | 2087        |
-| TRANSFER_FROM_NFT                      | 9b23d3d9          | 1797        |
-| BURN_TOKEN                             | acb9cff9          | 1758        |
-| CREATE_FUNGIBLE_TOKEN                  | 7812a04b          | 1643        |
-| TRANSFER_FROM                          | 15dacbea          | 1583        |
+| TRANSFER_TOKEN                         | eca36917          | 2 640       |
+| MINT_TOKEN                             | 278e0b88          | 2 225       |
+| ASSOCIATE_TOKENS                       | 2e63879b          | 2 087       |
+| TRANSFER_FROM_NFT                      | 9b23d3d9          | 1 797       |
+| BURN_TOKEN                             | acb9cff9          | 1 758       |
+| CREATE_FUNGIBLE_TOKEN                  | 7812a04b          | 1 643       |
+| TRANSFER_FROM                          | 15dacbea          | 1 583       |
 | REDIRECT_FOR_TOKEN                     | 618dc65e          | 916         |
 | ASSOCIATE_TOKEN                        | 49146bde          | 701         |
 | UNPAUSE_TOKEN                          | 3b3bff0f          | 664         |
@@ -78,5 +80,107 @@ Analyze all mainnet contracts, whether they are using some of the precompile con
 | GET_TOKEN_DEFAULT_KYC_STATUS           | 335e04c1          | 1           |
 | GET_TOKEN_DEFAULT_FREEZE_STATUS        | a7daa18d          | 1           |
 | IS_FROZEN                              | 46de0fb1          | 1           |
+
+### Part #2
+
+- Total transactions against contracts: 18 904 836
+
+- Total transactions against contracts with at least 1 precompile function call: 3 441 338
+
+| Precompile function name               | Function selector | Total usage |
+|----------------------------------------|-------------------|-------------|
+| REDIRECT_FOR_TOKEN                     | 618dc65e          | 13 281 673  |
+| TRANSFER_TOKEN                         | eca36917          | 10 878 681  |
+| MINT_TOKEN                             | 278e0b88          | 2 196 057   |
+| BURN_TOKEN                             | acb9cff9          | 1 366 742   |
+| APPROVE                                | e1f21c67          | 494 270     |
+| TRANSFER_NFT                           | 5cfc9011          | 47 390      |
+| MINT_TOKEN_V2                          | e0f4059a          | 37 141      |
+| BURN_TOKEN_V2                          | d6910d06          | 31 489      |
+| ASSOCIATE_TOKEN                        | 49146bde          | 30 571      |
+| TRANSFER_NFTS                          | 2c4ba191          | 19 122      |
+| DISSOCIATE_TOKEN                       | 099794e8          | 18 051      |
+| TRANSFER_FROM                          | 15dacbea          | 9 066       |
+| GET_NON_FUNGIBLE_TOKEN_INFO            | 287e1da8          | 3 208       |
+| WIPE_TOKEN_ACCOUNT_FUNGIBLE            | 9790686d          | 2 141       |
+| WIPE_TOKEN_ACCOUNT_NFT                 | f7f38e26          | 1 415       |
+| ASSOCIATE_TOKENS                       | 2e63879b          | 1 401       |
+| CREATE_FUNGIBLE_TOKEN                  | 7812a04b          | 1 115       |
+| GET_TOKEN_TYPE                         | 93272baf          | 789         |
+| GET_TOKEN_INFO                         | 1f69565f          | 479         |
+| CRYPTO_TRANSFER                        | 189a554c          | 456         |
+| CRYPTO_TRANSFER_V2                     | 0e71804f          | 371         |
+| TRANSFER_TOKENS                        | 82bba493          | 357         |
+| GET_TOKEN_CUSTOM_FEES                  | ae7611a0          | 290         |
+| CREATE_NON_FUNGIBLE_TOKEN_V3           | ea83f293          | 109         |
+| CREATE_FUNGIBLE_TOKEN_V3               | 0fb65bf3          | 52          |
+| TRANSFER_FROM_NFT                      | 9b23d3d9          | 38          |
+| UPDATE_TOKEN_INFO_V2                   | 18370d34          | 36          |
+| CREATE_NON_FUNGIBLE_TOKEN_WITH_FEES_V3 | abb54eb5          | 35          |
+| CREATE_NON_FUNGIBLE_TOKEN_WITH_FEES_V2 | 45733969          | 27          |
+| CREATE_FUNGIBLE_TOKEN_V2               | c23baeb6          | 16          |
+| GET_TOKEN_KEY                          | 3c4dd32e          | 15          |
+| WIPE_TOKEN_ACCOUNT_FUNGIBLE_V2         | efef57f9          | 14          |
+| CREATE_NON_FUNGIBLE_TOKEN_V2           | 9c89bb35          | 5           |
+| GET_FUNGIBLE_TOKEN_INFO                | 3f28a19b          | 4           |
+| CREATE_NON_FUNGIBLE_TOKEN              | 9dc711e0          | 3           |
+| CREATE_NON_FUNGIBLE_TOKEN              | 9dc711e0          | 2           |
+| UPDATE_TOKEN_INFO_V3                   | 7d305cfa          | 1           |
+| GRANT_TOKEN_KYC                        | 8f8d7f99          | 1           |
+
+Top 50 contracts with the most transactions against them with at least 1 precompile call within a transaction:
+
+| Contract ID | Transactions count |
+|-------------|--------------------|
+| 0.0.3045981 | 930 270            |
+| 0.0.3473679 | 347 557            |
+| 0.0.3158574 | 336 741            |
+| 0.0.3949434 | 304 125            |
+| 0.0.5144196 | 220 247            |
+| 0.0.1077627 | 143 106            |
+| 0.0.4053945 | 118 064            |
+| 0.0.1461860 | 104 855            |
+| 0.0.2283226 | 87 326             |
+| 0.0.4708120 | 86 364             |
+| 0.0.4093491 | 72 581             |
+| 0.0.4029437 | 67 959             |
+| 0.0.1460199 | 64 714             |
+| 0.0.2935218 | 61 874             |
+| 0.0.3160217 | 53 458             |
+| 0.0.6601793 | 48 100             |
+| 0.0.4091053 | 36 059             |
+| 0.0.3158172 | 18 070             |
+| 0.0.4568290 | 17 932             |
+| 0.0.3160328 | 17 803             |
+| 0.0.4499459 | 14 035             |
+| 0.0.2935502 | 10 870             |
+| 0.0.3067873 | 10 756             |
+| 0.0.1738953 | 9 611              |
+| 0.0.6755814 | 9 360              |
+| 0.0.3064799 | 9 082              |
+| 0.0.1262126 | 8 343              |
+| 0.0.6275509 | 7 843              |
+| 0.0.4544591 | 6 252              |
+| 0.0.1739095 | 6 202              |
+| 0.0.1456985 | 6 147              |
+| 0.0.4348341 | 5 766              |
+| 0.0.4570286 | 5 634              |
+| 0.0.6070108 | 5 629              |
+| 0.0.1412503 | 5 592              |
+| 0.0.1738971 | 5 204              |
+| 0.0.2939223 | 5 121              |
+| 0.0.4325057 | 5 112              |
+| 0.0.2181449 | 4 833              |
+| 0.0.2054876 | 4 568              |
+| 0.0.2944959 | 3 913              |
+| 0.0.2971373 | 3 911              |
+| 0.0.3949448 | 3 857              |
+| 0.0.6070064 | 3 695              |
+| 0.0.2936092 | 3 651              |
+| 0.0.1238566 | 3 164              |
+| 0.0.4610937 | 3 060              |
+| 0.0.3696885 | 2 987              |
+| 0.0.2971311 | 2 969              |
+| 0.0.1738806 | 2 950              |
 
 Note: all supported functions can be found [here](https://github.com/hashgraph/hedera-services/blob/develop/hedera-node/hedera-smart-contract-service-impl/src/main/java/com/hedera/node/app/service/contract/impl/exec/systemcontracts/hts/AbiConstants.java) in the services repository
