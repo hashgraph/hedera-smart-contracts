@@ -128,6 +128,8 @@ Analyze all mainnet contracts, whether they are using some of the precompile con
 
 Top 50 contracts with the most transactions against them with at least 1 precompile call within a transaction:
 
+- Total transactions against contracts with at least 1 precompile function call: 3 441 338
+
 | Contract ID | Transactions count |
 |-------------|--------------------|
 | 0.0.3045981 | 930 270            |
