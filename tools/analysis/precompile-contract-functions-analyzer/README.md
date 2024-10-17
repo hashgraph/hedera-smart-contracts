@@ -85,8 +85,6 @@ Analyze all mainnet contracts, whether they are using some of the precompile con
 
 - Total transactions against contracts: 18 904 836
 
-- Total transactions against contracts with at least 1 precompile function call: 3 441 338
-
 | Precompile function name               | Function selector | Total usage |
 |----------------------------------------|-------------------|-------------|
 | REDIRECT_FOR_TOKEN                     | 618dc65e          | 13 281 673  |
