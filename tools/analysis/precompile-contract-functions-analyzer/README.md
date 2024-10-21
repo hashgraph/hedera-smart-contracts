@@ -183,4 +183,29 @@ Top 50 contracts with the most transactions against them with at least 1 precomp
 | 0.0.2971311 | 2 969              |
 | 0.0.1738806 | 2 950              |
 
+
+### Part #3
+
+- Deconstruction of REDIRECT_FOR_TOKEN usage
+
+| Selector | Function name                             | Total calls |
+|----------|-------------------------------------------|-------------|
+| 70a08231 | balanceOf(address)                        | 11 788 124  |
+| a9059cbb | transfer(address,uint256)                 | 654 426     |
+| 23b872dd | transferFrom(address,address,uint256)     | 230 457     |
+| 18160ddd | totalSupply()                             | 216 867     |
+| 6352211e | ownerOf(uint256)                          | 191 720     |
+| e985e9c5 | isApprovedForAll(address,address)         | 173 713     |
+| dd62ed3e | allowance(address,address)                | 12 081      |
+| 095ea7b3 | approve(address,uint256)                  | 8 340       |
+| 95d89b41 | symbol()                                  | 2 403       |
+| 06fdde03 | name()                                    | 2 403       |
+| 313ce567 | decimals()                                | 632         |
+| 0a754de6 | associate()                               | 208         |
+| 081812fc | getApproved(uint256)                      | 55          |
+| 42842e0e | safeTransferFrom(address,address,uint256) | 31          |
+| c87b56dd | tokenURI(uint256)                         | 64          |
+| a22cb465 | setApprovalForAll(address,bool)           | 6           |
+| 6c0360eb | baseURI()                                 | 2           |
+
 Note: all supported functions can be found [here](https://github.com/hashgraph/hedera-services/blob/develop/hedera-node/hedera-smart-contract-service-impl/src/main/java/com/hedera/node/app/service/contract/impl/exec/systemcontracts/hts/AbiConstants.java) in the services repository
