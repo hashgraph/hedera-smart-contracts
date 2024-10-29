@@ -26,6 +26,11 @@ const Constants = require('../../../constants');
 const {
   pollForNewSignerBalanceUsingProvider,
 } = require('../../../../utils/helpers');
+const {
+  Hbar,
+  PrivateKey,
+  AccountCreateTransaction,
+} = require('@hashgraph/sdk');
 
 describe('@CryptoAllowance Test Suite', () => {
   let walletA,
@@ -36,6 +41,7 @@ describe('@CryptoAllowance Test Suite', () => {
     cryptoAllowanceAddress,
     cryptoOwnerAddress;
   const amount = 3000;
+  const messageToSign = 'Hedera Account Service';
 
   before(async () => {
     [walletA, walletB, walletC, receiver] = await ethers.getSigners();
@@ -301,5 +307,96 @@ describe('@CryptoAllowance Test Suite', () => {
       expect(e).to.exist;
       expect(e.code).to.eq(Constants.CALL_EXCEPTION);
     }
+  });
+
+  it('Should verify message signature using isAuthorizedRawPublic for ECDSA account', async () => {
+    const messageHash = ethers.hashMessage(messageToSign);
+    const signature = await walletB.signMessage(messageToSign);
+    expect(signature.slice(2).length).to.eq(65 * 2); // 65 bytes ECDSA signature
+
+    const correctSignerReceipt = await (
+      await cryptoAllowanceContract.isAuthorizedRawPublic(
+        walletB.address, // correct signer
+        messageHash,
+        signature,
+        Constants.GAS_LIMIT_1_000_000
+      )
+    ).wait();
+
+    const correctSignerReceiptResponseCode = correctSignerReceipt.logs.find(
+      (l) => l.fragment.name === 'ResponseCode'
+    ).args[0];
+
+    const correctSignerReceiptResponse = correctSignerReceipt.logs.find(
+      (l) => l.fragment.name === 'IsAuthorizedRaw'
+    ).args;
+
+    expect(correctSignerReceiptResponseCode).to.eq(22n);
+    expect(correctSignerReceiptResponse[0]).to.eq(walletB.address);
+    expect(correctSignerReceiptResponse[1]).to.be.true;
+
+    const incorrectSignerReceipt = await (
+      await cryptoAllowanceContract.isAuthorizedRawPublic(
+        walletC.address, // incorrect signer
+        messageHash,
+        signature,
+        Constants.GAS_LIMIT_1_000_000
+      )
+    ).wait();
+
+    const incorrectSignerReceiptResponseCode = incorrectSignerReceipt.logs.find(
+      (l) => l.fragment.name === 'ResponseCode'
+    ).args[0];
+
+    const incorrectSignerReceiptResponse = incorrectSignerReceipt.logs.find(
+      (l) => l.fragment.name === 'IsAuthorizedRaw'
+    ).args;
+
+    expect(incorrectSignerReceiptResponseCode).to.eq(22n);
+    expect(incorrectSignerReceiptResponse[0]).to.eq(walletC.address);
+    expect(incorrectSignerReceiptResponse[1]).to.be.false;
+  });
+
+  it('Should verify message signature using isAuthorizedRawPublic for ED25519 account', async () => {
+    const newEdPK = PrivateKey.generateED25519();
+    const messageHash = Buffer.from(messageToSign);
+    const signature = `0x${Buffer.from(newEdPK.sign(messageHash)).toString('hex')}`;
+
+    const newEdPubKey = newEdPK.publicKey;
+    const client = await Utils.createSDKClient();
+
+    const edSignerAccount = (
+      await (
+        await new AccountCreateTransaction()
+          .setKey(newEdPubKey)
+          .setInitialBalance(Hbar.fromTinybars(1000))
+          .execute(client)
+      ).getReceipt(client)
+    ).accountId;
+
+    const signerAlias = `0x${edSignerAccount.toSolidityAddress()}`;
+
+    const correctSignerReceipt = await (
+      await cryptoAllowanceContract.isAuthorizedRawPublic(
+        signerAlias,
+        messageHash,
+        signature,
+        Constants.GAS_LIMIT_10_000_000
+      )
+    ).wait();
+
+    const correctSignerReceiptResponseCode = correctSignerReceipt.logs.find(
+      (l) => l.fragment.name === 'ResponseCode'
+    ).args[0];
+
+    const correctSignerReceiptResponse = correctSignerReceipt.logs.find(
+      (l) => l.fragment.name === 'IsAuthorizedRaw'
+    ).args;
+
+    expect(correctSignerReceiptResponseCode).to.eq(22n);
+    expect(correctSignerReceiptResponse[0].toLowerCase()).to.eq(
+      signerAlias.toLowerCase()
+    );
+    expect(correctSignerReceiptResponse[1]).to.be.true;
   });
 });
