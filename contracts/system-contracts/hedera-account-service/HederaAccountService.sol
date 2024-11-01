@@ -41,12 +41,13 @@ abstract contract HederaAccountService {
     /// @param account The account to check the signature against
     /// @param messageHash The hash of the message to check the signature against
     /// @param signature The signature to check
+    /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     /// @return response True if the signature is valid, false otherwise
-    function isAuthorizedRaw(address account, bytes memory messageHash, bytes memory signature) internal returns (bool response) {
+    function isAuthorizedRaw(address account, bytes memory messageHash, bytes memory signature) internal returns (int64 responseCode, bool response) {
         (bool success, bytes memory result) = HASPrecompileAddress.call(
             abi.encodeWithSelector(IHederaAccountService.isAuthorizedRaw.selector,
                 account, messageHash, signature));
-        response = success ? abi.decode(result, (bool)) : false;
+        (responseCode, response) = success ? (HederaResponseCodes.SUCCESS, abi.decode(result, (bool))) : (HederaResponseCodes.UNKNOWN, false);
     }
 
 }
