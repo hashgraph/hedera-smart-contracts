@@ -92,6 +92,20 @@ class Utils {
     );
   }
 
+  static async deployAirdropContract() {
+    const tokenAirdropFactory = await ethers.getContractFactory(
+      Constants.Contract.Airdrop
+    );
+    const tokenAirdrop = await tokenAirdropFactory.deploy(
+      Constants.GAS_LIMIT_1_000_000
+    );
+
+    return await ethers.getContractAt(
+      Constants.Contract.Airdrop,
+      await tokenAirdrop.getAddress()
+    );
+  }
+
   static async deployTokenCreateContract() {
     const tokenCreateFactory = await ethers.getContractFactory(
       Constants.Contract.TokenCreateContract
@@ -172,6 +186,20 @@ class Utils {
 
     return await ethers.getContractAt(
       Constants.Contract.HRC719Contract,
+      await hrcContract.getAddress()
+    );
+  }
+
+  static async deployHRC904Contract() {
+    const hrcContractFactory = await ethers.getContractFactory(
+      Constants.Contract.HRC904Contract
+    );
+    const hrcContract = await hrcContractFactory.deploy(
+      Constants.GAS_LIMIT_1_000_000
+    );
+
+    return await ethers.getContractAt(
+      Constants.Contract.HRC904Contract,
       await hrcContract.getAddress()
     );
   }
@@ -472,6 +500,30 @@ class Utils {
       await contract.createNonFungibleTokenWithSECP256K1AdminKeyPublic(
         treasury,
         adminKey,
+        {
+          value: BigInt(this.createTokenCost),
+          gasLimit: 1_000_000,
+        }
+      );
+    const tokenAddressReceipt = await tokenAddressTx.wait();
+    const { tokenAddress } = tokenAddressReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.CreatedToken
+    )[0].args;
+
+    return tokenAddress;
+  }
+
+  static async createNonFungibleTokenWithSECP256K1AdminKeyAssociateAndTransferToAddress(
+    contract,
+    treasury,
+    adminKey,
+    initialBalance = 300
+  ) {
+    const tokenAddressTx =
+      await contract.createNonFungibleTokenWithSECP256K1AdminKeyAssociateAndTransferToAddressPublic(
+        treasury,
+        adminKey,
+        initialBalance,
         {
           value: BigInt(this.createTokenCost),
           gasLimit: 1_000_000,

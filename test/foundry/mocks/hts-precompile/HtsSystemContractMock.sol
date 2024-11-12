@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.9;
 
-import '../../../../contracts/system-contracts/HederaResponseCodes.sol';
-import '../../../../contracts/system-contracts/hedera-token-service/KeyHelper.sol';
-import './HederaFungibleToken.sol';
-import './HederaNonFungibleToken.sol';
-import '../../../../contracts/base/NoDelegateCall.sol';
-import '../../../../contracts/libraries/Constants.sol';
-
-import '../interfaces/IHtsSystemContractMock.sol';
-import '../libraries/HederaTokenValidation.sol';
+import {NoDelegateCall} from "../../../../contracts/base/NoDelegateCall.sol";
+import {Constants} from "../../../../contracts/libraries/Constants.sol";
+import {HederaResponseCodes} from "../../../../contracts/system-contracts/HederaResponseCodes.sol";
+import {IHederaTokenService} from "../../../../contracts/system-contracts/hedera-token-service/IHederaTokenService.sol";
+import {KeyHelper} from "../../../../contracts/system-contracts/hedera-token-service/KeyHelper.sol";
+import {IHtsSystemContractMock} from "../interfaces/IHtsSystemContractMock.sol";
+import {HederaTokenValidation} from "../libraries/HederaTokenValidation.sol";
+import {HederaFungibleToken} from "./HederaFungibleToken.sol";
+import {HederaNonFungibleToken} from "./HederaNonFungibleToken.sol";
 
 contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsSystemContractMock {
 
@@ -1889,6 +1889,14 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsSystemContractM
     
     // TODO
     function redirectForToken(address token, bytes memory encodedFunctionSelector) external noDelegateCall override returns (int64 responseCode, bytes memory response) {}
+
+    function airdropTokens(TokenTransferList[] memory tokenTransfers) external returns (int64 responseCode) {}
+
+    function cancelAirdrops(PendingAirdrop[] memory pendingAirdrops) external returns (int64 responseCode) {}
+
+    function claimAirdrops(PendingAirdrop[] memory pendingAirdrops) external returns (int64 responseCode) {}
+
+    function rejectTokens(address rejectingAddress, address[] memory ftAddresses, NftID[] memory nftIDs) external returns (int64 responseCode) {}
 
     // Additional(not in IHederaTokenService) public/external state-changing functions:
     function isAssociated(address account, address token) external view returns (bool associated) {

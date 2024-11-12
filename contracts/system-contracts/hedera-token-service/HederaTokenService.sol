@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.5.0 <0.9.0;
-pragma experimental ABIEncoderV2;
 
-import "../HederaResponseCodes.sol";
-import "./IHederaTokenService.sol";
+import {HederaResponseCodes} from "../HederaResponseCodes.sol";
+import {IHederaTokenService} from "./IHederaTokenService.sol";
+pragma experimental ABIEncoderV2;
 
 abstract contract HederaTokenService {
     address constant precompileAddress = address(0x167);
@@ -703,5 +703,37 @@ abstract contract HederaTokenService {
         (bool success, bytes memory result) = precompileAddress.call(
             abi.encodeWithSelector(IHederaTokenService.updateNonFungibleTokenCustomFees.selector, token, fixedFees, royaltyFees));
         responseCode = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
+    }
+
+    function airdropTokens(IHederaTokenService.TokenTransferList[] memory tokenTransfers)
+    internal returns (int64 responseCode) {
+        (bool success, bytes memory result) = precompileAddress.call(
+            abi.encodeWithSelector(IHederaTokenService.airdropTokens.selector, tokenTransfers)
+        );
+        (responseCode) = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
+    }
+
+    function cancelAirdrops(IHederaTokenService.PendingAirdrop[] memory pendingAirdrops)
+    internal returns (int64 responseCode) {
+        (bool success, bytes memory result) = precompileAddress.call(
+            abi.encodeWithSelector(IHederaTokenService.cancelAirdrops.selector, pendingAirdrops)
+        );
+        (responseCode) = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
+    }
+
+    function claimAirdrops(IHederaTokenService.PendingAirdrop[] memory pendingAirdrops)
+    internal returns (int64 responseCode) {
+        (bool success, bytes memory result) = precompileAddress.call(
+            abi.encodeWithSelector(IHederaTokenService.claimAirdrops.selector, pendingAirdrops)
+        );
+        (responseCode) = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
+    }
+
+    function rejectTokens(address rejectingAddress, address[] memory ftAddresses, IHederaTokenService.NftID[] memory nftIds)
+    internal returns (int64 responseCode) {
+        (bool success, bytes memory result) = precompileAddress.call(
+            abi.encodeWithSelector(IHederaTokenService.rejectTokens.selector, rejectingAddress, ftAddresses, nftIds)
+        );
+        (responseCode) = success ? abi.decode(result, (int32)) : HederaResponseCodes.UNKNOWN;
     }
 }

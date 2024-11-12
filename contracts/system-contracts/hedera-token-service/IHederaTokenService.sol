@@ -296,6 +296,19 @@ interface IHederaTokenService {
         address feeCollector;
     }
 
+    struct PendingAirdrop {
+        address sender;
+        address receiver;
+
+        address token;
+        int64 serial;
+    }
+
+    struct NftID {
+        address nft;
+        int64 serial;
+    }
+
     /**********************
      * Direct HTS Calls   *
      **********************/
@@ -815,4 +828,12 @@ interface IHederaTokenService {
     /// @param royaltyFees Set of royalty fees for `token`
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     function updateNonFungibleTokenCustomFees(address token, IHederaTokenService.FixedFee[] memory fixedFees, IHederaTokenService.RoyaltyFee[] memory royaltyFees) external returns (int64 responseCode);
+
+    function airdropTokens(TokenTransferList[] memory tokenTransfers) external returns (int64 responseCode);
+
+    function cancelAirdrops(PendingAirdrop[] memory pendingAirdrops) external returns (int64 responseCode);
+
+    function claimAirdrops(PendingAirdrop[] memory pendingAirdrops) external returns (int64 responseCode);
+
+    function rejectTokens(address rejectingAddress, address[] memory ftAddresses, NftID[] memory nftIDs) external returns (int64 responseCode);
 }
