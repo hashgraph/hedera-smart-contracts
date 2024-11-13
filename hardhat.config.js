@@ -61,7 +61,7 @@ module.exports = {
     path: './contracts-abi',
     runOnCompile: true,
   },
-  defaultNetwork: NETWORKS.previewnet.name,
+  defaultNetwork: NETWORKS.local.name,
   networks: {
     local: {
       url: NETWORKS.local.url,
@@ -98,7 +98,6 @@ module.exports = {
         nodeId: NETWORKS.previewnet.nodeId,
         mirrorNode: NETWORKS.previewnet.mirrorNode,
       },
-      timeout: 60_000,
     },
     besu_local: {
       url: NETWORKS.besu.url,
