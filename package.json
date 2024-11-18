@@ -36,7 +36,7 @@
     "@hashgraph/hedera-local": "^2.31.0",
     "@hashgraph/sdk": "^2.53.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.8",
-    "@nomicfoundation/hardhat-foundry": "^1.1.2",
+    "@nomicfoundation/hardhat-foundry": "^1.1.3",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.1.0",
     "hardhat": "^2.22.15",
