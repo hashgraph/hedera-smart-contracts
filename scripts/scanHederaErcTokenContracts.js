@@ -62,15 +62,17 @@ function analyzeBytecode(bytecode) {
   let isERC20 = false;
   let isERC721 = false;
 
+  // Create regex patterns for ERC-20 and ERC-721 signatures
+  // This allows us to check for the presence of any signature in one pass through the bytecode,
+  // which can significantly improve performance, especially with larger bytecode strings.
+  const erc20Pattern = new RegExp(ERC20_FUNCTION_SIGNATURES.join('|'), 'g');
+  const erc721Pattern = new RegExp(ERC721_FUNCTION_SIGNATURES.join('|'), 'g');
+
   // Check for unique ERC-20 signatures (e.g., decimals, totalSupply)
-  isERC20 = ERC20_FUNCTION_SIGNATURES.some((signature) =>
-    bytecode.includes(signature)
-  );
+  isERC20 = erc20Pattern.test(bytecode);
 
   // Check for unique ERC-721 signatures (e.g., ownerOf, tokenURI)
-  isERC721 = ERC721_FUNCTION_SIGNATURES.some((signature) =>
-    bytecode.includes(signature)
-  );
+  isERC721 = erc721Pattern.test(bytecode);
 
   isERC20 = isERC721 ? false : isERC20;
   return { isERC20, isERC721 };
