@@ -122,27 +122,29 @@ async function scanHederaContracts() {
 
     const contractsList = [];
 
-    // Fetch bytecode for all contracts concurrently
-    const bytecodePromises = contractsData.contracts.map((contract) =>
-      fetchContractBytecode(contract.contract_id)
-    );
+    const bytecodePromisess = contractsData.contracts.map(async (contract) => {
+      return {
+        contract_id: contract.contract_id,
+        byteCode: await fetchContractBytecode(contract.contract_id),
+      };
+    });
 
-    const bytecodes = await Promise.all(bytecodePromises);
+    // const bytecodes = await Promise.all(bytecodePromises);
+    const bytecodesWithId = await Promise.all(bytecodePromisess);
 
     // Analyze bytecodes and filter contracts
-    for (let i = 0; i < contractsData.contracts.length; i++) {
-      const bytecode = bytecodes[i];
-      if (bytecode) {
-        const { isERC20, isERC721 } = analyzeBytecode(bytecode);
-        if (isERC20 || isERC721) {
-          //   const contractName = await fetchContractName(contractsData.contracts[i].contract_id);
-          contractsList.push({
-            contractId: contractsData.contracts[i].contract_id,
-            isERC20,
-            isERC721,
-            // name: contractName,
-          });
-        }
+    for (const obj of bytecodesWithId) {
+      const bytecode = obj.byteCode;
+      const contract_id = obj.contract_id;
+      const { isERC20, isERC721 } = analyzeBytecode(bytecode);
+      if (isERC20 || isERC721) {
+        //   const contractName = await fetchContractName(contractsData.contracts[i].contract_id);
+        contractsList.push({
+          contractId: contract_id,
+          isERC20,
+          isERC721,
+          // name: contractName,
+        });
       }
     }
 
