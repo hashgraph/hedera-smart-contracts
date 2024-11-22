@@ -40,8 +40,16 @@ async function fetchContracts(next = null) {
     const response = await axios.get(url);
     return response.data;
   } catch (error) {
-    console.error('Error fetching contracts:', error);
-    return null;
+    if (error.response.status === 429) {
+      console.log(
+        `Fetching contracts fails with ${error.response.statusText}. Waiting for 15000ms and restart...`
+      );
+      await new Promise((r) => setTimeout(r, 15000));
+      fetchContracts(next);
+    } else {
+      console.error('Error fetching contracts:', error);
+      return null;
+    }
   }
 }
 
@@ -53,8 +61,19 @@ async function fetchContractBytecode(contractId) {
     );
     return response.data.bytecode;
   } catch (error) {
-    console.error(`Error fetching bytecode for contract ${contractId}:`, error);
-    return null;
+    if (error.response.status === 429) {
+      console.log(
+        `Fetching bytecode for contract fails with ${error.response.statusText}. Waiting for 15000ms and restart...`
+      );
+      await new Promise((r) => setTimeout(r, 15000));
+      fetchContractBytecode(contractId);
+    } else {
+      console.error(
+        `Error fetching bytecode for contract ${contractId}:`,
+        error
+      );
+      return null;
+    }
   }
 }
 
