@@ -4,6 +4,7 @@ const fs = require('fs');
 // Mirror Node API Base URL for Hedera
 const MIRROR_NODE_API = 'https://testnet.mirrornode.hedera.com'; // You can change 'testnet' to 'mainnet' for mainnet contracts
 const JSON_FILE_PATH = 'erc_contracts.json'; // JSON file to store results
+const NEXT_LINK_STATE_PATH = 'nextLinkState.json'; // JSON file to store the last `next` value
 
 // ERC-20 and ERC-721 function signatures
 const ERC20_FUNCTION_SIGNATURES = [
@@ -110,9 +111,21 @@ function updateJsonFile(contractsList) {
   );
 }
 
+// write value of `next` to disk
+function updateNextLink(next) {
+  fs.writeFileSync(NEXT_LINK_STATE_PATH, JSON.stringify({ next }, null, 2));
+  return next;
+}
+
 // Main function to scan Hedera contracts
 async function scanHederaContracts() {
   let next = null;
+
+  // get `next` from disk if available
+  if (fs.existsSync(NEXT_LINK_STATE_PATH)) {
+    const data = fs.readFileSync(NEXT_LINK_STATE_PATH);
+    next = JSON.parse(data).next;
+  }
 
   do {
     const contractsData = await fetchContracts(next);
@@ -153,11 +166,7 @@ async function scanHederaContracts() {
       updateJsonFile(contractsList);
     }
 
-    // If there are more pages, update `next` to fetch the next batch of contracts
-    next =
-      contractsData.links && contractsData.links.next
-        ? contractsData.links.next
-        : null;
+    next = updateNextLink(contractsData.links.next);
   } while (next);
 
   console.log('Completed scanning Hedera contracts.');
