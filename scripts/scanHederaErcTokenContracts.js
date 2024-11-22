@@ -30,7 +30,7 @@ const ERC721_FUNCTION_SIGNATURES = [
 
 // Fetch all contracts from the mirror node API
 async function fetchContracts(next = null) {
-  let url = `${MIRROR_NODE_API}/api/v1/contracts`;
+  let url = `${MIRROR_NODE_API}/api/v1/contracts?order=asc`;
   if (next) {
     url = MIRROR_NODE_API + next;
   }
