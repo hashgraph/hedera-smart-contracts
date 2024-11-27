@@ -53,6 +53,39 @@ The **ERC Contract Indexer** will:
   - `MIRROR_NODE_URL`: API URL for the Hedera mirror node.
   - `STARTING_POINT`: Starting contract ID or contract EVM address (or a `next` pointer from a previous run).
 
+### Class Diagram
+
+The following class diagram illustrates the code structure and relationships between the components of the ERC Contracts Indexer tool:
+
+```mermaid
+classDiagram
+    class ContractScanner {
+        +fetchContracts(startingPoint: String): List~Contract~
+        +fetchContractDetails(contractId: String): Contract
+    }
+
+    class InterfaceMatcher {
+        +isErc20(contract: Contract): Boolean
+        +isErc721(contract: Contract): Boolean
+    }
+
+    class Validator {
+        +validateErc20(contract: Contract): Boolean
+        +validateErc721(contract: Contract): Boolean
+    }
+
+    class RegistryGenerator {
+        +generateErc20Registry(contracts: List~Contract~): void
+        +generateErc721Registry(contracts: List~Contract~): void
+    }
+
+    ContractScanner --> InterfaceMatcher : "Uses for matching"
+    InterfaceMatcher --> Validator : "Optional validation"
+    InterfaceMatcher --> RegistryGenerator : "Passes matched contracts"
+    Validator --> RegistryGenerator : "Passes validated contracts"
+
+```
+
 ### Implementation Workflow
 
 1. **Initialization**:
