@@ -1,0 +1,20 @@
+{
+  "name": "@hashgraph/erc-contract-indexer",
+  "version": "0.1.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node src/index.ts"
+  },
+  "keywords": [],
+  "author": "Hedera Smart Contracts Team",
+  "license": "Apache-2.0",
+  "description": "ERC Contracts Indexer",
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  }
+}
