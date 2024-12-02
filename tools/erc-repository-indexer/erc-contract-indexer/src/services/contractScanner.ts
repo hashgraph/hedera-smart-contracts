@@ -57,6 +57,27 @@ export class ContractScannerService {
   }
 
   /**
+   * Fetches bytecode for a specific contract from the mirror node API.
+   * @param {string} contractId - The ID of the contract to fetch bytecode for.
+   * @returns {Promise<string | null>} A promise that resolves to the contract bytecode, or null if the request fails.
+   * @throws {AxiosError} When there is a network or API error. Rate limit errors (429) are automatically retried.
+   */
+  async fetchContractByteCode(contractId: string): Promise<string | null> {
+    try {
+      const response = await axios.get(
+        `${this.mirrorNodeBaseUrl}${constants.GET_CONTRACT_ENDPOINT}/${contractId}`
+      );
+      return response.data.runtime_bytecode;
+    } catch (error) {
+      return this.handleAxiosError(
+        error,
+        this.fetchContractByteCode,
+        contractId
+      );
+    }
+  }
+
+  /**
    * Handles Axios errors, specifically dealing with rate limiting (429) errors by implementing retry logic.
    * @param {unknown} error - The error thrown by Axios
    * @param {(param: string | null) => any} retryMethod - The method to retry if rate limited
@@ -65,7 +86,7 @@ export class ContractScannerService {
    */
   private async handleAxiosError(
     error: unknown,
-    retryMethod: (param: string | null) => any,
+    retryMethod: (param: any) => any,
     param: string | null
   ): Promise<any> {
     const isRateLimitError = (error as AxiosError).response?.status === 429;

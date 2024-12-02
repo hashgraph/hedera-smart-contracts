@@ -19,8 +19,10 @@
  */
 
 import axios from 'axios';
+import constants from '../../src/utils/constants';
 import { Contract } from '../../src/schemas/MirrorNodeSchemas';
 import { ContractScannerService } from '../../src/services/contractScanner';
+import { Helper } from '../../src/utils/helper';
 import {
   afterEach,
   beforeEach,
@@ -29,7 +31,6 @@ import {
   it,
   jest,
 } from '@jest/globals';
-import { Helper } from '../../src/utils/helper';
 
 jest.mock('axios');
 jest.mock('../../src/utils/helper');
@@ -48,28 +49,28 @@ describe('ContractScannerService', () => {
   });
 
   describe('fetchContracts', () => {
-    it('should fetch contracts successfully', async () => {
-      const mockContracts: Contract[] = [
-        {
-          admin_key: {},
-          auto_renew_account: null,
-          auto_renew_period: 7776000,
-          contract_id: '0.0.1013',
-          created_timestamp: '1732323370.357439918',
-          deleted: false,
-          evm_address: '0x00000000000000000000000000000000000003f5',
-          expiration_timestamp: '1740099370.357439918',
-          file_id: '0.0.1012',
-          max_automatic_token_associations: 0,
-          memo: 'cellar door',
-          nonce: 1,
-          obtainer_id: null,
-          permanent_removal: null,
-          proxy_account_id: null,
-          timestamp: {},
-        },
-      ];
+    const mockContracts: Contract[] = [
+      {
+        admin_key: {},
+        auto_renew_account: null,
+        auto_renew_period: 7776000,
+        contract_id: '0.0.1013',
+        created_timestamp: '1732323370.357439918',
+        deleted: false,
+        evm_address: '0x00000000000000000000000000000000000003f5',
+        expiration_timestamp: '1740099370.357439918',
+        file_id: '0.0.1012',
+        max_automatic_token_associations: 0,
+        memo: 'cellar door',
+        nonce: 1,
+        obtainer_id: null,
+        permanent_removal: null,
+        proxy_account_id: null,
+        timestamp: {},
+      },
+    ];
 
+    it('should fetch contracts successfully', async () => {
       mockedAxios.get.mockResolvedValueOnce({
         data: { contracts: mockContracts },
       });
@@ -87,27 +88,6 @@ describe('ContractScannerService', () => {
     });
 
     it('should retry fetching contracts on rate limit error', async () => {
-      const mockContracts: Contract[] = [
-        {
-          admin_key: {},
-          auto_renew_account: null,
-          auto_renew_period: 7776000,
-          contract_id: '0.0.1013',
-          created_timestamp: '1732323370.357439918',
-          deleted: false,
-          evm_address: '0x00000000000000000000000000000000000003f5',
-          expiration_timestamp: '1740099370.357439918',
-          file_id: '0.0.1012',
-          max_automatic_token_associations: 0,
-          memo: 'cellar door',
-          nonce: 1,
-          obtainer_id: null,
-          permanent_removal: null,
-          proxy_account_id: null,
-          timestamp: {},
-        },
-      ];
-
       mockedAxios.get
         .mockRejectedValueOnce({ response: { status: 429 } }) // First call returns rate limit error
         .mockResolvedValueOnce({ data: { contracts: mockContracts } }); // Second call succeeds
@@ -117,6 +97,48 @@ describe('ContractScannerService', () => {
       const contracts = await contractsPromise;
 
       expect(contracts?.contracts).toEqual(mockContracts);
+      expect(axios.get).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('fetchContractByteCode', () => {
+    const contractId = '0.0.1013';
+    const mockBytecode = '0x1234567890abcdef';
+
+    it('should fetch contract bytecode successfully', async () => {
+      mockedAxios.get.mockResolvedValue({
+        data: { runtime_bytecode: mockBytecode },
+      });
+
+      const bytecode =
+        await contractScannerService.fetchContractByteCode(contractId);
+
+      expect(bytecode).toEqual(mockBytecode);
+      expect(axios.get).toHaveBeenCalledWith(
+        `${contractScannerService['mirrorNodeBaseUrl']}${constants.GET_CONTRACT_ENDPOINT}/${contractId}`
+      );
+    });
+
+    it('should return null when there is an error', async () => {
+      mockedAxios.get.mockRejectedValue(new Error('Network Error'));
+
+      const bytecode =
+        await contractScannerService.fetchContractByteCode(contractId);
+
+      expect(bytecode).toBeNull();
+      expect(axios.get).toHaveBeenCalledTimes(1);
+    });
+
+    it('should retry fetching bytecode on rate limit error', async () => {
+      mockedAxios.get
+        .mockRejectedValueOnce({ response: { status: 429 } }) // First call returns rate limit error
+        .mockResolvedValueOnce({ data: { runtime_bytecode: mockBytecode } }); // Second call succeeds
+      mockedHelper.wait.mockResolvedValueOnce(undefined);
+
+      const bytecode =
+        await contractScannerService.fetchContractByteCode(contractId);
+
+      expect(bytecode).toEqual(mockBytecode);
       expect(axios.get).toHaveBeenCalledTimes(2);
     });
   });
