@@ -82,4 +82,46 @@ describe('ContractScannerService', () => {
       expect(axios.get).toHaveBeenCalledTimes(2);
     });
   });
+
+  describe('fetchContractByteCode', () => {
+    const contractId = '0.0.1013';
+    const mockBytecode = '0x1234567890abcdef';
+
+    it('should fetch contract bytecode successfully', async () => {
+      mockedAxios.get.mockResolvedValue({
+        data: { runtime_bytecode: mockBytecode },
+      });
+
+      const contractObject =
+        await contractScannerService.fetchContractByteCode(contractId);
+
+      expect(contractObject?.runtime_bytecode).toEqual(mockBytecode);
+      expect(axios.get).toHaveBeenCalledWith(
+        `${contractScannerService['mirrorNodeBaseUrl']}${constants.GET_CONTRACT_ENDPOINT}/${contractId}`
+      );
+    });
+
+    it('should return null when there is an error', async () => {
+      mockedAxios.get.mockRejectedValue(new Error('Network Error'));
+
+      const contractObject =
+        await contractScannerService.fetchContractByteCode(contractId);
+
+      expect(contractObject).toBeNull();
+      expect(axios.get).toHaveBeenCalledTimes(1);
+    });
+
+    it('should retry fetching bytecode on rate limit error', async () => {
+      mockedAxios.get
+        .mockRejectedValueOnce({ response: { status: 429 } }) // First call returns rate limit error
+        .mockResolvedValueOnce({ data: { runtime_bytecode: mockBytecode } }); // Second call succeeds
+      mockedHelper.wait.mockResolvedValueOnce(undefined);
+
+      const contractObject =
+        await contractScannerService.fetchContractByteCode(contractId);
+
+      expect(contractObject?.runtime_bytecode).toEqual(mockBytecode);
+      expect(axios.get).toHaveBeenCalledTimes(2);
+    });
+  });
 });
