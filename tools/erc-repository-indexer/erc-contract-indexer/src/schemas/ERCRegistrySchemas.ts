@@ -20,5 +20,5 @@
 
 export interface ERCOutputInterface {
   address: string;
-  contractId: string | null;
+  contractId: string;
 }

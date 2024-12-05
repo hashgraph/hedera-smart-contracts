@@ -18,9 +18,22 @@
  *
  */
 
+import path from 'path';
 import constants from './constants';
 
 export class Helper {
+  /**
+   * Constructs the file path for the specified file name based on the current Hedera network.
+   * The network is determined by the HEDERA_NETWORK environment variable, defaulting to 'previewnet'.
+   *
+   * @param {string} fileName - The name of the file for which to build the path.
+   * @returns {string} The constructed file path.
+   */
+  static buildFilePath(fileName: string): string {
+    const network = process.env.HEDERA_NETWORK || 'previewnet';
+    return path.join(__dirname, '../../erc-registry', network, fileName);
+  }
+
   /**
    * Builds a URL for the mirror node API by combining the base URL with either a pagination token or the default endpoint
    * @param {string} mirrorNodeBaseUrl - The base URL of the mirror node API
