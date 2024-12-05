@@ -45,7 +45,7 @@
     "husky": "^9.1.7",
     "mocha-junit-reporter": "^2.2.0",
     "mocha-multi-reporters": "^1.5.1",
-    "prettier": "3.4.1"
+    "prettier": "3.4.2"
   },
   "dependencies": {
     "@nomicfoundation/solidity-analyzer": "^0.1.2",
