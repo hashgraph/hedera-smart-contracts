@@ -23,4 +23,11 @@ export default {
   GET_CONTRACT_ENDPOINT: '/api/v1/contracts',
   ERC_20_JSON_FILE_NAME: 'erc-20.json',
   ERC_721_JSON_FILE_NAME: 'erc-721.json',
+  NETWORK_REGEX: /^(localnet|previewnet|testnet|mainnet)$/,
+  STARTING_POINT_REGEX:
+    /^(0x[a-fA-F0-9]{40}|0\.0\.\d+|\/api\/v1\/contracts\?limit=100&order=asc&contract\.id=gt:0\.0\.\d+)$/,
+  EVM_ADDRESS_REGEX: /^0x[a-fA-F0-9]{40}$/,
+  HEDERA_CONTRACT_ID_REGEX: /^0\.0\.\d+$/,
+  NEXT_POINTER_REGEX:
+    /^\/api\/v1\/contracts\?limit=100&order=asc&contract\.id=gt:0\.0\.\d+$/,
 };

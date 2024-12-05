@@ -54,4 +54,15 @@ export class Helper {
   static wait(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
+
+  /**
+   * Builds a starting point URL for fetching contracts from the mirror node API.
+   * The URL is constructed to retrieve contracts with IDs greater than the specified contract ID.
+   *
+   * @param {string} contractId - The contract ID to use as a reference for the starting point.
+   * @returns {string} The constructed starting point URL for the mirror node API.
+   */
+  static buildStartingPoint(contractId: string): string {
+    return `/api/v1/contracts?limit=100&order=asc&contract.id=gt:${contractId}`;
+  }
 }
