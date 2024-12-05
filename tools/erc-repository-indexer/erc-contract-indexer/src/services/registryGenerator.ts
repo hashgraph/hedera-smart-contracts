@@ -60,13 +60,13 @@ export class RegistryGenerator {
   ): Promise<void> {
     const updatePromises = [];
 
-    if (erc20Contracts.length > 0) {
+    if (erc20Contracts.length) {
       updatePromises.push(
         this.updateRegistry(this.erc20JsonFilePath, erc20Contracts)
       );
     }
 
-    if (erc721Contracts.length > 0) {
+    if (erc721Contracts.length) {
       updatePromises.push(
         this.updateRegistry(this.erc721JsonFilePath, erc721Contracts)
       );
