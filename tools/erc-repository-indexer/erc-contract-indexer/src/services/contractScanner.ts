@@ -36,8 +36,8 @@ export class ContractScannerService {
   private readonly mirrorNodeBaseUrl: string;
 
   constructor() {
-    this.mirrorNodeBaseUrl =
-      process.env.MIRROR_NODE_URL || constants.MIRROR_NODE_FALL_BACK_BASE_URL;
+    const network = process.env.HEDERA_NETWORK || 'previewnet';
+    this.mirrorNodeBaseUrl = `https:${network}.mirrornode.hedera.com`;
   }
 
   /**
