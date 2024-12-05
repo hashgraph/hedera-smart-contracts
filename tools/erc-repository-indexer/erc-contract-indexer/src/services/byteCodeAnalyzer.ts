@@ -50,7 +50,7 @@ export class ByteCodeAnalyzer {
       const contractResponses = await Promise.all(
         contractObject.map(({ contract_id }) =>
           contract_id
-            ? contractScannerService.fetchContractByteCode(contract_id)
+            ? contractScannerService.fetchContractObject(contract_id)
             : null
         )
       );

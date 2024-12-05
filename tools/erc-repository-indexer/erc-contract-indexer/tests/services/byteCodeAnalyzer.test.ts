@@ -31,14 +31,16 @@ describe('ByteCodeAnalyzer', () => {
 
   beforeEach(() => {
     byteCodeAnalyzer = new ByteCodeAnalyzer();
-    contractScannerService = new ContractScannerService();
+    contractScannerService = new ContractScannerService(
+      constants.MOCK_HEDERA_NETWORK
+    );
   });
 
   describe('categorizeERCContracts', () => {
     it('should categorize contracts into ERC20 and ERC721', async () => {
       // Mock the fetchContractByteCode method to return specific bytecode
       jest
-        .spyOn(contractScannerService, 'fetchContractByteCode')
+        .spyOn(contractScannerService, 'fetchContractObject')
         .mockImplementation(async (contractId) => {
           if (contractId === '0.0.1013') {
             return {
@@ -74,9 +76,9 @@ describe('ByteCodeAnalyzer', () => {
     });
 
     it('should skip contracts with missing data', async () => {
-      // Mock the fetchContractByteCode method to return null
+      // Mock the fetchContractObject method to return null
       jest
-        .spyOn(contractScannerService, 'fetchContractByteCode')
+        .spyOn(contractScannerService, 'fetchContractObject')
         .mockResolvedValue(null);
       const result = await byteCodeAnalyzer.categorizeERCContracts(
         contractScannerService,
@@ -88,7 +90,7 @@ describe('ByteCodeAnalyzer', () => {
 
     it('should handle errors gracefully', async () => {
       jest
-        .spyOn(contractScannerService, 'fetchContractByteCode')
+        .spyOn(contractScannerService, 'fetchContractObject')
         .mockImplementation(async () => {
           throw new Error('Fetch error');
         });
