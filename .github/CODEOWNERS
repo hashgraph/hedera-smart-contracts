@@ -2,13 +2,13 @@
 ##### Global Protection Rule ######
 ###################################
 # NOTE: This rule is overriden by the more specific rules below. This is the catch-all rule for all files not covered by the more specific rules below
-*                                      @hashgraph/hedera-smart-contracts
+*                                      @hashgraph/hedera-smart-contracts-product
 
 ############################
 ##### Smart contracts ######
 ############################
-/contracts                             @hashgraph/hedera-smart-contracts @georgi-l95 @Ivo-Yankov @natanasow
-/test                                  @hashgraph/hedera-smart-contracts @attest08 @georgi-l95 @Ivo-Yankov @natanasow @yiliev0
+/contracts                             @hashgraph/hedera-smart-contracts-product @georgi-l95 @Ivo-Yankov @natanasow
+/test                                  @hashgraph/hedera-smart-contracts-product @attest08 @georgi-l95 @Ivo-Yankov @natanasow @yiliev0
 
 #########################
 #####  Core Files  ######
@@ -19,15 +19,15 @@
 # Protection Rules for Github Configuration Files and Actions Workflows
 /.github/                                       @hashgraph/devops-ci @hashgraph/release-engineering-managers
 /.github/CODEOWNERS                             @hashgraph/devops-ci @hashgraph/release-engineering-managers @Nana-EC
-/.github/workflows/                             @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts
+/.github/workflows/                             @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts-product
 
 # Self-protection for root CODEOWNERS files (this file should not exist and should definitely require approval)
 /CODEOWNERS                                     @hashgraph/release-engineering-managers
 
 # Protect the repository root files
-/README.md                                      @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts
+/README.md                                      @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts-product
 **/LICENSE                                      @hashgraph/release-engineering-managers
 
 # Git Ignore definitions
-**/.gitignore                                   @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts
-**/.gitignore.*                                 @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts
+**/.gitignore                                   @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts-product
+**/.gitignore.*                                 @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts-product
