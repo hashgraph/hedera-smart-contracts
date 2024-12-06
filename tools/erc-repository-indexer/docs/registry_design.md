@@ -59,30 +59,37 @@ The following class diagram illustrates the code structure and relationships bet
 
 ```mermaid
 classDiagram
-    class ContractScanner {
-        +fetchContracts(startingPoint: String): List~Contract~
-        +fetchContractDetails(contractId: String): Contract
+    class Main {
+        +run() Promise<void>
     }
 
-    class InterfaceMatcher {
-        +isErc20(contract: Contract): Boolean
-        +isErc721(contract: Contract): Boolean
+    class ConfigService {
+        +getNetwork() string
+        +resolveStartingPoint(registryGenerator: RegistryGenerator) Promise<string>
+        +validateConfigs() void
     }
 
-    class Validator {
-        +validateErc20(contract: Contract): Boolean
-        +validateErc721(contract: Contract): Boolean
+    class ByteCodeAnalyzer {
+        +categorizeERCContracts(contractScannerService: ContractScannerService, contractObject: MirrorNodeContract[]) Promise<string>
+    }
+
+    class ContractScannerService {
+        +fetchContracts(next: string) Promise<string>
+        +fetchContractObject(contractId: string) Promise<string>
     }
 
     class RegistryGenerator {
-        +generateErc20Registry(contracts: List~Contract~): void
-        +generateErc721Registry(contracts: List~Contract~): void
+        +generateErcRegistry(erc20Contracts: string[], erc721Contracts: string[]) Promise<void>
+        +updateNextPointer(next: string) Promise<void>
+        +retrieveNextPointer() Promise<string>
     }
 
-    ContractScanner --> InterfaceMatcher : "Uses for matching"
-    InterfaceMatcher --> Validator : "Optional validation"
-    InterfaceMatcher --> RegistryGenerator : "Passes matched contracts"
-    Validator --> RegistryGenerator : "Passes validated contracts"
+    Main --> ConfigService : "Validates configuration settings"
+    Main --> ContractScannerService : "Fetches batches of contracts"
+    Main --> ByteCodeAnalyzer : "Processes contracts and analyzes bytecode"
+    ByteCodeAnalyzer --> ContractScannerService : "Fetches detailed contract objects and bytecodes"
+    ByteCodeAnalyzer --> RegistryGenerator : "Provides categorized ERC-20 and ERC-721 contracts"
+    RegistryGenerator --> ContractScannerService : "Uses to generate registries"
 
 ```
 
