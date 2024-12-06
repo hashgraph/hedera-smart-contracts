@@ -89,7 +89,7 @@ export class ConfigService {
    * @returns {Promise<string | null>} A promise that resolves to the starting point string or null if not set.
    */
   async resolveStartingPoint(): Promise<string | null> {
-    if (constants.NEXT_POINTER_REGEX.test(this.startingPoint)) {
+    if (constants.GET_CONTRACTS_LISTS_NEXT_REGEX.test(this.startingPoint)) {
       console.log(
         `Start indexing the network from next_pointer=${this.startingPoint}`
       );

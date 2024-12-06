@@ -30,6 +30,6 @@ export default {
     /^(0x[a-fA-F0-9]{40}|0\.0\.\d+|\/api\/v1\/contracts\?limit=100&order=asc&contract\.id=gt:0\.0\.\d+)$/,
   EVM_ADDRESS_REGEX: /^0x[a-fA-F0-9]{40}$/,
   HEDERA_CONTRACT_ID_REGEX: /^0\.0\.\d+$/,
-  NEXT_POINTER_REGEX:
+  GET_CONTRACTS_LISTS_NEXT_REGEX:
     /^\/api\/v1\/contracts\?limit=100&order=asc&contract\.id=gt:0\.0\.\d+$/,
 };
