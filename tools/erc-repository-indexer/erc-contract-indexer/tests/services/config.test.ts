@@ -21,6 +21,7 @@
 import axios from 'axios';
 import { ConfigService } from '../../src/services/config';
 import constants from '../utils/constants';
+import { RegistryGenerator } from '../../src/services/registryGenerator';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -32,6 +33,7 @@ describe('ConfigService', () => {
   const mockContractId = constants.MOCK_MN_CONTRACTS[0].contract_id;
   const mockContractEvmAddress = constants.MOCK_MN_CONTRACTS[0].evm_address;
   const mockStartingPoint = `/api/v1/contracts?limit=100&order=asc&contract.id=gt:${mockContractId}`;
+  const registryGenerator = new RegistryGenerator();
 
   beforeEach(() => {
     // Reset environment variables before each test
@@ -90,7 +92,8 @@ describe('ConfigService', () => {
     process.env.STARTING_POINT = mockContractId;
 
     configService = new ConfigService();
-    const startingPoint = await configService.resolveStartingPoint();
+    const startingPoint =
+      await configService.resolveStartingPoint(registryGenerator);
     expect(startingPoint).toBe(mockStartingPoint);
   });
 
@@ -104,7 +107,8 @@ describe('ConfigService', () => {
     }); // Second call succeeds
 
     configService = new ConfigService();
-    const startingPoint = await configService.resolveStartingPoint();
+    const startingPoint =
+      await configService.resolveStartingPoint(registryGenerator);
     expect(startingPoint).toBe(mockStartingPoint);
   });
 
@@ -114,8 +118,27 @@ describe('ConfigService', () => {
     process.env.STARTING_POINT = mockStartingPoint;
 
     configService = new ConfigService();
-    const startingPoint = await configService.resolveStartingPoint();
+    const startingPoint =
+      await configService.resolveStartingPoint(registryGenerator);
 
     expect(startingPoint).toBe(process.env.STARTING_POINT);
+  });
+
+  it('should resolve starting point from storage if available', async () => {
+    process.env.HEDERA_NETWORK = mockValidHederaNetwork;
+    process.env.MIRROR_NODE_URL = mockValidMirrorNodeUrl;
+    process.env.STARTING_POINT = '';
+
+    // Mock the retrieveNextPointer method to return a valid pointer
+    const mockRetrieveNextPointer = jest
+      .spyOn(registryGenerator, 'retrieveNextPointer')
+      .mockResolvedValue(mockStartingPoint);
+
+    configService = new ConfigService();
+    const startingPoint =
+      await configService.resolveStartingPoint(registryGenerator);
+
+    expect(startingPoint).toBe(mockStartingPoint);
+    expect(mockRetrieveNextPointer).toHaveBeenCalled();
   });
 });
