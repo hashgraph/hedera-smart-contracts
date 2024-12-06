@@ -35,9 +35,8 @@ export class ContractScannerService {
    */
   private readonly mirrorNodeBaseUrl: string;
 
-  constructor() {
-    const network = process.env.HEDERA_NETWORK || 'previewnet';
-    this.mirrorNodeBaseUrl = `https:${network}.mirrornode.hedera.com`;
+  constructor(mirrorNodeUrl: string) {
+    this.mirrorNodeBaseUrl = mirrorNodeUrl;
   }
 
   /**
@@ -61,12 +60,12 @@ export class ContractScannerService {
   }
 
   /**
-   * Fetches contract details including bytecode for a specific contract from the mirror node API.
+   * Fetches detailed contract object for a specific contract from the mirror node API.
    * @param {string} contractId - The ID of the contract to fetch details for.
    * @returns {Promise<MirrorNodeContractResponse | null>} A promise that resolves to the contract details including bytecode, or null if the request fails.
    * @throws {Error} When there is a network or API error. Rate limit errors (429) are automatically retried.
    */
-  async fetchContractByteCode(
+  async fetchContractObject(
     contractId: string
   ): Promise<MirrorNodeContractResponse | null> {
     try {
@@ -75,11 +74,7 @@ export class ContractScannerService {
       );
       return response.data;
     } catch (error) {
-      return this.handleAxiosError(
-        error,
-        this.fetchContractByteCode,
-        contractId
-      );
+      return this.handleAxiosError(error, this.fetchContractObject, contractId);
     }
   }
 

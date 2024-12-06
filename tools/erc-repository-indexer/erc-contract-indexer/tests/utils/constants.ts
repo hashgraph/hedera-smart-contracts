@@ -19,6 +19,7 @@
  */
 
 export default {
+  MOCK_HEDERA_NETWORK: 'MOCK_HEDERA_NETWORK',
   MOCK_MN_CONTRACTS: [
     {
       admin_key: {},

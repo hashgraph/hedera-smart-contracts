@@ -42,7 +42,9 @@ describe('ContractScannerService', () => {
   let contractScannerService: ContractScannerService;
 
   beforeEach(() => {
-    contractScannerService = new ContractScannerService();
+    contractScannerService = new ContractScannerService(
+      testConstants.MOCK_HEDERA_NETWORK
+    );
   });
 
   afterEach(() => {
@@ -83,7 +85,7 @@ describe('ContractScannerService', () => {
     });
   });
 
-  describe('fetchContractByteCode', () => {
+  describe('fetchContractObject', () => {
     const contractId = '0.0.1013';
     const mockBytecode = '0x1234567890abcdef';
 
@@ -93,7 +95,7 @@ describe('ContractScannerService', () => {
       });
 
       const contractObject =
-        await contractScannerService.fetchContractByteCode(contractId);
+        await contractScannerService.fetchContractObject(contractId);
 
       expect(contractObject?.runtime_bytecode).toEqual(mockBytecode);
       expect(axios.get).toHaveBeenCalledWith(
@@ -105,7 +107,7 @@ describe('ContractScannerService', () => {
       mockedAxios.get.mockRejectedValue(new Error('Network Error'));
 
       const contractObject =
-        await contractScannerService.fetchContractByteCode(contractId);
+        await contractScannerService.fetchContractObject(contractId);
 
       expect(contractObject).toBeNull();
       expect(axios.get).toHaveBeenCalledTimes(1);
@@ -118,7 +120,7 @@ describe('ContractScannerService', () => {
       mockedHelper.wait.mockResolvedValueOnce(undefined);
 
       const contractObject =
-        await contractScannerService.fetchContractByteCode(contractId);
+        await contractScannerService.fetchContractObject(contractId);
 
       expect(contractObject?.runtime_bytecode).toEqual(mockBytecode);
       expect(axios.get).toHaveBeenCalledTimes(2);
