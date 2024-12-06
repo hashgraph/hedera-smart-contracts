@@ -26,9 +26,16 @@ export class ConfigService {
   /**
    * @private
    * @readonly
-   * @property {string} network - The network identifier for the Hedera network (e.g., testnet, mainnet).
+   * @property {string} network - The network identifier for the Hedera network (e.g., previewnet, testnet, mainnet).
    */
   private readonly network: string;
+
+  /**
+   * @private
+   * @readonly
+   * @property {string} mirrorNodeUrl - The URL for the Hedera Mirror Node API.
+   */
+  private readonly mirrorNodeUrl: string;
 
   /**
    * @private
@@ -39,6 +46,7 @@ export class ConfigService {
 
   constructor() {
     this.network = process.env.HEDERA_NETWORK || '';
+    this.mirrorNodeUrl = process.env.MIRROR_NODE_URL || '';
     this.startingPoint = process.env.STARTING_POINT || '';
     this.validateConfigs();
 
@@ -54,6 +62,15 @@ export class ConfigService {
     if (!this.network || !constants.NETWORK_REGEX.test(this.network)) {
       throw new Error(
         `HEDERA_NETWORK Is Not Properly Configured: network=${this.network}`
+      );
+    }
+
+    if (
+      !this.mirrorNodeUrl ||
+      !constants.MIRROR_NODE_URL_REGEX.test(this.mirrorNodeUrl)
+    ) {
+      throw new Error(
+        `MIRROR_NODE_URL Is Not Properly Configured: mirrorNodeUrl=${this.mirrorNodeUrl}`
       );
     }
 
@@ -123,5 +140,13 @@ export class ConfigService {
    */
   getNetwork(): string {
     return this.network;
+  }
+
+  /**
+   * Gets the URL of the mirror node.
+   * @returns {string} The mirror node URL.
+   */
+  getMirrorNodeUrl(): string {
+    return this.mirrorNodeUrl;
   }
 }
