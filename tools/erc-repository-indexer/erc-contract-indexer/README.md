@@ -35,15 +35,17 @@ The ERC Contract Indexer is a tool designed to facilitate the indexing and manag
 
 3. Create a `.env` file in the root directory and configure your environment variables:
 
-| Variable         | Description                               | Accepted Values                                                                                                                                                                                               |
-| ---------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `HEDERA_NETWORK` | The network to connect to.                | `previewnet`, `testnet`, or `mainnet`                                                                                                                                                                         |
-| `STARTING_POINT` | The starting point for contract indexing. | A Hedera contract ID (e.g., `0.0.369`), an EVM 20-byte address (e.g., `0x0000000000000000000000000000000000000369`), or a next pointer (e.g., `/api/v1/contracts?limit=100&order=asc&contract.id=gt:0.0.369`) |
+| Variable          | Description                               | Accepted Values                                                                                                                                                                                                                 |
+| ----------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `HEDERA_NETWORK`  | The network to connect to.                | `previewnet`, `testnet`, or `mainnet`                                                                                                                                                                                           |
+| `MIRROR_NODE_URL` | The URL for the Hedera mirror node API.   | A valid URL pointing to the Hedera mirror node (e.g., `https://{previewnet\|testnet\|mainnet}.mirrornode.hedera.com`)                                                                                                           |
+| `STARTING_POINT`  | The starting point for contract indexing. | A Hedera contract ID (e.g., `0.0.369`), an EVM 20-byte address (e.g., `0x0000000000000000000000000000000000000369`), or a get contract list next pointer (e.g., `/api/v1/contracts?limit=100&order=asc&contract.id=gt:0.0.369`) |
 
 Example configuration:
 
 ```plaintext
 HEDERA_NETWORK=testnet
+MIRROR_NODE_URL=https://testnet.mirrornode.hedera.com
 STARTING_POINT=0.0.1013
 ```
 
