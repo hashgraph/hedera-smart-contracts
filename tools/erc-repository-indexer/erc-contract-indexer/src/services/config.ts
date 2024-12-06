@@ -21,6 +21,7 @@
 import constants from '../utils/constants';
 import { ContractScannerService } from './contractScanner';
 import { Helper } from '../utils/helper';
+import { RegistryGenerator } from './registryGenerator';
 
 export class ConfigService {
   /**
@@ -85,10 +86,17 @@ export class ConfigService {
   }
 
   /**
-   * Resolves the starting point for indexing based on the configuration.
-   * @returns {Promise<string | null>} A promise that resolves to the starting point string or null if not set.
+   * Determines the starting point for indexing based on the configuration settings.
+   * The method prioritizes the STARTING_POINT if it is defined in the configuration.
+   * If STARTING_POINT is not defined, it checks for a stored next pointer on disk; if found, it uses that.
+   * If neither is available, the indexing will start from the genesis block.
+   *
+   * @param {RegistryGenerator} registryGenerator - An instance of the RegistryGenerator used to retrieve the next pointer from storage.
+   * @returns {Promise<string | null>} A promise that resolves to the starting point string, or null if no valid starting point is set.
    */
-  async resolveStartingPoint(): Promise<string | null> {
+  async resolveStartingPoint(
+    registryGenerator: RegistryGenerator
+  ): Promise<string | null> {
     if (constants.GET_CONTRACTS_LISTS_NEXT_REGEX.test(this.startingPoint)) {
       console.log(
         `Start indexing the network from next_pointer=${this.startingPoint}`
@@ -105,6 +113,16 @@ export class ConfigService {
 
     if (constants.EVM_ADDRESS_REGEX.test(this.startingPoint)) {
       return this.resolveFromEvmAddress();
+    }
+
+    const startingPointFromStorage =
+      await registryGenerator.retrieveNextPointer();
+
+    if (startingPointFromStorage) {
+      console.log(
+        `Start indexing the network from storage next pointer=${startingPointFromStorage}`
+      );
+      return startingPointFromStorage;
     }
 
     console.log('Start indexing the network from genesis');

@@ -39,6 +39,13 @@ export class RegistryGenerator {
    */
   private readonly erc721JsonFilePath: string;
 
+  /**
+   * @private
+   * @readonly
+   * @property {string} nextPointerFilePath - The file path where the next pointer for indexing will be stored.
+   */
+  private readonly nextPointerFilePath: string;
+
   constructor() {
     this.erc20JsonFilePath = Helper.buildFilePath(
       constants.ERC_20_JSON_FILE_NAME
@@ -46,6 +53,30 @@ export class RegistryGenerator {
     this.erc721JsonFilePath = Helper.buildFilePath(
       constants.ERC_721_JSON_FILE_NAME
     );
+    this.nextPointerFilePath = Helper.buildFilePath(
+      constants.GET_CONTRACTS_LIST_NEXT_POINTER_JSON_FILE_NAME
+    );
+  }
+
+  /**
+   * Updates the next pointer in a file if it is not null.
+   * @param {string | null} next - The next pointer to be written to the file. If null, the file will not be updated.
+   * @returns {Promise<void>} A promise that resolves when the next pointer has been successfully written to the file.
+   */
+  async updateNextPointer(next: string | null): Promise<void> {
+    if (next) {
+      await this.writeContentsToFile(this.nextPointerFilePath, next);
+      console.log('Next pointer has been successfully updated to:', next);
+    }
+  }
+
+  /**
+   * Retrieves the next pointer from nextPointerFilePath.
+   * @returns {Promise<string | null>} A promise that resolves to the next pointer if it exists, or null if the file is empty or does not exist.
+   */
+  async retrieveNextPointer(): Promise<string | null> {
+    const fileContent = this.readContentsFromFile(this.nextPointerFilePath);
+    return fileContent ? JSON.parse(fileContent) : null;
   }
 
   /**
@@ -89,7 +120,10 @@ export class RegistryGenerator {
   ): Promise<void> {
     console.log('Pushing new ERC token contracts to registry...');
 
-    const existingContracts = this.readExistingContracts(filePath);
+    const fileContent = this.readContentsFromFile(filePath);
+    const existingContracts = fileContent
+      ? (JSON.parse(fileContent) as ERCOutputInterface[])
+      : [];
 
     // Create a Map to deduplicate contracts by contractId
     const contractMap = new Map(
@@ -102,38 +136,38 @@ export class RegistryGenerator {
     // Convert Map values back to array for file writing
     const uniqueContracts = Array.from(contractMap.values());
 
-    await this.writeContractsToFile(filePath, uniqueContracts);
+    await this.writeContentsToFile(filePath, uniqueContracts);
+    console.log('Finish pushing new ERC token contracts to registry.');
   }
 
   /**
-   * Reads existing contracts from a registry file.
-   * @param {string} filePath - Path to the registry file
-   * @returns {ERCOutputInterface[]} Array of existing contracts, or empty array if file doesn't exist
+   * Reads the contents of a registry file and returns the existing contracts.
+   * If the file does not exist, an empty string is returned.
+   * @param {string} filePath - The path to the registry file.
+   * @returns {string} The contents of the registry file as a string, or an empty string if the file doesn't exist.
    * @private
    */
-  private readExistingContracts(filePath: string): ERCOutputInterface[] {
-    // Cache file read result to avoid multiple disk reads
+  private readContentsFromFile(filePath: string): string {
     if (!fs.existsSync(filePath)) {
-      return [];
+      return '';
     }
-    const fileContent = fs.readFileSync(filePath, 'utf8');
-    return fileContent ? JSON.parse(fileContent) : [];
+    return fs.readFileSync(filePath, 'utf8');
   }
 
   /**
-   * Writes contracts to a registry file.
-   * @param {string} filePath - Path to the registry file
-   * @param {ERCOutputInterface[]} contracts - Contracts to write to file
-   * @returns {Promise<void>} Promise that resolves when file is written
-   * @private
+   * Writes the specified contents to a file at the given file path.
+   * If the directory does not exist, it will be created recursively.
+   *
+   * @param {string} filePath - The path to the file where contents will be written.
+   * @param {any} contents - The contents to write to the file, which will be stringified as JSON.
+   * @returns {Promise<void>} A promise that resolves when the file has been successfully written.
    */
-  private async writeContractsToFile(
+  private async writeContentsToFile(
     filePath: string,
-    contracts: ERCOutputInterface[]
+    contents: any
   ): Promise<void> {
     const dir = path.dirname(filePath);
     await fs.promises.mkdir(dir, { recursive: true });
-    await fs.promises.writeFile(filePath, JSON.stringify(contracts, null, 2));
-    console.log('Finish pushing new ERC token contracts to registry.');
+    await fs.promises.writeFile(filePath, JSON.stringify(contents, null, 2));
   }
 }

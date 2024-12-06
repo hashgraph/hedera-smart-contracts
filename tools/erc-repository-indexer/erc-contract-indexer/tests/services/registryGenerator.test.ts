@@ -19,8 +19,14 @@ const mockedFs = fs as jest.Mocked<typeof fs>;
 describe('RegistryGenerator', () => {
   let registry: RegistryGenerator;
   const mockERC20Path = constants.ERC_20_JSON_FILE_NAME;
-  const mockContractA = [{ contractId: '123', address: '0x123' }];
-  const mockContractB = [{ contractId: '456', address: '0x456' }];
+  const mockContractA: ERCOutputInterface[] = [
+    { contractId: '123', address: '0x123' },
+  ];
+  const mockContractB: ERCOutputInterface[] = [
+    { contractId: '456', address: '0x456' },
+  ];
+  const mockNextPointerPath =
+    constants.GET_CONTRACTS_LIST_NEXT_POINTER_JSON_FILE_NAME;
 
   beforeEach(() => {
     registry = new RegistryGenerator();
@@ -53,24 +59,35 @@ describe('RegistryGenerator', () => {
         mockContractB
       );
     });
+
+    it('should not call updateRegistry if no contracts are provided', async () => {
+      const updateRegistrySpy = jest.spyOn<any, any>(
+        registry,
+        'updateRegistry'
+      );
+
+      await registry.generateErcRegistry([], []);
+
+      expect(updateRegistrySpy).not.toHaveBeenCalled();
+    });
   });
 
-  describe('readExistingContracts', () => {
+  describe('readContentsFromFile', () => {
     it('should return an empty array if file does not exist', () => {
       mockedFs.existsSync.mockReturnValue(false);
 
-      const result = registry['readExistingContracts'](mockERC20Path);
+      const result = registry['readContentsFromFile'](mockERC20Path);
 
-      expect(result).toEqual([]);
+      expect(result).toEqual('');
     });
 
     it('should parse JSON from file successfully', () => {
       const mockData = mockContractA;
       mockedFs.readFileSync.mockReturnValue(JSON.stringify(mockData));
 
-      const result = registry['readExistingContracts'](mockERC20Path);
+      const result = registry['readContentsFromFile'](mockERC20Path);
 
-      expect(result).toEqual(mockData);
+      expect(JSON.parse(result)).toEqual(mockData);
     });
 
     it('should throw error when file read fails', () => {
@@ -78,17 +95,17 @@ describe('RegistryGenerator', () => {
         throw new Error('Read error');
       });
 
-      expect(() => registry['readExistingContracts'](mockERC20Path)).toThrow(
+      expect(() => registry['readContentsFromFile'](mockERC20Path)).toThrow(
         'Read error'
       );
     });
   });
 
-  describe('writeContractsToFile', () => {
+  describe('writeContentsToFile', () => {
     it('should create directories and write contracts to file', async () => {
       const mockContracts: ERCOutputInterface[] = mockContractA;
 
-      await registry['writeContractsToFile'](mockERC20Path, mockContracts);
+      await registry['writeContentsToFile'](mockERC20Path, mockContracts);
 
       expect(mockedFs.promises.mkdir).toHaveBeenCalledWith(
         path.dirname(mockERC20Path),
@@ -106,7 +123,7 @@ describe('RegistryGenerator', () => {
         .mockRejectedValue(new Error('Write error'));
 
       await expect(
-        registry['writeContractsToFile'](mockERC20Path, mockContractA)
+        registry['writeContentsToFile'](mockERC20Path, mockContractA)
       ).rejects.toThrow('Write error');
     });
   });
@@ -128,6 +145,51 @@ describe('RegistryGenerator', () => {
         mockERC20Path,
         JSON.stringify(expectedContracts, null, 2)
       );
+    });
+  });
+
+  describe('updateNextPointer', () => {
+    it('should write the next pointer to the file if it is not null', async () => {
+      await registry.updateNextPointer(mockNextPointerPath);
+
+      expect(mockedFs.promises.writeFile).toHaveBeenCalledWith(
+        registry['nextPointerFilePath'],
+        JSON.stringify(mockNextPointerPath, null, 2)
+      );
+    });
+
+    it('should not write to the file if the next pointer is null', async () => {
+      await registry.updateNextPointer(null);
+
+      expect(mockedFs.promises.writeFile).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('retrieveNextPointer', () => {
+    it('should return null if the file does not exist', async () => {
+      mockedFs.existsSync.mockReturnValue(false);
+
+      const result = await registry.retrieveNextPointer();
+
+      expect(result).toBeNull();
+    });
+
+    it('should return the next pointer from the file', async () => {
+      mockedFs.readFileSync.mockReturnValue(
+        JSON.stringify(mockNextPointerPath)
+      );
+
+      const result = await registry.retrieveNextPointer();
+
+      expect(result).toBe(mockNextPointerPath);
+    });
+
+    it('should return null if the file is empty', async () => {
+      mockedFs.readFileSync.mockReturnValue('');
+
+      const result = await registry.retrieveNextPointer();
+
+      expect(result).toBeNull();
     });
   });
 });
