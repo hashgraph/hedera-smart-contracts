@@ -107,4 +107,15 @@ describe('ConfigService', () => {
     const startingPoint = await configService.resolveStartingPoint();
     expect(startingPoint).toBe(mockStartingPoint);
   });
+
+  it('should resolve starting point from get contracts list next pointer', async () => {
+    process.env.HEDERA_NETWORK = mockValidHederaNetwork;
+    process.env.MIRROR_NODE_URL = mockValidMirrorNodeUrl;
+    process.env.STARTING_POINT = mockStartingPoint;
+
+    configService = new ConfigService();
+    const startingPoint = await configService.resolveStartingPoint();
+
+    expect(startingPoint).toBe(process.env.STARTING_POINT);
+  });
 });
