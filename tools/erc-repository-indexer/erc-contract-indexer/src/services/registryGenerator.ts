@@ -118,8 +118,6 @@ export class RegistryGenerator {
     filePath: string,
     newContracts: ERCOutputInterface[]
   ): Promise<void> {
-    console.log('Pushing new ERC token contracts to registry...');
-
     const fileContent = this.readContentsFromFile(filePath);
     const existingContracts = fileContent
       ? (JSON.parse(fileContent) as ERCOutputInterface[])
@@ -137,7 +135,9 @@ export class RegistryGenerator {
     const uniqueContracts = Array.from(contractMap.values());
 
     await this.writeContentsToFile(filePath, uniqueContracts);
-    console.log('Finish pushing new ERC token contracts to registry.');
+    console.log(
+      `Finished writing ${newContracts.length} new ERC token contracts to registry.`
+    );
   }
 
   /**
