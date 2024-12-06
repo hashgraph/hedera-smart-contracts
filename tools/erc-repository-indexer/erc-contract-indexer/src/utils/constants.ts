@@ -19,7 +19,7 @@
  */
 
 export default {
-  RETRY_DELAY_MS: 15000,
+  RETRY_DELAY_MS: 9000,
   GET_CONTRACT_ENDPOINT: '/api/v1/contracts',
   ERC_20_JSON_FILE_NAME: 'erc-20.json',
   ERC_721_JSON_FILE_NAME: 'erc-721.json',
