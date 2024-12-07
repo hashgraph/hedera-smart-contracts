@@ -22,3 +22,21 @@ export interface ERCOutputInterface {
   address: string;
   contractId: string;
 }
+
+export interface ERC20OutputInterface extends ERCOutputInterface {
+  name: string;
+  symbol: string;
+  decimals: number;
+  totalSupply: number;
+}
+
+export interface ERC721OutputInterface extends ERCOutputInterface {
+  name: string;
+  symbol: string;
+}
+
+export interface ERCTokenInfoSelectors {
+  type: string;
+  field: string;
+  sighash: string;
+}
