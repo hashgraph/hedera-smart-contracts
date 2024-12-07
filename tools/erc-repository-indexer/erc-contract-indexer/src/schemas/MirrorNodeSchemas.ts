@@ -46,3 +46,8 @@ export interface MirrorNodeContractResponse extends MirrorNodeContract {
 export interface Links {
   next: string | null;
 }
+
+export interface ContractCallData {
+  data: string;
+  to: string;
+}
