@@ -22,9 +22,10 @@ import axios, { AxiosError } from 'axios';
 import constants from '../utils/constants';
 import { Helper } from '../utils/helper';
 import {
+  ContractCallData,
+  Links,
   MirrorNodeContract,
   MirrorNodeContractResponse,
-  Links,
 } from '../schemas/MirrorNodeSchemas';
 
 export class ContractScannerService {
@@ -82,13 +83,13 @@ export class ContractScannerService {
    * Handles Axios errors, specifically dealing with rate limiting (429) errors by implementing retry logic.
    * @param {unknown} error - The error thrown by Axios
    * @param {(param: string | null) => any} retryMethod - The method to retry if rate limited
-   * @param {string | null} param - Parameter to pass to the retry method
+   * @param {any} param - Parameter to pass to the retry method
    * @returns {Promise<any>} Returns the result of the retry method if successful, null otherwise
    */
   private async handleAxiosError(
     error: unknown,
     retryMethod: (param: any) => any,
-    param: string | null
+    param: any
   ): Promise<any> {
     const isRateLimitError = (error as AxiosError).response?.status === 429;
     if (isRateLimitError) {
@@ -99,7 +100,28 @@ export class ContractScannerService {
       return retryMethod.call(this, param);
     }
 
-    console.error('Error fetching contracts:', error);
+    console.error('Error returned from mirror node:', error);
     return null;
+  }
+  /**
+   * Sends a contract call request to the mirror node API.
+   *
+   * This method constructs a POST request to the contract call endpoint with the provided call data.
+   * It handles any potential errors, including rate limit errors, by retrying the request if necessary.
+   *
+   * @param {ContractCallData} callData - The data required for the contract call, including the target contract address and the data to be sent.
+   * @returns {Promise<any>} A promise that resolves to the result of the contract call, or null if the request fails.
+   * @throws {Error} When there is a network or API error.
+   */
+  async contractCallRequest(callData: ContractCallData): Promise<any> {
+    try {
+      const response = await axios.post(
+        `${this.mirrorNodeBaseUrl}${constants.CONTRACT_CALL_ENDPOINT}`,
+        callData
+      );
+      return response.data.result;
+    } catch (error) {
+      return this.handleAxiosError(error, this.contractCallRequest, callData);
+    }
   }
 }
