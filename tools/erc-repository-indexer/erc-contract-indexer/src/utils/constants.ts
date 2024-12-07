@@ -21,6 +21,7 @@
 export default {
   RETRY_DELAY_MS: 9000,
   GET_CONTRACT_ENDPOINT: '/api/v1/contracts',
+  CONTRACT_CALL_ENDPOINT: '/api/v1/contracts/call',
   ERC_20_JSON_FILE_NAME: 'erc-20.json',
   ERC_721_JSON_FILE_NAME: 'erc-721.json',
   GET_CONTRACTS_LIST_NEXT_POINTER_JSON_FILE_NAME: 'next-pointer.json',
@@ -33,4 +34,38 @@ export default {
   HEDERA_CONTRACT_ID_REGEX: /^0\.0\.\d+$/,
   GET_CONTRACTS_LISTS_NEXT_REGEX:
     /^\/api\/v1\/contracts\?limit=100&order=asc&contract\.id=gt:0\.0\.\d+$/,
+  ERC20_TOKEN_INFO_SELECTORS: [
+    {
+      type: 'string',
+      field: 'name',
+      sighash: '0x06fdde03',
+    },
+    {
+      type: 'string',
+      field: 'symbol',
+      sighash: '0x95d89b41',
+    },
+    {
+      type: 'uint256',
+      field: 'totalSupply',
+      sighash: '0x18160ddd',
+    },
+    {
+      type: 'uint8',
+      field: 'decimals',
+      sighash: '0x313ce567',
+    },
+  ],
+  ERC721_TOKEN_INFO_SELECTORS: [
+    {
+      type: 'string',
+      field: 'name',
+      sighash: '0x06fdde03',
+    },
+    {
+      type: 'string',
+      field: 'symbol',
+      sighash: '0x95d89b41',
+    },
+  ],
 };
