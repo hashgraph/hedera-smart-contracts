@@ -34,3 +34,9 @@ export interface ERC721OutputInterface extends ERCOutputInterface {
   name: string;
   symbol: string;
 }
+
+export interface ERCTokenInfoSelectors {
+  type: string;
+  field: string;
+  sighash: string;
+}
