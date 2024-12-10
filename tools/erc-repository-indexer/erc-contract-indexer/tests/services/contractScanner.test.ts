@@ -39,11 +39,20 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 const mockedHelper = Helper as jest.Mocked<typeof Helper>;
 
 describe('ContractScannerService', () => {
+  const mockValidMirrorNodeUrl = 'mock-mirror-node.com';
+  const mockValidMirrorNodeUrlWeb3 = 'mock-mirror-node-web3.com';
+
   let contractScannerService: ContractScannerService;
 
   beforeEach(() => {
+    mockedHelper.buildAxiosClient.mockReturnValue({
+      mirrorNodeRestClient: mockedAxios,
+      mirrorNodeWeb3Client: mockedAxios,
+    });
+
     contractScannerService = new ContractScannerService(
-      testConstants.MOCK_HEDERA_NETWORK
+      mockValidMirrorNodeUrl,
+      mockValidMirrorNodeUrlWeb3
     );
   });
 
@@ -99,7 +108,7 @@ describe('ContractScannerService', () => {
 
       expect(contractObject?.runtime_bytecode).toEqual(mockBytecode);
       expect(axios.get).toHaveBeenCalledWith(
-        `${contractScannerService['mirrorNodeBaseUrl']}${constants.GET_CONTRACT_ENDPOINT}/${contractId}`
+        constants.GET_CONTRACT_ENDPOINT + '/' + contractId
       );
     });
 
@@ -141,7 +150,7 @@ describe('ContractScannerService', () => {
 
       expect(result).toEqual(mockResponse.result);
       expect(axios.post).toHaveBeenCalledWith(
-        `${contractScannerService['mirrorNodeBaseUrl']}${constants.CONTRACT_CALL_ENDPOINT}`,
+        constants.CONTRACT_CALL_ENDPOINT,
         callData
       );
     });
