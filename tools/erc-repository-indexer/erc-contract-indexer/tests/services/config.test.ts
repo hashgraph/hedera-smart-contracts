@@ -18,21 +18,20 @@
  *
  */
 
-import axios from 'axios';
+import { AxiosInstance } from 'axios';
 import { ConfigService } from '../../src/services/config';
-import constants from '../utils/constants';
+import testConstants from '../utils/constants';
 import { RegistryGenerator } from '../../src/services/registryGenerator';
-
-jest.mock('axios');
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+import { Helper } from '../../src/utils/helper';
+import constants from '../../src/utils/constants';
 
 describe('ConfigService', () => {
   let configService: ConfigService;
   const mockValidHederaNetwork = `testnet`;
   const mockValidMirrorNodeUrl = 'https://testnet.mirrornode.hedera.com';
-  const mockContractId = constants.MOCK_MN_CONTRACTS[0].contract_id;
-  const mockContractEvmAddress = constants.MOCK_MN_CONTRACTS[0].evm_address;
-  const mockStartingPoint = `/api/v1/contracts?limit=100&order=asc&contract.id=gt:${mockContractId}`;
+  const mockContractId = testConstants.MOCK_MN_CONTRACTS[0].contract_id;
+  const mockContractEvmAddress = testConstants.MOCK_MN_CONTRACTS[0].evm_address;
+  const mockStartingPoint = `/api/v1/contracts?limit=100&order=asc&contract.id=gte:${mockContractId}`;
   const registryGenerator = new RegistryGenerator();
 
   beforeEach(() => {
@@ -40,6 +39,38 @@ describe('ConfigService', () => {
     delete process.env.HEDERA_NETWORK;
     delete process.env.STARTING_POINT;
     delete process.env.MIRROR_NODE_URL;
+
+    jest.spyOn(Helper, 'buildAxiosClient').mockReturnValue({
+      mirrorNodeRestClient: {
+        get: jest
+          .fn()
+          .mockResolvedValue({ data: { contract_id: mockContractId } }),
+      } as any,
+      mirrorNodeWeb3Client: {} as jest.Mocked<AxiosInstance>,
+    });
+  });
+
+  it('should get the correct configurations', () => {
+    process.env.HEDERA_NETWORK = mockValidHederaNetwork;
+    process.env.MIRROR_NODE_URL = mockValidMirrorNodeUrl;
+    process.env.MIRROR_NODE_URL_WEB3 = mockValidMirrorNodeUrl;
+    const configService = new ConfigService();
+
+    expect(configService.getNetwork()).toEqual(mockValidHederaNetwork);
+    expect(configService.getMirrorNodeUrl()).toEqual(mockValidMirrorNodeUrl);
+    expect(configService.getMirrorNodeUrlWeb3()).toEqual(
+      mockValidMirrorNodeUrl
+    );
+  });
+
+  it('should not throw error even if MIRROR_NODE_URL_WEB3 is not set', () => {
+    process.env.HEDERA_NETWORK = mockValidHederaNetwork;
+    process.env.MIRROR_NODE_URL = mockValidMirrorNodeUrl;
+    delete process.env.MIRROR_NODE_URL_WEB3;
+
+    const configService = new ConfigService();
+
+    expect(configService.getMirrorNodeUrlWeb3()).toEqual('');
   });
 
   it('should throw an error when HEDERA_NETWORK is not configured', () => {
@@ -68,6 +99,17 @@ describe('ConfigService', () => {
     expect(() => {
       configService = new ConfigService();
     }).toThrow(/MIRROR_NODE_URL Is Not Properly Configured/);
+  });
+
+  it('should not throw an error if MIRROR_NODE_URL is invalid when network is not one of the PRODUCTION_NETWORKS', () => {
+    const localnet = 'localnet';
+    expect(constants.PRODUCTION_NETWORKS.includes(localnet)).toBeFalsy;
+
+    const invalid_url = 'invalid_url';
+    process.env.HEDERA_NETWORK = localnet;
+    process.env.MIRROR_NODE_URL = invalid_url;
+    const configService = new ConfigService();
+    expect(configService.getMirrorNodeUrl()).toEqual(invalid_url);
   });
 
   it('should not throw an error if HEDERA_NETWORK and MIRROR_NODE_URL are valid', () => {
@@ -101,10 +143,6 @@ describe('ConfigService', () => {
     process.env.HEDERA_NETWORK = mockValidHederaNetwork;
     process.env.MIRROR_NODE_URL = mockValidMirrorNodeUrl;
     process.env.STARTING_POINT = mockContractEvmAddress;
-
-    mockedAxios.get.mockResolvedValueOnce({
-      data: { contract_id: mockContractId },
-    }); // Second call succeeds
 
     configService = new ConfigService();
     const startingPoint =

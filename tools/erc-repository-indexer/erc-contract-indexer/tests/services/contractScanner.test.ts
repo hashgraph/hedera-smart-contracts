@@ -39,11 +39,20 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 const mockedHelper = Helper as jest.Mocked<typeof Helper>;
 
 describe('ContractScannerService', () => {
+  const mockValidMirrorNodeUrl = 'mock-mirror-node.com';
+  const mockValidMirrorNodeUrlWeb3 = 'mock-mirror-node-web3.com';
+
   let contractScannerService: ContractScannerService;
 
   beforeEach(() => {
+    mockedHelper.buildAxiosClient.mockReturnValue({
+      mirrorNodeRestClient: mockedAxios,
+      mirrorNodeWeb3Client: mockedAxios,
+    });
+
     contractScannerService = new ContractScannerService(
-      testConstants.MOCK_HEDERA_NETWORK
+      mockValidMirrorNodeUrl,
+      mockValidMirrorNodeUrlWeb3
     );
   });
 
@@ -99,7 +108,7 @@ describe('ContractScannerService', () => {
 
       expect(contractObject?.runtime_bytecode).toEqual(mockBytecode);
       expect(axios.get).toHaveBeenCalledWith(
-        `${contractScannerService['mirrorNodeBaseUrl']}${constants.GET_CONTRACT_ENDPOINT}/${contractId}`
+        constants.GET_CONTRACT_ENDPOINT + '/' + contractId
       );
     });
 
@@ -124,6 +133,47 @@ describe('ContractScannerService', () => {
 
       expect(contractObject?.runtime_bytecode).toEqual(mockBytecode);
       expect(axios.get).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('contractCallRequest', () => {
+    const callData = {
+      data: testConstants.MOCK_CONTRACT_CALL_RESPONSE.erc20.name.sighash,
+      to: testConstants.MOCK_MN_CONTRACTS[0].evm_address,
+    };
+
+    it('should send a contract call request successfully', async () => {
+      const mockResponse = { result: '0xabcdef' };
+      mockedAxios.post.mockResolvedValueOnce({ data: mockResponse });
+
+      const result = await contractScannerService.contractCallRequest(callData);
+
+      expect(result).toEqual(mockResponse.result);
+      expect(axios.post).toHaveBeenCalledWith(
+        constants.CONTRACT_CALL_ENDPOINT,
+        callData
+      );
+    });
+
+    it('should return null when there is an error', async () => {
+      mockedAxios.post.mockRejectedValue(new Error('Network Error'));
+
+      const result = await contractScannerService.contractCallRequest(callData);
+
+      expect(result).toBeNull();
+      expect(axios.post).toHaveBeenCalledTimes(1);
+    });
+
+    it('should retry on rate limit error', async () => {
+      mockedAxios.post
+        .mockRejectedValueOnce({ response: { status: 429 } }) // First call returns rate limit error
+        .mockResolvedValueOnce({ data: { result: '0xabcdef' } }); // Second call succeeds
+
+      mockedHelper.wait.mockResolvedValueOnce(undefined);
+      const result = await contractScannerService.contractCallRequest(callData);
+
+      expect(result).toEqual('0xabcdef');
+      expect(axios.post).toHaveBeenCalledTimes(2);
     });
   });
 });

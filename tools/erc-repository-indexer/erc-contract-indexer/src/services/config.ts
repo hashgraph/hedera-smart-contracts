@@ -41,6 +41,13 @@ export class ConfigService {
   /**
    * @private
    * @readonly
+   * @property {string} mirrorNodeUrlWeb3 - The URL for the Hedera Mirror Node Web3Module API.
+   */
+  private readonly mirrorNodeUrlWeb3: string;
+
+  /**
+   * @private
+   * @readonly
    * @property {string} startingPoint - The starting point for indexing, which can be a contract ID or a pagination pointer.
    */
   private readonly startingPoint: string;
@@ -48,10 +55,13 @@ export class ConfigService {
   constructor() {
     this.network = process.env.HEDERA_NETWORK || '';
     this.mirrorNodeUrl = process.env.MIRROR_NODE_URL || '';
+    this.mirrorNodeUrlWeb3 = process.env.MIRROR_NODE_URL_WEB3 || '';
     this.startingPoint = process.env.STARTING_POINT || '';
     this.validateConfigs();
 
-    console.log(`Indexing process initiated. Target network: ${this.network}`);
+    console.log(
+      `Indexing process initiated: network=${this.network}, mirrorNodeUrl=${this.mirrorNodeUrl}, mirrorNodeUrlWeb3=${this.mirrorNodeUrlWeb3}`
+    );
   }
 
   /**
@@ -66,13 +76,15 @@ export class ConfigService {
       );
     }
 
-    if (
-      !this.mirrorNodeUrl ||
-      !constants.MIRROR_NODE_URL_REGEX.test(this.mirrorNodeUrl)
-    ) {
-      throw new Error(
-        `MIRROR_NODE_URL Is Not Properly Configured: mirrorNodeUrl=${this.mirrorNodeUrl}`
-      );
+    if (constants.PRODUCTION_NETWORKS.includes(this.network)) {
+      if (
+        !this.mirrorNodeUrl ||
+        !constants.MIRROR_NODE_URL_REGEX.test(this.mirrorNodeUrl)
+      ) {
+        throw new Error(
+          `MIRROR_NODE_URL Is Not Properly Configured: mirrorNodeUrl=${this.mirrorNodeUrl}`
+        );
+      }
     }
 
     if (
@@ -135,7 +147,10 @@ export class ConfigService {
    * @throws {Error} If the contract is not found.
    */
   private async resolveFromEvmAddress(): Promise<string> {
-    const contractScanner = new ContractScannerService(this.network);
+    const contractScanner = new ContractScannerService(
+      this.mirrorNodeUrl,
+      this.mirrorNodeUrlWeb3
+    );
     const contractResponse = await contractScanner.fetchContractObject(
       this.startingPoint
     );
@@ -166,5 +181,13 @@ export class ConfigService {
    */
   getMirrorNodeUrl(): string {
     return this.mirrorNodeUrl;
+  }
+
+  /**
+   * Gets the URL of the mirror node web3module.
+   * @returns {string} The mirror node URL web3module.
+   */
+  getMirrorNodeUrlWeb3(): string {
+    return this.mirrorNodeUrlWeb3;
   }
 }
