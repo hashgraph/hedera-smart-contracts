@@ -19,11 +19,11 @@
  */
 
 import { AxiosInstance } from 'axios';
-import { ConfigService } from '../../src/services/config';
+import { ConfigService } from '../../../src/services/config';
 import testConstants from '../utils/constants';
-import { RegistryGenerator } from '../../src/services/registryGenerator';
-import { Helper } from '../../src/utils/helper';
-import constants from '../../src/utils/constants';
+import { RegistryGenerator } from '../../../src/services/registryGenerator';
+import { Helper } from '../../../src/utils/helper';
+import constants from '../../../src/utils/constants';
 
 describe('ConfigService', () => {
   let configService: ConfigService;
