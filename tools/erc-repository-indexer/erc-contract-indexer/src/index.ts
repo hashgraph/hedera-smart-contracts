@@ -30,7 +30,8 @@ export const main = async () => {
   const configService = new ConfigService();
   const registryGenerator = new RegistryGenerator();
   const contractScannerService = new ContractScannerService(
-    configService.getMirrorNodeUrl()
+    configService.getMirrorNodeUrl(),
+    configService.getMirrorNodeUrlWeb3()
   );
   const byteCodeAnalyzer = new ByteCodeAnalyzer();
 
