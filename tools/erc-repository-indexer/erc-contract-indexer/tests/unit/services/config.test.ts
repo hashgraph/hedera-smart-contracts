@@ -102,11 +102,11 @@ describe('ConfigService', () => {
   });
 
   it('should not throw an error if MIRROR_NODE_URL is invalid when network is not one of the PRODUCTION_NETWORKS', () => {
-    const localnet = 'localnet';
-    expect(constants.PRODUCTION_NETWORKS.includes(localnet)).toBeFalsy;
+    const localnode = 'local-node';
+    expect(constants.PRODUCTION_NETWORKS.includes(localnode)).toBeFalsy;
 
     const invalid_url = 'invalid_url';
-    process.env.HEDERA_NETWORK = localnet;
+    process.env.HEDERA_NETWORK = localnode;
     process.env.MIRROR_NODE_URL = invalid_url;
     const configService = new ConfigService();
     expect(configService.getMirrorNodeUrl()).toEqual(invalid_url);

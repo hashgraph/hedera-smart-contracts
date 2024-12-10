@@ -26,7 +26,7 @@ export default {
   ERC_721_JSON_FILE_NAME: 'erc-721.json',
   GET_CONTRACTS_LIST_NEXT_POINTER_JSON_FILE_NAME: 'next-pointer.json',
   PRODUCTION_NETWORKS: ['previewnet', 'testnet', 'mainnet'],
-  NETWORK_REGEX: /^(localnet|previewnet|testnet|mainnet)$/,
+  NETWORK_REGEX: /^(local-node|previewnet|testnet|mainnet)$/,
   MIRROR_NODE_URL_REGEX:
     /^https:\/\/(previewnet|testnet|mainnet)\.mirrornode\.hedera\.com$/,
   STARTING_POINT_REGEX:
