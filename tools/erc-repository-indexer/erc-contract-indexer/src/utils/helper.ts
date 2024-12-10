@@ -18,6 +18,7 @@
  *
  */
 
+import axios, { AxiosInstance } from 'axios';
 import path from 'path';
 import constants from './constants';
 
@@ -35,15 +36,16 @@ export class Helper {
   }
 
   /**
-   * Builds a URL for the mirror node API by combining the base URL with either a pagination token or the default endpoint
-   * @param {string} mirrorNodeBaseUrl - The base URL of the mirror node API
+   * Constructs a URL based on the provided `next` parameter. If `next` is null,
+   * it returns a default URL with query parameters for fetching contracts.
+   *
    * @param {string | null} next - The pagination token for the next set of results, or null to use default endpoint
    * @returns {string} The complete URL to query the mirror node API
    */
-  static buildUrl(mirrorNodeBaseUrl: string, next: string | null): string {
+  static buildUrl(next: string | null): string {
     return next
-      ? `${mirrorNodeBaseUrl}${next}`
-      : `${mirrorNodeBaseUrl}${constants.GET_CONTRACT_ENDPOINT}?limit=100&order=asc`;
+      ? next
+      : `${constants.GET_CONTRACT_ENDPOINT}?limit=100&order=asc`;
   }
 
   /**
@@ -57,12 +59,36 @@ export class Helper {
 
   /**
    * Builds a starting point URL for fetching contracts from the mirror node API.
-   * The URL is constructed to retrieve contracts with IDs greater than the specified contract ID.
+   * The URL is constructed to retrieve contracts with IDs greater than or equal to the specified contract ID.
    *
    * @param {string} contractId - The contract ID to use as a reference for the starting point.
    * @returns {string} The constructed starting point URL for the mirror node API.
    */
   static buildStartingPoint(contractId: string): string {
-    return `/api/v1/contracts?limit=100&order=asc&contract.id=gt:${contractId}`;
+    return `/api/v1/contracts?limit=100&order=asc&contract.id=gte:${contractId}`;
+  }
+
+  /**
+   * Creates and returns Axios client instances for interacting with the Hedera Mirror Node REST API
+   * and Web3-compatible API.
+   *
+   * @param {string} mirrorNodeUrl - The base URL for the Hedera Mirror Node REST API.
+   * @param {string} mirrorNodeUrlWeb3 - The base URL for the Hedera Mirror Node Web3-compatible API.
+   *                                     If not provided, defaults to the value of `mirrorNodeUrl`.
+   * @returns {{ mirrorNodeRestClient: AxiosInstance, mirrorNodeWeb3Client: AxiosInstance }}
+   */
+  static buildAxiosClient(
+    mirrorNodeUrl: string,
+    mirrorNodeUrlWeb3: string
+  ): {
+    mirrorNodeRestClient: AxiosInstance;
+    mirrorNodeWeb3Client: AxiosInstance;
+  } {
+    return {
+      mirrorNodeRestClient: axios.create({ baseURL: mirrorNodeUrl }),
+      mirrorNodeWeb3Client: axios.create({
+        baseURL: mirrorNodeUrlWeb3 || mirrorNodeUrl,
+      }),
+    };
   }
 }

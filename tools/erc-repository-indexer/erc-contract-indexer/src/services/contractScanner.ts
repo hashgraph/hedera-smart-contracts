@@ -18,7 +18,7 @@
  *
  */
 
-import axios, { AxiosError } from 'axios';
+import { AxiosError, AxiosInstance } from 'axios';
 import constants from '../utils/constants';
 import { Helper } from '../utils/helper';
 import {
@@ -32,12 +32,24 @@ export class ContractScannerService {
   /**
    * @private
    * @readonly
-   * @property {string} mirrorNodeBaseUrl - The base URL of the Hedera Mirror Node API used for retrieving contract data.
+   * @property {AxiosInstance} mirrorNodeRestClient - Axios client instance for interacting with the Hedera Mirror Node REST API.
    */
-  private readonly mirrorNodeBaseUrl: string;
+  private readonly mirrorNodeRestClient: AxiosInstance;
 
-  constructor(mirrorNodeUrl: string) {
-    this.mirrorNodeBaseUrl = mirrorNodeUrl;
+  /**
+   * @private
+   * @readonly
+   * @property {AxiosInstance} mirrorNodeWeb3Client - Axios client instance for interacting with the Hedera Mirror Node Web3Module API.
+   */
+  private readonly mirrorNodeWeb3Client: AxiosInstance;
+
+  constructor(mirrorNodeUrl: string, mirrorNodeUrlWeb3: string) {
+    const mirrorNodeClients = Helper.buildAxiosClient(
+      mirrorNodeUrl,
+      mirrorNodeUrlWeb3
+    );
+    this.mirrorNodeRestClient = mirrorNodeClients.mirrorNodeRestClient;
+    this.mirrorNodeWeb3Client = mirrorNodeClients.mirrorNodeWeb3Client;
   }
 
   /**
@@ -49,11 +61,11 @@ export class ContractScannerService {
   async fetchContracts(
     next: string | null = null
   ): Promise<{ contracts: MirrorNodeContract[]; links: Links } | null> {
-    const url = Helper.buildUrl(this.mirrorNodeBaseUrl, next);
-    console.log('Fetching contract batch from URL:', url);
+    const getAllContractPath = Helper.buildUrl(next);
+    console.log('Fetching contract batch from URL:', getAllContractPath);
 
     try {
-      const response = await axios.get(url);
+      const response = await this.mirrorNodeRestClient.get(getAllContractPath);
       return response.data;
     } catch (error) {
       return this.handleAxiosError(error, this.fetchContracts, next);
@@ -70,8 +82,8 @@ export class ContractScannerService {
     contractId: string
   ): Promise<MirrorNodeContractResponse | null> {
     try {
-      const response = await axios.get(
-        `${this.mirrorNodeBaseUrl}${constants.GET_CONTRACT_ENDPOINT}/${contractId}`
+      const response = await this.mirrorNodeRestClient.get(
+        `${constants.GET_CONTRACT_ENDPOINT}/${contractId}`
       );
       return response.data;
     } catch (error) {
@@ -115,8 +127,8 @@ export class ContractScannerService {
    */
   async contractCallRequest(callData: ContractCallData): Promise<any> {
     try {
-      const response = await axios.post(
-        `${this.mirrorNodeBaseUrl}${constants.CONTRACT_CALL_ENDPOINT}`,
+      const response = await this.mirrorNodeWeb3Client.post(
+        constants.CONTRACT_CALL_ENDPOINT,
         callData
       );
       return response.data.result;

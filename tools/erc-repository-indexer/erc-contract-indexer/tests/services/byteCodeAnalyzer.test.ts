@@ -34,11 +34,14 @@ describe('ByteCodeAnalyzer', () => {
   let contractScannerService: ContractScannerService;
   const mockContracts: MirrorNodeContract[] = testConstants.MOCK_MN_CONTRACTS;
   const mockContractCallResponse = testConstants.MOCK_CONTRACT_CALL_RESPONSE;
+  const mockValidMirrorNodeUrl = 'mock-mirror-node.com';
+  const mockValidMirrorNodeUrlWeb3 = 'mock-mirror-node-web3.com';
 
   beforeEach(() => {
     byteCodeAnalyzer = new ByteCodeAnalyzer();
     contractScannerService = new ContractScannerService(
-      testConstants.MOCK_HEDERA_NETWORK
+      mockValidMirrorNodeUrl,
+      mockValidMirrorNodeUrlWeb3
     );
   });
 
