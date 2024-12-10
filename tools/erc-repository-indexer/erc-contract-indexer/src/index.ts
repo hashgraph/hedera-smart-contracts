@@ -18,65 +18,14 @@
  *
  */
 
-import dotenv from 'dotenv';
-import { ByteCodeAnalyzer } from './services/byteCodeAnalyzer';
-import { ConfigService } from './services/config';
-import { ContractScannerService } from './services/contractScanner';
-import { RegistryGenerator } from './services/registryGenerator';
+import { ercRegistryRunner } from './runner';
 
-dotenv.config();
-
-export const main = async () => {
-  const configService = new ConfigService();
-  const registryGenerator = new RegistryGenerator();
-  const contractScannerService = new ContractScannerService(
-    configService.getMirrorNodeUrl(),
-    configService.getMirrorNodeUrlWeb3()
-  );
-  const byteCodeAnalyzer = new ByteCodeAnalyzer();
-
+(async () => {
   try {
-    let next = await configService.resolveStartingPoint(registryGenerator);
-    await processContracts(
-      next,
-      contractScannerService,
-      byteCodeAnalyzer,
-      registryGenerator
-    );
-  } catch (error) {
-    console.error('Error during the indexing process:', error);
+    await ercRegistryRunner();
+    console.log('Runner executed successfully.');
+  } catch (err) {
+    console.error('Error executing runner:', err);
+    process.exit(1); // Exit with failure status
   }
-};
-
-const processContracts = async (
-  next: string | null,
-  contractScannerService: ContractScannerService,
-  byteCodeAnalyzer: ByteCodeAnalyzer,
-  registryGenerator: RegistryGenerator
-) => {
-  do {
-    const fetchContractsResponse =
-      await contractScannerService.fetchContracts(next);
-
-    if (!fetchContractsResponse || !fetchContractsResponse.contracts.length) {
-      console.warn('No contracts found.');
-      return;
-    }
-
-    next = fetchContractsResponse.links.next;
-
-    const ercContracts = await byteCodeAnalyzer.categorizeERCContracts(
-      contractScannerService,
-      fetchContractsResponse.contracts
-    );
-
-    // let the registry update process to run asynchronously in the background
-    registryGenerator.generateErcRegistry(
-      ercContracts.erc20Contracts,
-      ercContracts.erc721Contracts
-    );
-    registryGenerator.updateNextPointer(next);
-  } while (next);
-};
-
-main().then();
+})();
