@@ -1,0 +1,3122 @@
+[
+  {
+    "contractId": "0.0.14902",
+    "address": "0x0000000000000000000000000000000000003a36",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.15701",
+    "address": "0x0000000000000000000000000000000000003d55",
+    "name": "CUSD",
+    "symbol": "CUSD",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.15707",
+    "address": "0x0000000000000000000000000000000000003d5b",
+    "name": "CUSD",
+    "symbol": "CUSD",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.18586",
+    "address": "0x000000000000000000000000000000000000489a",
+    "name": "CUSD",
+    "symbol": "CUSD",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.20354",
+    "address": "0x0000000000000000000000000000000000004f82",
+    "name": "REJOLUT",
+    "symbol": "REJO",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.21261",
+    "address": "0x000000000000000000000000000000000000530d",
+    "name": "HbarToken",
+    "symbol": "HT",
+    "totalSupply": 10000000,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.27482",
+    "address": "0x0000000000000000000000000000000000006b5a",
+    "name": "TOKENWALLET",
+    "symbol": "TW",
+    "totalSupply": 1234567,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.27879",
+    "address": "0x0000000000000000000000000000000000006ce7",
+    "name": "TOKENWALLET",
+    "symbol": "TW",
+    "totalSupply": 10,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.28435",
+    "address": "0x0000000000000000000000000000000000006f13",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.47310",
+    "address": "0x000000000000000000000000000000000000b8ce",
+    "name": "Wrapped Hbar",
+    "symbol": "WHBAR",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.47764",
+    "address": "0x000000000000000000000000000000000000ba94",
+    "name": "PhiCoin Gold",
+    "symbol": "ΦAu",
+    "totalSupply": 3110347680,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.47770",
+    "address": "0x000000000000000000000000000000000000ba9a",
+    "name": "PhiCoin Gold",
+    "symbol": "ΦAU",
+    "totalSupply": 3110347680,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.47774",
+    "address": "0x000000000000000000000000000000000000ba9e",
+    "name": "PhiCoin Silver",
+    "symbol": "ΦAG",
+    "totalSupply": 31103476800,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.1015433",
+    "address": "0x00000000000000000000000000000000000f7e89",
+    "name": "Wrapped Hbar",
+    "symbol": "WHBAR",
+    "totalSupply": 60554305877683,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.1100989",
+    "address": "0x000000000000000000000000000000000010ccbd",
+    "name": "ClubPenguinToken",
+    "symbol": "CPT",
+    "totalSupply": 100000000000000,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.1128603",
+    "address": "0x000000000000000000000000000000000011389b",
+    "name": "MyToken",
+    "symbol": "MTK",
+    "totalSupply": 1.222e+22,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1321086",
+    "address": "0x442af81eaad6c27d4c7e029c935603bae96c66e8",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 20687611777,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1321164",
+    "address": "0xd18f1922cffa8f4bbc47793a6d198120447ad8e4",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 6911745567811,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1321478",
+    "address": "0x189079f6bac1f07c99308faaa380ec0d14e62ee1",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1321481",
+    "address": "0x49483a71140894d2381fed43f9dd3b6462fde657",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 35614707,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1321496",
+    "address": "0xf4d8e05ce43bec2179a7bdc1313dc56b16edd96a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1189539063,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1321517",
+    "address": "0x6b15d05f55a60341d738250f78774cb395ecf05a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 42719902011,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1321519",
+    "address": "0x9dda110649fb2969c705e23b338f6ab093027ac9",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 111556211800,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1321521",
+    "address": "0x9a41de1112a920d491e064519d83edee4eb90703",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 160126,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1321537",
+    "address": "0x6e38ecababba37ffb94150bd53c4593f72e1f920",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1321558",
+    "address": "0x8164516ca825293c46e5eefe3cff44b38b9227ab",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 2131969,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1321564",
+    "address": "0x8cb5be7ccda89b4f1b2014a0b75d9cdf31c94e4b",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 7865590944,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1321573",
+    "address": "0x0a7a675861f1686dcb9e33dcfbe9cc2f196eb9b2",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 6544920305,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1323828",
+    "address": "0x581f8294b4a0779d723bb4e289a1f4ee4c196b6a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 65315961067087,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1323836",
+    "address": "0x7e4e0a89ce690e6f5d4c9237a54e96dcc866065d",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 57930201,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1323911",
+    "address": "0xb62dc6e5f021dc2e1acc61f9fdd66b768f59622e",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 3279602653065,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1323915",
+    "address": "0xe001dde8f149a96b658ed8c6875a74c445927cdc",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 4288443375,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1324439",
+    "address": "0x2296620de98cb02a48dadb339bb11a1c9fa92f43",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1324858",
+    "address": "0x549b5cce7eebd38cc09f6547cb981bf3825b9d06",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1325020",
+    "address": "0x9d87dffb6b4c9d01f9545b49642ff6b0bbbfc3a4",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 3874516549,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1325027",
+    "address": "0xa06127077bc963c17160cda03aa00082e88806a0",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1326601",
+    "address": "0xb1eaf5bbb341ffb676f49ab8ba2714c398d8b164",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1327041",
+    "address": "0x2a4164f81ae882bf7a0a958622e22005e20a915a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1331865",
+    "address": "0x0000000000000000000000000000000000145299",
+    "name": "PutinGrow",
+    "symbol": "PUTINGROW",
+    "totalSupply": 1000000000000000000,
+    "decimals": 9
+  },
+  {
+    "contractId": "0.0.1334385",
+    "address": "0x9c4f289e3365986293379a2f07a437420985bddf",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 10000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1335121",
+    "address": "0x7a6153eef8626819534e50b6a9a9b11d992ed6dd",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1344113",
+    "address": "0x5cb7f7164df83557c791374d4f474149d2117c41",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 48639481048833,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1358819",
+    "address": "0x000000000000000000000000000000000014bbe3",
+    "name": "zvsfhpSdMh",
+    "symbol": "UsPUa",
+    "totalSupply": 10000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1366082",
+    "address": "0x27b3b74d3e371901cc5b579b07e89f1cc0dbf4a7",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1371155",
+    "address": "0x362606dc8ccaf2805d2e898da22156f353a2906e",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1385358",
+    "address": "0x54fa7533012b4a1373fcfbadde33a6da6653e24f",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1396001",
+    "address": "0x74c83727ed85b52b5b7f463f2425cdf1468a9205",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1409436",
+    "address": "0xd416a437f588762a1171056827925ead246da04b",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1412565",
+    "address": "0xba35d9fc4c0b422c680ee8d628c2ccf44ee65f50",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 500500,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1412832",
+    "address": "0x88e1e76f39032a936cf80185f50e335e669aca53",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1414374",
+    "address": "0xfa65dd60f176b3fb88eddfad511706796a9eb900",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 313965959,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1414441",
+    "address": "0xf68a4d27bac7e83f1867e35f46eb16a633a7d0a0",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 428735665,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1414822",
+    "address": "0xf981fa7d5db3cf311e46d5e42ef052cedb850234",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1446271",
+    "address": "0xc8d4829279f50bf982433b4c850c5c3fbf1a9bcc",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 466379723,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1450140",
+    "address": "0x31ce1372027a82171fc1b15f18871fd56d17f81a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1450144",
+    "address": "0x6e6cdebe922662464d20e0df15636a28fb874a97",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1450817",
+    "address": "0x11c5ba23e7cfa42a999163242e86b9253284054e",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1451054",
+    "address": "0x27a5fc7d40533e53245c4793ca985447e4374d74",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1451056",
+    "address": "0xf7fbed0cabfa839faaab2676fd6d37c189593cbc",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1451061",
+    "address": "0x103e48d35781a7ce56564dbb4553d169a959c130",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1451063",
+    "address": "0xb50d35e59d06faa546b92b9fbfa667b40aa4f734",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1451428",
+    "address": "0x70fbd57ef58b8ad87046274342bf7afece7db246",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1458192",
+    "address": "0xdffdc4c3a8554fef34414a690d96053cfee42eac",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 6036886,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1459465",
+    "address": "0x0000000000000000000000000000000000164509",
+    "name": "BattleCoins",
+    "symbol": "BACO",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.1459473",
+    "address": "0x0000000000000000000000000000000000164511",
+    "name": "BattleCoins",
+    "symbol": "BACO",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.1462442",
+    "address": "0x791940f4cfe9309b9766e2c3818145caf8791e68",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 122404,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1467793",
+    "address": "0x07390065bbfef3562a97c86c9b97b494dd9c06a7",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 50000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1467869",
+    "address": "0xe6c16e3b4e86e0c5b93ae3c126fcd682ddbb30ec",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1473819",
+    "address": "0x906de1de8412924986fc3c6f6496d4daa1d2980a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1474629",
+    "address": "0x744488530bc80275e7e6854e031c99f994991891",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1475183",
+    "address": "0xdddcd22e0da3d7982be87c0c3c5d2dae95e384e7",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1475184",
+    "address": "0x0d6515faa00808c819435d9972c79b2748281bc8",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1475187",
+    "address": "0x92393d5e469b5e3ef5ddce2eed2e002e1ebc3254",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1476053",
+    "address": "0x9a5ad85eac8f3d176750b9d25ecf0e6930de5556",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1477370",
+    "address": "0x591699db7a7112bfc0bd6d7a913b88ebc26bb220",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1477452",
+    "address": "0xe97418354e8c4c2961f186fa9824461261ad62e2",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 4472135954,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1477498",
+    "address": "0xa05c62f195d508e013a09f4fa7ce7ddcb9b1c937",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1483461",
+    "address": "0x37522f48cad2ab403e391dd0b7daa5d8ea2c0f79",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 100144145,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1485848",
+    "address": "0x069ee99943aa052a8ffa48a4d34efa0e58b923c7",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1485861",
+    "address": "0x6d0a18de90ea79c2f75ac519861e0662f15e39b1",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 6523136,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1488252",
+    "address": "0x387972aa050266bf329fff2a7e530f60377fc5dc",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1488286",
+    "address": "0x2f3e71864178a93887e11bbee849d16d288c5b60",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1488288",
+    "address": "0x5c5a02b5c059ef7a9408b24ecc070b346196b981",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1488289",
+    "address": "0xa007436df285216a4f6051b5ee116b36b806dbc5",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1488915",
+    "address": "0x9da6b937470432da0523fcaaa007d69612067f69",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1488924",
+    "address": "0xbbf0de872084501b9efcac7ab62faa21d02f6d8a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 3322398000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1488935",
+    "address": "0x0ba07d52b1894593fa3270e88728ad2d37021be4",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 15112648436,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1489073",
+    "address": "0xc13d17ff0366be91ee802cbb2d4fce0083707a06",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1489078",
+    "address": "0x53e09a52d766ccbc11899d8c99b742945b6eb765",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1489124",
+    "address": "0x5172391fde0d6ec5789aa003be49d21aed6ceb50",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1491381",
+    "address": "0x23b8c670442d9a5efbf62a669fe8eb2ee13506d0",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1493825",
+    "address": "0xe247e7c561276ce5ea976cd2d483990498c7f5bd",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1494708",
+    "address": "0x90e948717e509e9af7ffae4996fe5cd6a4c89388",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1495929",
+    "address": "0x11e4c75c824aee0b5d5302dfb044676c7cee2561",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1495930",
+    "address": "0xa1e5428607468f2586a6442180071b9462d465dd",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1497677",
+    "address": "0x5aca0ce5d24417d0e097a20f1e12d11b069c6de9",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1497797",
+    "address": "0xe6af53332246219551f90115a7702e10986c4cb3",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1497799",
+    "address": "0x6cf5c072d71d29e7ee57be8b421a3246a408e088",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1665091",
+    "address": "0x130b90e3233b42a4d6b8084b48008bfc0ef01df3",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1671009",
+    "address": "0x47835939062bc475490add35fae5fcdec6dabf95",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1671011",
+    "address": "0x90959684abd6013ed1a2c2822d36a4ce2a740bf0",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1671012",
+    "address": "0x71e02b4f214b168798d90174d3ef7f7cbb542af1",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1671026",
+    "address": "0x72214678d1d984cd76ac8daf29ab60e9364b7e4b",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1671076",
+    "address": "0xcd8d7baf1eedca9c48bfd903141669d25e5ae617",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1671196",
+    "address": "0x9283e675003008004973461715fea181a8164e6d",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1740860",
+    "address": "0xf00b8e6c6c6372f5f63a6c875002c12ee0e4f0d0",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1778107",
+    "address": "0x961147b21d222312e2fa8c41e9bbf2126eb89fa6",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 7723880,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1886292",
+    "address": "0xcf617b80319eb859f96f197989de70c7da44e926",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1977759",
+    "address": "0x781f2a3818245043c97679690d34db2ca275d7e6",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1986078",
+    "address": "0x3904ad0e5c86c9c3ac452cd61afe1776bf92cecd",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 69762251118643,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1986162",
+    "address": "0x0aa81a482da9a402063b5e48066620f7f46ea171",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 4857369494,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1986560",
+    "address": "0x02298b30c2aa641ec2ed642125e3bf962c0637d5",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1986572",
+    "address": "0x606854f6dba29caf562d5671550987dd7e159aea",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 41690910,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1986579",
+    "address": "0x17b86812b12ff4bbaaab99c508b889b4e8ebd90a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 28778987,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1986581",
+    "address": "0xf9eec4f1b074a2c1de32a34f9f99564985799c7a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1986597",
+    "address": "0xfbc8df7a950556413485af86097b10fd9a8d9a1a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1702351315,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1986618",
+    "address": "0x7f76a37b7915210ff21c039c12154f8884128a48",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 122474487,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1986641",
+    "address": "0xd36b6f37b825a22b0c4552c7807ae7663e68f810",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1996547",
+    "address": "0x9ddf6cfb825adb4458feaee71142c2e1d5d9477e",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1997618",
+    "address": "0x40fba927aef76f5f6e6bc4263b9b98de302b883c",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2012238",
+    "address": "0x657194d752cb399cfc7ed0550fc3c23c3ac4e773",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2016872",
+    "address": "0x58b9c4815f8f3d46928e1765bd2b024b82a9c77e",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 6964827736222,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2021991",
+    "address": "0x04e10493d0a4724f1b9a11516270175321762fc4",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2022101",
+    "address": "0x42ab31dc14de6787f82e236c7b17f22c29892bad",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2022287",
+    "address": "0xec9396fd1019a6644534ce7905183f495bc86baf",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 2364864575276,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2022990",
+    "address": "0x9869ad7ee5e503b37dacdb072a1a2d96a6874e41",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2023059",
+    "address": "0xca6e6938159fa4b0f6b6c34a63e4ec6deecbbb9d",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2023065",
+    "address": "0xde7faff219bb968a09b0d4aec043d14f63925550",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2023068",
+    "address": "0xa4aaa1a2b2ca0a34d2039e970edd231b3b8d416a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2023542",
+    "address": "0xed26482532593309b929cd484d3bc94d51a0d391",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2023554",
+    "address": "0xa07b79793e6eb105d88d82d249e5b41603f4976a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2024508",
+    "address": "0xf81434b0924c1fe8e4558d263fc77a2c3e0c7ecd",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2024810",
+    "address": "0xf142200f5195e5802ebad1e13788ec806f57c0c8",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 40906152,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2080602",
+    "address": "0xb552a6c5d6cb3602ae34b83eed22df13e037adb0",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 24176792,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2086139",
+    "address": "0x3e294197feb7ba7c9f738d6b8020741250ab5940",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2089231",
+    "address": "0x5c93f5dbb67da372cc1790cfd450ad9d083bf166",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 13372809,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2089235",
+    "address": "0xbed14f5e8dcf9fdcfd9f487884e5a899bce48c03",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 441947503,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2105520",
+    "address": "0xa501b838ce05670a7fc59062e90b78dd0631bef7",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 624223675801,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2105529",
+    "address": "0x7ea5c6153afc2dd1b9503c02d6ea344ebb9c6d28",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1151120737,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2105535",
+    "address": "0xefbb5200f3ad0209e84be08b40127c1d8fd9ca70",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2105539",
+    "address": "0x9df76caeebda5c7f7e13769c49e7cdc809fd3ffa",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 137039139263,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2105541",
+    "address": "0x095cc0bf1e0482599dd565cb3543c307dd788e6a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 222256387,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2106167",
+    "address": "0x0000000000000000000000000000000000202337",
+    "name": "Test",
+    "symbol": "T",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.2110967",
+    "address": "0x00000000000000000000000000000000002035f7",
+    "name": "Test",
+    "symbol": "T",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.2131436",
+    "address": "0xc332a4132c3ae48142860b7639c1f43105910b5b",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2131453",
+    "address": "0x9549d5469314061960e8b630a5b15f0f5a2c172e",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2131458",
+    "address": "0xe2223075e6fc2a438933d2a026d6162f97838696",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2131585",
+    "address": "0xf2e5868582287636fcad1f76e855dedde3ee404d",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2134348",
+    "address": "0x27bfd16619a097a8efdf3834d1f3f01892743b58",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 200000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2148458",
+    "address": "0x6e96d2d7250fb9a648f4f2ea2d10f2fdcc9d3581",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2150845",
+    "address": "0xaf811fbfc38217eb15e4d85037842fa27cfba0bb",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 2645751311,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2158402",
+    "address": "0xd0d144891f66d4fe248d2d306979a7bc0744935d",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2162031",
+    "address": "0xfee63a8a3064a2a6c1fff8de1b39b494022253de",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2172069",
+    "address": "0x9b07949e426bfbe7867a612329f21ef42bafc9f8",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2174298",
+    "address": "0x0000000000000000000000000000000000212d5a",
+    "name": "Test",
+    "symbol": "T",
+    "totalSupply": 3000,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.2174328",
+    "address": "0x0000000000000000000000000000000000212d78",
+    "name": "Test",
+    "symbol": "T",
+    "totalSupply": 4000,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.2179869",
+    "address": "0x000000000000000000000000000000000021431d",
+    "name": "MyToken",
+    "symbol": "TKN",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2179870",
+    "address": "0x000000000000000000000000000000000021431e",
+    "name": "MyToken",
+    "symbol": "TKN",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2180398",
+    "address": "0x000000000000000000000000000000000021452e",
+    "name": "MyToken",
+    "symbol": "TKN",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2186200",
+    "address": "0x8c030eddfed1319303425a3c41665ba42a8138eb",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2189425",
+    "address": "0xaa9414a978f607cf2933e7ba3e717e25296db8bf",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2198249",
+    "address": "0x4c0032d1386767a95672394ba2314a3ed085a4d5",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2198479",
+    "address": "0x8d161dd3a06c46a1994f6a5cbed196a95ea26ea8",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2198513",
+    "address": "0xc4da5ca68a0499010b6696f22378a384c7044199",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2198532",
+    "address": "0xb2d8736f6a12a3e01730454687a3383d3007a499",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2198533",
+    "address": "0xa8af37a0b221156d3608326640a7a37d38177d1b",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2198573",
+    "address": "0xa833fa11d50a95b0b405867e3a4e888ea1725e3e",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 547722,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2198576",
+    "address": "0xc95289080155c08c8ff035bd94010903699e7e23",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 10594,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2198588",
+    "address": "0x97c956c53364c807cb4b60354768ae20c66b1d70",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 6407,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2234822",
+    "address": "0xaf02d687fb9eed3e77cfe61623eac7429348373b",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2260540",
+    "address": "0xab54e9d48bcd562caddc03f1da38de63ae6e96c5",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2261251",
+    "address": "0xea7c502d58374c1e4d4db0dc3349fc8818df1e30",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2483189",
+    "address": "0x3a0bbedfc2b8f910733abd606f63cd5beaab0844",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 19899,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2638512",
+    "address": "0x94b8df72b66616349f9135f96945b6e4b318ce9e",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2849202",
+    "address": "0x00000000000000000000000000000000002b79b2",
+    "name": "Wrapped Hbar",
+    "symbol": "WHBAR",
+    "totalSupply": 99999700,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.2906772",
+    "address": "0x00000000000000000000000000000000002c5a94",
+    "name": "Wrapped Hbar",
+    "symbol": "WHBAR",
+    "totalSupply": 10100000008,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.2918781",
+    "address": "0x00000000000000000000000000000000002c897d",
+    "name": "Wrapped Hbar",
+    "symbol": "WHBAR",
+    "totalSupply": 5100000008,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.2926466",
+    "address": "0xda832d309ced5e69c6d54c5515f873303ba64a51",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2928837",
+    "address": "0x475a4c3ca4978753248a907827653388d6225750",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2934593",
+    "address": "0x00000000000000000000000000000000002cc741",
+    "name": "Wrapped Hbar",
+    "symbol": "WHBAR",
+    "totalSupply": 0,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.2934623",
+    "address": "0x00000000000000000000000000000000002cc75f",
+    "name": "Wrapped Hbar",
+    "symbol": "WHBAR",
+    "totalSupply": 0,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.2934659",
+    "address": "0x00000000000000000000000000000000002cc783",
+    "name": "Wrapped Hbar",
+    "symbol": "WHBAR",
+    "totalSupply": 0,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.2934689",
+    "address": "0x00000000000000000000000000000000002cc7a1",
+    "name": "Wrapped Hbar",
+    "symbol": "WHBAR",
+    "totalSupply": 0,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.2934740",
+    "address": "0x00000000000000000000000000000000002cc7d4",
+    "name": "Wrapped Hbar",
+    "symbol": "WHBAR",
+    "totalSupply": 0,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.2934795",
+    "address": "0x00000000000000000000000000000000002cc80b",
+    "name": "Wrapped Hbar",
+    "symbol": "WHBAR",
+    "totalSupply": 0,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.2934819",
+    "address": "0x00000000000000000000000000000000002cc823",
+    "name": "Wrapped Hbar",
+    "symbol": "WHBAR",
+    "totalSupply": 1187612504617884,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.2935280",
+    "address": "0x53bd01dcf3dffb9dfe241793d6b79d90079e0f48",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1641428670691,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2935290",
+    "address": "0x5718f1127e025c6745835facf551283481630423",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 819560417308019,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2935295",
+    "address": "0x635fa94b5bef0de9a59b8ed7a9aee3d9d8eaba37",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 899823012252176,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2935301",
+    "address": "0xc34800c63db3dd6655783e49cadecf32d7f94e7a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 3080453043284,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2935305",
+    "address": "0x0a0f03cbb50b0c9ae160dc5c3c87ac6074ce3a8d",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 468503813726,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2935308",
+    "address": "0x1c78852bcb1d8340baea7cc22729c38e646682b3",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 42939293,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2935344",
+    "address": "0x9a21d544829b3939b87cab8140a37827472cbbea",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2935350",
+    "address": "0x23a94e80f5390a66e6a6e14b3041f25811f91b31",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 491014311141,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2935363",
+    "address": "0x8a55d80453795ccbee2d3f3b1a63ef62b46a785c",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 2812665785,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2935967",
+    "address": "0x760cc855e7d2be294f8a4270d989987c655c54b1",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2937324",
+    "address": "0xb6098f15c0537dd69a017fb907332ebed6b69b45",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 66912540671,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2937705",
+    "address": "0xc660d5e7951c0926270e231ca9d28ef3203c2317",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1720779542905,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2937709",
+    "address": "0xca833cd33bc9f4a92171dd70b4f32086cdf08e54",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2937712",
+    "address": "0xd18f8677f4cfa455f5fdee0fa36c8a3a5cda4f23",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1324835556,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2937720",
+    "address": "0x087e68bc9cec7e329a81997cced3ef6121b7a67a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 194853082,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2937734",
+    "address": "0xea8f005c7f2e19da7dc583757b128e41eed35e0c",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 389606980,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2946103",
+    "address": "0xd0d1e1b7ce63d8c3df19f9923705661fde0aa34b",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2962621",
+    "address": "0x0242153dc134c9a8ad0bfc0efd7fb8bd6310e7a9",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 18999143073516,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2967033",
+    "address": "0x5806fe611c6e4c40ba0ba089c08970c429539484",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2997324",
+    "address": "0x4c9af28ae82c01464f2b41124dcb310c1ccd6254",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 30374309645611,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3053291",
+    "address": "0x00000000000000000000000000000000002e96eb",
+    "name": "APU Token",
+    "symbol": "APU",
+    "totalSupply": 1e+22,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3053427",
+    "address": "0x00000000000000000000000000000000002e9773",
+    "name": "APU Token",
+    "symbol": "APU",
+    "totalSupply": 1e+22,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3053476",
+    "address": "0x00000000000000000000000000000000002e97a4",
+    "name": "APU Token",
+    "symbol": "APU",
+    "totalSupply": 1e+22,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3053731",
+    "address": "0x00000000000000000000000000000000002e98a3",
+    "name": "APU Token",
+    "symbol": "APU",
+    "totalSupply": 1e+22,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3053767",
+    "address": "0x00000000000000000000000000000000002e98c7",
+    "name": "APU Token",
+    "symbol": "APU",
+    "totalSupply": 1e+22,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3054044",
+    "address": "0x00000000000000000000000000000000002e99dc",
+    "name": "APU Token",
+    "symbol": "APU",
+    "totalSupply": 1e+22,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3071524",
+    "address": "0x11f65675482fe6b14069669b8fed2af4ea0548c8",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3071530",
+    "address": "0xd4dd9c3eddd78e8289e424304d0d821fb767d039",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3113305",
+    "address": "0x93805e37f1375e79df3e129025afad3a3ed22cb3",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 418330013,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3131347",
+    "address": "0xd0b915b2c93aae7d08487dfe77eebc0a4820a862",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3168006",
+    "address": "0xa04e1d7b414745ea5777b76e3712d229be33492c",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 227473714100,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3212120",
+    "address": "0x0d4e65163a14452a68f2771dbd34e7c0c51e5157",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 3162277660,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3240634",
+    "address": "0xbbe3b2ca378683808bcadf1df31d53c720087e52",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 10000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3242729",
+    "address": "0x92992a47ab49d85d2f05ae451cde347e8b700338",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 10000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3273617",
+    "address": "0xbc9d0b35de2b33290d61110166716f3057b35d14",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3276468",
+    "address": "0xe1ab990bcf74ac0e09561bfd5e1d4096c5577dff",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3279866",
+    "address": "0x38cd403894ee3f8ff356c203682a009f00e613ca",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3281327",
+    "address": "0x932bb3a78b35c0b101dc7369a4c19375d31ab8d9",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 333534360425027,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3282360",
+    "address": "0xe0b472448638829222ada3e45e484a38a9d0127d",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3287589",
+    "address": "0xefaf1406b18f66e50c9a88343047492ba3d4b92f",
+    "name": "Toad",
+    "symbol": "TOAD",
+    "totalSupply": 10000000000000000,
+    "decimals": 7
+  },
+  {
+    "contractId": "0.0.3295494",
+    "address": "0x0ecb6cff68c26c838bfa469a3ffb907e2aa03d18",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 420954851,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3295844",
+    "address": "0x214a75693eafe395f50edef03b6d020b90bb2db4",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 100000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3298045",
+    "address": "0xf52546582e3843727d9303a2b38f41af58d28d63",
+    "name": "Yield",
+    "symbol": "YIELD",
+    "totalSupply": 10000000000000000,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.3303671",
+    "address": "0x5ae3cb0c657dc9997f16673efd6c00a1dd63d547",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3313010",
+    "address": "0x52e3482f7cf126e26cd8d4ff08210a10cec61e97",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3472673",
+    "address": "0x83aa47cb2dd6b58bc4e73d0519356d2221a2d621",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3687509",
+    "address": "0xe3b2c85a3bc3f6844a370c3e3574d2030627f7da",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3711660",
+    "address": "0x70b10485ae3d71f20f59b75854d925c4f4b24cd5",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 20000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3712595",
+    "address": "0x430b179093a6995d2e554ec8ca97254a98f42c34",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1162633,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3796821",
+    "address": "0x6aebeb423844d4c307748cc0531854bfdf3cc6d8",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3817557",
+    "address": "0x577fc0664a4e6074334452df0328147ba9c150af",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3913434",
+    "address": "0x0c259b9007b9cf47b58b397250e29e9965e839ed",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 188594662337,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3939947",
+    "address": "0x316ed99f5b191a95e3fe422461a5c1f72c831071",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3941062",
+    "address": "0xa4f3b7d93ec7b70a4daefa831b5ec56569bcb023",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 13845586,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3959615",
+    "address": "0xb30b2320457a93fb945460d305573e8c8dc1f2c6",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 60415229867,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3970846",
+    "address": "0x25bf41b690899e6adeb482a8543558950a50125d",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 19364917231,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3970969",
+    "address": "0x632c640e9d1e91ba69977d1baf19a5abac1d1fc4",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 245920326,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3970978",
+    "address": "0xfe67dbd125693ac0e2cd87d17c92429dd76d1245",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 488719489,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3970998",
+    "address": "0x025d819fd3385031e647e2ec6e7dd63973951f24",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 5291435088,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3971003",
+    "address": "0x76b49a0f386f80ba40ba3cea043857b632b698dc",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 83557367,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3971007",
+    "address": "0x91261396f347937e61c798b9c6f244195f38e2ba",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3971010",
+    "address": "0x898dc28d18779d9f6c55308dbfff5812c705b026",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 7497063,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3971014",
+    "address": "0xf6c07cdbf2e6ccb287022df7c27dbc2aa36b439f",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3971044",
+    "address": "0x86fd35da550eed4eb41e9b574eb40b6d884b72c6",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 81569228802,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3987259",
+    "address": "0x22ff5c1d396c8fdd17f040c1edeac1707465b2f1",
+    "name": "VRJAM Red",
+    "symbol": "VRJAM",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3987291",
+    "address": "0xdd9158b1d4bb7a9a1374eaad46dd1192ec740866",
+    "name": "VRJAM Red",
+    "symbol": "VRJAM",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3987315",
+    "address": "0xac43750a12fccc8287f381164890e3a58cce78aa",
+    "name": "VRJAM Red",
+    "symbol": "VRJAM",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3987355",
+    "address": "0x1355b5234c32d744ab2b3c72815b16eceedf2d28",
+    "name": "VRJAM Red",
+    "symbol": "VRJAM",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4000848",
+    "address": "0xf175cc5001a6ef48db7f6c3e54e88e41ada76dd1",
+    "name": "VRJAM Red",
+    "symbol": "VRJAM",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4002563",
+    "address": "0x67bc7e5c0957609ae9e5fd434ddb6080ea201d8e",
+    "name": "VRJAM Red",
+    "symbol": "VRJAM",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4002622",
+    "address": "0x824316ad0120be23c25fc9dc3014c5081f9ed69a",
+    "name": "VRJAM Red",
+    "symbol": "VRJAM",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4005613",
+    "address": "0xd138226fed988ea19be8dc1bfc53b8a4f3893269",
+    "name": "VRJAM Red",
+    "symbol": "VRJAM",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4093763",
+    "address": "0x26e54839f4c2e75c5d657d71ae4c2f2b648eade8",
+    "name": "HTellor Tribute",
+    "symbol": "HTRB",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4094015",
+    "address": "0xc6b647971a4233bbdf1daacd8f60c52d8ec823be",
+    "name": "HTellor Tribute",
+    "symbol": "HTRB",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4104847",
+    "address": "0x043e68836ef54fcf7a1cd16fd01716f7edc8553e",
+    "name": "HTellor Tribute",
+    "symbol": "HTRB",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4137867",
+    "address": "0x6508f76b2c3de0b06ce7e05197e9fe352cb2cc2a",
+    "name": "HTellor Tribute",
+    "symbol": "HTRB",
+    "totalSupply": 1e+56,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4144023",
+    "address": "0xb2c150f33caeb75a616c01a71142f84370eb2be4",
+    "name": "VRJAM Red",
+    "symbol": "VRJAM",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4144098",
+    "address": "0xad9d6c9cd0bc981ecdf311a12b7292c7cbcac933",
+    "name": "VRJAM Red",
+    "symbol": "VRJAM",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4144112",
+    "address": "0x082ec51b4a74e42faa42543853e4d2838d32eef4",
+    "name": "VRJAM Blue",
+    "symbol": "VRJAM",
+    "totalSupply": 1e+28,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4317709",
+    "address": "0xda59098e0e01babf826e75a3ab84e6f52e335e23",
+    "name": "VRJAM Red",
+    "symbol": "VRJAM(RED)",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4317713",
+    "address": "0x02c3b851afcdd54aa027c5aa48ee61bd10713da2",
+    "name": "VRJAM Blue",
+    "symbol": "VRJAM(BLUE)",
+    "totalSupply": 1e+28,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4342862",
+    "address": "0xa5fed32aa980daad275bcc69bdb3f0d240f96930",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4357284",
+    "address": "0x4af2ed7e4ac5e2fc5e3c1f752e584408e0637848",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4361933",
+    "address": "0x6d4c2270598ff7388782904369feb8f040310dfd",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 178885438,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4362302",
+    "address": "0x75fa212a815c1a48a2cb86e70497ab41e91f191b",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 110000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4364426",
+    "address": "0xb85014b9d0c2431ddcd5dff6f5ff8f859dba159e",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4365893",
+    "address": "0xe30b252e4bf254ace9bff851a0a99a9e51b296ea",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 89285715284,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4365944",
+    "address": "0xe3d0d244b9543d1ced4ee1f18dfa7a091ba79077",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 2449571143408,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4366214",
+    "address": "0x1c521ce32472b82b085070938f60051703acb016",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4367953",
+    "address": "0xd779ba5abe3fb62b410c98194b4542d311acf0ab",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 100000001000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4368092",
+    "address": "0x9be5b08a7ae79fed44da7a2fbca09623b7c7a9fe",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 374165738,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4369806",
+    "address": "0x1d96a14c7864a38e6eaae581d1479323565e3329",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 214366417095,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4370034",
+    "address": "0xa8e3fe82c4669b1e9b37f13ddc42547e055168fb",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 3537253666,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4373695",
+    "address": "0xbee07c5beec717bb9b3192c842033cca033c3e22",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 774377384702,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4373755",
+    "address": "0x684f2a6c641f47fae0ee3f45af27822aaed2bda5",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 42379882674073,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4382550",
+    "address": "0x9877872a57f697f00c84a62a62ffa894e163cefd",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 3290164545875,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4383953",
+    "address": "0x5ea622b3747c377bc3ff552deda8e1cd74975b11",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4433743",
+    "address": "0x5387b3ca6e2f1e21dcc16b45cc6b5eb8c098cfed",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1882185914901,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4463322",
+    "address": "0xc30bf261254f46e3277eee299e9f1a74ea900d9c",
+    "name": "VRJAM Red",
+    "symbol": "VRJAM(RED)",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4463631",
+    "address": "0x7bd495ece5f5ae65266d21ac8fd0d31a8e98cab8",
+    "name": "VRJAM Red",
+    "symbol": "VRJAM(RED)",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4464221",
+    "address": "0x7c57b1223636e417a6d9249c5a7561e77259add6",
+    "name": "VRJAM Blue",
+    "symbol": "VRJAM(BLUE)",
+    "totalSupply": 1e+28,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4498610",
+    "address": "0x88692097ca32ddd88b30cbb3f7442a403706ca70",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 11649999050323,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4525090",
+    "address": "0x9cd6ea253283cef62a72acc3e9ee4e5d29f85c69",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4525643",
+    "address": "0xe72438d6c1bcf07eb0e477231d51b1e2f54ccf5e",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 11180339887999,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4537344",
+    "address": "0xe6b478c9e7e62ccef51d2553ff70eed2ad7423b1",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4537387",
+    "address": "0x7cba09078981173193cdf53336138448dec549c5",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 100000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4539330",
+    "address": "0x76561751b7a1d295ee16b381e116328b18b6f919",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4543429",
+    "address": "0x37d20d44e5cfba414d3b862c11e51587fecc1755",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 40000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4547361",
+    "address": "0xdefc06e8433fb7b308c81ff1814f138c3835a19b",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 2564623803347717,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4550076",
+    "address": "0xfbd630dc666f11c41839af62f24403f2ee8b61fe",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4550859",
+    "address": "0xd2a2b6b2740b7782031a8b6f0de65f27b0d9710a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4552118",
+    "address": "0xfa051a1731d290edbecbe390d0e954c397f4b57d",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 44783429469,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4554042",
+    "address": "0x16628966becaf60f956c9c41c401cf6e2566da79",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 3161675257747,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4554753",
+    "address": "0xd5552185eeed137d4d242e7ddf6780eb929011ba",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4555424",
+    "address": "0x58317ac51d61543a1e09509de48d44f7af57ddfb",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4559467",
+    "address": "0x419d00aceaf472515d19c19cf1f8460ec13f7eea",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 22360679774,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4563314",
+    "address": "0x7d59e85a3dad667c07b84971482948a90ed2848a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4587414",
+    "address": "0x58ac2a0a904f4f8dd3b76aee4a880206a40458a0",
+    "name": "VRJAM Red",
+    "symbol": "VRJAM(RED)",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4587428",
+    "address": "0x3ed60c2c40b120bb277f341337bc1d89da4eb8dc",
+    "name": "VRJAM Blue",
+    "symbol": "VRJAM(BLUE)",
+    "totalSupply": 1e+28,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4588348",
+    "address": "0x0f58e9d1eccf94e9a895e81e4725219fcbed656f",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4590712",
+    "address": "0xfbbf5d7d5cd2e7e65a0b92b305f0f59fc06dfb09",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4593357",
+    "address": "0x30ead724aaea8c3688964f0877cd023b7bab0041",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4597531",
+    "address": "0x39ed4b267dfcfe1f84aafcc972a121a2e023b867",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4598281",
+    "address": "0x9a8f5c6a50030661d845b51d97e4dff7658cd85d",
+    "name": "Yield",
+    "symbol": "YIELD",
+    "totalSupply": 1e+29,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4605504",
+    "address": "0x20b069fa5991a00d8c17a5ba7250ec9af212313b",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4626353",
+    "address": "0x5483f05e1a742f85cbf086c1a7b02344fb6e9193",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4700956",
+    "address": "0xcdc09ca1991028a3a819575da4930bec5bb976a1",
+    "name": "HEDERAMAINNETTEST001",
+    "symbol": "HEDERAMAINNETTEST001",
+    "totalSupply": 10000000,
+    "decimals": 5
+  },
+  {
+    "contractId": "0.0.4716033",
+    "address": "0xfcc5326b3d756846612dd9cf4661ba308d920a04",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4718528",
+    "address": "0x986b08b973b7664f8d9971ad54c377c210d577cf",
+    "name": "ddjbdbe",
+    "symbol": "edjejdej",
+    "totalSupply": 20,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.4723661",
+    "address": "0x81452fc30590c4ff6d754574a0b1e072927f4743",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 8644155058,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4724133",
+    "address": "0xc755b45431c6aa4973ab901bf834d11a80b6802f",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 4472135954999,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4800991",
+    "address": "0xe4502229b42119f1a8b13981258ee865a40be469",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4802731",
+    "address": "0x0472ffa7a1cdd3faa8f1c3320fc238a0d3de90e5",
+    "name": "HDR",
+    "symbol": "HDR",
+    "totalSupply": 100,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.4825074",
+    "address": "0x751671987fe7d7544476088e78a5be973c53fd5f",
+    "name": "Hedera Test Token",
+    "symbol": "HEDERA.TEST",
+    "totalSupply": 100,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.4850016",
+    "address": "0xd720cd0e0d292734530e6bd27ab8f2fb84c4ab58",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4850869",
+    "address": "0x7e7d0a6b011b1e83fec6903337814edee860bc87",
+    "name": "Hedera Data Owner",
+    "symbol": "Hedera Data Owner",
+    "totalSupply": 10000,
+    "decimals": 2
+  },
+  {
+    "contractId": "0.0.4905534",
+    "address": "0xbc626ae3d6ff16c79ee68d77bd4c0eb306584473",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4908234",
+    "address": "0x1b194cd9897e21e726471871666b3546b29b21c2",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4956829",
+    "address": "0xa6118b3f8061a4260a53f48a65b25e0412fbe6f1",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4967676",
+    "address": "0x83cfa41d3c45879581447ee831958ae3b390fc6a",
+    "name": "NXTDM",
+    "symbol": "NXTDM",
+    "totalSupply": 1000,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.4977411",
+    "address": "0xf8317ba39ea302022b9424b20a71ef4bcb6fd97e",
+    "name": "MBDT",
+    "symbol": "MBDT",
+    "totalSupply": 1000,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.4983895",
+    "address": "0xb27b174d59c73082c8b32caae803bd77a79fedb0",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 100000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5012789",
+    "address": "0xc96a3cc3b8b29cd743546e02f2d36cdc3e658359",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5012799",
+    "address": "0x6e58d68342526c94263050bd125d60f487712346",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5026332",
+    "address": "0x20abdcf9004cbae87a2459a075261d2bb4cb1339",
+    "name": "Normie Token",
+    "symbol": "NORMIE",
+    "totalSupply": 1e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5026350",
+    "address": "0xdfd8627f20d87060a702797020919c1154a9b826",
+    "name": "Normie Token",
+    "symbol": "NORMIE",
+    "totalSupply": 1e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5029265",
+    "address": "0xe77d0ce6de1e54f3bdc8bb5a44a43c719b523c24",
+    "name": "VERT",
+    "symbol": "V",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5029324",
+    "address": "0xd8dbfbfff2185d5a418808a24a70432158790f2f",
+    "name": "G42 Worldcoin Inveniam Transaction",
+    "symbol": "G42WITRANSACTION",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.5046212",
+    "address": "0x08a136d86ce836d04f40bacd7996fbd7559163a5",
+    "name": "test",
+    "symbol": "TESTWW",
+    "totalSupply": 10,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.5229754",
+    "address": "0x64ada5473cd34d9e313f038ae4582a8bda7260b4",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 14085448,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5232230",
+    "address": "0x2f1ac0f573d668494a5fd4fdbf3908b566be3134",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 8957601799,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5381906",
+    "address": "0xbe1efd3c10ffa257172f5a9f31d537fbcb0bce73",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5402508",
+    "address": "0xb3d4a92ef81857df82568ce6d1aa6381d1436493",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5655141",
+    "address": "0x8495ea56058ce10dac6d70e907c83e2c97d0759e",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 972784,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5655289",
+    "address": "0xc4868b4d2e1006a536d601926f57b7f3e393fc81",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 10000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5690050",
+    "address": "0xecfe32f1399967eed712a92e557d4dc07164b6ce",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1001,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5697466",
+    "address": "0x07d720523d7b084dd66dad5bbecf1e06a7a1eb1a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 43407,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5735810",
+    "address": "0xb3e128cdfff33f63964fe87c295a1839eccc3d60",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5740447",
+    "address": "0x2d84c3bf4d2ccdcd4593d1b2d34945c240feb755",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5795965",
+    "address": "0x8f238b18187b39fb7c18c8fc72552dd31e8a5bbb",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 39113449815148,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5796450",
+    "address": "0x516f407591ce09290ba8cedd1bd69aca7fafdcd7",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6008514",
+    "address": "0xfcde7421c9ec73b90ee63838cb3e0debebd9dfda",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6050627",
+    "address": "0x0888cebc5cd0313169760d7a4f5ea128a2ca2ae4",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6050757",
+    "address": "0xdac78218dfbc3089113ec2faade3dd4974a3c12c",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 447258871,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6050868",
+    "address": "0x880151c7111a30f8cc2c82f5d9b845fc4dfe097d",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 999950989,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6050932",
+    "address": "0x689b2ff268f38f56fe592665f1d921209c60dc18",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6051277",
+    "address": "0xa9afd87ef961eca4f34e2d51268244076436d53f",
+    "name": "Test",
+    "symbol": "TEST",
+    "totalSupply": 1e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6052956",
+    "address": "0xf5295c077af6b61c3f83fe794b7a830fa596aaa9",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 141421356237,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6053247",
+    "address": "0xca9d8d749376813135ee12c27347aae4799cdfcd",
+    "name": "Test",
+    "symbol": "TEST",
+    "totalSupply": 1e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6086934",
+    "address": "0xbdc4f8d8279601721e5a91fb4f8580891c82de52",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6086947",
+    "address": "0x3e645b6f5b2d72bfcc134ba77c5e6bba5acdbb55",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 3363486690221,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6266526",
+    "address": "0xd1c48b92866afc5e1c31616891c961bc371b9d60",
+    "name": "GenericERC20",
+    "symbol": "GT",
+    "totalSupply": 1e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6266675",
+    "address": "0x73f0c62a89794fab6fd6ced7d193aeae3ee18b3c",
+    "name": "GenericERC20",
+    "symbol": "GT",
+    "totalSupply": 1e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6266781",
+    "address": "0x0f40181ba1d61021395ea08b7f62251de2dcaf71",
+    "name": "GenericERC20",
+    "symbol": "GT",
+    "totalSupply": 1e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6266988",
+    "address": "0xe5c07622e964d71c2b36864cf6d9e3c9ed35e195",
+    "name": "GenericERC20",
+    "symbol": "GT",
+    "totalSupply": 1e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6267101",
+    "address": "0xc6b6bc346cd7d218bbbb8ab2be92b58e9a138855",
+    "name": "GenericERC20",
+    "symbol": "GT",
+    "totalSupply": 1e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6267295",
+    "address": "0xe4e9a54ea92933de1e8c080c8d200217061d63ee",
+    "name": "GenericERC20",
+    "symbol": "GT",
+    "totalSupply": 1e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6267367",
+    "address": "0x45c585c3a7f8a2ba91af7d95638c3c90bb878db6",
+    "name": "GenericERC20",
+    "symbol": "GT",
+    "totalSupply": 1e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6269877",
+    "address": "0x3b9949092469b6f6d37c1313e5d7e05917dbd1ec",
+    "name": "GenericERC20",
+    "symbol": "GT",
+    "totalSupply": 1e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6269952",
+    "address": "0xaa6cb8a116d03fb4d131d663385585ecd71e495c",
+    "name": "GenericERC20",
+    "symbol": "GT",
+    "totalSupply": 1e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6270188",
+    "address": "0xf8b3dace6657554715005daea3e0caf612d9bba2",
+    "name": "GenericERC20",
+    "symbol": "GT",
+    "totalSupply": 1e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6270197",
+    "address": "0xdcff6c8e94cf425adfda8af452b9eafbd2d1ca2b",
+    "name": "GenericERC20",
+    "symbol": "GT",
+    "totalSupply": 1e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6273452",
+    "address": "0x00000000000000000000000000000000005fb9ac",
+    "name": "Demo20",
+    "symbol": "DEMO20",
+    "totalSupply": 5.2e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6329586",
+    "address": "0x7701ef22742357b9ea053d2f7d8632cfe0de099d",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 2236207868,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6349827",
+    "address": "0x6233db12f694b9a870ef488d2fcb290950334aed",
+    "name": "GasSwap",
+    "symbol": "GasSwap",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6386948",
+    "address": "0x7ce6bb2cc2d3fd45a974da6a0f29236cb9513a98",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6439637",
+    "address": "0x48db497fa61d3991eb9e378ce388a360c549f1da",
+    "name": "vZbyte",
+    "symbol": "vZBYT",
+    "totalSupply": 78846055382820140000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7017493",
+    "address": "0x688fd85c133f3b864962b0dd17a1b132ed0f38a8",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 54772255750,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7205914",
+    "address": "0x75b7f3697b8ee4d56267fdde9c64d716a6243d85",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7205939",
+    "address": "0xc8972618cd43af42da65db3b345ca28da0aeef1a",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7205955",
+    "address": "0xbf2e2a544deae5545c57214e6627b88a0ee70ecf",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7208851",
+    "address": "0x6319151ae5f649a57ef16ad70b78fa7e196f6c54",
+    "name": "VRJAM LP",
+    "symbol": "VRJAM(LP)",
+    "totalSupply": 17431270358,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7212373",
+    "address": "0xab8fa03f7ecad42576c19a85fa11d905d9c345c1",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7265040",
+    "address": "0x76cd83bc24faae816e543a2dfd015d5e7cf8feec",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7358435",
+    "address": "0x274edff7be44301b824866895c3b0c946677aecc",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 11359951066,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7358532",
+    "address": "0xf50996e8c4fd46f59c6dd630451c42a9cb4dfc18",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 14491376,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7522739",
+    "address": "0x6666e76d1864d333766210b5fda0179ca0f65d53",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7522744",
+    "address": "0x1d40fac3d55447f7b200eb861869032d2a808561",
+    "name": "wbtc",
+    "symbol": "wbtcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7522750",
+    "address": "0xbc6014f92935a452cef5ea3e0c48b57e7c235b76",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7522757",
+    "address": "0x828e1697c1e2fa18922640e7830c3cfa3a57227e",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7522760",
+    "address": "0x0abe58d118c0dbb81d50b4a1da7a855ec8018f27",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7522769",
+    "address": "0x54e55795f9360d8a95bcf5adcf6b0a23bdadfc54",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7640023",
+    "address": "0x1d65c6b1b7716da593f054f608a57bc115f51b5c",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 129016364,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7750769",
+    "address": "0xa75ed10e635042849bded8eae15b362511072125",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 391885187071,
+    "decimals": 18
+  }
+]
