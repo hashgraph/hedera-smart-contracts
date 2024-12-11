@@ -18,14 +18,15 @@
  *
  */
 
-import { ercRegistryRunner } from './runner';
-
-(async () => {
-  try {
-    await ercRegistryRunner();
-    console.log('Runner executed successfully.');
-  } catch (err) {
-    console.error('Error executing runner:', err);
-    process.exit(1); // Exit with failure status
-  }
-})();
+export default {
+  ERC_CONSTRUCTOR_PARAMS: {
+    erc20: {
+      tokenName: 'ERC Registry Fungible',
+      tokenSymbol: 'ERFT',
+    },
+    erc721: {
+      tokenName: 'ERC Registry Non-Fungible',
+      tokenSymbol: 'ERNFT',
+    },
+  },
+};

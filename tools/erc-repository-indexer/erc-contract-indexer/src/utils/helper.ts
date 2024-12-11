@@ -31,7 +31,7 @@ export class Helper {
    * @returns {string} The constructed file path.
    */
   static buildFilePath(fileName: string): string {
-    const network = process.env.HEDERA_NETWORK || 'previewnet';
+    const network = process.env.HEDERA_NETWORK || 'local-node';
     return path.join(__dirname, '../../erc-registry', network, fileName);
   }
 

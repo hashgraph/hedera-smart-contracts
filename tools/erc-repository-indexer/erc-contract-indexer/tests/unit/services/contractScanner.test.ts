@@ -19,11 +19,11 @@
  */
 
 import axios from 'axios';
-import constants from '../../src/utils/constants';
+import constants from '../../../src/utils/constants';
 import testConstants from '../utils/constants';
-import { MirrorNodeContract } from '../../src/schemas/MirrorNodeSchemas';
-import { ContractScannerService } from '../../src/services/contractScanner';
-import { Helper } from '../../src/utils/helper';
+import { MirrorNodeContract } from '../../../src/schemas/MirrorNodeSchemas';
+import { ContractScannerService } from '../../../src/services/contractScanner';
+import { Helper } from '../../../src/utils/helper';
 import {
   afterEach,
   beforeEach,
@@ -34,7 +34,8 @@ import {
 } from '@jest/globals';
 
 jest.mock('axios');
-jest.mock('../../src/utils/helper');
+jest.mock('../../../src/utils/helper');
+
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 const mockedHelper = Helper as jest.Mocked<typeof Helper>;
 

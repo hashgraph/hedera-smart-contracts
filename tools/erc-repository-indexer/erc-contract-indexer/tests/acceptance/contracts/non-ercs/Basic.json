@@ -1,0 +1,29 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "Basic",
+  "sourceName": "contracts/solidity/Basic.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "ping",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x6080604052348015600e575f80fd5b50607480601a5f395ff3fe6080604052348015600e575f80fd5b50600436106026575f3560e01c80635c36b18614602a575b5f80fd5b600160405190815260200160405180910390f3fea2646970667358221220491a7d66769ca81227e108a94bbe3878c7f15a500ac1aaaa7381e60141cc932964736f6c63430008180033",
+  "deployedBytecode": "0x6080604052348015600e575f80fd5b50600436106026575f3560e01c80635c36b18614602a575b5f80fd5b600160405190815260200160405180910390f3fea2646970667358221220491a7d66769ca81227e108a94bbe3878c7f15a500ac1aaaa7381e60141cc932964736f6c63430008180033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

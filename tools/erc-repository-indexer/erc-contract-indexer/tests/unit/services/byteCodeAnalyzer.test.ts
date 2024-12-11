@@ -18,16 +18,16 @@
  *
  */
 
-import { ByteCodeAnalyzer } from '../../src/services/byteCodeAnalyzer';
-import testConstants from '../utils/constants';
-import { ContractScannerService } from '../../src/services/contractScanner';
 import {
-  ContractCallData,
   MirrorNodeContract,
   MirrorNodeContractResponse,
-} from '../../src/schemas/MirrorNodeSchemas';
+  ContractCallData,
+} from '../../../src/schemas/MirrorNodeSchemas';
+import { ByteCodeAnalyzer } from '../../../src/services/byteCodeAnalyzer';
+import { ContractScannerService } from '../../../src/services/contractScanner';
+import constants from '../../../src/utils/constants';
+import testConstants from '../utils/constants';
 import { jest } from '@jest/globals';
-import constants from '../../src/utils/constants';
 
 describe('ByteCodeAnalyzer', () => {
   let byteCodeAnalyzer: ByteCodeAnalyzer;
