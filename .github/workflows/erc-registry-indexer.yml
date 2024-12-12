@@ -78,14 +78,14 @@ jobs:
           gpg_private_key: ${{ secrets.GPG_KEY_CONTENTS }}
           passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
 
-      - name: Commit
-        uses: stefanzweifel/git-auto-commit-action@8621497c8c39c72f3e2a999a26b4ca1b5058a842 # v5.0.1
-        with:
-          commit_author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-          commit_message: 'chore: update ERC Registry'
-          commit_options: '--no-verify --signoff'
-          commit_user_name: ${{ steps.gpg_importer.outputs.name }}
-          commit_user_email: ${{ steps.gpg_importer.outputs.email }}
+      # - name: Commit
+      #   uses: stefanzweifel/git-auto-commit-action@8621497c8c39c72f3e2a999a26b4ca1b5058a842 # v5.0.1
+      #   with:
+      #     commit_author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+      #     commit_message: 'chore: update ERC Registry'
+      #     commit_options: '--no-verify --signoff'
+      #     commit_user_name: ${{ steps.gpg_importer.outputs.name }}
+      #     commit_user_email: ${{ steps.gpg_importer.outputs.email }}
 
       - name: Get current date
         id: current_date
