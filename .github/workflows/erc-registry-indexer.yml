@@ -1,6 +1,11 @@
 name: ERC Registry Indexer
 
 on:
+  push:
+    branches:
+      [
+        1081-erc-registry-phase-2-add-an-option-to-execute-the-indexing-tool-as-a-github-dispatch-workflow,
+      ]
   workflow_dispatch:
     inputs:
       HEDERA_NETWORK:
@@ -38,8 +43,8 @@ jobs:
 
       - name: Set Environment Variables
         run: |
-          echo "HEDERA_NETWORK=${{ github.event.inputs.HEDERA_NETWORK }}" >> ${{ env.INDEXER_PATH }}/.env
-          echo "MIRROR_NODE_URL=${{ github.event.inputs.MIRROR_NODE_URL }}" >> ${{ env.INDEXER_PATH }}/.env
+          echo "HEDERA_NETWORK=previewnet" >> ${{ env.INDEXER_PATH }}/.env
+          echo "MIRROR_NODE_URL=https://previewnet.mirrornode.hedera.com)" >> ${{ env.INDEXER_PATH }}/.env
           echo "STARTING_POINT=${{ github.event.inputs.STARTING_POINT }}" >> ${{ env.INDEXER_PATH }}/.env
 
       - name: Install Dependencies
@@ -50,7 +55,7 @@ jobs:
       - name: Backup Existing Registry
         run: |
           mkdir -p ${{ env.INDEXER_PATH }}/backup
-          cp ${{ env.INDEXER_PATH }}/erc-registry/${{github.event.inputs.HEDERA_NETWORK}}/*.json ${{ env.INDEXER_PATH }}/backup
+          cp ${{ env.INDEXER_PATH }}/erc-registry/previewnet/*.json ${{ env.INDEXER_PATH }}/backup
 
       - name: Start Timer
         id: timer_start
@@ -75,8 +80,8 @@ jobs:
         id: count_records
         run: |
           cd ${{ env.INDEXER_PATH }}
-          NEW_ERC20_RECORDS=$(jq -s '.[0] + .[1] | length' backup/erc-20.json erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/erc-20.json)
-          NEW_ERC721_RECORDS=$(jq -s '.[0] + .[1] | length' backup/erc-721.json erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/erc-721.json)
+          NEW_ERC20_RECORDS=$(jq -s '.[0] + .[1] | length' backup/erc-20.json erc-registry/previewnet/erc-20.json)
+          NEW_ERC721_RECORDS=$(jq -s '.[0] + .[1] | length' backup/erc-721.json erc-registry/previewnet/erc-721.json)
           echo "NEW_ERC20_RECORDS=${NEW_ERC20_RECORDS}" >> $GITHUB_ENV
           echo "NEW_ERC721_RECORDS=${NEW_ERC721_RECORDS}" >> $GITHUB_ENV
 
@@ -94,28 +99,34 @@ jobs:
         id: current_date
         run: echo "CURRENT_DATE=$(date -u +"%m-%d-%Y")" >> $GITHUB_ENV
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
-        with:
-          branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
-          commit-message: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
-          committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-          author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-          delete-branch: true
-          signoff: true
-          title: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
-          body: >
-            **Description**:  
+      - name: Debug Node.js Environment
+        run: |
+          cd ./tools/erc-repository-indexer/erc-contract-indexer
+          node -e "console.log('NEW_ERC20_RECORDS:', ${{ env.NEW_ERC20_RECORDS }}"
+          node -e "console.log('NEW_ERC721_RECORDS:', ${{ env.NEW_ERC721_RECORDS }}"
+          node -e "console.log('INDEX_DURATION:', ${{ env.INDEX_DURATION }}"
 
-            This PR updates the ERC Registry to include the most recent ERC-20 and ERC-721 tokens.
+      # - name: Create Pull Request
+      #   uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
+      #   with:
+      #     branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
+      #     commit-message: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
+      #     committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+      #     author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+      #     token: ${{ secrets.GH_ACCESS_TOKEN }}
+      #     delete-branch: true
+      #     signoff: true
+      #     title: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
+      #     body: >
+      #       **Description**:
 
+      #       This PR updates the ERC Registry to include the most recent ERC-20 and ERC-721 tokens.
 
-            **Registry Update Summary**:
-              - **Hedera Network**: ${{ github.event.inputs.HEDERA_NETWORK }}
-              - **New ERC-20 Records Added**: ${{ env.NEW_ERC20_RECORDS }}
-              - **New ERC-721 Records Added**: ${{ env.NEW_ERC721_RECORDS }}
-              - **Indexing Duration**: ${{ env.INDEX_DURATION }} seconds
-              - **Current Date**: ${{ env.CURRENT_DATE }}
-          labels: 'internal'
-          assignees: 'swirlds-automation'
+      #       **Registry Update Summary**:
+      #         - **Hedera Network**: ${{ github.event.inputs.HEDERA_NETWORK }}
+      #         - **New ERC-20 Records Added**: ${{ env.NEW_ERC20_RECORDS }}
+      #         - **New ERC-721 Records Added**: ${{ env.NEW_ERC721_RECORDS }}
+      #         - **Indexing Duration**: ${{ env.INDEX_DURATION }} seconds
+      #         - **Current Date**: ${{ env.CURRENT_DATE }}
+      #     labels: 'internal'
+      #     assignees: 'swirlds-automation'
