@@ -11,15 +11,12 @@ on:
       HEDERA_NETWORK:
         description: 'Target Hedera network (e.g., previewnet, testnet, mainnet).'
         required: true
-        default: 'previewnet'
       MIRROR_NODE_URL:
         description: 'Mirror node base URL (e.g., https://testnet.mirrornode.hedera.com).'
         required: true
-        default: 'https://testnet.mirrornode.hedera.com'
       STARTING_POINT:
         description: 'Starting point for indexing (e.g., a specific block number). Leave empty to start from the beginning.'
         required: false
-        default: ''
 
 jobs:
   index-and-update:
@@ -49,11 +46,16 @@ jobs:
 
       - name: Set Environment Variables
         run: |
-          echo "HEDERA_NETWORK=${{ github.event.inputs.HEDERA_NETWORK }}" >> .env
-          echo "MIRROR_NODE_URL=${{ github.event.inputs.MIRROR_NODE_URL }}" >> .env
-          if [ "${{ github.event.inputs.STARTING_POINT }}" ]; then
-            echo "STARTING_POINT=${{ github.event.inputs.STARTING_POINT }}" >> .env
-          fi
+          echo "HEDERA_NETWORK=previewnet" >> .env
+          echo "MIRROR_NODE_URL=https://previewnet.mirrornode.hedera.com" >> .env
+
+      # - name: Set Environment Variables
+      #   run: |
+      #     echo "HEDERA_NETWORK=${{ github.event.inputs.HEDERA_NETWORK }}" >> .env
+      #     echo "MIRROR_NODE_URL=${{ github.event.inputs.MIRROR_NODE_URL }}" >> .env
+      #     if [ "${{ github.event.inputs.STARTING_POINT }}" ]; then
+      #       echo "STARTING_POINT=${{ github.event.inputs.STARTING_POINT }}" >> .env
+      #     fi
 
       - name: Start ERC Registry Indexer
         run: |
