@@ -46,6 +46,7 @@ jobs:
 
       - name: Set Environment Variables
         run: |
+          run: cp local.env .env
           export HEDERA_NETWORK=previewnet
           export MIRROR_NODE_URL=https://previewnet.mirrornode.hedera.com
       # - name: Set Environment Variables
