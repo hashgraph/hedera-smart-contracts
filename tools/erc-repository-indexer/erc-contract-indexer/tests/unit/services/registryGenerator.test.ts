@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import { RegistryGenerator } from '../../src/services/registryGenerator';
-import { ERCOutputInterface } from '../../src/schemas/ERCRegistrySchemas';
-import constants from '../../src/utils/constants';
+import { RegistryGenerator } from '../../../src/services/registryGenerator';
+import { ERCOutputInterface } from '../../../src/schemas/ERCRegistrySchemas';
+import constants from '../../../src/utils/constants';
 
 jest.mock('fs', () => ({
   ...jest.requireActual('fs'),

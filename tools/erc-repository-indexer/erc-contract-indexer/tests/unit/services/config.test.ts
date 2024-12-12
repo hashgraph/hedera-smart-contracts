@@ -19,11 +19,11 @@
  */
 
 import { AxiosInstance } from 'axios';
-import { ConfigService } from '../../src/services/config';
+import { ConfigService } from '../../../src/services/config';
 import testConstants from '../utils/constants';
-import { RegistryGenerator } from '../../src/services/registryGenerator';
-import { Helper } from '../../src/utils/helper';
-import constants from '../../src/utils/constants';
+import { RegistryGenerator } from '../../../src/services/registryGenerator';
+import { Helper } from '../../../src/utils/helper';
+import constants from '../../../src/utils/constants';
 
 describe('ConfigService', () => {
   let configService: ConfigService;
@@ -102,11 +102,11 @@ describe('ConfigService', () => {
   });
 
   it('should not throw an error if MIRROR_NODE_URL is invalid when network is not one of the PRODUCTION_NETWORKS', () => {
-    const localnet = 'localnet';
-    expect(constants.PRODUCTION_NETWORKS.includes(localnet)).toBeFalsy;
+    const localnode = 'local-node';
+    expect(constants.PRODUCTION_NETWORKS.includes(localnode)).toBeFalsy;
 
     const invalid_url = 'invalid_url';
-    process.env.HEDERA_NETWORK = localnet;
+    process.env.HEDERA_NETWORK = localnode;
     process.env.MIRROR_NODE_URL = invalid_url;
     const configService = new ConfigService();
     expect(configService.getMirrorNodeUrl()).toEqual(invalid_url);
