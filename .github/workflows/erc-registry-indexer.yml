@@ -11,11 +11,9 @@ on:
       HEDERA_NETWORK:
         description: 'Target Hedera network (e.g., previewnet, testnet, mainnet).'
         required: true
-        default: 'previewnet'
       MIRROR_NODE_URL:
         description: 'Mirror node base URL (e.g., https://testnet.mirrornode.hedera.com).'
         required: true
-        default: 'https://previewnet.mirrornode.hedera.com'
       STARTING_POINT:
         description: 'Starting point for indexing (e.g., a specific block number). Leave empty to start from the beginning.'
         required: false
@@ -24,6 +22,8 @@ jobs:
   index-and-update:
     name: Index ERC Contracts and Update Registry
     runs-on: smart-contracts-linux-large
+    env:
+      INDEXER_PATH: ./tools/erc-repository-indexer/erc-contract-indexer
 
     steps:
       - name: Harden Runner
@@ -44,20 +44,18 @@ jobs:
 
       - name: Set Environment Variables
         run: |
-          echo "HEDERA_NETWORK=previewnet" >> ./tools/erc-repository-indexer/erc-contract-indexer/.env
-          echo "MIRROR_NODE_URL=https://previewnet.mirrornode.hedera.com" >> ./tools/erc-repository-indexer/erc-contract-indexer/.env
-          if [ "${{ github.event.inputs.STARTING_POINT }}" ]; then
-            echo "STARTING_POINT=${{ github.event.inputs.STARTING_POINT }}" >> ./tools/erc-repository-indexer/erc-contract-indexer/.env
-          fi
+          echo "HEDERA_NETWORK=previewnet" >> ${{ env.INDEXER_PATH }}/.env
+          echo "MIRROR_NODE_URL=https://previewnet.mirrornode.hedera.com" >> ${{ env.INDEXER_PATH }}/.env
+          echo "STARTING_POINT=${{ github.event.inputs.STARTING_POINT }}" >> ${{ env.INDEXER_PATH }}/.env
 
       - name: Install Dependencies
         run: |
-          cd ./tools/erc-repository-indexer/erc-contract-indexer
+          cd ${{env.INDEXER_PATH}}
           npm install
 
       - name: Start ERC Registry Indexer
         run: |
-          cd ./tools/erc-repository-indexer/erc-contract-indexer
+          cd ${{env.INDEXER_PATH}}
           npm start
 
       - name: Import GPG Key
@@ -78,16 +76,16 @@ jobs:
         uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
         with:
           branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
-          commit-message: 'chore: update ERC Registry'
+          commit-message: 'chore: update ERC Registry with latest ERC tokens on ${{github.event.inputs.HEDERA_NETWORK}}'
           committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
           author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
           delete-branch: true
           signoff: true
-          title: 'chore: update ERC Registry'
+          title: 'chore: update ERC Registry with latest tokens on ${{github.event.inputs.HEDERA_NETWORK}}'
           body: >
             **Description**:  
 
-            This PR updates the ERC Registry with the latest token information indexed from ${{ github.event.inputs.HEDERA_NETWORK }} up to ${{ env.CURRENT_DATE }}.
+            This PR provides a periodic update for the ERC Registry, including the latest ERC-20 and ERC-721 tokens indexed from Hedera ${{ github.event.inputs.HEDERA_NETWORK }} as of ${{ env.CURRENT_DATE }}.
 
 
             Fixes #
