@@ -60,8 +60,11 @@ jobs:
         run: |
           cd ./tools/erc-repository-indexer/erc-contract-indexer
           node -e "console.log('HEDERA_NETWORK:', process.env.HEDERA_NETWORK)"
+
       - name: Start ERC Registry Indexer
         run: |
+          cat .env
+          env
           cd ./tools/erc-repository-indexer/erc-contract-indexer
           npm start
 
