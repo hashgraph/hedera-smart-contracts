@@ -48,7 +48,7 @@ jobs:
         run: |
           echo "HEDERA_NETWORK=previewnet" >> .env
           echo "MIRROR_NODE_URL=https://previewnet.mirrornode.hedera.com" >> .env
-
+          cat .env
       # - name: Set Environment Variables
       #   run: |
       #     echo "HEDERA_NETWORK=${{ github.event.inputs.HEDERA_NETWORK }}" >> .env
