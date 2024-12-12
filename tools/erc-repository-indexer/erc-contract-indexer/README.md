@@ -41,8 +41,6 @@ The ERC Contract Indexer is a tool designed to facilitate the indexing and manag
 | `MIRROR_NODE_URL`      | The URL for the Hedera mirror node API.                                                                        | A valid URL pointing to the Hedera mirror node (e.g., `https://{previewnet\|testnet\|mainnet}.mirrornode.hedera.com`)                                                                                                           |
 | `MIRROR_NODE_URL_WEB3` | The URL for the Hedera Mirror Node Web3Module API, required only when `HEDERA_NETWORK` is set to `local-node`. | Any value                                                                                                                                                                                                                       |
 | `STARTING_POINT`       | The starting point for contract indexing.                                                                      | A Hedera contract ID (e.g., `0.0.369`), an EVM 20-byte address (e.g., `0x0000000000000000000000000000000000000369`), or a get contract list next pointer (e.g., `/api/v1/contracts?limit=100&order=asc&contract.id=gt:0.0.369`) |
-| `SDK_OPERATOR_ID`      | The operator ID used to initialize a Hashgraph SDK, applicable only for testing.                               | Hedera Account IDs                                                                                                                                                                                                              |
-| `SDK_OPERATOR_KEY`     | The operator Key used to initialize a Hashgraph SDK, applicable only for testing.                              | Hedera Account DER Private Key                                                                                                                                                                                                  |
 
 Example configuration:
 
@@ -86,12 +84,25 @@ This will initiate the indexing process, fetching contracts from the specified s
 
 > **Note:** Future updates will enhance the JSON file format to include additional details about the ERC tokens.
 
-### Testing
+### Unit Testing
 
-To run the tests for the project, use the following command:
+To run the unit tests for the project, use the following command:
 
 ```bash
-npm test
+npm test:unit
 ```
 
-This will execute the test suite and provide feedback on the functionality of the services.
+### Acceptance Testing
+
+To enable acceptance testing, new configurations must be added to the `.env` file:
+
+| Variable           | Description                                          | Accepted Values                |
+| ------------------ | ---------------------------------------------------- | ------------------------------ |
+| `SDK_OPERATOR_ID`  | The operator ID used to initialize a Hashgraph SDK.  | Hedera Account IDs             |
+| `SDK_OPERATOR_KEY` | The operator key used to initialize a Hashgraph SDK. | Hedera Account DER Private Key |
+
+To execute the acceptance tests, use the following command:
+
+```bash
+npm test:acceptance
+```
