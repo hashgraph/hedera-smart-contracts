@@ -1,17 +1,25 @@
 name: ERC Registry Indexer
 
 on:
+  push:
+    branches:
+      [
+        1081-erc-registry-phase-2-add-an-option-to-execute-the-indexing-tool-as-a-github-dispatch-workflow,
+      ]
   workflow_dispatch:
     inputs:
       HEDERA_NETWORK:
         description: 'Target Hedera network (e.g., previewnet, testnet, mainnet).'
         required: true
+        default: 'previewnet'
       MIRROR_NODE_URL:
         description: 'Mirror node base URL (e.g., https://testnet.mirrornode.hedera.com).'
         required: true
+        default: 'https://testnet.mirrornode.hedera.com'
       STARTING_POINT:
         description: 'Starting point for indexing (e.g., a specific block number). Leave empty to start from the beginning.'
         required: false
+        default: ''
 
 jobs:
   index-and-update:
