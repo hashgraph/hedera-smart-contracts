@@ -45,10 +45,7 @@ jobs:
           npm install
 
       - name: Set Environment Variables
-        run: |
-          run: cp local.env .env
-          export HEDERA_NETWORK=previewnet
-          export MIRROR_NODE_URL=https://previewnet.mirrornode.hedera.com
+        run: cp local.env .env
       # - name: Set Environment Variables
       #   run: |
       #     echo "HEDERA_NETWORK=${{ github.event.inputs.HEDERA_NETWORK }}" >> .env
