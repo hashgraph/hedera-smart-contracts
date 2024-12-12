@@ -42,8 +42,6 @@ jobs:
           node-version: 20
           #cache: npm Disabling this because it causes the workflow to hang and eventually timeout
 
-      # - name: Set Environment Variables
-      #   run: cp local.env ./tools/erc-repository-indexer/erc-contract-indexer/.env
       - name: Set Environment Variables
         run: |
           echo "HEDERA_NETWORK=previewnet" >> ./tools/erc-repository-indexer/erc-contract-indexer/.env
@@ -62,12 +60,6 @@ jobs:
           cd ./tools/erc-repository-indexer/erc-contract-indexer
           npm start
 
-      - name: Debug Node.js Environment
-        run: |
-          cd ./tools/erc-repository-indexer/erc-contract-indexer
-          ls erc-registry
-          cat erc-registry/previewnet/erc-20.json
-
       - name: Import GPG Key
         id: gpg_importer
         uses: step-security/ghaction-import-gpg@6c8fe4d0126a59d57c21f87c9ae5dd3451fa3cca # v6.1.0
@@ -78,31 +70,28 @@ jobs:
           gpg_private_key: ${{ secrets.GPG_KEY_CONTENTS }}
           passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
 
-      # - name: Commit
-      #   uses: stefanzweifel/git-auto-commit-action@8621497c8c39c72f3e2a999a26b4ca1b5058a842 # v5.0.1
-      #   with:
-      #     commit_author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-      #     commit_message: 'chore: update ERC Registry'
-      #     commit_options: '--no-verify --signoff'
-      #     commit_user_name: ${{ steps.gpg_importer.outputs.name }}
-      #     commit_user_email: ${{ steps.gpg_importer.outputs.email }}
-
       - name: Get current date
         id: current_date
         run: echo "date=$(date -u +"%Y-%m-%d")" >> $GITHUB_ENV
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
-        with:
-          branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
-          commit-message: 'chore: update ERC Registry'
-          committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-          author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-          delete-branch: true
-          signoff: true
-          title: 'chore: update ERC Registry'
-          body: >
-            This PR updates the ERC Registry with the latest token information indexed from the Hedera network up to ${{ steps.current_date.outputs.date }}.
-          labels: 'internal'
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-          assignees: 'swirlds-automation'
+      - name: Debug Node.js Environment
+        run: |
+          cd ./tools/erc-repository-indexer/erc-contract-indexer
+          console.log("meow")
+          console.log(${{steps.current_date.outputs.date}})
+
+      # - name: Create Pull Request
+      #   uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
+      #   with:
+      #     branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
+      #     commit-message: 'chore: update ERC Registry'
+      #     committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+      #     author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+      #     delete-branch: true
+      #     signoff: true
+      #     title: 'chore: update ERC Registry'
+      #     body: >
+      #       This PR updates the ERC Registry with the latest token information indexed from the Hedera network up to ${{ steps.current_date.outputs.date }}.
+      #     labels: 'internal'
+      #     token: ${{ secrets.GH_ACCESS_TOKEN }}
+      #     assignees: 'swirlds-automation'
