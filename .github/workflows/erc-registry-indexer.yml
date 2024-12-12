@@ -46,8 +46,8 @@ jobs:
       #   run: cp local.env ./tools/erc-repository-indexer/erc-contract-indexer/.env
       - name: Set Environment Variables
         run: |
-          echo "HEDERA_NETWORK=${{ github.event.inputs.HEDERA_NETWORK }}" >> ./tools/erc-repository-indexer/erc-contract-indexer/.env
-          echo "MIRROR_NODE_URL=${{ github.event.inputs.MIRROR_NODE_URL }}" >> ./tools/erc-repository-indexer/erc-contract-indexer/.env
+          echo "HEDERA_NETWORK=previewnet" >> ./tools/erc-repository-indexer/erc-contract-indexer/.env
+          echo "MIRROR_NODE_URL=https://previewnet.mirrornode.hedera.com" >> ./tools/erc-repository-indexer/erc-contract-indexer/.env
           if [ "${{ github.event.inputs.STARTING_POINT }}" ]; then
             echo "STARTING_POINT=${{ github.event.inputs.STARTING_POINT }}" >> ./tools/erc-repository-indexer/erc-contract-indexer/.env
           fi
