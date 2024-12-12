@@ -47,10 +47,38 @@ jobs:
           cd ${{env.INDEXER_PATH}}
           npm install
 
+      - name: Backup Existing Registry
+        run: |
+          mkdir -p ${{ env.INDEXER_PATH }}/backup
+          cp ${{ env.INDEXER_PATH }}/erc-registry/${{github.event.inputs.HEDERA_NETWORK}}/*.json ${{ env.INDEXER_PATH }}/backup
+
+      - name: Start Timer
+        id: timer_start
+        run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
+
       - name: Start ERC Registry Indexer
         run: |
           cd ${{env.INDEXER_PATH}}
           npm start
+
+      - name: Stop Timer
+        id: timer_end
+        run: echo "END_TIME=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Calculate Duration
+        id: calculate_duration
+        run: |
+          DURATION=$((END_TIME - START_TIME))
+          echo "INDEX_DURATION=${DURATION}" >> $GITHUB_ENV
+
+      - name: Count New Records
+        id: count_records
+        run: |
+          cd ${{ env.INDEXER_PATH }}
+          NEW_ERC20_RECORDS=$(jq -s '.[0] + .[1] | length' backup/erc-20.json erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/erc-20.json)
+          NEW_ERC721_RECORDS=$(jq -s '.[0] + .[1] | length' backup/erc-721.json erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/erc-721.json)
+          echo "NEW_ERC20_RECORDS=${NEW_ERC20_RECORDS}" >> $GITHUB_ENV
+          echo "NEW_ERC721_RECORDS=${NEW_ERC721_RECORDS}" >> $GITHUB_ENV
 
       - name: Import GPG Key
         id: gpg_importer
@@ -80,7 +108,14 @@ jobs:
           body: >
             **Description**:  
 
-            This PR provides an update for the ERC Registry, including the latest ERC-20 and ERC-721 tokens indexed from Hedera ${{ github.event.inputs.HEDERA_NETWORK }} as of ${{ env.CURRENT_DATE }}.
+            This PR updates the ERC Registry to include the most recent ERC-20 and ERC-721 tokens.
 
+
+            **Registry Update Summary**:
+              - **Hedera Network**: ${{ github.event.inputs.HEDERA_NETWORK }}
+              - **New ERC-20 Records Added**: ${{ env.NEW_ERC20_RECORDS }}
+              - **New ERC-721 Records Added**: ${{ env.NEW_ERC721_RECORDS }}
+              - **Indexing Duration**: ${{ env.INDEX_DURATION }} seconds
+              - **Current Date**: ${{ env.CURRENT_DATE }}
           labels: 'internal'
           assignees: 'swirlds-automation'
