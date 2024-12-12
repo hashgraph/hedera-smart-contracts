@@ -57,18 +57,16 @@ jobs:
           cd ./tools/erc-repository-indexer/erc-contract-indexer
           npm install
 
-      - name: Debug Node.js Environment
-        run: |
-          cd ./tools/erc-repository-indexer/erc-contract-indexer
-          node -e "console.log('HEDERA_NETWORK:', process.env.HEDERA_NETWORK)"
-          cat .env
-
       - name: Start ERC Registry Indexer
         run: |
           cd ./tools/erc-repository-indexer/erc-contract-indexer
-          ls -a
-          cat .env
           npm start
+
+      - name: Debug Node.js Environment
+        run: |
+          cd ./tools/erc-repository-indexer/erc-contract-indexer
+          ls erc-registry
+          cat erc-registry/previewnet/erc-20.json
 
       - name: Import GPG Key
         id: gpg_importer
