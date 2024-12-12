@@ -72,7 +72,7 @@ jobs:
 
       - name: Get Current Date
         id: current_date
-        run: echo "CURRENT_DATE=$(date -u +"%Y-%m-%d")" >> $GITHUB_ENV
+        run: echo "CURRENT_DATE=$(date -u +"%m-%d-%Y")" >> $GITHUB_ENV
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
@@ -86,7 +86,9 @@ jobs:
           title: 'chore: update ERC Registry'
           body: >
             **Description**:  
-            This PR updates the ERC Registry with the latest token information indexed from the Hedera network up to ${{ env.CURRENT_DATE }}.
+
+            This PR updates the ERC Registry with the latest token information indexed from ${{ github.event.inputs.HEDERA_NETWORK }} up to ${{ env.CURRENT_DATE }}.
+
 
             Fixes #
           labels: 'internal'
