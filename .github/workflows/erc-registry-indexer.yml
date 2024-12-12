@@ -1,0 +1,92 @@
+name: ERC Registry Indexer
+
+on:
+  workflow_dispatch:
+    inputs:
+      HEDERA_NETWORK:
+        description: 'Target Hedera network (e.g., previewnet, testnet, mainnet).'
+        required: true
+      MIRROR_NODE_URL:
+        description: 'Mirror node base URL (e.g., https://testnet.mirrornode.hedera.com).'
+        required: true
+      STARTING_POINT:
+        description: 'Starting point for indexing (e.g., a specific block number). Leave empty to start from the beginning.'
+        required: false
+
+jobs:
+  index-and-update:
+    name: Index ERC Contracts and Update Registry
+    runs-on: smart-contracts-linux-large
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2.10.2
+        with:
+          egress-policy: audit
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        run: |
+          cd ./tools/erc-repository-indexer/erc-contract-indexer
+          npm install
+
+      - name: Set Environment Variables
+        run: |
+          echo "HEDERA_NETWORK=${{ github.event.inputs.HEDERA_NETWORK }}" >> .env
+          echo "MIRROR_NODE_URL=${{ github.event.inputs.MIRROR_NODE_URL }}" >> .env
+          if [ "${{ github.event.inputs.STARTING_POINT }}" ]; then
+            echo "STARTING_POINT=${{ github.event.inputs.STARTING_POINT }}" >> .env
+          fi
+
+      - name: Start ERC Registry Indexer
+        run: |
+          cd ./tools/erc-repository-indexer/erc-contract-indexer
+          npm start
+
+      - name: Import GPG Key
+        id: gpg_importer
+        uses: step-security/ghaction-import-gpg@6c8fe4d0126a59d57c21f87c9ae5dd3451fa3cca # v6.1.0
+        with:
+          git_commit_gpgsign: true
+          git_tag_gpgsign: true
+          git_user_signingkey: true
+          gpg_private_key: ${{ secrets.GPG_KEY_CONTENTS }}
+          passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
+
+      - name: Commit
+        uses: stefanzweifel/git-auto-commit-action@8621497c8c39c72f3e2a999a26b4ca1b5058a842 # v5.0.1
+        with:
+          commit_author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+          commit_message: 'chore: update ERC Registry'
+          commit_options: '--no-verify --signoff'
+          commit_user_name: ${{ steps.gpg_importer.outputs.name }}
+          commit_user_email: ${{ steps.gpg_importer.outputs.email }}
+
+      - name: Get current date
+        id: current_date
+        run: echo "date=$(date -u +"%Y-%m-%d")" >> $GITHUB_ENV
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
+        with:
+          branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
+          commit-message: 'chore: update ERC Registry'
+          committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+          author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+          delete-branch: true
+          signoff: true
+          title: 'chore: update ERC Registry'
+          body: >
+            This PR updates the ERC Registry with the latest token information indexed from the Hedera network up to ${{ steps.current_date.outputs.date }}.
+          labels: 'internal'
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          assignees: 'swirlds-automation'
