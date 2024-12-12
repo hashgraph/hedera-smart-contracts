@@ -11,9 +11,11 @@ on:
       HEDERA_NETWORK:
         description: 'Target Hedera network (e.g., previewnet, testnet, mainnet).'
         required: true
+        default: 'previewnet'
       MIRROR_NODE_URL:
         description: 'Mirror node base URL (e.g., https://testnet.mirrornode.hedera.com).'
         required: true
+        default: 'https://previewnet.mirrornode.hedera.com'
       STARTING_POINT:
         description: 'Starting point for indexing (e.g., a specific block number). Leave empty to start from the beginning.'
         required: false
@@ -25,34 +27,35 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@v2.10.2
+        uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
         with:
           egress-policy: audit
 
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           submodules: recursive
 
-      - name: Set Up Node.js
-        uses: actions/setup-node@v4.1.0
+      - name: Use Node.js [20]
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
           node-version: 20
+          #cache: npm Disabling this because it causes the workflow to hang and eventually timeout
+
+      # - name: Set Environment Variables
+      #   run: cp local.env ./tools/erc-repository-indexer/erc-contract-indexer/.env
+      - name: Set Environment Variables
+        run: |
+          echo "HEDERA_NETWORK=${{ github.event.inputs.HEDERA_NETWORK }}" >> ./tools/erc-repository-indexer/erc-contract-indexer/.env
+          echo "MIRROR_NODE_URL=${{ github.event.inputs.MIRROR_NODE_URL }}" >> ./tools/erc-repository-indexer/erc-contract-indexer/.env
+          if [ "${{ github.event.inputs.STARTING_POINT }}" ]; then
+            echo "STARTING_POINT=${{ github.event.inputs.STARTING_POINT }}" >> ./tools/erc-repository-indexer/erc-contract-indexer/.env
+          fi
 
       - name: Install Dependencies
         run: |
           cd ./tools/erc-repository-indexer/erc-contract-indexer
           npm install
-
-      - name: Set Environment Variables
-        run: cp local.env .env
-      # - name: Set Environment Variables
-      #   run: |
-      #     echo "HEDERA_NETWORK=${{ github.event.inputs.HEDERA_NETWORK }}" >> .env
-      #     echo "MIRROR_NODE_URL=${{ github.event.inputs.MIRROR_NODE_URL }}" >> .env
-      #     if [ "${{ github.event.inputs.STARTING_POINT }}" ]; then
-      #       echo "STARTING_POINT=${{ github.event.inputs.STARTING_POINT }}" >> .env
-      #     fi
 
       - name: Debug Node.js Environment
         run: |
@@ -62,9 +65,8 @@ jobs:
 
       - name: Start ERC Registry Indexer
         run: |
-          env
-          cat .env
           cd ./tools/erc-repository-indexer/erc-contract-indexer
+          cat .env
           npm start
 
       - name: Import GPG Key
