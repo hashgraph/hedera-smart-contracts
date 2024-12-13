@@ -119,9 +119,9 @@ jobs:
 
       - name: Delete backup registry folder
         run: |
-          if [ -f ${{ env.INDEXER_PATH }}/backup ]; then
-            rm ${{ env.INDEXER_PATH }}/backup
-            echo "Deleted backup folder"
+          if [ -d ${{ env.INDEXER_PATH }}/backup ]; then
+            rm -rf ${{ env.INDEXER_PATH }}/backup
+            echo "Deleted backup folder."
           else
             echo "backup folder not found, skipping deletion."
           fi
