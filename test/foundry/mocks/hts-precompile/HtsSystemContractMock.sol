@@ -1902,4 +1902,12 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsSystemContractM
     function _getStringLength(string memory _string) internal pure returns (uint length) {
         length = bytes(_string).length;
     }
+
+    function airdropTokens(TokenTransferList[] memory tokenTransfers) external returns (int64 responseCode) {}
+
+    function cancelAirdrops(PendingAirdrop[] memory pendingAirdrops) external returns (int64 responseCode) {}
+
+    function claimAirdrops(PendingAirdrop[] memory pendingAirdrops) external returns (int64 responseCode) {}
+
+    function rejectTokens(address rejectingAddress, address[] memory ftAddresses, NftID[] memory nftIDs) external returns (int64 responseCode) {}
 }
