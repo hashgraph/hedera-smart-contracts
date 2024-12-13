@@ -117,20 +117,13 @@ jobs:
           echo "NEW_ERC20_RECORDS=${NEW_ERC20_RECORDS}" >> $GITHUB_ENV
           echo "NEW_ERC721_RECORDS=${NEW_ERC721_RECORDS}" >> $GITHUB_ENV
 
-      - name: Delete backup registry
+      - name: Delete backup registry folder
         run: |
-          if [ -f ${{ env.INDEXER_PATH }}/backup/erc-20.json ]; then
-            rm ${{ env.INDEXER_PATH }}/backup/erc-20.json
-            echo "Deleted backup/erc-20.json"
+          if [ -f ${{ env.INDEXER_PATH }}/backup ]; then
+            rm ${{ env.INDEXER_PATH }}/backup
+            echo "Deleted backup folder"
           else
-            echo "backup/erc-20.json not found, skipping deletion."
-          fi
-
-          if [ -f ${{ env.INDEXER_PATH }}/backup/erc-721.json ]; then
-            rm ${{ env.INDEXER_PATH }}/backup/erc-721.json
-            echo "Deleted backup/erc-721.json"
-          else
-            echo "backup/erc-721.json not found, skipping deletion."
+            echo "backup folder not found, skipping deletion."
           fi
 
       - name: Import GPG Key
