@@ -67,6 +67,7 @@ jobs:
         run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
 
       - name: Start ERC Registry Indexer
+        id: start_erc_indexer
         run: |
           cd ${{env.INDEXER_PATH}}
           npm start
@@ -78,7 +79,15 @@ jobs:
       - name: Calculate Duration
         id: calculate_duration
         run: |
+          START_TIMEEE=${{ steps.start_erc_indexer.start }}
+          END_TIMEEEE=${{ steps.start_erc_indexer.end }}
+
+          node -e "console.log('START_TIMEEE:', ${{ steps.start_erc_indexer.start }});"
+          node -e "console.log('END_TIMEEEE:', ${{ steps.start_erc_indexer.end }});"
+
+          # Calculate the duration in seconds
           DURATION=$((END_TIME - START_TIME))
+
           if [ "$DURATION" -lt 60 ]; then
             FORMATTED_DURATION="${DURATION} seconds"
           elif [ "$DURATION" -lt 3600 ]; then
