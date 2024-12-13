@@ -79,7 +79,18 @@ jobs:
         id: calculate_duration
         run: |
           DURATION=$((END_TIME - START_TIME))
-          echo "INDEX_DURATION=${DURATION}" >> $GITHUB_ENV
+          if [ "$DURATION" -lt 60 ]; then
+            FORMATTED_DURATION="${DURATION} seconds"
+          elif [ "$DURATION" -lt 3600 ]; then
+            MINUTES=$((DURATION / 60))
+            SECONDS=$((DURATION % 60))
+            FORMATTED_DURATION="${MINUTES} minute(s) and ${SECONDS} second(s)"
+          else
+            HOURS=$((DURATION / 3600))
+            MINUTES=$(((DURATION % 3600) / 60))
+            FORMATTED_DURATION="${HOURS} hour(s) and ${MINUTES} minute(s)"
+          fi
+          echo "INDEX_DURATION=${FORMATTED_DURATION}" >> $GITHUB_ENV
 
       - name: Count New Records
         id: count_records
@@ -122,29 +133,29 @@ jobs:
           cd ./tools/erc-repository-indexer/erc-contract-indexer
           node -e "console.log('NEW_ERC20_RECORDS:', ${{ env.NEW_ERC20_RECORDS }});"
           node -e "console.log('NEW_ERC721_RECORDS:', ${{ env.NEW_ERC721_RECORDS }});"
-          node -e "console.log('INDEX_DURATION:', ${{ env.INDEX_DURATION }});"
+          node -e "console.log('INDEX_DURATION:', ${{ env.FORMATTED_DURATION }});"
 
-      # - name: Create Pull Request
-      #   uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
-      #   with:
-      #     branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
-      #     commit-message: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
-      #     committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-      #     author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-      #     token: ${{ secrets.GH_ACCESS_TOKEN }}
-      #     delete-branch: true
-      #     signoff: true
-      #     title: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
-      #     body: >
-      #       **Description**:
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
+        with:
+          branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
+          commit-message: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
+          committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+          author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          delete-branch: true
+          signoff: true
+          title: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
+          body: >
+            **Description**:
 
-      #       This PR updates the ERC Registry to include the most recent ERC-20 and ERC-721 tokens.
+            This PR updates the ERC Registry to include the most recent ERC-20 and ERC-721 tokens.
 
-      #       **Registry Update Summary**:
-      #         - **Hedera Network**: ${{ github.event.inputs.HEDERA_NETWORK }}
-      #         - **New ERC-20 Records Added**: ${{ env.NEW_ERC20_RECORDS }}
-      #         - **New ERC-721 Records Added**: ${{ env.NEW_ERC721_RECORDS }}
-      #         - **Indexing Duration**: ${{ env.INDEX_DURATION }} seconds
-      #         - **Current Date**: ${{ env.CURRENT_DATE }}
-      #     labels: 'internal'
-      #     assignees: 'swirlds-automation'
+            **Registry Update Summary**:
+              - **Hedera Network**: ${{ github.event.inputs.HEDERA_NETWORK }}
+              - **New ERC-20 Records Added**: ${{ env.NEW_ERC20_RECORDS }}
+              - **New ERC-721 Records Added**: ${{ env.NEW_ERC721_RECORDS }}
+              - **Indexing Duration**: ${{ env.FORMATTED_DURATION }}
+              - **Current Date**: ${{ env.CURRENT_DATE }}
+          labels: 'internal'
+          assignees: 'swirlds-automation'
