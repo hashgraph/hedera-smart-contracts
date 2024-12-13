@@ -100,8 +100,8 @@ jobs:
           if [ -f backup/erc-20.json ]; then
             node -e "console.log('backup erc20 lenth:', $(jq '. | length' backup/erc-20.json));"
             node -e "console.log('backup erc721 lenth:', $(jq '. | length' backup/erc-721.json));"
-            NEW_ERC20_RECORDS=$(jq -s '.[0] + .[1] | length' backup/erc-20.json erc-registry/previewnet/erc-20.json)
-            node -e "console.log('NEW_ERC20_RECORDS:', $(jq -s '.[0] + .[1] | length' backup/erc-20.json erc-registry/previewnet/erc-20.json));"
+            NEW_ERC20_RECORDS=$(jq -s '.[1] - .[0] | length' backup/erc-20.json erc-registry/previewnet/erc-20.json)
+            node -e "console.log('NEW_ERC20_RECORDS:', $(jq -s '.[1] - .[0] | length' backup/erc-20.json erc-registry/previewnet/erc-20.json));"
           else
             NEW_ERC20_RECORDS=$(jq '. | length' erc-registry/previewnet/erc-20.json)
           fi
