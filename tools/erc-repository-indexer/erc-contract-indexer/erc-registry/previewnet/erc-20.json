@@ -1,0 +1,250 @@
+[
+  {
+    "contractId": "0.0.4443",
+    "address": "0x000000000000000000000000000000000000115b",
+    "name": "My ERC20 Token",
+    "symbol": "MTK",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4473",
+    "address": "0x0000000000000000000000000000000000001179",
+    "name": "ERC20 Fungible Token",
+    "symbol": "20FT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4475",
+    "address": "0x000000000000000000000000000000000000117b",
+    "name": "ERC20 Fungible Token",
+    "symbol": "20FT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5861",
+    "address": "0x00000000000000000000000000000000000016e5",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5862",
+    "address": "0x00000000000000000000000000000000000016e6",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5863",
+    "address": "0x00000000000000000000000000000000000016e7",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5864",
+    "address": "0x00000000000000000000000000000000000016e8",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5865",
+    "address": "0x00000000000000000000000000000000000016e9",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5868",
+    "address": "0x00000000000000000000000000000000000016ec",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5897",
+    "address": "0x0000000000000000000000000000000000001709",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5898",
+    "address": "0x000000000000000000000000000000000000170a",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5899",
+    "address": "0x000000000000000000000000000000000000170b",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5900",
+    "address": "0x000000000000000000000000000000000000170c",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5901",
+    "address": "0x000000000000000000000000000000000000170d",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5902",
+    "address": "0x000000000000000000000000000000000000170e",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5933",
+    "address": "0x000000000000000000000000000000000000172d",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5934",
+    "address": "0x000000000000000000000000000000000000172e",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5935",
+    "address": "0x000000000000000000000000000000000000172f",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5936",
+    "address": "0x0000000000000000000000000000000000001730",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5937",
+    "address": "0x0000000000000000000000000000000000001731",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5938",
+    "address": "0x0000000000000000000000000000000000001732",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5969",
+    "address": "0x0000000000000000000000000000000000001751",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5970",
+    "address": "0x0000000000000000000000000000000000001752",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5971",
+    "address": "0x0000000000000000000000000000000000001753",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5972",
+    "address": "0x0000000000000000000000000000000000001754",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5973",
+    "address": "0x0000000000000000000000000000000000001755",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5974",
+    "address": "0x0000000000000000000000000000000000001756",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6830",
+    "address": "0x39132f313c743c8e925ef554c4230fb3c93ddb1d",
+    "name": "LCAGsLlsJD",
+    "symbol": "hhJPG",
+    "totalSupply": 10000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6842",
+    "address": "0x88af9c637b9062eb30b49586f9ecf524570ce9b3",
+    "name": "NHwCnlYGNc",
+    "symbol": "qCHkS",
+    "totalSupply": 10000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6981",
+    "address": "0x5a48eeb7dc2ad7b51f6504007ed95d88f6d558b8",
+    "name": "jJjVSnUnOR",
+    "symbol": "sKdik",
+    "totalSupply": 10000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7063",
+    "address": "0x319b2cd8a2251584ac43c5da947529a22ebe95f5",
+    "name": "elexiZaQVP",
+    "symbol": "eMEpF",
+    "totalSupply": 10000,
+    "decimals": 18
+  }
+]
