@@ -108,7 +108,7 @@ jobs:
 
           # Determine the length of ERC-721 records
           if [ -f backup/erc-721.json ]; then
-            NEW_ERC721_RECORDS=$(jq -s '.[0] + .[1] | length' backup/erc-721.json erc-registry/previewnet/erc-721.json)
+            NEW_ERC721_RECORDS=$(jq -s '.[1] - .[0] | length' backup/erc-721.json erc-registry/previewnet/erc-721.json)
           else
             NEW_ERC721_RECORDS=$(jq '. | length' erc-registry/previewnet/erc-721.json)
           fi
