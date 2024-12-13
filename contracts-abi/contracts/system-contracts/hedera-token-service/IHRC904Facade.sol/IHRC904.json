@@ -3,21 +3,16 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "accountNumAlias",
+        "name": "receiverAddress",
         "type": "address"
       }
     ],
-    "name": "getEvmAddressAlias",
+    "name": "cancelAirdropFT",
     "outputs": [
       {
         "internalType": "int64",
         "name": "responseCode",
         "type": "int64"
-      },
-      {
-        "internalType": "address",
-        "name": "evmAddressAlias",
-        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -27,21 +22,21 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "evmAddressAlias",
+        "name": "receiverAddress",
         "type": "address"
+      },
+      {
+        "internalType": "int64",
+        "name": "serialNumber",
+        "type": "int64"
       }
     ],
-    "name": "getHederaAccountNumAlias",
+    "name": "cancelAirdropNFT",
     "outputs": [
       {
         "internalType": "int64",
         "name": "responseCode",
         "type": "int64"
-      },
-      {
-        "internalType": "address",
-        "name": "accountNumAlias",
-        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -51,84 +46,91 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "account",
+        "name": "senderAddress",
         "type": "address"
-      },
-      {
-        "internalType": "bytes",
-        "name": "message",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes",
-        "name": "signature",
-        "type": "bytes"
       }
     ],
-    "name": "isAuthorized",
+    "name": "claimAirdropFT",
     "outputs": [
       {
         "internalType": "int64",
         "name": "responseCode",
         "type": "int64"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "senderAddress",
+        "type": "address"
       },
+      {
+        "internalType": "int64",
+        "name": "serialNumber",
+        "type": "int64"
+      }
+    ],
+    "name": "claimAirdropNFT",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "rejectTokenFT",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int64[]",
+        "name": "serialNumbers",
+        "type": "int64[]"
+      }
+    ],
+    "name": "rejectTokenNFTs",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
         "internalType": "bool",
-        "name": "authorized",
+        "name": "enableAutoAssociations",
         "type": "bool"
       }
     ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes",
-        "name": "messageHash",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes",
-        "name": "signature",
-        "type": "bytes"
-      }
-    ],
-    "name": "isAuthorizedRaw",
+    "name": "setUnlimitedAutomaticAssociations",
     "outputs": [
       {
         "internalType": "int64",
         "name": "responseCode",
         "type": "int64"
-      },
-      {
-        "internalType": "bool",
-        "name": "authorized",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "addr",
-        "type": "address"
-      }
-    ],
-    "name": "isValidAlias",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "response",
-        "type": "bool"
       }
     ],
     "stateMutability": "nonpayable",
