@@ -55,7 +55,7 @@ jobs:
       - name: Backup Existing Registry
         run: |
           mkdir -p ${{ env.INDEXER_PATH }}/backup
-          if [ -d ${{ env.INDEXER_PATH }}/erc-registry/previewnet" ] && [ "$(ls -A ${{ env.INDEXER_PATH }}/erc-registry/previewnet/*.json 2>/dev/null)" ]; then
+          if [ -d "${{ env.INDEXER_PATH }}/erc-registry/previewnet" ] && [ "$(ls -A ${{ env.INDEXER_PATH }}/erc-registry/previewnet/*.json 2>/dev/null)" ]; then
             cp ${{ env.INDEXER_PATH }}/erc-registry/previewnet/*.json ${{ env.INDEXER_PATH }}/backup/
             echo "Backup successful."
           else
