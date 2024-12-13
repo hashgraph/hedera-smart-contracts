@@ -24,20 +24,20 @@ const { Contract } = require('ethers');
 const Constants = require('../../../constants');
 
 describe('@IHRC-906 Facade @CryptoAllowance  Test Suite', function () {
-  let walletA, walletB, walletC, walletIHRC906Facade;
+  let walletA, walletB, walletC, walletIHRC906AccountFacade;
   const amount = 3_000;
 
   before(async () => {
     [walletA, walletB, walletC] = await ethers.getSigners();
 
-    const IHRC906Facade = new ethers.Interface(
-      (await hre.artifacts.readArtifact('IHRC906Facade')).abi
+    const IHRC906AccountFacade = new ethers.Interface(
+      (await hre.artifacts.readArtifact('IHRC906AccountFacade')).abi
     );
-    walletIHRC906Facade = new Contract(walletA.address, IHRC906Facade, walletA);
+    walletIHRC906AccountFacade = new Contract(walletA.address, IHRC906AccountFacade, walletA);
   });
 
   it('should execute hbarApprove() by an EOA to grant an hbar allowance to another EOA', async () => {
-    const tx = await walletIHRC906Facade.hbarApprove(
+    const tx = await walletIHRC906AccountFacade.hbarApprove(
       walletB.address,
       amount,
       Constants.GAS_LIMIT_1_000_000
@@ -49,7 +49,7 @@ describe('@IHRC-906 Facade @CryptoAllowance  Test Suite', function () {
 
   // @notice: skipping until mirror-node fully enables HIP906
   xit('should execute hbarAllowance() by an EOA to retrieve allowance granted to a spender', async () => {
-    const approveTx = await walletIHRC906Facade.hbarApprove(
+    const approveTx = await walletIHRC906AccountFacade.hbarApprove(
       walletC.address,
       amount,
       Constants.GAS_LIMIT_1_000_000
@@ -57,7 +57,7 @@ describe('@IHRC-906 Facade @CryptoAllowance  Test Suite', function () {
     await approveTx.wait();
 
     // @notice: staticCall() method gets the return values instead of transaction information
-    const result = await walletIHRC906Facade.hbarAllowance.staticCall(
+    const result = await walletIHRC906AccountFacade.hbarAllowance.staticCall(
       walletC.address,
       Constants.GAS_LIMIT_1_000_000
     );

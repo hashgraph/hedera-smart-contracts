@@ -10,3 +10,11 @@ The table below outlines the available Hedera Account Service System Contract fu
 | `hbarApprove`     | `0x86aff07c`           | [0.52](https://docs.hedera.com/hedera/networks/release-notes/services#release-v0.52) | [HIP 906](https://hips.hedera.com/hip/hip-906) | `hbarApprove(address spender, int256 amount)`                              |
 | `isAuthorizedRaw` | `0xb2a31da4`           | [0.52](https://docs.hedera.com/hedera/networks/release-notes/services#release-v0.52) | [HIP 632](https://hips.hedera.com/hip/hip-632) | `isAuthorizedRaw(address, bytes /*messageHash*/, bytes /*signatureBlob*/)` |
 | `isAuthorized`    | `0xb2526367`           | [0.56](https://docs.hedera.com/hedera/networks/release-notes/services#release-v0.56) | [HIP 632](https://hips.hedera.com/hip/hip-632) | `isAuthorizedRaw(address, bytes /*messageHash*/, bytes /*signatureBlob*/)` |
+
+The Hedera network also make facade contract calls available to EOAs for improved experience.
+Facade function allow for EOAs to make calls without requiring a deployed contract
+The table below outlines the available Hedera Account Service (HAS) System Contract facade functions:
+
+| Function Name                          | Function Selector Hash | Consensus Node Release Version                                               | HIP                                            | Method Interface                                                                                                                                                              | Comments                                                       |
+| -------------------------------------- | ---------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `setUnlimitedAutomaticAssociations`   | `0xf5677e99`  | [0.56](https://docs.hedera.com/hedera/networks/release-notes/services#release-v0.56)  | [HIP 904](https://hips.hedera.com/hip/hip-904) | `setUnlimitedAutomaticAssociations(bool enableAutoAssociations) external returns (int64 responseCode)` |

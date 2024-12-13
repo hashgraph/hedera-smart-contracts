@@ -162,20 +162,20 @@ describe('@CryptoAllowance Test Suite', () => {
     }
   });
 
-  it('Should allow owner to grant an allowance to spender using IHRC906Facade and spender to transfer allowance to receiver on behalf of owner', async () => {
-    // set up IHRC906Facade
-    const IHRC906Facade = new ethers.Interface(
-      (await hre.artifacts.readArtifact('IHRC906Facade')).abi
+  it('Should allow owner to grant an allowance to spender using IHRC906AccountFacade and spender to transfer allowance to receiver on behalf of owner', async () => {
+    // set up IHRC906AccountFacade
+    const IHRC906AccountFacade = new ethers.Interface(
+      (await hre.artifacts.readArtifact('IHRC906AccountFacade')).abi
     );
 
-    const walletAIHRC906Facade = new ethers.Contract(
+    const walletAIHRC906AccountFacade = new ethers.Contract(
       walletA.address,
-      IHRC906Facade,
+      IHRC906AccountFacade,
       walletA
     );
 
     // grant an allowance to cryptoAllowanceContract
-    const approveTx = await walletAIHRC906Facade.hbarApprove(
+    const approveTx = await walletAIHRC906AccountFacade.hbarApprove(
       cryptoAllowanceAddress,
       amount,
       Constants.GAS_LIMIT_1_000_000

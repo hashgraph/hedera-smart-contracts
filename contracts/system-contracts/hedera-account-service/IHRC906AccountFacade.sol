@@ -2,9 +2,9 @@
 pragma solidity >=0.4.9 <0.9.0;
 
 /**
- * notice: This interface is applicable when msg.sender is an EOA or a smart contract.
+ * notice: This interface is applicable when msg.sender is an EOA or a smart contract and the target address is the same.
  */
-interface IHRC906Facade {
+interface IHRC906AccountFacade {
     /// Returns the amount of hbar that the spender has been authorized to spend on behalf of the owner.
     /// @param spender The account that has been authorized by the owner.
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
