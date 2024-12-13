@@ -90,7 +90,7 @@ jobs:
             MINUTES=$(((DURATION % 3600) / 60))
             FORMATTED_DURATION="${HOURS} hour(s) and ${MINUTES} minute(s)"
           fi
-          echo "INDEX_DURATION=${FORMATTED_DURATION}" >> $GITHUB_ENV
+          echo "INDEXING_DURATION=${FORMATTED_DURATION}" >> $GITHUB_ENV
 
       - name: Count New Records
         id: count_records
@@ -133,7 +133,7 @@ jobs:
           cd ./tools/erc-repository-indexer/erc-contract-indexer
           node -e "console.log('NEW_ERC20_RECORDS:', ${{ env.NEW_ERC20_RECORDS }});"
           node -e "console.log('NEW_ERC721_RECORDS:', ${{ env.NEW_ERC721_RECORDS }});"
-          node -e "console.log('INDEX_DURATION:', ${{ env.FORMATTED_DURATION }});"
+          node -e "console.log('INDEXING_DURATION:', ${{ env.INDEXING_DURATION }});"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
@@ -157,7 +157,7 @@ jobs:
               - **Hedera Network**: ${{ github.event.inputs.HEDERA_NETWORK }}
               - **New ERC-20 Records Added**: ${{ env.NEW_ERC20_RECORDS }}
               - **New ERC-721 Records Added**: ${{ env.NEW_ERC721_RECORDS }}
-              - **Indexing Duration**: ${{ env.FORMATTED_DURATION }}
+              - **Indexing Duration**: ${{ env.INDEXING_DURATION }}
               - **Current Date**: ${{ env.CURRENT_DATE }}
           labels: 'internal'
           assignees: 'swirlds-automation'
