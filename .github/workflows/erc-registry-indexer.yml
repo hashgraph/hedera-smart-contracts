@@ -117,6 +117,22 @@ jobs:
           echo "NEW_ERC20_RECORDS=${NEW_ERC20_RECORDS}" >> $GITHUB_ENV
           echo "NEW_ERC721_RECORDS=${NEW_ERC721_RECORDS}" >> $GITHUB_ENV
 
+      - name: Delete backup registry
+        run: |
+          if [ -f ${{ env.INDEXER_PATH }}/backup/erc-20.json ]; then
+            rm ${{ env.INDEXER_PATH }}/backup/erc-20.json
+            echo "Deleted backup/erc-20.json"
+          else
+            echo "backup/erc-20.json not found, skipping deletion."
+          fi
+
+          if [ -f ${{ env.INDEXER_PATH }}/backup/erc-721.json ]; then
+            rm ${{ env.INDEXER_PATH }}/backup/erc-721.json
+            echo "Deleted backup/erc-721.json"
+          else
+            echo "backup/erc-721.json not found, skipping deletion."
+          fi
+
       - name: Import GPG Key
         id: gpg_importer
         uses: step-security/ghaction-import-gpg@6c8fe4d0126a59d57c21f87c9ae5dd3451fa3cca # v6.1.0
@@ -137,27 +153,27 @@ jobs:
           node -e "console.log('NEW_ERC20_RECORDS:', ${{ env.NEW_ERC20_RECORDS }});"
           node -e "console.log('NEW_ERC721_RECORDS:', ${{ env.NEW_ERC721_RECORDS }});"
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
-        with:
-          branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
-          commit-message: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
-          committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-          author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-          delete-branch: true
-          signoff: true
-          title: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
-          body: >
-            **Description**:
+      # - name: Create Pull Request
+      #   uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
+      #   with:
+      #     branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
+      #     commit-message: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
+      #     committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+      #     author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+      #     token: ${{ secrets.GH_ACCESS_TOKEN }}
+      #     delete-branch: true
+      #     signoff: true
+      #     title: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
+      #     body: >
+      #       **Description**:
 
-            This PR updates the ERC Registry to include the most recent ERC-20 and ERC-721 tokens.
+      #       This PR updates the ERC Registry to include the most recent ERC-20 and ERC-721 tokens.
 
-            **Registry Update Summary**:
-              - **Hedera Network**: ${{ github.event.inputs.HEDERA_NETWORK }}
-              - **New ERC-20 Records Added**: ${{ env.NEW_ERC20_RECORDS }}
-              - **New ERC-721 Records Added**: ${{ env.NEW_ERC721_RECORDS }}
-              - **Indexing Duration**: ${{ env.INDEXING_DURATION }}
-              - **Current Date**: ${{ env.CURRENT_DATE }}
-          labels: 'internal'
-          assignees: 'swirlds-automation'
+      #       **Registry Update Summary**:
+      #         - **Hedera Network**: ${{ github.event.inputs.HEDERA_NETWORK }}
+      #         - **New ERC-20 Records Added**: ${{ env.NEW_ERC20_RECORDS }}
+      #         - **New ERC-721 Records Added**: ${{ env.NEW_ERC721_RECORDS }}
+      #         - **Indexing Duration**: ${{ env.INDEXING_DURATION }}
+      #         - **Current Date**: ${{ env.CURRENT_DATE }}
+      #     labels: 'internal'
+      #     assignees: 'swirlds-automation'
