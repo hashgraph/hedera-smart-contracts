@@ -79,15 +79,10 @@ jobs:
       - name: Calculate Duration
         id: calculate_duration
         run: |
-          START_TIMEEE=${{ steps.start_erc_indexer.start }}
-          END_TIMEEEE=${{ steps.start_erc_indexer.end }}
-
-          node -e "console.log('START_TIMEEE:', ${{ steps.start_erc_indexer.start }});"
-          node -e "console.log('END_TIMEEEE:', ${{ steps.start_erc_indexer.end }});"
-
           # Calculate the duration in seconds
-          DURATION=$((END_TIME - START_TIME))
+          DURATION=$((END_TIME - START_TIME + 63900))
 
+          # Resolve duration
           if [ "$DURATION" -lt 60 ]; then
             FORMATTED_DURATION="${DURATION} seconds"
           elif [ "$DURATION" -lt 3600 ]; then
@@ -101,16 +96,15 @@ jobs:
           fi
           echo "INDEXING_DURATION=${FORMATTED_DURATION}" >> $GITHUB_ENV
 
+          node -e "console.log('INDEXING_DURATION:', ${{ env.INDEXING_DURATION }});"
+
       - name: Count New Records
         id: count_records
         run: |
           cd ${{ env.INDEXER_PATH }}
           # Determine the length of ERC-20 records
           if [ -f backup/erc-20.json ]; then
-            node -e "console.log('backup erc20 lenth:', $(jq '. | length' backup/erc-20.json));"
-            node -e "console.log('backup erc721 lenth:', $(jq '. | length' backup/erc-721.json));"
             NEW_ERC20_RECORDS=$(jq -s '.[1] - .[0] | length' backup/erc-20.json erc-registry/previewnet/erc-20.json)
-            node -e "console.log('NEW_ERC20_RECORDS:', $(jq -s '.[1] - .[0] | length' backup/erc-20.json erc-registry/previewnet/erc-20.json));"
           else
             NEW_ERC20_RECORDS=$(jq '. | length' erc-registry/previewnet/erc-20.json)
           fi
@@ -148,12 +142,6 @@ jobs:
       - name: Get Current Date
         id: current_date
         run: echo "CURRENT_DATE=$(date -u +"%m-%d-%Y")" >> $GITHUB_ENV
-
-      - name: Debug Node.js Environment
-        run: |
-          cd ./tools/erc-repository-indexer/erc-contract-indexer
-          node -e "console.log('NEW_ERC20_RECORDS:', ${{ env.NEW_ERC20_RECORDS }});"
-          node -e "console.log('NEW_ERC721_RECORDS:', ${{ env.NEW_ERC721_RECORDS }});"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
