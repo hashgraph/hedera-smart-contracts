@@ -44,7 +44,7 @@ jobs:
       - name: Set Environment Variables
         run: |
           echo "HEDERA_NETWORK=previewnet" >> ${{ env.INDEXER_PATH }}/.env
-          echo "MIRROR_NODE_URL=https://previewnet.mirrornode.hedera.com)" >> ${{ env.INDEXER_PATH }}/.env
+          echo "MIRROR_NODE_URL=https://previewnet.mirrornode.hedera.com" >> ${{ env.INDEXER_PATH }}/.env
           echo "STARTING_POINT=${{ github.event.inputs.STARTING_POINT }}" >> ${{ env.INDEXER_PATH }}/.env
 
       - name: Install Dependencies
