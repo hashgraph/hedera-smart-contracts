@@ -1,0 +1,50 @@
+[
+  {
+    "contractId": "0.0.4443",
+    "address": "0x000000000000000000000000000000000000115b",
+    "name": "My ERC20 Token",
+    "symbol": "MTK",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4473",
+    "address": "0x0000000000000000000000000000000000001179",
+    "name": "ERC20 Fungible Token",
+    "symbol": "20FT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4475",
+    "address": "0x000000000000000000000000000000000000117b",
+    "name": "ERC20 Fungible Token",
+    "symbol": "20FT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5861",
+    "address": "0x00000000000000000000000000000000000016e5",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5862",
+    "address": "0x00000000000000000000000000000000000016e6",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5863",
+    "address": "0x00000000000000000000000000000000000016e7",
+    "name": "ERC Registry Fungible",
+    "symbol": "ERFT",
+    "totalSupply": 0,
+    "decimals": 18
+  }
+]
