@@ -120,9 +120,9 @@ jobs:
       - name: Debug Node.js Environment
         run: |
           cd ./tools/erc-repository-indexer/erc-contract-indexer
-          node -e "console.log('NEW_ERC20_RECORDS:', ${{ env.NEW_ERC20_RECORDS }}"
-          node -e "console.log('NEW_ERC721_RECORDS:', ${{ env.NEW_ERC721_RECORDS }}"
-          node -e "console.log('INDEX_DURATION:', ${{ env.INDEX_DURATION }}"
+          node -e "console.log('NEW_ERC20_RECORDS:', ${{ env.NEW_ERC20_RECORDS }});"
+          node -e "console.log('NEW_ERC721_RECORDS:', ${{ env.NEW_ERC721_RECORDS }});"
+          node -e "console.log('INDEX_DURATION:', ${{ env.INDEX_DURATION }});"
 
       # - name: Create Pull Request
       #   uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
