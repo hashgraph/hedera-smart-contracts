@@ -30,9 +30,8 @@ describe('ERC Registry Acceptance Test', () => {
   // production networks take more time to finish deployments
   jest.setTimeout(60000);
 
-  const totalExpectedNonERCContracts = 3;
-  const totalExpectedERC20Contracts = 6;
-  const totalExpectedERC721Contracts = 9;
+  const totalExpectedDeploymentsForEachContractType = 1;
+
   const erc20JsonFilePath = Helper.buildFilePath(
     constants.ERC_20_JSON_FILE_NAME
   );
@@ -44,15 +43,15 @@ describe('ERC Registry Acceptance Test', () => {
     erc20: [] as string[],
     erc721: [] as string[],
     nonErc: [] as string[],
+    minimalErc20: [] as string[],
+    minimalErc721: [] as string[],
   };
   let sdkClient: NodeClient | null = null;
 
   beforeAll(async () => {
     const contractDeploymentRequirements =
       testHelper.prepareContractDeployRequirements(
-        totalExpectedERC20Contracts,
-        totalExpectedERC721Contracts,
-        totalExpectedNonERCContracts
+        totalExpectedDeploymentsForEachContractType
       );
     sdkClient = testHelper.buildSdkClient();
     deployedAddresses = await testHelper.deployRequiredContracts(
@@ -62,14 +61,18 @@ describe('ERC Registry Acceptance Test', () => {
     // Sort all contract addresses to identify the earliest deployed contract
     const allDeployedAddresses = testHelper.sortAddresses([
       ...deployedAddresses.erc20,
+      ...deployedAddresses.minimalErc20,
       ...deployedAddresses.erc721,
+      ...deployedAddresses.minimalErc721,
       ...deployedAddresses.nonErc,
     ]);
+
     const totalExpectedDeployments =
-      totalExpectedNonERCContracts +
-      totalExpectedERC20Contracts +
-      totalExpectedERC721Contracts;
+      totalExpectedDeploymentsForEachContractType *
+      contractDeploymentRequirements.length;
+
     expect(allDeployedAddresses.length).toEqual(totalExpectedDeployments);
+
     // Start the indexing process from the earliest contract in the batch, avoiding indexing from genesis.
     process.env.STARTING_POINT = allDeployedAddresses[0];
   });
@@ -84,33 +87,61 @@ describe('ERC Registry Acceptance Test', () => {
   it('should execute the main ERC registry runner method and correctly record the number of detected ERC contracts in registry', async () => {
     // run the actual tool to start indexing the network and write to registry
     await ercRegistryRunner().then();
+
     // wait for 500ms for all the asynchronous tasks to finish
     await new Promise((resolve) => setTimeout(resolve, 500));
+
     // retrieve the newest erc contracts added to the registry
     const latestErc20sWrittenToRegistry = JSON.parse(
       testHelper.readContentsFromFile(erc20JsonFilePath)
-    ).slice(totalExpectedERC20Contracts * -1);
+    ).slice(totalExpectedDeploymentsForEachContractType * 2 * -1);
     const latestErc721sWrittenToRegistry = JSON.parse(
       testHelper.readContentsFromFile(erc721JsonFilePath)
-    ).slice(totalExpectedERC721Contracts * -1);
+    ).slice(totalExpectedDeploymentsForEachContractType * 2 * -1);
+
     // assertion
-    latestErc20sWrittenToRegistry.forEach((object: any, index: number) => {
-      expect(object.address).toEqual(deployedAddresses.erc20[index]);
-      expect(object.name).toEqual(
-        testConstants.ERC_CONSTRUCTOR_PARAMS.erc20.tokenName
-      );
-      expect(object.symbol).toEqual(
-        testConstants.ERC_CONSTRUCTOR_PARAMS.erc20.tokenSymbol
-      );
+    latestErc20sWrittenToRegistry.forEach((object: any) => {
+      expect(
+        deployedAddresses.erc20.includes(object.address) ||
+          deployedAddresses.minimalErc20.includes(object.address)
+      ).toBe(true);
+
+      if (deployedAddresses.erc20.includes(object.address)) {
+        expect(object.name).toEqual(
+          testConstants.ERC_CONSTRUCTOR_PARAMS.erc20.tokenName
+        );
+        expect(object.symbol).toEqual(
+          testConstants.ERC_CONSTRUCTOR_PARAMS.erc20.tokenSymbol
+        );
+      }
+
+      if (deployedAddresses.minimalErc20.includes(object.address)) {
+        expect(object.name).toBeNull;
+        expect(object.symbol).toBeNull;
+        expect(object.decimals).toBeNull;
+        expect(object.totalSupply).toBeNull;
+      }
     });
-    latestErc721sWrittenToRegistry.forEach((object: any, index: number) => {
-      expect(object.address).toEqual(deployedAddresses.erc721[index]);
-      expect(object.name).toEqual(
-        testConstants.ERC_CONSTRUCTOR_PARAMS.erc721.tokenName
-      );
-      expect(object.symbol).toEqual(
-        testConstants.ERC_CONSTRUCTOR_PARAMS.erc721.tokenSymbol
-      );
+
+    latestErc721sWrittenToRegistry.forEach((object: any) => {
+      expect(
+        deployedAddresses.erc721.includes(object.address) ||
+          deployedAddresses.minimalErc721.includes(object.address)
+      ).toBe(true);
+
+      if (deployedAddresses.erc721.includes(object.address)) {
+        expect(object.name).toEqual(
+          testConstants.ERC_CONSTRUCTOR_PARAMS.erc721.tokenName
+        );
+        expect(object.symbol).toEqual(
+          testConstants.ERC_CONSTRUCTOR_PARAMS.erc721.tokenSymbol
+        );
+      }
+
+      if (deployedAddresses.minimalErc721.includes(object.address)) {
+        expect(object.name).toBeNull;
+        expect(object.symbol).toBeNull;
+      }
     });
   });
 });
