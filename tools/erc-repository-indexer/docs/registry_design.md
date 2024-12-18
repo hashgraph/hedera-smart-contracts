@@ -116,8 +116,7 @@ classDiagram
 
    c. **Perform Interface Signature Matching**:
 
-   - Analyze the bytecode for compliance with ERC-20 or ERC-721 standards using the [Contract.isErc()](https://github.com/acuarica/evm/blob/402028ca8c3a33dbb8498f0200d9af2efbf4f792/src/index.ts#L153-L158) method from the [SEVM library](https://www.npmjs.com/package/sevm). This method matches function signatures to confirm compliance with the ERC-20 and ERC-721 standards.
-   - **Limitations**: The tool may fail to identify contracts that were not compiled using Solidity or Vyper. This limitation should be considered when interpreting the results.
+   - Perform bytecode analysis for ERC-20 and ERC-721 compliance using a regex-based approach. This method utilizes positive lookahead assertions to match all requisite function selectors and event topics directly within the bytecode, ensuring accurate interface validation.
 
    d. **Handle Pagination**:
 
