@@ -69,10 +69,10 @@ export default {
       sighash: '0x95d89b41',
     },
   ],
-  ERC_STANDARD_SIGNATURE_REGEX: {
+  ERC_STANDARD_SIGNATURES: {
     /**
-     * The regex pattern for identifying an ERC-20 bytecode.
-     * Built on top of the following method and event signatures:
+     * The pattern for identifying ERC-20 bytecode, based on a set of method and event signatures
+     * as defined in the ERC-20 standard interface.
      *
      * Selectors (Methods):
      * - 'dd62ed3e': allowance(address _owner, address _spender) view returns (uint256 remaining)
@@ -87,16 +87,21 @@ export default {
      * - 'ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef': Transfer(address indexed _from, address indexed _to, uint256 _value)
      *
      * source: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v5.1.0/contracts/token/ERC20/IERC20.sol
-     *
-     * note: The `(?=...)` (positive lookahead operator) is used here to ensure that ALL the necessary selectors and topics exist at least once in the bytecode.
-     *       It doesn't consume characters but asserts that the given pattern (selector or topic) can be found somewhere in the bytecode.
      */
-    ERC20:
-      /(?=.*dd62ed3e)(?=.*095ea7b3)(?=.*70a08231)(?=.*18160ddd)(?=.*a9059cbb)(?=.*23b872dd)(?=.*8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925)(?=.*ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef)/,
+    ERC20: [
+      'dd62ed3e',
+      '095ea7b3',
+      '70a08231',
+      '18160ddd',
+      'a9059cbb',
+      '23b872dd',
+      '8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925',
+      'ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+    ],
 
     /**
-     * The regex pattern for identifying an ERC-721 bytecode.
-     * Built on top of the following method and event signatures:
+     * The pattern for identifying ERC-721 bytecode, based on a set of method and event signatures
+     * as defined in the ERC-721 standard interface.
      *
      * Selectors (Methods):
      * - '095ea7b3': approve(address _approved, uint256 _tokenId) payable
@@ -116,11 +121,21 @@ export default {
      * - 'ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef': Transfer(address indexed _from, address indexed _to, uint256 indexed _tokenId)
      *
      * source: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v5.1.0/contracts/token/ERC721/IERC721.sol
-     *
-     * note: The `(?=...)` (positive lookahead operator) is used here to ensure that ALL the necessary selectors and topics exist at least once in the bytecode.
-     *       It doesn't consume characters but asserts that the given pattern (selector or topic) can be found somewhere in the bytecode.
      */
-    ERC721:
-      /(?=.*095ea7b3)(?=.*70a08231)(?=.*081812fc)(?=.*e985e9c5)(?=.*6352211e)(?=.*42842e0e)(?=.*b88d4fde)(?=.*a22cb465)(?=.*01ffc9a7)(?=.*23b872dd)(?=.*8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925)(?=.*17307eab39ab6107e8899845ad3d59bd9653f200f220920489ca2b5937696c31)(?=.*ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef)/,
+    ERC721: [
+      '095ea7b3',
+      '70a08231',
+      '081812fc',
+      'e985e9c5',
+      '6352211e',
+      '42842e0e',
+      'b88d4fde',
+      'a22cb465',
+      '01ffc9a7',
+      '23b872dd',
+      '8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925',
+      '17307eab39ab6107e8899845ad3d59bd9653f200f220920489ca2b5937696c31',
+      'ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+    ],
   },
 };
