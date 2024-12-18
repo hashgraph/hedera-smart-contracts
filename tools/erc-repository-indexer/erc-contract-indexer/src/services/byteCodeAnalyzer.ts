@@ -18,7 +18,6 @@
  *
  */
 
-import { Contract } from 'sevm';
 import { ContractScannerService } from './contractScanner';
 import constants from '../utils/constants';
 import { ethers } from 'ethers';
@@ -101,9 +100,7 @@ export class ByteCodeAnalyzer {
 
         console.log(`Analyzing contract: contractId=${contract.contract_id}`);
 
-        const sevmContract = new Contract(contractBytecode);
-
-        if (sevmContract.isERC(ERCID.ERC20)) {
+        if (this.isErc(ERCID.ERC20, contractBytecode)) {
           const ercTokenInfoObject = await this.analyzeErcContract(
             ERCID.ERC20,
             contract,
@@ -115,7 +112,7 @@ export class ByteCodeAnalyzer {
           }
         }
 
-        if (sevmContract.isERC(ERCID.ERC721)) {
+        if (this.isErc(ERCID.ERC721, contractBytecode)) {
           const ercTokenInfoObject = await this.analyzeErcContract(
             ERCID.ERC721,
             contract,
@@ -227,5 +224,18 @@ export class ByteCodeAnalyzer {
       address: contract.evm_address,
       ...ercTokenInfoObject,
     } as ERC20OutputInterface | ERC721OutputInterface;
+  }
+
+  /**
+   * Checks if the given bytecode matches the specified ERC standard based on its signature.
+   *
+   * @param {ERCID} ercId - The identifier for the ERC standard (e.g., ERC-20, ERC-721).
+   * @param {string} bytecode - The bytecode of the contract to be checked.
+   * @returns {boolean} - Returns true if the bytecode matches the signature pattern for the specified ERC standard, otherwise false.
+   */
+  private isErc(ercId: ERCID, bytecode: string): boolean {
+    const ercSignatureRegexPattern =
+      constants.ERC_STANDARD_SIGNATURE_REGEX[ercId];
+    return ercSignatureRegexPattern.test(bytecode);
   }
 }
