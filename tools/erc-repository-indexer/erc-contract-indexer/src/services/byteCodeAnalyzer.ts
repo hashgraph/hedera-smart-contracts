@@ -196,32 +196,28 @@ export class ByteCodeAnalyzer {
           .then((tokenInfoResponse) => ({
             type,
             field,
-            sighash,
             tokenInfoResponse,
           }))
     );
     const contractCallResponses = await Promise.all(contractCallPromises);
 
     const ercTokenInfoObject = contractCallResponses.reduce<
-      Record<string, string | number>
-    >((ercTokenInfoObject, { type, field, sighash, tokenInfoResponse }) => {
+      Record<string, string | number | null>
+    >((ercTokenInfoObject, { type, field, tokenInfoResponse }) => {
       if (!tokenInfoResponse) {
-        const errMessage = `ERC contract passes signature matching but fails contract call: contractId=${contract.contract_id}, contractAddress=${contract.evm_address}, function_selector=${sighash}`;
-        const error = new Error(errMessage);
-        (error as any).errMessage = errMessage;
-        throw error;
+        ercTokenInfoObject[field] = tokenInfoResponse;
+      } else {
+        const decodedTokenInfo = ethers.AbiCoder.defaultAbiCoder().decode(
+          [type],
+          tokenInfoResponse
+        )[0];
+
+        // `decodedTokenInfo` can potentially be one of two types: string or BigInt.
+        // Since the goal is to write the data to disk, convert BigInt to a Number,
+        // as the filesystem (fs) cannot directly handle BigInt values.
+        ercTokenInfoObject[field] =
+          type === 'string' ? decodedTokenInfo : Number(decodedTokenInfo);
       }
-
-      const decodedTokenInfo = ethers.AbiCoder.defaultAbiCoder().decode(
-        [type],
-        tokenInfoResponse
-      )[0];
-
-      // `decodedTokenInfo` can potentially be one of two types: string or BigInt.
-      // Since the goal is to write the data to disk, convert BigInt to a Number,
-      // as the filesystem (fs) cannot directly handle BigInt values.
-      ercTokenInfoObject[field] =
-        type === 'string' ? decodedTokenInfo : Number(decodedTokenInfo);
 
       return ercTokenInfoObject;
     }, {});
