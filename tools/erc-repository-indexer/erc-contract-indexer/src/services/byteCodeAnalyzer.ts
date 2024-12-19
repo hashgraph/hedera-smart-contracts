@@ -18,6 +18,7 @@
  *
  */
 
+import AhoCorasick from 'ahocorasick';
 import { ContractScannerService } from './contractScanner';
 import constants from '../utils/constants';
 import { ethers } from 'ethers';
@@ -227,15 +228,30 @@ export class ByteCodeAnalyzer {
   }
 
   /**
-   * Checks if the given bytecode matches the specified ERC standard based on its signature.
+   * Determines if the provided bytecode conforms to the specified ERC standard by searching for all required function selectors and event topics using the Aho-Corasick algorithm.
    *
-   * @param {ERCID} ercId - The identifier for the ERC standard (e.g., ERC-20, ERC-721).
-   * @param {string} bytecode - The bytecode of the contract to be checked.
-   * @returns {boolean} - Returns true if the bytecode matches the signature pattern for the specified ERC standard, otherwise false.
+   * The Aho-Corasick algorithm constructs a finite state machine from the provided set of standard signatures, facilitating efficient multi-pattern matching within the bytecode.
+   * It operates with linear time complexity, O(n + m + z), where n represents the bytecode length, m is the total length of the signatures, and z is the number of matches identified.
+   * This efficiency is especially beneficial for analyzing large bytecode sequences, as it drastically minimizes processing time.
+   *
+   * @param {ERCID} ercId - Identifier for the ERC standard (e.g., ERC-20, ERC-721).
+   * @param {string} bytecode - The contract's bytecode to be analyzed.
+   * @returns {boolean} - Returns true if the bytecode contains all required signatures for the specified ERC standard; otherwise, false.
    */
   private isErc(ercId: ERCID, bytecode: string): boolean {
-    const ercSignatureRegexPattern =
-      constants.ERC_STANDARD_SIGNATURE_REGEX[ercId];
-    return ercSignatureRegexPattern.test(bytecode);
+    const standardErcSignatures = constants.ERC_STANDARD_SIGNATURES[ercId];
+
+    const ahoCorasick = new AhoCorasick(standardErcSignatures);
+    const matches = ahoCorasick.search(bytecode);
+
+    // Each match returned by ahoCorasick.search() is in the format [occurrences, ['key']], where:
+    // - `match[1]` refers to the array containing the matched signature(s) (the `key` array).
+    // - `match[1][0]` accesses the first item in this `key` array, which represents the actual matched signature.
+    // This logic ensures we extract only the relevant signature from each match.
+    const foundSignatures = new Set(matches.map((match: any) => match[1][0]));
+
+    return standardErcSignatures.every((signature) =>
+      foundSignatures.has(signature)
+    );
   }
 }

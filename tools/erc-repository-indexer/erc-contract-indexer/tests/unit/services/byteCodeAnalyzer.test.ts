@@ -289,7 +289,7 @@ describe('ByteCodeAnalyzer', () => {
       });
     });
 
-    it('should throw error if the contractCallRequest return null tokenInfoResponse', async () => {
+    it('should NOT throw an error if the contractCallRequest return null tokenInfoResponse', async () => {
       jest
         .spyOn(contractScannerService, 'contractCallRequest')
         .mockResolvedValue(null);
@@ -300,17 +300,18 @@ describe('ByteCodeAnalyzer', () => {
         runtime_bytecode: testConstants.ERC_721_BYTECODE_EXAMPLE,
       };
 
-      try {
-        await (byteCodeAnalyzer as any).getErcTokenInfo(
-          contractScannerService,
-          mockContractResponse,
-          constants.ERC721_TOKEN_INFO_SELECTORS
-        );
-        throw new Error('should have thrown an error');
-      } catch (error: any) {
-        const expectedErrMessage = `ERC contract passes signature matching but fails contract call: contractId=${mockContracts[1].contract_id}, contractAddress=${mockContracts[1].evm_address}, function_selector=${mockContractCallResponse.erc721.name.sighash}`;
-        expect(error.errMessage).toEqual(expectedErrMessage);
-      }
+      const tokenInfo = await (byteCodeAnalyzer as any).getErcTokenInfo(
+        contractScannerService,
+        mockContractResponse,
+        constants.ERC721_TOKEN_INFO_SELECTORS
+      );
+
+      expect(tokenInfo).toEqual({
+        contractId: mockContracts[1].contract_id,
+        address: mockContracts[1].evm_address,
+        name: null,
+        symbol: null,
+      });
     });
   });
 
@@ -363,6 +364,30 @@ describe('ByteCodeAnalyzer', () => {
       expect(shouldBeErc721).toBe(true);
       expect(shouldNotBeErc20WithErc20Bytecode).toBe(false);
       expect(shouldNotBeErc721WithNonErcBytecode).toBe(false);
+    });
+
+    it('should perform isErc method within a very small time threshold compared to regular regex-based searching', () => {
+      // official isErc() method with Aho-Corasick algorithm
+      const startTime = performance.now();
+      const largeByteCode = '0x' + '00'.repeat(41120); // ~20KB
+
+      // perform signature matching through official isErc() method
+      (byteCodeAnalyzer as any).isErc(ERCID.ERC20, largeByteCode);
+
+      const endTime = performance.now();
+      const elapsedTime = endTime - startTime;
+      const performanceThreshold = 3; // 3 milliseconds
+      expect(elapsedTime).toBeLessThan(performanceThreshold);
+
+      // regex-based approach
+      const startTimeRegex = performance.now();
+      const exampleErc721RegexPattern =
+        /(?=.*dd62ed3e)(?=.*095ea7b3)(?=.*70a08231)(?=.*18160ddd)(?=.*a9059cbb)(?=.*23b872dd)(?=.*8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925)(?=.*ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef)/;
+      exampleErc721RegexPattern.test(largeByteCode);
+      const endTimeRegex = performance.now();
+      const elapsedTimeRegex = endTimeRegex - startTimeRegex;
+      const performanceThresholdRegex = 3600; // 3600 milliseconds
+      expect(elapsedTimeRegex).toBeGreaterThan(performanceThresholdRegex);
     });
   });
 });
