@@ -24,6 +24,38 @@
     "decimals": 18
   },
   {
+    "contractId": "0.0.16251",
+    "address": "0x0000000000000000000000000000000000003f7b",
+    "name": "dfhjk",
+    "symbol": "RR",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.16260",
+    "address": "0x0000000000000000000000000000000000003f84",
+    "name": "TEST",
+    "symbol": "TC1",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.16290",
+    "address": "0x0000000000000000000000000000000000003fa2",
+    "name": "dfhjk",
+    "symbol": "RR",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.16294",
+    "address": "0x0000000000000000000000000000000000003fa6",
+    "name": "HELLO_TEST",
+    "symbol": "HT",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
     "contractId": "0.0.18586",
     "address": "0x000000000000000000000000000000000000489a",
     "name": "CUSD",
@@ -72,6 +104,46 @@
     "decimals": 0
   },
   {
+    "contractId": "0.0.40792",
+    "address": "0x0000000000000000000000000000000000009f58",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.40814",
+    "address": "0x0000000000000000000000000000000000009f6e",
+    "name": "Jam",
+    "symbol": "JAM",
+    "totalSupply": 100000000000000000,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.40941",
+    "address": "0x0000000000000000000000000000000000009fed",
+    "name": "Jam",
+    "symbol": "JAM",
+    "totalSupply": 100000000000000000,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.44928",
+    "address": "0x000000000000000000000000000000000000af80",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.45109",
+    "address": "0x000000000000000000000000000000000000b035",
+    "name": "JDX Auction JDXA",
+    "symbol": "JDXA",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
     "contractId": "0.0.47310",
     "address": "0x000000000000000000000000000000000000b8ce",
     "name": "Wrapped Hbar",
@@ -108,7 +180,7 @@
     "address": "0x00000000000000000000000000000000000f7e89",
     "name": "Wrapped Hbar",
     "symbol": "WHBAR",
-    "totalSupply": 60554305877683,
+    "totalSupply": 61347431341081,
     "decimals": 8
   },
   {
@@ -126,6 +198,14 @@
     "symbol": "MTK",
     "totalSupply": 1.222e+22,
     "decimals": 18
+  },
+  {
+    "contractId": "0.0.1262116",
+    "address": "0x0000000000000000000000000000000000134224",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
   },
   {
     "contractId": "0.0.1321086",
@@ -164,7 +244,7 @@
     "address": "0xf4d8e05ce43bec2179a7bdc1313dc56b16edd96a",
     "name": "Uniswap V2",
     "symbol": "UNI-V2",
-    "totalSupply": 1189539063,
+    "totalSupply": 94420745,
     "decimals": 18
   },
   {
@@ -333,6 +413,14 @@
     "name": "Uniswap V2",
     "symbol": "UNI-V2",
     "totalSupply": 48639481048833,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.1357251",
+    "address": "0x000000000000000000000000000000000014b5c3",
+    "name": "UB Token",
+    "symbol": "UB",
+    "totalSupply": 1e+23,
     "decimals": 18
   },
   {
@@ -972,7 +1060,7 @@
     "address": "0x58b9c4815f8f3d46928e1765bd2b024b82a9c77e",
     "name": "Uniswap V2",
     "symbol": "UNI-V2",
-    "totalSupply": 6964827736222,
+    "totalSupply": 6536848055535,
     "decimals": 18
   },
   {
@@ -996,7 +1084,7 @@
     "address": "0xec9396fd1019a6644534ce7905183f495bc86baf",
     "name": "Uniswap V2",
     "symbol": "UNI-V2",
-    "totalSupply": 2364864575276,
+    "totalSupply": 2635284275856,
     "decimals": 18
   },
   {
@@ -1484,7 +1572,7 @@
     "address": "0x00000000000000000000000000000000002cc823",
     "name": "Wrapped Hbar",
     "symbol": "WHBAR",
-    "totalSupply": 1187612504617884,
+    "totalSupply": 1185518878018602,
     "decimals": 8
   },
   {
@@ -1492,7 +1580,7 @@
     "address": "0x53bd01dcf3dffb9dfe241793d6b79d90079e0f48",
     "name": "Uniswap V2",
     "symbol": "UNI-V2",
-    "totalSupply": 1641428670691,
+    "totalSupply": 1649650528346,
     "decimals": 18
   },
   {
@@ -1500,7 +1588,7 @@
     "address": "0x5718f1127e025c6745835facf551283481630423",
     "name": "Uniswap V2",
     "symbol": "UNI-V2",
-    "totalSupply": 819560417308019,
+    "totalSupply": 823135208873989,
     "decimals": 18
   },
   {
@@ -1508,7 +1596,7 @@
     "address": "0x635fa94b5bef0de9a59b8ed7a9aee3d9d8eaba37",
     "name": "Uniswap V2",
     "symbol": "UNI-V2",
-    "totalSupply": 899823012252176,
+    "totalSupply": 899260627644397,
     "decimals": 18
   },
   {
@@ -1580,7 +1668,7 @@
     "address": "0xc660d5e7951c0926270e231ca9d28ef3203c2317",
     "name": "Uniswap V2",
     "symbol": "UNI-V2",
-    "totalSupply": 1720779542905,
+    "totalSupply": 1626084693468,
     "decimals": 18
   },
   {
@@ -1637,6 +1725,14 @@
     "name": "Uniswap V2",
     "symbol": "UNI-V2",
     "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.2991312",
+    "address": "0x08bc4d8c9bc5542a2c6afe6518f498e00192bca3",
+    "name": "Arkhia Test Token",
+    "symbol": "ARKT",
+    "totalSupply": 0,
     "decimals": 18
   },
   {
@@ -1744,6 +1840,22 @@
     "decimals": 18
   },
   {
+    "contractId": "0.0.3240534",
+    "address": "0x3d35a47f4b9dc86ba1f4df3ffef795b0883b721e",
+    "name": "Arkhia Test Token",
+    "symbol": "ARKT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3240543",
+    "address": "0xdfd7ba9301795fbeef9a45c7b3286c1dab8dafef",
+    "name": "Arkhia Test Token",
+    "symbol": "ARKT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
     "contractId": "0.0.3240634",
     "address": "0xbbe3b2ca378683808bcadf1df31d53c720087e52",
     "name": "Uniswap V2",
@@ -1773,6 +1885,14 @@
     "name": "Uniswap V2",
     "symbol": "UNI-V2",
     "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.3278986",
+    "address": "0xd02075e9ae5f252c179cd0f3e5e4ee83f3fe5aad",
+    "name": "Arkhia Test Token",
+    "symbol": "ARKT",
+    "totalSupply": 0,
     "decimals": 18
   },
   {
@@ -2264,6 +2384,14 @@
     "decimals": 18
   },
   {
+    "contractId": "0.0.4400967",
+    "address": "0x55941eec124f89c4ad793ec039dec24522687924",
+    "name": "HTellor Tribute",
+    "symbol": "HTRB",
+    "totalSupply": 3e+24,
+    "decimals": 18
+  },
+  {
     "contractId": "0.0.4433743",
     "address": "0x5387b3ca6e2f1e21dcc16b45cc6b5eb8c098cfed",
     "name": "Uniswap V2",
@@ -2301,6 +2429,38 @@
     "name": "Uniswap V2",
     "symbol": "UNI-V2",
     "totalSupply": 11649999050323,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4504416",
+    "address": "0x5c18d5eb211203eb80b591aa71a269b1e16e9eba",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4504432",
+    "address": "0x082cb42b738f6e02ba4bba4e8787eef67d76db2d",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4504445",
+    "address": "0x76f9118f78579912e52081076664f7c30438964b",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4504463",
+    "address": "0x48968172eec120625b9170df6f148d781c11d8fc",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
     "decimals": 18
   },
   {
@@ -2352,11 +2512,19 @@
     "decimals": 18
   },
   {
+    "contractId": "0.0.4544401",
+    "address": "0x242cd12579467983dc521d8ac46eb13936ab65de",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
     "contractId": "0.0.4547361",
     "address": "0xdefc06e8433fb7b308c81ff1814f138c3835a19b",
     "name": "Uniswap V2",
     "symbol": "UNI-V2",
-    "totalSupply": 2564623803347717,
+    "totalSupply": 2515503233034914,
     "decimals": 18
   },
   {
@@ -2365,6 +2533,22 @@
     "name": "Uniswap V2",
     "symbol": "UNI-V2",
     "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4550583",
+    "address": "0x6f43ac555a1533db811d74a27758e6b91601776d",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 17094645761,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4550603",
+    "address": "0x38eade3dcc12ce1e8f8d330cd9a5b8d8895e20d3",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 19305302493,
     "decimals": 18
   },
   {
@@ -2408,6 +2592,278 @@
     "decimals": 18
   },
   {
+    "contractId": "0.0.4558274",
+    "address": "0x715e31967c8cf41fe920a2e324f77f3a9252e0d3",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 179812290851,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558570",
+    "address": "0xdfd25ec05f0870e76d83232b89cc648b9ea1ff77",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 18499178796,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558572",
+    "address": "0xdf1a9905087d7b62fbad6684bc10a62ccc2fac32",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 3548115184557,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558576",
+    "address": "0xb8af7c6b8c752d83dbe3d8cbb6c467227b64e1da",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 8450298878282,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558581",
+    "address": "0x15a04cfa19ab2fadfeb699397e570d131319aefa",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 111670455346,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558589",
+    "address": "0x49bce6adea59ce638ef15808dbc63503845c0c85",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 29345205734,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558591",
+    "address": "0xff0d367ce4ca5f5eddf0cc27bbdd5b9691f49154",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 3591030516,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558592",
+    "address": "0xaa7a1edff2fd88f6367586567947d51a72a48738",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 77186774895,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558598",
+    "address": "0x0a1d74cee596ef34657016959f2b47b6df26d868",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 1891873475,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558602",
+    "address": "0xe304574139d9f7feb5e82dbbeaab0af4b67be98c",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 105625446701,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558603",
+    "address": "0x290790bea50edd700f83a6a149875dc4ddcb0d97",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 242578,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558608",
+    "address": "0x7c912baea912d5877ebb9d876139b12b1fcb387b",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 24352,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558611",
+    "address": "0x322f4cbdd95e7a864e2421ddb01042187a404fc1",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 1666393544,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558615",
+    "address": "0xb6dd583f7f40555f9969471ad56886800eceda1b",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 11959849,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558616",
+    "address": "0xe7cfd218b9350f4471635881d7afb3fc81dd5fed",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 771383143600,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558619",
+    "address": "0x9eb8dc33dbb12bd3a43711a7d5d354b35e6869b7",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 4449827990,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558623",
+    "address": "0xa0e48448cf7018ab8c3fd0996ec123cdd9593af0",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 316149728,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558625",
+    "address": "0xc2296b57bef293ff7f62668c71198b33db92d117",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 187713763004,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558628",
+    "address": "0xeaedd7421d3a5c7cb627e17d324a70badcb3c8d7",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 105938790150,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558631",
+    "address": "0x060dc314326eac7e4eca354e245f517c8b09cdce",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 1085569521910,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558635",
+    "address": "0x21edff83754843988a76d35eefe81c828fc78e20",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 419829904405,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558636",
+    "address": "0x409b8cf38276c6052851773d3e88bbe3445fde3d",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 321420760627,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558640",
+    "address": "0xa040298e04f62f09e38c5e4a3a0900816daab3dd",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 171113246287,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558644",
+    "address": "0xeea759212ee893acef75b5ee6e652cc83f3fb58c",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 22893947518,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558646",
+    "address": "0x2cd5b085e838e7ecc8577d08d26da82469c21e38",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 1611141958,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558783",
+    "address": "0x3f61e805de2520c6c5132376eeeb179daa2ce22e",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 878730666,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558784",
+    "address": "0x5fc2d3ffcfa57d22d89fe66e272dc93865a5eef2",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 96298025612,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558787",
+    "address": "0x547a02ddce4c78192f95664f83e6777c278bf7c3",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 6721850220,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558792",
+    "address": "0x60a9871f212f9193370262a0dd2439c275cdf8fc",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 5190473,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558796",
+    "address": "0xbffac673e183e0b37086d16ddc6fb3de5fb1b855",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 11063649,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558797",
+    "address": "0xec967e3d419278adc70fdb5580609c7195b2b48f",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 1009847,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558803",
+    "address": "0xe2d54bd5b04126982913de96692dc44f6b6e10bd",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 1000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558807",
+    "address": "0x3e2d9f5a5ed50720f2321ad603e5609daef6d53b",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 99670516,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4558814",
+    "address": "0xffa172384475af8901f0c8ade98dc1a370827b70",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 100000000,
+    "decimals": 18
+  },
+  {
     "contractId": "0.0.4559467",
     "address": "0x419d00aceaf472515d19c19cf1f8460ec13f7eea",
     "name": "Uniswap V2",
@@ -2421,6 +2877,38 @@
     "name": "Uniswap V2",
     "symbol": "UNI-V2",
     "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4571025",
+    "address": "0xf9c957e0f1e36f4c07103d4b58fef39c4b20b870",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 353102429,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4571027",
+    "address": "0xea898a5aace9826df95bed3ec13d5d7f35b8de04",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 115914549,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4571030",
+    "address": "0xfa45b6a0df21ef5c76005eb19e6db305f87e51ea",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 52116791662,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4571033",
+    "address": "0x6bcd795438f674308d227ebdadb9b46180fee312",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 920398592540,
     "decimals": 18
   },
   {
@@ -2488,12 +2976,68 @@
     "decimals": 18
   },
   {
+    "contractId": "0.0.4606546",
+    "address": "0x8ec20883cbca16ad6cecb153c9d55f6279226843",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
     "contractId": "0.0.4626353",
     "address": "0x5483f05e1a742f85cbf086c1a7b02344fb6e9193",
     "name": "Uniswap V2",
     "symbol": "UNI-V2",
     "totalSupply": 1000000000,
     "decimals": 18
+  },
+  {
+    "contractId": "0.0.4690810",
+    "address": "0xc24bd3e1a1f5cb1acf7ebb42b1b2512e1c453969",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.4690821",
+    "address": "0xf90c6ddb3009f6e7f9ccf295e23d88411d80f509",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.4690844",
+    "address": "0x97ce9bcd82fd445bf6300acf4249e22988fdbfd6",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.4690858",
+    "address": "0x58be790d4a93533656c02e9812c606408a565511",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.4690890",
+    "address": "0x565b9cb3e51277593e0514edb85dbb32026fd0b4",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.4691320",
+    "address": "0x83e639e18dfd9d241e9726e8e532287447284ad2",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
   },
   {
     "contractId": "0.0.4700956",
@@ -2533,6 +3077,54 @@
     "name": "Uniswap V2",
     "symbol": "UNI-V2",
     "totalSupply": 4472135954999,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4752573",
+    "address": "0xa057c30d9b848cba515b3df8055421775a69bcf1",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4754330",
+    "address": "0x047620eae4fc0c6a9f2380d782beb0b8db6040f1",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4754358",
+    "address": "0x4392804a66e9ed35f274946bf8e5813800f94521",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4763950",
+    "address": "0x5f05c0a19cf49737a39deed0daa150796cea1ea9",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4764098",
+    "address": "0x757dfa55d1825bc9e82b2ba2a4ab27e65acdb3fa",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.4799280",
+    "address": "0x137d368a40c272560babc2c6e91583fcbff2bbe8",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
     "decimals": 18
   },
   {
@@ -2592,6 +3184,14 @@
     "decimals": 18
   },
   {
+    "contractId": "0.0.4916075",
+    "address": "0xfacfe5e9f929ee2f30b31be2e767d4c0c151aaa7",
+    "name": "Token",
+    "symbol": "TKN",
+    "totalSupply": 1e+24,
+    "decimals": 18
+  },
+  {
     "contractId": "0.0.4956829",
     "address": "0xa6118b3f8061a4260a53f48a65b25e0412fbe6f1",
     "name": "Uniswap V2",
@@ -2640,6 +3240,30 @@
     "decimals": 18
   },
   {
+    "contractId": "0.0.5025388",
+    "address": "0x00000000000000000000000000000000004cae6c",
+    "name": "SnapTokens",
+    "symbol": "SNAP",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5025710",
+    "address": "0x00000000000000000000000000000000004cafae",
+    "name": "SnapTokens",
+    "symbol": "SNAP",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5025824",
+    "address": "0x00000000000000000000000000000000004cb020",
+    "name": "SnapTokens",
+    "symbol": "SNAP",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
     "contractId": "0.0.5026332",
     "address": "0x20abdcf9004cbae87a2459a075261d2bb4cb1339",
     "name": "Normie Token",
@@ -2672,12 +3296,76 @@
     "decimals": 0
   },
   {
+    "contractId": "0.0.5032374",
+    "address": "0x00000000000000000000000000000000004cc9b6",
+    "name": "SnapTokens",
+    "symbol": "SNAP",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5032399",
+    "address": "0x00000000000000000000000000000000004cc9cf",
+    "name": "SnapTokens",
+    "symbol": "SNAP",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
     "contractId": "0.0.5046212",
     "address": "0x08a136d86ce836d04f40bacd7996fbd7559163a5",
     "name": "test",
     "symbol": "TESTWW",
     "totalSupply": 10,
     "decimals": 0
+  },
+  {
+    "contractId": "0.0.5065050",
+    "address": "0x71cb3bc6903503013c8be44f401f46ecda118313",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 88561251166903,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5065062",
+    "address": "0x22ab1cb7e1e7051e505b33bf4c7a34958e43bb15",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 15809100867649,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5065069",
+    "address": "0x3ee20fd66f75d8128a4f4a262f70768c2f7b9815",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 1642786994589,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5065098",
+    "address": "0xa45fd8e868b7a862e285d5aa2dea32572a1432df",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 338272741507,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5168014",
+    "address": "0x6aeb09af2e9207721e79363873b9b7634b79c7ad",
+    "name": "Mock Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5168218",
+    "address": "0xdbaf01f0b26fb656f1fb16885e8ddd4f9d7dd122",
+    "name": "Mock Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 0,
+    "decimals": 18
   },
   {
     "contractId": "0.0.5229754",
@@ -2693,6 +3381,22 @@
     "name": "Uniswap V2",
     "symbol": "UNI-V2",
     "totalSupply": 8957601799,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5243574",
+    "address": "0xd7dc7e7232bb7af3ed90b32047e4607021d79ed2",
+    "name": "Mock Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.5243718",
+    "address": "0xdffe14b449a2f1aadfb91b8e37da8a990c17f76c",
+    "name": "Mock Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 0,
     "decimals": 18
   },
   {
@@ -2840,6 +3544,30 @@
     "decimals": 18
   },
   {
+    "contractId": "0.0.6084374",
+    "address": "0x5554fce12a884645d0bd99fa75137bf2e53de04f",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 2704940676225,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6084385",
+    "address": "0x0b480f64109621d3f81b9bde54cc7b4d8bd3dd2d",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 38033268268,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6084396",
+    "address": "0x29f4effb9a068ac1a5effb44cf43b5366b0746d5",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 60857520476,
+    "decimals": 18
+  },
+  {
     "contractId": "0.0.6086934",
     "address": "0xbdc4f8d8279601721e5a91fb4f8580891c82de52",
     "name": "Uniswap V2",
@@ -2952,6 +3680,14 @@
     "decimals": 18
   },
   {
+    "contractId": "0.0.6286805",
+    "address": "0xce8e046a02fe92a18cfc41e68b2779c86549f8c5",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
     "contractId": "0.0.6329586",
     "address": "0x7701ef22742357b9ea053d2f7d8632cfe0de099d",
     "name": "Uniswap V2",
@@ -2968,6 +3704,22 @@
     "decimals": 18
   },
   {
+    "contractId": "0.0.6351125",
+    "address": "0x7338aeaeb276e8272b2b99f3c0a6b598bb715aff",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 183915579481505,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6351128",
+    "address": "0x3881ef0b5ee970862aa0634446ada15b380c2047",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 33597829468385,
+    "decimals": 18
+  },
+  {
     "contractId": "0.0.6386948",
     "address": "0x7ce6bb2cc2d3fd45a974da6a0f29236cb9513a98",
     "name": "ChainLink Token",
@@ -2980,8 +3732,64 @@
     "address": "0x48db497fa61d3991eb9e378ce388a360c549f1da",
     "name": "vZbyte",
     "symbol": "vZBYT",
-    "totalSupply": 78846055382820140000,
+    "totalSupply": 150182846996817150000,
     "decimals": 18
+  },
+  {
+    "contractId": "0.0.6519989",
+    "address": "0x1c37fb53f19f9b27096ca011fd8e2ec2e32a7265",
+    "name": "YeahToken",
+    "symbol": "$YEAH",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6520010",
+    "address": "0x2baabd00f115cffd004383bf023aac3983fac8fe",
+    "name": "YeahToken",
+    "symbol": "$YEAH",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6615580",
+    "address": "0xe509d019699545c8c7954e948487a89cfbbc3396",
+    "name": "FSCO Coins ",
+    "symbol": "FSCOin",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.6753723",
+    "address": "0x167913616955a2bd2b2372d340834c2d3cb3dcdd",
+    "name": "Staked Bonzo",
+    "symbol": "xBonzo",
+    "totalSupply": 0,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.6754158",
+    "address": "0x951339c40dc28faa1ab74ab7f73d4e6f31a51d69",
+    "name": "Staked Bonzo",
+    "symbol": "xBonzo",
+    "totalSupply": 0,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.6755376",
+    "address": "0x9cd63a8951c1b57e60c24eab224d7c109347fabf",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.6755386",
+    "address": "0x30a5f95a0be569a70dee8352a22e559fd4f11329",
+    "name": "ATOKEN_IMPL",
+    "symbol": "ATOKEN_IMPL",
+    "totalSupply": 0,
+    "decimals": 0
   },
   {
     "contractId": "0.0.7017493",
@@ -3016,11 +3824,27 @@
     "decimals": 18
   },
   {
+    "contractId": "0.0.7208774",
+    "address": "0x00000000000000000000000000000000006dff46",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.7208790",
+    "address": "0x00000000000000000000000000000000006dff56",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
     "contractId": "0.0.7208851",
     "address": "0x6319151ae5f649a57ef16ad70b78fa7e196f6c54",
     "name": "VRJAM LP",
     "symbol": "VRJAM(LP)",
-    "totalSupply": 17431270358,
+    "totalSupply": 80419364346,
     "decimals": 18
   },
   {
@@ -3040,6 +3864,86 @@
     "decimals": 18
   },
   {
+    "contractId": "0.0.7285988",
+    "address": "0x670c174d76019933cf980bcaf29028025ac0011e",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.7286013",
+    "address": "0x1c7c3131f1b2937c40d60d0f9835723cf44b0550",
+    "name": "ATOKEN_IMPL",
+    "symbol": "ATOKEN_IMPL",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.7298834",
+    "address": "0x377fb4291b7263c46f1b351d111220370237ec93",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 166822790,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7298837",
+    "address": "0x35512813b3db3624982457185458d4b576a701f3",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 250002000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7308387",
+    "address": "0xebe6c0fa00b503497b57c42f20843dd4b28c3c89",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.7308390",
+    "address": "0x43ec93b2fac7738b6c4cb6a7983f7b42a07ca57c",
+    "name": "ATOKEN_IMPL",
+    "symbol": "ATOKEN_IMPL",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.7308468",
+    "address": "0x89cbf67dfaecc98261b07f74cabc2d0194f2dc2f",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.7308470",
+    "address": "0x851a5f3203b8ad0be451e2aa235c4c422e319e3f",
+    "name": "ATOKEN_IMPL",
+    "symbol": "ATOKEN_IMPL",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.7345060",
+    "address": "0x9b3ad90d86f56d9b15009b26e795fa3838942f9a",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 4906239952150632,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7345061",
+    "address": "0x543164bdfa7534e5574f8857ce658a6b1a711bb3",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 6133124037867293,
+    "decimals": 18
+  },
+  {
     "contractId": "0.0.7358435",
     "address": "0x274edff7be44301b824866895c3b0c946677aecc",
     "name": "Uniswap V2",
@@ -3054,6 +3958,46 @@
     "symbol": "UNI-V2",
     "totalSupply": 14491376,
     "decimals": 18
+  },
+  {
+    "contractId": "0.0.7380775",
+    "address": "0x0e052da483441f0ba0b3d2236630b236612d2728",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 20000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7380776",
+    "address": "0xdd40a69b340861fc626d2511a1f04cd2f654fdec",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 38764793,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7450301",
+    "address": "0xe3709ab08457c8edb0c0ee4c4f9193b39efc0769",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.7450376",
+    "address": "0x7d40ff7e57af04e4dba1d4f6348833f7feb66638",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.7450432",
+    "address": "0x1c3eb3c090607b6b1e598b1722b4c91847ee8082",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
   },
   {
     "contractId": "0.0.7522739",
@@ -3117,6 +4061,166 @@
     "name": "Uniswap V2",
     "symbol": "UNI-V2",
     "totalSupply": 391885187071,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7833457",
+    "address": "0xb8f01c966bef7a5c20ef738882cbea0884a3fc61",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7833479",
+    "address": "0x692c7f2e3a14a6eb34fb4cf138259d45b12bebd3",
+    "name": "wbtc",
+    "symbol": "wbtcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7833498",
+    "address": "0xb9e14941c87215a74f2afb573e631943daad8d1c",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7833513",
+    "address": "0x249fe2d3313ba3ecec016e941764a115ea93f69e",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7833533",
+    "address": "0xd608ba22fdc657a2bc4131648303d5cf5ecaa8ed",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7833566",
+    "address": "0x22be1f75fe1adf8ef73bda44a004f5b9b97e1267",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7833712",
+    "address": "0x3eb1d02a206955091eddeaafeede28006ae6f34f",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7833730",
+    "address": "0xabc2338a94666a139ededfcc4f377aad2628c9a7",
+    "name": "wbtc",
+    "symbol": "wbtcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7833756",
+    "address": "0x28bfc34939066d0aba30206b4865855b4f175c31",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7833775",
+    "address": "0x38fd365fe7c33e8ef0ce1fd0adcc4dd0ba743535",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7833797",
+    "address": "0x77acd0e41dad6eec3312f83907e08bb73cc7ac7c",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7833829",
+    "address": "0x4a3ae6b94ecb901fd704b4613aab1d1d5142dd74",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7833850",
+    "address": "0xb7b6315964dcdaf797108d25f0db579c4494016a",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7834057",
+    "address": "0xc4cee866b97572f14139d6aa68db538a542f7fbe",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7834078",
+    "address": "0xbb986b68f6046c95c54dd4a7c5fff316a9d12a87",
+    "name": "wbtc",
+    "symbol": "wbtcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7834092",
+    "address": "0x2745b0cb17176e00449645ab67ee3ab72fa1f8db",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7834108",
+    "address": "0x5f0377fa93be11b9e9cbf6d8c3646c9a9d2460c7",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7834121",
+    "address": "0x1d7530b44e5bdec605d9eaebbb1a0f2ca5d36e4d",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7834145",
+    "address": "0x71ceb1db0fc2f72e25ca4d8efca26d731afe8402",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7834155",
+    "address": "0x9514c0a9777a75b93a8fcad8caa5ed85bbab0dcd",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
     "decimals": 18
   }
 ]
