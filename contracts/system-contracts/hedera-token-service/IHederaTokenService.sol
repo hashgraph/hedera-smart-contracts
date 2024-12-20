@@ -689,7 +689,7 @@ interface IHederaTokenService {
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     /// @return tokenInfo TokenInfo info for `token`
     function getTokenInfo(address token)
-        external
+        external view
         returns (int64 responseCode, TokenInfo memory tokenInfo);
 
     /// Query token KeyValue

@@ -225,7 +225,7 @@ abstract contract HederaTokenService {
     /// @param token The ID of the token as a solidity address
     /// @dev This function reverts if the call is not successful
     function getTokenInfo(address token) internal returns (int responseCode, IHederaTokenService.TokenInfo memory tokenInfo) {
-        (bool success, bytes memory result) = precompileAddress.call(
+        (bool success, bytes memory result) = precompileAddress.staticcall(
             abi.encodeWithSelector(IHederaTokenService.getTokenInfo.selector, token));
         IHederaTokenService.TokenInfo memory defaultTokenInfo;
         (responseCode, tokenInfo) = success ? abi.decode(result, (int32, IHederaTokenService.TokenInfo)) : (HederaResponseCodes.UNKNOWN, defaultTokenInfo);
