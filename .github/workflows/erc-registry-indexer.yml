@@ -188,10 +188,11 @@ jobs:
           repository: hashgraph/hedera-mirror-node-explorer
           token: ${{ secrets.GH_ACCESS_TOKEN }}
 
-      - name: Copy Files to Mirror Node Explorer Repository
+      - name: Inside current directory
         run: |
-          #check current direcotry
           ls
+      - name: Outer Dir
+        run: |
           ls ../
 
       - name: Create Pull Request
