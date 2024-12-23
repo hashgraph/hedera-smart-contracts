@@ -4222,5 +4222,29 @@
     "symbol": "packl",
     "totalSupply": 0,
     "decimals": 18
+  },
+  {
+    "contractId": "0.0.7915162",
+    "address": "0xb50696e1c6320e8bd76ac6d52975c8b4736cebd6",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 8081542,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7915240",
+    "address": "0xd5611c32e6b83ac3803d573b36227b96a8ebc66a",
+    "name": "IVY FINANCE",
+    "symbol": "IVYFI",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7947054",
+    "address": "0x1194010e34c321ce99200f8aabdfacbba571c2e3",
+    "name": "Arkhia Test Token",
+    "symbol": "ARKT",
+    "totalSupply": 0,
+    "decimals": 18
   }
 ]
