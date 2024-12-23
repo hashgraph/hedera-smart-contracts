@@ -175,6 +175,9 @@ jobs:
           # Navigate to target repository
           cd hedera-mirror-node-explorer
 
+          # Make a new directory
+          mkdir erc-registry
+
           # Copy files to their correct positions in the target repository
           cp -r ../${{ env.INDEXER_PATH }}/erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/* ./erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}
 
