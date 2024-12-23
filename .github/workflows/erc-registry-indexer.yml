@@ -166,20 +166,25 @@ jobs:
       #     labels: 'internal'
       #     assignees: 'swirlds-automation'
 
-      - name: Clone Mirror Node Explorer Repository
+      # - name: Clone Mirror Node Explorer Repository
+      #   run: |
+      #     git clone https://github.com/hashgraph/hedera-mirror-node-explorer.git
+
+      # - name: Copy Files to Mirror Node Explorer Repository
+      #   run: |
+      #     # Navigate to target repository
+      #     cd hedera-mirror-node-explorer
+
+      #     # Make a new directory
+      #     mkdir erc-registry
+
+      #     # Copy files to their correct positions in the target repository
+      #     cp -r ../${{ env.INDEXER_PATH }}/erc-registry/mainnet/* ./erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}
+
+      - name: Save Files to Temporary Directory
         run: |
-          git clone https://github.com/hashgraph/hedera-mirror-node-explorer.git
-
-      - name: Copy Files to Mirror Node Explorer Repository
-        run: |
-          # Navigate to target repository
-          cd hedera-mirror-node-explorer
-
-          # Make a new directory
-          mkdir erc-registry
-
-          # Copy files to their correct positions in the target repository
-          cp -r ../${{ env.INDEXER_PATH }}/erc-registry/mainnet/* ./erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}
+          mkdir -p /tmp/erc-registry
+          cp -r ${{ env.INDEXER_PATH }}/erc-registry/mainnet/* /tmp/erc-registry/
 
       - name: Checkout Mirror Node Explorer
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -188,37 +193,33 @@ jobs:
           repository: hashgraph/hedera-mirror-node-explorer
           token: ${{ secrets.GH_ACCESS_TOKEN }}
 
-      - name: Inside current directory
+      - name: Restore Files from Temporary Directory
         run: |
+          mkdir -p ./erc-registry
+          cp -r /tmp/erc-registry/mainnet ./erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}
           ls
-      - name: Outer Dir
-        run: |
-          ls ../hedera-smart-contracts/
-      - name: Outer Dir
-        run: |
-          ls ../hedera-smart-contracts/tools/erc-repository-indexer/erc-registry/mainnet
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
-        with:
-          branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
-          commit-message: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
-          committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-          author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-          delete-branch: true
-          signoff: true
-          title: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
-          body: >
-            **Description**:
+      # - name: Create Pull Request
+      #   uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
+      #   with:
+      #     branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
+      #     commit-message: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
+      #     committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+      #     author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+      #     token: ${{ secrets.GH_ACCESS_TOKEN }}
+      #     delete-branch: true
+      #     signoff: true
+      #     title: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
+      #     body: >
+      #       **Description**:
 
-            This PR updates the ERC Registry to include the most recent ERC-20 and ERC-721 tokens.
+      #       This PR updates the ERC Registry to include the most recent ERC-20 and ERC-721 tokens.
 
-            **Registry Update Summary**:
-              - **Hedera Network**: ${{ github.event.inputs.HEDERA_NETWORK }}
-              - **New ERC-20 Records Added**: ${{ env.NEW_ERC20_RECORDS }}
-              - **New ERC-721 Records Added**: ${{ env.NEW_ERC721_RECORDS }}
-              - **Indexing Duration**: ${{ env.INDEXING_DURATION }}
-              - **Current Date**: ${{ env.CURRENT_DATE }}
-          labels: 'internal'
-          assignees: 'swirlds-automation'
+      #       **Registry Update Summary**:
+      #         - **Hedera Network**: ${{ github.event.inputs.HEDERA_NETWORK }}
+      #         - **New ERC-20 Records Added**: ${{ env.NEW_ERC20_RECORDS }}
+      #         - **New ERC-721 Records Added**: ${{ env.NEW_ERC721_RECORDS }}
+      #         - **Indexing Duration**: ${{ env.INDEXING_DURATION }}
+      #         - **Current Date**: ${{ env.CURRENT_DATE }}
+      #     labels: 'internal'
+      #     assignees: 'swirlds-automation'
