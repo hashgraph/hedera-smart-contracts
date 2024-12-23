@@ -197,7 +197,10 @@ jobs:
         run: |
           ls /tmp/erc-registry/
           mkdir -p ./erc-registry
-          cp -r /tmp/erc-registry/ ./erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}
+          cp -r /tmp/erc-registry/ ./erc-registry/
+
+      - name: Checkout registry
+        run: |
           ls ./erc-registry
 
       # - name: Create Pull Request
