@@ -198,7 +198,7 @@ jobs:
           ls /tmp/erc-registry/
           mkdir -p ./erc-registry
           cp -r /tmp/erc-registry/ ./erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}
-          ls
+          ls ./erc-registry
 
       # - name: Create Pull Request
       #   uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
