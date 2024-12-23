@@ -43,8 +43,8 @@ jobs:
 
       - name: Set Environment Variables
         run: |
-          echo "HEDERA_NETWORK=${{ github.event.inputs.HEDERA_NETWORK }}" >> ${{ env.INDEXER_PATH }}/.env
-          echo "MIRROR_NODE_URL=${{ github.event.inputs.MIRROR_NODE_URL }}" >> ${{ env.INDEXER_PATH }}/.env
+          echo "HEDERA_NETWORK=mainnet" >> ${{ env.INDEXER_PATH }}/.env
+          echo "MIRROR_NODE_URL=https://mainnet.mirrornode.hedera.com" >> ${{ env.INDEXER_PATH }}/.env
           echo "STARTING_POINT=${{ github.event.inputs.STARTING_POINT }}" >> ${{ env.INDEXER_PATH }}/.env
 
       - name: Install Dependencies
@@ -66,11 +66,11 @@ jobs:
       #   id: timer_start
       #   run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
 
-      # - name: Start ERC Registry Indexer
-      #   id: start_erc_indexer
-      #   run: |
-      #     cd ${{env.INDEXER_PATH}}
-      #     npm start
+      - name: Start ERC Registry Indexer
+        id: start_erc_indexer
+        run: |
+          cd ${{env.INDEXER_PATH}}
+          npm start
 
       # - name: Stop Timer
       #   id: timer_end
@@ -179,7 +179,7 @@ jobs:
           mkdir erc-registry
 
           # Copy files to their correct positions in the target repository
-          cp -r ../${{ env.INDEXER_PATH }}/erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/* ./erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}
+          cp -r ../${{ env.INDEXER_PATH }}/erc-registry/mainnet/* ./erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}
 
       - name: Checkout Mirror Node Explorer
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
