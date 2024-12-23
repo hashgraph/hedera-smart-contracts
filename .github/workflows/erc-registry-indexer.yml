@@ -197,7 +197,7 @@ jobs:
         run: |
           ls /tmp/erc-registry/
           mkdir -p ./erc-registry
-          cp -r /tmp/erc-registry/ ./erc-registry/
+          cp -r /tmp/erc-registry/* ./erc-registry/
 
       - name: Checkout registry
         run: |
