@@ -46,5 +46,66 @@ describe('Helper', () => {
       const nextLink = Helper.buildUrl(mockNext, mockScanningLimit);
       expect(nextLink).toEqual(expectedNextLink);
     });
+
+    describe('mergeAndSort', () => {
+      const existingContracts = [
+        {
+          contractId: '0.0.14902',
+          address: '0x0000...',
+          name: '',
+          symbol: '',
+          totalSupply: 0,
+          decimals: 0,
+        },
+        {
+          contractId: '0.0.15701',
+          address: '0x0000...',
+          name: 'CUSD',
+          symbol: 'CUSD',
+          totalSupply: 0,
+          decimals: 18,
+        },
+      ];
+
+      const newContracts = [
+        {
+          contractId: '0.0.14903',
+          address: '0x0000...',
+          name: 'CUSD',
+          symbol: 'CUSD',
+          totalSupply: 0,
+          decimals: 18,
+        },
+        {
+          contractId: '0.0.15701',
+          address: '0x0000...',
+          name: 'CUSD',
+          symbol: 'CUSD',
+          totalSupply: 0,
+          decimals: 18,
+        },
+        {
+          contractId: '0.0.15707',
+          address: '0x0000...',
+          name: 'CUSD',
+          symbol: 'CUSD',
+          totalSupply: 0,
+          decimals: 18,
+        },
+      ];
+
+      it('merges, sorts, and removes duplicate objects from the two contract arrays', () => {
+        const result = Helper.mergeAndSort(existingContracts, newContracts);
+
+        const expectedResult = [
+          existingContracts[0], // '0.0.14902'
+          newContracts[0], // '0.0.14903'
+          existingContracts[1], // '0.0.15701' (duplicate removed)
+          newContracts[2], // '0.0.15707'
+        ];
+
+        expect(result).toEqual(expectedResult);
+      });
+    });
   });
 });
