@@ -42,6 +42,7 @@ const mockedHelper = Helper as jest.Mocked<typeof Helper>;
 describe('ContractScannerService', () => {
   const mockValidMirrorNodeUrl = 'mock-mirror-node.com';
   const mockValidMirrorNodeUrlWeb3 = 'mock-mirror-node-web3.com';
+  const mockScanningLimit = 39;
 
   let contractScannerService: ContractScannerService;
 
@@ -53,7 +54,8 @@ describe('ContractScannerService', () => {
 
     contractScannerService = new ContractScannerService(
       mockValidMirrorNodeUrl,
-      mockValidMirrorNodeUrlWeb3
+      mockValidMirrorNodeUrlWeb3,
+      mockScanningLimit
     );
   });
 
