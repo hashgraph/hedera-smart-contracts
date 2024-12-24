@@ -36,16 +36,28 @@ export class Helper {
   }
 
   /**
-   * Constructs a URL based on the provided `next` parameter. If `next` is null,
-   * it returns a default URL with query parameters for fetching contracts.
+   * Constructs a URL based on the provided `next` parameter. If `next` is not null,
+   * it updates the value of the `limit=` parameter in the URL using the provided `scanContractLimit`.
+   * If `next` is null, it returns a default URL with query parameters, including `scanContractLimit`
+   * and an ascending order for fetching contracts.
    *
-   * @param {string | null} next - The pagination token for the next set of results, or null to use default endpoint
-   * @returns {string} The complete URL to query the mirror node API
+   * @param {string | null} next - The pagination token for the next set of results, or null to use the default endpoint.
+   * @param {number} scanContractLimit - The limit for the number of contracts to fetch, used to update or construct the URL.
+   * @returns {string} The complete URL to query the mirror node API.
    */
-  static buildUrl(next: string | null): string {
+  static buildUrl(
+    next: string | null,
+    scanContractLimit: number = 100
+  ): string {
     return next
-      ? next
-      : `${constants.GET_CONTRACT_ENDPOINT}?limit=100&order=asc`;
+      ? // Replace the value of the 'limit=' parameter in the URL with the given scanContractLimit.
+        // Regex explanation:
+        // - (limit=): Captures the exact string 'limit=' using a capture group.
+        // - \d+: Matches one or more digits following 'limit='.
+        // - `$1${scanContractLimit}`: Replaces the matched pattern with 'limit=' (from capture group) and the new value of scanContractLimit.
+        next.replace(/(limit=)\d+/, `$1${scanContractLimit}`)
+      : // If 'next' is null, construct a new URL with the scanContractLimit and order.
+        `${constants.GET_CONTRACT_ENDPOINT}?limit=${scanContractLimit}&order=asc`;
   }
 
   /**
