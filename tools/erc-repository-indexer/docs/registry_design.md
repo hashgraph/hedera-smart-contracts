@@ -52,6 +52,7 @@ The **ERC Contract Indexer** will:
   - `HEDERA_NETWORK`: Network environment (e.g., testnet, mainnet).
   - `MIRROR_NODE_URL`: API URL for the Hedera mirror node.
   - `STARTING_POINT`: Starting contract ID or contract EVM address (or a `next` pointer from a previous run).
+  - `ENABLE_DETECTION_ONLY`: A configuration flag that enables the detection of ERC contracts while bypassing registry updates, designed for analysis-only scenarios.
 
 ### Class Diagram
 

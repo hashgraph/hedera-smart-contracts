@@ -52,15 +52,24 @@ export class ConfigService {
    */
   private readonly startingPoint: string;
 
+  /**
+   * @private
+   * @readonly
+   * @property {boolean} detectionOnly - A flag indicating whether detection-only mode is enabled.
+   * If `true`, only contract detection occurs; if `false`, registry updates are also performed.
+   */
+  private readonly detectionOnly: boolean;
+
   constructor() {
     this.network = process.env.HEDERA_NETWORK || '';
     this.mirrorNodeUrl = process.env.MIRROR_NODE_URL || '';
     this.mirrorNodeUrlWeb3 = process.env.MIRROR_NODE_URL_WEB3 || '';
     this.startingPoint = process.env.STARTING_POINT || '';
+    this.detectionOnly = process.env.ENABLE_DETECTION_ONLY === 'true';
     this.validateConfigs();
 
     console.log(
-      `Indexing process initiated: network=${this.network}, mirrorNodeUrl=${this.mirrorNodeUrl}, mirrorNodeUrlWeb3=${this.mirrorNodeUrlWeb3}`
+      `Indexing process initiated: network=${this.network}, mirrorNodeUrl=${this.mirrorNodeUrl}, mirrorNodeUrlWeb3=${this.mirrorNodeUrlWeb3}, detectionOnly=${this.detectionOnly}`
     );
   }
 
@@ -189,5 +198,13 @@ export class ConfigService {
    */
   getMirrorNodeUrlWeb3(): string {
     return this.mirrorNodeUrlWeb3;
+  }
+
+  /**
+   * Gets the current status of the detection-only mode.
+   * @returns {boolean} `true` if detection-only mode is enabled, `false` otherwise.
+   */
+  getDetectionOnly(): boolean {
+    return this.detectionOnly;
   }
 }
