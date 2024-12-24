@@ -53,6 +53,7 @@ The **ERC Contract Indexer** will:
   - `MIRROR_NODE_URL`: API URL for the Hedera mirror node.
   - `STARTING_POINT`: Starting contract ID or contract EVM address (or a `next` pointer from a previous run).
   - `ENABLE_DETECTION_ONLY`: A configuration flag that enables the detection of ERC contracts while bypassing registry updates, designed for analysis-only scenarios.
+  - `SCAN_CONTRACT_LIMIT`: Defines the maximum number of contracts to scan per operation, with a default value of 100. Accepts only numeric values within the range of 1 to 100. This setting overrides the `limit` parameter in the `next` link if one exists in storage. For example, if the `next` link in storage is `/api/v1/contracts?limit=100&order=asc&contract.id=gt:0.0.5294198` and `SCAN_CONTRACT_LIMIT` is set to 30, the link will be updated to `/api/v1/contracts?limit=30&order=asc&contract.id=gt:0.0.5294198`.
 
 ### Class Diagram
 
