@@ -118,23 +118,36 @@ export class RegistryGenerator {
     filePath: string,
     newContracts: ERCOutputInterface[]
   ): Promise<void> {
+    let uniqueContracts: ERCOutputInterface[] = [];
     const fileContent = this.readContentsFromFile(filePath);
     const existingContracts = fileContent
       ? (JSON.parse(fileContent) as ERCOutputInterface[])
       : [];
 
-    // Create a Map to deduplicate contracts by contractId
-    const contractMap = new Map(
-      [...existingContracts, ...newContracts].map((contract) => [
-        contract.contractId,
-        contract,
-      ])
-    );
-
-    // Convert Map values back to array for file writing
-    const uniqueContracts = Array.from(contractMap.values());
+    if (!existingContracts.length) {
+      uniqueContracts = newContracts;
+    } else if (
+      // Since both arrays are sorted in ascending order, if the `contractId` of the last item in `existingContracts`
+      // is less than the `contractId` of the first item in `newContracts`, just merged the contracts and remove dups without sorting.
+      existingContracts[existingContracts.length - 1].contractId <
+      newContracts[0].contractId
+    ) {
+      // Create a Map to deduplicate contracts by contractId
+      const contractMap = new Map(
+        [...existingContracts, ...newContracts].map((contract) => [
+          contract.contractId,
+          contract,
+        ])
+      );
+      uniqueContracts = Array.from(contractMap.values());
+    } else {
+      uniqueContracts = Helper.mergeAndSort(existingContracts, newContracts);
+    }
 
     await this.writeContentsToFile(filePath, uniqueContracts);
+
+    // Convert Map values back to array for file writing
+
     console.log(
       `Finished writing ${newContracts.length} new ERC token contracts to registry.`
     );
