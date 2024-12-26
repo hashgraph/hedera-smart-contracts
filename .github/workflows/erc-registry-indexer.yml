@@ -186,7 +186,7 @@ jobs:
           commit-message: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
           committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
           author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          token: ${{ secrets.GH_ACCESS_TOKEN_MIRROR_NODE_EXPLORER }}
           delete-branch: true
           signoff: true
           title: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
