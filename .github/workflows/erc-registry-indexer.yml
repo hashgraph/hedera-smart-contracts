@@ -12,6 +12,9 @@ on:
       STARTING_POINT:
         description: 'Starting Point (e.g., a contractId, a contract address, ect.). Leave empty to start from the beginning or from last saved starting point.'
         required: false
+      SCAN_CONTRACT_LIMIT:
+        description: 'The maximum number of contracts to scan per operation, with a default value of 100. Accepts only numeric values between 1 and 100.'
+        required: false
 
 jobs:
   index-and-update:
@@ -41,6 +44,7 @@ jobs:
           echo "HEDERA_NETWORK=${{ github.event.inputs.HEDERA_NETWORK }}" >> ${{ env.INDEXER_PATH }}/.env
           echo "MIRROR_NODE_URL=${{ github.event.inputs.MIRROR_NODE_URL }}" >> ${{ env.INDEXER_PATH }}/.env
           echo "STARTING_POINT=${{ github.event.inputs.STARTING_POINT }}" >> ${{ env.INDEXER_PATH }}/.env
+          echo "SCAN_CONTRACT_LIMIT=${{ github.event.inputs.SCAN_CONTRACT_LIMIT }}" >> ${{ env.INDEXER_PATH }}/.env
 
       - name: Install Dependencies
         run: |

@@ -52,15 +52,25 @@ export class ConfigService {
    */
   private readonly startingPoint: string;
 
+  /**
+   * @private
+   * @readonly
+   * @property {number} scanContractLimit - The maximum number of contracts to scan per operation.
+   */
+  private readonly scanContractLimit: number;
+
   constructor() {
     this.network = process.env.HEDERA_NETWORK || '';
     this.mirrorNodeUrl = process.env.MIRROR_NODE_URL || '';
     this.mirrorNodeUrlWeb3 = process.env.MIRROR_NODE_URL_WEB3 || '';
     this.startingPoint = process.env.STARTING_POINT || '';
+    this.scanContractLimit = process.env.SCAN_CONTRACT_LIMIT
+      ? parseInt(process.env.SCAN_CONTRACT_LIMIT)
+      : 100;
     this.validateConfigs();
 
     console.log(
-      `Indexing process initiated: network=${this.network}, mirrorNodeUrl=${this.mirrorNodeUrl}, mirrorNodeUrlWeb3=${this.mirrorNodeUrlWeb3}`
+      `Indexing process initiated: network=${this.network}, mirrorNodeUrl=${this.mirrorNodeUrl}, mirrorNodeUrlWeb3=${this.mirrorNodeUrlWeb3}, scanContractLimit=${this.scanContractLimit}`
     );
   }
 
@@ -93,6 +103,16 @@ export class ConfigService {
     ) {
       throw new Error(
         `STARTING_POINT Is Not Properly Configured: startingPoint=${this.startingPoint}`
+      );
+    }
+
+    if (
+      isNaN(this.scanContractLimit) ||
+      this.scanContractLimit <= 0 ||
+      this.scanContractLimit > 100
+    ) {
+      throw new Error(
+        `SCAN_CONTRACT_LIMIT Is Not Properly Configured (should be a number from 1-100): scanContractLimit=${this.scanContractLimit}`
       );
     }
   }
@@ -149,7 +169,8 @@ export class ConfigService {
   private async resolveFromEvmAddress(): Promise<string> {
     const contractScanner = new ContractScannerService(
       this.mirrorNodeUrl,
-      this.mirrorNodeUrlWeb3
+      this.mirrorNodeUrlWeb3,
+      this.scanContractLimit
     );
     const contractResponse = await contractScanner.fetchContractObject(
       this.startingPoint
@@ -189,5 +210,13 @@ export class ConfigService {
    */
   getMirrorNodeUrlWeb3(): string {
     return this.mirrorNodeUrlWeb3;
+  }
+
+  /**
+   * Retrieves the maximum number of contracts to scan per operation.
+   * @returns {number} The configured contract scan limit.
+   */
+  getScanContractLimit(): number {
+    return this.scanContractLimit;
   }
 }

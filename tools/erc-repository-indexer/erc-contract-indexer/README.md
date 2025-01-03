@@ -41,6 +41,7 @@ The ERC Contract Indexer is a tool designed to facilitate the indexing and manag
 | `MIRROR_NODE_URL`      | The URL for the Hedera mirror node API.                                                                        | A valid URL pointing to the Hedera mirror node (e.g., `https://{previewnet\|testnet\|mainnet}.mirrornode.hedera.com`)                                                                                                           |
 | `MIRROR_NODE_URL_WEB3` | The URL for the Hedera Mirror Node Web3Module API, required only when `HEDERA_NETWORK` is set to `local-node`. | Any value                                                                                                                                                                                                                       |
 | `STARTING_POINT`       | The starting point for contract indexing.                                                                      | A Hedera contract ID (e.g., `0.0.369`), an EVM 20-byte address (e.g., `0x0000000000000000000000000000000000000369`), or a get contract list next pointer (e.g., `/api/v1/contracts?limit=100&order=asc&contract.id=gt:0.0.369`) |
+| `SCAN_CONTRACT_LIMIT`  | Specifies the maximum number of contracts to scan per operation. Defaults to 100.                              | Accepts numeric values ranging from 1 to 100.                                                                                                                                                                                   |
 
 Example configuration:
 

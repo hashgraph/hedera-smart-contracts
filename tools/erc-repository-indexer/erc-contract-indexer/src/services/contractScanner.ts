@@ -43,13 +43,25 @@ export class ContractScannerService {
    */
   private readonly mirrorNodeWeb3Client: AxiosInstance;
 
-  constructor(mirrorNodeUrl: string, mirrorNodeUrlWeb3: string) {
+  /**
+   * @private
+   * @readonly
+   * @property {number} scanContractLimit - The maximum number of contracts to scan per operation.
+   */
+  private readonly scanContractLimit: number;
+
+  constructor(
+    mirrorNodeUrl: string,
+    mirrorNodeUrlWeb3: string,
+    scanContractLimit: number
+  ) {
     const mirrorNodeClients = Helper.buildAxiosClient(
       mirrorNodeUrl,
       mirrorNodeUrlWeb3
     );
     this.mirrorNodeRestClient = mirrorNodeClients.mirrorNodeRestClient;
     this.mirrorNodeWeb3Client = mirrorNodeClients.mirrorNodeWeb3Client;
+    this.scanContractLimit = scanContractLimit;
   }
 
   /**
@@ -61,7 +73,7 @@ export class ContractScannerService {
   async fetchContracts(
     next: string | null = null
   ): Promise<{ contracts: MirrorNodeContract[]; links: Links } | null> {
-    const getAllContractPath = Helper.buildUrl(next);
+    const getAllContractPath = Helper.buildUrl(next, this.scanContractLimit);
     console.log('Fetching contract batch from URL:', getAllContractPath);
 
     try {
@@ -104,6 +116,7 @@ export class ContractScannerService {
     param: any
   ): Promise<any> {
     const isRateLimitError = (error as AxiosError).response?.status === 429;
+    const isBadRequestError = (error as AxiosError).response?.status === 400;
     if (isRateLimitError) {
       console.log(
         `Rate limit exceeded. Retrying in ${constants.RETRY_DELAY_MS}ms...`
@@ -112,7 +125,15 @@ export class ContractScannerService {
       return retryMethod.call(this, param);
     }
 
-    console.error('Error returned from mirror node:', error);
+    // Bad requests for contractCallRequest are expected for non-ERC contracts.
+    // To prevent log clutter, log the error only if it is not a bad request originating from contractCallRequest.
+    if (
+      !isBadRequestError &&
+      retryMethod.name !== this.contractCallRequest.name
+    ) {
+      console.error('Error returned from the mirror node:', error);
+    }
+
     return null;
   }
   /**

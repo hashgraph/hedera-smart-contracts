@@ -31,7 +31,8 @@ export const ercRegistryRunner = async () => {
   const registryGenerator = new RegistryGenerator();
   const contractScannerService = new ContractScannerService(
     configService.getMirrorNodeUrl(),
-    configService.getMirrorNodeUrlWeb3()
+    configService.getMirrorNodeUrlWeb3(),
+    configService.getScanContractLimit()
   );
   const byteCodeAnalyzer = new ByteCodeAnalyzer();
 
