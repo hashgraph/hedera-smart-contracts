@@ -48,7 +48,7 @@ describe('ERC Registry Acceptance Test', () => {
   };
   let sdkClient: NodeClient | null = null;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const contractDeploymentRequirements =
       testHelper.prepareContractDeployRequirements(
         totalExpectedDeploymentsForEachContractType
@@ -77,7 +77,7 @@ describe('ERC Registry Acceptance Test', () => {
     process.env.STARTING_POINT = allDeployedAddresses[0];
   });
 
-  afterAll(() => {
+  afterEach(() => {
     // Close or clean up any resources after all test
     if (sdkClient) {
       sdkClient.close(); // Or any appropriate cleanup method
@@ -143,5 +143,36 @@ describe('ERC Registry Acceptance Test', () => {
         expect(object.symbol).toBeNull;
       }
     });
+  });
+
+  it('should not update registry when ENABLE_DETECTION_ONLY is set to true', async () => {
+    // Enable detection-only mode
+    process.env.ENABLE_DETECTION_ONLY = 'true';
+
+    // Backup current registry
+    const currentErc20Registry = JSON.parse(
+      testHelper.readContentsFromFile(erc20JsonFilePath) || '[]'
+    );
+    const currentErc721Registry = JSON.parse(
+      testHelper.readContentsFromFile(erc721JsonFilePath) || '[]'
+    );
+
+    // Run the tool to index the network and potentially update the registry
+    await ercRegistryRunner();
+
+    // Wait for asynchronous tasks to complete
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    // Read updated registry
+    const updatedErc20Registry = JSON.parse(
+      testHelper.readContentsFromFile(erc20JsonFilePath) || '[]'
+    );
+    const updatedErc721Registry = JSON.parse(
+      testHelper.readContentsFromFile(erc721JsonFilePath) || '[]'
+    );
+
+    // Verify that the registry was not updated
+    expect(updatedErc20Registry).toEqual(currentErc20Registry);
+    expect(updatedErc721Registry).toEqual(currentErc721Registry);
   });
 });
