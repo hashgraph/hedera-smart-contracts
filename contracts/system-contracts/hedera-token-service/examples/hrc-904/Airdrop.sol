@@ -38,14 +38,14 @@ contract Airdrop is HederaTokenService {
         return responseCode;
     }
 
-    function tokenNAmountAirdrops(address[] memory tokens, address[] memory senders, address[] memory receivers, int64 amount) public payable returns (int64 responseCode) {
-        uint256 length = senders.length;
+    function tokenNAmountAirdrops(address[] memory tokens, address sender, address receiver, int64 amount) public payable returns (int64 responseCode) {
+        uint256 length = tokens.length;
         IHederaTokenService.TokenTransferList[] memory tokenTransfers = new IHederaTokenService.TokenTransferList[](length);
         for (uint256 i = 0; i < length; i++)
         {
             IHederaTokenService.TokenTransferList memory airdrop;
             airdrop.token = tokens[i];
-            airdrop.transfers = prepareAA(senders[i], receivers[i], amount);
+            airdrop.transfers = prepareAA(sender, receiver, amount);
             tokenTransfers[i] = airdrop;
         }
         responseCode = airdropTokens(tokenTransfers);
@@ -55,15 +55,15 @@ contract Airdrop is HederaTokenService {
         return responseCode;
     }
 
-    function nftNAmountAirdrops(address[] memory nft, address[] memory senders, address[] memory receivers, int64[] memory serials) public returns (int64 responseCode) {
-        uint256 length = nft.length;
+    function nftNAmountAirdrops(address[] memory nfts, address sender, address receiver, int64[] memory serials) public returns (int64 responseCode) {
+        uint256 length = nfts.length;
         IHederaTokenService.TokenTransferList[] memory tokenTransfers = new IHederaTokenService.TokenTransferList[](length);
         for (uint256 i = 0; i < length; i++)
         {
             IHederaTokenService.TokenTransferList memory airdrop;
-            airdrop.token = nft[i];
+            airdrop.token = nfts[i];
             IHederaTokenService.NftTransfer[] memory nftTransfers = new IHederaTokenService.NftTransfer[](1);
-            nftTransfers[0] = prepareNftTransfer(senders[i], receivers[i], serials[i]);
+            nftTransfers[0] = prepareNftTransfer(sender, receiver, serials[i]);
             airdrop.nftTransfers = nftTransfers;
             tokenTransfers[i] = airdrop;
         }
@@ -82,7 +82,7 @@ contract Airdrop is HederaTokenService {
     ) public payable returns (int64 responseCode) {
         uint256 length = receivers.length + 1;
 
-        IHederaTokenService.TokenTransferList[] memory tokenTransfers = new IHederaTokenService.TokenTransferList[](length);
+        IHederaTokenService.TokenTransferList[] memory tokenTransfers = new IHederaTokenService.TokenTransferList[](1);
         IHederaTokenService.TokenTransferList memory airdrop;
         airdrop.token = token;
 
@@ -98,11 +98,11 @@ contract Airdrop is HederaTokenService {
         IHederaTokenService.AccountAmount[] memory transfers = new IHederaTokenService.AccountAmount[](length);
         transfers[0] = senderAA;
 
-        for (uint i = 0; i < receivers.length; i++) {
+        for (uint i = 1; i < length; i++) {
             IHederaTokenService.AccountAmount memory receiverAA;
-            receiverAA.accountID = receivers[i];
+            receiverAA.accountID = receivers[i - 1];
             receiverAA.amount = amount;
-            transfers[i + 1] = receiverAA;
+            transfers[i] = receiverAA;
         }
 
         airdrop.transfers = transfers;
@@ -111,7 +111,7 @@ contract Airdrop is HederaTokenService {
         responseCode = airdropTokens(tokenTransfers);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert("Airdrop failed");
+            revert();
         }
 
         return responseCode;

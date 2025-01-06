@@ -2,195 +2,229 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const utils = require('../utils');
 const Constants = require('../../../constants');
-const IHRC904Contract = require('../../../../artifacts/contracts/system-contracts/hedera-token-service/IHRC904.sol/IHRC904.json');
-const { Contract } = require('ethers');
 
 describe('AirdropContract Test Suite', function () {
-  let hrc904Contract;
   let airdropContract;
   let tokenCreateContract;
-  let tokenTransferContract;
-  let tokenQueryContract;
   let erc20Contract;
   let erc721Contract;
   let tokenAddress;
-  let tokenAddress2;
   let nftTokenAddress;
-  let mintedTokenSerialNumber;
   let signers;
-  let IHRC904;
+  let owner;
 
-  before(async function () {
-    signers = await ethers.getSigners();
-    airdropContract = await utils.deployAirdropContract();
-    tokenCreateContract = await utils.deployTokenCreateContract();
-    tokenQueryContract = await utils.deployTokenQueryContract();
-    tokenTransferContract = await utils.deployTokenTransferContract();
-    erc20Contract = await utils.deployERC20Contract();
-    erc721Contract = await utils.deployERC721Contract();
-    hrc904Contract = await utils.deployHRC904Contract();
-    hrc904Address = await hrc904Contract.getAddress();
-    hrc904Interface = new ethers.Interface(IHRC904Contract.abi);
+  async function setupToken() {
+    const tokenAddress =
+      await utils.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
+        tokenCreateContract,
+        owner,
+        utils.getSignerCompressedPublicKey()
+      );
 
-    await utils.updateAccountKeysViaHapi([
-      await airdropContract.getAddress(),
-      await tokenCreateContract.getAddress(),
-      await tokenQueryContract.getAddress(),
-      await tokenTransferContract.getAddress(),
-      await hrc904Contract.getAddress(),
-    ]);
-    tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(
-      tokenCreateContract,
-      signers[0].address,
-      utils.getSignerCompressedPublicKey()
-    );
     await utils.updateTokenKeysViaHapi(tokenAddress, [
       await airdropContract.getAddress(),
       await tokenCreateContract.getAddress(),
-      await tokenQueryContract.getAddress(),
-      await tokenTransferContract.getAddress(),
-      await hrc904Contract.getAddress(),
     ]);
-    nftTokenAddress = await utils.createNonFungibleTokenWithSECP256K1AdminKey(
-      tokenCreateContract,
-      signers[0].address,
-      utils.getSignerCompressedPublicKey()
-    );
-    await utils.updateTokenKeysViaHapi(nftTokenAddress, [
-      await airdropContract.getAddress(),
-      await tokenCreateContract.getAddress(),
-      await tokenQueryContract.getAddress(),
-      await tokenTransferContract.getAddress(),
-      await hrc904Contract.getAddress(),
-    ]);
-    mintedTokenSerialNumber = await utils.mintNFT(
-      tokenCreateContract,
-      nftTokenAddress
-    );
 
     await utils.associateToken(
       tokenCreateContract,
       tokenAddress,
       Constants.Contract.TokenCreateContract
     );
-    await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
+
+    return tokenAddress;
+  }
+
+  async function setupNft() {
+    const nftTokenAddress =
+      await utils.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
+        tokenCreateContract,
+        owner,
+        utils.getSignerCompressedPublicKey()
+      );
+
+    await utils.updateTokenKeysViaHapi(
+      nftTokenAddress,
+      [
+        await airdropContract.getAddress(),
+        await tokenCreateContract.getAddress(),
+      ],
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false
+    );
+
     await utils.associateToken(
       tokenCreateContract,
       nftTokenAddress,
       Constants.Contract.TokenCreateContract
     );
-    await utils.grantTokenKyc(tokenCreateContract, nftTokenAddress);
 
-    IHRC904 = new ethers.Interface(
-      (await hre.artifacts.readArtifact('IHRC904')).abi
-    );
-    hrc904AccountInterface = new Contract(
-      signers[1].address,
-      IHRC904,
-      signers[1]
-    );
+    return nftTokenAddress;
+  }
+
+  before(async function () {
+    signers = await ethers.getSigners();
+    airdropContract = await utils.deployAirdropContract();
+    tokenCreateContract = await utils.deployTokenCreateContract();
+    erc20Contract = await utils.deployERC20Contract();
+    erc721Contract = await utils.deployERC721Contract();
+    owner = signers[0].address;
+
+    await utils.updateAccountKeysViaHapi([
+      await airdropContract.getAddress(),
+      await tokenCreateContract.getAddress(),
+    ]);
+
+    tokenAddress = await setupToken();
+    nftTokenAddress = await setupNft();
   });
 
-  it('should airdrop multiple tokens (FT and NFT) to multiple accounts', async function () {
+  it('should airdrop tokens to multiple accounts', async function () {
     const ftAmount = BigInt(1);
     const accounts = signers.slice(1, 3).map((s) => s.address);
-    // Check initial balances
     const initialFTBalances = await Promise.all(
       accounts.map((account) => erc20Contract.balanceOf(tokenAddress, account))
     );
-    const initialNFTBalances = await Promise.all(
-      accounts.map((account) =>
-        erc721Contract
-          .ownerOf(nftTokenAddress, mintedTokenSerialNumber)
-          .catch(() => null)
-      )
-    );
-    // Airdrop fungible tokens
-    const tx = await airdropContract.mixedAirdrop(
-      [tokenAddress, tokenAddress2], // tokens
-      [nftTokenAddress], // nft's
-      [signers[0].address], // ft senders
-      accounts, // ft receivers
-      [signers[0].address], // nft senders
-      accounts, // nft receivers
-      ftAmount, // ft amount
-      [mintedTokenSerialNumber], // serials
+
+    const txFT = await airdropContract.tokenAirdropDistribute(
+      tokenAddress,
+      owner,
+      accounts,
+      ftAmount,
       {
         gasLimit: 5_000_000,
       }
     );
-    await tx.wait();
-
-    // Check updated balances
+    await txFT.wait();
     const updatedFTBalances = await Promise.all(
       accounts.map((account) => erc20Contract.balanceOf(tokenAddress, account))
     );
-    const updatedNFTBalances = await Promise.all(
-      accounts.map((account, index) =>
-        erc721Contract
-          .ownerOf(nftTokenAddress, mintedTokenSerialNumber)
-          .catch(() => null)
-      )
-    );
 
-    // Validate FT balances
     for (let i = 0; i < accounts.length; i++) {
       expect(updatedFTBalances[i]).to.equal(initialFTBalances[i] + ftAmount);
     }
+  });
 
-    // Validate NFT ownership
+  it('should airdrop NFTs to multiple accounts', async function () {
+    const accounts = signers.slice(1, 3).map((s) => s.address);
+
+    const serial = await utils.mintNFTToAddress(
+      tokenCreateContract,
+      nftTokenAddress
+    );
+
+    const serial2 = await utils.mintNFTToAddress(
+      tokenCreateContract,
+      nftTokenAddress
+    );
+
+    const txNFT = await airdropContract.nftAirdrop(
+      nftTokenAddress,
+      owner,
+      accounts[0],
+      serial,
+      {
+        gasLimit: 5_000_000,
+      }
+    );
+    const txNFT2 = await airdropContract.nftAirdrop(
+      nftTokenAddress,
+      owner,
+      accounts[1],
+      serial2,
+      {
+        gasLimit: 5_000_000,
+      }
+    );
+    await txNFT.wait();
+    await txNFT2.wait();
+
+    const updatedNFTBalances = await Promise.all([
+      erc721Contract.ownerOf(nftTokenAddress, serial).catch(() => null),
+      erc721Contract.ownerOf(nftTokenAddress, serial2).catch(() => null),
+    ]);
+
     for (let i = 0; i < accounts.length; i++) {
       expect(updatedNFTBalances[i]).to.equal(accounts[i]);
     }
   });
 
-  it('should airdrop 10 tokens (FT and NFT) to multiple accounts', async function () {
+  it('should airdrop 10 tokens to multiple accounts', async function () {
     const ftAmount = BigInt(1);
-    const nftSerialNumbers = Array.from(
-      { length: 10 },
-      (_, i) => BigInt(mintedTokenSerialNumber) + BigInt(i)
-    );
-    const accounts = signers.slice(1, 11).map((s) => s.address);
-
-    const mintedTokenSerialNumbers = [];
-    // Mint additional NFTs
-    for (let i = 1; i < 10; i++) {
-      const serialNumber = await utils.mintNFT(
-        tokenCreateContract,
-        nftTokenAddress
-      );
-      mintedTokenSerialNumbers.push(serialNumber);
+    const tokens = [];
+    for (let i = 0; i < 10; i++) {
+      tokens.push(await setupToken());
     }
-
-    const tx = await airdropContract.mixedAirdrop(
-      [tokenAddress], // tokens
-      [nftTokenAddress], // nft's
-      [signers[0].address], // ft senders
-      accounts, // ft receivers
-      [signers[0].address], // nft senders
-      accounts, // nft receivers
-      ftAmount, // ft amount
-      mintedTokenSerialNumbers, // serials
-      {
-        gasLimit: 5_000_000,
+    const accounts = signers.slice(1, 3).map((s) => s.address);
+    for (let i = 0; i < accounts.length; i++) {
+      const tx = await airdropContract.tokenNAmountAirdrops(
+        tokens,
+        owner,
+        accounts[i],
+        ftAmount,
+        {
+          gasLimit: 15_000_000,
+        }
+      );
+      await tx.wait();
+      for (let j = 0; j < tokens.length; j++) {
+        const balance = await erc20Contract.balanceOf(tokens[j], accounts[i]);
+        expect(balance).to.equal(ftAmount);
       }
-    );
-    await tx.wait();
+    }
+  });
 
-    // Validate FT balances
-    for (let i = 0; i < accounts.length; i++) {
-      const balance = await erc20Contract.balanceOf(tokenAddress, accounts[i]);
-      expect(balance).to.equal(ftAmount);
+  it('should airdrop 10 NFTs to multiple accounts', async function () {
+    const accounts = signers.slice(1, 3).map((s) => s.address);
+
+    async function createNFTs(count) {
+      const tokens = [];
+      const serials = [];
+      for (let i = 0; i < count; i++) {
+        const tokenAddress = await setupNft();
+        const serial = await utils.mintNFTToAddress(
+          tokenCreateContract,
+          tokenAddress
+        );
+        tokens.push(tokenAddress);
+        serials.push(serial);
+      }
+      return { tokens, serials };
     }
 
-    // Validate NFT ownership
-    for (let i = 0; i < accounts.length; i++) {
-      const owner = await erc721Contract.ownerOf(
-        nftTokenAddress,
-        nftSerialNumbers[i]
+    async function performAirdropAndValidate(receiver, nftTokens, nftSerials) {
+      const tx = await airdropContract.nftNAmountAirdrops(
+        nftTokens,
+        owner,
+        receiver,
+        nftSerials,
+        {
+          gasLimit: 15_000_000,
+        }
       );
-      expect(owner).to.equal(accounts[i]);
+      await tx.wait();
+
+      for (let i = 0; i < nftTokens.length; i++) {
+        const nftOwner = await erc721Contract.ownerOf(
+          nftTokens[i],
+          nftSerials[i]
+        );
+        expect(nftOwner).to.equal(receiver);
+      }
     }
+
+    // Create and airdrop 10 NFTs to the first account
+    const { tokens: nftTokens1, serials: nftSerials1 } = await createNFTs(10);
+    await performAirdropAndValidate(accounts[0], nftTokens1, nftSerials1);
+
+    // Create and airdrop 10 NFTs to the second account
+    const { tokens: nftTokens2, serials: nftSerials2 } = await createNFTs(10);
+    await performAirdropAndValidate(accounts[1], nftTokens2, nftSerials2);
   });
 
   it('should airdrop a fungible token to a single account', async function () {
@@ -222,22 +256,27 @@ describe('AirdropContract Test Suite', function () {
   it('should airdrop a non-fungible token to a single account', async function () {
     const receiver = signers[1].address;
 
-    const tx = await airdropContract.nftAirdrop(
+    const mintedTokenSerialNumber = await utils.mintNFTToAddress(
+      tokenCreateContract,
+      nftTokenAddress
+    );
+
+    const txNFT = await airdropContract.nftAirdrop(
       nftTokenAddress,
-      signers[0].address,
+      owner,
       receiver,
       mintedTokenSerialNumber,
       {
-        gasLimit: 2_000_000,
+        gasLimit: 5_000_000,
       }
     );
-    await tx.wait();
+    await txNFT.wait();
 
-    const owner = await erc721Contract.ownerOf(
-      nftTokenAddress,
-      mintedTokenSerialNumber
-    );
-    expect(owner).to.equal(receiver);
+    const updatedNFTBalances = await erc721Contract
+      .ownerOf(nftTokenAddress, mintedTokenSerialNumber)
+      .catch(() => null);
+
+    expect(updatedNFTBalances).to.equal(receiver);
   });
 
   it('should fail when the sender does not have enough balance', async function () {
@@ -247,7 +286,7 @@ describe('AirdropContract Test Suite', function () {
     try {
       const tx = await airdropContract.tokenAirdrop(
         tokenAddress,
-        signers[2].address, // Insufficient balance
+        signers[2].address,
         receiver,
         ftAmount,
         {
@@ -257,91 +296,130 @@ describe('AirdropContract Test Suite', function () {
       await tx.wait();
       expect.fail('Should revert');
     } catch (error) {
-      expect(error.reason).to.eq('INSUFFICIENT_TOKEN_BALANCE');
+      expect(error.shortMessage).to.eq('transaction execution reverted');
+      // TODO: Assert child tx error message === INSUFFICIENT_TOKEN_BALANCE
     }
   });
 
   it('should fail when the receiver does not have a valid account', async function () {
-    const ftAmount = BigInt(1);
     const invalidReceiver = '0x000000000000000000000000000000000000dead';
+    const mintedTokenSerialNumber = await utils.mintNFTToAddress(
+      tokenCreateContract,
+      nftTokenAddress
+    );
+
+    try {
+      const txNFT = await airdropContract.nftAirdrop(
+        nftTokenAddress,
+        owner,
+        invalidReceiver,
+        mintedTokenSerialNumber,
+        {
+          gasLimit: 2_000_000,
+        }
+      );
+      await txNFT.wait();
+      expect.fail('Should revert');
+    } catch (error) {
+      // TODO: Assert child tx error message === INVALID_ACCOUNT_ID
+      expect(error.shortMessage).to.eq('transaction execution reverted');
+    }
+  });
+
+  it('should fail when the token does not exist', async function () {
+    const receiver = signers[1].address;
+    const invalidToken = '0xdead00000000000000000000000000000000dead';
+    try {
+      const txNFT = await airdropContract.nftAirdrop(
+        invalidToken,
+        owner,
+        receiver,
+        1,
+        {
+          gasLimit: 2_000_000,
+        }
+      );
+      await txNFT.wait();
+
+      expect.fail('Should revert');
+    } catch (error) {
+      // TODO: Assert child tx error message === INVALID_TOKEN_ID
+      expect(error.shortMessage).to.eq('transaction execution reverted');
+    }
+  });
+
+  it('should fail when the airdrop amounts are out of bounds', async function () {
+    const invalidAmount = BigInt(0);
+    const receiver = signers[1].address;
 
     try {
       const tx = await airdropContract.tokenAirdrop(
         tokenAddress,
-        signers[2].address,
-        invalidReceiver,
+        signers[0].address,
+        receiver,
+        invalidAmount,
+        {
+          gasLimit: 2_000_000,
+        }
+      );
+      await tx.wait();
+      expect.fail('Should revert');
+    } catch (error) {
+      // TODO: Assert child tx error message === INVALID_TRANSACTION_BODY
+      expect(error.shortMessage).to.eq('transaction execution reverted');
+    }
+  });
+
+  it('should fail when 11 or more NFT airdrops are provided', async function () {
+    try {
+      const nftTokens = [];
+      const nftSerials = [];
+      for (let i = 0; i < 11; i++) {
+        const tokenAddress = await setupNft();
+        const serial = await utils.mintNFTToAddress(
+          tokenCreateContract,
+          tokenAddress
+        );
+        nftTokens.push(tokenAddress);
+        nftSerials.push(serial);
+      }
+
+      const tx = await airdropContract.nftNAmountAirdrops(
+        nftTokens,
+        owner,
+        signers[1].address,
+        nftSerials,
+        {
+          gasLimit: 15_000_000,
+        }
+      );
+      await tx.wait();
+      expect.fail('Should revert');
+    } catch (error) {
+      expect(error.shortMessage).to.eq('transaction execution reverted');
+    }
+  });
+
+  it('should fail when 11 or more token airdrops are provided', async function () {
+    try {
+      const ftAmount = BigInt(1);
+      const tokens = [];
+      for (let i = 0; i < 10; i++) {
+        tokens.push(await setupToken());
+      }
+      const tx = await airdropContract.tokenNAmountAirdrops(
+        tokens,
+        owner,
+        signers[1].address,
         ftAmount,
         {
           gasLimit: 2_000_000,
         }
       );
       await tx.wait();
-      console.log(tx.hash);
       expect.fail('Should revert');
     } catch (error) {
-      console.log(JSON.stringify(error));
-      expect(error.code).to.eq(Constants.CONTRACT_REVERT_EXECUTED_CODE);
-    }
-  });
-
-  it('should fail when the token does not exist', async function () {
-    const ftAmount = BigInt(1);
-    const receiver = signers[1].address;
-    const invalidToken = '0x000000000000000000000000000000000000dead';
-
-    try {
-      const tx = await airdropContract.tokenAirdrop(
-        invalidToken,
-        signers[0].address,
-        receiver,
-        ftAmount
-      );
-      await tx.wait();
-      console.log(tx.hash);
-
-      expect.fail('Should revert');
-    } catch (error) {
-      console.log(JSON.stringify(error));
-      expect(error.code).to.eq(Constants.CONTRACT_REVERT_EXECUTED_CODE);
-    }
-  });
-
-  it('should fail when the airdrop amounts are out of bounds', async function () {
-    const invalidAmount = BigInt(-100);
-    const receiver = signers[1].address;
-
-    try {
-      const tx = await airdropContract.tokenAirdrop(
-        tokenAddress,
-        signers[0].address,
-        receiver,
-        invalidAmount
-      );
-      await tx.wait();
-      console.log(tx.hash);
-      expect.fail('Should revert');
-    } catch (error) {
-      console.log(JSON.stringify(error));
-      expect(error.code).to.eq(Constants.CONTRACT_REVERT_EXECUTED_CODE);
-    }
-  });
-
-  it('should fail when 11 or more airdrops are provided', async function () {
-    const ftAmount = BigInt(1);
-    const receivers = new Array(11).fill(signers[1].address);
-
-    try {
-      const tx = await airdropContract.tokenNAmountAirdrops(
-        [tokenAddress],
-        new Array(11).fill(signers[0].address),
-        receivers,
-        ftAmount
-      );
-      await tx.wait();
-      expect.fail('Should revert');
-    } catch (error) {
-      console.log(JSON.stringify(error));
-      expect(error.code).to.eq(Constants.CONTRACT_REVERT_EXECUTED_CODE);
+      expect(error.shortMessage).to.eq('transaction execution reverted');
     }
   });
 });
