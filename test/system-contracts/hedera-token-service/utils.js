@@ -33,6 +33,7 @@ const {
   TokenUpdateTransaction,
   TokenAssociateTransaction,
   AccountBalanceQuery,
+  ContractInfoQuery,
 } = require('@hashgraph/sdk');
 const Constants = require('../../constants');
 
@@ -711,6 +712,14 @@ class Utils {
   static async getAccountInfo(evmAddress, client) {
     const query = new AccountInfoQuery().setAccountId(
       AccountId.fromEvmAddress(0, 0, evmAddress)
+    );
+
+    return await query.execute(client);
+  }
+
+  static async getContractInfo(evmAddress, client) {
+    const query = new ContractInfoQuery().setContractId(
+      ContractId.fromEvmAddress(0, 0, evmAddress)
     );
 
     return await query.execute(client);
