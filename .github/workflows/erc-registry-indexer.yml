@@ -176,7 +176,7 @@ jobs:
       - name: Restore erc-registry from Temporary Directory
         run: |
           mkdir -p ./erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}
-          cp -r /tmp/erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/* ./erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}
+          cp -r /tmp/erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/* ./public/${{ github.event.inputs.HEDERA_NETWORK }}
 
       - name: Create Pull Request Target hedera-mirror-node-explorer
         uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
