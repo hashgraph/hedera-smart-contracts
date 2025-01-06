@@ -115,12 +115,7 @@ jobs:
       networkTag: ${{inputs.networkNodeTag}}
       mirrorTag: ${{inputs.mirrorNodeTag}}
       relayTag: ${{inputs.relayTag}}
-    # Adding tmate for debugging
-    steps:
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        with:
-          debug: true
+      enableTmate: true
 
   Multicall:
     name: Multicall Test Suite
