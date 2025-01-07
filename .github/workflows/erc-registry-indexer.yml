@@ -183,7 +183,7 @@ jobs:
           cp -r /tmp/erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/* ./public/${{ github.event.inputs.HEDERA_NETWORK }}
 
       - name: Create Pull Request Target hedera-mirror-node-explorer
-        uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
+        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
         with:
           branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
           commit-message: 'chore: update ERC Registry with latest ERC-20 and ERC-721 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
