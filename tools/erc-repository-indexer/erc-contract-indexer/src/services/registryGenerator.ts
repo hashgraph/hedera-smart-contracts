@@ -23,6 +23,7 @@ import path from 'path';
 import constants from '../utils/constants';
 import { ERCOutputInterface } from '../schemas/ERCRegistrySchemas';
 import { Helper } from '../utils/helper';
+import _ from 'lodash';
 
 export class RegistryGenerator {
   /**
@@ -135,16 +136,14 @@ export class RegistryGenerator {
       existingContracts[existingContracts.length - 1].contractId <
       newContracts[0].contractId
     ) {
-      // Create a Map to deduplicate contracts by contractId
-      const contractMap = new Map(
-        [...existingContracts, ...newContracts].map((contract) => [
-          contract.contractId,
-          contract,
-        ])
-      );
-      uniqueContracts = Array.from(contractMap.values());
+      uniqueContracts = _.chain([...existingContracts, ...newContracts]) // merge contracts
+        .uniqBy('contractId') // Remove duplicates based on contractId
+        .value(); // Extract the final array
     } else {
-      uniqueContracts = Helper.mergeAndSort(existingContracts, newContracts);
+      uniqueContracts = _.chain([...existingContracts, ...newContracts]) // merge contracts
+        .uniqBy('contractId') // Remove duplicates based on contractId
+        .sortBy((contract) => Number(contract.contractId.split('.')[2])) // Sort by the numeric value of contractId
+        .value(); // Extract the final array
     }
 
     await this.writeContentsToFile(filePath, uniqueContracts);

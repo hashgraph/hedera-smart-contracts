@@ -20,7 +20,6 @@
 
 import axios, { AxiosInstance } from 'axios';
 import constants from './constants';
-import { ERCOutputInterface } from '../schemas/ERCRegistrySchemas';
 import path from 'path';
 
 export class Helper {
@@ -103,55 +102,5 @@ export class Helper {
         baseURL: mirrorNodeUrlWeb3 || mirrorNodeUrl,
       }),
     };
-  }
-
-  /**
-   * Merges two sorted arrays of contract objects and returns a single sorted array without duplicates.
-   * This function assumes both input arrays are sorted by `contractId` in ascending order.
-   *
-   * @param {ERCOutputInterface[]} existingContracts - The first array of contract objects, already sorted by `contractId`.
-   * @param {ERCOutputInterface[]} newContracts - The second array of contract objects, already sorted by `contractId`.
-   * @returns {ERCOutputInterface[]} A merged and sorted array of contract objects, with duplicate `contractId` entries removed.
-   */
-  static mergeAndSort(
-    existingContracts: ERCOutputInterface[],
-    newContracts: ERCOutputInterface[]
-  ): ERCOutputInterface[] {
-    let i = 0;
-    let j = 0;
-    const mergedContracts: ERCOutputInterface[] = [];
-
-    // Merge two sorted arrays
-    while (i < existingContracts.length && j < newContracts.length) {
-      const existing = existingContracts[i];
-      const incoming = newContracts[j];
-
-      const existingContractIdComparedValue = Number(
-        existing.contractId.split('.')[2]
-      );
-      const incomingContractIdComparedValue = Number(
-        incoming.contractId.split('.')[2]
-      );
-
-      if (existingContractIdComparedValue < incomingContractIdComparedValue) {
-        mergedContracts.push(existing);
-        i++;
-      } else if (
-        existingContractIdComparedValue > incomingContractIdComparedValue
-      ) {
-        mergedContracts.push(incoming);
-        j++;
-      } else {
-        // remove duplicated objects
-        mergedContracts.push(existing);
-        i++;
-        j++;
-      }
-    }
-
-    // Add any remaining elements from each array
-    return mergedContracts
-      .concat(existingContracts.slice(i))
-      .concat(newContracts.slice(j));
   }
 }
