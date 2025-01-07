@@ -19,8 +19,8 @@
  */
 
 import axios, { AxiosInstance } from 'axios';
-import path from 'path';
 import constants from './constants';
+import path from 'path';
 
 export class Helper {
   /**
