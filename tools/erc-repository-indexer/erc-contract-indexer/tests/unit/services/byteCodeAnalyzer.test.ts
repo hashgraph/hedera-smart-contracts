@@ -36,12 +36,14 @@ describe('ByteCodeAnalyzer', () => {
   const mockContractCallResponse = testConstants.MOCK_CONTRACT_CALL_RESPONSE;
   const mockValidMirrorNodeUrl = 'mock-mirror-node.com';
   const mockValidMirrorNodeUrlWeb3 = 'mock-mirror-node-web3.com';
+  const mockScanningLimit = 39;
 
   beforeEach(() => {
     byteCodeAnalyzer = new ByteCodeAnalyzer();
     contractScannerService = new ContractScannerService(
       mockValidMirrorNodeUrl,
-      mockValidMirrorNodeUrlWeb3
+      mockValidMirrorNodeUrlWeb3,
+      mockScanningLimit
     );
   });
 
