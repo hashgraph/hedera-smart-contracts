@@ -179,4 +179,30 @@ describe('ConfigService', () => {
     expect(startingPoint).toBe(mockStartingPoint);
     expect(mockRetrieveNextPointer).toHaveBeenCalled();
   });
+  it('should return default value for detectionOnly, false, if ENABLE_DETECTION_ONLY is not set', () => {
+    process.env.HEDERA_NETWORK = mockValidHederaNetwork;
+    process.env.MIRROR_NODE_URL = mockValidMirrorNodeUrl;
+    delete process.env.ENABLE_DETECTION_ONLY;
+
+    const configService = new ConfigService();
+    expect(configService.getDetectionOnly()).toEqual(false);
+  });
+
+  it('should return preconfigured value for detectionOnly if ENABLE_DETECTION_ONLY is provided', () => {
+    process.env.HEDERA_NETWORK = mockValidHederaNetwork;
+    process.env.MIRROR_NODE_URL = mockValidMirrorNodeUrl;
+    process.env.ENABLE_DETECTION_ONLY = 'true';
+
+    const configService = new ConfigService();
+    expect(configService.getDetectionOnly()).toEqual(true);
+  });
+
+  it('should return false for detectionOnly when ENABLE_DETECTION_ONLY is not explicitly set to true', () => {
+    process.env.HEDERA_NETWORK = mockValidHederaNetwork;
+    process.env.MIRROR_NODE_URL = mockValidMirrorNodeUrl;
+    process.env.ENABLE_DETECTION_ONLY = 'not a boolean value';
+
+    const configService = new ConfigService();
+    expect(configService.getDetectionOnly()).toEqual(false);
+  });
 });

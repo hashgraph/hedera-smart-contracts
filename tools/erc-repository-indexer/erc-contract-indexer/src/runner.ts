@@ -41,7 +41,8 @@ export const ercRegistryRunner = async () => {
       next,
       contractScannerService,
       byteCodeAnalyzer,
-      registryGenerator
+      registryGenerator,
+      configService
     );
   } catch (error) {
     console.error('Error during the indexing process:', error);
@@ -52,7 +53,8 @@ const processContracts = async (
   next: string | null,
   contractScannerService: ContractScannerService,
   byteCodeAnalyzer: ByteCodeAnalyzer,
-  registryGenerator: RegistryGenerator
+  registryGenerator: RegistryGenerator,
+  configService: ConfigService
 ) => {
   do {
     const fetchContractsResponse =
@@ -70,11 +72,15 @@ const processContracts = async (
       fetchContractsResponse.contracts
     );
 
-    // let the registry update process to run asynchronously in the background
-    registryGenerator.generateErcRegistry(
-      ercContracts.erc20Contracts,
-      ercContracts.erc721Contracts
-    );
-    registryGenerator.updateNextPointer(next);
+    // only update registry if detectionOnly is off
+    if (!configService.getDetectionOnly()) {
+      // let the registry update process to run asynchronously in the background
+      registryGenerator.generateErcRegistry(
+        ercContracts.erc20Contracts,
+        ercContracts.erc721Contracts
+      );
+
+      registryGenerator.updateNextPointer(next);
+    }
   } while (next);
 };
