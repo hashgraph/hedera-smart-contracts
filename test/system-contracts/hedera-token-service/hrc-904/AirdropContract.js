@@ -159,30 +159,32 @@ describe('AirdropContract Test Suite', function () {
     }
   });
 
-  // it('should airdrop 10 tokens to multiple accounts', async function () {
-  //   const ftAmount = BigInt(1);
-  //   const tokens = [];
-  //   for (let i = 0; i < 10; i++) {
-  //     tokens.push(await setupToken());
-  //   }
-  //   const accounts = signers.slice(1, 3).map((s) => s.address);
-  //   for (let i = 0; i < accounts.length; i++) {
-  //     const tx = await airdropContract.tokenNAmountAirdrops(
-  //       tokens,
-  //       owner,
-  //       accounts[i],
-  //       ftAmount,
-  //       {
-  //         gasLimit: 15_000_000,
-  //       }
-  //     );
-  //     await tx.wait();
-  //     for (let j = 0; j < tokens.length; j++) {
-  //       const balance = await erc20Contract.balanceOf(tokens[j], accounts[i]);
-  //       expect(balance).to.equal(ftAmount);
-  //     }
-  //   }
-  // });
+  it('should airdrop 10 tokens to multiple accounts', async function () {
+    const ftAmount = BigInt(1);
+    const tokens = [];
+    // Every accountAmount counts as 1 transfer so 5x2=10
+    for (let i = 0; i < 5; i++) {
+      tokens.push(await setupToken());
+    }
+    const accounts = signers.slice(1, 3).map((s) => s.address);
+    for (let i = 0; i < accounts.length; i++) {
+      const tx = await airdropContract.tokenNAmountAirdrops(
+        tokens,
+        owner,
+        accounts[i],
+        ftAmount,
+        {
+          gasLimit: 2_000_000,
+        }
+      );
+      console.log(tx.hash);
+      await tx.wait();
+      for (let j = 0; j < tokens.length; j++) {
+        const balance = await erc20Contract.balanceOf(tokens[j], accounts[i]);
+        expect(balance).to.equal(ftAmount);
+      }
+    }
+  });
 
   it('should airdrop 10 NFTs to multiple accounts', async function () {
     const accounts = signers.slice(1, 3).map((s) => s.address);
@@ -212,6 +214,7 @@ describe('AirdropContract Test Suite', function () {
           gasLimit: 15_000_000,
         }
       );
+      console.log(tx.hash);
       await tx.wait();
 
       for (let i = 0; i < nftTokens.length; i++) {
@@ -389,7 +392,7 @@ describe('AirdropContract Test Suite', function () {
     try {
       const ftAmount = BigInt(1);
       const tokens = [];
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 6; i++) {
         tokens.push(await setupToken());
       }
       const tx = await airdropContract.tokenNAmountAirdrops(
