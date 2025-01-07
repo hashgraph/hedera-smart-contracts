@@ -18,7 +18,7 @@
  *
  */
 
-import { Contract } from 'sevm';
+import AhoCorasick from 'ahocorasick';
 import { ContractScannerService } from './contractScanner';
 import constants from '../utils/constants';
 import { ethers } from 'ethers';
@@ -101,9 +101,7 @@ export class ByteCodeAnalyzer {
 
         console.log(`Analyzing contract: contractId=${contract.contract_id}`);
 
-        const sevmContract = new Contract(contractBytecode);
-
-        if (sevmContract.isERC(ERCID.ERC20)) {
+        if (this.isErc(ERCID.ERC20, contractBytecode)) {
           const ercTokenInfoObject = await this.analyzeErcContract(
             ERCID.ERC20,
             contract,
@@ -115,7 +113,7 @@ export class ByteCodeAnalyzer {
           }
         }
 
-        if (sevmContract.isERC(ERCID.ERC721)) {
+        if (this.isErc(ERCID.ERC721, contractBytecode)) {
           const ercTokenInfoObject = await this.analyzeErcContract(
             ERCID.ERC721,
             contract,
@@ -196,32 +194,28 @@ export class ByteCodeAnalyzer {
           .then((tokenInfoResponse) => ({
             type,
             field,
-            sighash,
             tokenInfoResponse,
           }))
     );
     const contractCallResponses = await Promise.all(contractCallPromises);
 
     const ercTokenInfoObject = contractCallResponses.reduce<
-      Record<string, string | number>
-    >((ercTokenInfoObject, { type, field, sighash, tokenInfoResponse }) => {
+      Record<string, string | number | null>
+    >((ercTokenInfoObject, { type, field, tokenInfoResponse }) => {
       if (!tokenInfoResponse) {
-        const errMessage = `ERC contract passes signature matching but fails contract call: contractId=${contract.contract_id}, contractAddress=${contract.evm_address}, function_selector=${sighash}`;
-        const error = new Error(errMessage);
-        (error as any).errMessage = errMessage;
-        throw error;
+        ercTokenInfoObject[field] = tokenInfoResponse;
+      } else {
+        const decodedTokenInfo = ethers.AbiCoder.defaultAbiCoder().decode(
+          [type],
+          tokenInfoResponse
+        )[0];
+
+        // `decodedTokenInfo` can potentially be one of two types: string or BigInt.
+        // Since the goal is to write the data to disk, convert BigInt to a Number,
+        // as the filesystem (fs) cannot directly handle BigInt values.
+        ercTokenInfoObject[field] =
+          type === 'string' ? decodedTokenInfo : Number(decodedTokenInfo);
       }
-
-      const decodedTokenInfo = ethers.AbiCoder.defaultAbiCoder().decode(
-        [type],
-        tokenInfoResponse
-      )[0];
-
-      // `decodedTokenInfo` can potentially be one of two types: string or BigInt.
-      // Since the goal is to write the data to disk, convert BigInt to a Number,
-      // as the filesystem (fs) cannot directly handle BigInt values.
-      ercTokenInfoObject[field] =
-        type === 'string' ? decodedTokenInfo : Number(decodedTokenInfo);
 
       return ercTokenInfoObject;
     }, {});
@@ -231,5 +225,33 @@ export class ByteCodeAnalyzer {
       address: contract.evm_address,
       ...ercTokenInfoObject,
     } as ERC20OutputInterface | ERC721OutputInterface;
+  }
+
+  /**
+   * Determines if the provided bytecode conforms to the specified ERC standard by searching for all required function selectors and event topics using the Aho-Corasick algorithm.
+   *
+   * The Aho-Corasick algorithm constructs a finite state machine from the provided set of standard signatures, facilitating efficient multi-pattern matching within the bytecode.
+   * It operates with linear time complexity, O(n + m + z), where n represents the bytecode length, m is the total length of the signatures, and z is the number of matches identified.
+   * This efficiency is especially beneficial for analyzing large bytecode sequences, as it drastically minimizes processing time.
+   *
+   * @param {ERCID} ercId - Identifier for the ERC standard (e.g., ERC-20, ERC-721).
+   * @param {string} bytecode - The contract's bytecode to be analyzed.
+   * @returns {boolean} - Returns true if the bytecode contains all required signatures for the specified ERC standard; otherwise, false.
+   */
+  private isErc(ercId: ERCID, bytecode: string): boolean {
+    const standardErcSignatures = constants.ERC_STANDARD_SIGNATURES[ercId];
+
+    const ahoCorasick = new AhoCorasick(standardErcSignatures);
+    const matches = ahoCorasick.search(bytecode);
+
+    // Each match returned by ahoCorasick.search() is in the format [occurrences, ['key']], where:
+    // - `match[1]` refers to the array containing the matched signature(s) (the `key` array).
+    // - `match[1][0]` accesses the first item in this `key` array, which represents the actual matched signature.
+    // This logic ensures we extract only the relevant signature from each match.
+    const foundSignatures = new Set(matches.map((match: any) => match[1][0]));
+
+    return standardErcSignatures.every((signature) =>
+      foundSignatures.has(signature)
+    );
   }
 }
