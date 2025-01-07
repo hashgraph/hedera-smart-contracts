@@ -35,6 +35,10 @@ const {
   AccountBalanceQuery,
 } = require('@hashgraph/sdk');
 const Constants = require('../../constants');
+const axios = require('axios');
+const {
+  getMirrorNodeUrl,
+} = require('../native/evm-compatibility-ecrecover/utils');
 
 class Utils {
   //createTokenCost is cost for creating the token, which is passed to the system-contracts. This is equivalent of 40 and 60hbars, any excess hbars are refunded.
@@ -960,6 +964,18 @@ class Utils {
       default:
         return;
     }
+  }
+
+  static async getPrecompileResponseCode(txHash) {
+    const network = hre.network.name;
+    const mirrorNodeUrl = getMirrorNodeUrl(network);
+    const res = await axios.get(
+      `${mirrorNodeUrl}/contracts/results/${txHash}/actions`
+    );
+    const precompileAction = res.data.actions.find(
+      (x) => x.recipient === Constants.PRECOMPILE_ADDRESS
+    );
+    return BigInt(precompileAction.result_data).toString();
   }
 }
 

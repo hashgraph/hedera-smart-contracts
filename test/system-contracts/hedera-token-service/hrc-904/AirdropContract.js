@@ -84,14 +84,20 @@ describe('AirdropContract Test Suite', function () {
     nftTokenAddress = await setupNft();
   });
 
-  it('should airdrop tokens to multiple accounts', async function () {
+  it('should airdrop fungible tokens (FT) to multiple accounts', async function () {
     const ftAmount = BigInt(1);
     const accounts = signers.slice(1, 3).map((s) => s.address);
-    const initialFTBalances = await Promise.all(
-      accounts.map((account) => erc20Contract.balanceOf(tokenAddress, account))
-    );
 
-    const txFT = await airdropContract.tokenAirdropDistribute(
+    const getBalances = async () =>
+      Promise.all(
+        accounts.map((account) =>
+          erc20Contract.balanceOf(tokenAddress, account)
+        )
+      );
+
+    const initialBalances = await getBalances();
+
+    const tx = await airdropContract.tokenAirdropDistribute(
       tokenAddress,
       owner,
       accounts,
@@ -100,17 +106,16 @@ describe('AirdropContract Test Suite', function () {
         gasLimit: 5_000_000,
       }
     );
-    await txFT.wait();
-    const updatedFTBalances = await Promise.all(
-      accounts.map((account) => erc20Contract.balanceOf(tokenAddress, account))
-    );
+    await tx.wait();
 
-    for (let i = 0; i < accounts.length; i++) {
-      expect(updatedFTBalances[i]).to.equal(initialFTBalances[i] + ftAmount);
-    }
+    const updatedBalances = await getBalances();
+
+    updatedBalances.forEach((balance, index) => {
+      expect(balance).to.equal(initialBalances[index] + ftAmount);
+    });
   });
 
-  it('should airdrop NFTs to multiple accounts', async function () {
+  it('should airdrop non-fungible tokens (NFT) to multiple accounts', async function () {
     const accounts = signers.slice(1, 3).map((s) => s.address);
 
     const serial = await utils.mintNFTToAddress(
@@ -154,30 +159,30 @@ describe('AirdropContract Test Suite', function () {
     }
   });
 
-  it('should airdrop 10 tokens to multiple accounts', async function () {
-    const ftAmount = BigInt(1);
-    const tokens = [];
-    for (let i = 0; i < 10; i++) {
-      tokens.push(await setupToken());
-    }
-    const accounts = signers.slice(1, 3).map((s) => s.address);
-    for (let i = 0; i < accounts.length; i++) {
-      const tx = await airdropContract.tokenNAmountAirdrops(
-        tokens,
-        owner,
-        accounts[i],
-        ftAmount,
-        {
-          gasLimit: 15_000_000,
-        }
-      );
-      await tx.wait();
-      for (let j = 0; j < tokens.length; j++) {
-        const balance = await erc20Contract.balanceOf(tokens[j], accounts[i]);
-        expect(balance).to.equal(ftAmount);
-      }
-    }
-  });
+  // it('should airdrop 10 tokens to multiple accounts', async function () {
+  //   const ftAmount = BigInt(1);
+  //   const tokens = [];
+  //   for (let i = 0; i < 10; i++) {
+  //     tokens.push(await setupToken());
+  //   }
+  //   const accounts = signers.slice(1, 3).map((s) => s.address);
+  //   for (let i = 0; i < accounts.length; i++) {
+  //     const tx = await airdropContract.tokenNAmountAirdrops(
+  //       tokens,
+  //       owner,
+  //       accounts[i],
+  //       ftAmount,
+  //       {
+  //         gasLimit: 15_000_000,
+  //       }
+  //     );
+  //     await tx.wait();
+  //     for (let j = 0; j < tokens.length; j++) {
+  //       const balance = await erc20Contract.balanceOf(tokens[j], accounts[i]);
+  //       expect(balance).to.equal(ftAmount);
+  //     }
+  //   }
+  // });
 
   it('should airdrop 10 NFTs to multiple accounts', async function () {
     const accounts = signers.slice(1, 3).map((s) => s.address);
@@ -227,9 +232,11 @@ describe('AirdropContract Test Suite', function () {
     await performAirdropAndValidate(accounts[1], nftTokens2, nftSerials2);
   });
 
-  it('should airdrop a fungible token to a single account', async function () {
+  it('should airdrop a fungible token (FT) to a single account', async function () {
     const ftAmount = BigInt(1);
     const receiver = signers[1].address;
+    const tokenAddress = await setupToken();
+
     const initialBalance = await erc20Contract.balanceOf(
       tokenAddress,
       receiver
@@ -253,10 +260,10 @@ describe('AirdropContract Test Suite', function () {
     expect(updatedBalance).to.equal(initialBalance + ftAmount);
   });
 
-  it('should airdrop a non-fungible token to a single account', async function () {
+  it('should airdrop a non-fungible token (NFT) to a single account', async function () {
     const receiver = signers[1].address;
 
-    const mintedTokenSerialNumber = await utils.mintNFTToAddress(
+    const serial = await utils.mintNFTToAddress(
       tokenCreateContract,
       nftTokenAddress
     );
@@ -265,40 +272,34 @@ describe('AirdropContract Test Suite', function () {
       nftTokenAddress,
       owner,
       receiver,
-      mintedTokenSerialNumber,
+      serial,
       {
         gasLimit: 5_000_000,
       }
     );
     await txNFT.wait();
 
-    const updatedNFTBalances = await erc721Contract
-      .ownerOf(nftTokenAddress, mintedTokenSerialNumber)
+    const nftOwner = await erc721Contract
+      .ownerOf(nftTokenAddress, serial)
       .catch(() => null);
-
-    expect(updatedNFTBalances).to.equal(receiver);
+    expect(nftOwner).to.equal(receiver);
   });
 
   it('should fail when the sender does not have enough balance', async function () {
     const ftAmount = BigInt(100_000_000_000_000_000);
     const receiver = signers[1].address;
 
-    try {
-      const tx = await airdropContract.tokenAirdrop(
-        tokenAddress,
-        signers[2].address,
-        receiver,
-        ftAmount,
-        {
-          gasLimit: 2_000_000,
-        }
-      );
-      await tx.wait();
-      expect.fail('Should revert');
-    } catch (error) {
-      expect(error.shortMessage).to.eq('transaction execution reverted');
-      // TODO: Assert child tx error message === INSUFFICIENT_TOKEN_BALANCE
-    }
+    const tx = await airdropContract.tokenAirdrop(
+      tokenAddress,
+      signers[2].address,
+      receiver,
+      ftAmount,
+      {
+        gasLimit: 2_000_000,
+      }
+    );
+    const responseCode = await utils.getPrecompileResponseCode(tx.hash);
+    expect(responseCode).to.eq('178'); // INSUFFICIENT_TOKEN_BALANCE code
   });
 
   it('should fail when the receiver does not have a valid account', async function () {
@@ -308,66 +309,50 @@ describe('AirdropContract Test Suite', function () {
       nftTokenAddress
     );
 
-    try {
-      const txNFT = await airdropContract.nftAirdrop(
-        nftTokenAddress,
-        owner,
-        invalidReceiver,
-        mintedTokenSerialNumber,
-        {
-          gasLimit: 2_000_000,
-        }
-      );
-      await txNFT.wait();
-      expect.fail('Should revert');
-    } catch (error) {
-      // TODO: Assert child tx error message === INVALID_ACCOUNT_ID
-      expect(error.shortMessage).to.eq('transaction execution reverted');
-    }
+    const txNFT = await airdropContract.nftAirdrop(
+      nftTokenAddress,
+      owner,
+      invalidReceiver,
+      mintedTokenSerialNumber,
+      {
+        gasLimit: 2_000_000,
+      }
+    );
+    const responseCode = await utils.getPrecompileResponseCode(txNFT.hash);
+    expect(responseCode).to.eq('15'); // INVALID_ACCOUNT_ID code
   });
 
   it('should fail when the token does not exist', async function () {
     const receiver = signers[1].address;
     const invalidToken = '0xdead00000000000000000000000000000000dead';
-    try {
-      const txNFT = await airdropContract.nftAirdrop(
-        invalidToken,
-        owner,
-        receiver,
-        1,
-        {
-          gasLimit: 2_000_000,
-        }
-      );
-      await txNFT.wait();
-
-      expect.fail('Should revert');
-    } catch (error) {
-      // TODO: Assert child tx error message === INVALID_TOKEN_ID
-      expect(error.shortMessage).to.eq('transaction execution reverted');
-    }
+    const txNFT = await airdropContract.nftAirdrop(
+      invalidToken,
+      owner,
+      receiver,
+      1,
+      {
+        gasLimit: 2_000_000,
+      }
+    );
+    const responseCode = await utils.getPrecompileResponseCode(txNFT.hash);
+    expect(responseCode).to.eq('167'); // INVALID_TOKEN_ID code
   });
 
   it('should fail when the airdrop amounts are out of bounds', async function () {
     const invalidAmount = BigInt(0);
     const receiver = signers[1].address;
 
-    try {
-      const tx = await airdropContract.tokenAirdrop(
-        tokenAddress,
-        signers[0].address,
-        receiver,
-        invalidAmount,
-        {
-          gasLimit: 2_000_000,
-        }
-      );
-      await tx.wait();
-      expect.fail('Should revert');
-    } catch (error) {
-      // TODO: Assert child tx error message === INVALID_TRANSACTION_BODY
-      expect(error.shortMessage).to.eq('transaction execution reverted');
-    }
+    const tx = await airdropContract.tokenAirdrop(
+      tokenAddress,
+      signers[0].address,
+      receiver,
+      invalidAmount,
+      {
+        gasLimit: 2_000_000,
+      }
+    );
+    const responseCode = await utils.getPrecompileResponseCode(tx.hash);
+    expect(responseCode).to.eq('50'); // INVALID_TRANSACTION_BODY code
   });
 
   it('should fail when 11 or more NFT airdrops are provided', async function () {

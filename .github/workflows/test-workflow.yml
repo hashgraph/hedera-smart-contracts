@@ -15,10 +15,6 @@ on:
       relayTag:
         required: false
         type: string
-      enableTmate:
-        required: false
-        type: boolean
-        default: false
 
 defaults:
   run:
