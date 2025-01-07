@@ -177,7 +177,6 @@ describe('AirdropContract Test Suite', function () {
           gasLimit: 2_000_000,
         }
       );
-      console.log(tx.hash);
       await tx.wait();
       for (let j = 0; j < tokens.length; j++) {
         const balance = await erc20Contract.balanceOf(tokens[j], accounts[i]);
@@ -211,10 +210,9 @@ describe('AirdropContract Test Suite', function () {
         receiver,
         nftSerials,
         {
-          gasLimit: 15_000_000,
+          gasLimit: 2_000_000,
         }
       );
-      console.log(tx.hash);
       await tx.wait();
 
       for (let i = 0; i < nftTokens.length; i++) {
