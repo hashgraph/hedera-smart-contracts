@@ -7,7 +7,7 @@ import {IHederaTokenService} from "../../IHederaTokenService.sol";
 pragma experimental ABIEncoderV2;
 
 // @title Airdrop Contract
-// @notice Facilitates token airdrops on the Hedera network for both fungible and non-fungible tokens
+// @notice Facilitates token airdrops for both fungible and non-fungible tokens
 // @dev Implements HRC-904 standard for token airdrops
 //
 // Recipients will receive tokens in one of these ways:
