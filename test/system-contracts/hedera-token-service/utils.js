@@ -973,7 +973,7 @@ class Utils {
       `${mirrorNodeUrl}/contracts/results/${txHash}/actions`
     );
     const precompileAction = res.data.actions.find(
-      (x) => x.recipient === Constants.PRECOMPILE_ADDRESS
+      (x) => x.recipient === Constants.HTS_SYSTEM_CONTRACT_ADDRESS
     );
     return BigInt(precompileAction.result_data).toString();
   }
