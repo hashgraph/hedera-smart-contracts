@@ -56,6 +56,7 @@ module.exports = {
         networkNodeUrl: NETWORKS.local.networkNodeUrl,
         nodeId: NETWORKS.local.nodeId,
         mirrorNode: NETWORKS.local.mirrorNode,
+        timeout: NETWORKS.local.timeout,
       },
     },
     testnet: {
