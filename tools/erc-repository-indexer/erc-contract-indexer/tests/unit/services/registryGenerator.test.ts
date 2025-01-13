@@ -19,11 +19,15 @@ const mockedFs = fs as jest.Mocked<typeof fs>;
 describe('RegistryGenerator', () => {
   let registry: RegistryGenerator;
   const mockERC20Path = constants.ERC_20_JSON_FILE_NAME;
+
   const mockContractA: ERCOutputInterface[] = [
     { contractId: '123', address: '0x123' },
   ];
   const mockContractB: ERCOutputInterface[] = [
     { contractId: '456', address: '0x456' },
+  ];
+  const mockContractC: ERCOutputInterface[] = [
+    { contractId: '789', address: '0x789' },
   ];
   const mockNextPointerPath =
     constants.GET_CONTRACTS_LIST_NEXT_POINTER_JSON_FILE_NAME;
@@ -41,15 +45,19 @@ describe('RegistryGenerator', () => {
   });
 
   describe('generateErcRegistry', () => {
-    it('should call updateRegistry for both ERC20 and ERC721 paths', async () => {
+    it('should call updateRegistry for ERC20, ERC721, and ERC1155 paths', async () => {
       const updateRegistrySpy = jest.spyOn<any, any>(
         registry,
         'updateRegistry'
       );
 
-      await registry.generateErcRegistry(mockContractA, mockContractB);
+      await registry.generateErcRegistry(
+        mockContractA,
+        mockContractB,
+        mockContractC
+      );
 
-      expect(updateRegistrySpy).toHaveBeenCalledTimes(2);
+      expect(updateRegistrySpy).toHaveBeenCalledTimes(3);
       expect(updateRegistrySpy).toHaveBeenCalledWith(
         registry['erc20JsonFilePath'],
         mockContractA
@@ -57,6 +65,10 @@ describe('RegistryGenerator', () => {
       expect(updateRegistrySpy).toHaveBeenCalledWith(
         registry['erc721JsonFilePath'],
         mockContractB
+      );
+      expect(updateRegistrySpy).toHaveBeenCalledWith(
+        registry['erc1155JsonFilePath'],
+        mockContractC
       );
     });
 
@@ -66,7 +78,7 @@ describe('RegistryGenerator', () => {
         'updateRegistry'
       );
 
-      await registry.generateErcRegistry([], []);
+      await registry.generateErcRegistry([], [], []);
 
       expect(updateRegistrySpy).not.toHaveBeenCalled();
     });
