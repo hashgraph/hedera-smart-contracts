@@ -1,4 +1,4 @@
-name: ERC Registry Tool
+name: ERC Registry Tool Test
 
 on:
   pull_request:
