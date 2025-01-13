@@ -15,8 +15,6 @@ import {IHRC904AccountFacade} from "../../../hedera-account-service/IHRC904Accou
 // - Rejecting tokens and NFTs
 // - Managing token associations and auto-association settings
 contract HRC904Contract {
-    event IsAssociated(bool status);
-
     // @notice Cancels a pending fungible token airdrop to a receiver
     // @dev Calls cancelAirdropFT on the token's HRC904 facade
     // @param token The token address to cancel airdrop for
