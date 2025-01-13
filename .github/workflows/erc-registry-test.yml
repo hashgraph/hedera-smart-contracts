@@ -50,7 +50,7 @@ jobs:
       - name: Run Acceptance Tests
         run: |
           cd ${{env.INDEXER_PATH}}
-          npm run test:unit
+          npm run test:acceptance
 
       - name: Stop the local node
         if: ${{ !cancelled() }}
