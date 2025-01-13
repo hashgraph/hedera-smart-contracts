@@ -18,7 +18,7 @@ pragma experimental ABIEncoderV2;
 //
 // All transfer fees and auto-renewal rent costs are charged to the transaction submitter
 contract Airdrop is HederaTokenService {
-    // @notice Airdrops fungible tokens from a sender to a single receiver
+    // @notice Airdrops a fungible token from a sender to a single receiver
     // @dev Builds airdrop struct and submits airdropTokens system contract call
     // @param token The token address to airdrop
     // @param sender The address sending the tokens
@@ -70,7 +70,7 @@ contract Airdrop is HederaTokenService {
     // @param receiver The address receiving all tokens
     // @param amount The amount of each token to transfer
     // @return responseCode The response code from the airdrop operation (22 = success)
-    function tokenNAmountAirdrops(address[] memory tokens, address sender, address receiver, int64 amount) public payable returns (int64 responseCode) {
+    function multipleFtAirdrop(address[] memory tokens, address sender, address receiver, int64 amount) public payable returns (int64 responseCode) {
         uint256 length = tokens.length;
         IHederaTokenService.TokenTransferList[] memory tokenTransfers = new IHederaTokenService.TokenTransferList[](length);
         for (uint256 i = 0; i < length; i++)
@@ -94,7 +94,7 @@ contract Airdrop is HederaTokenService {
     // @param receiver The address receiving all NFTs
     // @param serials Array of serial numbers corresponding to each NFT
     // @return responseCode The response code from the airdrop operation (22 = success)
-    function nftNAmountAirdrops(address[] memory nfts, address sender, address receiver, int64[] memory serials) public returns (int64 responseCode) {
+    function multipleNftAirdrop(address[] memory nfts, address sender, address receiver, int64[] memory serials) public returns (int64 responseCode) {
         uint256 length = nfts.length;
         IHederaTokenService.TokenTransferList[] memory tokenTransfers = new IHederaTokenService.TokenTransferList[](length);
         for (uint256 i = 0; i < length; i++)

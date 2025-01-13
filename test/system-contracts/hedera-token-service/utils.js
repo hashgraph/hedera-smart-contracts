@@ -68,6 +68,18 @@ class Utils {
     DELEGETABLE_CONTRACT_ID: 4,
   };
 
+  static async deployContract(
+    contractPath,
+    gasLimit = Constants.GAS_LIMIT_1_000_000
+  ) {
+    const factory = await ethers.getContractFactory(contractPath);
+    const contract = await factory.deploy(gasLimit);
+    return await ethers.getContractAt(
+      contractPath,
+      await contract.getAddress()
+    );
+  }
+
   static async deployERC20Mock() {
     const erc20MockFactory = await ethers.getContractFactory(
       Constants.Path.HIP583_ERC20Mock
@@ -966,6 +978,15 @@ class Utils {
     }
   }
 
+  /**
+   * This method fetches the transaction actions from the mirror node corresponding to the current network,
+   * filters the actions to find the one directed to the Hedera Token Service (HTS) system contract,
+   * and extracts the result data from the precompile action. The result data is converted from a BigInt
+   * to a string before being returned.
+   *
+   * @param {string} txHash - The transaction hash to query.
+   * @returns {string} - The response code as a string.
+   */
   static async getPrecompileResponseCode(txHash) {
     const network = hre.network.name;
     const mirrorNodeUrl = getMirrorNodeUrl(network);

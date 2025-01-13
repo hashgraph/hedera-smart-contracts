@@ -168,7 +168,7 @@ describe('AirdropContract Test Suite', function () {
     }
     const accounts = signers.slice(1, 3).map((s) => s.address);
     for (let i = 0; i < accounts.length; i++) {
-      const tx = await airdropContract.tokenNAmountAirdrops(
+      const tx = await airdropContract.multipleFtAirdrop(
         tokens,
         owner,
         accounts[i],
@@ -204,7 +204,7 @@ describe('AirdropContract Test Suite', function () {
     }
 
     async function performAirdropAndValidate(receiver, nftTokens, nftSerials) {
-      const tx = await airdropContract.nftNAmountAirdrops(
+      const tx = await airdropContract.multipleNftAirdrop(
         nftTokens,
         owner,
         receiver,
@@ -370,7 +370,7 @@ describe('AirdropContract Test Suite', function () {
         nftSerials.push(serial);
       }
 
-      const tx = await airdropContract.nftNAmountAirdrops(
+      const tx = await airdropContract.multipleNftAirdrop(
         nftTokens,
         owner,
         signers[1].address,
@@ -393,7 +393,7 @@ describe('AirdropContract Test Suite', function () {
       for (let i = 0; i < 6; i++) {
         tokens.push(await setupToken());
       }
-      const tx = await airdropContract.tokenNAmountAirdrops(
+      const tx = await airdropContract.multipleFtAirdrop(
         tokens,
         owner,
         signers[1].address,

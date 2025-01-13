@@ -80,28 +80,4 @@ contract HRC904Contract {
     function setUnlimitedAssociations(address account, bool enableAutoAssociations) public returns (int64 responseCode) {
         return IHRC904AccountFacade(account).setUnlimitedAutomaticAssociations(enableAutoAssociations);
     }
-
-    // @notice Associates the caller's account with a token
-    // @dev Calls associate on the HRC719 token interface
-    // @param token The token address to associate with
-    // @return responseCode The response code from the associate operation (22 = success)
-    function associate(address token) public returns (uint256 responseCode) {
-        return IHRC719(token).associate();
-    }
-
-    // @notice Dissociates the caller's account from a token
-    // @dev Calls dissociate on the HRC719 token interface
-    // @param token The token address to dissociate from
-    // @return responseCode The response code from the dissociate operation (22 = success)
-    function dissociate(address token) public returns (uint256 responseCode) {
-        return IHRC719(token).dissociate();
-    }
-
-    // @notice Checks if the caller's account is associated with a token
-    // @dev Calls isAssociated on the HRC719 token interface
-    // @param token The token address to check association status
-    // @return associated True if the account is associated with the token
-    function isAssociated(address token) public view returns (bool associated) {
-        return IHRC719(token).isAssociated();
-    }
 }
