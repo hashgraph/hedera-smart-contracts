@@ -35,6 +35,8 @@ export interface ERC721OutputInterface extends ERCOutputInterface {
   symbol: string;
 }
 
+export interface ERC1155OutputInterface extends ERCOutputInterface {}
+
 export interface ERCTokenInfoSelectors {
   type: string;
   field: string;

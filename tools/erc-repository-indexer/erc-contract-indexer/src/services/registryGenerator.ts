@@ -43,6 +43,13 @@ export class RegistryGenerator {
   /**
    * @private
    * @readonly
+   * @property {string} erc1155JsonFilePath - The file path where ERC1155 contract registry data will be stored
+   */
+  private readonly erc1155JsonFilePath: string;
+
+  /**
+   * @private
+   * @readonly
    * @property {string} nextPointerFilePath - The file path where the next pointer for indexing will be stored.
    */
   private readonly nextPointerFilePath: string;
@@ -53,6 +60,9 @@ export class RegistryGenerator {
     );
     this.erc721JsonFilePath = Helper.buildFilePath(
       constants.ERC_721_JSON_FILE_NAME
+    );
+    this.erc1155JsonFilePath = Helper.buildFilePath(
+      constants.ERC_1155_JSON_FILE_NAME
     );
     this.nextPointerFilePath = Helper.buildFilePath(
       constants.GET_CONTRACTS_LIST_NEXT_POINTER_JSON_FILE_NAME
@@ -81,14 +91,16 @@ export class RegistryGenerator {
   }
 
   /**
-   * Generates registry files for ERC20 and ERC721 contracts by updating existing registries with new contracts.
+   * Generates registry files for ERC20, ERC721, and ERC1155 contracts by updating existing registries with new contracts.
    * @param {ERCOutputInterface[]} erc20Contracts - Array of ERC20 contract interfaces to add to registry
    * @param {ERCOutputInterface[]} erc721Contracts - Array of ERC721 contract interfaces to add to registry
+   * @param {ERCOutputInterface[]} erc1155Contracts - Array of ERC1155 contract interfaces to add to registry
    * @returns {Promise<void>} Promise that resolves when registry files are updated
    */
   async generateErcRegistry(
     erc20Contracts: ERCOutputInterface[],
-    erc721Contracts: ERCOutputInterface[]
+    erc721Contracts: ERCOutputInterface[],
+    erc1155Contracts: ERCOutputInterface[]
   ): Promise<void> {
     const updatePromises = [];
 
@@ -101,6 +113,12 @@ export class RegistryGenerator {
     if (erc721Contracts.length) {
       updatePromises.push(
         this.updateRegistry(this.erc721JsonFilePath, erc721Contracts)
+      );
+    }
+
+    if (erc1155Contracts.length) {
+      updatePromises.push(
+        this.updateRegistry(this.erc1155JsonFilePath, erc1155Contracts)
       );
     }
 

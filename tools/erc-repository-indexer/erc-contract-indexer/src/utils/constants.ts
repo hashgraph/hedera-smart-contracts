@@ -24,6 +24,7 @@ export default {
   CONTRACT_CALL_ENDPOINT: '/api/v1/contracts/call',
   ERC_20_JSON_FILE_NAME: 'erc-20.json',
   ERC_721_JSON_FILE_NAME: 'erc-721.json',
+  ERC_1155_JSON_FILE_NAME: 'erc-1155.json',
   GET_CONTRACTS_LIST_NEXT_POINTER_JSON_FILE_NAME: 'next-pointer.json',
   PRODUCTION_NETWORKS: ['previewnet', 'testnet', 'mainnet'],
   NETWORK_REGEX: /^(local-node|previewnet|testnet|mainnet)$/,
@@ -136,6 +137,43 @@ export default {
       '8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925',
       '17307eab39ab6107e8899845ad3d59bd9653f200f220920489ca2b5937696c31',
       'ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+    ],
+
+    /**
+     * The pattern for identifying ERC-1155 bytecode, based on a set of method and event signatures
+     * as defined in the ERC-1155 standard interface.
+     *
+     * Selectors (Methods):
+     * - '00fdd58e': 'function balanceOf(address account, uint256 id) external view returns (uint256)',
+     * - '4e1273f4': 'function balanceOfBatch(address[] calldata accounts, uint256[] calldata ids) external view returns (uint256[] memory)',
+     * - 'e985e9c5': 'function isApprovedForAll(address account, address operator) external view returns (bool),
+     * - '2eb2c2d6': 'function safeBatchTransferFrom(address from, address to, uint256[] calldata ids, uint256[] calldata values, bytes calldata data) external',
+     * - 'f242432a': 'function safeTransferFrom(address from, address to, uint256 id, uint256 value, bytes calldata data) external',
+     * - 'a22cb465': 'function setApprovalForAll(address operator, bool approved) external',
+     * - '01ffc9a7': 'function supportsInterface(bytes4 interfaceID) view returns (bool)'
+     *
+     * Topics (Events):
+     * - '17307eab39ab6107e8899845ad3d59bd9653f200f220920489ca2b5937696c31': 'event ApprovalForAll(address indexed account, address indexed operator, bool approved)',
+     * - '4a39dc06d4c0dbc64b70af90fd698a233a518aa5d07e595d983b8c0526c8f7fb': 'event TransferBatch(address indexed operator, address indexed from, address indexed to, uint256[] ids, uint256[] values)',
+     * - 'c3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62': 'event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value);',
+     * - '6bb7ff708619ba0610cba295a58592e0451dee2622938c8755667688daf3529b': 'event URI(string value, uint256 indexed id)'. Note: This event is defined in the IERC1155 interface but is not triggered in the base OpenZeppelin ERC1155 abstract contract.
+     *                                                                                                                      As a result, it is not included in the bytecode of a custom contract inheriting from ERC1155. Only if explicitly implemented
+     *                                                                                                                      in a derived contract, the event signature hash will appear in the compiled bytecode. For more flexible signature matching,
+     *                                                                                                                      this hash is excluded from the ERC1155 array below.
+     *
+     * source: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v5.1.0/contracts/token/ERC1155/IERC1155.sol
+     */
+    ERC1155: [
+      'fdd58e',
+      '4e1273f4',
+      'e985e9c5',
+      '2eb2c2d6',
+      'f242432a',
+      'a22cb465',
+      '01ffc9a7',
+      '17307eab39ab6107e8899845ad3d59bd9653f200f220920489ca2b5937696c31',
+      '4a39dc06d4c0dbc64b70af90fd698a233a518aa5d07e595d983b8c0526c8f7fb',
+      'c3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62',
     ],
   },
 };
