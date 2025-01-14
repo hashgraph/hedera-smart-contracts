@@ -220,34 +220,6 @@ class Utils {
     );
   }
 
-  static async deployAirdropContract() {
-    const tokenAirdropFactory = await ethers.getContractFactory(
-      Constants.Contract.Airdrop
-    );
-    const tokenAirdrop = await tokenAirdropFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Contract.Airdrop,
-      await tokenAirdrop.getAddress()
-    );
-  }
-
-  static async deployHRC904Contract() {
-    const hrcContractFactory = await ethers.getContractFactory(
-      Constants.Contract.HRC904Contract
-    );
-    const hrcContract = await hrcContractFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Contract.HRC904Contract,
-      await hrcContract.getAddress()
-    );
-  }
-
   static async createFungibleToken(contract, treasury) {
     const tokenAddressTx = await contract.createFungibleTokenPublic(treasury, {
       value: BigInt(this.createTokenCost),
