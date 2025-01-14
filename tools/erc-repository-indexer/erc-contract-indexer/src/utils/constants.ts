@@ -164,7 +164,7 @@ export default {
      * source: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v5.1.0/contracts/token/ERC1155/IERC1155.sol
      */
     ERC1155: [
-      'fdd58e',
+      'fdd58e', // Leading zeros ('00') are omitted in the bytecode due to EVM optimizations. This does not affect functionality, as Solidity uses a PUSH3 instruction to load the selector onto the stack.
       '4e1273f4',
       'e985e9c5',
       '2eb2c2d6',
