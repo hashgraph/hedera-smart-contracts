@@ -838,5 +838,59 @@
     "address": "0x610a1bd68500b5348e18c43d97c93d7d35c36aaf",
     "name": "GTest3",
     "symbol": "GT3"
+  },
+  {
+    "contractId": "0.0.7967226",
+    "address": "0x1183f072fe5dfe3578d373a283cc3295a232c6c4",
+    "name": "Kirsten Chen",
+    "symbol": "Kir"
+  },
+  {
+    "contractId": "0.0.7967267",
+    "address": "0x7ea94eaabaec6082330985506350fb2c356e6327",
+    "name": "MARCEL STRIPE PROD",
+    "symbol": "MAR"
+  },
+  {
+    "contractId": "0.0.7967400",
+    "address": "0x2603c8ad0c4f3b4b9a8e6348535b7299009d2d16",
+    "name": "VintageMasters BV",
+    "symbol": "Vin"
+  },
+  {
+    "contractId": "0.0.8009032",
+    "address": "0xb4ed87534c5530f273ffb2f4d2d6a5b36c541017",
+    "name": null,
+    "symbol": null
+  },
+  {
+    "contractId": "0.0.8032835",
+    "address": "0xe98586e8ee2b92f065e46faab0b40f235a9f913b",
+    "name": "Retro",
+    "symbol": "retro"
+  },
+  {
+    "contractId": "0.0.8034221",
+    "address": "0xede0f2f2b1716874883294e3c2ce2bca32f5ed69",
+    "name": "80s",
+    "symbol": "80s"
+  },
+  {
+    "contractId": "0.0.8041264",
+    "address": "0xc6216f26c49a57e4ca0daf4e0b9b5d5c20c3fe49",
+    "name": "Dg",
+    "symbol": "dg"
+  },
+  {
+    "contractId": "0.0.8071453",
+    "address": "0xfb19b3f33b88ce8452dcc8fd7ddbe26c0b902921",
+    "name": "MvMEHashTest",
+    "symbol": "HTest1"
+  },
+  {
+    "contractId": "0.0.8071687",
+    "address": "0x75061d6f18def8721a336905ef9751b087b5a763",
+    "name": "GCollection2",
+    "symbol": "GC2"
   }
 ]

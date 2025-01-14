@@ -4222,5 +4222,197 @@
     "symbol": "packl",
     "totalSupply": 0,
     "decimals": 18
+  },
+  {
+    "contractId": "0.0.7915162",
+    "address": "0xb50696e1c6320e8bd76ac6d52975c8b4736cebd6",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 53241428,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7915240",
+    "address": "0xd5611c32e6b83ac3803d573b36227b96a8ebc66a",
+    "name": "IVY FINANCE",
+    "symbol": "IVYFI",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.7947054",
+    "address": "0x1194010e34c321ce99200f8aabdfacbba571c2e3",
+    "name": "Arkhia Test Token",
+    "symbol": "ARKT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8020499",
+    "address": "0xcf8da6806307685e8e206ec157cca3ed41467d51",
+    "name": "Arkhia Test Token",
+    "symbol": "ARKT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8020504",
+    "address": "0x29a4af2d8d6205cdf376fb58ba2baeb4c7e1e0b4",
+    "name": "Arkhia Test Token",
+    "symbol": "ARKT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8020524",
+    "address": "0xf17fb4cb6f848f9d889290e0549291b20a489614",
+    "name": "Arkhia Test Token",
+    "symbol": "ARKT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8020531",
+    "address": "0xd8258d26406c988c516e2fddfa9b425184520270",
+    "name": "Arkhia Test Token",
+    "symbol": "ARKT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8067399",
+    "address": "0x8404416d44fed35095db0de70809ef73d8542f2a",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8067402",
+    "address": "0xf2ce0435aa067684f85143bf9189490cb417d7d8",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8067407",
+    "address": "0x2b3f9ea3ca2b9864a9b501614a779324d982cd71",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8067410",
+    "address": "0xd983d1fbbd01ad5d9c4a7180cb04a1fbdadbb6b2",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8067453",
+    "address": "0xa78ead07da357f8dfeee5d8e1f599e789bdb6084",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8067459",
+    "address": "0xe56b0586d726d5cdbc3b595c35c388fba0f227ff",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8067465",
+    "address": "0x9b7e7e7f366d2ea224ce10d8bca1701e2370979c",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8067468",
+    "address": "0xb89829f4558692bd02b015d379574b12b719917e",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8067476",
+    "address": "0x03be7742ab1dd9970f37a9ece49be8aca6e5e2ee",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8067504",
+    "address": "0x9180fb31c5a92db67f418563992e4b5d4ee9d8a2",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8067511",
+    "address": "0x6386bf1091ac40fa2b4a2811fbcc72487510b69f",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8067515",
+    "address": "0xed1469ceab891d863a91dd2027887a8f522d7e10",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8067522",
+    "address": "0x0a883ce7fa86f241cccbdd5a77cbe2abadf5e32b",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8067533",
+    "address": "0x8aa0c0b8bf8b24c1d0df95f25e77c36bee2237d9",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8067537",
+    "address": "0x15dc36e719d900df3d23b329b28203265279b36f",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8088973",
+    "address": "0xccb7c2b6d1594dc65f69f448e00824cfd02b7bd4",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8089014",
+    "address": "0xa4616c9c01eb4a4f8d157b1332392838ae066723",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
   }
 ]
