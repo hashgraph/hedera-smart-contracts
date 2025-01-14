@@ -1,18 +1,5 @@
 [
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "status",
-        "type": "bool"
-      }
-    ],
-    "name": "IsAssociated",
-    "type": "event"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
