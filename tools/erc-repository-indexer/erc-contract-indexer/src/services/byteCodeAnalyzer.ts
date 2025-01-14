@@ -23,11 +23,9 @@ import { ContractScannerService } from './contractScanner';
 import constants from '../utils/constants';
 import { ethers } from 'ethers';
 import {
-  ERC1155OutputInterface,
-  ERC20OutputInterface,
-  ERC721OutputInterface,
   ERCOutputInterface,
   ERCTokenInfoSelectors,
+  TokenOutputInterface,
 } from '../schemas/ERCRegistrySchemas';
 import {
   MirrorNodeContract,
@@ -158,16 +156,14 @@ export class ByteCodeAnalyzer {
    * @param {MirrorNodeContractResponse} contract - The contract object containing relevant data.
    * @param {ContractScannerService} contractScannerService - The service used to fetch contract token information.
    * @param {ERCTokenInfoSelectors[]} ercTokenInfoSelectors - An array of selectors for token information.
-   * @returns {Promise<ERC20OutputInterface | ERC721OutputInterface | ERC1155OutputInterface |  null>} The token information object or null if not found.
+   * @returns {Promise<TokenOutputInterface |  null>} The token information object or null if not found.
    */
   private async analyzeErcContract(
     ercId: ERCID,
     contract: MirrorNodeContractResponse,
     contractScannerService: ContractScannerService,
     ercTokenInfoSelectors: ERCTokenInfoSelectors[]
-  ): Promise<
-    ERC20OutputInterface | ERC721OutputInterface | ERC1155OutputInterface | null
-  > {
+  ): Promise<TokenOutputInterface | null> {
     console.log(
       `New ERC contract detected: contractId=${contract.contract_id}, ercID: ${ercId}`
     );
@@ -194,16 +190,14 @@ export class ByteCodeAnalyzer {
    * @param {ContractScannerService} contractScannerService - The service used to fetch contract token information.
    * @param {MirrorNodeContractResponse} contract - The contract object containing relevant data.
    * @param {ERCTokenInfoSelectors[]} ercTokenInfoSelectors - An array of selectors for token information.
-   * @returns {Promise<ERC20OutputInterface | ERC721OutputInterface | ERC1155OutputInterface>} The token information object.
+   * @returns {Promise<TokenOutputInterface>} The token information object.
    * @throws {Error} If a contract call fails despite passing signature matching.
    */
   private async getErcTokenInfo(
     contractScannerService: ContractScannerService,
     contract: MirrorNodeContractResponse,
     ercTokenInfoSelectors: ERCTokenInfoSelectors[]
-  ): Promise<
-    ERC20OutputInterface | ERC721OutputInterface | ERC1155OutputInterface
-  > {
+  ): Promise<TokenOutputInterface> {
     const contractCallPromises = ercTokenInfoSelectors.map(
       ({ type, field, sighash }) =>
         contractScannerService
@@ -244,7 +238,7 @@ export class ByteCodeAnalyzer {
       contractId: contract.contract_id!,
       address: contract.evm_address,
       ...ercTokenInfoObject,
-    } as ERC20OutputInterface | ERC721OutputInterface | ERC1155OutputInterface;
+    } as TokenOutputInterface;
   }
 
   /**
