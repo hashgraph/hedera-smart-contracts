@@ -23,10 +23,9 @@ import { ContractScannerService } from './contractScanner';
 import constants from '../utils/constants';
 import { ethers } from 'ethers';
 import {
-  ERC20OutputInterface,
-  ERC721OutputInterface,
   ERCOutputInterface,
   ERCTokenInfoSelectors,
+  TokenOutputInterface,
 } from '../schemas/ERCRegistrySchemas';
 import {
   MirrorNodeContract,
@@ -36,18 +35,19 @@ import {
 enum ERCID {
   ERC20 = 'ERC20',
   ERC721 = 'ERC721',
+  ERCC1155 = 'ERC1155',
 }
 
 export class ByteCodeAnalyzer {
   /**
-   * Analyzes bytecode, detects and categorizes contracts into ERC20 and ERC721 types based on their bytecode.
+   * Analyzes bytecode, detects and categorizes contracts into ERC20, ERC721, and ERC1155 types based on their bytecode.
    *
-   * This method fetches contract bytecode for the provided contract objects and categorizes them into ERC20 and ERC721 contracts
+   * This method fetches contract bytecode for the provided contract objects and categorizes them into ERC20, ERC721, and ERC1155 contracts
    * based on their bytecode analysis. It returns an object containing arrays of categorized contracts.
    *
    * @param {ContractScannerService} contractScannerService - The service used to fetch contract bytecode.
    * @param {MirrorNodeContract[]} contractObject - An array of contract objects to categorize.
-   * @returns {Promise<{erc20Contracts: ERCOutputInterface[], erc721Contracts: ERCOutputInterface[]}>}
+   * @returns {Promise<{erc20Contracts: ERCOutputInterface[], erc721Contracts: ERCOutputInterface[], erc1155Contracts: ERCOutputInterface[]}>}
    * @throws {Error} If there's an error while analyzing contract bytecode.
    */
   async categorizeERCContracts(
@@ -56,9 +56,11 @@ export class ByteCodeAnalyzer {
   ): Promise<{
     erc20Contracts: ERCOutputInterface[];
     erc721Contracts: ERCOutputInterface[];
+    erc1155Contracts: ERCOutputInterface[];
   }> {
     const erc20Contracts: ERCOutputInterface[] = [];
     const erc721Contracts: ERCOutputInterface[] = [];
+    const erc1155Contracts: ERCOutputInterface[] = [];
 
     try {
       const contractResponses = await Promise.all(
@@ -124,12 +126,24 @@ export class ByteCodeAnalyzer {
             erc721Contracts.push(ercTokenInfoObject);
           }
         }
+
+        if (this.isErc(ERCID.ERCC1155, contractBytecode)) {
+          const ercTokenInfoObject = await this.analyzeErcContract(
+            ERCID.ERCC1155,
+            contract,
+            contractScannerService,
+            []
+          );
+          if (ercTokenInfoObject) {
+            erc1155Contracts.push(ercTokenInfoObject);
+          }
+        }
       }
     } catch (error) {
       console.error('Error while analyzing contract bytecode:', error);
     }
 
-    return { erc20Contracts, erc721Contracts };
+    return { erc20Contracts, erc721Contracts, erc1155Contracts };
   }
 
   /**
@@ -138,18 +152,18 @@ export class ByteCodeAnalyzer {
    * This method logs the detection of a new ERC contract and attempts to retrieve its token information
    * using the provided contract scanner service. If successful, it returns the token information object.
    *
-   * @param {ERCID} ercId - The type of ERC contract (ERC20 or ERC721).
+   * @param {ERCID} ercId - The type of ERC contract (ERC20, ERC721, or ERC1155).
    * @param {MirrorNodeContractResponse} contract - The contract object containing relevant data.
    * @param {ContractScannerService} contractScannerService - The service used to fetch contract token information.
    * @param {ERCTokenInfoSelectors[]} ercTokenInfoSelectors - An array of selectors for token information.
-   * @returns {Promise<ERC20OutputInterface | ERC721OutputInterface | null>} The token information object or null if not found.
+   * @returns {Promise<TokenOutputInterface |  null>} The token information object or null if not found.
    */
   private async analyzeErcContract(
     ercId: ERCID,
     contract: MirrorNodeContractResponse,
     contractScannerService: ContractScannerService,
     ercTokenInfoSelectors: ERCTokenInfoSelectors[]
-  ): Promise<ERC20OutputInterface | ERC721OutputInterface | null> {
+  ): Promise<TokenOutputInterface | null> {
     console.log(
       `New ERC contract detected: contractId=${contract.contract_id}, ercID: ${ercId}`
     );
@@ -176,14 +190,14 @@ export class ByteCodeAnalyzer {
    * @param {ContractScannerService} contractScannerService - The service used to fetch contract token information.
    * @param {MirrorNodeContractResponse} contract - The contract object containing relevant data.
    * @param {ERCTokenInfoSelectors[]} ercTokenInfoSelectors - An array of selectors for token information.
-   * @returns {Promise<ERC20OutputInterface | ERC721OutputInterface>} The token information object.
+   * @returns {Promise<TokenOutputInterface>} The token information object.
    * @throws {Error} If a contract call fails despite passing signature matching.
    */
   private async getErcTokenInfo(
     contractScannerService: ContractScannerService,
     contract: MirrorNodeContractResponse,
     ercTokenInfoSelectors: ERCTokenInfoSelectors[]
-  ): Promise<ERC20OutputInterface | ERC721OutputInterface> {
+  ): Promise<TokenOutputInterface> {
     const contractCallPromises = ercTokenInfoSelectors.map(
       ({ type, field, sighash }) =>
         contractScannerService
@@ -224,7 +238,7 @@ export class ByteCodeAnalyzer {
       contractId: contract.contract_id!,
       address: contract.evm_address,
       ...ercTokenInfoObject,
-    } as ERC20OutputInterface | ERC721OutputInterface;
+    } as TokenOutputInterface;
   }
 
   /**
@@ -234,7 +248,7 @@ export class ByteCodeAnalyzer {
    * It operates with linear time complexity, O(n + m + z), where n represents the bytecode length, m is the total length of the signatures, and z is the number of matches identified.
    * This efficiency is especially beneficial for analyzing large bytecode sequences, as it drastically minimizes processing time.
    *
-   * @param {ERCID} ercId - Identifier for the ERC standard (e.g., ERC-20, ERC-721).
+   * @param {ERCID} ercId - Identifier for the ERC standard (e.g., ERC-20, ERC-721, ERC-1155).
    * @param {string} bytecode - The contract's bytecode to be analyzed.
    * @returns {boolean} - Returns true if the bytecode contains all required signatures for the specified ERC standard; otherwise, false.
    */
