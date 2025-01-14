@@ -78,7 +78,8 @@ const processContracts = async (
       // let the registry update process to run asynchronously in the background
       registryGenerator.generateErcRegistry(
         ercContracts.erc20Contracts,
-        ercContracts.erc721Contracts
+        ercContracts.erc721Contracts,
+        ercContracts.erc1155Contracts
       );
 
       registryGenerator.updateNextPointer(next);
