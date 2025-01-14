@@ -1,6 +1,11 @@
 name: ERC Registry Indexer
 
 on:
+  push:
+    branches:
+      [
+        1172-erc-registry-phase-3-update-erc-registry-indexer-workflow-script-to-include-erc-1155,
+      ]
   workflow_dispatch:
     inputs:
       HEDERA_NETWORK:
@@ -41,9 +46,9 @@ jobs:
 
       - name: Set Environment Variables
         run: |
-          echo "HEDERA_NETWORK=${{ github.event.inputs.HEDERA_NETWORK }}" >> ${{ env.INDEXER_PATH }}/.env
-          echo "MIRROR_NODE_URL=${{ github.event.inputs.MIRROR_NODE_URL }}" >> ${{ env.INDEXER_PATH }}/.env
-          echo "STARTING_POINT=${{ github.event.inputs.STARTING_POINT }}" >> ${{ env.INDEXER_PATH }}/.env
+          echo "HEDERA_NETWORK=mainnet" >> ${{ env.INDEXER_PATH }}/.env
+          echo "MIRROR_NODE_URL=https://mainnet.mirrornode.hedera.com" >> ${{ env.INDEXER_PATH }}/.env
+          echo "STARTING_POINT=0.0.0" >> ${{ env.INDEXER_PATH }}/.env
           echo "SCAN_CONTRACT_LIMIT=${{ github.event.inputs.SCAN_CONTRACT_LIMIT }}" >> ${{ env.INDEXER_PATH }}/.env
 
       - name: Install Dependencies
@@ -191,28 +196,28 @@ jobs:
           mkdir -p ./erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}
           cp -r /tmp/erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/* ./public/${{ github.event.inputs.HEDERA_NETWORK }}
 
-      - name: Create Pull Request Target hedera-mirror-node-explorer
-        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
-        with:
-          branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
-          commit-message: 'chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
-          committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-          author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-          token: ${{ secrets.GH_ACCESS_TOKEN_MIRROR_NODE_EXPLORER }}
-          delete-branch: true
-          signoff: true
-          title: 'chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
-          body: >
-            **Description**:
+      # - name: Create Pull Request Target hedera-mirror-node-explorer
+      #   uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
+      #   with:
+      #     branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
+      #     commit-message: 'chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
+      #     committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+      #     author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+      #     token: ${{ secrets.GH_ACCESS_TOKEN_MIRROR_NODE_EXPLORER }}
+      #     delete-branch: true
+      #     signoff: true
+      #     title: 'chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
+      #     body: >
+      #       **Description**:
 
-            This PR updates the ERC Registry to include the most recent ERC-20, ERC-721, and ERC-1155 tokens.
+      #       This PR updates the ERC Registry to include the most recent ERC-20, ERC-721, and ERC-1155 tokens.
 
-            **Registry Update Summary**:
-              - **Hedera Network**: ${{ github.event.inputs.HEDERA_NETWORK }}
-              - **New ERC-20 Records Added**: ${{ env.NEW_ERC20_RECORDS }}
-              - **New ERC-721 Records Added**: ${{ env.NEW_ERC721_RECORDS }}
-              - **New ERC-1155 Records Added**: ${{ env.NEW_ERC1155_RECORDS }}
-              - **Indexing Duration**: ${{ env.INDEXING_DURATION }}
-              - **Last Indexed Time**: ${{ env.CURRENT_DATE }}
-          labels: 'internal'
-          assignees: 'swirlds-automation'
+      #       **Registry Update Summary**:
+      #         - **Hedera Network**: ${{ github.event.inputs.HEDERA_NETWORK }}
+      #         - **New ERC-20 Records Added**: ${{ env.NEW_ERC20_RECORDS }}
+      #         - **New ERC-721 Records Added**: ${{ env.NEW_ERC721_RECORDS }}
+      #         - **New ERC-1155 Records Added**: ${{ env.NEW_ERC1155_RECORDS }}
+      #         - **Indexing Duration**: ${{ env.INDEXING_DURATION }}
+      #         - **Last Indexed Time**: ${{ env.CURRENT_DATE }}
+      #     labels: 'internal'
+      #     assignees: 'swirlds-automation'
