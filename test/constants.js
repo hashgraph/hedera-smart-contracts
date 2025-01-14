@@ -222,7 +222,6 @@ const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 const WEEK = 7 * DAY;
 const GWEI = 1e9;
-const HTS_SYSTEM_CONTRACT_ADDRESS = '0.0.359';
 
 module.exports = {
   Events,
@@ -245,5 +244,4 @@ module.exports = {
   WEEK,
   WEI,
   GWEI,
-  HTS_SYSTEM_CONTRACT_ADDRESS,
 };
