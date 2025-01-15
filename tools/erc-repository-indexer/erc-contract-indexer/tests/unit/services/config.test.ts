@@ -179,4 +179,66 @@ describe('ConfigService', () => {
     expect(startingPoint).toBe(mockStartingPoint);
     expect(mockRetrieveNextPointer).toHaveBeenCalled();
   });
+  it('should return default value for detectionOnly, false, if ENABLE_DETECTION_ONLY is not set', () => {
+    process.env.HEDERA_NETWORK = mockValidHederaNetwork;
+    process.env.MIRROR_NODE_URL = mockValidMirrorNodeUrl;
+    delete process.env.ENABLE_DETECTION_ONLY;
+
+    const configService = new ConfigService();
+    expect(configService.getDetectionOnly()).toEqual(false);
+  });
+
+  it('should return preconfigured value for detectionOnly if ENABLE_DETECTION_ONLY is provided', () => {
+    process.env.HEDERA_NETWORK = mockValidHederaNetwork;
+    process.env.MIRROR_NODE_URL = mockValidMirrorNodeUrl;
+    process.env.ENABLE_DETECTION_ONLY = 'true';
+
+    const configService = new ConfigService();
+    expect(configService.getDetectionOnly()).toEqual(true);
+  });
+
+  it('should return false for detectionOnly when ENABLE_DETECTION_ONLY is not explicitly set to true', () => {
+    process.env.HEDERA_NETWORK = mockValidHederaNetwork;
+    process.env.MIRROR_NODE_URL = mockValidMirrorNodeUrl;
+    process.env.ENABLE_DETECTION_ONLY = 'not a boolean value';
+
+    const configService = new ConfigService();
+    expect(configService.getDetectionOnly()).toEqual(false);
+  });
+
+  it('should return default value, 100, if SCAN_CONTRACT_LIMIT is undefined', async () => {
+    process.env.HEDERA_NETWORK = mockValidHederaNetwork;
+    process.env.MIRROR_NODE_URL = mockValidMirrorNodeUrl;
+    delete process.env.SCAN_CONTRACT_LIMIT;
+
+    const configService = new ConfigService();
+
+    expect(configService.getScanContractLimit()).toEqual(100);
+  });
+
+  it('should return dynamic SCAN_CONTRACT_LIMIT value', async () => {
+    process.env.HEDERA_NETWORK = mockValidHederaNetwork;
+    process.env.MIRROR_NODE_URL = mockValidMirrorNodeUrl;
+
+    const expectedLimit = 36;
+    process.env.SCAN_CONTRACT_LIMIT = expectedLimit.toString();
+
+    const configService = new ConfigService();
+
+    expect(configService.getScanContractLimit()).toEqual(expectedLimit);
+  });
+
+  it('should throw an error if SCAN_CONTRACT_LIMIT is set to invalid values', async () => {
+    process.env.HEDERA_NETWORK = mockValidHederaNetwork;
+    process.env.MIRROR_NODE_URL = mockValidMirrorNodeUrl;
+
+    const invalidLimits = ['-3', '369', 'not a number'];
+    invalidLimits.forEach((limit) => {
+      process.env.SCAN_CONTRACT_LIMIT = limit;
+
+      expect(() => {
+        configService = new ConfigService();
+      }).toThrow(/SCAN_CONTRACT_LIMIT Is Not Properly Configured/);
+    });
+  });
 });

@@ -17,17 +17,17 @@
 # NOTE: Must be placed last to ensure enforcement over all other rules
 
 # Protection Rules for Github Configuration Files and Actions Workflows
-/.github/                                       @hashgraph/devops-ci @hashgraph/release-engineering-managers
-/.github/CODEOWNERS                             @hashgraph/devops-ci @hashgraph/release-engineering-managers @Nana-EC
-/.github/workflows/                             @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts-product @hashgraph/hedera-smart-contracts
+/.github/                                       @hashgraph/platform-ci @hashgraph/release-engineering-managers
+/.github/CODEOWNERS                             @hashgraph/platform-ci @hashgraph/release-engineering-managers @Nana-EC
+/.github/workflows/                             @hashgraph/platform-ci @hashgraph/platform-ci-committers @hashgraph/release-engineering-managers
 
 # Self-protection for root CODEOWNERS files (this file should not exist and should definitely require approval)
 /CODEOWNERS                                     @hashgraph/release-engineering-managers
 
 # Protect the repository root files
-/README.md                                      @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts-product @hashgraph/hedera-smart-contracts
+/README.md                                      @hashgraph/platform-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts-product @hashgraph/hedera-smart-contracts
 **/LICENSE                                      @hashgraph/release-engineering-managers
 
 # Git Ignore definitions
-**/.gitignore                                   @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts-product @hashgraph/hedera-smart-contracts
-**/.gitignore.*                                 @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts-product @hashgraph/hedera-smart-contracts
+**/.gitignore                                   @hashgraph/platform-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts-product @hashgraph/hedera-smart-contracts
+**/.gitignore.*                                 @hashgraph/platform-ci @hashgraph/release-engineering-managers @hashgraph/hedera-smart-contracts-product @hashgraph/hedera-smart-contracts

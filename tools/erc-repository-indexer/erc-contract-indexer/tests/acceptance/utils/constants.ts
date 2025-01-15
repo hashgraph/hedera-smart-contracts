@@ -28,5 +28,8 @@ export default {
       tokenName: 'ERC Registry Non-Fungible',
       tokenSymbol: 'ERNFT',
     },
+    erc1155: {
+      tokenUri: 'test-uri',
+    },
   },
 };

@@ -2,13 +2,13 @@
 
 ## Overview
 
-The ERC Contract Indexer is a tool designed to facilitate the indexing and management of ERC20 and ERC721 smart contracts on the Hedera Hashgraph network. This project provides a set of services to fetch, analyze, and store contract data efficiently, enabling developers and users to interact with smart contracts seamlessly.
+The ERC Contract Indexer is a tool designed to facilitate the indexing and management of ERC20, ERC721 and ERC1155 smart contracts on the Hedera Hashgraph network. This project provides a set of services to fetch, analyze, and store contract data efficiently, enabling developers and users to interact with smart contracts seamlessly.
 
 ## Features
 
 - **Contract Fetching**: Retrieve contract details from the Hedera mirror node.
-- **Bytecode Analysis**: Analyze smart contract bytecode to categorize contracts as ERC20 or ERC721.
-- **Registry Management**: Generate and update registries for ERC20 and ERC721 contracts.
+- **Bytecode Analysis**: Analyze smart contract bytecode to categorize contracts as ERC20, ERC721, or ERC1155.
+- **Registry Management**: Generate and update registries for ERC20, ERC721, and ERC1155 contracts.
 - **Next Pointer Handling**: Manage pagination for contract indexing using a next pointer.
 
 ## Getting Started
@@ -35,12 +35,14 @@ The ERC Contract Indexer is a tool designed to facilitate the indexing and manag
 
 3. Create a `.env` file in the root directory and configure your environment variables:
 
-| Variable               | Description                                                                                                    | Accepted Values                                                                                                                                                                                                                 |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `HEDERA_NETWORK`       | The network to connect to.                                                                                     | `local-node`, `previewnet`, `testnet`, or `mainnet`                                                                                                                                                                             |
-| `MIRROR_NODE_URL`      | The URL for the Hedera mirror node API.                                                                        | A valid URL pointing to the Hedera mirror node (e.g., `https://{previewnet\|testnet\|mainnet}.mirrornode.hedera.com`)                                                                                                           |
-| `MIRROR_NODE_URL_WEB3` | The URL for the Hedera Mirror Node Web3Module API, required only when `HEDERA_NETWORK` is set to `local-node`. | Any value                                                                                                                                                                                                                       |
-| `STARTING_POINT`       | The starting point for contract indexing.                                                                      | A Hedera contract ID (e.g., `0.0.369`), an EVM 20-byte address (e.g., `0x0000000000000000000000000000000000000369`), or a get contract list next pointer (e.g., `/api/v1/contracts?limit=100&order=asc&contract.id=gt:0.0.369`) |
+| Variable                | Description                                                                                                    | Accepted Values                                                                                                                                                                                                                 |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `HEDERA_NETWORK`        | The network to connect to.                                                                                     | `local-node`, `previewnet`, `testnet`, or `mainnet`                                                                                                                                                                             |
+| `MIRROR_NODE_URL`       | The URL for the Hedera mirror node API.                                                                        | A valid URL pointing to the Hedera mirror node (e.g., `https://{previewnet\|testnet\|mainnet}.mirrornode.hedera.com`)                                                                                                           |
+| `MIRROR_NODE_URL_WEB3`  | The URL for the Hedera Mirror Node Web3Module API, required only when `HEDERA_NETWORK` is set to `local-node`. | Any value                                                                                                                                                                                                                       |
+| `STARTING_POINT`        | The starting point for contract indexing.                                                                      | A Hedera contract ID (e.g., `0.0.369`), an EVM 20-byte address (e.g., `0x0000000000000000000000000000000000000369`), or a get contract list next pointer (e.g., `/api/v1/contracts?limit=100&order=asc&contract.id=gt:0.0.369`) |
+| `ENABLE_DETECTION_ONLY` | Enable detection of ERC contracts without updating the registry.                                               | Any                                                                                                                                                                                                                             |
+| `SCAN_CONTRACT_LIMIT`   | Specifies the maximum number of contracts to scan per operation. Defaults to 100.                              | Accepts numeric values ranging from 1 to 100.                                                                                                                                                                                   |
 
 Example configuration:
 
@@ -60,18 +62,35 @@ To start the indexing process, run the following command:
 npm start
 ```
 
-This will initiate the indexing process, fetching contracts from the specified starting point and categorizing them into ERC20 and ERC721 contracts. The end goal is to generate a comprehensive registry that contains JSON files for both ERC-20 and ERC-721 tokens. The expected format for these registries is as follows:
+This will initiate the indexing process, fetching contracts from the specified starting point and categorizing them into ERC20, ERC721, and ERC1155 contracts. The end goal is to generate a comprehensive registry that contains JSON files for ERC-20, ERC-721, and ERC1155 tokens. The expected format for these registries is as follows:
 
 - **ERC20**:
   ```json
   [
     {
       "address": "0xevm_address",
-      "contractId": "0.0.hedera_contract_id"
+      "contractId": "0.0.hedera_contract_id",
+      "name": "token_name",
+      "symbol": "token_symbol",
+      "totalSupply": token_totalSupply,
+      "decimals": token_decimals
     }
   ]
   ```
 - **ERC721**:
+
+  ```json
+  [
+    {
+      "address": "0xevm_address",
+      "contractId": "0.0.hedera_contract_id",
+      "name": "token_name",
+      "symbol": "token_symbol"
+    }
+  ]
+  ```
+
+- **ERC1155**:
   ```json
   [
     {

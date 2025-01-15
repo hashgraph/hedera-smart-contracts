@@ -29,6 +29,7 @@ import OZERC20Artifacts from '../contracts/erc-20/OZERC20Mock.json';
 import MinimalOZERC20Artifacts from '../contracts/erc-20/MinimalERC20.json';
 import OZERC721Artifacts from '../contracts/erc-721/OZERC721Mock.json';
 import MinimalOZERC721Artifacts from '../contracts/erc-721/MinimalERC721.json';
+import OZERC1155Artifacts from '../contracts/erc-1155/ERC1155Mock.json';
 import BasicArtifacts from '../contracts/non-ercs/Basic.json';
 import NodeClient from '@hashgraph/sdk/lib/client/NodeClient';
 
@@ -153,6 +154,14 @@ export default class Helper {
         ercConstructorParams: null,
       },
       {
+        contractType: 'erc1155',
+        totalDeployments: totalExpectedDeploymentsForEachContractType,
+        bytecode: OZERC1155Artifacts.bytecode,
+        ercConstructorParams: new ContractFunctionParameters().addString(
+          testConstants.ERC_CONSTRUCTOR_PARAMS.erc1155.tokenUri
+        ),
+      },
+      {
         contractType: 'nonErc',
         totalDeployments: totalExpectedDeploymentsForEachContractType,
         bytecode: BasicArtifacts.bytecode,
@@ -173,6 +182,7 @@ export default class Helper {
   ): Promise<{
     erc20: string[];
     erc721: string[];
+    erc1155: string[];
     nonErc: string[];
     minimalErc20: string[];
     minimalErc721: string[];
@@ -183,6 +193,7 @@ export default class Helper {
       erc721: [] as any,
       minimalErc721: [] as any,
       nonErc: [] as any,
+      erc1155: [] as any,
     };
 
     for (const contractObject of contractDeploymentRequirements) {
@@ -194,6 +205,7 @@ export default class Helper {
             | 'erc721'
             | 'minimalErc721'
             | 'nonErc'
+            | 'erc1155'
         ].push(
           Helper.deploySmartContractsViaSdk(
             sdkClient,
@@ -207,6 +219,7 @@ export default class Helper {
 
     deployedAddresses.erc20 = await Promise.all(deployedAddresses.erc20);
     deployedAddresses.erc721 = await Promise.all(deployedAddresses.erc721);
+    deployedAddresses.erc1155 = await Promise.all(deployedAddresses.erc1155);
     deployedAddresses.nonErc = await Promise.all(deployedAddresses.nonErc);
     deployedAddresses.minimalErc20 = await Promise.all(
       deployedAddresses.minimalErc20
@@ -214,6 +227,8 @@ export default class Helper {
     deployedAddresses.minimalErc721 = await Promise.all(
       deployedAddresses.minimalErc721
     );
+
+    await new Promise((r) => setTimeout(r, 500));
 
     return deployedAddresses;
   }

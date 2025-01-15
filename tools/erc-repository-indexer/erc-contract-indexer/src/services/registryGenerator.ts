@@ -23,6 +23,7 @@ import path from 'path';
 import constants from '../utils/constants';
 import { ERCOutputInterface } from '../schemas/ERCRegistrySchemas';
 import { Helper } from '../utils/helper';
+import _ from 'lodash';
 
 export class RegistryGenerator {
   /**
@@ -42,6 +43,13 @@ export class RegistryGenerator {
   /**
    * @private
    * @readonly
+   * @property {string} erc1155JsonFilePath - The file path where ERC1155 contract registry data will be stored
+   */
+  private readonly erc1155JsonFilePath: string;
+
+  /**
+   * @private
+   * @readonly
    * @property {string} nextPointerFilePath - The file path where the next pointer for indexing will be stored.
    */
   private readonly nextPointerFilePath: string;
@@ -52,6 +60,9 @@ export class RegistryGenerator {
     );
     this.erc721JsonFilePath = Helper.buildFilePath(
       constants.ERC_721_JSON_FILE_NAME
+    );
+    this.erc1155JsonFilePath = Helper.buildFilePath(
+      constants.ERC_1155_JSON_FILE_NAME
     );
     this.nextPointerFilePath = Helper.buildFilePath(
       constants.GET_CONTRACTS_LIST_NEXT_POINTER_JSON_FILE_NAME
@@ -80,14 +91,16 @@ export class RegistryGenerator {
   }
 
   /**
-   * Generates registry files for ERC20 and ERC721 contracts by updating existing registries with new contracts.
+   * Generates registry files for ERC20, ERC721, and ERC1155 contracts by updating existing registries with new contracts.
    * @param {ERCOutputInterface[]} erc20Contracts - Array of ERC20 contract interfaces to add to registry
    * @param {ERCOutputInterface[]} erc721Contracts - Array of ERC721 contract interfaces to add to registry
+   * @param {ERCOutputInterface[]} erc1155Contracts - Array of ERC1155 contract interfaces to add to registry
    * @returns {Promise<void>} Promise that resolves when registry files are updated
    */
   async generateErcRegistry(
     erc20Contracts: ERCOutputInterface[],
-    erc721Contracts: ERCOutputInterface[]
+    erc721Contracts: ERCOutputInterface[],
+    erc1155Contracts: ERCOutputInterface[]
   ): Promise<void> {
     const updatePromises = [];
 
@@ -103,38 +116,58 @@ export class RegistryGenerator {
       );
     }
 
+    if (erc1155Contracts.length) {
+      updatePromises.push(
+        this.updateRegistry(this.erc1155JsonFilePath, erc1155Contracts)
+      );
+    }
+
     // Wait for all updates to complete in parallel
     await Promise.all(updatePromises);
   }
 
   /**
-   * Updates a registry file with new contracts, removing duplicates if any.
-   * @param {string} filePath - Path to the registry file
-   * @param {ERCOutputInterface[]} newContracts - New contracts to add to registry
-   * @returns {Promise<void>} Promise that resolves when registry is updated
+   * Updates a registry file with new contracts by merging them with existing contracts,
+   * ensuring the registry remains sorted and free of duplicates.
+   *
+   * @param {string} filePath - The file path to the registry file.
+   * @param {ERCOutputInterface[]} newContracts - The new contracts to add to the registry.
+   * @returns {Promise<void>} - A promise that resolves once the registry is successfully updated.
+   *
    * @private
    */
   private async updateRegistry(
     filePath: string,
     newContracts: ERCOutputInterface[]
   ): Promise<void> {
+    let uniqueContracts: ERCOutputInterface[] = [];
     const fileContent = this.readContentsFromFile(filePath);
     const existingContracts = fileContent
       ? (JSON.parse(fileContent) as ERCOutputInterface[])
       : [];
 
-    // Create a Map to deduplicate contracts by contractId
-    const contractMap = new Map(
-      [...existingContracts, ...newContracts].map((contract) => [
-        contract.contractId,
-        contract,
-      ])
-    );
-
-    // Convert Map values back to array for file writing
-    const uniqueContracts = Array.from(contractMap.values());
+    if (!existingContracts.length) {
+      uniqueContracts = newContracts;
+    } else if (
+      // Since both arrays are sorted in ascending order, if the `contractId` of the last item in `existingContracts`
+      // is less than the `contractId` of the first item in `newContracts`, just merged the contracts and remove dups without sorting.
+      existingContracts[existingContracts.length - 1].contractId <
+      newContracts[0].contractId
+    ) {
+      uniqueContracts = _.chain([...existingContracts, ...newContracts]) // merge contracts
+        .uniqBy('contractId') // Remove duplicates based on contractId
+        .value(); // Extract the final array
+    } else {
+      uniqueContracts = _.chain([...existingContracts, ...newContracts]) // merge contracts
+        .uniqBy('contractId') // Remove duplicates based on contractId
+        .sortBy((contract) => Number(contract.contractId.split('.')[2])) // Sort by the numeric value of contractId
+        .value(); // Extract the final array
+    }
 
     await this.writeContentsToFile(filePath, uniqueContracts);
+
+    // Convert Map values back to array for file writing
+
     console.log(
       `Finished writing ${newContracts.length} new ERC token contracts to registry.`
     );
