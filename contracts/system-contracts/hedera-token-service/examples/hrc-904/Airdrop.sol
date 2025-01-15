@@ -30,7 +30,7 @@ contract Airdrop is HederaTokenService {
         IHederaTokenService.TokenTransferList memory airdrop;
 
         airdrop.token = token;
-        airdrop.transfers = prepareAA(sender, receiver, amount);
+        airdrop.transfers = createAccountTransferPair(sender, receiver, amount);
         tokenTransfers[0] = airdrop;
         responseCode = airdropTokens(tokenTransfers);
         if (responseCode != HederaResponseCodes.SUCCESS) {
@@ -77,7 +77,7 @@ contract Airdrop is HederaTokenService {
         {
             IHederaTokenService.TokenTransferList memory airdrop;
             airdrop.token = tokens[i];
-            airdrop.transfers = prepareAA(sender, receiver, amount);
+            airdrop.transfers = createAccountTransferPair(sender, receiver, amount);
             tokenTransfers[i] = airdrop;
         }
         responseCode = airdropTokens(tokenTransfers);
@@ -208,7 +208,7 @@ contract Airdrop is HederaTokenService {
         {
             IHederaTokenService.TokenTransferList memory airdrop;
             airdrop.token = token[i];
-            airdrop.transfers = prepareAA(tokenSenders[i], tokenReceivers[i], tokenAmount);
+            airdrop.transfers = createAccountTransferPair(tokenSenders[i], tokenReceivers[i], tokenAmount);
             tokenTransfers[i] = airdrop;
         }
         uint nftIndex = tokenSenders.length;
@@ -235,7 +235,7 @@ contract Airdrop is HederaTokenService {
     // @param receiver The address receiving tokens
     // @param amount The amount to transfer
     // @return transfers Array containing the sender and receiver transfer details
-    function prepareAA(address sender, address receiver, int64 amount) internal pure returns (IHederaTokenService.AccountAmount[] memory transfers) {
+    function createAccountTransferPair(address sender, address receiver, int64 amount) internal pure returns (IHederaTokenService.AccountAmount[] memory transfers) {
         IHederaTokenService.AccountAmount memory aa1;
         aa1.accountID = sender;
         aa1.amount = -amount;
