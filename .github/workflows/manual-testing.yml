@@ -196,3 +196,12 @@ jobs:
       networkTag: ${{inputs.networkNodeTag}}
       mirrorTag: ${{inputs.mirrorNodeTag}}
       relayTag: ${{inputs.relayTag}}
+
+  HIP904:
+    name: HIP904 Contract Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: 'HIP904'
+      networkTag: ${{inputs.networkNodeTag}}
+      mirrorTag: ${{inputs.mirrorNodeTag}}
+      relayTag: ${{inputs.relayTag}}

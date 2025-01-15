@@ -117,6 +117,12 @@ jobs:
     with:
       testfilter: CryptoAllowance
 
+  HIP904:
+    name: HIP904 Contract Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: HIP904
+
   PublishResults:
     name: Publish Results
     if: ${{ !cancelled() }}
@@ -137,6 +143,7 @@ jobs:
       - PrngSystemContract
       - BLSSignatureVerification
       - CryptoAllowance
+      - HIP904
 
     runs-on: smart-contracts-linux-large
     steps:
