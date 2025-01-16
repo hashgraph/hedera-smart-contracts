@@ -59,6 +59,9 @@ describe('Admin Key and Contract ID Validation', function () {
   it('should ensure that the admin key matches the contract ID after deploying a contract', async function () {
     const factory = await ethers.getContractFactory(Constants.Contract.Base);
     const contract = await factory.deploy();
+    
+    await contract.waitForDeployment();
+
     const info = await utils.getContractInfo(contract.target, sdkClient);
 
     const adminkey = info.adminKey.num;
