@@ -2,7 +2,7 @@
  *
  * Hedera Smart Contracts
  *
- * Copyright (C) 2024 Hedera Hashgraph, LLC
+ * Copyright (C) 2025 Hedera Hashgraph, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ describe('Admin Key and Contract ID Validation', function () {
     expect(adminkey.equals(contractId)).to.be.true;
   });
 
-  it('should ensure that the admin key matches the contract ID after deploying a contract without finalizing a hollow address', async function () {
+  it('should ensure that the admin key matches the contract ID after deploying a contract', async function () {
     const factory = await ethers.getContractFactory(Constants.Contract.Base);
     const contract = await factory.deploy();
     const info = await utils.getContractInfo(contract.target, sdkClient);
