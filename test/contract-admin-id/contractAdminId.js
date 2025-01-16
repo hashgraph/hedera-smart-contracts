@@ -55,4 +55,15 @@ describe('Admin Key and Contract ID Validation', function () {
 
     expect(adminkey.equals(contractId)).to.be.true;
   });
+
+  it('should ensure that the admin key matches the contract ID after deploying a contract without finalizing a hollow address', async function () {
+    const factory = await ethers.getContractFactory(Constants.Contract.Base);
+    const contract = await factory.deploy();
+    const info = await utils.getContractInfo(contract.target, sdkClient);
+
+    const adminkey = info.adminKey.num;
+    const contractId = info.contractId.num;
+
+    expect(adminkey.equals(contractId)).to.be.true;
+  });
 });
