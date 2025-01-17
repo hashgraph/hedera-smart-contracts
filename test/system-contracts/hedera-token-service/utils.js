@@ -36,6 +36,10 @@ const {
   ContractInfoQuery,
 } = require('@hashgraph/sdk');
 const Constants = require('../../constants');
+const axios = require('axios');
+const {
+  getMirrorNodeUrl,
+} = require('../native/evm-compatibility-ecrecover/utils');
 
 class Utils {
   //createTokenCost is cost for creating the token, which is passed to the system-contracts. This is equivalent of 40 and 60hbars, any excess hbars are refunded.
@@ -64,6 +68,19 @@ class Utils {
     SECP256K1: 3,
     DELEGETABLE_CONTRACT_ID: 4,
   };
+
+  static async deployContract(
+    contractPath,
+    gasLimit = Constants.GAS_LIMIT_1_000_000
+  ) {
+    const factory = await ethers.getContractFactory(contractPath);
+    const contract = await factory.deploy(gasLimit);
+
+    return await ethers.getContractAt(
+      contractPath,
+      await contract.getAddress()
+    );
+  }
 
   static async deployERC20Mock() {
     const erc20MockFactory = await ethers.getContractFactory(
@@ -941,6 +958,30 @@ class Utils {
       default:
         return;
     }
+  }
+
+  static async getHTSResponseCode(txHash) {
+    const network = hre.network.name;
+    const mirrorNodeUrl = getMirrorNodeUrl(network);
+    const res = await axios.get(
+      `${mirrorNodeUrl}/contracts/results/${txHash}/actions`
+    );
+    const precompileAction = res.data.actions.find(
+      (x) => x.recipient === Constants.HTS_SYSTEM_CONTRACT_ADDRESS
+    );
+    return BigInt(precompileAction.result_data).toString();
+  }
+
+  static async getHASResponseCode(txHash) {
+    const network = hre.network.name;
+    const mirrorNodeUrl = getMirrorNodeUrl(network);
+    const res = await axios.get(
+      `${mirrorNodeUrl}/contracts/results/${txHash}/actions`
+    );
+    const precompileAction = res.data.actions.find(
+      (x) => x.recipient === Constants.HAS_SYSTEM_CONTRACT_ADDRESS
+    );
+    return BigInt(precompileAction.result_data).toString();
   }
 }
 
