@@ -34,13 +34,19 @@ describe('ERC721Contract Test Suite', function () {
 
   before(async function () {
     signers = await ethers.getSigners();
-    tokenCreateContract = await utils.deployTokenCreateContract();
-    tokenTransferContract = await utils.deployTokenTransferContract();
+    tokenCreateContract = await utils.deployContract(
+      Constants.Contract.TokenCreateContract
+    );
+    tokenTransferContract = await utils.deployContract(
+      Constants.Contract.TokenTransferContract
+    );
     await utils.updateAccountKeysViaHapi([
       await tokenCreateContract.getAddress(),
       await tokenTransferContract.getAddress(),
     ]);
-    erc721Contract = await utils.deployERC721Contract();
+    erc721Contract = await utils.deployContract(
+      Constants.Contract.ERC721Contract
+    );
     tokenAddress = await utils.createNonFungibleToken(
       tokenCreateContract,
       signers[0].address

@@ -43,9 +43,15 @@ describe('AtomicHTS - HIP#551: Batch Transactions Test Suite', () => {
     signers = await ethers.getSigners();
     accountA = signers[0].address;
     accountB = signers[1].address;
-    tokenCreateContract = await utils.deployTokenCreateContract();
-    tokenTransferContract = await utils.deployTokenTransferContract();
-    tokenManagmentContract = await utils.deployTokenManagementContract();
+    tokenCreateContract = await utils.deployContract(
+      Constants.Contract.TokenCreateContract
+    );
+    tokenTransferContract = await utils.deployContract(
+      Constants.Contract.TokenTransferContract
+    );
+    tokenManagmentContract = await utils.deployContract(
+      Constants.Contract.TokenManagementContract
+    );
 
     const atomicContractFactory = await ethers.getContractFactory(
       Constants.Contract.AtomicHTS
@@ -73,7 +79,9 @@ describe('AtomicHTS - HIP#551: Batch Transactions Test Suite', () => {
       await tokenTransferContract.getAddress(),
     ]);
 
-    erc20Contract = await utils.deployERC20Contract();
+    erc20Contract = await utils.deployContract(
+      Constants.Contract.ERC20Contract
+    );
 
     await utils.associateToken(
       tokenCreateContract,

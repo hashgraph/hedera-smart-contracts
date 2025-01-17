@@ -40,7 +40,9 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
     let exchangeTokenBalance;
 
     before(async function () {
-      tokenCreateContract = await utils.deployTokenCreateContract();
+      tokenCreateContract = await utils.deployContract(
+        Constants.Contract.TokenCreateContract
+      );
       await utils.updateAccountKeysViaHapi([
         await tokenCreateContract.getAddress(),
       ]);
@@ -53,7 +55,9 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
         await tokenCreateContract.getAddress(),
       ]);
 
-      erc20Contract = await utils.deployERC20Contract();
+      erc20Contract = await utils.deployContract(
+        Constants.Contract.ERC20Contract
+      );
       proxyContract = await deployDEXProxyContract(tokenAddress);
       proxyAddress = await proxyContract.getAddress();
 

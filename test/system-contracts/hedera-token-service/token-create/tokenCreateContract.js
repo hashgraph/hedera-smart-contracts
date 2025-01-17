@@ -44,16 +44,26 @@ describe('TokenCreateContract Test Suite', function () {
 
   before(async function () {
     signers = await ethers.getSigners();
-    tokenCreateContract = await utils.deployTokenCreateContract();
-    tokenTransferContract = await utils.deployTokenTransferContract();
-    tokenManagmentContract = await utils.deployTokenManagementContract();
+    tokenCreateContract = await utils.deployContract(
+      Constants.Contract.TokenCreateContract
+    );
+    tokenTransferContract = await utils.deployContract(
+      Constants.Contract.TokenTransferContract
+    );
+    tokenManagmentContract = await utils.deployContract(
+      Constants.Contract.TokenManagementContract
+    );
     await utils.updateAccountKeysViaHapi([
       await tokenCreateContract.getAddress(),
       await tokenTransferContract.getAddress(),
       await tokenManagmentContract.getAddress(),
     ]);
-    erc20Contract = await utils.deployERC20Contract();
-    erc721Contract = await utils.deployERC721Contract();
+    erc20Contract = await utils.deployContract(
+      Constants.Contract.ERC20Contract
+    );
+    erc721Contract = await utils.deployContract(
+      Constants.Contract.ERC721Contract
+    );
     tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(
       tokenCreateContract,
       signers[0].address,
@@ -304,8 +314,12 @@ describe('TokenCreateContract Test Suite', function () {
 
     before(async function () {
       signers = await ethers.getSigners();
-      tokenCreateContract = await utils.deployTokenCreateContract();
-      tokenQueryContract = await utils.deployTokenQueryContract();
+      tokenCreateContract = await utils.deployContract(
+        Constants.Contract.TokenCreateContract
+      );
+      tokenQueryContract = await utils.deployContract(
+        Constants.Contract.TokenQueryContract
+      );
       await utils.updateAccountKeysViaHapi([
         await tokenCreateContract.getAddress(),
         await tokenQueryContract.getAddress(),

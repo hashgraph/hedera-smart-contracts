@@ -46,12 +46,16 @@ describe('@HRC-719 Test Suite', function () {
 
   before(async function () {
     signers = await ethers.getSigners();
-    tokenCreateContract = await utils.deployTokenCreateContract();
+    tokenCreateContract = await utils.deployContract(
+      Constants.Contract.TokenCreateContract
+    );
     await utils.updateAccountKeysViaHapi([
       await tokenCreateContract.getAddress(),
     ]);
 
-    hrc719Contract = await utils.deployHRC719Contract();
+    hrc719Contract = await utils.deployContract(
+      Constants.Contract.HRC719Contract
+    );
 
     IHRC719 = new ethers.Interface(
       (await hre.artifacts.readArtifact('IHRC719')).abi

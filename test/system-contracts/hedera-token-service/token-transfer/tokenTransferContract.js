@@ -42,11 +42,21 @@ describe('TokenTransferContract Test Suite', function () {
 
   before(async function () {
     signers = await ethers.getSigners();
-    tokenCreateContract = await utils.deployTokenCreateContract();
-    tokenQueryContract = await utils.deployTokenQueryContract();
-    tokenTransferContract = await utils.deployTokenTransferContract();
-    erc20Contract = await utils.deployERC20Contract();
-    erc721Contract = await utils.deployERC721Contract();
+    tokenCreateContract = await utils.deployContract(
+      Constants.Contract.TokenCreateContract
+    );
+    tokenQueryContract = await utils.deployContract(
+      Constants.Contract.TokenQueryContract
+    );
+    tokenTransferContract = await utils.deployContract(
+      Constants.Contract.TokenTransferContract
+    );
+    erc20Contract = await utils.deployContract(
+      Constants.Contract.ERC20Contract
+    );
+    erc721Contract = await utils.deployContract(
+      Constants.Contract.ERC721Contract
+    );
     await utils.updateAccountKeysViaHapi([
       await tokenCreateContract.getAddress(),
       await tokenQueryContract.getAddress(),

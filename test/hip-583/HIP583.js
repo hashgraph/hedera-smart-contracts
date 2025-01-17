@@ -44,14 +44,22 @@ describe('HIP583 Test Suite', function () {
 
   before(async function () {
     signers = await ethers.getSigners();
-    tokenCreateContract = await utils.deployTokenCreateContract();
-    tokenTransferContract = await utils.deployTokenTransferContract();
+    tokenCreateContract = await utils.deployContract(
+      Constants.Contract.TokenCreateContract
+    );
+    tokenTransferContract = await utils.deployContract(
+      Constants.Contract.TokenTransferContract
+    );
     await utils.updateAccountKeysViaHapi([
       await tokenCreateContract.getAddress(),
       await tokenTransferContract.getAddress(),
     ]);
-    erc20Contract = await utils.deployERC20Contract();
-    erc721Contract = await utils.deployERC721Contract();
+    erc20Contract = await utils.deployContract(
+      Constants.Contract.ERC20Contract
+    );
+    erc721Contract = await utils.deployContract(
+      Constants.Contract.ERC721Contract
+    );
     tokenAddress =
       await utils.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
         tokenCreateContract,
@@ -587,7 +595,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
         )
       ).wait();
 
-      erc20Mock = await utils.deployERC20Mock();
+      erc20Mock = await utils.deployContract(Constants.Contract.ERC20Contract);
       await erc20Mock.mint(await contractTransferTx.getAddress(), 1000);
     });
 
@@ -664,7 +672,7 @@ describe('HIP583 Test Suite - Contract Transfer TX', function () {
         )
       ).wait();
 
-      erc721Mock = await utils.deployERC721Mock();
+      erc721Mock = await utils.deployContract(Constants.Contract.ERC20Contract);
       await erc721Mock.mint(await contractTransferTx.getAddress(), tokenId);
     });
 
@@ -756,16 +764,24 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via system-contracts', functi
 
   before(async function () {
     signers = await ethers.getSigners();
-    tokenCreateContract = await utils.deployTokenCreateContract();
-    tokenQueryContract = await utils.deployTokenQueryContract();
-    tokenTransferContract = await utils.deployTokenTransferContract();
+    tokenCreateContract = await utils.deployContract(
+      Constants.Contract.TokenCreateContract
+    );
+    tokenQueryContract = await utils.deployContract(
+      Constants.Contract.TokenQueryContract
+    );
+    tokenTransferContract = await utils.deployContract(
+      Constants.Contract.TokenTransferContract
+    );
     await utils.updateAccountKeysViaHapi([
       await tokenCreateContract.getAddress(),
       await tokenQueryContract.getAddress(),
       await tokenTransferContract.getAddress(),
     ]);
-    erc20Contract = await utils.deployERC20Contract();
-    erc721Contract = await utils.deployERC721Contract();
+    erc20Contract = await utils.deployContract(Constants.Path.HIP583_ERC20Mock);
+    erc721Contract = await utils.deployContract(
+      Constants.Contract.ERC721Contract
+    );
   });
 
   const bootstrapHollowAccount = async function (

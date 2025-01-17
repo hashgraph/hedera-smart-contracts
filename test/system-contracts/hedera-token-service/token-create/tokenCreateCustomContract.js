@@ -36,7 +36,9 @@ describe('TokenCreateCustomContract Test Suite', () => {
   let keys, signers, fixedFeeTokenAddress, tokenCreateCustomContract;
 
   before(async () => {
-    tokenCreateCustomContract = await utils.deployTokenCreateCustomContract();
+    tokenCreateCustomContract = await utils.deployContract(
+      Constants.Contract.TokenCreateCustomContract
+    );
     signers = await ethers.getSigners();
 
     // constructing keys array
