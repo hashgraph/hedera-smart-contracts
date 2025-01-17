@@ -204,11 +204,15 @@ const Contract = {
   CancunOpcodes: 'CancunOpcodes',
   KZGPointEvaluation: 'KZGPointEvaluation',
   StateRegistry: 'StateRegistry',
+  Airdrop: 'Airdrop',
+  CancelAirdrop: 'CancelAirdrop',
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';
 const CONTRACT_REVERT_EXECUTED_CODE = 3;
 const GAS_LIMIT_1_000_000 = { gasLimit: 1_000_000 };
+const GAS_LIMIT_2_000_000 = { gasLimit: 2_000_000 };
+const GAS_LIMIT_5_000_000 = { gasLimit: 5_000_000 };
 const GAS_LIMIT_10_000_000 = { gasLimit: 10_000_000 };
 const GAS_LIMIT_800000 = { gasLimit: 800000 };
 const GAS_LIMIT_8000000 = { gasLimit: 8000000 };
@@ -222,6 +226,8 @@ const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 const WEEK = 7 * DAY;
 const GWEI = 1e9;
+const HTS_SYSTEM_CONTRACT_ADDRESS = '0.0.359';
+const HAS_SYSTEM_CONTRACT_ADDRESS = '0.0.362';
 
 module.exports = {
   Events,
@@ -230,6 +236,8 @@ module.exports = {
   CALL_EXCEPTION,
   CONTRACT_REVERT_EXECUTED_CODE,
   GAS_LIMIT_1_000_000,
+  GAS_LIMIT_2_000_000,
+  GAS_LIMIT_5_000_000,
   GAS_LIMIT_10_000_000,
   GAS_LIMIT_800000,
   GAS_LIMIT_8000000,
@@ -244,4 +252,6 @@ module.exports = {
   WEEK,
   WEI,
   GWEI,
+  HTS_SYSTEM_CONTRACT_ADDRESS,
+  HAS_SYSTEM_CONTRACT_ADDRESS,
 };

@@ -36,6 +36,10 @@ const {
   ContractInfoQuery,
 } = require('@hashgraph/sdk');
 const Constants = require('../../constants');
+const axios = require('axios');
+const {
+  getMirrorNodeUrl,
+} = require('../native/evm-compatibility-ecrecover/utils');
 
 class Utils {
   //createTokenCost is cost for creating the token, which is passed to the system-contracts. This is equivalent of 40 and 60hbars, any excess hbars are refunded.
@@ -65,143 +69,16 @@ class Utils {
     DELEGETABLE_CONTRACT_ID: 4,
   };
 
-  static async deployERC20Mock() {
-    const erc20MockFactory = await ethers.getContractFactory(
-      Constants.Path.HIP583_ERC20Mock
-    );
-    const erc20Mock = await erc20MockFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
+  static async deployContract(
+    contractPath,
+    gasLimit = Constants.GAS_LIMIT_1_000_000
+  ) {
+    const factory = await ethers.getContractFactory(contractPath);
+    const contract = await factory.deploy(gasLimit);
 
     return await ethers.getContractAt(
-      Constants.Path.HIP583_ERC20Mock,
-      await erc20Mock.getAddress()
-    );
-  }
-
-  static async deployERC721Mock() {
-    const erc721MockFactory = await ethers.getContractFactory(
-      Constants.Path.HIP583_ERC721Mock
-    );
-    const erc721Mock = await erc721MockFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Path.HIP583_ERC721Mock,
-      await erc721Mock.getAddress()
-    );
-  }
-
-  static async deployTokenCreateContract() {
-    const tokenCreateFactory = await ethers.getContractFactory(
-      Constants.Contract.TokenCreateContract
-    );
-    const tokenCreate = await tokenCreateFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Contract.TokenCreateContract,
-      await tokenCreate.getAddress()
-    );
-  }
-
-  static async deployTokenCreateCustomContract() {
-    const tokenCreateCustomFactory = await ethers.getContractFactory(
-      Constants.Contract.TokenCreateCustomContract
-    );
-    const tokenCreateCustom = await tokenCreateCustomFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Contract.TokenCreateCustomContract,
-      await tokenCreateCustom.getAddress()
-    );
-  }
-
-  static async deployTokenManagementContract() {
-    const tokenManagementFactory = await ethers.getContractFactory(
-      Constants.Contract.TokenManagementContract
-    );
-    const tokenManagement = await tokenManagementFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Contract.TokenManagementContract,
-      await tokenManagement.getAddress()
-    );
-  }
-
-  static async deployTokenQueryContract() {
-    const tokenQueryFactory = await ethers.getContractFactory(
-      Constants.Contract.TokenQueryContract
-    );
-    const tokenQuery = await tokenQueryFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Contract.TokenQueryContract,
-      await tokenQuery.getAddress()
-    );
-  }
-
-  static async deployTokenTransferContract() {
-    const tokenTransferFactory = await ethers.getContractFactory(
-      Constants.Contract.TokenTransferContract
-    );
-    const tokenTransfer = await tokenTransferFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Contract.TokenTransferContract,
-      await tokenTransfer.getAddress()
-    );
-  }
-
-  static async deployHRC719Contract() {
-    const hrcContractFactory = await ethers.getContractFactory(
-      Constants.Contract.HRC719Contract
-    );
-    const hrcContract = await hrcContractFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Contract.HRC719Contract,
-      await hrcContract.getAddress()
-    );
-  }
-
-  static async deployERC20Contract() {
-    const erc20ContractFactory = await ethers.getContractFactory(
-      Constants.Contract.ERC20Contract
-    );
-    const erc20Contract = await erc20ContractFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Contract.ERC20Contract,
-      await erc20Contract.getAddress()
-    );
-  }
-
-  static async deployERC721Contract() {
-    const erc721ContractFactory = await ethers.getContractFactory(
-      Constants.Contract.ERC721Contract
-    );
-    const erc721Contract = await erc721ContractFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Contract.ERC721Contract,
-      await erc721Contract.getAddress()
+      contractPath,
+      await contract.getAddress()
     );
   }
 
@@ -941,6 +818,30 @@ class Utils {
       default:
         return;
     }
+  }
+
+  static async getHTSResponseCode(txHash) {
+    const network = hre.network.name;
+    const mirrorNodeUrl = getMirrorNodeUrl(network);
+    const res = await axios.get(
+      `${mirrorNodeUrl}/contracts/results/${txHash}/actions`
+    );
+    const precompileAction = res.data.actions.find(
+      (x) => x.recipient === Constants.HTS_SYSTEM_CONTRACT_ADDRESS
+    );
+    return BigInt(precompileAction.result_data).toString();
+  }
+
+  static async getHASResponseCode(txHash) {
+    const network = hre.network.name;
+    const mirrorNodeUrl = getMirrorNodeUrl(network);
+    const res = await axios.get(
+      `${mirrorNodeUrl}/contracts/results/${txHash}/actions`
+    );
+    const precompileAction = res.data.actions.find(
+      (x) => x.recipient === Constants.HAS_SYSTEM_CONTRACT_ADDRESS
+    );
+    return BigInt(precompileAction.result_data).toString();
   }
 }
 
