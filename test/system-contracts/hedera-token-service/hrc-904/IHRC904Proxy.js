@@ -4,7 +4,7 @@ const utils = require('../utils');
 const Constants = require('../../../constants');
 const { Contract } = require('ethers');
 
-describe('HRC-904 IHRC904 Proxy Methods Test Suite', function () {
+describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
   let airdropContract;
   let tokenAddress;
   let nftTokenAddress;
