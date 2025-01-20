@@ -3,7 +3,7 @@ const { ethers } = require('hardhat');
 const utils = require('../utils');
 const Constants = require('../../../constants');
 
-describe('HRC-904 CancelAirdropContract Test Suite', function () {
+describe('HIP904 CancelAirdropContract Test Suite', function () {
   let airdropContract;
   let cancelAirdropContract;
   let tokenCreateContract;
