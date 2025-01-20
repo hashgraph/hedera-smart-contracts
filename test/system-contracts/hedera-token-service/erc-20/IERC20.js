@@ -38,12 +38,8 @@ describe('IERC20 Test Suite', function () {
 
   before(async function () {
     signers = await ethers.getSigners();
-    tokenCreateContract = await utils.deployContract(
-      Constants.Contract.TokenCreateContract
-    );
-    tokenTransferContract = await utils.deployContract(
-      Constants.Contract.TokenTransferContract
-    );
+    tokenCreateContract = await utils.deployTokenCreateContract();
+    tokenTransferContract = await utils.deployTokenTransferContract();
     await utils.updateAccountKeysViaHapi([
       await tokenCreateContract.getAddress(),
       await tokenTransferContract.getAddress(),

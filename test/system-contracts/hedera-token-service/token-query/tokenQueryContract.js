@@ -36,12 +36,8 @@ describe('TokenQueryContract Test Suite', function () {
 
   before(async function () {
     signers = await ethers.getSigners();
-    tokenCreateContract = await utils.deployContract(
-      Constants.Contract.TokenCreateContract
-    );
-    tokenQueryContract = await utils.deployContract(
-      Constants.Contract.TokenQueryContract
-    );
+    tokenCreateContract = await utils.deployTokenCreateContract();
+    tokenQueryContract = await utils.deployTokenQueryContract();
     await utils.updateAccountKeysViaHapi([
       await tokenCreateContract.getAddress(),
       await tokenQueryContract.getAddress(),
