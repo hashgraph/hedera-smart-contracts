@@ -764,12 +764,8 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via system-contracts', functi
       await tokenQueryContract.getAddress(),
       await tokenTransferContract.getAddress(),
     ]);
-    erc20Contract = await utils.deployContract(
-      Constants.Contract.ERC20Contract
-    );
-    erc721Contract = await utils.deployContract(
-      Constants.Contract.ERC721Contract
-    );
+    erc20Contract = await utils.deployERC20Contract();
+    erc721Contract = await utils.deployERC721Contract();
   });
 
   const bootstrapHollowAccount = async function (
