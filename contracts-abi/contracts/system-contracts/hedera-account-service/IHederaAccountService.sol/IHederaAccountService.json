@@ -3,6 +3,54 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "accountNumAlias",
+        "type": "address"
+      }
+    ],
+    "name": "getEvmAddressAlias",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      },
+      {
+        "internalType": "address",
+        "name": "evmAddressAlias",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "evmAddressAlias",
+        "type": "address"
+      }
+    ],
+    "name": "getHederaAccountNumAlias",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      },
+      {
+        "internalType": "address",
+        "name": "accountNumAlias",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "owner",
         "type": "address"
       },
@@ -66,7 +114,7 @@
       },
       {
         "internalType": "bytes",
-        "name": "messageHash",
+        "name": "message",
         "type": "bytes"
       },
       {
@@ -119,6 +167,30 @@
       {
         "internalType": "bool",
         "name": "authorized",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "isValidAlias",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      },
+      {
+        "internalType": "bool",
+        "name": "response",
         "type": "bool"
       }
     ],
