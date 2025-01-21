@@ -27,15 +27,6 @@ contract CryptoAllowance is HederaAccountService, HederaTokenService {
         emit HbarAllowance(owner, spender, allowance);
     }
 
-    function isAuthorizedRawPublic(address account, bytes memory messageHash, bytes memory signature) public returns (int64 responseCode, bool response) {
-        (responseCode, response) = HederaAccountService.isAuthorizedRaw(account, messageHash, signature);
-        emit ResponseCode(responseCode);
-        if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert("mehehehehe");
-        }
-        emit IsAuthorizedRaw(account, response);
-    }
-
     function cryptoTransferPublic(IHederaTokenService.TransferList calldata transferList, IHederaTokenService.TokenTransferList[] calldata tokenTransferList) public returns (int responseCode) {
         responseCode = HederaTokenService.cryptoTransfer(transferList, tokenTransferList);
         emit ResponseCode(responseCode);
