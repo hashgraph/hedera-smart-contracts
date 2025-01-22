@@ -942,6 +942,21 @@ class Utils {
         return;
     }
   }
+
+  static getMirrorNodeUrl(network) {
+    switch (network) {
+      case 'mainnet':
+        return 'https://mainnet.mirrornode.hedera.com/api/v1';
+      case 'testnet':
+        return 'https://testnet.mirrornode.hedera.com/api/v1';
+      case 'previewnet':
+        return 'https://previewnet.mirrornode.hedera.com/api/v1';
+      case 'local':
+        return 'http://127.0.0.1:5551/api/v1';
+      default:
+        throw new Error('Unknown network');
+    }
+  }
 }
 
 module.exports = Utils;

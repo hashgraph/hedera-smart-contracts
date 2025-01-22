@@ -204,6 +204,7 @@ const Contract = {
   CancunOpcodes: 'CancunOpcodes',
   KZGPointEvaluation: 'KZGPointEvaluation',
   StateRegistry: 'StateRegistry',
+  AliasAccountUtility: 'AliasAccountUtility',
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';

@@ -53,8 +53,8 @@ abstract contract HederaAccountService {
     /// @return accountNumAlias The Hedera account's num for the given EVM address alias.
     function getHederaAccountNumAlias(address evmAddressAlias) internal returns (int64 responseCode, address accountNumAlias) {
         (bool success, bytes memory result) = HASPrecompileAddress.call(
-            abi.encodeWithSelector(IHederaAccountService.getHederaAccountNumAlias.selector, accountNumAlias));
-        (responseCode, evmAddressAlias) = success ? abi.decode(result, (int32, address)) : (HederaResponseCodes.UNKNOWN, address(0));
+            abi.encodeWithSelector(IHederaAccountService.getHederaAccountNumAlias.selector, evmAddressAlias));
+        (responseCode, accountNumAlias) = success ? abi.decode(result, (int32, address)) : (HederaResponseCodes.UNKNOWN, address(0));
     }
 
     /// Returns true iff a Hedera account num alias or EVM address alias.
