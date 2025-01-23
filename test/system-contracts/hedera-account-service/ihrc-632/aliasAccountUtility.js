@@ -26,7 +26,10 @@ const {
   Hbar,
   PrivateKey,
   AccountCreateTransaction,
+  KeyList,
 } = require('@hashgraph/sdk');
+const path = require('path');
+const protobuf = require('protobufjs');
 
 describe('@HAS IHRC-632 Test Suite', () => {
   let walletA,
@@ -289,6 +292,206 @@ describe('@HAS IHRC-632 Test Suite', () => {
         EDItems[1].signerAlias.toLowerCase()
       );
       expect(incorrectSignerReceiptResponse[2]).to.be.false;
+    });
+  });
+
+  describe(`IsAuthorized`, () => {
+    // raw messageToSign
+    const messageToSign = 'Hedera Account Service';
+
+    before(async () => {
+      // Load and compile protobuf definitions
+      const signatureMapProto = path.resolve(__dirname, 'signature_map.proto');
+      root = await protobuf.load(signatureMapProto);
+      SignatureMap = root.lookupType('SignatureMap');
+    });
+
+    // Helper function to create a signature blob which align with the SignatureMap protobuff message struct
+    const createSignatureBlob = (signatures) => {
+      const sigPairs = signatures.map((sig) => ({
+        pubKeyPrefix: Buffer.from(sig.pubKeyPrefix),
+        [sig.signatureType]: Buffer.from(sig.signatureValue),
+      }));
+
+      const message = SignatureMap.create({ sigPair: sigPairs });
+
+      const encodedMessage = SignatureMap.encode(message).finish();
+
+      return encodedMessage;
+    };
+
+    const prepareSigBlobData = async (
+      sdkClient,
+      signatureTypes,
+      unauthorized = false
+    ) => {
+      let keyData = {
+        pubKeys: [],
+        signatureBlobDatas: [],
+      };
+
+      // loop through signatureTypes to prepare
+      signatureTypes.forEach((sigType) => {
+        if (sigType !== 'ECDSAsecp256k1' && sigType !== 'ed25519') {
+          throw new Error('Invalid signature type.');
+        }
+
+        const privateKey =
+          sigType === 'ECDSAsecp256k1'
+            ? PrivateKey.generateECDSA()
+            : PrivateKey.generateED25519();
+
+        // Extract public key prefix from private key
+        const pubKey = privateKey.publicKey;
+        const pubKeyBytes = pubKey.toBytesRaw();
+        const pubKeyPrefix = pubKeyBytes.slice(0, 32);
+
+        // Sign message using private key
+        let signature = privateKey.sign(Buffer.from(messageToSign, 'utf-8'));
+
+        // create unauthorized signature if unauthorized is set to true
+        if (unauthorized) {
+          // create a new random key. This key will not be included in the threshold key during account creation and signatureBlob creation
+          const unauthorizedKey = PrivateKey.generateECDSA();
+
+          // re-assign signature with a new one signed by the `unauthorizedKey`
+          signature = unauthorizedKey.sign(Buffer.from(messageToSign, 'utf-8'));
+        }
+
+        // Create signature blob data
+        // depends on `unauthorized`, this signatureBlobData might be invalid as pubKeyPrefix and signature don't match if `unauthorized` is true
+        const signatureBlobData = {
+          pubKeyPrefix: pubKeyPrefix,
+          signatureType: sigType,
+          signatureValue: signature,
+        };
+
+        keyData.pubKeys.push(pubKey);
+        keyData.signatureBlobDatas.push(signatureBlobData);
+      });
+
+      // Create a threshold key with both public keys
+      const thresholdKey = new KeyList(
+        [...keyData.pubKeys],
+        keyData.pubKeys.length
+      );
+
+      // Create new account with the new key
+      const accountCreateTx = await new AccountCreateTransaction()
+        .setKey(thresholdKey)
+        .setInitialBalance(Hbar.fromTinybars(1000))
+        .execute(sdkClient);
+      const receipt = await accountCreateTx.getReceipt(sdkClient);
+      const newAccount = receipt.accountId;
+      const accountAddress = `0x${newAccount.toSolidityAddress()}`;
+
+      // Create signature blob
+      const signatureBlob = createSignatureBlob(keyData.signatureBlobDatas);
+
+      return { accountAddress, signatureBlob };
+    };
+
+    it('Should verify message signature and return TRUE using isAuthorized for ECDSA key', async () => {
+      const sigBlobData = await prepareSigBlobData(sdkClient, [
+        'ECDSAsecp256k1',
+      ]);
+
+      const tx = await aliasAccountUtility.isAuthorizedPublic(
+        sigBlobData.accountAddress,
+        Buffer.from(messageToSign, 'utf-8'),
+        sigBlobData.signatureBlob,
+        Constants.GAS_LIMIT_10_000_000
+      );
+      const txReceipt = await tx.wait();
+
+      const accountAuthorizationResponse = txReceipt.logs.find(
+        (l) => l.fragment.name === 'AccountAuthorizationResponse'
+      ).args;
+
+      expect(accountAuthorizationResponse[0]).to.eq(22);
+      expect(accountAuthorizationResponse[1].toLowerCase()).to.eq(
+        sigBlobData.accountAddress.toLowerCase()
+      );
+      expect(accountAuthorizationResponse[2]).to.be.true;
+    });
+
+    it('Should verify message signature and return TRUE using isAuthorized for ED25519 key', async () => {
+      const sigBlobData = await prepareSigBlobData(sdkClient, ['ed25519']);
+
+      const tx = await aliasAccountUtility.isAuthorizedPublic(
+        sigBlobData.accountAddress,
+        Buffer.from(messageToSign, 'utf-8'),
+        sigBlobData.signatureBlob,
+        Constants.GAS_LIMIT_10_000_000
+      );
+      const txReceipt = await tx.wait();
+
+      const accountAuthorizationResponse = txReceipt.logs.find(
+        (l) => l.fragment.name === 'AccountAuthorizationResponse'
+      ).args;
+
+      expect(accountAuthorizationResponse[0]).to.eq(22);
+      expect(accountAuthorizationResponse[1].toLowerCase()).to.eq(
+        sigBlobData.accountAddress.toLowerCase()
+      );
+      expect(accountAuthorizationResponse[2]).to.be.true;
+    });
+
+    it('Should verify message signature and return TRUE using isAuthorized for threshold key includes multiple ED25519 and ECDSA keys', async () => {
+      const sigBlobData = await prepareSigBlobData(sdkClient, [
+        'ECDSAsecp256k1',
+        'ed25519',
+        'ed25519',
+        'ed25519',
+        'ECDSAsecp256k1',
+        'ECDSAsecp256k1',
+        'ed25519',
+        'ECDSAsecp256k1',
+      ]);
+
+      const tx = await aliasAccountUtility.isAuthorizedPublic(
+        sigBlobData.accountAddress,
+        Buffer.from(messageToSign, 'utf-8'),
+        sigBlobData.signatureBlob,
+        Constants.GAS_LIMIT_10_000_000
+      );
+      const txReceipt = await tx.wait();
+
+      const accountAuthorizationResponse = txReceipt.logs.find(
+        (l) => l.fragment.name === 'AccountAuthorizationResponse'
+      ).args;
+
+      expect(accountAuthorizationResponse[0]).to.eq(22);
+      expect(accountAuthorizationResponse[1].toLowerCase()).to.eq(
+        sigBlobData.accountAddress.toLowerCase()
+      );
+      expect(accountAuthorizationResponse[2]).to.be.true;
+    });
+
+    it('Should FAIL to verify message signature and return FALSE using isAuthorized for unauthorized key', async () => {
+      const sigBlobData = await prepareSigBlobData(
+        sdkClient,
+        ['ECDSAsecp256k1'],
+        true // set unauthorized to true
+      );
+
+      const tx = await aliasAccountUtility.isAuthorizedPublic(
+        sigBlobData.accountAddress,
+        Buffer.from(messageToSign, 'utf-8'),
+        sigBlobData.signatureBlob,
+        Constants.GAS_LIMIT_10_000_000
+      );
+      const txReceipt = await tx.wait();
+
+      const accountAuthorizationResponse = txReceipt.logs.find(
+        (l) => l.fragment.name === 'AccountAuthorizationResponse'
+      ).args;
+
+      expect(accountAuthorizationResponse[0]).to.eq(22);
+      expect(accountAuthorizationResponse[1].toLowerCase()).to.eq(
+        sigBlobData.accountAddress.toLowerCase()
+      );
+      expect(accountAuthorizationResponse[2]).to.be.false; // unauthorized
     });
   });
 });
