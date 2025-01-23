@@ -34,7 +34,7 @@ describe('@HAS IHRC-632 Test Suite', () => {
     walletC,
     aliasAccountUtility,
     sdkClient,
-    walletALongZeroAddress;
+    walletAHederaAccountNumAlias;
 
   before(async () => {
     [walletA, walletB, walletC] = await ethers.getSigners();
@@ -53,7 +53,7 @@ describe('@HAS IHRC-632 Test Suite', () => {
       sdkClient
     );
 
-    walletALongZeroAddress =
+    walletAHederaAccountNumAlias =
       `0x` + (await Utils.convertAccountIdToLongZeroAddress(walletAAccountId));
   });
 
@@ -61,7 +61,7 @@ describe('@HAS IHRC-632 Test Suite', () => {
     // skipping since there's a bug in getEvmAddressAlias in the services
     xit('Should execute getEvmAddressAliasPublic and get the corressponded evmAddressAlias', async () => {
       const tx = await aliasAccountUtility.getEvmAddressAliasPublic(
-        walletALongZeroAddress,
+        walletAHederaAccountNumAlias,
         Constants.GAS_LIMIT_1_000_000
       );
 
@@ -104,12 +104,13 @@ describe('@HAS IHRC-632 Test Suite', () => {
       ).args;
 
       expect(evmAddressAliasLog[0]).to.eq(22); // responseCode 22 = success
-      expect(evmAddressAliasLog[1]).to.eq(walletALongZeroAddress); // evm address
+      expect(evmAddressAliasLog[1]).to.eq(walletAHederaAccountNumAlias); // evm address
     });
 
     it('Should execute getEvmAddressAliasPublic with not long zero address and get INVALID_ACOUNT_ID', async () => {
       const tx = await aliasAccountUtility.getEvmAddressAliasPublic(
         walletALongZeroAddress, // a long zero address
+        walletAHederaAccountNumAlias, // a long zero address
         Constants.GAS_LIMIT_1_000_000
       );
 
@@ -123,7 +124,56 @@ describe('@HAS IHRC-632 Test Suite', () => {
     });
   });
 
-  describe(`isAuthorizedRaw`, () => {
+  describe('isValidAlias', () => {
+    it('Should execute isValidAliasPublic with EVM address alias param and return TRUE', async () => {
+      const tx = await aliasAccountUtility.isValidAliasPublic(
+        walletA.address,
+        Constants.GAS_LIMIT_1_000_000
+      );
+
+      const receipt = await tx.wait();
+
+      const evmAddressAliasLog = receipt.logs.find(
+        (log) => log.fragment.name === 'IsValidAliasResponse'
+      ).args;
+
+      expect(evmAddressAliasLog[0]).to.eq(22); // responseCode 22 = success
+      expect(evmAddressAliasLog[1]).to.be.true;
+    });
+
+    it('Should execute isValidAliasPublic with Hedera Account Num Alias param and return TRUE', async () => {
+      const tx = await aliasAccountUtility.isValidAliasPublic(
+        walletAHederaAccountNumAlias,
+        Constants.GAS_LIMIT_1_000_000
+      );
+
+      const receipt = await tx.wait();
+
+      const evmAddressAliasLog = receipt.logs.find(
+        (log) => log.fragment.name === 'IsValidAliasResponse'
+      ).args;
+
+      expect(evmAddressAliasLog[0]).to.eq(22); // responseCode 22 = success
+      expect(evmAddressAliasLog[1]).to.be.true;
+    });
+
+    it('Should execute isValidAliasPublic with a non existed account param and return FALSE', async () => {
+      const tx = await aliasAccountUtility.isValidAliasPublic(
+        ethers.Wallet.createRandom().address,
+        Constants.GAS_LIMIT_1_000_000
+      );
+
+      const receipt = await tx.wait();
+
+      const evmAddressAliasLog = receipt.logs.find(
+        (log) => log.fragment.name === 'IsValidAliasResponse'
+      ).args;
+
+      expect(evmAddressAliasLog[0]).to.eq(22); // responseCode 22 = success
+      expect(evmAddressAliasLog[1]).to.be.false;
+    });
+  });
+
     const messageToSign = 'Hedera Account Service';
     const messageHashEC = ethers.hashMessage(messageToSign);
     const messageHashED = Buffer.from(messageToSign);

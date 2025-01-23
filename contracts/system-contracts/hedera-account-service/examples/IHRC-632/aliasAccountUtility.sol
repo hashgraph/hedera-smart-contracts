@@ -8,6 +8,7 @@ contract AliasAccountUtility is HederaAccountService {
     event ResponseCode(int responseCode);
     event IsAuthorizedRaw(address account, bool response);
     event AddressAliasResponse(int64 responseCode, address evmAddressAlias);
+    event IsValidAliasResponse(int64 responseCode, bool response);
 
 
 
@@ -41,6 +42,18 @@ contract AliasAccountUtility is HederaAccountService {
     function getHederaAccountNumAliasPublic(address evmAddressAlias) public returns (int64 responseCode, address accountNumAlias) {
         (responseCode, accountNumAlias) = HederaAccountService.getHederaAccountNumAlias(evmAddressAlias);
         emit AddressAliasResponse(responseCode, accountNumAlias);
+        if (responseCode != HederaResponseCodes.SUCCESS && responseCode != HederaResponseCodes.INVALID_SOLIDITY_ADDRESS) {
+            revert();
+        }
+    }
+
+    /// Returns true iff a Hedera account num alias or EVM address alias.
+    /// @param addr Some 20-byte address.
+    /// @return responseCode The response code for the status of the request. SUCCESS is 22.
+    /// @return response true iff addr is a Hedera account num alias or an EVM address alias (and false otherwise).
+    function isValidAliasPublic(address addr) public returns (int64 responseCode, bool response) {
+        (responseCode, response) = HederaAccountService.isValidAlias(addr);
+        emit IsValidAliasResponse(responseCode, response);
         if (responseCode != HederaResponseCodes.SUCCESS && responseCode != HederaResponseCodes.INVALID_SOLIDITY_ADDRESS) {
             revert();
         }

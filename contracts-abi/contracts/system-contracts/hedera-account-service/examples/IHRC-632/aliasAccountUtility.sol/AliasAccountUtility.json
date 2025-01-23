@@ -11,6 +11,31 @@
       {
         "indexed": false,
         "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "response",
+        "type": "bool"
+      }
+    ],
+    "name": "AccountAuthorizationResponse",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
         "name": "evmAddressAlias",
         "type": "address"
       }
@@ -23,9 +48,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
       },
       {
         "indexed": false,
@@ -34,7 +59,7 @@
         "type": "bool"
       }
     ],
-    "name": "IsAuthorizedRaw",
+    "name": "IsValidAliasResponse",
     "type": "event"
   },
   {
@@ -107,6 +132,40 @@
       },
       {
         "internalType": "bytes",
+        "name": "message",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "signature",
+        "type": "bytes"
+      }
+    ],
+    "name": "isAuthorizedPublic",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      },
+      {
+        "internalType": "bool",
+        "name": "authorized",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
         "name": "messageHash",
         "type": "bytes"
       },
@@ -117,6 +176,30 @@
       }
     ],
     "name": "isAuthorizedRawPublic",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      },
+      {
+        "internalType": "bool",
+        "name": "authorized",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "isValidAliasPublic",
     "outputs": [
       {
         "internalType": "int64",
