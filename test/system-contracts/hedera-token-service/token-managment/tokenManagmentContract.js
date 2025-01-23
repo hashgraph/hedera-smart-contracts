@@ -154,7 +154,8 @@ describe('TokenManagmentContract Test Suite', function () {
     );
     const isFrozenTx = await tokenQueryContract.isFrozenPublic(
       tokenAddress,
-      await tokenCreateContract.getAddress()
+      await tokenCreateContract.getAddress(),
+      Constants.GAS_LIMIT_1_000_000
     );
     const responseCodeFreeze = (await freezeTx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.ResponseCode
@@ -176,7 +177,8 @@ describe('TokenManagmentContract Test Suite', function () {
     );
     const isStillFrozenTx = await tokenQueryContract.isFrozenPublic(
       tokenAddress,
-      await tokenCreateContract.getAddress()
+      await tokenCreateContract.getAddress(),
+      Constants.GAS_LIMIT_1_000_000
     );
     const responseCodeUnfreeze = (await unfreezeTx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.ResponseCode
@@ -240,7 +242,8 @@ describe('TokenManagmentContract Test Suite', function () {
     );
     const isKycTx = await tokenQueryContract.isKycPublic(
       tokenAddress,
-      await tokenCreateContract.getAddress()
+      await tokenCreateContract.getAddress(),
+      Constants.GAS_LIMIT_1_000_000
     );
     const revokeKycResponseCode = (await revokeKycTx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.ResponseCode
@@ -364,7 +367,7 @@ describe('TokenManagmentContract Test Suite', function () {
     );
 
     const getTokenExpiryInfoTxBefore =
-      await tokenQueryContract.getTokenExpiryInfoPublic(tokenAddress);
+      await tokenQueryContract.getTokenExpiryInfoPublic(tokenAddress,Constants.GAS_LIMIT_1_000_000);
     const responseCode = (await getTokenExpiryInfoTxBefore.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.ResponseCode
     )[0].args.responseCode;
@@ -396,7 +399,7 @@ describe('TokenManagmentContract Test Suite', function () {
 
     // get updated expiryInfo
     const getTokenExpiryInfoTxAfter =
-      await tokenQueryContract.getTokenExpiryInfoPublic(tokenAddress);
+      await tokenQueryContract.getTokenExpiryInfoPublic(tokenAddress,Constants.GAS_LIMIT_1_000_000);
     const getExpiryInfoResponseCode = (
       await getTokenExpiryInfoTxAfter.wait()
     ).logs.filter((e) => e.fragment.name === Constants.Events.ResponseCode)[0]
@@ -418,7 +421,8 @@ describe('TokenManagmentContract Test Suite', function () {
   it('should be able to update token keys', async function () {
     const getKeyTx = await tokenQueryContract.getTokenKeyPublic(
       tokenAddress,
-      2
+      2,
+      Constants.GAS_LIMIT_1_000_000
     );
     const originalKey = (await getKeyTx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.TokenKey
@@ -440,7 +444,7 @@ describe('TokenManagmentContract Test Suite', function () {
     )[0].args.responseCode;
 
     // Assert updated key
-    const tx = await tokenQueryContract.getTokenKeyPublic(tokenAddress, 2);
+    const tx = await tokenQueryContract.getTokenKeyPublic(tokenAddress, 2,Constants.GAS_LIMIT_1_000_000);
     const result = await tx.wait();
     const { responseCode } = result.logs.filter(
       (e) => e.fragment.name === Constants.Events.ResponseCode
@@ -893,7 +897,8 @@ describe('TokenManagmentContract Test Suite', function () {
             );
           const isFrozenTxBefore = await tokenQueryContract.isFrozenPublic(
             tokenAddress,
-            await tokenCreateContract.getAddress()
+            await tokenCreateContract.getAddress(),
+            Constants.GAS_LIMIT_1_000_000
           );
 
           const unfreezeTx = await tokenManagmentContract
@@ -904,7 +909,8 @@ describe('TokenManagmentContract Test Suite', function () {
             );
           const isFrozenTxAfter = await tokenQueryContract.isFrozenPublic(
             tokenAddress,
-            await tokenCreateContract.getAddress()
+            await tokenCreateContract.getAddress(),
+            Constants.GAS_LIMIT_1_000_000
           );
 
           expect(
@@ -973,7 +979,8 @@ describe('TokenManagmentContract Test Suite', function () {
           .connect(signers[1])
           .unfreezeTokenPublic(
             tokenAddress,
-            await tokenCreateContract.getAddress()
+            await tokenCreateContract.getAddress(),
+            Constants.GAS_LIMIT_1_000_000
           );
 
         await utils.expectToFail(freezeTokenTx, Constants.CALL_EXCEPTION);
@@ -1198,22 +1205,26 @@ describe('TokenManagmentContract Test Suite', function () {
             .connect(signers[1])
             .freezeTokenPublic(
               tokenAddress,
-              await tokenCreateContract.getAddress()
+              await tokenCreateContract.getAddress(),
+              Constants.GAS_LIMIT_1_000_000
             );
           const isFrozenTxBefore = await tokenQueryContract.isFrozenPublic(
             tokenAddress,
-            await tokenCreateContract.getAddress()
+            await tokenCreateContract.getAddress(),
+            Constants.GAS_LIMIT_1_000_000
           );
 
           const unfreezeTx = await tokenManagmentContract
             .connect(signers[1])
             .unfreezeTokenPublic(
               tokenAddress,
-              await tokenCreateContract.getAddress()
+              await tokenCreateContract.getAddress(),
+              Constants.GAS_LIMIT_1_000_000
             );
           const isFrozenTxAfter = await tokenQueryContract.isFrozenPublic(
             tokenAddress,
-            await tokenCreateContract.getAddress()
+            await tokenCreateContract.getAddress(),
+            Constants.GAS_LIMIT_1_000_000
           );
 
           expect(
@@ -1252,24 +1263,25 @@ describe('TokenManagmentContract Test Suite', function () {
           );
           const keyTxBefore = await tokenQueryContract.getTokenKeyPublic(
             tokenAddress,
-            utils.KeyType.SUPPLY
+            utils.KeyType.SUPPLY,
+            Constants.GAS_LIMIT_1_000_000
           );
           const keyBefore = (await keyTxBefore.wait()).logs.filter(
             (e) => e.fragment.name === Constants.Events.TokenKey
           )[0].args.key;
-
           const updatedKey = updateTokenInfoValues(
             utils.KeyValueType.CONTRACT_ID,
             await tokenTransferContract.getAddress()
           );
           const updateTokenKeyTx = await tokenManagmentContract
-            .connect(signers[0])
-            .updateTokenKeysPublic(tokenAddress, [
-              [utils.KeyType.SUPPLY, updatedKey],
-            ]);
+          .connect(signers[0])
+          .updateTokenKeysPublic(tokenAddress, [
+            [utils.KeyType.SUPPLY, updatedKey],
+          ]);
           const keyTxAfter = await tokenQueryContract.getTokenKeyPublic(
             tokenAddress,
-            utils.KeyType.SUPPLY
+            utils.KeyType.SUPPLY,
+            Constants.GAS_LIMIT_1_000_000
           );
           const keyAfter = (await keyTxAfter.wait()).logs.filter(
             (e) => e.fragment.name === Constants.Events.TokenKey
@@ -2484,7 +2496,7 @@ describe('TokenManagmentContract Test Suite', function () {
         } catch (error) {
           transactionHash = error.receipt.hash;
         }
-  
+
         const revertReason = await utils.getRevertReasonFromReceipt(transactionHash);
         const decodeRevertReason = utils.decodeErrorMessage(revertReason);
         expect(decodeRevertReason).to.equal(CUSTOM_FEES_LIST_TOO_LONG);
