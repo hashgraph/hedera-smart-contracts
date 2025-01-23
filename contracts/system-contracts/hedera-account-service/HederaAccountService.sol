@@ -104,6 +104,6 @@ abstract contract HederaAccountService {
         (bool success, bytes memory result) = HASPrecompileAddress.call(
             abi.encodeWithSelector(IHederaAccountService.isAuthorized.selector,
                 account, message, signature));
-        (responseCode, authorized) = success ? (HederaResponseCodes.SUCCESS, abi.decode(result, (bool))) : (HederaResponseCodes.UNKNOWN, false);
+        (responseCode, authorized) = success ? abi.decode(result, (int32, bool)) : (HederaResponseCodes.UNKNOWN, false);
     }
 }
