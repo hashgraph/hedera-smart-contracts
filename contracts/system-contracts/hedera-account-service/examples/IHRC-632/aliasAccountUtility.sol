@@ -6,7 +6,7 @@ import "../../HederaAccountService.sol";
 
 contract AliasAccountUtility is HederaAccountService { 
     event ResponseCode(int responseCode);
-    event IsAuthorizedRaw(address account, bool response);
+    event AccountAuthorizationResponse(int64 responseCode, address account, bool response);
     event AddressAliasResponse(int64 responseCode, address evmAddressAlias);
     event IsValidAliasResponse(int64 responseCode, bool response);
 
@@ -64,13 +64,14 @@ contract AliasAccountUtility is HederaAccountService {
     /// @param messageHash The hash of the message that was signed
     /// @param signature The signature to verify
     /// @return responseCode The response code indicating success or failure
-    /// @return response True if the signature is valid for the account, false otherwise
-    function isAuthorizedRawPublic(address account, bytes memory messageHash, bytes memory signature) public returns (int64 responseCode, bool response) {
-        (responseCode, response) = HederaAccountService.isAuthorizedRaw(account, messageHash, signature);
-        emit ResponseCode(responseCode);
+    /// @return authorized True if the signature is valid for the account, false otherwise
+    function isAuthorizedRawPublic(address account, bytes memory messageHash, bytes memory signature) public returns (int64 responseCode, bool authorized) {
+        (responseCode, authorized) = HederaAccountService.isAuthorizedRaw(account, messageHash, signature);
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
         }
-        emit IsAuthorizedRaw(account, response);
+        emit AccountAuthorizationResponse(responseCode, account, authorized);
+    }
+
     }
 }

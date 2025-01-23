@@ -109,7 +109,6 @@ describe('@HAS IHRC-632 Test Suite', () => {
 
     it('Should execute getEvmAddressAliasPublic with not long zero address and get INVALID_ACOUNT_ID', async () => {
       const tx = await aliasAccountUtility.getEvmAddressAliasPublic(
-        walletALongZeroAddress, // a long zero address
         walletAHederaAccountNumAlias, // a long zero address
         Constants.GAS_LIMIT_1_000_000
       );
@@ -174,6 +173,7 @@ describe('@HAS IHRC-632 Test Suite', () => {
     });
   });
 
+  describe(`IsAuthorizedRaw`, () => {
     const messageToSign = 'Hedera Account Service';
     const messageHashEC = ethers.hashMessage(messageToSign);
     const messageHashED = Buffer.from(messageToSign);
@@ -184,7 +184,6 @@ describe('@HAS IHRC-632 Test Suite', () => {
         const newEdPK = PrivateKey.generateED25519();
         const newEdPubKey = newEdPK.publicKey;
         const client = await Utils.createSDKClient();
-
         const edSignerAccount = (
           await (
             await new AccountCreateTransaction()
@@ -195,12 +194,10 @@ describe('@HAS IHRC-632 Test Suite', () => {
         ).accountId;
         const signerAlias = `0x${edSignerAccount.toSolidityAddress()}`;
         const signature = `0x${Buffer.from(newEdPK.sign(messageHashED)).toString('hex')}`;
-
         const obj = {
           signature,
           signerAlias,
         };
-
         EDItems.push(obj);
       }
     });
@@ -218,17 +215,13 @@ describe('@HAS IHRC-632 Test Suite', () => {
         )
       ).wait();
 
-      const correctSignerReceiptResponseCode = correctSignerReceipt.logs.find(
-        (l) => l.fragment.name === 'ResponseCode'
-      ).args[0];
-
       const correctSignerReceiptResponse = correctSignerReceipt.logs.find(
-        (l) => l.fragment.name === 'IsAuthorizedRaw'
+        (l) => l.fragment.name === 'AccountAuthorizationResponse'
       ).args;
 
-      expect(correctSignerReceiptResponseCode).to.eq(22n);
-      expect(correctSignerReceiptResponse[0]).to.eq(walletB.address);
-      expect(correctSignerReceiptResponse[1]).to.be.true;
+      expect(correctSignerReceiptResponse[0]).to.eq(22);
+      expect(correctSignerReceiptResponse[1]).to.eq(walletB.address);
+      expect(correctSignerReceiptResponse[2]).to.be.true;
     });
 
     it('Should verify message signature and return FALSE using isAuthorizedRawPublic for ECDSA account', async () => {
@@ -244,18 +237,13 @@ describe('@HAS IHRC-632 Test Suite', () => {
         )
       ).wait();
 
-      const incorrectSignerReceiptResponseCode =
-        incorrectSignerReceipt.logs.find(
-          (l) => l.fragment.name === 'ResponseCode'
-        ).args[0];
-
       const incorrectSignerReceiptResponse = incorrectSignerReceipt.logs.find(
-        (l) => l.fragment.name === 'IsAuthorizedRaw'
+        (l) => l.fragment.name === 'AccountAuthorizationResponse'
       ).args;
 
-      expect(incorrectSignerReceiptResponseCode).to.eq(22n);
-      expect(incorrectSignerReceiptResponse[0]).to.eq(walletC.address);
-      expect(incorrectSignerReceiptResponse[1]).to.be.false;
+      expect(incorrectSignerReceiptResponse[0]).to.eq(22);
+      expect(incorrectSignerReceiptResponse[1]).to.eq(walletC.address);
+      expect(incorrectSignerReceiptResponse[2]).to.be.false;
     });
 
     it('Should verify message signature and return TRUE using isAuthorizedRawPublic for ED25519 account', async () => {
@@ -268,19 +256,15 @@ describe('@HAS IHRC-632 Test Suite', () => {
         )
       ).wait();
 
-      const correctSignerReceiptResponseCode = correctSignerReceipt.logs.find(
-        (l) => l.fragment.name === 'ResponseCode'
-      ).args[0];
-
       const correctSignerReceiptResponse = correctSignerReceipt.logs.find(
-        (l) => l.fragment.name === 'IsAuthorizedRaw'
+        (l) => l.fragment.name === 'AccountAuthorizationResponse'
       ).args;
 
-      expect(correctSignerReceiptResponseCode).to.eq(22n);
-      expect(correctSignerReceiptResponse[0].toLowerCase()).to.eq(
+      expect(correctSignerReceiptResponse[0]).to.eq(22);
+      expect(correctSignerReceiptResponse[1].toLowerCase()).to.eq(
         EDItems[0].signerAlias.toLowerCase()
       );
-      expect(correctSignerReceiptResponse[1]).to.be.true;
+      expect(correctSignerReceiptResponse[2]).to.be.true;
     });
 
     it('Should verify message signature and return FALSE using isAuthorizedRawPublic for ED25519 account', async () => {
@@ -293,23 +277,18 @@ describe('@HAS IHRC-632 Test Suite', () => {
         )
       ).wait();
 
-      const incorrectSignerReceiptResponseCode =
-        incorrectSignerReceipt.logs.find(
-          (l) => l.fragment.name === 'ResponseCode'
-        ).args[0];
-
       const incorrectSignerReceiptResponse = incorrectSignerReceipt.logs.find(
-        (l) => l.fragment.name === 'IsAuthorizedRaw'
+        (l) => l.fragment.name === 'AccountAuthorizationResponse'
       ).args;
 
-      expect(incorrectSignerReceiptResponseCode).to.eq(22n);
-      expect(incorrectSignerReceiptResponse[0].toLowerCase()).to.eq(
+      expect(incorrectSignerReceiptResponse[0]).to.eq(22);
+      expect(incorrectSignerReceiptResponse[1].toLowerCase()).to.eq(
         EDItems[0].signerAlias.toLowerCase()
       );
-      expect(incorrectSignerReceiptResponse[0].toLowerCase()).to.not.eq(
+      expect(incorrectSignerReceiptResponse[1].toLowerCase()).to.not.eq(
         EDItems[1].signerAlias.toLowerCase()
       );
-      expect(incorrectSignerReceiptResponse[1]).to.be.false;
+      expect(incorrectSignerReceiptResponse[2]).to.be.false;
     });
   });
 });
