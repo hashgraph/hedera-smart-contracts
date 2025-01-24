@@ -306,7 +306,7 @@ describe('@HAS IHRC-632 Test Suite', () => {
       SignatureMap = root.lookupType('SignatureMap');
     });
 
-    // Helper function to create a signature blob which align with the SignatureMap protobuff message struct
+    // Helper function to create a signature blob which align with the SignatureMap protobuf message struct
     const createSignatureBlob = (signatures) => {
       const sigPairs = signatures.map((sig) => ({
         pubKeyPrefix: Buffer.from(sig.pubKeyPrefix),
