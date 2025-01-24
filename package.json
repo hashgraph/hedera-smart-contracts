@@ -33,7 +33,7 @@
     "freeze-network-node": "hardhat run scripts/freeze-network-node.js"
   },
   "devDependencies": {
-    "@hashgraph/hedera-local": "^2.32.6",
+    "@hashgraph/hedera-local": "^2.33.0",
     "@hashgraph/sdk": "^2.56.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.8",
     "@nomicfoundation/hardhat-foundry": "^1.1.3",
