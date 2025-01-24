@@ -111,11 +111,11 @@ jobs:
     with:
       testfilter: BLSSignature
 
-  CryptoAllowance:
-    name: CryptoAllowance Test Suite
+  HederaAccountService:
+    name: HederaAccountService Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
-      testfilter: CryptoAllowance
+      testfilter: HAS
 
   HIP904:
     name: HIP904 Contract Test Suite
@@ -142,7 +142,7 @@ jobs:
       - ShanghaiOpcodes
       - PrngSystemContract
       - BLSSignatureVerification
-      - CryptoAllowance
+      - HederaAccountService
       - HIP904
 
     runs-on: smart-contracts-linux-large
