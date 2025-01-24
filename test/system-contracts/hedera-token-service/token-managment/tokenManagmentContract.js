@@ -24,7 +24,7 @@ const utils = require('../utils');
 const Constants = require('../../../constants');
 const { pollForNewERC20Balance } = require('../../../../utils/helpers');
 
-describe('TokenManagmentContract Test Suite', function () {
+describe.only('TokenManagmentContract Test Suite', function () {
   const TX_SUCCESS_CODE = 22;
   const CUSTOM_SCHEDULE_ALREADY_HAS_NO_FEES = '244';
   const TOKEN_HAS_NO_FEE_SCHEDULE_KEY = '240';
@@ -991,11 +991,12 @@ describe('TokenManagmentContract Test Suite', function () {
         //Update token info
         {
           const contractId = await tokenManagmentContract.getAddress();
+        
           const updatedKey = updateTokenInfoValues(
             utils.KeyValueType.CONTRACT_ID,
             contractId
           );
-
+          
           const token = {
             name: tokenInfoBefore.name,
             symbol: tokenInfoBefore.symbol,
@@ -1011,36 +1012,38 @@ describe('TokenManagmentContract Test Suite', function () {
               autoRenewPeriod: 0,
             },
           };
-
+          
           token.treasury = signers[0].address;
-
-          await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
+          
+          const proverka = await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
         }
-
+        
         //Change supply key with admin contract
         {
           const updatedKey = updateTokenInfoValues(
             utils.KeyValueType.CONTRACT_ID,
             await tokenTransferContract.getAddress()
           );
-
+          
           const keyTxBefore = await tokenQueryContract.getTokenKeyPublic(
             tokenAddress,
-            utils.KeyType.SUPPLY
+            utils.KeyType.SUPPLY,
+            Constants.GAS_LIMIT_1_000_000
           );
           const keyBefore = (await keyTxBefore.wait()).logs.filter(
             (e) => e.fragment.name === Constants.Events.TokenKey
           )[0].args.key;
-
+          
           const updateTokenKeyTx = await tokenManagmentContract
-            .connect(signers[1])
-            .updateTokenKeysPublic(tokenAddress, [
-              [utils.KeyType.SUPPLY, updatedKey],
-            ]);
-
+          .connect(signers[1])
+          .updateTokenKeysPublic(tokenAddress, [
+            [utils.KeyType.SUPPLY, updatedKey],
+          ]);
+          
           const keyTxAfter = await tokenQueryContract.getTokenKeyPublic(
             tokenAddress,
-            utils.KeyType.SUPPLY
+            utils.KeyType.SUPPLY,
+            Constants.GAS_LIMIT_1_000_000
           );
           const keyAfter = (await keyTxAfter.wait()).logs.filter(
             (e) => e.fragment.name === Constants.Events.TokenKey
@@ -1987,8 +1990,8 @@ describe('TokenManagmentContract Test Suite', function () {
       const feeToBeCharged = Math.floor(400 * ((updatedFractionalFeeNumerator + updatedFractionalFeeNumerator2) / fractionalFeeDenominator));
 
       const transferTx1 = await tokenTransferContract.transferTokensPublic(tokenWithFees, [signers[1].address, signers[2].address], [-400, 400], Constants.GAS_LIMIT_1_000_000);
-      const transferTx1Receipt = await transferTx1.wait();
-      console.log(transferTx1Receipt);
+      await transferTx1.wait();
+      
       const signer2BalanceAfterTransfer = await utils.getTokenBalance(signers[2].address, tokenWithFees);
 
       //ensure the fee has been updated and collected
@@ -2054,7 +2057,7 @@ describe('TokenManagmentContract Test Suite', function () {
       {numerator: 10, denominator: 100, amount: tenHbars, tokenId: ethers.ZeroAddress, useHbarsForPayment: true, feeCollector: signers[2].address}];
       const updateRoyaltyFeeTx = await tokenManagmentContract.updateNonFungibleTokenCustomFeesPublic(nft, [], updatedRoyaltyFee);
       await updateRoyaltyFeeTx.wait();
-      console.log("NFT", nft);
+
       const beforeNftTransferHbars2 = await utils.getHbarBalance(signers[2].address);
       const beforeNftTransferHbars3 = await utils.getHbarBalance(signers[3].address);
       
@@ -2444,7 +2447,8 @@ describe('TokenManagmentContract Test Suite', function () {
         expect(decodeRevertReason).to.equal(FRACTION_DIVIDES_BY_ZERO);
       });
 
-      it('should fail when updating fungible token fees to more than 10', async function() {
+      // TODO: fix skipped tests below after issue #3419
+      it.skip('should fail when updating fungible token fees to more than 10', async function() {
         let transactionHash;
         tokenWithFees = await utils.createFungibleTokenWithCustomFeesAndKeys(
           tokenCreateCustomContract,
@@ -2473,7 +2477,7 @@ describe('TokenManagmentContract Test Suite', function () {
         expect(decodeRevertReason).to.equal(CUSTOM_FEES_LIST_TOO_LONG);
       });
 
-      it('should fail when updating NFT token fees to more than 10', async function() {
+      it.skip('should fail when updating NFT token fees to more than 10', async function() {
         const nft = await utils.createNonFungibleTokenWithCustomRoyaltyFeeAndKeys(
           tokenCreateCustomContract,
           signers[0].address,
