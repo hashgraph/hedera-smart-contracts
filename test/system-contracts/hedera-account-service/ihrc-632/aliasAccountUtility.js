@@ -295,6 +295,17 @@ describe('@HAS IHRC-632 Test Suite', () => {
     });
   });
 
+  // The isAuthorized function is responsible for verifying message signatures against the keys associated with a Hedera account.
+  // This function is particularly complex as it accommodates various signature types available in the Hedera ecosystem, including ECDSA and ED25519.
+  //
+  // The function takes an address, a message, and a signatureBlob as inputs. The signatureBlob contains one or more signatures encoded in protobuf format, which correspond to the provided message.
+  //
+  // It is important to note that calls to this method incur additional gas charges, which are determined by the resource cost of validating each signature, along with the variable cost associated with performing a cryptographic hash on the message.
+  // The tests for this function encompass:
+  // - Verifying individual signatures from ECDSA and ED25519 keys
+  // - Validating signatures from threshold keys that include multiple ECDSA and ED25519 keys
+  // - Managing cases of unauthorized signatures
+  // The function utilizes protobuf encoding to create signature blobs that conform to the SignatureMap message format.
   describe(`IsAuthorized`, () => {
     // raw messageToSign
     const messageToSign = 'Hedera Account Service';
