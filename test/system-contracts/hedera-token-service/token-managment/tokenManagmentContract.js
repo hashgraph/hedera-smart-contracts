@@ -1015,7 +1015,7 @@ describe('TokenManagmentContract Test Suite', function () {
           
           token.treasury = signers[0].address;
           
-          const proverka = await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
+          await updateTokenInfo(tokenManagmentContract, tokenAddress, token);
         }
         
         //Change supply key with admin contract
@@ -2447,7 +2447,7 @@ describe('TokenManagmentContract Test Suite', function () {
         expect(decodeRevertReason).to.equal(FRACTION_DIVIDES_BY_ZERO);
       });
 
-      // TODO: fix skipped tests below after issue #3419
+      // TODO: fix skipped tests below --> opened issue https://github.com/hashgraph/hedera-smart-contracts/issues/1207
       it.skip('should fail when updating fungible token fees to more than 10', async function() {
         let transactionHash;
         tokenWithFees = await utils.createFungibleTokenWithCustomFeesAndKeys(
