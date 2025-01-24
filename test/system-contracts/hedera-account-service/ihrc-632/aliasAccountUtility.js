@@ -107,7 +107,9 @@ describe('@HAS IHRC-632 Test Suite', () => {
       ).args;
 
       expect(evmAddressAliasLog[0]).to.eq(22); // responseCode 22 = success
-      expect(evmAddressAliasLog[1]).to.eq(walletAHederaAccountNumAlias); // evm address
+      expect(evmAddressAliasLog[1].toLowerCase()).to.eq(
+        walletAHederaAccountNumAlias
+      ); // evm address
     });
 
     it('Should execute getEvmAddressAliasPublic with not long zero address and get INVALID_ACOUNT_ID', async () => {
