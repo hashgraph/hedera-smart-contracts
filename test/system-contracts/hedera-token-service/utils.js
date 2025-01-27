@@ -82,6 +82,146 @@ class Utils {
     );
   }
 
+  static async deployERC20Mock() {
+    const erc20MockFactory = await ethers.getContractFactory(
+      Constants.Path.HIP583_ERC20Mock
+    );
+    const erc20Mock = await erc20MockFactory.deploy(
+      Constants.GAS_LIMIT_1_000_000
+    );
+
+    return await ethers.getContractAt(
+      Constants.Path.HIP583_ERC20Mock,
+      await erc20Mock.getAddress()
+    );
+  }
+
+  static async deployERC721Mock() {
+    const erc721MockFactory = await ethers.getContractFactory(
+      Constants.Path.HIP583_ERC721Mock
+    );
+    const erc721Mock = await erc721MockFactory.deploy(
+      Constants.GAS_LIMIT_1_000_000
+    );
+
+    return await ethers.getContractAt(
+      Constants.Path.HIP583_ERC721Mock,
+      await erc721Mock.getAddress()
+    );
+  }
+
+  static async deployTokenCreateContract() {
+    const tokenCreateFactory = await ethers.getContractFactory(
+      Constants.Contract.TokenCreateContract
+    );
+    const tokenCreate = await tokenCreateFactory.deploy(
+      Constants.GAS_LIMIT_1_000_000
+    );
+
+    return await ethers.getContractAt(
+      Constants.Contract.TokenCreateContract,
+      await tokenCreate.getAddress()
+    );
+  }
+
+  static async deployTokenCreateCustomContract() {
+    const tokenCreateCustomFactory = await ethers.getContractFactory(
+      Constants.Contract.TokenCreateCustomContract
+    );
+    const tokenCreateCustom = await tokenCreateCustomFactory.deploy(
+      Constants.GAS_LIMIT_1_000_000
+    );
+
+    return await ethers.getContractAt(
+      Constants.Contract.TokenCreateCustomContract,
+      await tokenCreateCustom.getAddress()
+    );
+  }
+
+  static async deployTokenManagementContract() {
+    const tokenManagementFactory = await ethers.getContractFactory(
+      Constants.Contract.TokenManagementContract
+    );
+    const tokenManagement = await tokenManagementFactory.deploy(
+      Constants.GAS_LIMIT_1_000_000
+    );
+
+    return await ethers.getContractAt(
+      Constants.Contract.TokenManagementContract,
+      await tokenManagement.getAddress()
+    );
+  }
+
+  static async deployTokenQueryContract() {
+    const tokenQueryFactory = await ethers.getContractFactory(
+      Constants.Contract.TokenQueryContract
+    );
+    const tokenQuery = await tokenQueryFactory.deploy(
+      Constants.GAS_LIMIT_1_000_000
+    );
+
+    return await ethers.getContractAt(
+      Constants.Contract.TokenQueryContract,
+      await tokenQuery.getAddress()
+    );
+  }
+
+  static async deployTokenTransferContract() {
+    const tokenTransferFactory = await ethers.getContractFactory(
+      Constants.Contract.TokenTransferContract
+    );
+    const tokenTransfer = await tokenTransferFactory.deploy(
+      Constants.GAS_LIMIT_1_000_000
+    );
+
+    return await ethers.getContractAt(
+      Constants.Contract.TokenTransferContract,
+      await tokenTransfer.getAddress()
+    );
+  }
+
+  static async deployHRC719Contract() {
+    const hrcContractFactory = await ethers.getContractFactory(
+      Constants.Contract.HRC719Contract
+    );
+    const hrcContract = await hrcContractFactory.deploy(
+      Constants.GAS_LIMIT_1_000_000
+    );
+
+    return await ethers.getContractAt(
+      Constants.Contract.HRC719Contract,
+      await hrcContract.getAddress()
+    );
+  }
+
+  static async deployERC20Contract() {
+    const erc20ContractFactory = await ethers.getContractFactory(
+      Constants.Contract.ERC20Contract
+    );
+    const erc20Contract = await erc20ContractFactory.deploy(
+      Constants.GAS_LIMIT_1_000_000
+    );
+
+    return await ethers.getContractAt(
+      Constants.Contract.ERC20Contract,
+      await erc20Contract.getAddress()
+    );
+  }
+
+  static async deployERC721Contract() {
+    const erc721ContractFactory = await ethers.getContractFactory(
+      Constants.Contract.ERC721Contract
+    );
+    const erc721Contract = await erc721ContractFactory.deploy(
+      Constants.GAS_LIMIT_1_000_000
+    );
+
+    return await ethers.getContractAt(
+      Constants.Contract.ERC721Contract,
+      await erc721Contract.getAddress()
+    );
+  }
+
   static async createFungibleToken(contract, treasury) {
     const tokenAddressTx = await contract.createFungibleTokenPublic(treasury, {
       value: BigInt(this.createTokenCost),
