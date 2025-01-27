@@ -205,6 +205,7 @@ const Contract = {
   KZGPointEvaluation: 'KZGPointEvaluation',
   StateRegistry: 'StateRegistry',
   Airdrop: 'Airdrop',
+  AliasAccountUtility: 'AliasAccountUtility',
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';

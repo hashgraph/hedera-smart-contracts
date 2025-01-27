@@ -65,23 +65,6 @@ describe('@OZERC20 Test Suite', function () {
     expect(res2).to.equal(0);
   });
 
-  it('should be able to execute approve(address,uint256)', async function () {
-    const res = await erc20.approve(await erc20.getAddress(), amount);
-    expect(
-      (await res.wait()).logs.filter(
-        (e) => e.fragment.name === Constants.Events.Approval
-      )
-    ).to.not.be.empty;
-  });
-
-  it('should be able to execute allowance(address,address,uint256)', async function () {
-    const res = await erc20.allowance(
-      signers[0].address,
-      await erc20.getAddress()
-    );
-    expect(res).to.eq(amount);
-  });
-
   it('should be able to execute transfer(address,uint256)', async function () {
     const balanceBefore = await erc20.balanceOf(signers[1].address);
     await erc20.transfer(signers[1].address, 33);
@@ -104,5 +87,24 @@ describe('@OZERC20 Test Suite', function () {
 
     expect(balanceBefore).to.not.eq(balanceAfter);
     expect(balanceAfter).to.eq(parseInt(balanceBefore) + amount);
+  });
+
+  describe('should be able to approve an amount and read a corresponding allowance', function () {
+    it('should be able to execute approve(address,uint256)', async function () {
+      const res = await erc20.approve(await erc20.getAddress(), amount);
+      expect(
+        (await res.wait()).logs.filter(
+          (e) => e.fragment.name === Constants.Events.Approval
+        )
+      ).to.not.be.empty;
+    });
+
+    it('should be able to execute allowance(address,address)', async function () {
+      const res = await erc20.allowance(
+        signers[0].address,
+        await erc20.getAddress()
+      );
+      expect(res).to.eq(amount);
+    });
   });
 });
