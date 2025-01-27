@@ -206,6 +206,7 @@ const Contract = {
   StateRegistry: 'StateRegistry',
   Airdrop: 'Airdrop',
   ClaimAirdrop: 'ClaimAirdrop',
+  AliasAccountUtility: 'AliasAccountUtility',
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';

@@ -1,5 +1,81 @@
 [
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "response",
+        "type": "bool"
+      }
+    ],
+    "name": "AccountAuthorizationResponse",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "evmAddressAlias",
+        "type": "address"
+      }
+    ],
+    "name": "AddressAliasResponse",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "response",
+        "type": "bool"
+      }
+    ],
+    "name": "IsValidAliasResponse",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "int256",
+        "name": "responseCode",
+        "type": "int256"
+      }
+    ],
+    "name": "ResponseCode",
+    "type": "event"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -7,7 +83,7 @@
         "type": "address"
       }
     ],
-    "name": "getEvmAddressAlias",
+    "name": "getEvmAddressAliasPublic",
     "outputs": [
       {
         "internalType": "int64",
@@ -31,7 +107,7 @@
         "type": "address"
       }
     ],
-    "name": "getHederaAccountNumAlias",
+    "name": "getHederaAccountNumAliasPublic",
     "outputs": [
       {
         "internalType": "int64",
@@ -42,64 +118,6 @@
         "internalType": "address",
         "name": "accountNumAlias",
         "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "spender",
-        "type": "address"
-      }
-    ],
-    "name": "hbarAllowance",
-    "outputs": [
-      {
-        "internalType": "int64",
-        "name": "responseCode",
-        "type": "int64"
-      },
-      {
-        "internalType": "int256",
-        "name": "amount",
-        "type": "int256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "spender",
-        "type": "address"
-      },
-      {
-        "internalType": "int256",
-        "name": "amount",
-        "type": "int256"
-      }
-    ],
-    "name": "hbarApprove",
-    "outputs": [
-      {
-        "internalType": "int64",
-        "name": "responseCode",
-        "type": "int64"
       }
     ],
     "stateMutability": "nonpayable",
@@ -123,7 +141,7 @@
         "type": "bytes"
       }
     ],
-    "name": "isAuthorized",
+    "name": "isAuthorizedPublic",
     "outputs": [
       {
         "internalType": "int64",
@@ -157,7 +175,7 @@
         "type": "bytes"
       }
     ],
-    "name": "isAuthorizedRaw",
+    "name": "isAuthorizedRawPublic",
     "outputs": [
       {
         "internalType": "int64",
@@ -181,7 +199,7 @@
         "type": "address"
       }
     ],
-    "name": "isValidAlias",
+    "name": "isValidAliasPublic",
     "outputs": [
       {
         "internalType": "int64",
