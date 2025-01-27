@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+message SignatureMap {
+    /**
+     * Each signature pair corresponds to a unique Key required to sign the transaction.
+     */
+    repeated SignaturePair sigPair = 1;
+}
+
+message SignaturePair {
+    /**
+     * First few bytes of the public key
+     */
+    bytes pubKeyPrefix = 1;
+
+    oneof signature {
+        /**
+         * smart contract virtual signature (always length zero)
+         */
+        bytes contract = 2;
+
+        /**
+         * ed25519 signature
+         */
+        bytes ed25519 = 3;
+
+        /**
+         * RSA-3072 signature
+         */
+        bytes RSA_3072 = 4;
+
+        /**
+         * ECDSA p-384 signature
+         */
+        bytes ECDSA_384 = 5;
+
+        /**
+         * ECDSA(secp256k1) signature
+         */
+        bytes ECDSAsecp256k1 = 6;
+    }
+}
