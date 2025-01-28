@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.8.22;
+pragma solidity 0.8.24;
 
 contract WHBAR {
     string public name = "Wrapped HBAR";
@@ -11,8 +11,11 @@ contract WHBAR {
     event Deposit(address indexed dst, uint wad);
     event Withdrawal(address indexed src, uint wad);
 
-    mapping(address => uint) public balanceOf;
-    mapping(address => mapping(address => uint)) public allowance;
+    error InsufficientFunds();
+    error InsufficientAllowance();
+
+    mapping(address user => uint balance) public balanceOf;
+    mapping(address owner => mapping(address spender => uint amount)) public allowance;
 
     fallback() external payable {
         deposit();
@@ -29,10 +32,12 @@ contract WHBAR {
     }
 
     function withdraw(uint wad) public {
-        require(balanceOf[msg.sender] >= wad);
+        if (!(balanceOf[msg.sender] >= wad)) {
+            revert InsufficientFunds();
+        }
 
         balanceOf[msg.sender] -= wad;
-        payable(msg.sender).transfer(wad);
+        payable(msg.sender).call{value: wad}("");
 
         emit Withdrawal(msg.sender, wad);
     }
@@ -54,12 +59,15 @@ contract WHBAR {
     }
 
     function transferFrom(address src, address dst, uint wad) public returns (bool) {
-        require(balanceOf[src] >= wad);
+        if (!(balanceOf[src] >= wad)) {
+            revert InsufficientFunds();
+        }
 
-        if (src != msg.sender && allowance[src][msg.sender] !=
-    type(uint256).max) {
-        require(allowance[src][msg.sender] >= wad);
-        allowance[src][msg.sender] -= wad;
+        if (src != msg.sender && allowance[src][msg.sender] != type(uint256).max) {
+            if (!(allowance[src][msg.sender] >= wad)) {
+                revert InsufficientAllowance();
+            }
+            allowance[src][msg.sender] -= wad;
         }
 
         balanceOf[src] -= wad;
@@ -67,6 +75,6 @@ contract WHBAR {
 
         emit Transfer(src, dst, wad);
 
-    return true;
+        return true;
     }
 }

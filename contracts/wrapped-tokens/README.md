@@ -19,6 +19,10 @@ The WHBAR contract for Wrapped HBAR to help transactions that use native token p
 - Deposit - ``` event Deposit(address dst, uint256 wad)```
 - Withdrawal - ``` event Withdrawal(address src, uint256 wad)```
 
+##### Errors:
+- InsufficientFunds - ```error InsufficientFunds()```
+- InsufficientAllowance - ```error InsufficientAllowance()```
+
 ##### Methods:
 - receive - ```receive() external payable```
 - fallback - ```fallback() external payable```
