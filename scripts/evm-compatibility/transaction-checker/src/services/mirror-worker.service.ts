@@ -16,7 +16,7 @@ export function mirrorWorker(id: number) {
 
           await sendAndLogToFile(payload, status, null);
         } catch (error) {
-          console.log(`Mirror Worker ${id} failed to get the status of transaction ${payload.transactionId}: ${error}`);
+          console.error(`Mirror Worker ${id} failed to get the status of transaction ${payload.transactionId}: ${error}`);
           await sendAndLogToFile(payload, '', `Error getting status from node, transaction failed or not executed (mirror node): ${error}`);
         }
       }

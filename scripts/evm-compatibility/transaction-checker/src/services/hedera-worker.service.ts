@@ -18,7 +18,7 @@ export function hederaWorker(id: number) {
           await sendAndLogToFile(payload, status.toString(), null);
         } catch (error) {
           mirrorQueue.push(payload);
-          console.log(`Hedera Worker ${id} failed to get receipt of transaction ${payload.transactionId}, sent to mirror queue. Error was: ${error}`);
+          console.error(`Hedera Worker ${id} failed to get receipt of transaction ${payload.transactionId}, sent to mirror queue. Error was: ${error}`);
         }
       }
     }
