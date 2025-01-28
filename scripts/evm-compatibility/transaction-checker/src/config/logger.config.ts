@@ -32,7 +32,7 @@ async function logToFile(jsonString: string) {
   }  // Log to file if enabled in environment variables.
 
   const logEntry = `${new Date().toISOString()} - ${jsonString}\n`;
-  const logFilePath = path.resolve(__dirname, `../../${env.logFilePath}${env.logFileName}`);
+  const logFilePath = path.resolve(__dirname, `..`, `..`, env.logFilePath, env.logFileName);
 
   await fs.promises.mkdir(path.dirname(logFilePath), {recursive: true});
   await fs.promises.appendFile(logFilePath, logEntry, 'utf8');

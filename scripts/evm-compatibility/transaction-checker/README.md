@@ -17,7 +17,7 @@ Before runing this app, the hedera local node and hedera shadowing smart contrac
 Create a ```.env``` file in the root of project and add all variables as in ```.env.example```. Api key for ```OPERATOR_PRIVATE``` should be added from the shadowing
 
 - ``PORT``- port which app will be running on - default is 8081
-- ``LOG_TO_FILE``- directory to store logs
+- ``LOG_TO_FILE``- true or false, determining whether logs should be saved to a file
 - ``LOG_FILE_PATH``- directory to store logs
 - ``LOG_FILE_NAME``- file name stored log
 - ``NETWORK_WORKERS``- max network workers - default 128

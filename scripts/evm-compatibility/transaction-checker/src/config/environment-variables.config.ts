@@ -5,7 +5,7 @@ dotenv.config();
 export const env = {
   port: parseInt(process.env.PORT || '8081'),
   logToFile: process.env.LOG_TO_FILE || 'false',
-  logFilePath: process.env.LOG_FILE_PATH || 'logs/',
+  logFilePath: process.env.LOG_FILE_PATH || 'logs',
   logFileName: process.env.LOG_FILE_NAME || 'transactions.log',
 
   networkWorkers: parseInt(process.env.NETWORK_WORKERS || '128'),
