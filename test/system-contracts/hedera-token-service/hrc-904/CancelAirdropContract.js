@@ -309,8 +309,8 @@ describe('HIP904 CancelAirdropContract Test Suite', function () {
     expect(responseCode).to.eq('367'); // INVALID_PENDING_AIRDROP_ID code
   });
 
-  // TODO: The following 3 tests are skipped because they are not supported by the current implementation in services
-  // They do not return the correct error code, therefore they will be skipped until the implementation is updated
+  // TODO: Test is skipped because current implementation does not return correct error code for non-existent tokens
+  // https://github.com/hashgraph/hedera-services/issues/17534
   it.skip('should fail when token does not exist', async function () {
     const invalidToken = ethers.Wallet.createRandom().address;
 
@@ -328,6 +328,8 @@ describe('HIP904 CancelAirdropContract Test Suite', function () {
     }
   });
 
+  // TODO: Test is skipped because current implementation does not return correct error code for non-existent NFTs
+  // https://github.com/hashgraph/hedera-services/issues/17534
   it.skip('should fail when NFT does not exist', async function () {
     const invalidNftToken = ethers.Wallet.createRandom().address;
     const serialNumber = 1;
@@ -347,6 +349,8 @@ describe('HIP904 CancelAirdropContract Test Suite', function () {
     }
   });
 
+  // TODO: Test is skipped because current implementation does not support checking for maximum number of pending airdrops
+  // https://github.com/hashgraph/hedera-services/issues/17534
   it.skip('should fail when more than 10 pending airdrops provided', async function () {
     try {
       const { senders, receivers, tokens, serials } =
