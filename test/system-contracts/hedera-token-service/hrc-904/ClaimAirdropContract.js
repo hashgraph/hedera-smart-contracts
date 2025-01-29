@@ -316,6 +316,7 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
   });
 
   // TODO: Test is skipped because current services implementation does not support checking for maximum number of pending airdrops
+  // https://github.com/hashgraph/hedera-services/issues/17534
   it.skip('should fail to claim more than 10 pending airdrops at once', async function () {
     try {
       const { senders, receivers, tokens, serials } =
@@ -336,6 +337,7 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
   });
 
   // TODO: Test is skipped because current services implementation does not return correct error code for non-existent tokens
+  // https://github.com/hashgraph/hedera-services/issues/17534
   it.skip('should fail to claim airdrops when token does not exist', async function () {
     const nonExistentToken = '0x1234567890123456789012345678901234567890';
 
@@ -354,6 +356,7 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
   });
 
   // TODO: Test is skipped because current services implementation does not return correct error code for non-existent NFTs
+  // https://github.com/hashgraph/hedera-services/issues/17534
   it.skip('should fail to claim airdrops when NFT does not exist', async function () {
     const nonExistentNft = '0x1234567890123456789012345678901234567890';
 
