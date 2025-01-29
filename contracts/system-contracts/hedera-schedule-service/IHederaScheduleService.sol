@@ -17,7 +17,7 @@ interface IHederaScheduleService {
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     function signSchedule(address schedule, bytes memory signatureMap) external returns (int64 responseCode);
 
-    /// Allows for the creation of a schedule transaction for given a system contract address, abi encoded call data and payer address
+    /// Allows for the creation of a schedule transaction for a given system contract address, abi encoded call data and payer address
     /// Currently supports the Hedera Token Service System Contract (0x167) with encoded call data for
     /// createFungibleToken, createNonFungibleToken, createFungibleTokenWithCustomFees, createNonFungibleTokenWithCustomFees
     /// and updateToken functions

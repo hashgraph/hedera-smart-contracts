@@ -1,4 +1,4 @@
-## Hedera Account Service (HAS) System Contract Functions
+## Hedera Schedule Service (HSS) System Contract Functions
 
 The Hedera Schedule Service (HSS) System Contract is accessible at address `0x16b` on the Hedera network. This contract interface introduces a new schedule transaction proxy contract to interact with other contracts for functionality such as creating and signing scheduled transactions. It also enables querying information about certain scheduled transactions.
 
@@ -16,6 +16,6 @@ The Hedera network also make facade contract calls available to EOAs for improve
 Facade function allow for EOAs to make calls without requiring a deployed contract
 The table below outlines the available Hedera Schedule Service (HSS) System Contract facade functions:
 
-| Function Name                          | Function Selector Hash | Consensus Node Release Version                                               | HIP                                            | Method Interface                                                                                                                                                              | Comments                                                       |
-| -------------------------------------- | ---------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| `signSchedule`   | `0x06d15889`  | [0.57](https://docs.hedera.com/hedera/networks/release-notes/services#release-v0.57)  | [HIP 755](https://hips.hedera.com/hip/hip-755) | `signSchedule() external returns (int64 responseCode)` |
+| Function Name                          | Function Selector Hash | Consensus Node Release Version                                               | HIP                                            | Method Interface                                                                                |
+| -------------------------------------- | ---------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | 
+| `signSchedule`   | `0x06d15889`  | [0.57](https://docs.hedera.com/hedera/networks/release-notes/services#release-v0.57)  | [HIP 755](https://hips.hedera.com/hip/hip-755) | `signSchedule() external returns (int64 responseCode)` 
