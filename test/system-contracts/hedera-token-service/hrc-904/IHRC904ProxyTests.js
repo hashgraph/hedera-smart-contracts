@@ -493,6 +493,7 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
   // TODO: The following test is skipped because it is not supported by the current implementation in services
   // It does not return the correct error code and we can currently only check if it reverts
   // therefore it will be skipped until the implementation is updated
+  // https://github.com/hashgraph/hedera-services/issues/17534
   it.skip('should revert when trying to reject NFT tokens when 11 or more serials are provided', async function () {
     let serialNumbers = [];
     for (let i = 0; i < 11; i++) {
