@@ -9,10 +9,10 @@ import "./hts/KeyHelper.sol";
 /**
  * @title HTS Connector
  * @dev HTS Connector is a HTS token that extends the functionality of the OFTCore contract.
- */
+    */
 abstract contract HTSConnector is OFTCore, KeyHelper, HederaTokenService {
     address public htsTokenAddress;
-
+    bool public finiteTotalSupplyType = true;
     event TokenCreated(address tokenAddress);
 
     /**
@@ -37,7 +37,7 @@ abstract contract HTSConnector is OFTCore, KeyHelper, HederaTokenService {
 
         IHederaTokenService.Expiry memory expiry = IHederaTokenService.Expiry(0, address(this), 8000000);
         IHederaTokenService.HederaToken memory token = IHederaTokenService.HederaToken(
-            _name, _symbol, address(this), "memo", true, 5000, false, keys, expiry
+            _name, _symbol, address(this), "memo", finiteTotalSupplyType, 5000, false, keys, expiry
         );
 
         (int responseCode, address tokenAddress) = HederaTokenService.createFungibleToken(

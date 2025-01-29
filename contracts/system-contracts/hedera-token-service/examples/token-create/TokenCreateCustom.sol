@@ -8,6 +8,8 @@ import "../../KeyHelper.sol";
 import "../../FeeHelper.sol";
 
 contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelper, FeeHelper {
+    bool finiteTotalSupplyType = true;
+
     event ResponseCode(int responseCode);
     event CreatedToken(address tokenAddress);
     event TransferToken(address tokenAddress, address receiver, int64 amount);
@@ -29,7 +31,7 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         );
 
         IHederaTokenService.HederaToken memory token = IHederaTokenService.HederaToken(
-            name, symbol, treasury, memo, true, maxSupply, freezeDefaultStatus, keys, expiry
+            name, symbol, treasury, memo, finiteTotalSupplyType, maxSupply, freezeDefaultStatus, keys, expiry
         );
         
         (int responseCode, address tokenAddress) =
@@ -64,7 +66,7 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         );
 
         IHederaTokenService.HederaToken memory token = IHederaTokenService.HederaToken(
-            name, symbol, treasury, memo, true, maxSupply, freezeDefaultStatus, keys, expiry
+            name, symbol, treasury, memo, finiteTotalSupplyType, maxSupply, freezeDefaultStatus, keys, expiry
         );
         
         (int responseCode, address tokenAddress) =
@@ -93,7 +95,7 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         );
 
         IHederaTokenService.HederaToken memory token = IHederaTokenService.HederaToken(
-            name, symbol, treasury, memo, true, maxSupply, false, keys, expiry
+            name, symbol, treasury, memo, finiteTotalSupplyType, maxSupply, false, keys, expiry
         );
 
         (int responseCode, address tokenAddress) =
@@ -120,7 +122,7 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         );
 
         IHederaTokenService.HederaToken memory token = IHederaTokenService.HederaToken(
-            name, symbol, treasury, memo, true, maxSupply, false, keys, expiry
+            name, symbol, treasury, memo, finiteTotalSupplyType, maxSupply, false, keys, expiry
         );
 
         (int responseCode, address tokenAddress) =
@@ -148,7 +150,7 @@ contract TokenCreateCustomContract is HederaTokenService, ExpiryHelper, KeyHelpe
         );
 
         IHederaTokenService.HederaToken memory token = IHederaTokenService.HederaToken(
-            name, symbol, treasury, memo, true, maxSupply, false, keys, expiry
+            name, symbol, treasury, memo, finiteTotalSupplyType, maxSupply, false, keys, expiry
         );
 
         (int responseCode, address tokenAddress) =
