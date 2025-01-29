@@ -1,5 +1,15 @@
 [
   {
+    "inputs": [],
+    "name": "InsufficientAllowance",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InsufficientFunds",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -95,12 +105,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "owner",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "",
+        "name": "spender",
         "type": "address"
       }
     ],
@@ -108,7 +118,7 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "amount",
         "type": "uint256"
       }
     ],
@@ -143,7 +153,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "user",
         "type": "address"
       }
     ],
@@ -151,7 +161,7 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "balance",
         "type": "uint256"
       }
     ],

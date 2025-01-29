@@ -85,7 +85,8 @@ describe('TokenQueryContract Test Suite', function () {
     const tx = await tokenQueryContract.allowancePublic(
       tokenAddress,
       await tokenCreateContract.getAddress(),
-      signers[1].address
+      signers[1].address,
+      Constants.GAS_LIMIT_1_000_000
     );
     const amount = (await tx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.AllowanceValue
@@ -101,7 +102,8 @@ describe('TokenQueryContract Test Suite', function () {
   it('should query getApproved', async function () {
     const tx = await tokenQueryContract.getApprovedPublic(
       nftTokenAddress,
-      mintedTokenSerialNumber
+      mintedTokenSerialNumber,
+      Constants.GAS_LIMIT_1_000_000
     );
     const { approved } = (await tx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.ApprovedAddress
@@ -118,7 +120,8 @@ describe('TokenQueryContract Test Suite', function () {
     const tx = await tokenQueryContract.isApprovedForAllPublic(
       nftTokenAddress,
       await tokenCreateContract.getAddress(),
-      signers[1].address
+      signers[1].address,
+      Constants.GAS_LIMIT_1_000_000
     );
     const approved = (await tx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.Approved
@@ -134,7 +137,8 @@ describe('TokenQueryContract Test Suite', function () {
   it('should query isFrozen', async function () {
     const tx = await tokenQueryContract.isFrozenPublic(
       tokenAddress,
-      await tokenCreateContract.getAddress()
+      await tokenCreateContract.getAddress(),
+      Constants.GAS_LIMIT_1_000_000
     );
     const isFrozen = (await tx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.Frozen
@@ -150,7 +154,8 @@ describe('TokenQueryContract Test Suite', function () {
   it('should query isKyc', async function () {
     const tx = await tokenQueryContract.isKycPublic(
       tokenAddress,
-      await tokenCreateContract.getAddress()
+      await tokenCreateContract.getAddress(),
+      Constants.GAS_LIMIT_1_000_000
     );
     const isFrozen = (await tx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.KycGranted
@@ -166,7 +171,8 @@ describe('TokenQueryContract Test Suite', function () {
   it('should query getTokenCustomFees', async function () {
     //All values for fixedFees and fractionalFees are hardcoded and pulled from the Token Create Contract
     const tx = await tokenQueryContract.getTokenCustomFeesPublic(
-      tokenWithCustomFeesAddress
+      tokenWithCustomFeesAddress,
+      Constants.GAS_LIMIT_1_000_000
     );
     const { fixedFees, fractionalFees } = (await tx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.TokenCustomFees
@@ -191,7 +197,7 @@ describe('TokenQueryContract Test Suite', function () {
 
   it('should query getTokenDefaultFreezeStatus', async function () {
     const tx =
-      await tokenQueryContract.getTokenDefaultFreezeStatusPublic(tokenAddress);
+      await tokenQueryContract.getTokenDefaultFreezeStatusPublic(tokenAddress,Constants.GAS_LIMIT_1_000_000);
     const defaultFreezeStatus = (await tx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.TokenDefaultFreezeStatus
     )[0].args.defaultFreezeStatus;
@@ -205,7 +211,7 @@ describe('TokenQueryContract Test Suite', function () {
 
   it('should query getTokenDefaultKycStatus', async function () {
     const tx =
-      await tokenQueryContract.getTokenDefaultKycStatusPublic(tokenAddress);
+      await tokenQueryContract.getTokenDefaultKycStatusPublic(tokenAddress,Constants.GAS_LIMIT_1_000_000);
     const defaultKycStatus = (await tx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.TokenDefaultKycStatus
     )[0].args.defaultKycStatus;
@@ -218,7 +224,7 @@ describe('TokenQueryContract Test Suite', function () {
   });
 
   it('should query getTokenExpiryInfo', async function () {
-    const tx = await tokenQueryContract.getTokenExpiryInfoPublic(tokenAddress);
+    const tx = await tokenQueryContract.getTokenExpiryInfoPublic(tokenAddress,Constants.GAS_LIMIT_1_000_000);
     const expiryInfo = (await tx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.TokenExpiryInfo
     )[0].args.expiryInfo;
@@ -258,7 +264,7 @@ describe('TokenQueryContract Test Suite', function () {
   });
 
   it('should query getTokenKey', async function () {
-    const tx = await tokenQueryContract.getTokenKeyPublic(tokenAddress, 2);
+    const tx = await tokenQueryContract.getTokenKeyPublic(tokenAddress, 2,Constants.GAS_LIMIT_1_000_000);
     const key = (await tx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.TokenKey
     )[0].args.key;
@@ -287,7 +293,7 @@ describe('TokenQueryContract Test Suite', function () {
   });
 
   it('should query isToken', async function () {
-    const tx = await tokenQueryContract.isTokenPublic(tokenAddress);
+    const tx = await tokenQueryContract.isTokenPublic(tokenAddress,Constants.GAS_LIMIT_1_000_000);
     const isToken = (await tx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.IsToken
     )[0].args.isToken;
@@ -300,7 +306,7 @@ describe('TokenQueryContract Test Suite', function () {
   });
 
   it('should query getTokenType', async function () {
-    const tx = await tokenQueryContract.getTokenTypePublic(tokenAddress);
+    const tx = await tokenQueryContract.getTokenTypePublic(tokenAddress,Constants.GAS_LIMIT_1_000_000);
     const tokenType = (await tx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.TokenType
     )[0].args.tokenType;
