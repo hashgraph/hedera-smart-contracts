@@ -11,7 +11,6 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
   let erc721Contract;
   let signers;
   let owner;
-  let accounts;
   let receiver;
   let walletIHRC904AccountFacade;
   let receiverPrivateKey;
@@ -89,7 +88,7 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
         receiver.address,
         ftAmount,
         {
-          value: BigInt('850000000000000000'),
+          value: Constants.ONE_HBAR,
           gasLimit: 2_000_000,
         }
       );
@@ -130,7 +129,6 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
       Constants.Contract.ERC721Contract
     );
     owner = signers[0].address;
-    accounts = signers.slice(1, 3).map((s) => s.address);
 
     await utils.updateAccountKeysViaHapi([
       await airdropContract.getAddress(),
@@ -186,7 +184,7 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
       receiver.address,
       ftAmount,
       {
-        value: BigInt('850000000000000000'),
+        value: Constants.ONE_HBAR,
         gasLimit: 2_000_000,
       }
     );
@@ -223,7 +221,7 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
       receiver.address,
       serialNumber,
       {
-        value: BigInt('850000000000000000'),
+        value: Constants.ONE_HBAR,
         gasLimit: 2_000_000,
       }
     );
@@ -317,9 +315,7 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
     expect(responseCode).to.eq('15'); // INVALID_ACCOUNT_ID code
   });
 
-  // TODO: The following 3 tests are skipped because they are not supported by the current implementation in services
-  // They do not return the correct error code and we can currently only check if the transaction reverts
-  // therefore they will be skipped until the implementation is updated
+  // TODO: Test is skipped because current services implementation does not support checking for maximum number of pending airdrops
   it.skip('should fail to claim more than 10 pending airdrops at once', async function () {
     try {
       const { senders, receivers, tokens, serials } =
@@ -339,6 +335,7 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
     }
   });
 
+  // TODO: Test is skipped because current services implementation does not return correct error code for non-existent tokens
   it.skip('should fail to claim airdrops when token does not exist', async function () {
     const nonExistentToken = '0x1234567890123456789012345678901234567890';
 
@@ -356,6 +353,7 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
     }
   });
 
+  // TODO: Test is skipped because current services implementation does not return correct error code for non-existent NFTs
   it.skip('should fail to claim airdrops when NFT does not exist', async function () {
     const nonExistentNft = '0x1234567890123456789012345678901234567890';
 
@@ -390,7 +388,7 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
       receiver.address,
       serialNumber,
       {
-        value: BigInt('850000000000000000'),
+        value: Constants.ONE_HBAR,
         gasLimit: 2_000_000,
       }
     );
