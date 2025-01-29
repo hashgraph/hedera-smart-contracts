@@ -168,7 +168,7 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
       receiver.address,
       BigInt(1),
       {
-        value: BigInt('850000000000000000'),
+        value: Constants.ONE_HBAR,
         gasLimit: 2_000_000,
       }
     );
@@ -192,7 +192,7 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
       receiver.address,
       mintedTokenSerialNumber,
       {
-        value: BigInt('850000000000000000'),
+        value: Constants.ONE_HBAR,
         gasLimit: 2_000_000,
       }
     );
@@ -237,7 +237,7 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
       receiver.address,
       BigInt(1),
       {
-        value: BigInt('850000000000000000'),
+        value: Constants.ONE_HBAR,
         gasLimit: 2_000_000,
       }
     );
@@ -259,7 +259,7 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
       receiver.address,
       mintedTokenSerialNumber,
       {
-        value: BigInt('850000000000000000'),
+        value: Constants.ONE_HBAR,
         gasLimit: 2_000_000,
       }
     );
@@ -280,7 +280,7 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
       receiver.address,
       BigInt(1),
       {
-        value: BigInt('850000000000000000'),
+        value: Constants.ONE_HBAR,
         gasLimit: 2_000_000,
       }
     );
@@ -302,7 +302,7 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
       signers[1].address,
       mintedTokenSerialNumber,
       {
-        value: BigInt('850000000000000000'),
+        value: Constants.ONE_HBAR,
         gasLimit: 2_000_000,
       }
     );
@@ -347,7 +347,7 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
         signers[1].address,
         serialNumber,
         {
-          value: BigInt('850000000000000000'),
+          value: Constants.ONE_HBAR,
           gasLimit: 2_000_000,
         }
       );
