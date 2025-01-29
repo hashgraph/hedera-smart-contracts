@@ -216,6 +216,7 @@ const GAS_LIMIT_2_000_000 = { gasLimit: 2_000_000 };
 const GAS_LIMIT_10_000_000 = { gasLimit: 10_000_000 };
 const GAS_LIMIT_800000 = { gasLimit: 800000 };
 const GAS_LIMIT_8000000 = { gasLimit: 8000000 };
+const ONE_HBAR = BigInt('850000000000000000');
 const TOKEN_NAME = 'tokenName';
 const TOKEN_SYMBOL = 'tokenSymbol';
 const TOKEN_URL = 'tokenUrl';
@@ -251,4 +252,5 @@ module.exports = {
   WEI,
   GWEI,
   HTS_SYSTEM_CONTRACT_ID,
+  ONE_HBAR,
 };

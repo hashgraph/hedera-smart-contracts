@@ -122,7 +122,7 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
       receiver.address,
       ftAmount,
       {
-        value: BigInt('850000000000000000'),
+        value: Constants.ONE_HBAR,
         gasLimit: 2_000_000,
       }
     );
@@ -154,7 +154,7 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
       receiver.address,
       serial,
       {
-        value: BigInt('850000000000000000'),
+        value: Constants.ONE_HBAR,
         gasLimit: 2_000_000,
       }
     );
@@ -185,7 +185,7 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
         receiver.address,
         BigInt(1),
         {
-          value: BigInt('850000000000000000'),
+          value: Constants.ONE_HBAR,
           gasLimit: 2_000_000,
         }
       );
@@ -215,7 +215,7 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
       receiver.address,
       BigInt(1),
       {
-        value: BigInt('850000000000000000'),
+        value: Constants.ONE_HBAR,
         gasLimit: 2_000_000,
       }
     );
@@ -273,7 +273,7 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
       receiver.address,
       serial,
       {
-        value: BigInt('850000000000000000'),
+        value: Constants.ONE_HBAR,
         gasLimit: 2_000_000,
       }
     );
