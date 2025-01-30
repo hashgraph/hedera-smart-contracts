@@ -1060,6 +1060,58 @@ class Utils {
 
     return tokenAddress;
   }
+
+  /**
+   * Creates multiple pending airdrops for testing purposes
+   * @param {Contract} airdropContract - The airdrop contract instance
+   * @param {string} owner - The owner's address
+   * @param {Contract} tokenCreateContract - The token create contract instance
+   * @param {number} count - Number of pending airdrops to create
+   * @returns {Object} Object containing arrays of senders, receivers, tokens, serials, and amounts
+   */
+  static async createPendingAirdrops(
+    airdropContract,
+    owner,
+    tokenCreateContract,
+    receiver,
+    count
+  ) {
+    const senders = [];
+    const receivers = [];
+    const tokens = [];
+    const serials = [];
+    const amounts = [];
+
+    for (let i = 0; i < count; i++) {
+      const tokenAddress = await this.setupToken(
+        tokenCreateContract,
+        owner,
+        airdropContract
+      );
+      const ftAmount = BigInt(i + 1); // Different amount for each airdrop
+
+      // Create pending airdrop
+      const airdropTx = await airdropContract.tokenAirdrop(
+        tokenAddress,
+        owner,
+        receiver,
+        ftAmount,
+        {
+          value: Constants.ONE_HBAR,
+          gasLimit: 2_000_000,
+        }
+      );
+      await airdropTx.wait();
+
+      senders.push(owner);
+      receivers.push(receiver);
+      tokens.push(tokenAddress);
+      serials.push(0); // 0 for fungible tokens
+      amounts.push(ftAmount);
+    }
+
+    return { senders, receivers, tokens, serials, amounts };
+  }
 }
 
 module.exports = Utils;

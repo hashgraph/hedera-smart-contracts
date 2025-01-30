@@ -34,44 +34,6 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
   let receiver;
   let receiverPrivateKey;
 
-  async function createPendingAirdrops(count) {
-    const senders = [];
-    const receivers = [];
-    const tokens = [];
-    const serials = [];
-    const amounts = [];
-
-    for (let i = 0; i < count; i++) {
-      const tokenAddress = await utils.setupToken(
-        tokenCreateContract,
-        owner,
-        airdropContract
-      );
-      const ftAmount = BigInt(i + 1); // Different amount for each airdrop
-
-      // Create pending airdrop
-      const airdropTx = await airdropContract.tokenAirdrop(
-        tokenAddress,
-        owner,
-        receiver.address,
-        ftAmount,
-        {
-          value: Constants.ONE_HBAR,
-          gasLimit: 2_000_000,
-        }
-      );
-      await airdropTx.wait();
-
-      senders.push(owner);
-      receivers.push(receiver.address);
-      tokens.push(tokenAddress);
-      serials.push(0); // 0 for fungible tokens
-      amounts.push(ftAmount);
-    }
-
-    return { senders, receivers, tokens, serials, amounts };
-  }
-
   before(async function () {
     signers = await ethers.getSigners();
     airdropContract = await utils.deployContract(Constants.Contract.Airdrop);
@@ -226,7 +188,13 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
 
   it('should claim multiple pending fungible token airdrops', async function () {
     const { senders, receivers, tokens, serials, amounts } =
-      await createPendingAirdrops(10);
+      await utils.createPendingAirdrops(
+        airdropContract,
+        owner,
+        tokenCreateContract,
+        receiver.address,
+        10
+      );
 
     const initialBalances = await Promise.all(
       tokens.map((token) => erc20Contract.balanceOf(token, receiver.address))
@@ -317,7 +285,13 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
   it.skip('should fail to claim more than 10 pending airdrops at once', async function () {
     try {
       const { senders, receivers, tokens, serials } =
-        await createPendingAirdrops(11);
+        await utils.createPendingAirdrops(
+          airdropContract,
+          owner,
+          tokenCreateContract,
+          receiver.address,
+          11
+        );
 
       const tx = await claimAirdropContract.claimMultipleAirdrops(
         senders,
