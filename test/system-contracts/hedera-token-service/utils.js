@@ -1000,6 +1000,60 @@ class Utils {
     );
     return BigInt(precompileAction.result_data).toString();
   }
+
+  static async setupNft(tokenCreateContract, owner, airdropContract) {
+    const nftTokenAddress =
+      await Utils.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
+        tokenCreateContract,
+        owner,
+        Utils.getSignerCompressedPublicKey()
+      );
+
+    await Utils.updateTokenKeysViaHapi(
+      nftTokenAddress,
+      [
+        await airdropContract.getAddress(),
+        await tokenCreateContract.getAddress(),
+      ],
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false
+    );
+
+    await Utils.associateToken(
+      tokenCreateContract,
+      nftTokenAddress,
+      Constants.Contract.TokenCreateContract
+    );
+
+    return nftTokenAddress;
+  }
+
+  static async setupToken(tokenCreateContract, owner, airdropContract) {
+    const tokenAddress =
+      await Utils.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
+        tokenCreateContract,
+        owner,
+        Utils.getSignerCompressedPublicKey()
+      );
+
+    await Utils.updateTokenKeysViaHapi(tokenAddress, [
+      await airdropContract.getAddress(),
+      await tokenCreateContract.getAddress(),
+    ]);
+
+    await Utils.associateToken(
+      tokenCreateContract,
+      tokenAddress,
+      Constants.Contract.TokenCreateContract
+    );
+
+    return tokenAddress;
+  }
 }
 
 module.exports = Utils;

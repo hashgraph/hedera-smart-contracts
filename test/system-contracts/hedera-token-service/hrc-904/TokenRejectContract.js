@@ -1,3 +1,23 @@
+/*-
+ *
+ * Hedera Smart Contracts
+ *
+ * Copyright (C) 2025 Hedera Hashgraph, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const utils = require('../utils');
@@ -12,60 +32,6 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
   let receiver;
   let walletIHRC904AccountFacade;
 
-  async function setupToken() {
-    const tokenAddress =
-      await utils.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
-        tokenCreateContract,
-        owner,
-        utils.getSignerCompressedPublicKey()
-      );
-
-    await utils.updateTokenKeysViaHapi(tokenAddress, [
-      await airdropContract.getAddress(),
-      await tokenCreateContract.getAddress(),
-    ]);
-
-    await utils.associateToken(
-      tokenCreateContract,
-      tokenAddress,
-      Constants.Contract.TokenCreateContract
-    );
-
-    return tokenAddress;
-  }
-
-  async function setupNft() {
-    const nftTokenAddress =
-      await utils.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
-        tokenCreateContract,
-        owner,
-        utils.getSignerCompressedPublicKey()
-      );
-
-    await utils.updateTokenKeysViaHapi(
-      nftTokenAddress,
-      [
-        await airdropContract.getAddress(),
-        await tokenCreateContract.getAddress(),
-      ],
-      true,
-      true,
-      false,
-      true,
-      true,
-      true,
-      false
-    );
-
-    await utils.associateToken(
-      tokenCreateContract,
-      nftTokenAddress,
-      Constants.Contract.TokenCreateContract
-    );
-
-    return nftTokenAddress;
-  }
-
   before(async function () {
     signers = await ethers.getSigners();
     tokenRejectContract = await utils.deployContract(
@@ -77,8 +43,9 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
     airdropContract = await utils.deployContract(Constants.Contract.Airdrop);
     owner = signers[0].address;
 
-    const receiverPrivateKey = ethers.hexlify(ethers.randomBytes(32));
-    receiver = new ethers.Wallet(receiverPrivateKey).connect(ethers.provider);
+    const randomWallet = ethers.Wallet.createRandom();
+    const receiverPrivateKey = randomWallet.privateKey;
+    receiver = randomWallet.connect(ethers.provider);
 
     await signers[0].sendTransaction({
       to: receiver.address,
@@ -112,7 +79,11 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
   });
 
   it('should reject tokens for a single account', async function () {
-    const tokenAddress = await setupToken();
+    const tokenAddress = await utils.setupToken(
+      tokenCreateContract,
+      owner,
+      airdropContract
+    );
     const receiver = signers[1];
 
     const ftAmount = BigInt(1);
@@ -143,7 +114,11 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
   });
 
   it('should reject NFTs for a single account', async function () {
-    const nftTokenAddress = await setupNft();
+    const nftTokenAddress = await utils.setupNft(
+      tokenCreateContract,
+      owner,
+      airdropContract
+    );
     const receiver = signers[1];
 
     const serial = utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
@@ -175,7 +150,11 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
   });
 
   it('should reject tokens for multiple accounts', async function () {
-    const tokenAddress = await setupToken();
+    const tokenAddress = await utils.setupToken(
+      tokenCreateContract,
+      owner,
+      airdropContract
+    );
     const receivers = signers.slice(1, 3);
 
     for (const receiver of receivers) {
@@ -203,7 +182,11 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
   });
 
   it('should fail when sender does not have any associated tokens', async function () {
-    const tokenAddress = await setupToken();
+    const tokenAddress = await utils.setupToken(
+      tokenCreateContract,
+      owner,
+      airdropContract
+    );
 
     await walletIHRC904AccountFacade.setUnlimitedAutomaticAssociations(false, {
       gasLimit: 2_000_000,
@@ -232,7 +215,11 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
   });
 
   it('should fail when sender does not have a pending airdrop', async function () {
-    const tokenAddress = await setupToken();
+    const tokenAddress = await utils.setupToken(
+      tokenCreateContract,
+      owner,
+      airdropContract
+    );
     const receiver = signers[1];
 
     const tx = await tokenRejectContract.rejectTokens(
@@ -247,7 +234,11 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
 
   it('should fail when provided fungible token is invalid', async function () {
     const invalidToken = ethers.Wallet.createRandom().address;
-    const nftTokenAddress = await setupNft();
+    const nftTokenAddress = await utils.setupNft(
+      tokenCreateContract,
+      owner,
+      airdropContract
+    );
 
     const tx = await tokenRejectContract.rejectTokens(
       receiver.address,
@@ -262,7 +253,11 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
   it('should fail when provided NFT is invalid', async function () {
     const invalidNft = ethers.Wallet.createRandom().address;
 
-    const nftTokenAddress = await setupNft();
+    const nftTokenAddress = await utils.setupNft(
+      tokenCreateContract,
+      owner,
+      airdropContract
+    );
     const receiver = signers[1];
 
     const serial = utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress);
