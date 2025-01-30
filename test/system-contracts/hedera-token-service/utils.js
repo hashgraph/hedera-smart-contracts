@@ -983,6 +983,118 @@ class Utils {
     );
     return BigInt(precompileAction.result_data).toString();
   }
+
+  static async setupNft(
+    tokenCreateContract,
+    owner,
+    airdropContract,
+    cancelAirdropContract
+  ) {
+    const nftTokenAddress =
+      await this.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
+        tokenCreateContract,
+        owner,
+        this.getSignerCompressedPublicKey()
+      );
+
+    await this.updateTokenKeysViaHapi(
+      nftTokenAddress,
+      [
+        await airdropContract.getAddress(),
+        await tokenCreateContract.getAddress(),
+      ],
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false
+    );
+
+    await this.associateToken(
+      tokenCreateContract,
+      nftTokenAddress,
+      Constants.Contract.TokenCreateContract
+    );
+
+    return nftTokenAddress;
+  }
+
+  static async setupToken(tokenCreateContract, owner, airdropContract) {
+    const tokenAddress =
+      await this.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
+        tokenCreateContract,
+        owner,
+        this.getSignerCompressedPublicKey()
+      );
+
+    await this.updateTokenKeysViaHapi(
+      tokenAddress,
+      [
+        await airdropContract.getAddress(),
+        await tokenCreateContract.getAddress(),
+      ],
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false
+    );
+
+    await this.associateToken(
+      tokenCreateContract,
+      tokenAddress,
+      Constants.Contract.TokenCreateContract
+    );
+
+    return tokenAddress;
+  }
+
+  static async createPendingAirdrops(
+    count,
+    tokenCreateContract,
+    owner,
+    airdropContract,
+    receiver
+  ) {
+    const senders = [];
+    const receivers = [];
+    const tokens = [];
+    const serials = [];
+    const amounts = [];
+
+    for (let i = 0; i < count; i++) {
+      const tokenAddress = await this.setupToken(
+        tokenCreateContract,
+        owner,
+        airdropContract
+      );
+      const ftAmount = BigInt(i + 1); // Different amount for each airdrop
+
+      const airdropTx = await airdropContract.tokenAirdrop(
+        tokenAddress,
+        owner,
+        receiver,
+        ftAmount,
+        {
+          value: Constants.ONE_HBAR,
+          gasLimit: 2_000_000,
+        }
+      );
+      await airdropTx.wait();
+
+      senders.push(owner);
+      receivers.push(receiver);
+      tokens.push(tokenAddress);
+      serials.push(0); // 0 for fungible tokens
+      amounts.push(ftAmount);
+    }
+
+    return { senders, receivers, tokens, serials, amounts };
+  }
 }
 
 module.exports = Utils;
