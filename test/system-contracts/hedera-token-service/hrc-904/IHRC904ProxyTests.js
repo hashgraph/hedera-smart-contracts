@@ -1,10 +1,30 @@
+/*-
+ *
+ * Hedera Smart Contracts
+ *
+ * Copyright (C) 2025 Hedera Hashgraph, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const utils = require('../utils');
 const Constants = require('../../../constants');
 const { Contract } = require('ethers');
 
-describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
+describe('HIP904 IHRC904Facade ContractTest Suite', function () {
   let airdropContract;
   let tokenAddress;
   let nftTokenAddress;
@@ -20,35 +40,6 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
   let walletIHRC904NftFacadeReceiver;
   let contractAddresses;
 
-  async function setupNft() {
-    const nftTokenAddress =
-      await utils.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
-        tokenCreateContract,
-        owner,
-        utils.getSignerCompressedPublicKey()
-      );
-
-    await utils.updateTokenKeysViaHapi(
-      nftTokenAddress,
-      contractAddresses,
-      true,
-      true,
-      false,
-      true,
-      true,
-      true,
-      false
-    );
-
-    await utils.associateToken(
-      tokenCreateContract,
-      nftTokenAddress,
-      Constants.Contract.TokenCreateContract
-    );
-
-    return nftTokenAddress;
-  }
-
   before(async function () {
     signers = await ethers.getSigners();
     airdropContract = await utils.deployContract(Constants.Contract.Airdrop);
@@ -56,13 +47,8 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
       Constants.Contract.TokenCreateContract
     );
     owner = signers[0].address;
-    receiver = new ethers.Wallet(
-      ethers.hexlify(ethers.randomBytes(32))
-    ).connect(ethers.provider);
-
-    invalidSender = new ethers.Wallet(
-      ethers.hexlify(ethers.randomBytes(32))
-    ).connect(ethers.provider);
+    receiver = ethers.Wallet.createRandom().connect(ethers.provider);
+    invalidSender = ethers.Wallet.createRandom().connect(ethers.provider);
 
     // Send some HBAR to activate the account
     await signers[0].sendTransaction({
@@ -75,41 +61,21 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
       await tokenCreateContract.getAddress(),
     ]);
 
-    tokenAddress =
-      await utils.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
-        tokenCreateContract,
-        owner,
-        utils.getSignerCompressedPublicKey()
-      );
-
-    await utils.updateTokenKeysViaHapi(
-      tokenAddress,
-      [
-        await airdropContract.getAddress(),
-        await tokenCreateContract.getAddress(),
-      ],
-      true,
-      true,
-      false,
-      true,
-      true,
-      true,
-      true,
-      true
-    );
-
-    await utils.associateToken(
-      tokenCreateContract,
-      tokenAddress,
-      Constants.Contract.TokenCreateContract
-    );
-
     contractAddresses = [
       await airdropContract.getAddress(),
       await tokenCreateContract.getAddress(),
     ];
 
-    nftTokenAddress = await setupNft();
+    tokenAddress = await utils.setupToken(
+      tokenCreateContract,
+      owner,
+      contractAddresses
+    );
+    nftTokenAddress = await utils.setupNft(
+      tokenCreateContract,
+      owner,
+      contractAddresses
+    );
 
     const IHRC904AccountFacade = new ethers.Interface(
       (await hre.artifacts.readArtifact('IHRC904AccountFacade')).abi
@@ -291,7 +257,11 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
   });
 
   it('should reject tokens for a given account and serial number (NFT)', async function () {
-    const nftTokenAddress = await setupNft();
+    const nftTokenAddress = await utils.setupNft(
+      tokenCreateContract,
+      owner,
+      contractAddresses
+    );
     const mintedTokenSerialNumber = await utils.mintNFTToAddress(
       tokenCreateContract,
       nftTokenAddress
@@ -331,7 +301,11 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
   });
 
   it('should reject 10 tokens for a given account and serial number (NFT)', async function () {
-    const nftTokenAddress = await setupNft();
+    const nftTokenAddress = await utils.setupNft(
+      tokenCreateContract,
+      owner,
+      contractAddresses
+    );
     let serialNumbers = [];
     for (let i = 0; i < 10; i++) {
       serialNumbers.push(
@@ -379,14 +353,14 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
       receiver.address
     );
     const responseCode = await utils.getHTSResponseCode(tx.hash);
-    expect(responseCode).to.eq('367');
+    expect(responseCode).to.eq('367'); // INVALID_PENDING_AIRDROP_ID code
   });
 
   it('should fail to cancel a pending airdrop for FT when receiver has no valid account', async function () {
     const tx =
       await walletIHRC904TokenFacadeSender.cancelAirdropFT(invalidAddress);
     const responseCode = await utils.getHTSResponseCode(tx.hash);
-    expect(responseCode).to.eq('367');
+    expect(responseCode).to.eq('367'); // INVALID_PENDING_AIRDROP_ID code
   });
 
   it('should fail to cancel a pending airdrop for NFT when sender has no pending airdrops', async function () {
@@ -399,7 +373,7 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
       mintedTokenSerialNumber
     );
     const responseCode = await utils.getHTSResponseCode(tx.hash);
-    expect(responseCode).to.eq('367');
+    expect(responseCode).to.eq('367'); // INVALID_PENDING_AIRDROP_ID code
   });
 
   it('should fail to cancel a pending airdrop for NFT when receiver has no valid account', async function () {
@@ -412,20 +386,20 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
       mintedTokenSerialNumber
     );
     const responseCode = await utils.getHTSResponseCode(tx.hash);
-    expect(responseCode).to.eq('367');
+    expect(responseCode).to.eq('367'); // INVALID_PENDING_AIRDROP_ID code
   });
 
   it('should fail to claim FT airdrop with no pending airdrops', async function () {
     const tx = await walletIHRC904TokenFacadeReceiver.claimAirdropFT(owner);
     const responseCode = await utils.getHTSResponseCode(tx.hash);
-    expect(responseCode).to.eq('367');
+    expect(responseCode).to.eq('367'); // INVALID_PENDING_AIRDROP_ID code
   });
 
   it('should fail to claim FT airdrop with an invalid account', async function () {
     const tx =
       await walletIHRC904TokenFacadeReceiver.claimAirdropFT(invalidAddress);
     const responseCode = await utils.getHTSResponseCode(tx.hash);
-    expect(responseCode).to.eq('367');
+    expect(responseCode).to.eq('367'); // INVALID_PENDING_AIRDROP_ID code
   });
 
   it('should fail to claim NFT airdrop with no pending airdrops', async function () {
@@ -438,7 +412,7 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
       mintedTokenSerialNumber
     );
     const responseCode = await utils.getHTSResponseCode(tx.hash);
-    expect(responseCode).to.eq('367');
+    expect(responseCode).to.eq('367'); // INVALID_PENDING_AIRDROP_ID code
   });
 
   it('should fail to claim NFT airdrop with an invalid account', async function () {
@@ -451,24 +425,28 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
       mintedTokenSerialNumber
     );
     const responseCode = await utils.getHTSResponseCode(tx.hash);
-    expect(responseCode).to.eq('367');
+    expect(responseCode).to.eq('367'); // INVALID_PENDING_AIRDROP_ID code
   });
 
   it('should fail to reject FT tokens with no tokens', async function () {
     const tx = await walletIHRC904TokenFacadeReceiver.rejectTokenFT();
     const responseCode = await utils.getHTSResponseCode(tx.hash);
-    expect(responseCode).to.eq('178');
+    expect(responseCode).to.eq('178'); // INSUFFICIENT_TOKEN_BALANCE code
   });
 
   it('should fail to reject FT tokens with an invalid account', async function () {
     // Trying to reject FT tokens with the treasury account
     const tx = await walletIHRC904TokenFacadeSender.rejectTokenFT();
     const responseCode = await utils.getHTSResponseCode(tx.hash);
-    expect(responseCode).to.eq('196');
+    expect(responseCode).to.eq('196'); // ACCOUNT_IS_TREASURY code
   });
 
   it('should fail to reject NFT tokens with no tokens', async function () {
-    const nftTokenAddress = await setupNft();
+    const nftTokenAddress = await utils.setupNft(
+      tokenCreateContract,
+      owner,
+      contractAddresses
+    );
     const mintedTokenSerialNumber = await utils.mintNFTToAddress(
       tokenCreateContract,
       nftTokenAddress
@@ -487,7 +465,7 @@ describe('HIP904 IHRC904 Proxy Methods Test Suite', function () {
       mintedTokenSerialNumber,
     ]);
     const responseCode = await utils.getHTSResponseCode(tx.hash);
-    expect(responseCode).to.eq('354');
+    expect(responseCode).to.eq('354'); // INVALID_OWNER_ID code
   });
 
   // TODO: The following test is skipped because it is not supported by the current implementation in services
