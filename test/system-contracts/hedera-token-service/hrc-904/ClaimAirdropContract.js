@@ -1,3 +1,23 @@
+/*-
+ *
+ * Hedera Smart Contracts
+ *
+ * Copyright (C) 2025 Hedera Hashgraph, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const utils = require('../utils');
@@ -12,63 +32,7 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
   let signers;
   let owner;
   let receiver;
-  let walletIHRC904AccountFacade;
   let receiverPrivateKey;
-
-  async function setupToken() {
-    const tokenAddress =
-      await utils.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
-        tokenCreateContract,
-        owner,
-        utils.getSignerCompressedPublicKey()
-      );
-
-    await utils.updateTokenKeysViaHapi(tokenAddress, [
-      await airdropContract.getAddress(),
-      await tokenCreateContract.getAddress(),
-    ]);
-
-    await utils.associateToken(
-      tokenCreateContract,
-      tokenAddress,
-      Constants.Contract.TokenCreateContract
-    );
-
-    return tokenAddress;
-  }
-
-  async function setupNft() {
-    const nftTokenAddress =
-      await utils.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
-        tokenCreateContract,
-        owner,
-        utils.getSignerCompressedPublicKey()
-      );
-
-    await utils.updateTokenKeysViaHapi(
-      nftTokenAddress,
-      [
-        await airdropContract.getAddress(),
-        await tokenCreateContract.getAddress(),
-        await claimAirdropContract.getAddress(),
-      ],
-      true,
-      true,
-      false,
-      true,
-      true,
-      true,
-      false
-    );
-
-    await utils.associateToken(
-      tokenCreateContract,
-      nftTokenAddress,
-      Constants.Contract.TokenCreateContract
-    );
-
-    return nftTokenAddress;
-  }
 
   async function createPendingAirdrops(count) {
     const senders = [];
@@ -78,7 +42,11 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
     const amounts = [];
 
     for (let i = 0; i < count; i++) {
-      const tokenAddress = await setupToken();
+      const tokenAddress = await utils.setupToken(
+        tokenCreateContract,
+        owner,
+        airdropContract
+      );
       const ftAmount = BigInt(i + 1); // Different amount for each airdrop
 
       // Create pending airdrop
@@ -145,13 +113,17 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
       [receiverPrivateKey]
     );
 
-    tokenAddress = await setupToken();
+    tokenAddress = await utils.setupToken(
+      tokenCreateContract,
+      owner,
+      airdropContract
+    );
 
     const IHRC904AccountFacade = new ethers.Interface(
       (await hre.artifacts.readArtifact('IHRC904AccountFacade')).abi
     );
 
-    walletIHRC904AccountFacade = new ethers.Contract(
+    const walletIHRC904AccountFacade = new ethers.Contract(
       receiver.address,
       IHRC904AccountFacade,
       receiver
@@ -171,7 +143,11 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
   it('should claim a single pending fungible token airdrop', async function () {
     const ftAmount = BigInt(1);
     const sender = signers[0].address;
-    const tokenAddress = await setupToken();
+    const tokenAddress = await utils.setupToken(
+      tokenCreateContract,
+      owner,
+      airdropContract
+    );
 
     const initialBalance = await erc20Contract.balanceOf(
       tokenAddress,
@@ -208,7 +184,12 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
 
   it('should claim a single pending NFT airdrop', async function () {
     const sender = signers[0].address;
-    const nftTokenAddress = await setupNft();
+    const nftTokenAddress = await utils.setupNft(
+      tokenCreateContract,
+      owner,
+      airdropContract,
+      claimAirdropContract
+    );
 
     const serialNumber = await utils.mintNFTToAddress(
       tokenCreateContract,
@@ -275,7 +256,11 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
 
   it('should fail to claim airdrops when sender has no pending airdrops', async function () {
     const sender = signers[1].address;
-    const tokenAddress = await setupToken();
+    const tokenAddress = await utils.setupToken(
+      tokenCreateContract,
+      owner,
+      airdropContract
+    );
 
     const tx = await claimAirdropContract.claim(
       sender,
@@ -289,7 +274,11 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
 
   it('should fail to claim airdrops when sender does not have a valid account', async function () {
     const invalidSender = ethers.Wallet.createRandom().address;
-    const tokenAddress = await setupToken();
+    const tokenAddress = await utils.setupToken(
+      tokenCreateContract,
+      owner,
+      airdropContract
+    );
 
     const tx = await claimAirdropContract.claim(
       invalidSender,
@@ -302,8 +291,16 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
   });
 
   it('should fail to claim airdrops when receiver does not have a valid account', async function () {
-    const invalidReceiver = await setupToken();
-    const tokenAddress = await setupToken();
+    const invalidReceiver = await utils.setupToken(
+      tokenCreateContract,
+      owner,
+      airdropContract
+    );
+    const tokenAddress = await utils.setupToken(
+      tokenCreateContract,
+      owner,
+      airdropContract
+    );
 
     const tx = await claimAirdropContract.claim(
       owner,
@@ -377,7 +374,12 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
 
   it('should fail to claim airdrops when NFT serial number does not exist', async function () {
     const sender = signers[0].address;
-    const nftTokenAddress = await setupNft();
+    const nftTokenAddress = await utils.setupNft(
+      tokenCreateContract,
+      owner,
+      airdropContract,
+      claimAirdropContract
+    );
     const nonExistentSerialNumber = 999;
 
     const serialNumber = await utils.mintNFTToAddress(
