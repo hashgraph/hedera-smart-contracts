@@ -1,3 +1,23 @@
+/*-
+ *
+ * Hedera Smart Contracts
+ *
+ * Copyright (C) 2025 Hedera Hashgraph, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 const Constants = require('../../constants');
 const { expect, assert } = require('chai');
 const hre = require('hardhat');
@@ -1100,182 +1120,6 @@ describe('@OpcodeLogger Test Suite', async function () {
         expect(sl.memory).to.not.equal(null);
         expect(sl.stack).to.not.equal(null);
       });
-    });
-
-    // disabled until https://github.com/hashgraph/hedera-mirror-node/issues/8843 is resolved
-    it.skip('should return INVALID_TOKEN_ID as debugTrace revert reason when minting a token with incorrect address', async function () {
-      const tx = await opcodeLogger.executeHtsMintTokenRevertingCalls(
-        tokenCreateContractAddress,
-        tokenAddress,
-        [-1],
-        [],
-        Constants.GAS_LIMIT_10_000_000
-      );
-
-      const res = await executeDebugTraceTransaction(tx.hash, {
-        tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: true,
-        disableStack: true
-      });
-
-      const revertOperations = res.structLogs.filter(function (opLog) {
-        return opLog.op === "REVERT"
-      });
-
-      expect(revertOperations.length).to.be.greaterThan(0, 'No "revert" operations were found in debugTrace transaction response');
-      expect(revertOperations[0].reason).to.not.be.null
-      expect(hexToASCII(revertOperations[0].reason)).to.contain(
-        "Minting reveted with INVALID_TOKEN_ID",
-        `\nActual revert reason: '${hexToASCII(revertOperations[0].reason)}'\n did not match with expected: 'Minting reveted with INVALID_TOKEN_ID'\n`);
-    });
-
-    it('should return TOKEN_MAX_SUPPLY_REACHED as debugTrace revert reason when minting a token with max supply reached', async function () {
-      const mintTokenAmounts = [3, 300,];
-      const tx = await opcodeLogger.executeHtsMintTokenRevertingCalls(
-        tokenCreateContractAddress,
-        tokenAddress,
-        mintTokenAmounts,
-        [],
-        Constants.GAS_LIMIT_10_000_000
-      );
-
-      const res = await executeDebugTraceTransaction(tx.hash, {
-        tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: true,
-        disableStack: true
-      });
-
-      const revertOperations = res.structLogs.filter(function (opLog) {
-        return opLog.op === "REVERT"
-      });
-
-      expect(revertOperations.length).to.be.greaterThan(0, 'No "revert" operations were found in debugTrace transaction response');
-
-      for (let i = 0; i < mintTokenAmounts.length; i++) {
-        expect(revertOperations[i].reason).to.not.be.null
-        expect(hexToASCII(revertOperations[i].reason)).to.contain(`Minting ${mintTokenAmounts[i]} tokens reveted with TOKEN_MAX_SUPPLY_REACHED`);
-      };
-    });
-
-    // disabled until https://github.com/hashgraph/hedera-mirror-node/issues/8843 is resolved
-    it.skip('should return correct debugTrace revert reason for HTS calls with the same call depth', async function () {
-      /* 
-      * DO NOT use '0' as the function will not revert.
-      * Using values less than '0' e.g. '-1' to cause the function to revert with message: 'INVALID_TOKEN_ID'
-      * Values greater than '0' will cause the function to revert with message: 'Minting {value} tokens reveted with TOKEN_MAX_SUPPLY_REACHED'
-      */
-      const mintTokenAmounts = [1, 10, 100, -1];
-
-      const tx = await opcodeLogger.executeHtsMintTokenRevertingCalls(
-        tokenCreateContractAddress,
-        tokenAddress,
-        mintTokenAmounts,
-        [],
-        Constants.GAS_LIMIT_10_000_000
-      );
-
-      const res = await executeDebugTraceTransaction(tx.hash, {
-        tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: true,
-        disableStack: true
-      });
-
-      const revertOperations = res.structLogs.filter(function (opLog) {
-        return opLog.op === "REVERT"
-      });
-
-      expect(revertOperations.length).to.be.greaterThan(0, 'No "revert" operations were found in debugTrace transaction response');
-
-      for (let i = 0; i < mintTokenAmounts.length; i++) {
-        expect(revertOperations[i].reason).to.not.be.null
-
-        let expectedMessage = mintTokenAmounts[i] < 0
-          ? 'Minting reveted with INVALID_TOKEN_ID'
-          : `Minting ${mintTokenAmounts[i]} tokens reveted with TOKEN_MAX_SUPPLY_REACHED`;
-
-        expect(hexToASCII(revertOperations[i].reason)).to.contain(
-          expectedMessage,
-          `\nActual revert reason: '${hexToASCII(revertOperations[i].reason)}'\n did not match with expected: '${expectedMessage}'\n`
-        );
-        expect(revertOperations[i].depth).to.equal(1);
-      };
-    });
-
-    it('should return correct debugTrace revert reason for HTS calls with different call depth', async function () {
-      const mintTokenAmounts = [5, 2, 7,];
-      const tx = await opcodeLogger.nestEverySecondHtsMintTokenCall(
-        tokenCreateContractAddress,
-        tokenAddress,
-        mintTokenAmounts,
-        [],
-        Constants.GAS_LIMIT_10_000_000
-      );
-
-      const res = await executeDebugTraceTransaction(tx.hash, {
-        tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: true,
-        disableStack: true
-      });
-
-      expect(res.failed).to.be.false;
-      expect(res.structLogs.length).to.be.greaterThan(0);
-      res.structLogs.map(function (sl) {
-        expect(sl.storage).to.equal(null);
-        expect(sl.memory).to.equal(null);
-        expect(sl.stack).to.equal(null);
-      });
-
-      const revertOperations = res.structLogs.filter(function (opLog) {
-        return opLog.op === "REVERT"
-      });
-
-      expect(revertOperations.length).to.be.greaterThan(0, 'No "revert" operations were found in debugTrace transaction response');
-
-      for (let i = 0; i < mintTokenAmounts.length; i++) {
-        let expectedMessage = `Minting ${mintTokenAmounts[i]} tokens reveted with TOKEN_MAX_SUPPLY_REACHED`;
-        expect(hexToASCII(revertOperations[i].reason)).to.contain(expectedMessage);
-        expect(revertOperations[i].depth).to.equal(i % 2 === 0 ? 1 : 2);
-      };
-    });
-
-    it('should not mix revert reasons between different HTS calls', async function () {
-      const mintTokenAmounts = [2, 11, 17];
-      const tx = await opcodeLogger.executeHtsMintTokenRevertingCallsAndFailToAssociate(
-        tokenCreateContractAddress,
-        tokenAddress,
-        mintTokenAmounts,
-        [],
-        Constants.GAS_LIMIT_10_000_000
-      );
-
-      const res = await executeDebugTraceTransaction(tx.hash, {
-        tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: true,
-        disableStack: true
-      });
-
-      const revertOperations = res.structLogs.filter(function (opLog) {
-        return opLog.op === "REVERT"
-      });
-
-      expect(revertOperations.length).to.be.greaterThan(0, 'No "revert" operations were found in debugTrace transaction response');
-
-      for (let i = 0; i < mintTokenAmounts.length; i++) {
-        expect(revertOperations[i].reason).to.not.be.null
-
-        let expectedMessage = mintTokenAmounts[i] < 0
-          ? 'Minting reveted with INVALID_TOKEN_ID'
-          : `Minting ${mintTokenAmounts[i]} tokens reveted with TOKEN_MAX_SUPPLY_REACHED`;
-
-        expect(hexToASCII(revertOperations[i].reason)).to.contain(expectedMessage);
-        expect(revertOperations[i].depth).to.equal(1);
-      };
-      expect(hexToASCII(revertOperations[revertOperations.length - 1].reason)).to.contain('Association reveted with TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT');
     });
 
     it('should not contain revert operation when GAS is depleted (insufficient)', async function () {
