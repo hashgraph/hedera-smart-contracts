@@ -78,10 +78,10 @@ contract OpcodeLogger {
     function executeHtsMintTokenRevertingCalls(address contractAddress, address tokenAddress, int64[] memory amounts, bytes[] memory metadata) external returns (bool success) {
         for (uint i = 0; i < amounts.length; i++) {
             if (amounts[i] < 0){
-                //reverts with 'Minting reveted with INVALID_TOKEN_ID'
+                // reverts with 'Minting reverted with INVALID_TOKEN_ID'
                 (success,) = address(contractAddress).call(abiEncodeMintTokenPublic(contractAddress, 0, metadata));
             } else {
-                //reverts with 'Minting <amount> tokens reveted with TOKEN_MAX_SUPPLY_REACHED'
+                // reverts with 'Minting <amount> tokens reverted with TOKEN_MAX_SUPPLY_REACHED'
                 (success,) = address(contractAddress).call(abiEncodeMintTokenPublic(tokenAddress, amounts[i], metadata));
             }
         }
@@ -95,7 +95,8 @@ contract OpcodeLogger {
                 (success,) = address(contractAddress).call(abiEncodeMintTokenPublic(tokenAddress, amounts[i], metadata));
             }
         }
-        //reverts with 'Association reveted with TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT'
+
+        // reverts with 'Association reverted with TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT'
         (success,) = address(contractAddress).call(abiEncodeAssociateTokenPublic(contractAddress, tokenAddress));
     }
 

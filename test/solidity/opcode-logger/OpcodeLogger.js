@@ -851,7 +851,7 @@ describe('@OpcodeLogger Test Suite', async function () {
       precompiles = await factoryPrecompiles.deploy();
       await precompiles.waitForDeployment();
 
-      const tokenCreateFactory = await ethers.getContractFactory(Constants.Contract.TokenCreateTest);
+      const tokenCreateFactory = await ethers.getContractFactory(Constants.Contract.TokenCreateOpcodeLogger);
       tokenCreateContract = await tokenCreateFactory.deploy(Constants.GAS_LIMIT_1_000_000);
       await tokenCreateContract.waitForDeployment();
       tokenCreateTx = await tokenCreateContract.createFungibleTokenPublic(

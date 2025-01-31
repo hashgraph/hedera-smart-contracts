@@ -7,7 +7,7 @@ import "contracts/system-contracts/hedera-token-service/ExpiryHelper.sol";
 import "contracts/system-contracts/hedera-token-service/KeyHelper.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract TokenCreateTest is HederaTokenService, ExpiryHelper, KeyHelper {
+contract TokenCreateOpcodeLogger is HederaTokenService, ExpiryHelper, KeyHelper {
 
     string name = "tokenName";
     string symbol = "tokenSymbol";
@@ -69,8 +69,7 @@ contract TokenCreateTest is HederaTokenService, ExpiryHelper, KeyHelper {
             name, symbol, treasury, memo, true, maxSupply, freezeDefaultStatus, keys, expiry
         );
 
-        (int responseCode, address tokenAddress) =
-        HederaTokenService.createNonFungibleToken(token);
+        (int responseCode, address tokenAddress) = HederaTokenService.createNonFungibleToken(token);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert ();
@@ -81,19 +80,17 @@ contract TokenCreateTest is HederaTokenService, ExpiryHelper, KeyHelper {
 
     function mintTokenPublic(address token, int64 amount, bytes[] memory metadata) public
     returns (int responseCode, int64 newTotalSupply, int64[] memory serialNumbers)  {
-        // Services -> INVALID_TOKEN_ID
-        // MirrorNode -> OpcodeloggerDebugtraceTransaction -> UNKNOWN
         (responseCode, newTotalSupply, serialNumbers) = HederaTokenService.mintToken(token, amount, metadata);
         emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
-            if (responseCode == HederaResponseCodes.INVALID_TOKEN_ID){
-                revert(string(abi.encodePacked("Minting reveted with INVALID_TOKEN_ID")));
-            } else if (responseCode == HederaResponseCodes.TOKEN_MAX_SUPPLY_REACHED){
-                revert(string(abi.encodePacked("Minting ", Strings.toString((uint256(uint64(amount)))), " tokens reveted with TOKEN_MAX_SUPPLY_REACHED")));
+            if (responseCode == HederaResponseCodes.INVALID_TOKEN_ID) {
+                revert(string(abi.encodePacked("Minting reverted with INVALID_TOKEN_ID")));
+            } else if (responseCode == HederaResponseCodes.TOKEN_MAX_SUPPLY_REACHED) {
+                revert(string(abi.encodePacked("Minting ", Strings.toString((uint256(uint64(amount)))), " tokens reverted with TOKEN_MAX_SUPPLY_REACHED")));
             }
 
-            revert (string(abi.encodePacked("Minting was reveted with responseCode: ", Strings.toString(uint256(responseCode)))));
+            revert (string(abi.encodePacked("Minting was reverted with responseCode: ", Strings.toString(uint256(responseCode)))));
         }
         emit MintedToken(newTotalSupply, serialNumbers);
     }
@@ -103,8 +100,8 @@ contract TokenCreateTest is HederaTokenService, ExpiryHelper, KeyHelper {
         emit ResponseCode(responseCode);
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
-            if (responseCode == HederaResponseCodes.TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT){
-                revert(string(abi.encodePacked("Association reveted with TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT")));
+            if (responseCode == HederaResponseCodes.TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT) {
+                revert(string(abi.encodePacked("Association reverted with TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT")));
             }
             revert ("Default associateTokenPublic() revert reason");
         }
