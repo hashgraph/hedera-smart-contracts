@@ -33,60 +33,7 @@ describe('HIP904 AirdropContract Test Suite', function () {
   let signers;
   let owner;
   let accounts;
-
-  async function setupToken() {
-    const tokenAddress =
-      await utils.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
-        tokenCreateContract,
-        owner,
-        utils.getSignerCompressedPublicKey()
-      );
-
-    await utils.updateTokenKeysViaHapi(tokenAddress, [
-      await airdropContract.getAddress(),
-      await tokenCreateContract.getAddress(),
-    ]);
-
-    await utils.associateToken(
-      tokenCreateContract,
-      tokenAddress,
-      Constants.Contract.TokenCreateContract
-    );
-
-    return tokenAddress;
-  }
-
-  async function setupNft() {
-    const nftTokenAddress =
-      await utils.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
-        tokenCreateContract,
-        owner,
-        utils.getSignerCompressedPublicKey()
-      );
-
-    await utils.updateTokenKeysViaHapi(
-      nftTokenAddress,
-      [
-        await airdropContract.getAddress(),
-        await tokenCreateContract.getAddress(),
-      ],
-      true,
-      true,
-      false,
-      true,
-      true,
-      true,
-      false
-    );
-
-    await utils.associateToken(
-      tokenCreateContract,
-      nftTokenAddress,
-      Constants.Contract.TokenCreateContract
-    );
-
-    return nftTokenAddress;
-  }
+  let contractAddresses;
 
   before(async function () {
     signers = await ethers.getSigners();
@@ -103,19 +50,32 @@ describe('HIP904 AirdropContract Test Suite', function () {
     owner = signers[0].address;
     accounts = signers.slice(1, 3).map((s) => s.address);
 
-    await utils.updateAccountKeysViaHapi([
+    contractAddresses = [
       await airdropContract.getAddress(),
       await tokenCreateContract.getAddress(),
-    ]);
+    ];
+    await utils.updateAccountKeysViaHapi(contractAddresses);
 
-    tokenAddress = await setupToken();
-    nftTokenAddress = await setupNft();
+    tokenAddress = await utils.setupToken(
+      tokenCreateContract,
+      owner,
+      contractAddresses
+    );
+    nftTokenAddress = await utils.setupNft(
+      tokenCreateContract,
+      owner,
+      contractAddresses
+    );
   });
 
   it('should airdrop a fungible token (FT) to a single account', async function () {
     const ftAmount = BigInt(1);
     const receiver = signers[1].address;
-    const tokenAddress = await setupToken();
+    const tokenAddress = await utils.setupToken(
+      tokenCreateContract,
+      owner,
+      contractAddresses
+    );
 
     const initialBalance = await erc20Contract.balanceOf(
       tokenAddress,
@@ -162,7 +122,11 @@ describe('HIP904 AirdropContract Test Suite', function () {
   it('should airdrop fungible token (FT) to a single account using distribute', async function () {
     const ftAmount = BigInt(1);
     const receiver = signers[1].address;
-    const tokenAddress = await setupToken();
+    const tokenAddress = await utils.setupToken(
+      tokenCreateContract,
+      owner,
+      contractAddresses
+    );
 
     const initialBalance = await erc20Contract.balanceOf(
       tokenAddress,
@@ -187,7 +151,11 @@ describe('HIP904 AirdropContract Test Suite', function () {
 
   it('should airdrop fungible tokens (FT) to multiple accounts', async function () {
     const ftAmount = BigInt(1);
-    const tokenAddress = await setupToken();
+    const tokenAddress = await utils.setupToken(
+      tokenCreateContract,
+      owner,
+      contractAddresses
+    );
 
     const getBalances = async () =>
       Promise.all(
@@ -234,8 +202,14 @@ describe('HIP904 AirdropContract Test Suite', function () {
     expect(nftOwner).to.equal(receiver);
   });
 
+  // TODO: Test skipped due to missing error code support in services implementation
+  // See: https://github.com/hashgraph/hedera-services/issues/17409
   it.skip('should airdrop non-fungible tokens (NFT) to multiple accounts', async function () {
-    const nftTokenAddress = await setupNft();
+    const nftTokenAddress = await utils.setupNft(
+      tokenCreateContract,
+      owner,
+      contractAddresses
+    );
     const serials = [];
     serials.push(
       await utils.mintNFTToAddress(tokenCreateContract, nftTokenAddress)
@@ -269,7 +243,9 @@ describe('HIP904 AirdropContract Test Suite', function () {
     const tokens = [];
     // Every accountAmount counts as 1 transfer so 5x2=10
     for (let i = 0; i < 5; i++) {
-      tokens.push(await setupToken());
+      tokens.push(
+        await utils.setupToken(tokenCreateContract, owner, contractAddresses)
+      );
     }
     for (let i = 0; i < accounts.length; i++) {
       const tx = await airdropContract.multipleFtAirdrop(
@@ -292,7 +268,11 @@ describe('HIP904 AirdropContract Test Suite', function () {
       const tokens = [];
       const serials = [];
       for (let i = 0; i < count; i++) {
-        const tokenAddress = await setupNft();
+        const tokenAddress = await utils.setupNft(
+          tokenCreateContract,
+          owner,
+          contractAddresses
+        );
         const serial = await utils.mintNFTToAddress(
           tokenCreateContract,
           tokenAddress
@@ -401,7 +381,11 @@ describe('HIP904 AirdropContract Test Suite', function () {
       const nftTokens = [];
       const nftSerials = [];
       for (let i = 0; i < 11; i++) {
-        const tokenAddress = await setupNft();
+        const tokenAddress = await utils.setupNft(
+          tokenCreateContract,
+          owner,
+          contractAddresses
+        );
         const serial = await utils.mintNFTToAddress(
           tokenCreateContract,
           tokenAddress
@@ -431,7 +415,9 @@ describe('HIP904 AirdropContract Test Suite', function () {
       const ftAmount = BigInt(1);
       const tokens = [];
       for (let i = 0; i < 6; i++) {
-        tokens.push(await setupToken());
+        tokens.push(
+          await utils.setupToken(tokenCreateContract, airdropContract, owner)
+        );
       }
       const tx = await airdropContract.multipleFtAirdrop(
         tokens,
@@ -445,5 +431,54 @@ describe('HIP904 AirdropContract Test Suite', function () {
     } catch (error) {
       expect(error.shortMessage).to.eq('transaction execution reverted');
     }
+  });
+
+  it('should handle airdrop to account with no available association slots', async function () {
+    const ftAmount = BigInt(1);
+    const receiver = ethers.Wallet.createRandom().connect(ethers.provider);
+    await signers[0].sendTransaction({
+      to: receiver.address,
+      value: ethers.parseEther('100'),
+    });
+    const IHRC904AccountFacade = new ethers.Interface(
+      (await hre.artifacts.readArtifact('IHRC904AccountFacade')).abi
+    );
+
+    walletIHRC904AccountFacade = new ethers.Contract(
+      receiver.address,
+      IHRC904AccountFacade,
+      receiver
+    );
+
+    const disableAutoAssociations =
+      await walletIHRC904AccountFacade.setUnlimitedAutomaticAssociations(
+        false,
+        {
+          gasLimit: 2_000_000,
+        }
+      );
+    await disableAutoAssociations.wait();
+
+    const tx = await airdropContract.tokenAirdrop(
+      tokenAddress,
+      signers[0].address,
+      receiver.address,
+      ftAmount,
+      {
+        gasLimit: 2_000_000,
+        value: Constants.ONE_HBAR,
+      }
+    );
+    await tx.wait();
+
+    const responseCode = await utils.getHTSResponseCode(tx.hash);
+    expect(responseCode).to.eq('22');
+
+    // The airdrop will be pending, so the balance should still be 0
+    const balance = await erc20Contract.balanceOf(
+      tokenAddress,
+      receiver.address
+    );
+    expect(balance).to.equal(0n);
   });
 });

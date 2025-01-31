@@ -1000,6 +1000,64 @@ class Utils {
     );
     return BigInt(precompileAction.result_data).toString();
   }
+
+  static async setupNft(tokenCreateContract, owner, contractAddresses) {
+    const nftTokenAddress =
+      await this.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
+        tokenCreateContract,
+        owner,
+        this.getSignerCompressedPublicKey()
+      );
+
+    await this.updateTokenKeysViaHapi(
+      nftTokenAddress,
+      contractAddresses,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false
+    );
+
+    await this.associateToken(
+      tokenCreateContract,
+      nftTokenAddress,
+      Constants.Contract.TokenCreateContract
+    );
+
+    return nftTokenAddress;
+  }
+
+  static async setupToken(tokenCreateContract, owner, contractAddresses) {
+    const tokenAddress =
+      await this.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
+        tokenCreateContract,
+        owner,
+        this.getSignerCompressedPublicKey()
+      );
+
+    await this.updateTokenKeysViaHapi(
+      tokenAddress,
+      contractAddresses,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false
+    );
+
+    await this.associateToken(
+      tokenCreateContract,
+      tokenAddress,
+      Constants.Contract.TokenCreateContract
+    );
+
+    return tokenAddress;
+  }
 }
 
 module.exports = Utils;
