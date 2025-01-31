@@ -5,6 +5,7 @@ pragma experimental ABIEncoderV2;
 import "../../HederaTokenService.sol";
 import "../../ExpiryHelper.sol";
 import "../../KeyHelper.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper {
 
@@ -166,6 +167,32 @@ contract TokenManagementContract is HederaTokenService, ExpiryHelper, KeyHelper 
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
             revert();
+        }
+    }
+
+    function updateFungibleTokenCustomFeesPublic(
+        address token, 
+        IHederaTokenService.FixedFee[] memory fixedFees,
+        IHederaTokenService.FractionalFee[] memory fractionalFees
+    ) public returns (int responseCode) {
+        responseCode = HederaTokenService.updateFungibleTokenCustomFees(token, fixedFees, fractionalFees);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert(Strings.toString(uint(responseCode)));
+        }
+    }
+
+    function updateNonFungibleTokenCustomFeesPublic(
+        address token, 
+        IHederaTokenService.FixedFee[] memory fixedFees,
+        IHederaTokenService.RoyaltyFee[] memory royaltyFees
+    ) public returns (int responseCode) {
+        responseCode = HederaTokenService.updateNonFungibleTokenCustomFees(token, fixedFees, royaltyFees);
+        emit ResponseCode(responseCode);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert(Strings.toString(uint(responseCode)));
         }
     }
 }

@@ -8,9 +8,13 @@ on:
         type: string
         required: true
 
+permissions:
+  contents: write
+  actions: write
+
 jobs:
   branch_bump_tag:
-    runs-on: [self-hosted, Linux, medium, ephemeral]
+    runs-on: smart-contracts-linux-medium
     env:
       RELEASE_NOTES_FILENAME: release_notes
     outputs:
@@ -18,16 +22,17 @@ jobs:
       next_version_snapshot: ${{ env.NEXT_VERSION_SNAPSHOT }}
       pr_title: ${{ env.PR_TITLE }}
       release_branch: ${{ env.RELEASE_BRANCH }}
+      milestone: ${{ env.MILESTONE }}
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
         with:
           egress-policy: audit
 
       - name: Parse Version
         id: version_parser
-        uses: step-security/semver-utils@f437161847710e2a9e7b99f75442cbad9aa9ec14 # v1.0.0
+        uses: step-security/semver-utils@a24a84bec134bf99b85937a44b58cc9a1d268edd # v4.3.0
         with:
           lenient: false
           version: ${{ github.event.inputs.version }}
@@ -37,6 +42,7 @@ jobs:
           PREMINOR_VERSION=${{ steps.version_parser.outputs.inc-preminor }}
           NEXT_VERSION_SNAPSHOT=${PREMINOR_VERSION//-0/-SNAPSHOT}
           RELEASE_BRANCH="release/${{ steps.version_parser.outputs.major }}.${{ steps.version_parser.outputs.minor }}"
+          MILESTONE="${{ steps.version_parser.outputs.major }}.${{ steps.version_parser.outputs.minor }}.${{ steps.version_parser.outputs.patch }}"
           [[ -z "${{ steps.version_parser.outputs.prerelease }}" ]] && \
             VERSION=${{ steps.version_parser.outputs.release }} || \
             VERSION="${{ steps.version_parser.outputs.release }}-${{ steps.version_parser.outputs.prerelease }}"
@@ -46,10 +52,11 @@ jobs:
           RELEASE_BRANCH=$RELEASE_BRANCH
           RELEASE_TAG=$RELEASE_TAG
           VERSION=$VERSION
+          MILESTONE=$MILESTONE
           EOF
 
       - name: Checkout repository
-        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
           ref: main
@@ -57,7 +64,7 @@ jobs:
 
       - name: Import GPG Key
         id: gpg_importer
-        uses: step-security/ghaction-import-gpg@a7c87df2279f2bf2e69ba8289dfbf35fe05a4e08 # v1.0.0
+        uses: step-security/ghaction-import-gpg@6c8fe4d0126a59d57c21f87c9ae5dd3451fa3cca # v6.1.0
         with:
           git_commit_gpgsign: true
           git_tag_gpgsign: true
@@ -67,19 +74,20 @@ jobs:
 
       - name: Create and Switch to Release Branch
         run: |
+          git fetch origin
           if ! git ls-remote --exit-code --heads --quiet origin refs/heads/${RELEASE_BRANCH}; then
             git checkout -b ${RELEASE_BRANCH}
             git push -u origin ${RELEASE_BRANCH}
 
             # create a PR to bump main branch to the next snapshot version
             echo "CREATE_PR=true" >> $GITHUB_ENV
-            echo "PR_TITLE=Bump versions for v$NEXT_VERSION_SNAPSHOT" >> $GITHUB_ENV
+            echo "PR_TITLE=chore(release): Bump versions for v$NEXT_VERSION_SNAPSHOT" >> $GITHUB_ENV
           else
             git checkout ${RELEASE_BRANCH}
           fi
 
       - name: Set up Node.js
-        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
         with:
           node-version: '20'
 
@@ -90,28 +98,28 @@ jobs:
         run: npm ci
 
       - name: Bump Versions
-        run: npm version ${{ env.VERSION }}
+        run: npm version ${{ env.VERSION }} --no-commit-hooks --no-git-tag-version
 
       - name: Create Release Notes
         if: ${{ steps.milestone.outputs.milestone_id != '' }}
-        uses: Decathlon/release-notes-generator-action@98423db7024696a339f3988ac8a2b051c5860741 # v3.1.6
+        uses: step-security/release-notes-generator-action@d7cdbb310d4aab8d98f273f4ae20fdd7cb055799 # v3.1.6
         env:
           FILENAME: ${{ env.RELEASE_NOTES_FILENAME }}
           GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           MILESTONE_NUMBER: ${{ steps.milestone.outputs.milestone_id }}
 
       - name: Commit and Tag
-        uses: stefanzweifel/git-auto-commit-action@8621497c8c39c72f3e2a999a26b4ca1b5058a842 # v5.0.1
+        uses: stefanzweifel/git-auto-commit-action@e348103e9026cc0eee72ae06630dbe30c8bf7a79 # v5.1.0
         with:
           commit_author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-          commit_message: Bump versions for ${{ env.RELEASE_TAG }}
+          commit_message: 'chore(release): Bump versions for ${{ env.RELEASE_TAG }}'
           commit_options: '--no-verify --signoff'
           commit_user_name: ${{ steps.gpg_importer.outputs.name }}
           commit_user_email: ${{ steps.gpg_importer.outputs.email }}
           tagging_message: ${{ env.RELEASE_TAG }}
 
       - name: Create Github Release
-        uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
+        uses: ncipollo/release-action@cdcc88a9acf3ca41c16c37bb7d21b9ad48560d87 # v1.15.0
         with:
           bodyFile: ${{ env.RELEASE_NOTES_FILENAME }}.md
           commit: ${{ env.RELEASE_BRANCH }}
@@ -124,21 +132,22 @@ jobs:
 
   create_snapshot_pr:
     name: Create snapshot PR
-    runs-on: [self-hosted, Linux, medium, ephemeral]
+    runs-on: smart-contracts-linux-medium
     needs: branch_bump_tag
     if: ${{ needs.branch_bump_tag.outputs.create_pr == 'true' }}
     env:
       NEXT_VERSION_SNAPSHOT: ${{ needs.branch_bump_tag.outputs.next_version_snapshot }}
       RELEASE_BRANCH: ${{ needs.branch_bump_tag.outputs.release_branch }}
-
+      MILESTONE: ${{ needs.branch_bump_tag.outputs.milestone }}
+      PR_TITLE: ${{ needs.branch_bump_tag.outputs.pr_title }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
         with:
           egress-policy: audit
 
       - name: Checkout Repository
-        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
           ref: main
@@ -146,7 +155,7 @@ jobs:
 
       - name: Import GPG Key
         id: gpg_importer
-        uses: step-security/ghaction-import-gpg@a7c87df2279f2bf2e69ba8289dfbf35fe05a4e08 # v1.0.0
+        uses: step-security/ghaction-import-gpg@6c8fe4d0126a59d57c21f87c9ae5dd3451fa3cca # v6.1.0
         with:
           git_commit_gpgsign: true
           git_tag_gpgsign: true
@@ -155,7 +164,7 @@ jobs:
           passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
 
       - name: Set up Node.js
-        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
         with:
           node-version: '20'
 
@@ -166,17 +175,25 @@ jobs:
         run: npm ci
 
       - name: Bump Versions
-        run: npm version ${{ env.NEXT_VERSION_SNAPSHOT }}
+        run: npm version ${{ env.NEXT_VERSION_SNAPSHOT }} --no-commit-hooks --no-git-tag-version
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6.1.0
+        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
         with:
-          body: ''
+          body: |
+            **Description**:
+            Bump versions for v${{ env.NEXT_VERSION_SNAPSHOT }}
+            Automated snapshot version bump for the next development cycle.
+
+            **Related issue(s)**:
           branch: create-pull-request/${{ env.NEXT_VERSION_SNAPSHOT }}
-          commit-message: Bump versions for v${{ env.NEXT_VERSION_SNAPSHOT }}
+          commit-message: ${{ env.PR_TITLE }}
           committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
           author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
           delete-branch: true
           signoff: true
-          title: ${{ needs.branch_bump_tag.outputs.pr_title }}
+          title: ${{ env.PR_TITLE }}
+          milestone: ${{ env.MILESTONE }}
+          labels: 'process'
           token: ${{ secrets.GH_ACCESS_TOKEN }}
+          assignees: 'swirlds-automation'

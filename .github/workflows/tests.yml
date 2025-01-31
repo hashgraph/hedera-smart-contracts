@@ -111,11 +111,17 @@ jobs:
     with:
       testfilter: BLSSignature
 
-  CryptoAllowance:
-    name: CryptoAllowance Test Suite
+  HederaAccountService:
+    name: HederaAccountService Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
-      testfilter: CryptoAllowance
+      testfilter: HAS
+
+  HIP904:
+    name: HIP904 Contract Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: HIP904
 
   PublishResults:
     name: Publish Results
@@ -136,10 +142,16 @@ jobs:
       - ShanghaiOpcodes
       - PrngSystemContract
       - BLSSignatureVerification
-      - CryptoAllowance
+      - HederaAccountService
+      - HIP904
 
-    runs-on: [self-hosted, Linux, large, ephemeral]
+    runs-on: smart-contracts-linux-large
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        with:
+          egress-policy: audit
+
       - name: Download Test Reports
         uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
         with:
@@ -147,7 +159,7 @@ jobs:
           merge-multiple: true
 
       - name: Publish Test Report
-        uses: actionite/publish-unit-test-result-action@1e01e49081c6c4073913aa4b7980fa83e709f322 # v2.3.0
+        uses: step-security/publish-unit-test-result-action@cc82caac074385ae176d39d2d143ad05e1130b2d # v2.18.0
         with:
           check_name: Test Results
           json_thousands_separator: ','

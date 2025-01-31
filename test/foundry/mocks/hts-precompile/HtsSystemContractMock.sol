@@ -8,10 +8,10 @@ import './HederaNonFungibleToken.sol';
 import '../../../../contracts/base/NoDelegateCall.sol';
 import '../../../../contracts/libraries/Constants.sol';
 
-import '../interfaces/IHtsPrecompileMock.sol';
+import '../interfaces/IHtsSystemContractMock.sol';
 import '../libraries/HederaTokenValidation.sol';
 
-contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock {
+contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsSystemContractMock {
 
     error HtsPrecompileError(int64 responseCode);
 
@@ -724,6 +724,13 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
         _association[token][sender] = false;
     }
 
+    function _postIsAssociated(
+        address token,
+        address sender
+    ) internal view returns (bool associated) {
+        associated = _association[token][sender];
+    }
+
     function _postApprove(
         address token,
         address sender,
@@ -778,6 +785,18 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
         (success, responseCode) = _precheckAssociateToken(sender, token);
         if (success) {
             _postAssociate(token, sender);
+        }
+    }
+
+    function preIsAssociated(
+        address sender // msg.sender in the context of the Hedera{Non|}FungibleToken; it should be owner for SUCCESS
+    ) external view onlyHederaToken returns (bool associated) {
+        address token = msg.sender;
+        int64 responseCode;
+        bool success;
+        (success, responseCode) = _precheckAssociateToken(sender, token);
+        if (success) {
+            associated = _postIsAssociated(token, sender);
         }
     }
 
@@ -1865,6 +1884,9 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
         }
     }
 
+    function updateFungibleTokenCustomFees(address token,  IHederaTokenService.FixedFee[] memory fixedFees, IHederaTokenService.FractionalFee[] memory fractionalFees) external returns (int64 responseCode){}
+    function updateNonFungibleTokenCustomFees(address token, IHederaTokenService.FixedFee[] memory fixedFees, IHederaTokenService.RoyaltyFee[] memory royaltyFees) external returns (int64 responseCode){}
+    
     // TODO
     function redirectForToken(address token, bytes memory encodedFunctionSelector) external noDelegateCall override returns (int64 responseCode, bytes memory response) {}
 
@@ -1880,4 +1902,12 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsPrecompileMock 
     function _getStringLength(string memory _string) internal pure returns (uint length) {
         length = bytes(_string).length;
     }
+
+    function airdropTokens(TokenTransferList[] memory tokenTransfers) external returns (int64 responseCode) {}
+
+    function cancelAirdrops(PendingAirdrop[] memory pendingAirdrops) external returns (int64 responseCode) {}
+
+    function claimAirdrops(PendingAirdrop[] memory pendingAirdrops) external returns (int64 responseCode) {}
+
+    function rejectTokens(address rejectingAddress, address[] memory ftAddresses, NftID[] memory nftIDs) external returns (int64 responseCode) {}
 }

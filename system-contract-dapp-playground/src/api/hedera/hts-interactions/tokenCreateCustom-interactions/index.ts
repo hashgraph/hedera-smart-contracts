@@ -60,7 +60,7 @@ import { TNetworkName } from '@/types/common';
  *
  * @return Promise<ISmartContractExecutionResult>
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L136
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L136
  *      for more information on the purposes of the params
  */
 export const createHederaFungibleToken = async (
@@ -183,7 +183,7 @@ export const createHederaFungibleToken = async (
  *
  * @return Promise<ISmartContractExecutionResult>
  *
- * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L136
+ * @see https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L136
  *      for more information on the purposes of the params
  */
 export const createHederaNonFungibleToken = async (

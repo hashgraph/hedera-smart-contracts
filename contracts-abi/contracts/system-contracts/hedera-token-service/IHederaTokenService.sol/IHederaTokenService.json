@@ -2,6 +2,81 @@
   {
     "inputs": [
       {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "token",
+            "type": "address"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "accountID",
+                "type": "address"
+              },
+              {
+                "internalType": "int64",
+                "name": "amount",
+                "type": "int64"
+              },
+              {
+                "internalType": "bool",
+                "name": "isApproval",
+                "type": "bool"
+              }
+            ],
+            "internalType": "struct IHederaTokenService.AccountAmount[]",
+            "name": "transfers",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "senderAccountID",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "receiverAccountID",
+                "type": "address"
+              },
+              {
+                "internalType": "int64",
+                "name": "serialNumber",
+                "type": "int64"
+              },
+              {
+                "internalType": "bool",
+                "name": "isApproval",
+                "type": "bool"
+              }
+            ],
+            "internalType": "struct IHederaTokenService.NftTransfer[]",
+            "name": "nftTransfers",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.TokenTransferList[]",
+        "name": "tokenTransfers",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "airdropTokens",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "token",
         "type": "address"
@@ -167,6 +242,88 @@
       {
         "internalType": "int64",
         "name": "newTotalSupply",
+        "type": "int64"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "sender",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "receiver",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "token",
+            "type": "address"
+          },
+          {
+            "internalType": "int64",
+            "name": "serial",
+            "type": "int64"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.PendingAirdrop[]",
+        "name": "pendingAirdrops",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "cancelAirdrops",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "sender",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "receiver",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "token",
+            "type": "address"
+          },
+          {
+            "internalType": "int64",
+            "name": "serial",
+            "type": "int64"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.PendingAirdrop[]",
+        "name": "pendingAirdrops",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "claimAirdrops",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
         "type": "int64"
       }
     ],
@@ -2432,6 +2589,47 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "rejectingAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "ftAddresses",
+        "type": "address[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "nft",
+            "type": "address"
+          },
+          {
+            "internalType": "int64",
+            "name": "serial",
+            "type": "int64"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.NftID[]",
+        "name": "nftIDs",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "rejectTokens",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "token",
         "type": "address"
       },
@@ -2713,6 +2911,182 @@
       }
     ],
     "name": "unpauseToken",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int64",
+            "name": "amount",
+            "type": "int64"
+          },
+          {
+            "internalType": "address",
+            "name": "tokenId",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "useHbarsForPayment",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "useCurrentTokenForPayment",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "feeCollector",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.FixedFee[]",
+        "name": "fixedFees",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int64",
+            "name": "numerator",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "denominator",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "minimumAmount",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "maximumAmount",
+            "type": "int64"
+          },
+          {
+            "internalType": "bool",
+            "name": "netOfTransfers",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "feeCollector",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.FractionalFee[]",
+        "name": "fractionalFees",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "updateFungibleTokenCustomFees",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int64",
+            "name": "amount",
+            "type": "int64"
+          },
+          {
+            "internalType": "address",
+            "name": "tokenId",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "useHbarsForPayment",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "useCurrentTokenForPayment",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "feeCollector",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.FixedFee[]",
+        "name": "fixedFees",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int64",
+            "name": "numerator",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "denominator",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "amount",
+            "type": "int64"
+          },
+          {
+            "internalType": "address",
+            "name": "tokenId",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "useHbarsForPayment",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "feeCollector",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.RoyaltyFee[]",
+        "name": "royaltyFees",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "updateNonFungibleTokenCustomFees",
     "outputs": [
       {
         "internalType": "int64",
