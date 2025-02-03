@@ -32,12 +32,15 @@ describe('HIP904 IHRC904Facade ContractTest Suite', function () {
   let signers;
   let owner;
   let receiver;
+  let receiverPrivateKey;
   const invalidAddress = '0x000000000000000000000000000000000000dead';
   let walletIHRC904TokenFacadeSender;
   let walletIHRC904AccountFacade;
   let walletIHRC904NftFacadeSender;
   let walletIHRC904TokenFacadeReceiver;
   let walletIHRC904NftFacadeReceiver;
+  let erc20Contract;
+  let erc721Contract;
   let contractAddresses;
 
   before(async function () {
@@ -47,7 +50,8 @@ describe('HIP904 IHRC904Facade ContractTest Suite', function () {
       Constants.Contract.TokenCreateContract
     );
     owner = signers[0].address;
-    receiver = ethers.Wallet.createRandom().connect(ethers.provider);
+    receiverPrivateKey = ethers.hexlify(ethers.randomBytes(32));
+    receiver = new ethers.Wallet(receiverPrivateKey).connect(ethers.provider);
     invalidSender = ethers.Wallet.createRandom().connect(ethers.provider);
 
     // Send some HBAR to activate the account
@@ -55,6 +59,13 @@ describe('HIP904 IHRC904Facade ContractTest Suite', function () {
       to: receiver.address,
       value: ethers.parseEther('100'),
     });
+
+    erc20Contract = await utils.deployContract(
+      Constants.Contract.ERC20Contract
+    );
+    erc721Contract = await utils.deployContract(
+      Constants.Contract.ERC721Contract
+    );
 
     await utils.updateAccountKeysViaHapi([
       await airdropContract.getAddress(),
@@ -128,6 +139,11 @@ describe('HIP904 IHRC904Facade ContractTest Suite', function () {
 
   // Positive tests
   it('should cancel a pending airdrop for a fungible token (FT)', async function () {
+    const initialBalance = await erc20Contract.balanceOf(
+      tokenAddress,
+      receiver.address
+    );
+
     const airdrop = await airdropContract.tokenAirdrop(
       tokenAddress,
       owner,
@@ -144,6 +160,12 @@ describe('HIP904 IHRC904Facade ContractTest Suite', function () {
     );
     const responseCode = await utils.getHTSResponseCode(tx.hash);
     expect(responseCode).to.eq('22');
+
+    const finalBalance = await erc20Contract.balanceOf(
+      tokenAddress,
+      receiver.address
+    );
+    expect(finalBalance).to.equal(initialBalance);
   });
 
   it('should cancel a pending airdrop for a non-fungible token (NFT)', async function () {
@@ -170,18 +192,26 @@ describe('HIP904 IHRC904Facade ContractTest Suite', function () {
     );
     const responseCode = await utils.getHTSResponseCode(tx.hash);
     expect(responseCode).to.eq('22');
+
+    const finalOwner = await erc721Contract.ownerOf(
+      nftTokenAddress,
+      mintedTokenSerialNumber
+    );
+    expect(finalOwner).to.not.equal(receiver.address);
   });
 
   it('should enable unlimited automatic associations for an account', async function () {
     const tx =
-      await walletIHRC904AccountFacade.setUnlimitedAutomaticAssociations(
-        false,
-        {
-          gasLimit: 2_000_000,
-        }
-      );
+      await walletIHRC904AccountFacade.setUnlimitedAutomaticAssociations(true, {
+        gasLimit: 2_000_000,
+      });
     const responseCode = await utils.getHASResponseCode(tx.hash);
     expect(responseCode).to.eq('22');
+
+    const maxAssociations = await utils.getMaxAutomaticTokenAssociations(
+      receiver.address
+    );
+    expect(maxAssociations).to.eq(-1);
   });
 
   it('should disable unlimited automatic associations for an account', async function () {
@@ -194,24 +224,44 @@ describe('HIP904 IHRC904Facade ContractTest Suite', function () {
       );
     const responseCode = await utils.getHASResponseCode(tx.hash);
     expect(responseCode).to.eq('22');
+
+    const maxAssociations = await utils.getMaxAutomaticTokenAssociations(
+      receiver.address
+    );
+    expect(maxAssociations).to.eq(0);
   });
 
   it('should claim a pending airdrop for a fungible token (FT)', async function () {
+    const initialBalance = await erc20Contract.balanceOf(
+      tokenAddress,
+      receiver.address
+    );
+    const amount = BigInt(1);
+
     const airdrop = await airdropContract.tokenAirdrop(
       tokenAddress,
       owner,
       receiver.address,
-      BigInt(1),
+      amount,
       {
         value: Constants.ONE_HBAR,
         gasLimit: 2_000_000,
       }
     );
     await airdrop.wait();
+    await utils.associateWithSigner(receiverPrivateKey, tokenAddress);
 
     const tx = await walletIHRC904TokenFacadeReceiver.claimAirdropFT(owner);
+    await tx.wait();
+
     const responseCode = await utils.getHTSResponseCode(tx.hash);
     expect(responseCode).to.eq('22');
+
+    const finalBalance = await erc20Contract.balanceOf(
+      tokenAddress,
+      receiver.address
+    );
+    expect(finalBalance).to.equal(initialBalance + amount);
   });
 
   it('should claim a pending airdrop for a non-fungible token (NFT)', async function () {
@@ -237,6 +287,12 @@ describe('HIP904 IHRC904Facade ContractTest Suite', function () {
     );
     const responseCode = await utils.getHTSResponseCode(tx.hash);
     expect(responseCode).to.eq('22');
+
+    const finalOwner = await erc721Contract.ownerOf(
+      nftTokenAddress,
+      mintedTokenSerialNumber
+    );
+    expect(finalOwner).to.equal(receiver.address);
   });
 
   it('should reject tokens for a given account (FT)', async function () {
