@@ -77,6 +77,7 @@ const Contract = {
   OZERC20Mock: 'OZERC20Mock',
   OZERC721Mock: 'OZERC721Mock',
   TokenCreateContract: 'TokenCreateContract',
+  TokenCreateOpcodeLogger: 'TokenCreateOpcodeLogger',
   DiamondCutFacet: 'DiamondCutFacet',
   Diamond: 'Diamond',
   DiamondInit: 'DiamondInit',
