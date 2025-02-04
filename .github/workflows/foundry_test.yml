@@ -5,23 +5,32 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   check:
     strategy:
       fail-fast: true
 
     name: Foundry project
-    runs-on: [self-hosted, Linux, large, ephemeral]
+    runs-on: smart-contracts-linux-large
     steps:
-      - uses: actions/checkout@v3
+      - name: Harden Runner
+        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        with:
+          egress-policy: audit
+
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           submodules: recursive
 
-      - name: Use Node.js [18.15]
-        uses: actions/setup-node@v3
+      - name: Use Node.js [20]
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
         with:
-          node-version: 18.15
-          cache: npm
+          node-version: 20
+          #cache: npm Disabling this because it causes the workflow to hang and eventually timeout
 
       - name: Create .env file
         run: cp local.env .env
@@ -30,13 +39,14 @@ jobs:
         run: npm ci
 
       - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
+        uses: step-security/foundry-toolchain@01e2d127ea061e2ce8fa34340de71ca8518f093e # v1.2.1
         with:
           version: nightly
 
       - name: Run Forge build
         run: |
           forge --version
+          forge build
           forge build
         id: build
 

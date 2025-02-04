@@ -16,26 +16,44 @@ on:
         required: false
         type: string
 
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  contents: read
+
 jobs:
   acceptance-workflow:
-    runs-on: [self-hosted, Linux, large, ephemeral]
+    runs-on: smart-contracts-linux-large
     timeout-minutes: 35
     strategy:
       fail-fast: false
 
     permissions:
-      contents: write
+      contents: read
       checks: write
       pull-requests: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
 
-      - name: Use Node.js [18.15]
-        uses: actions/setup-node@v3
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
         with:
-          node-version: 18.15
-          cache: npm
+          egress-policy: audit
+
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Install Docker Compose Plugin
+        run: |
+          sudo curl -fLo /usr/local/lib/docker/cli-plugins/docker-compose https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-linux-x86_64
+          sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+
+      - name: Use Node.js [20]
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
+        with:
+          node-version: 20
+          #cache: npm Disabling this because it causes the workflow to hang and eventually timeout
 
       - name: Create .env file
         run: cp local.env .env
@@ -45,7 +63,7 @@ jobs:
 
       # This step is required to avoid "HardhatFoundryError: Couldn't run `forge`"
       - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
+        uses: step-security/foundry-toolchain@01e2d127ea061e2ce8fa34340de71ca8518f093e # v1.2.1
         with:
           version: nightly
 
@@ -58,19 +76,19 @@ jobs:
 
       - name: Upload Test Results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         with:
-          name: Test Results
+          name: Test Results (${{ inputs.testfilter }})
           path: test-*.xml
 
       - name: Publish Test Report
-        uses: actionite/publish-unit-test-result-action@v2
+        uses: step-security/publish-unit-test-result-action@cc82caac074385ae176d39d2d143ad05e1130b2d # v2.18.0
         if: ${{ !cancelled() }}
         with:
-          check_run_disabled: true
-          comment_mode: off
+          check_name: 'Unit Tests results' # Set to empty to disable check run
+          comment_mode: errors
           json_thousands_separator: ','
-          junit_files: 'test-*.xml'
+          files: 'test-*.xml'
 
       - name: Stop the local node
         if: ${{ !cancelled() }}

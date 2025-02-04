@@ -17,7 +17,7 @@
   },
   {
     "inputs": [],
-    "name": "FailedInnerCall",
+    "name": "FailedCall",
     "type": "error"
   },
   {
@@ -114,6 +114,11 @@
       }
     ],
     "name": "GovernorInvalidSignature",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GovernorInvalidVoteParams",
     "type": "error"
   },
   {
@@ -232,16 +237,6 @@
   {
     "inputs": [],
     "name": "InvalidShortString",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "QueueEmpty",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "QueueFull",
     "type": "error"
   },
   {

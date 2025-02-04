@@ -56,6 +56,8 @@ const Events = {
   TinyBars: 'TinyBars',
   TinyCents: 'TinyCents',
   PseudoRandomSeed: 'PseudoRandomSeed',
+  CryptoAllowance: 'CryptoAllowance',
+  IsAssociated: 'IsAssociated',
   DeployedContractAddress: 'DeployedContractAddress',
   DeployedContract0Address: 'DeployedContract0Address',
   DeployedContract1Address: 'DeployedContract1Address',
@@ -66,8 +68,6 @@ const Events = {
 const Path = {
   BLOCK_INFO: 'contracts/solidity/block/BlockInfo.sol:BlockInfo',
   CRYPTO_MATH: 'contracts/solidity/cryptomath/CryptoMath.sol:CryptoMath',
-  ERC20Mock: 'contracts/openzeppelin/ERC-20/ERC20Mock.sol:ERC20Mock',
-  ERC721Mock: 'contracts/openzeppelin/ERC-721/ERC721Mock.sol:ERC721Mock',
   HIP583_ERC20Mock: 'contracts/hip-583/ERC20Mock.sol:ERC20Mock',
   HIP583_ERC721Mock: 'contracts/hip-583/ERC721Mock.sol:ERC721Mock',
   HRC: 'contracts/hrc/HRC.sol:HRC',
@@ -79,7 +79,10 @@ const Path = {
 
 const Contract = {
   ERC20Mock: 'ERC20Mock',
+  OZERC20Mock: 'OZERC20Mock',
+  OZERC721Mock: 'OZERC721Mock',
   TokenCreateContract: 'TokenCreateContract',
+  TokenCreateOpcodeLogger: 'TokenCreateOpcodeLogger',
   DiamondCutFacet: 'DiamondCutFacet',
   Diamond: 'Diamond',
   DiamondInit: 'DiamondInit',
@@ -106,7 +109,7 @@ const Contract = {
   ERC20BurnableMock: 'ERC20BurnableMock',
   ERC20CappedMock: 'ERC20CappedMock',
   ERC20PausableMock: 'ERC20PausableMock',
-  HRCContract: 'HRCContract',
+  HRC719Contract: 'HRC719Contract',
   ExchangeRateMock: 'ExchangeRateMock',
   PrngSystemContract: 'PrngSystemContract',
   Concatenation: 'Concatenation',
@@ -119,6 +122,7 @@ const Contract = {
   Inheritance: 'Inheritance',
   Functions: 'Functions',
   FunctionsChild: 'FunctionsChild',
+  OpcodeLogger: 'OpcodeLogger',
   FunctionsParent: 'FunctionsParent',
   Scoping: 'Scoping',
   Arithmetic: 'Arithmetic',
@@ -200,17 +204,26 @@ const Contract = {
   ChainedContracts: 'ChainedContracts',
   EthNativePrecompileCaller: 'EthNativePrecompileCaller',
   AtomicHTS: 'AtomicHTS',
+  BLSTest: 'BLSTest',
+  BlsBn254: 'BlsBn254',
+  CryptoAllowance: 'CryptoAllowance',
+  CryptoOwner: 'CryptoOwner',
+  CancunOpcodes: 'CancunOpcodes',
+  KZGPointEvaluation: 'KZGPointEvaluation',
+  StateRegistry: 'StateRegistry',
+  AliasAccountUtility: 'AliasAccountUtility',
   Deploys2Contracts: 'Deploys2Contracts'
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';
-const CONTRACT_REVERT_EXECUTED_CODE = -32008;
+const CONTRACT_REVERT_EXECUTED_CODE = 3;
 const GAS_LIMIT_1_000_000 = { gasLimit: 1_000_000 };
 const GAS_LIMIT_10_000_000 = { gasLimit: 10_000_000 };
 const GAS_LIMIT_800000 = { gasLimit: 800000 };
 const GAS_LIMIT_8000000 = { gasLimit: 8000000 };
 const TOKEN_NAME = 'tokenName';
 const TOKEN_SYMBOL = 'tokenSymbol';
+const TOKEN_URL = 'tokenUrl';
 const TX_SUCCESS_CODE = 22;
 const SECOND = (WEI = 1);
 const MINUTE = 60 * SECOND;
@@ -229,6 +242,7 @@ module.exports = {
   GAS_LIMIT_10_000_000,
   GAS_LIMIT_800000,
   GAS_LIMIT_8000000,
+  TOKEN_URL,
   TOKEN_NAME,
   TOKEN_SYMBOL,
   TX_SUCCESS_CODE,

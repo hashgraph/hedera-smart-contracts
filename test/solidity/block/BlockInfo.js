@@ -26,7 +26,7 @@ describe('@solidityequiv1 BlockInfo Test Suite', function () {
 
   before(async function () {
     signers = await ethers.getSigners();
-    provider = ethers.getDefaultProvider();
+    provider = signers[0].provider;
 
     const factory = await ethers.getContractFactory(Constants.Path.BLOCK_INFO);
     blockInfo = await factory.deploy({ gasLimit: 15000000 });
@@ -38,19 +38,11 @@ describe('@solidityequiv1 BlockInfo Test Suite', function () {
     expect(blockBaseFee).to.equal(0);
   });
 
-  // https://github.com/hashgraph/hedera-mirror-node/issues/7045
   it('should be able to get the hash of a given block when the block number is one of the 256 most recent blocks', async function () {
-    try {
-      const blockNumber = await provider.getBlockNumber();
-      await provider.getBlock(blockNumber);
-      await blockInfo.getBlockHash();
-    } catch (e) {
-      expect(e.code).to.equal('CALL_EXCEPTION');
-      expect(e.message).to.contain('missing revert data in call exception');
-      expect(e.reason).to.contain(
-        'missing revert data in call exception; Transaction reverted without a reason string'
-      );
-    }
+    const blockNumber = await provider.getBlockNumber();
+    const block = await provider.getBlock(blockNumber);
+    const blockHash = await blockInfo.getBlockHash(blockNumber);
+    expect(block.hash).to.equal(blockHash);
   });
 
   it('should get the current block coinbase which is the hedera network account', async function () {
@@ -59,10 +51,10 @@ describe('@solidityequiv1 BlockInfo Test Suite', function () {
     expect(coinbase).to.equal('0x0000000000000000000000000000000000000062');
   });
 
-  // Turn off until mirror node issue is resolved: https://github.com/hashgraph/hedera-mirror-node/issues/7036
   it('should get the current block prevrandao using block.prevrandao', async function () {
+    let prevrandao;
     try {
-      await blockInfo.getBlockPrevrando();
+      prevrandao = await blockInfo.getBlockPrevrando();
     } catch (e) {
       expect(e.code).to.equal('CALL_EXCEPTION');
       expect(e.message).to.contain('missing revert data in call exception');
@@ -70,14 +62,14 @@ describe('@solidityequiv1 BlockInfo Test Suite', function () {
         'missing revert data in call exception; Transaction reverted without a reason string'
       );
     }
-    // Uncomment when mirror node issue is resolved
-    // expect(BigNumber.isBigNumber(prevrandao)).to.be.true
+    expect(typeof prevrandao).to.equal('bigint');
   });
 
   // Turn off until mirror node issue is resolved: https://github.com/hashgraph/hedera-mirror-node/issues/7036
   it('should get the current block difficulty using block.difficulty (replaced by prevrandao)', async function () {
+    let difficulty;
     try {
-      await blockInfo.getBlockDifficulty();
+      difficulty = await blockInfo.getBlockDifficulty();
     } catch (e) {
       expect(e.code).to.equal('CALL_EXCEPTION');
       expect(e.message).to.contain('missing revert data in call exception');
@@ -85,8 +77,7 @@ describe('@solidityequiv1 BlockInfo Test Suite', function () {
         'missing revert data in call exception; Transaction reverted without a reason string'
       );
     }
-    // Uncomment when mirror node issue is resolved
-    // expect(BigNumber.isBigNumber(difficulty)).to.be.true
+    expect(typeof difficulty).to.equal('bigint');
   });
 
   it('should get the block gas limit', async function () {

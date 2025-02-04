@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.9;
 
-import '../../../../contracts/hts-precompile/HederaResponseCodes.sol';
+import '../../../../contracts/system-contracts/HederaResponseCodes.sol';
 import '../hts-precompile/HederaFungibleToken.sol';
 import '../hts-precompile/HederaNonFungibleToken.sol';
-import '../interfaces/IHtsPrecompileMock.sol';
+import '../interfaces/IHtsSystemContractMock.sol';
 
 library HederaTokenValidation {
 
@@ -172,11 +172,11 @@ library HederaTokenValidation {
         address expectedOwner,
         uint serialNumber,
         mapping(address => bool) storage _isNonFungible,
-        mapping(address => mapping(int64 => IHtsPrecompileMock.PartialNonFungibleTokenInfo)) storage _partialNonFungibleTokenInfos
+        mapping(address => mapping(int64 => IHtsSystemContractMock.PartialNonFungibleTokenInfo)) storage _partialNonFungibleTokenInfos
     ) internal view returns (bool success, int64 responseCode) {
         if (_isNonFungible[token]) {
             int64 _serialNumber = int64(uint64(serialNumber));
-            IHtsPrecompileMock.PartialNonFungibleTokenInfo memory partialNonFungibleTokenInfo = _partialNonFungibleTokenInfos[token][_serialNumber];
+            IHtsSystemContractMock.PartialNonFungibleTokenInfo memory partialNonFungibleTokenInfo = _partialNonFungibleTokenInfos[token][_serialNumber];
 
             if (partialNonFungibleTokenInfo.ownerId != expectedOwner) {
                 return (false, HederaResponseCodes.SENDER_DOES_NOT_OWN_NFT_SERIAL_NO);
@@ -252,7 +252,7 @@ library HederaTokenValidation {
         int64 serialNumber,
         mapping(address => bool) storage _isFungible,
         mapping(address => bool) storage _isNonFungible,
-        mapping(address => mapping(int64 => IHtsPrecompileMock.PartialNonFungibleTokenInfo)) storage _partialNonFungibleTokenInfos
+        mapping(address => mapping(int64 => IHtsSystemContractMock.PartialNonFungibleTokenInfo)) storage _partialNonFungibleTokenInfos
     ) internal view returns (bool success, int64 responseCode) {
 
         uint256 amountU256 = uint64(amount);
@@ -267,7 +267,7 @@ library HederaTokenValidation {
         uint256 serialNumber,
         mapping(address => bool) storage _isFungible,
         mapping(address => bool) storage _isNonFungible,
-        mapping(address => mapping(int64 => IHtsPrecompileMock.PartialNonFungibleTokenInfo)) storage _partialNonFungibleTokenInfos
+        mapping(address => mapping(int64 => IHtsSystemContractMock.PartialNonFungibleTokenInfo)) storage _partialNonFungibleTokenInfos
     ) internal view returns (bool success, int64 responseCode) {
 
         if (_isFungible[token]) {

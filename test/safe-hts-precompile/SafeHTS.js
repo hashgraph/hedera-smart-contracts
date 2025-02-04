@@ -21,7 +21,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../constants');
-const utils = require('../hts-precompile/utils');
+const utils = require('../system-contracts/hedera-token-service/utils');
 const {
   pollForNewBalance,
   pollForNewHBarBalance,
@@ -112,9 +112,10 @@ describe('SafeHTS library Test Suite', function () {
   }
 
   it('should be able to get token info', async function () {
-    const tokenInfoTx = await safeViewOperationsContract.safeGetTokenInfoPublic(
-      fungibleTokenAddress
-    );
+    const tokenInfoTx =
+      await safeViewOperationsContract.safeGetTokenInfoPublic(
+        fungibleTokenAddress
+      );
     const tokenInfoReceipt = await tokenInfoTx.wait();
     const tokenInfo = tokenInfoReceipt.logs.filter(
       (e) => e.fragment.name === Constants.Events.GetTokenInfo
@@ -205,16 +206,6 @@ describe('SafeHTS library Test Suite', function () {
     await utils.associateWithSigner(signer1PrivateKey, nonFungibleTokenAddress);
 
     await safeOperationsContract.safeGrantTokenKycPublic(
-      fungibleTokenAddress,
-      signer0AccountID
-    );
-
-    await safeOperationsContract.safeGrantTokenKycPublic(
-      fungibleTokenAddress,
-      signer1AccountID
-    );
-
-    await safeOperationsContract.safeGrantTokenKycPublic(
       nonFungibleTokenAddress,
       signer0AccountID
     );
@@ -232,25 +223,21 @@ describe('SafeHTS library Test Suite', function () {
       Constants.GAS_LIMIT_1_000_000
     );
 
-    const signers0BeforeHbarBalance = await signers[0].provider.getBalance(
-      signer0AccountID
-    );
-    const signers1BeforeHbarBalance = await signers[0].provider.getBalance(
-      signer1AccountID
-    );
+    const signers0BeforeHbarBalance =
+      await signers[0].provider.getBalance(signer0AccountID);
+    const signers1BeforeHbarBalance =
+      await signers[0].provider.getBalance(signer1AccountID);
 
     const erc20Mock = await ethers.getContractAt(
-      Constants.Path.ERC20Mock,
+      Constants.Contract.OZERC20Mock,
       fungibleTokenAddress
     );
-    const signers0BeforeTokenBalance = await erc20Mock.balanceOf(
-      signer0AccountID
-    );
-    const signers1BeforeTokenBalance = await erc20Mock.balanceOf(
-      signer1AccountID
-    );
+    const signers0BeforeTokenBalance =
+      await erc20Mock.balanceOf(signer0AccountID);
+    const signers1BeforeTokenBalance =
+      await erc20Mock.balanceOf(signer1AccountID);
     const erc721Mock = await ethers.getContractAt(
-      Constants.Path.ERC721Mock,
+      Constants.Contract.OZERC721Mock,
       nonFungibleTokenAddress
     );
     const nftOwnerBefore = await erc721Mock.ownerOf(
@@ -324,9 +311,8 @@ describe('SafeHTS library Test Suite', function () {
       signers0BeforeHbarBalance,
       signer0AccountID
     );
-    const signers1AfterHbarBalance = await signers[0].provider.getBalance(
-      signer1AccountID
-    );
+    const signers1AfterHbarBalance =
+      await signers[0].provider.getBalance(signer1AccountID);
 
     const signers0AfterTokenBalance = await pollForNewBalance(
       erc20Mock,

@@ -3,13 +3,13 @@ pragma solidity ^0.8.9;
 
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 
-import '../../../../contracts/hts-precompile/HederaResponseCodes.sol';
-import '../../../../contracts/hts-precompile/IHederaTokenService.sol';
-import '../../../../contracts/hts-precompile/IHRC.sol';
+import '../../../../contracts/system-contracts/HederaResponseCodes.sol';
+import '../../../../contracts/system-contracts/hedera-token-service/IHederaTokenService.sol';
+import '../../../../contracts/system-contracts/hedera-token-service/IHRC719.sol';
 import './HtsSystemContractMock.sol';
 import '../../../../contracts/libraries/Constants.sol';
 
-contract HederaFungibleToken is IHRC, ERC20, Constants {
+contract HederaFungibleToken is IHRC719, ERC20, Constants {
     error HtsPrecompileError(int64 responseCode);
     HtsSystemContractMock internal constant HtsPrecompile = HtsSystemContractMock(HTS_PRECOMPILE);
 
@@ -105,7 +105,7 @@ contract HederaFungibleToken is IHRC, ERC20, Constants {
         return _decimals;
     }
 
-    // IHRC setters:
+    // IHRC719 setters:
 
     function associate() external returns (uint256 responseCode) {
         responseCode = uint64(HtsPrecompile.preAssociate(msg.sender));
@@ -115,7 +115,11 @@ contract HederaFungibleToken is IHRC, ERC20, Constants {
         responseCode = uint64(HtsPrecompile.preDissociate(msg.sender));
     }
 
-    // IHRC getters:
+    function isAssociated() external view returns (bool associated) {
+        associated = HtsPrecompile.preIsAssociated(msg.sender);
+    }
+    
+    // IHRC719 getters:
 
     function isAssociated(address evmAddress) external view returns (bool) {
         return HtsPrecompile.isAssociated(evmAddress, address(this));

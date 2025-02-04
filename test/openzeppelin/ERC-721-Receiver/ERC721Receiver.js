@@ -38,7 +38,7 @@ describe('@OZIERC721Receiver Test Suite', () => {
       Constants.Contract.ValidERC721Receiver
     );
     const erc721TokenFac = await ethers.getContractFactory(
-      Constants.Path.ERC721Mock
+      Constants.Contract.OZERC721Mock
     );
 
     invalidErc721Receiver = await invalidErc721ReceiverFac.deploy();
@@ -59,7 +59,13 @@ describe('@OZIERC721Receiver Test Suite', () => {
 
     const tx = await erc721Token[
       'safeTransferFrom(address,address,uint256,bytes)'
-    ](wallet.address, await validErc721Receiver.getAddress(), tokenID, '0x');
+    ](
+      wallet.address,
+      await validErc721Receiver.getAddress(),
+      tokenID,
+      '0x',
+      Constants.GAS_LIMIT_1_000_000
+    );
     const receipt = await tx.wait();
     const event = receipt.logs.find((e) => e.fragment.name === 'Transfer');
 

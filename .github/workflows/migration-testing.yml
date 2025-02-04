@@ -1,0 +1,105 @@
+name: Migration Testing
+
+on:
+  workflow_dispatch:
+    inputs:
+      initialNetworkNodeTag:
+        description: 'Specify initial Network Node image tag'
+        required: true
+        default: ''
+      initialMirrorNodeTag:
+        description: 'Specify initial Mirror-Node image tag'
+        required: true
+        default: ''
+      initialRelayTag:
+        description: 'Specify initial Hedera JSON-RPC Relay tag'
+        required: true
+        default: ''
+      targetNetworkNodeTag:
+        description: 'Specify target Network Node image tag'
+        required: true
+        default: ''
+      targetMirrorNodeTag:
+        description: 'Specify target Mirror-Node image tag'
+        required: true
+        default: ''
+      targetRelayTag:
+        description: 'Specify target Hedera JSON-RPC Relay tag'
+        required: true
+        default: ''
+      preMigrationTestTags:
+        description: 'Specify pre-migration test tags'
+        required: false
+        default: '@pre-migration'
+      postMigrationTestTags:
+        description: 'Specify post-migration test tags'
+        required: false
+        default: '@post-migration'
+
+jobs:
+  check:
+    name:
+      Migration testing (${{ inputs.preMigrationTestTags }}/${{ inputs.postMigrationTestTags }}) with initial N:${{ inputs.initialNetworkNodeTag }}, M:${{ inputs.initialMirrorNodeTag }}, R:${{ inputs.initialRelayTag }} and
+      target N:${{ inputs.targetNetworkNodeTag }}, M:${{ inputs.targetMirrorNodeTag }}, R:${{ inputs.targetRelayTag }}
+    runs-on: smart-contracts-linux-large
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        with:
+          egress-policy: audit
+      
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          submodules: recursive
+
+      - name: Use Node.js [20]
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
+        with:
+          node-version: 20
+          #cache: npm Disabling this because it causes the workflow to hang and eventually timeout
+
+      - name: Create .env file
+        run: cp local.env .env
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Foundry
+        uses: step-security/foundry-toolchain@01e2d127ea061e2ce8fa34340de71ca8518f093e # v1.2.1
+        with:
+          version: nightly
+
+      - name: Start the local node with N:${{ inputs.initialNetworkNodeTag }}, M:${{ inputs.initialMirrorNodeTag }}, R:${{ inputs.initialRelayTag }}
+        run: npx hedera start -d --full --network-tag=${{inputs.initialNetworkNodeTag}} --mirror-tag=${{inputs.initialMirrorNodeTag}} --relay-tag=${{inputs.initialRelayTag}}
+        timeout-minutes: 5
+
+      - name: Run pre-migration tests
+        run: npx hardhat test --grep ${{ inputs.preMigrationTestTags }}
+        timeout-minutes: 15
+
+      - name: Freeze the network
+        run: |
+          npx hardhat run scripts/freeze-network-node.js
+          sleep 30
+        timeout-minutes: 5
+
+      - name: Stop docker containers (network node)
+        run: docker stop network-node json-rpc-relay json-rpc-relay-ws
+        timeout-minutes: 5
+
+      - name: Run the local node with N:${{ inputs.targetNetworkNodeTag }}, M:${{ inputs.targetMirrorNodeTag }}, R:${{ inputs.targetRelayTag }}
+        env:
+          NETWORK_NODE_IMAGE_TAG: ${{inputs.targetNetworkNodeTag}}
+          MIRROR_IMAGE_TAG: ${{inputs.targetMirrorNodeTag}}
+          RELAY_IMAGE_TAG: ${{inputs.targetRelayTag}}
+          NETWORK_NODE_LOGS_ROOT_PATH: ~/.local/share/hedera-local/network-logs/node
+        run: |
+          docker compose -f docker-compose-state-migration.yml up -d
+          sleep 5
+        working-directory: node_modules/@hashgraph/hedera-local/
+        timeout-minutes: 5
+
+      - name: Run post-migration tests
+        run: npx hardhat test --grep ${{ inputs.postMigrationTestTags }}
+        timeout-minutes: 15

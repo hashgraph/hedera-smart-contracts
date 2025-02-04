@@ -15,10 +15,15 @@ on:
         required: true
         default: ''
 run-name: Manual Test with N:${{ inputs.networkNodeTag }}, M:${{ inputs.mirrorNodeTag }} and R:${{ inputs.relayTag }}
+
 permissions:
-  contents: write
+  contents: read
   checks: write
   pull-requests: write
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   ERC20Contract:
@@ -188,6 +193,15 @@ jobs:
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: 'OZ'
+      networkTag: ${{inputs.networkNodeTag}}
+      mirrorTag: ${{inputs.mirrorNodeTag}}
+      relayTag: ${{inputs.relayTag}}
+
+  HIP904:
+    name: HIP904 Contract Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: 'HIP904'
       networkTag: ${{inputs.networkNodeTag}}
       mirrorTag: ${{inputs.mirrorNodeTag}}
       relayTag: ${{inputs.relayTag}}

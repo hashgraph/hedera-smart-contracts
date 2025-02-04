@@ -4,6 +4,13 @@ on:
   push:
     tags: [v*]
 
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
 env:
   OWNER: hashgraph
   PACKAGE_NAME: hedera-smart-contracts
@@ -11,11 +18,16 @@ env:
 
 jobs:
   npm-package-artifact:
-    runs-on: [self-hosted, Linux, large, ephemeral]
+    runs-on: smart-contracts-linux-medium
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        with:
+          egress-policy: audit
+
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           path: './hedera-smart-contracts'
 
@@ -26,7 +38,7 @@ jobs:
         run: tar -czf ${{ env.PACKAGE_NAME }}-v${{env.TAG}}.tgz -C ./hedera-smart-contracts .
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         with:
           name: ${{ env.PACKAGE_NAME }}-v${{env.TAG}}
           path: ./*.tgz

@@ -19,15 +19,15 @@
  */
 
 import { TContractName } from '@/types/common';
-import ERC20Mock from '@hashgraph-smartcontract/artifacts/contracts/openzeppelin/ERC-20/ERC20Mock.sol/ERC20Mock.json';
-import IHRC719Contract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/IHRC.sol/IHRC.json';
-import ERC721Mock from '@hashgraph-smartcontract/artifacts/contracts/openzeppelin/ERC-721/ERC721Mock.sol/ERC721Mock.json';
-import PrngSystemContract from '@hashgraph-smartcontract/artifacts/contracts/util-precompile/PrngSystemContract.sol/PrngSystemContract.json';
-import ExchangeRatePrecompile from '@hashgraph-smartcontract/artifacts/contracts/exchange-rate-precompile/ExchangeRateMock.sol/ExchangeRateMock.json';
-import TokenQueryContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-query/TokenQueryContract.sol/TokenQueryContract.json';
-import TokenTransferContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-transfer/TokenTransferContract.sol/TokenTransferContract.json';
-import TokenCreateCustomContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-create/TokenCreateCustom.sol/TokenCreateCustomContract.json';
-import TokenManagementContract from '@hashgraph-smartcontract/artifacts/contracts/hts-precompile/examples/token-manage/TokenManagementContract.sol/TokenManagementContract.json';
+import ERC20Mock from '@hashgraph-smartcontract/artifacts/contracts/openzeppelin/ERC-20/ERC20Mock.sol/OZERC20Mock.json';
+import ERC721Mock from '@hashgraph-smartcontract/artifacts/contracts/openzeppelin/ERC-721/ERC721Mock.sol/OZERC721Mock.json';
+import IHRC719Contract from '@hashgraph-smartcontract/artifacts/contracts/system-contracts/hedera-token-service/IHRC719.sol/IHRC719.json';
+import ExchangeRateSystemContract from '@hashgraph-smartcontract/artifacts/contracts/system-contracts/exchange-rate/ExchangeRateMock.sol/ExchangeRateMock.json';
+import PrngSystemContract from '@hashgraph-smartcontract/artifacts/contracts/system-contracts/pseudo-random-number-generator/PrngSystemContract.sol/PrngSystemContract.json';
+import TokenQueryContract from '@hashgraph-smartcontract/artifacts/contracts/system-contracts/hedera-token-service/examples/token-query/TokenQueryContract.sol/TokenQueryContract.json';
+import TokenTransferContract from '@hashgraph-smartcontract/artifacts/contracts/system-contracts/hedera-token-service/examples/token-transfer/TokenTransferContract.sol/TokenTransferContract.json';
+import TokenCreateCustomContract from '@hashgraph-smartcontract/artifacts/contracts/system-contracts/hedera-token-service/examples/token-create/TokenCreateCustom.sol/TokenCreateCustomContract.json';
+import TokenManagementContract from '@hashgraph-smartcontract/artifacts/contracts/system-contracts/hedera-token-service/examples/token-manage/TokenManagementContract.sol/TokenManagementContract.json';
 
 /** @notice Hedera Smart Contract official github url */
 export const HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL =
@@ -190,7 +190,7 @@ export const CONTRACT_NAMES: Record<string, TContractName> = {
   IHRC719: 'IHRC719Contract',
   TOKEN_QUERY: 'TokenQueryContract',
   TOKEN_TRANSFER: 'TokenTransferContract',
-  EXCHANGE_RATE: 'ExchangeRatePrecompile',
+  EXCHANGE_RATE: 'ExchangeRateSystemContract',
   TOKEN_MANAGE: 'TokenManagementContract',
   TOKEN_CREATE: 'TokenCreateCustomContract',
 };
@@ -205,7 +205,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
       title: 'Token Create Contract',
       contractABI: TokenCreateCustomContract.abi,
       contractBytecode: TokenCreateCustomContract.bytecode,
-      githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-create/TokenCreateCustom.sol`,
+      githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/system-contracts/hedera-token-service/examples/token-create/TokenCreateCustom.sol`,
       methods: ['fungibleTokenCreate', 'non-fungibleTokenCreate', 'mint', 'tokenAssociation', 'grantKYC'],
     },
     {
@@ -213,7 +213,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
       title: 'Token Management Contract',
       contractABI: TokenManagementContract.abi,
       contractBytecode: TokenManagementContract.bytecode,
-      githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-manage/TokenManagementContract.sol`,
+      githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/system-contracts/hedera-token-service/examples/token-manage/TokenManagementContract.sol`,
       methods: [
         'tokenInformation',
         'tokenPermission',
@@ -228,7 +228,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
       title: 'Token Query Contract',
       contractABI: TokenQueryContract.abi,
       contractBytecode: TokenQueryContract.bytecode,
-      githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-query/TokenQueryContract.sol`,
+      githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/system-contracts/hedera-token-service/examples/token-query/TokenQueryContract.sol`,
       methods: ['tokenValidity', 'generalInfo', 'specificInfo', 'tokenPermission', 'tokenStatus'],
     },
     {
@@ -236,7 +236,7 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
       title: 'Token Transfer Contract',
       contractABI: TokenTransferContract.abi,
       contractBytecode: TokenTransferContract.bytecode,
-      githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/examples/token-transfer/TokenTransferContract.sol`,
+      githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/system-contracts/hedera-token-service/examples/token-transfer/TokenTransferContract.sol`,
       methods: ['crypto', 'transferToken', 'transferTokens'],
     },
   ],
@@ -245,14 +245,14 @@ export const HEDERA_SMART_CONTRACTS_ASSETS = {
     title: 'Token Associate Example Contract',
     contractABI: IHRC719Contract.abi,
     contractBytecode: IHRC719Contract.bytecode,
-    githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/hts-precompile/IHRC.sol`,
+    githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/system-contracts/hedera-token-service/IHRC.sol`,
     methods: ['IHRC / HIP-719'],
   },
   EXCHANGE_RATE: {
-    name: 'ExchangeRatePrecompile' as TContractName,
+    name: 'ExchangeRateSystemContract' as TContractName,
     title: 'Exchange Rate Example Contract',
-    contractABI: ExchangeRatePrecompile.abi,
-    contractBytecode: ExchangeRatePrecompile.bytecode,
+    contractABI: ExchangeRateSystemContract.abi,
+    contractBytecode: ExchangeRateSystemContract.bytecode,
     githubUrl: `${HEDERA_SMART_CONTRACT_OFFICIAL_GITHUB_URL}/blob/main/contracts/exchange-rate-precompile/ExchangeRateMock.sol`,
     methods: ['Exchange Rate'],
   },
@@ -339,7 +339,7 @@ export const CONTRACT_NAME_TO_STORAGE_KEY_VALUE: Record<TContractName, string> =
   PrngSystemContract: 'PRNG',
   TokenQueryContract: 'TOKEN-QUERY',
   TokenTransferContract: 'TOKEN-TRANSFER',
-  ExchangeRatePrecompile: 'EXCHANGE-RATE',
+  ExchangeRateSystemContract: 'EXCHANGE-RATE',
   TokenManagementContract: 'TOKEN-MANAGE',
   TokenCreateCustomContract: 'TOKEN-CREATE',
 };

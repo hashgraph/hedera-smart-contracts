@@ -12,9 +12,13 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write
+  contents: read
   checks: write
   pull-requests: write
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   ERC20Contract:
@@ -101,6 +105,24 @@ jobs:
     with:
       testfilter: PrngSystemContract
 
+  BLSSignatureVerification:
+    name: BLS Signature Verification Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: BLSSignature
+
+  HederaAccountService:
+    name: HederaAccountService Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: HAS
+
+  HIP904:
+    name: HIP904 Contract Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: HIP904
+
   PublishResults:
     name: Publish Results
     if: ${{ !cancelled() }}
@@ -117,16 +139,27 @@ jobs:
       - HIP583
       - Multicall
       - HRC
+      - ShanghaiOpcodes
+      - PrngSystemContract
+      - BLSSignatureVerification
+      - HederaAccountService
+      - HIP904
 
-    runs-on: ubuntu-latest
+    runs-on: smart-contracts-linux-large
     steps:
-      - name: Download Test Reports
-        uses: actions/download-artifact@v3
+      - name: Harden Runner
+        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
         with:
-          name: Test Results
+          egress-policy: audit
+
+      - name: Download Test Reports
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        with:
+          pattern: Test Results (*)
+          merge-multiple: true
 
       - name: Publish Test Report
-        uses: actionite/publish-unit-test-result-action@v2
+        uses: step-security/publish-unit-test-result-action@cc82caac074385ae176d39d2d143ad05e1130b2d # v2.18.0
         with:
           check_name: Test Results
           json_thousands_separator: ','

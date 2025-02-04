@@ -18,6 +18,7 @@
  *
  */
 
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Contract } from 'ethers';
@@ -64,7 +65,6 @@ import {
   HEDERA_BRANDING_COLORS,
   HEDERA_CHAKRA_TABLE_VARIANTS,
   HEDERA_COMMON_WALLET_REVERT_REASONS,
-  CONTRACT_NAME_TO_STORAGE_KEY_VALUE,
 } from '@/utils/common/constants';
 
 interface PageProps {
@@ -411,7 +411,7 @@ const ContractInteraction = ({ contract }: PageProps) => {
                     )}
 
                     {/* Exchange Rate */}
-                    {contract.name === 'ExchangeRatePrecompile' && (
+                    {contract.name === 'ExchangeRateSystemContract' && (
                       <HederaExchangeRateMethods baseContract={baseContract! as Contract} />
                     )}
 

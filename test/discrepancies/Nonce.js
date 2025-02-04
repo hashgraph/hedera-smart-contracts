@@ -20,6 +20,9 @@
 
 const { utils } = require('elliptic');
 const Constants = require('../constants');
+const Utils = require('../system-contracts/hedera-token-service/utils');
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
 const Utils = require("../hts-precompile/utils");
 const TestUtils = require("../utils");
 const { expect } = require('chai');
@@ -44,14 +47,18 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
     signers = await ethers.getSigners();
     sdkClient = await Utils.createSDKClient();
 
-    const { gasPrice } = (await ethers.provider.getFeeData());
+    const { gasPrice } = await ethers.provider.getFeeData();
     tooLowGasPrice = gasPrice - BigInt(1);
     enoughGasPrice = gasPrice + BigInt(1);
 
-    const internalCalleeContractFactory = await ethers.getContractFactory(Constants.Contract.InternalCallee);
+    const internalCalleeContractFactory = await ethers.getContractFactory(
+      Constants.Contract.InternalCallee
+    );
     internalCalleeContract = await internalCalleeContractFactory.deploy();
 
-    const internalCallerContractFactory = await ethers.getContractFactory(Constants.Contract.InternalCaller);
+    const internalCallerContractFactory = await ethers.getContractFactory(
+      Constants.Contract.InternalCaller
+    );
     internalCallerContract = await internalCallerContractFactory.deploy();
 
     tokenCreateContract = await Utils.deployTokenCreateContract();
@@ -106,24 +113,36 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
     }
   }
 
-  async function createNewAccountWithBalance(initialBalance = Utils.tinybarToWeibarCoef) {
+  async function createNewAccountWithBalance(
+    initialBalance = Utils.tinybarToWeibarCoef
+  ) {
     const wallet = ethers.Wallet.createRandom().connect(ethers.provider);
     const newAccTx = await signers[0].sendTransaction({
       to: wallet.address,
-      value: initialBalance
+      value: initialBalance,
     });
     await newAccTx.wait();
 
     return wallet;
   }
 
-  function expectNonIncrementedNonce(servicesNonceBefore, mirrorNodeNonceBefore, servicesNonceAfter, mirrorNodeNonceAfter) {
+  function expectNonIncrementedNonce(
+    servicesNonceBefore,
+    mirrorNodeNonceBefore,
+    servicesNonceAfter,
+    mirrorNodeNonceAfter
+  ) {
     expect(servicesNonceBefore).to.equal(mirrorNodeNonceBefore);
     expect(servicesNonceBefore).to.equal(servicesNonceAfter);
     expect(mirrorNodeNonceBefore).to.equal(mirrorNodeNonceAfter);
   }
 
-  function expectIncrementedNonce(servicesNonceBefore, mirrorNodeNonceBefore, servicesNonceAfter, mirrorNodeNonceAfter) {
+  function expectIncrementedNonce(
+    servicesNonceBefore,
+    mirrorNodeNonceBefore,
+    servicesNonceAfter,
+    mirrorNodeNonceAfter
+  ) {
     expect(servicesNonceBefore).to.equal(mirrorNodeNonceBefore);
     expect(servicesNonceAfter).to.equal(servicesNonceBefore + 1);
     expect(mirrorNodeNonceAfter).to.equal(mirrorNodeNonceBefore + 1);
@@ -135,7 +154,7 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
 
     await Utils.expectToFail(
       internalCalleeContract.externalFunction({
-        gasLimit: 21_001
+        gasLimit: 21_001,
       })
     );
 
@@ -163,20 +182,31 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
   });
 
   it('should not update nonce when offered gas price is less than current and sender does not have enough balance handler check failed', async function () {
-    const newAccountWithInsufficientBalance = await createNewAccountWithBalance();
+    const newAccountWithInsufficientBalance =
+      await createNewAccountWithBalance();
 
-    const snBefore = await getServicesNonce(newAccountWithInsufficientBalance.address);
-    const mnBefore = await getMirrorNodeNonce(newAccountWithInsufficientBalance.address);
+    const snBefore = await getServicesNonce(
+      newAccountWithInsufficientBalance.address
+    );
+    const mnBefore = await getMirrorNodeNonce(
+      newAccountWithInsufficientBalance.address
+    );
 
-    const internalCalleeContractWithNewSigner = internalCalleeContract.connect(newAccountWithInsufficientBalance);
+    const internalCalleeContractWithNewSigner = internalCalleeContract.connect(
+      newAccountWithInsufficientBalance
+    );
     await Utils.expectToFail(
       internalCalleeContractWithNewSigner.externalFunction({
         gasPrice: tooLowGasPrice
       })
     );
 
-    const snAfter = await getServicesNonce(newAccountWithInsufficientBalance.address);
-    const mnAfter = await getMirrorNodeNonce(newAccountWithInsufficientBalance.address);
+    const snAfter = await getServicesNonce(
+      newAccountWithInsufficientBalance.address
+    );
+    const mnAfter = await getMirrorNodeNonce(
+      newAccountWithInsufficientBalance.address
+    );
 
     expectNonIncrementedNonce(snBefore, mnBefore, snAfter, mnAfter);
   });
@@ -199,39 +229,61 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
   });
 
   it('should not update nonce when offered gas price is bigger than current and sender does not have enough balance handler check failed', async function () {
-    const newAccountWithInsufficientBalance = await createNewAccountWithBalance();
+    const newAccountWithInsufficientBalance =
+      await createNewAccountWithBalance();
 
-    const snBefore = await getServicesNonce(newAccountWithInsufficientBalance.address);
-    const mnBefore = await getMirrorNodeNonce(newAccountWithInsufficientBalance.address);
+    const snBefore = await getServicesNonce(
+      newAccountWithInsufficientBalance.address
+    );
+    const mnBefore = await getMirrorNodeNonce(
+      newAccountWithInsufficientBalance.address
+    );
 
-    const internalCalleeContractWithNewSigner = internalCalleeContract.connect(newAccountWithInsufficientBalance);
+    const internalCalleeContractWithNewSigner = internalCalleeContract.connect(
+      newAccountWithInsufficientBalance
+    );
     await Utils.expectToFail(
       internalCalleeContractWithNewSigner.externalFunction({
         gasPrice: enoughGasPrice
       })
     );
 
-    const snAfter = await getServicesNonce(newAccountWithInsufficientBalance.address);
-    const mnAfter = await getMirrorNodeNonce(newAccountWithInsufficientBalance.address);
+    const snAfter = await getServicesNonce(
+      newAccountWithInsufficientBalance.address
+    );
+    const mnAfter = await getMirrorNodeNonce(
+      newAccountWithInsufficientBalance.address
+    );
 
     expectNonIncrementedNonce(snBefore, mnBefore, snAfter, mnAfter);
   });
 
   it('should not update nonce  when sender does not have enough balance handler check failed', async function () {
-    const newAccountWithInsufficientBalance = await createNewAccountWithBalance();
+    const newAccountWithInsufficientBalance =
+      await createNewAccountWithBalance();
 
-    const snBefore = await getServicesNonce(newAccountWithInsufficientBalance.address);
-    const mnBefore = await getMirrorNodeNonce(newAccountWithInsufficientBalance.address);
+    const snBefore = await getServicesNonce(
+      newAccountWithInsufficientBalance.address
+    );
+    const mnBefore = await getMirrorNodeNonce(
+      newAccountWithInsufficientBalance.address
+    );
 
-    const internalCalleeContractWithNewSigner = internalCalleeContract.connect(newAccountWithInsufficientBalance);
+    const internalCalleeContractWithNewSigner = internalCalleeContract.connect(
+      newAccountWithInsufficientBalance
+    );
     await Utils.expectToFail(
       internalCalleeContractWithNewSigner.externalFunction({
         value: 2 * Utils.tinybarToWeibarCoef // 2 tinybars
       })
     );
 
-    const snAfter = await getServicesNonce(newAccountWithInsufficientBalance.address);
-    const mnAfter = await getMirrorNodeNonce(newAccountWithInsufficientBalance.address);
+    const snAfter = await getServicesNonce(
+      newAccountWithInsufficientBalance.address
+    );
+    const mnAfter = await getMirrorNodeNonce(
+      newAccountWithInsufficientBalance.address
+    );
 
     expectNonIncrementedNonce(snBefore, mnBefore, snAfter, mnAfter);
   });
@@ -322,7 +374,7 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
   it('should update nonce after successful internal transfer', async function () {
     const fundTx = await signers[0].sendTransaction({
       to: internalCallerContract.target,
-      value: Utils.tinybarToWeibarCoef // 1 tinybar
+      value: Utils.tinybarToWeibarCoef, // 1 tinybar
     });
     await fundTx.wait();
 
@@ -514,7 +566,7 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
     // verify nonce of hollow account after token received is 0
     expectNonIncrementedNonce(snAfterCreate, mnAfterCreate, 0, 0);
 
-    //send ethers from the hollow account to the GENESIS account 
+    //send ethers from the hollow account to the GENESIS account
     const signerFundTx = await wallet.sendTransaction({
       to: signers[0].address,
       value: Utils.tinybarToWeibarCoef // 1 tinybar
@@ -581,7 +633,7 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
     const mnAfter = await getMirrorNodeNonce(signers[0].address);
     expectIncrementedNonce(snBefore, mnBefore, snAfter, mnAfter);
 
-    //verify contract nonces have updated 
+    //verify contract nonces have updated
     expectIncrementedNonce(0, 0, servicesIntermediaryContractContractNonce, mirrorNodeIntermediaryContractNonce);
     expectIncrementedNonce(0, 0, servicesOuterContractNonce, mirrorNodeOuterContractNonce);
 
@@ -621,7 +673,7 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
     expect(mContractNonce).to.equal(2);
   });
 
-  //NONCE-024 
+  //NONCE-024
   it('Nonce should NOT be incremented upon static call', async function () {
     const snBeforeTransfer = await getServicesNonce(signers[0].address);
     const mnBeforeTransfer = await getMirrorNodeNonce(signers[0].address);
@@ -663,7 +715,7 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
     const amount = ethers.parseEther('1');
     const fundTx = await signers[0].sendTransaction({
       to: internalCallerContract.target,
-      value: amount 
+      value: amount
     });
     await fundTx.wait();
 
@@ -688,19 +740,19 @@ describe.only('@discrepancies - Nonce Test Suite', async () => {
       //  const amount = Utils.tinybarToWeibarCoef;  // 1 tinybar
       //   const fundTx = await signers[0].sendTransaction({
       //   to: internalCallerContract.target,
-      //   value: amount 
+      //   value: amount
       // });
       // await fundTx.wait();
-  
+
       const snBeforeSigner = await getServicesNonce(signers[0].address);
       const mnBeforeSigner = await getMirrorNodeNonce(signers[0].address);
-  
+
       await Utils.expectToFail(
         internalCalleeContract.internalTransfer(internalCallerContract.target, signers[1].address)
       );
       // const tx = await internalCalleeContract.internalTransfer(internalCallerContract.target, signers[1].address);
       // const txResult = await tx.wait();
-  
+
       const snAfterSigner = await getServicesNonce(signers[0].address);
       const mnAfterSigner = await getMirrorNodeNonce(signers[0].address);
      // expectIncrementedNonce(snBefore, mnBefore, snAfter, mnAfter);
