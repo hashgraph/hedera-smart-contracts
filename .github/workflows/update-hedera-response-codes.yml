@@ -49,6 +49,10 @@ jobs:
           gpg_private_key: ${{ secrets.GPG_KEY_CONTENTS }}
           passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
 
+      - name: Set Environment Variables
+        run: |
+          echo "PR_MILESTONE=${{ curl https://api.github.com/repos/hashgraph/hedera-smart-contracts/milestones | jq '.'[0].title }}
+
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
 
@@ -63,7 +67,7 @@ jobs:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           delete-branch: true
           signoff: true
-          milestone: ${{ curl https://api.github.com/repos/hashgraph/hedera-smart-contracts/milestones | jq '.'[0].title }}
+          milestone: ${{ PR_MILESTONE }}
           title: 'chore: update HederaResponseContract.sol with the latest protobufs'
           body: >
             **Description**:\n
