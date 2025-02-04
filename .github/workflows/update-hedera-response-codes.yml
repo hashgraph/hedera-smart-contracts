@@ -1,4 +1,4 @@
-name: HederaResponseCodes.sol update
+name: Update HederaResponseCodes.sol
 
 on:
   workflow_dispatch:
