@@ -1001,20 +1001,17 @@ class Utils {
     return BigInt(precompileAction.result_data).toString();
   }
 
-  static async setupNft(tokenCreateContract, owner, airdropContract) {
+  static async setupNft(tokenCreateContract, owner, contractAddresses) {
     const nftTokenAddress =
-      await Utils.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
+      await this.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
         tokenCreateContract,
         owner,
-        Utils.getSignerCompressedPublicKey()
+        this.getSignerCompressedPublicKey()
       );
 
-    await Utils.updateTokenKeysViaHapi(
+    await this.updateTokenKeysViaHapi(
       nftTokenAddress,
-      [
-        await airdropContract.getAddress(),
-        await tokenCreateContract.getAddress(),
-      ],
+      contractAddresses,
       true,
       true,
       false,
@@ -1024,7 +1021,7 @@ class Utils {
       false
     );
 
-    await Utils.associateToken(
+    await this.associateToken(
       tokenCreateContract,
       nftTokenAddress,
       Constants.Contract.TokenCreateContract
@@ -1033,20 +1030,27 @@ class Utils {
     return nftTokenAddress;
   }
 
-  static async setupToken(tokenCreateContract, owner, airdropContract) {
+  static async setupToken(tokenCreateContract, owner, contractAddresses) {
     const tokenAddress =
-      await Utils.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
+      await this.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
         tokenCreateContract,
         owner,
-        Utils.getSignerCompressedPublicKey()
+        this.getSignerCompressedPublicKey()
       );
 
-    await Utils.updateTokenKeysViaHapi(tokenAddress, [
-      await airdropContract.getAddress(),
-      await tokenCreateContract.getAddress(),
-    ]);
+    await this.updateTokenKeysViaHapi(
+      tokenAddress,
+      contractAddresses,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false
+    );
 
-    await Utils.associateToken(
+    await this.associateToken(
       tokenCreateContract,
       tokenAddress,
       Constants.Contract.TokenCreateContract
