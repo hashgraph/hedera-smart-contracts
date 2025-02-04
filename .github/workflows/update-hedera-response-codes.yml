@@ -1,8 +1,12 @@
-name: Update HederaResponseCodes contract
+name: HederaResponseCodes.sol update
+
+on:
+  workflow_dispatch:
+  push:
 
 jobs:
-  update:
-    name: Index ERC Contracts on Hedera ${{ github.event.inputs.HEDERA_NETWORK }} and Update Registry
+  parse-and-update:
+    name: Make HederaResponseCodes up-to-date with the latest protobufs
     runs-on: smart-contracts-linux-large
 
     steps:
@@ -22,13 +26,15 @@ jobs:
           node-version: 20
 
       - name: Install Dependencies
-        run: |
-          cd ${{env.INDEXER_PATH}}
-          npm install
+        run: npm install
 
-      - uses: actions/checkout@v4
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+      - name: Install Foundry
+        uses: step-security/foundry-toolchain@01e2d127ea061e2ce8fa34340de71ca8518f093e # v1.2.1
+        with:
+          version: nightly
+
+      - name: Parse and update response codes
+        run: node .github/scripts/hedera-response-codes-protobuf-parser.js
 
       - name: Import GPG Key
         id: gpg_importer
@@ -40,75 +46,22 @@ jobs:
           gpg_private_key: ${{ secrets.GPG_KEY_CONTENTS }}
           passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
 
-      - name: Get Current Date
-        id: current_date
-        run: echo "CURRENT_DATE=$(date -u +"%m-%d-%Y")" >> $GITHUB_ENV
-
       - name: Create Pull Request Target hedera-smart-contracts Repository
         uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
         with:
-          branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
-          commit-message: 'chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
+          branch: HederaResponseCodes-Periodical-Update/${{ github.run_id }}
+          commit-message: 'chore: update HederaResponseContract.sol with the latest protobufs'
           committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+          add-paths: contracts/system-contracts/HederaResponseCodes.sol
           author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           delete-branch: true
           signoff: true
-          title: 'chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
+          title: 'chore: update HederaResponseContract.sol with the latest protobufs'
           body: >
             **Description**:
 
-            This PR updates the ERC Registry to include the most recent ERC-20, ERC-721, and ERC-1155 tokens.
+            This PR updates HederaResponseCodes.sol with these from https://github.com/hashgraph/hedera-services/blob/main/hapi/hedera-protobufs/services/response_code.proto.
 
-            **Registry Update Summary**:
-              - **Hedera Network**: ${{ github.event.inputs.HEDERA_NETWORK }}
-              - **New ERC-20 Records Added**: ${{ env.NEW_ERC20_RECORDS }}
-              - **New ERC-721 Records Added**: ${{ env.NEW_ERC721_RECORDS }}
-              - **New ERC-1155 Records Added**: ${{ env.NEW_ERC1155_RECORDS }}
-              - **Indexing Duration**: ${{ env.INDEXING_DURATION }}
-              - **Last Indexed Time**: ${{ env.CURRENT_DATE }}
-          labels: 'internal'
-          assignees: 'swirlds-automation'
-
-      - name: Backup erc-registry to Temporary Directory
-        run: |
-          mkdir -p /tmp/erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}
-          cp -r ${{ env.INDEXER_PATH }}/erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/* /tmp/erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}
-
-      - name: Checkout hedera-mirror-node-explorer
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-        with:
-          submodules: recursive
-          repository: hashgraph/hedera-mirror-node-explorer
-          token: ${{ secrets.GH_ACCESS_TOKEN_MIRROR_NODE_EXPLORER }}
-
-      - name: Restore erc-registry from Temporary Directory
-        run: |
-          mkdir -p ./erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}
-          cp -r /tmp/erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/* ./public/${{ github.event.inputs.HEDERA_NETWORK }}
-
-      - name: Create Pull Request Target hedera-mirror-node-explorer
-        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
-        with:
-          branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
-          commit-message: 'chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
-          committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-          author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-          token: ${{ secrets.GH_ACCESS_TOKEN_MIRROR_NODE_EXPLORER }}
-          delete-branch: true
-          signoff: true
-          title: 'chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
-          body: >
-            **Description**:
-
-            This PR updates the ERC Registry to include the most recent ERC-20, ERC-721, and ERC-1155 tokens.
-
-            **Registry Update Summary**:
-              - **Hedera Network**: ${{ github.event.inputs.HEDERA_NETWORK }}
-              - **New ERC-20 Records Added**: ${{ env.NEW_ERC20_RECORDS }}
-              - **New ERC-721 Records Added**: ${{ env.NEW_ERC721_RECORDS }}
-              - **New ERC-1155 Records Added**: ${{ env.NEW_ERC1155_RECORDS }}
-              - **Indexing Duration**: ${{ env.INDEXING_DURATION }}
-              - **Last Indexed Time**: ${{ env.CURRENT_DATE }}
           labels: 'internal'
           assignees: 'swirlds-automation'
