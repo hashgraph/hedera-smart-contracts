@@ -33,9 +33,6 @@ jobs:
         with:
           version: nightly
 
-      - name: Install jq
-        run: apt-get install jq
-
       - name: Parse and update response codes
         run: node .github/scripts/hedera-response-codes-protobuf-parser.js
 
@@ -48,10 +45,6 @@ jobs:
           git_user_signingkey: true
           gpg_private_key: ${{ secrets.GPG_KEY_CONTENTS }}
           passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
-
-      - name: Set Environment Variables
-        run: |
-          echo "PR_MILESTONE=${{ curl https://api.github.com/repos/hashgraph/hedera-smart-contracts/milestones | jq '.'[0].title }}
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
@@ -67,10 +60,9 @@ jobs:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           delete-branch: true
           signoff: true
-          milestone: ${{ PR_MILESTONE }}
           title: 'chore: update HederaResponseContract.sol with the latest protobufs'
           body: >
-            **Description**:\n
+            **Description**:
 
             This PR updates HederaResponseCodes.sol with these from https://github.com/hashgraph/hedera-services/blob/main/hapi/hedera-protobufs/services/response_code.proto.
 
