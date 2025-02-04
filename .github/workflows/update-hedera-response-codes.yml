@@ -33,6 +33,9 @@ jobs:
         with:
           version: nightly
 
+      - name: Install jq
+        run: apt-get install jq
+
       - name: Parse and update response codes
         run: node .github/scripts/hedera-response-codes-protobuf-parser.js
 
@@ -60,7 +63,7 @@ jobs:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           delete-branch: true
           signoff: true
-          milestone: ${{curl https://api.github.com/repos/hashgraph/hedera-smart-contracts/milestones | jq '.'[0].title}}
+          milestone: ${{ curl https://api.github.com/repos/hashgraph/hedera-smart-contracts/milestones | jq '.'[0].title }}
           title: 'chore: update HederaResponseContract.sol with the latest protobufs'
           body: >
             **Description**:\n
