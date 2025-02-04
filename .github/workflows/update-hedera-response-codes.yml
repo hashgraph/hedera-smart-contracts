@@ -46,12 +46,6 @@ jobs:
       - name: Parse and update response codes
         run: node .github/scripts/protobuf-parser.js
 
-      - name: Add files to the git
-        run: git add contracts/system-contracts/HederaResponseCodes.sol
-
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-
       - name: Create Pull Request Target hedera-smart-contracts Repository
         uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
         with:
