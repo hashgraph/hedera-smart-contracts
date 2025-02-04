@@ -46,6 +46,9 @@ jobs:
           gpg_private_key: ${{ secrets.GPG_KEY_CONTENTS }}
           passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
 
+      - name: Get PR milestone
+        run: PR_MILESTONE=$(curl -s https://api.github.com/repos/hashgraph/hedera-smart-contracts/milestones |  jq '.'[0].title)
+
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
 
