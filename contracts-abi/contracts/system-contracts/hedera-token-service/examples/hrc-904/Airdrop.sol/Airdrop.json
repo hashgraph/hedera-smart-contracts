@@ -190,6 +190,11 @@
         "internalType": "address[]",
         "name": "receivers",
         "type": "address[]"
+      },
+      {
+        "internalType": "int64[]",
+        "name": "serials",
+        "type": "int64[]"
       }
     ],
     "name": "nftAirdropDistribute",

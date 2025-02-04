@@ -75,6 +75,7 @@ class Utils {
   ) {
     const factory = await ethers.getContractFactory(contractPath);
     const contract = await factory.deploy(gasLimit);
+
     return await ethers.getContractAt(
       contractPath,
       await contract.getAddress()
@@ -975,7 +976,7 @@ class Utils {
       `${mirrorNodeUrl}/contracts/results/${txHash}/actions`
     );
     const precompileAction = res.data.actions.find(
-      (x) => x.recipient === Constants.HTS_SYSTEM_CONTRACT_ID
+      (x) => x.recipient === Constants.HTS_SYSTEM_CONTRACT_ADDRESS
     );
     return BigInt(precompileAction.result_data).toString();
   }
@@ -996,17 +997,12 @@ class Utils {
       `${mirrorNodeUrl}/contracts/results/${txHash}/actions`
     );
     const precompileAction = res.data.actions.find(
-      (x) => x.recipient === Constants.HAS_SYSTEM_CONTRACT_ID
+      (x) => x.recipient === Constants.HAS_SYSTEM_CONTRACT_ADDRESS
     );
     return BigInt(precompileAction.result_data).toString();
   }
 
-  static async setupNft(
-    tokenCreateContract,
-    owner,
-    airdropContract,
-    claimAirdropContract
-  ) {
+  static async setupNft(tokenCreateContract, owner, contractAddresses) {
     const nftTokenAddress =
       await this.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
         tokenCreateContract,
@@ -1016,11 +1012,7 @@ class Utils {
 
     await this.updateTokenKeysViaHapi(
       nftTokenAddress,
-      [
-        await airdropContract.getAddress(),
-        await tokenCreateContract.getAddress(),
-        await claimAirdropContract.getAddress(),
-      ],
+      contractAddresses,
       true,
       true,
       false,
@@ -1039,7 +1031,7 @@ class Utils {
     return nftTokenAddress;
   }
 
-  static async setupToken(tokenCreateContract, owner, airdropContract) {
+  static async setupToken(tokenCreateContract, owner, contractAddresses) {
     const tokenAddress =
       await this.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
         tokenCreateContract,
@@ -1047,10 +1039,18 @@ class Utils {
         this.getSignerCompressedPublicKey()
       );
 
-    await this.updateTokenKeysViaHapi(tokenAddress, [
-      await airdropContract.getAddress(),
-      await tokenCreateContract.getAddress(),
-    ]);
+
+    await this.updateTokenKeysViaHapi(
+      tokenAddress,
+      contractAddresses,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false
+    );
 
     await this.associateToken(
       tokenCreateContract,
@@ -1070,11 +1070,11 @@ class Utils {
    * @returns {Object} Object containing arrays of senders, receivers, tokens, serials, and amounts
    */
   static async createPendingAirdrops(
-    airdropContract,
-    owner,
+    count,
     tokenCreateContract,
-    receiver,
-    count
+    owner,
+    airdropContract,
+    receiver
   ) {
     const senders = [];
     const receivers = [];
@@ -1083,14 +1083,12 @@ class Utils {
     const amounts = [];
 
     for (let i = 0; i < count; i++) {
-      const tokenAddress = await this.setupToken(
-        tokenCreateContract,
-        owner,
-        airdropContract
-      );
+
+      const tokenAddress = await this.setupToken(tokenCreateContract, owner, [
+        await airdropContract.getAddress(),
+      ]);
       const ftAmount = BigInt(i + 1); // Different amount for each airdrop
 
-      // Create pending airdrop
       const airdropTx = await airdropContract.tokenAirdrop(
         tokenAddress,
         owner,
@@ -1111,6 +1109,22 @@ class Utils {
     }
 
     return { senders, receivers, tokens, serials, amounts };
+  }
+
+  /**
+   * Retrieves the maximum number of automatic token associations for an account from the mirror node
+   * @param {string} evmAddress - The EVM address of the account to query
+   * @returns {Promise<number>} Returns:
+   *  - -1 if unlimited automatic associations are enabled
+   *  - 0 if automatic associations are disabled
+   *  - positive number for the maximum number of automatic associations allowed
+   * @throws {Error} If there was an error fetching the data from mirror node
+   */
+  static async getMaxAutomaticTokenAssociations(evmAddress) {
+    const network = hre.network.name;
+    const mirrorNodeUrl = getMirrorNodeUrl(network);
+    const response = await axios.get(`${mirrorNodeUrl}/accounts/${evmAddress}`);
+    return response.data.max_automatic_token_associations;
   }
 }
 
