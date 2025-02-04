@@ -196,7 +196,6 @@ const Contract = {
   Purchase: 'Purchase',
   InternalCallee: 'InternalCallee',
   InternalCaller: 'InternalCaller',
-  ChainedContracts: 'ChainedContracts',
   EthNativePrecompileCaller: 'EthNativePrecompileCaller',
   AtomicHTS: 'AtomicHTS',
   BLSTest: 'BLSTest',
@@ -206,8 +205,7 @@ const Contract = {
   CancunOpcodes: 'CancunOpcodes',
   KZGPointEvaluation: 'KZGPointEvaluation',
   StateRegistry: 'StateRegistry',
-  AliasAccountUtility: 'AliasAccountUtility',
-  Deploys2Contracts: 'Deploys2Contracts'
+  AliasAccountUtility: 'AliasAccountUtility'
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';
