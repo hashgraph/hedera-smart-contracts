@@ -30,7 +30,6 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          cd ${{env.INDEXER_PATH}}
           npm install
 
       - uses: actions/checkout@v4
