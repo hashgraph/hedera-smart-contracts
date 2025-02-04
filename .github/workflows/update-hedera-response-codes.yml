@@ -1,11 +1,12 @@
 name: Make HederaResponseCodes up-to-date with the latest protobufs
 
 on:
-  pull_request:
-    branches: [main, release/**]
-  push:
-    branches: [main, release/**]
-    tags: [v*]
+  workflow_dispatch:
+    inputs:
+      networkNodeTag:
+        description: 'Specify desired Network Node image tag'
+        required: true
+        default: ''
 
 jobs:
   parse-and-update:
@@ -46,9 +47,6 @@ jobs:
           git_user_signingkey: true
           gpg_private_key: ${{ secrets.GPG_KEY_CONTENTS }}
           passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
-
-      - name: Parse and update response codes
-        run: node .github/scripts/protobuf-parser.js
 
       - name: Parse and update response codes
         run: node .github/scripts/protobuf-parser.js
