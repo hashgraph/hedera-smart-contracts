@@ -26,8 +26,7 @@ jobs:
           node-version: 20
 
       - name: Install Dependencies
-        run: |
-          npm install
+        run: npm install
 
       - name: Install Foundry
         uses: step-security/foundry-toolchain@01e2d127ea061e2ce8fa34340de71ca8518f093e # v1.2.1
