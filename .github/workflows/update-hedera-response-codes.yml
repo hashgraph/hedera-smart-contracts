@@ -1,13 +1,11 @@
-name: Update HederaResponseCodes contract
-run-name: Update HederaResponseCodes contract
+name: Make HederaResponseCodes up-to-date with the latest protobufs
 
 on:
-  workflow_dispatch:
-    inputs:
-      networkNodeTag:
-        description: 'Specify desired Network Node image tag'
-        required: true
-        default: ''
+  pull_request:
+    branches: [main, release/**]
+  push:
+    branches: [main, release/**]
+    tags: [v*]
 
 jobs:
   update:
