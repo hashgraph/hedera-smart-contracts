@@ -61,6 +61,5 @@ jobs:
             **Description**:
 
             This PR updates HederaResponseCodes.sol with these from https://github.com/hashgraph/hedera-services/blob/main/hapi/hedera-protobufs/services/response_code.proto.
-
           labels: 'internal'
           assignees: 'swirlds-automation'
