@@ -36,6 +36,10 @@ const {
   ContractInfoQuery,
 } = require('@hashgraph/sdk');
 const Constants = require('../../constants');
+const axios = require('axios');
+const {
+  getMirrorNodeUrl,
+} = require('../native/evm-compatibility-ecrecover/utils');
 
 class Utils {
   //createTokenCost is cost for creating the token, which is passed to the system-contracts. This is equivalent of 40 and 60hbars, any excess hbars are refunded.
@@ -64,6 +68,18 @@ class Utils {
     SECP256K1: 3,
     DELEGETABLE_CONTRACT_ID: 4,
   };
+
+  static async deployContract(
+    contractPath,
+    gasLimit = Constants.GAS_LIMIT_1_000_000
+  ) {
+    const factory = await ethers.getContractFactory(contractPath);
+    const contract = await factory.deploy(gasLimit);
+    return await ethers.getContractAt(
+      contractPath,
+      await contract.getAddress()
+    );
+  }
 
   static async deployERC20Mock() {
     const erc20MockFactory = await ethers.getContractFactory(
@@ -941,6 +957,102 @@ class Utils {
       default:
         return;
     }
+  }
+
+  /**
+   * This method fetches the transaction actions from the mirror node corresponding to the current network,
+   * filters the actions to find the one directed to the Hedera Token Service (HTS) system contract,
+   * and extracts the result data from the precompile action. The result data is converted from a BigInt
+   * to a string before being returned.
+   *
+   * @param {string} txHash - The transaction hash to query.
+   * @returns {string} - The response code as a string.
+   */
+  static async getHTSResponseCode(txHash) {
+    const network = hre.network.name;
+    const mirrorNodeUrl = getMirrorNodeUrl(network);
+    const res = await axios.get(
+      `${mirrorNodeUrl}/contracts/results/${txHash}/actions`
+    );
+    const precompileAction = res.data.actions.find(
+      (x) => x.recipient === Constants.HTS_SYSTEM_CONTRACT_ID
+    );
+    return BigInt(precompileAction.result_data).toString();
+  }
+
+  /**
+   * This method fetches the transaction actions from the mirror node corresponding to the current network,
+   * filters the actions to find the one directed to the Hedera Account Service (HAS) system contract,
+   * and extracts the result data from the precompile action. The result data is converted from a BigInt
+   * to a string before being returned.
+   *
+   * @param {string} txHash - The transaction hash to query.
+   * @returns {string} - The response code as a string.
+   */
+  static async getHASResponseCode(txHash) {
+    const network = hre.network.name;
+    const mirrorNodeUrl = getMirrorNodeUrl(network);
+    const res = await axios.get(
+      `${mirrorNodeUrl}/contracts/results/${txHash}/actions`
+    );
+    const precompileAction = res.data.actions.find(
+      (x) => x.recipient === Constants.HAS_SYSTEM_CONTRACT_ID
+    );
+    return BigInt(precompileAction.result_data).toString();
+  }
+
+  static async setupNft(tokenCreateContract, owner, airdropContract) {
+    const nftTokenAddress =
+      await Utils.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
+        tokenCreateContract,
+        owner,
+        Utils.getSignerCompressedPublicKey()
+      );
+
+    await Utils.updateTokenKeysViaHapi(
+      nftTokenAddress,
+      [
+        await airdropContract.getAddress(),
+        await tokenCreateContract.getAddress(),
+      ],
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false
+    );
+
+    await Utils.associateToken(
+      tokenCreateContract,
+      nftTokenAddress,
+      Constants.Contract.TokenCreateContract
+    );
+
+    return nftTokenAddress;
+  }
+
+  static async setupToken(tokenCreateContract, owner, airdropContract) {
+    const tokenAddress =
+      await Utils.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
+        tokenCreateContract,
+        owner,
+        Utils.getSignerCompressedPublicKey()
+      );
+
+    await Utils.updateTokenKeysViaHapi(tokenAddress, [
+      await airdropContract.getAddress(),
+      await tokenCreateContract.getAddress(),
+    ]);
+
+    await Utils.associateToken(
+      tokenCreateContract,
+      tokenAddress,
+      Constants.Contract.TokenCreateContract
+    );
+
+    return tokenAddress;
   }
 }
 
