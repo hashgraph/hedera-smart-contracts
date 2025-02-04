@@ -976,7 +976,7 @@ class Utils {
       `${mirrorNodeUrl}/contracts/results/${txHash}/actions`
     );
     const precompileAction = res.data.actions.find(
-      (x) => x.recipient === Constants.HTS_SYSTEM_CONTRACT_ADDRESS
+      (x) => x.recipient === Constants.HTS_SYSTEM_CONTRACT_ID
     );
     return BigInt(precompileAction.result_data).toString();
   }
@@ -997,7 +997,7 @@ class Utils {
       `${mirrorNodeUrl}/contracts/results/${txHash}/actions`
     );
     const precompileAction = res.data.actions.find(
-      (x) => x.recipient === Constants.HAS_SYSTEM_CONTRACT_ADDRESS
+      (x) => x.recipient === Constants.HAS_SYSTEM_CONTRACT_ID
     );
     return BigInt(precompileAction.result_data).toString();
   }
@@ -1038,7 +1038,6 @@ class Utils {
         owner,
         this.getSignerCompressedPublicKey()
       );
-
 
     await this.updateTokenKeysViaHapi(
       tokenAddress,
@@ -1083,7 +1082,6 @@ class Utils {
     const amounts = [];
 
     for (let i = 0; i < count; i++) {
-
       const tokenAddress = await this.setupToken(tokenCreateContract, owner, [
         await airdropContract.getAddress(),
       ]);

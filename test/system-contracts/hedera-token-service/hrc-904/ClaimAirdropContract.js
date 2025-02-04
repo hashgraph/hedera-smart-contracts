@@ -33,6 +33,7 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
   let owner;
   let receiver;
   let receiverPrivateKey;
+  let contractAddresses;
 
   before(async function () {
     signers = await ethers.getSigners();
@@ -59,26 +60,22 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
       Constants.Contract.ERC721Contract
     );
     owner = signers[0].address;
-
-    await utils.updateAccountKeysViaHapi([
+    contractAddresses = [
       await airdropContract.getAddress(),
       await tokenCreateContract.getAddress(),
       await claimAirdropContract.getAddress(),
-    ]);
+    ];
 
-    await utils.updateAccountKeysViaHapi(
-      [
-        await airdropContract.getAddress(),
-        await tokenCreateContract.getAddress(),
-        await claimAirdropContract.getAddress(),
-      ],
-      [receiverPrivateKey]
-    );
+    await utils.updateAccountKeysViaHapi(contractAddresses);
+
+    await utils.updateAccountKeysViaHapi(contractAddresses, [
+      receiverPrivateKey,
+    ]);
 
     tokenAddress = await utils.setupToken(
       tokenCreateContract,
       owner,
-      airdropContract
+      contractAddresses
     );
 
     const IHRC904AccountFacade = new ethers.Interface(
@@ -108,7 +105,7 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
     const tokenAddress = await utils.setupToken(
       tokenCreateContract,
       owner,
-      airdropContract
+      contractAddresses
     );
 
     const initialBalance = await erc20Contract.balanceOf(
@@ -149,8 +146,7 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
     const nftTokenAddress = await utils.setupNft(
       tokenCreateContract,
       owner,
-      airdropContract,
-      claimAirdropContract
+      contractAddresses
     );
 
     const serialNumber = await utils.mintNFTToAddress(
@@ -189,11 +185,11 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
   it('should claim multiple pending fungible token airdrops', async function () {
     const { senders, receivers, tokens, serials, amounts } =
       await utils.createPendingAirdrops(
-        airdropContract,
-        owner,
+        10,
         tokenCreateContract,
-        receiver.address,
-        10
+        owner,
+        airdropContract,
+        receiver.address
       );
 
     const initialBalances = await Promise.all(
@@ -227,7 +223,7 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
     const tokenAddress = await utils.setupToken(
       tokenCreateContract,
       owner,
-      airdropContract
+      contractAddresses
     );
 
     const tx = await claimAirdropContract.claim(
@@ -245,7 +241,7 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
     const tokenAddress = await utils.setupToken(
       tokenCreateContract,
       owner,
-      airdropContract
+      contractAddresses
     );
 
     const tx = await claimAirdropContract.claim(
@@ -262,12 +258,12 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
     const invalidReceiver = await utils.setupToken(
       tokenCreateContract,
       owner,
-      airdropContract
+      contractAddresses
     );
     const tokenAddress = await utils.setupToken(
       tokenCreateContract,
       owner,
-      airdropContract
+      contractAddresses
     );
 
     const tx = await claimAirdropContract.claim(
@@ -351,8 +347,7 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
     const nftTokenAddress = await utils.setupNft(
       tokenCreateContract,
       owner,
-      airdropContract,
-      claimAirdropContract
+      contractAddresses
     );
     const nonExistentSerialNumber = 999;
 
