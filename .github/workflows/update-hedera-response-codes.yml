@@ -2,7 +2,6 @@ name: HederaResponseCodes.sol update
 
 on:
   workflow_dispatch:
-  push:
 
 jobs:
   parse-and-update:
