@@ -117,6 +117,47 @@ describe('WHBAR', function() {
     expect(receiverBalanceAfter).to.equal(ONE_HBAR);
   });
 
+  it('should be able to transferFrom', async function() {
+    const amount = 1;
+
+    // create a random receiver
+    const receiverAddress = (ethers.Wallet.createRandom()).address;
+
+    // create a new random signer
+    const newSigner = ethers.Wallet.createRandom().connect(signers[0].provider);
+
+    // add some balance for gas covering
+    await (await signers[0].sendTransaction({
+      to: newSigner.address,
+      value: ONE_HBAR_AS_WEIBAR
+    })).wait();
+
+    // deposit 1 hbar with signer[0]
+    await (await contract.deposit({
+      value: ONE_HBAR_AS_WEIBAR
+    })).wait();
+
+    // approve the newSigner from signer[0]
+    await (await contract.approve(newSigner.address, amount)).wait();
+
+    // save the balances before
+    const allowanceBefore = await contract.allowance(signers[0].address, newSigner.address);
+    const receiverBalanceBefore = await contract.balanceOf(receiverAddress);
+
+    // execute transferFrom with newSigner using signers[0] approval
+    const contractWithNewSigner = await contract.connect(newSigner);
+    await (await contractWithNewSigner.transferFrom(signers[0].address, receiverAddress, amount)).wait();
+
+    // save the balances after
+    const allowanceAfter = await contract.allowance(signers[0].address, newSigner.address);
+    const receiverBalanceAfter = await contract.balanceOf(receiverAddress);
+
+    expect(allowanceBefore).to.equal(amount);
+    expect(allowanceAfter).to.equal(0);
+    expect(receiverBalanceBefore).to.equal(0);
+    expect(receiverBalanceAfter).to.equal(amount);
+  });
+
   it('should be able to approve', async function() {
     const receiverAddress = (ethers.Wallet.createRandom()).address;
     const amount = 5644;
@@ -152,5 +193,31 @@ describe('WHBAR', function() {
 
     const whbarSigner0After = await contract.balanceOf(signers[0].address);
     expect(whbarSigner0After - whbarSigner0Before).to.equal(ONE_HBAR);
+  });
+
+  it('should throw InsufficientFunds error on withdraw', async function() {
+    await expect(contract.withdraw(BigInt(100) * ONE_HBAR))
+        .to.be.revertedWithCustomError(contract, `InsufficientFunds`);
+  });
+
+  it('should throw InsufficientAllowance error on withdraw', async function () {
+    const amount = 1;
+    const receiverAddress = (ethers.Wallet.createRandom()).address;
+    const newSigner = ethers.Wallet.createRandom().connect(signers[0].provider);
+
+    // add some balance for gas covering
+    await (await signers[0].sendTransaction({
+      to: newSigner.address,
+      value: ONE_HBAR_AS_WEIBAR
+    })).wait();
+
+    // deposit 1 hbar with signer[0]
+    await (await contract.deposit({
+      value: ONE_HBAR_AS_WEIBAR
+    })).wait();
+
+    const contractWithNewSigner = await contract.connect(newSigner);
+    await expect(contractWithNewSigner.transferFrom(signers[0].address, receiverAddress, amount))
+        .to.be.revertedWithCustomError(contractWithNewSigner, `InsufficientAllowance`);
   });
 });
