@@ -33,6 +33,9 @@ jobs:
         with:
           version: nightly
 
+      - name: Parse and update response codes
+        run: node .github/scripts/protobuf-parser.js
+
       - name: Import GPG Key
         id: gpg_importer
         uses: step-security/ghaction-import-gpg@6c8fe4d0126a59d57c21f87c9ae5dd3451fa3cca # v6.1.0
@@ -42,9 +45,6 @@ jobs:
           git_user_signingkey: true
           gpg_private_key: ${{ secrets.GPG_KEY_CONTENTS }}
           passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
-
-      - name: Parse and update response codes
-        run: node .github/scripts/protobuf-parser.js
 
       - name: Create Pull Request Target hedera-smart-contracts Repository
         uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
