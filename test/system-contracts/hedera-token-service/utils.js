@@ -976,7 +976,7 @@ class Utils {
       `${mirrorNodeUrl}/contracts/results/${txHash}/actions`
     );
     const precompileAction = res.data.actions.find(
-      (x) => x.recipient === Constants.HTS_SYSTEM_CONTRACT_ADDRESS
+      (x) => x.recipient === Constants.HTS_SYSTEM_CONTRACT_ID
     );
     return BigInt(precompileAction.result_data).toString();
   }
@@ -997,7 +997,7 @@ class Utils {
       `${mirrorNodeUrl}/contracts/results/${txHash}/actions`
     );
     const precompileAction = res.data.actions.find(
-      (x) => x.recipient === Constants.HAS_SYSTEM_CONTRACT_ADDRESS
+      (x) => x.recipient === Constants.HAS_SYSTEM_CONTRACT_ID
     );
     return BigInt(precompileAction.result_data).toString();
   }
@@ -1060,6 +1060,14 @@ class Utils {
     return tokenAddress;
   }
 
+  /**
+   * Creates multiple pending airdrops for testing purposes
+   * @param {Contract} airdropContract - The airdrop contract instance
+   * @param {string} owner - The owner's address
+   * @param {Contract} tokenCreateContract - The token create contract instance
+   * @param {number} count - Number of pending airdrops to create
+   * @returns {Object} Object containing arrays of senders, receivers, tokens, serials, and amounts
+   */
   static async createPendingAirdrops(
     count,
     tokenCreateContract,
@@ -1100,6 +1108,7 @@ class Utils {
 
     return { senders, receivers, tokens, serials, amounts };
   }
+
   /**
    * Retrieves the maximum number of automatic token associations for an account from the mirror node
    * @param {string} evmAddress - The EVM address of the account to query
