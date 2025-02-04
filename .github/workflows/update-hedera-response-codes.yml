@@ -49,7 +49,6 @@ jobs:
       - name: Add files to the git
         run: git add contracts/system-contracts/HederaResponseCodes.sol
 
-      - uses: actions/checkout@v4
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
 
