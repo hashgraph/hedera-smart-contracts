@@ -5,13 +5,13 @@ pragma solidity >=0.4.9 <0.9.0;
 // documentation for each code can be found here https://github.com/hashgraph/hedera-services/blob/main/hapi/hedera-protobufs/services/response_code.proto
 
 library HederaResponseCodes {
-//    int32 internal constant OK = 0;
-//    int32 internal constant INVALID_TRANSACTION = 1;
-//    int32 internal constant PAYER_ACCOUNT_NOT_FOUND = 2;
-//    int32 internal constant INVALID_NODE_ACCOUNT = 3;
-//    int32 internal constant TRANSACTION_EXPIRED = 4;
-//    int32 internal constant INVALID_TRANSACTION_START = 5;
-//    int32 internal constant INVALID_TRANSACTION_DURATION = 6;
+    int32 internal constant OK = 0;
+    int32 internal constant INVALID_TRANSACTION = 1;
+    int32 internal constant PAYER_ACCOUNT_NOT_FOUND = 2;
+    int32 internal constant INVALID_NODE_ACCOUNT = 3;
+    int32 internal constant TRANSACTION_EXPIRED = 4;
+    int32 internal constant INVALID_TRANSACTION_START = 5;
+    int32 internal constant INVALID_TRANSACTION_DURATION = 6;
     int32 internal constant INVALID_SIGNATURE = 7;
     int32 internal constant MEMO_TOO_LONG = 8;
     int32 internal constant INSUFFICIENT_TX_FEE = 9;
