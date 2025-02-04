@@ -1,8 +1,11 @@
 import { getMirrorNodeTransaction } from '@/api/hedera-mirror-node/get-mirror-node-transaction';
 import { getHederaContractStatesByTimestamp } from '@/apps/smart-contract-comparison/blockchain-utils/get-hedera-contract-states-by-timestamp';
 import { getStorageAt } from '@/api/erigon/get-storage-at';
-import { writeLogFile } from '@/utils/helpers/write-log-file';
 import { ContractDetails, ContractType } from '@/utils/types';
+import {
+	CONTRACT_DETAILS_LOGGER,
+	STATE_ROOT_COMPARE_ERRORS_LOGGER,
+} from '@/utils/file-logger';
 
 // Compare a smart contract slot state from hedera and ethereum net and write it in the log file if they are not equal.
 export async function compareSmartContractRootState(
@@ -23,11 +26,7 @@ export async function compareSmartContractRootState(
 	const createTransactionTimestamp = transactionResponse.consensus_timestamp;
 	console.log(createTransactionTimestamp, 'lastTransactionTimestamp');
 
-	if (
-		contractRootData &&
-		contractRootData.ethereumTransactionHash &&
-		contractRootData.addressTo
-	) {
+	if (contractRootData?.ethereumTransactionHash && contractRootData.addressTo) {
 		const possibleTransactionAddress = contractRootData.addressTo;
 		// detect if address to from transaction was a smart contract address. If the result array is not empty then it means that this was a smart contract address that we send transaction to
 		// we send request to Hedera mirror node REST API http://localhost:5551/api/v1/docs/#/contracts/getContractState with address to of transaction and consensus timestamp to check this address in given timestamp
@@ -63,11 +62,7 @@ export async function compareSmartContractRootState(
 				Object.values(contractDetails);
 
 			// we log all smart contract detection and values
-			await writeLogFile(
-				`logs/all-contracts-details`,
-				`${contractDetailsValues.map((elem) => elem)} \r\n`,
-				'csv'
-			);
+			CONTRACT_DETAILS_LOGGER.info(contractDetailsValues);
 			// then we comapre the value on slots between Ethereum and Hedera if there are not the same than we put it in array for later usage
 			if (sepoliaStateValue != hederaState.value) {
 				errorInBlock.push(contractDetailsValues);
@@ -77,10 +72,6 @@ export async function compareSmartContractRootState(
 
 	// all the not matched slots values on smart contracts between Hedera and Ethereum we log in here
 	if (errorInBlock.length > 0) {
-		await writeLogFile(
-			`logs/state-root-compare-errors`,
-			`${errorInBlock.map((elem) => elem)} \r\n`,
-			'csv',
-		);
+		STATE_ROOT_COMPARE_ERRORS_LOGGER.info(errorInBlock);
 	}
 }
