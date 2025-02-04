@@ -960,6 +960,16 @@ class Utils {
     }
   }
 
+
+  /**
+   * This method fetches the transaction actions from the mirror node corresponding to the current network,
+   * filters the actions to find the one directed to the Hedera Token Service (HTS) system contract,
+   * and extracts the result data from the precompile action. The result data is converted from a BigInt
+   * to a string before being returned.
+   *
+   * @param {string} txHash - The transaction hash to query.
+   * @returns {string} - The response code as a string.
+   */
   static async getHTSResponseCode(txHash) {
     const network = hre.network.name;
     const mirrorNodeUrl = getMirrorNodeUrl(network);
@@ -968,10 +978,20 @@ class Utils {
     );
     const precompileAction = res.data.actions.find(
       (x) => x.recipient === Constants.HTS_SYSTEM_CONTRACT_ADDRESS
+
     );
     return BigInt(precompileAction.result_data).toString();
   }
 
+  /**
+   * This method fetches the transaction actions from the mirror node corresponding to the current network,
+   * filters the actions to find the one directed to the Hedera Account Service (HAS) system contract,
+   * and extracts the result data from the precompile action. The result data is converted from a BigInt
+   * to a string before being returned.
+   *
+   * @param {string} txHash - The transaction hash to query.
+   * @returns {string} - The response code as a string.
+   */
   static async getHASResponseCode(txHash) {
     const network = hre.network.name;
     const mirrorNodeUrl = getMirrorNodeUrl(network);
@@ -1030,8 +1050,7 @@ class Utils {
       true,
       true,
       true,
-      true,
-      true
+      false
     );
 
     await this.associateToken(

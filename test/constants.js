@@ -77,6 +77,7 @@ const Contract = {
   OZERC20Mock: 'OZERC20Mock',
   OZERC721Mock: 'OZERC721Mock',
   TokenCreateContract: 'TokenCreateContract',
+  TokenCreateOpcodeLogger: 'TokenCreateOpcodeLogger',
   DiamondCutFacet: 'DiamondCutFacet',
   Diamond: 'Diamond',
   DiamondInit: 'DiamondInit',
@@ -205,12 +206,15 @@ const Contract = {
   KZGPointEvaluation: 'KZGPointEvaluation',
   StateRegistry: 'StateRegistry',
   Airdrop: 'Airdrop',
+  TokenReject: 'TokenReject',
   AliasAccountUtility: 'AliasAccountUtility',
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';
 const CONTRACT_REVERT_EXECUTED_CODE = 3;
 const GAS_LIMIT_1_000_000 = { gasLimit: 1_000_000 };
+const GAS_LIMIT_2_000_000 = { gasLimit: 2_000_000 };
+const GAS_LIMIT_5_000_000 = { gasLimit: 5_000_000 };
 const GAS_LIMIT_10_000_000 = { gasLimit: 10_000_000 };
 const GAS_LIMIT_800000 = { gasLimit: 800000 };
 const GAS_LIMIT_8000000 = { gasLimit: 8000000 };
@@ -235,6 +239,8 @@ module.exports = {
   CALL_EXCEPTION,
   CONTRACT_REVERT_EXECUTED_CODE,
   GAS_LIMIT_1_000_000,
+  GAS_LIMIT_2_000_000,
+  GAS_LIMIT_5_000_000,
   GAS_LIMIT_10_000_000,
   GAS_LIMIT_800000,
   GAS_LIMIT_8000000,
@@ -252,4 +258,5 @@ module.exports = {
   GWEI,
   HTS_SYSTEM_CONTRACT_ADDRESS,
   HAS_SYSTEM_CONTRACT_ADDRESS,
+  ONE_HBAR,
 };
