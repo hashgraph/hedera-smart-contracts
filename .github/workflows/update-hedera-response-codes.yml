@@ -46,6 +46,9 @@ jobs:
           gpg_private_key: ${{ secrets.GPG_KEY_CONTENTS }}
           passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
 
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+
       - name: Create Pull Request Target hedera-smart-contracts Repository
         uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
         with:
@@ -59,7 +62,7 @@ jobs:
           signoff: true
           title: 'chore: update HederaResponseContract.sol with the latest protobufs'
           body: >
-            **Description**:
+            **Description**:\n
 
             This PR updates HederaResponseCodes.sol with these from https://github.com/hashgraph/hedera-services/blob/main/hapi/hedera-protobufs/services/response_code.proto.
 
