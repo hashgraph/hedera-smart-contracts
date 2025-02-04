@@ -54,8 +54,6 @@ jobs:
 
       - name: Create Pull Request Target hedera-smart-contracts Repository
         uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
-        env:
-          PR_MILESTONE: $(curl -s https://api.github.com/repos/hashgraph/hedera-smart-contracts/milestones |  jq '.'[0].title)
         with:
           branch: HederaResponseCodes-Periodical-Update/${{ github.run_id }}
           commit-message: 'chore: update HederaResponseContract.sol with the latest protobufs'
@@ -72,5 +70,4 @@ jobs:
             This PR updates HederaResponseCodes.sol with these from https://github.com/hashgraph/hedera-services/blob/main/hapi/hedera-protobufs/services/response_code.proto.
 
           labels: 'internal'
-          milestone: ${{ PR_MILESTONE }}
           assignees: 'swirlds-automation'
