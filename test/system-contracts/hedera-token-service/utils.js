@@ -34,10 +34,7 @@ const {
   TokenAssociateTransaction,
   AccountBalanceQuery,
   ContractInfoQuery,
-  AccountDeleteTransaction,
-  Wallet,
-  ContractCallQuery,
-  ContractNonceInfo
+  AccountDeleteTransaction
 } = require('@hashgraph/sdk');
 const Constants = require('../../constants');
 
@@ -712,13 +709,6 @@ class Utils {
     return accountInfo.accountId.toString();
   }
 
-  //Using SDK to call Consensus node to confirm that there are no nonce discrepancies between Consensus Node and Mirror node
-  static async getContractInfo(evmAddress, client){
-    const query = new ContractInfoQuery().setContractId(ContractId.fromEvmAddress(0,0,evmAddress));
-
-    return await query.execute(client);
-  }
-
   static async getAccountInfo(evmAddress, client) {
     const query = new AccountInfoQuery().setAccountId(
       AccountId.fromEvmAddress(0, 0, evmAddress)
@@ -728,26 +718,20 @@ class Utils {
   }
 
   static async getContractInfo(evmAddress, client) {
-    const query = new ContractInfoQuery().setContractId(
-      ContractId.fromEvmAddress(0, 0, evmAddress)
-    );
+    const query = new ContractInfoQuery().setContractId(ContractId.fromEvmAddress(0, 0, evmAddress));
 
     return await query.execute(client);
   }
 
   static async deleteAccount(account, signer, accountId) {
+    const accountDeleteTransaction = (await (new AccountDeleteTransaction()
+            .setAccountId(accountId)
+            .setTransferAccountId(signer.getOperator().accountId)
+            .freezeWith(signer)
+    ).sign(PrivateKey.fromStringECDSA(account.signingKey.privateKey)));
 
-    let accountDeleteTransaction = await new AccountDeleteTransaction()
-      .setAccountId(accountId)
-      .setTransferAccountId(signer.getOperator().accountId);
-
-    await accountDeleteTransaction
-      .freezeWith(signer)
-      .sign(PrivateKey.fromStringECDSA(account.signingKey.privateKey));
-
-    const r = await accountDeleteTransaction.execute(signer);
+    await accountDeleteTransaction.execute(signer);
   }
-
 
   static getSignerCompressedPublicKey(
     index = 0,

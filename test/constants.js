@@ -58,11 +58,6 @@ const Events = {
   PseudoRandomSeed: 'PseudoRandomSeed',
   CryptoAllowance: 'CryptoAllowance',
   IsAssociated: 'IsAssociated',
-  DeployedContractAddress: 'DeployedContractAddress',
-  DeployedContract0Address: 'DeployedContract0Address',
-  DeployedContract1Address: 'DeployedContract1Address',
-  DeployedContract2Address: 'DeployedContract2Address',
-  Deploys2ContractsAddress: 'Deploys2ContractsAddress'
 };
 
 const Path = {
