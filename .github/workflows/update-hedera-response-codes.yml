@@ -58,6 +58,7 @@ jobs:
           branch: HederaResponseCodes-Periodical-Update/${{ github.run_id }}
           commit-message: 'chore: update HederaResponseContract.sol with the latest protobufs'
           committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+          add-paths: contracts/system-contracts/HederaResponseCodes.sol
           author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           delete-branch: true
