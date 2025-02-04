@@ -1,7 +1,13 @@
 name: Update HederaResponseCodes contract
+run-name: Update HederaResponseCodes contract
 
 on:
   workflow_dispatch:
+    inputs:
+      networkNodeTag:
+        description: 'Specify desired Network Node image tag'
+        required: true
+        default: ''
 
 jobs:
   update:
