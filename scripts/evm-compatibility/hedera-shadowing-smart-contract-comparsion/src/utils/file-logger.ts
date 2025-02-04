@@ -1,3 +1,5 @@
+import path from 'path';
+import * as fs from 'fs';
 import * as winston from 'winston';
 import DailyRotateFile, {
 	DailyRotateFileTransportOptions,
@@ -42,7 +44,7 @@ abstract class RotatedFileLogger<T, L extends string = string> {
 		const transports = levels.map(
 			(level) =>
 				new DailyRotateFile({
-					datePattern: 'YYYY-MM-DD HH:mm',
+					datePattern: 'YYYY-MM-DD-HH:mm',
 					dirname: `${dirname}/${level}`,
 					filename: `%DATE%-${level}-${filename}.${extension}`,
 					maxSize,
@@ -74,20 +76,31 @@ abstract class RotatedFileLogger<T, L extends string = string> {
  * @argument dirname - The directory where the log files will be stored.
  * @argument filename - The name of the log files.
  */
-export class CsvLogger extends RotatedFileLogger<any[], 'info' | 'error'> {
+class CsvLogger extends RotatedFileLogger<any[], 'info'> {
 	constructor(
-		dirname: string,
-		filename: string,
-		maxSize?: DailyRotateFileTransportOptions['maxSize']
+		readonly dirname: string,
+		readonly filename: string,
+		readonly options: {
+			header?: string[];
+			maxSize?: DailyRotateFileTransportOptions['maxSize'];
+		} = {}
 	) {
 		super(
 			dirname,
 			filename,
 			'csv',
 			winston.format.printf(({ message }) => `${message}`),
-			['info', 'error'],
-			maxSize
+			['info'],
+			options.maxSize
 		);
+
+		if (options.header) {
+			const filePath = path.join(dirname, `${filename}-header.csv`);
+
+			if (!fs.existsSync(filePath)) {
+				fs.writeFileSync(filePath, options.header.join(','));
+			}
+		}
 	}
 
 	protected parse(array: any[]) {
@@ -97,14 +110,54 @@ export class CsvLogger extends RotatedFileLogger<any[], 'info' | 'error'> {
 	info(message: any[]) {
 		super.log('info', message);
 	}
-
-	error(message: any[]) {
-		super.log('error', message);
-	}
 }
 
-// EXAMPLE USAGE
 export const TRANSACTION_CHECKER_LOGGER = new CsvLogger(
 	'logs/transaction-checker',
-	'transaction-checker'
+	'transaction-checker',
+	{
+		header: [
+			'transactionId',
+			'type',
+			'blockNumber',
+			'addressTo',
+			'txTimestamp',
+			'currentTimestamp',
+			'hederaTransactionHash',
+			'ethereumTransactionHash',
+			'status',
+		],
+	}
+);
+
+export const CONTRACT_DETAILS_LOGGER = new CsvLogger(
+	'logs/all-contracts-details',
+	'all-contracts-details',
+	{
+		header: [
+			'blockNumber',
+			'ethereumTransactionHash',
+			'timestamp',
+			'contractAddress',
+			'searchedSlot',
+			'hederaValue',
+			'ethereumValue',
+		],
+	}
+);
+
+export const STATE_ROOT_COMPARE_ERRORS_LOGGER = new CsvLogger(
+	'logs/state-root-compare-errors',
+	'state-root-compare-errors',
+	{
+		header: [
+			'blockNumber',
+			'ethereumTransactionHash',
+			'timestamp',
+			'contractAddress',
+			'searchedSlot',
+			'hederaValue',
+			'ethereumValue',
+		],
+	}
 );
