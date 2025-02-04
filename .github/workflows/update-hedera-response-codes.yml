@@ -34,7 +34,7 @@ jobs:
           version: nightly
 
       - name: Parse and update response codes
-        run: node .github/scripts/protobuf-parser.js
+        run: node .github/scripts/hedera-response-codes-protobuf-parser.js
 
       - name: Import GPG Key
         id: gpg_importer
