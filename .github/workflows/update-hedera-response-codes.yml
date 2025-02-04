@@ -8,7 +8,7 @@ on:
     tags: [v*]
 
 jobs:
-  update:
+  parse-and-update:
     name: Make HederaResponseCodes up-to-date with the latest protobufs
     runs-on: smart-contracts-linux-large
 
@@ -50,25 +50,27 @@ jobs:
       - name: Parse and update response codes
         run: node .github/scripts/protobuf-parser.js
 
-      - uses: actions/checkout@v4
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+      - name: Parse and update response codes
+        run: node .github/scripts/protobuf-parser.js
 
-#      - name: Create Pull Request Target hedera-smart-contracts Repository
-#        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
-#        with:
-#          branch: HederaResponseCodes-Periodical-Update/${{ github.run_id }}
-#          commit-message: 'chore: update HederaResponseContract.sol with the latest protobufs'
-#          committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-#          author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
-#          token: ${{ secrets.GH_ACCESS_TOKEN }}
-#          delete-branch: true
-#          signoff: true
-#          title: 'chore: update HederaResponseContract.sol with the latest protobufs'
-#          body: >
-#            **Description**:
-#
-#            This PR updates HederaResponseCodes.sol with these from https://github.com/hashgraph/hedera-services/blob/main/hapi/hedera-protobufs/services/response_code.proto.
-#
-#          labels: 'internal'
-#          assignees: 'swirlds-automation'
+      - name: Add files to the git
+        run: git add contracts/system-contracts/HederaResponseCodes.sol
+
+      - name: Create Pull Request Target hedera-smart-contracts Repository
+        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
+        with:
+          branch: HederaResponseCodes-Periodical-Update/${{ github.run_id }}
+          commit-message: 'chore: update HederaResponseContract.sol with the latest protobufs'
+          committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+          author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          delete-branch: true
+          signoff: true
+          title: 'chore: update HederaResponseContract.sol with the latest protobufs'
+          body: >
+            **Description**:
+
+            This PR updates HederaResponseCodes.sol with these from https://github.com/hashgraph/hedera-services/blob/main/hapi/hedera-protobufs/services/response_code.proto.
+
+          labels: 'internal'
+          assignees: 'swirlds-automation'
