@@ -1,8 +1,29 @@
+/*-
+ *
+ * Hedera Smart Contracts
+ *
+ * Copyright (C) 2025 Hedera Hashgraph, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 const Constants = require('../../constants');
-const {expect} = require('chai');
+const { expect, assert } = require('chai');
 const hre = require('hardhat');
 const fs = require('fs');
 const {ethers} = hre;
+const { hexToASCII } = require('../../utils')
 
 const BESU_RESULTS_JSON_PATH = __dirname + '/opcodeLoggerBesuResults.json';
 const IS_BESU_NETWORK = hre.network.name === 'besu_local';
@@ -17,7 +38,7 @@ describe('@OpcodeLogger Test Suite', async function () {
     randomAddress = (ethers.Wallet.createRandom()).address;
 
     const factoryOpcodeLogger = await ethers.getContractFactory(Constants.Contract.OpcodeLogger);
-    opcodeLogger = await factoryOpcodeLogger.deploy();
+    opcodeLogger = await factoryOpcodeLogger.deploy({gasLimit: 5_000_000});
     await opcodeLogger.waitForDeployment();
   });
 
@@ -599,12 +620,18 @@ describe('@OpcodeLogger Test Suite', async function () {
   }
 
   describe('nested calls', async function () {
-    let errorsExternal;
+    let errorsExternal, nestedContractCreateTx;
 
     before(async () => {
       const factoryErrorsExternal = await ethers.getContractFactory(Constants.Contract.ErrorsExternal);
       errorsExternal = await factoryErrorsExternal.deploy();
       await errorsExternal.waitForDeployment();
+
+      const contractCreatorFactory = await ethers.getContractFactory(Constants.Contract.ContractCreator);
+      const contractCreator = await contractCreatorFactory.deploy();
+      await contractCreator.waitForDeployment();
+      const contractByteCode = (await hre.artifacts.readArtifact('Base')).bytecode;
+      nestedContractCreateTx = await contractCreator.createNewContract(contractByteCode);
     });
 
     it('successful NESTED CALL to existing contract with disabledMemory, disabledStack, disabledStorage set to true', async function () {
@@ -796,15 +823,69 @@ describe('@OpcodeLogger Test Suite', async function () {
         expect(sl.stack).to.equal(null);
       });
     });
+
+    it('successful NESTED Create CALL Deploy a contract which successfully deploys another contract with disableMemory, DisableStack and disableStorage set to true', async function () {
+      const res = await executeDebugTraceTransaction(nestedContractCreateTx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: true,
+        disableMemory: true,
+        disableStack: true
+      });
+
+      expect(res.failed).to.be.false;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.equal(null);
+        expect(sl.memory).to.equal(null);
+        expect(sl.stack).to.equal(null);
+      });
+    });
+
+    it('successful NESTED Create CALL Deploy a contract which successfully deploys another contract with disableMemory, DisableStack and disableStorage set to false', async function () {
+      const res = await executeDebugTraceTransaction(nestedContractCreateTx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: false,
+        disableMemory: false,
+        disableStack: false
+      });
+
+      expect(res.failed).to.be.false;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.not.equal(null);
+        expect(sl.memory).to.not.equal(null);
+        expect(sl.stack).to.not.equal(null);
+      });
+    });
   });
 
   describe('precompiles', async function () {
     let precompiles;
+    let tokenCreateContract;
+    let tokenCreateTx;
+    let tokenCreateContractAddress;
+    let tokenAddress;
 
     before(async () => {
       const factoryPrecompiles = await ethers.getContractFactory(Constants.Contract.Precompiles);
       precompiles = await factoryPrecompiles.deploy();
       await precompiles.waitForDeployment();
+
+      const tokenCreateFactory = await ethers.getContractFactory(Constants.Contract.TokenCreateOpcodeLogger);
+      tokenCreateContract = await tokenCreateFactory.deploy(Constants.GAS_LIMIT_1_000_000);
+      await tokenCreateContract.waitForDeployment();
+      tokenCreateTx = await tokenCreateContract.createFungibleTokenPublic(
+        await tokenCreateContract.getAddress(),
+        {
+          value: BigInt('10000000000000000000'),
+          gasLimit: 1_000_000,
+        }
+      );
+      const tokenAddressReceipt = await tokenCreateTx.wait();
+      tokenAddress = { tokenAddress } = tokenAddressReceipt.logs.filter(
+        (e) => e.fragment.name === Constants.Events.CreatedToken
+      )[0].args.tokenAddress;
+      tokenCreateContractAddress = await tokenCreateContract.getAddress();
     });
 
     it('successful ETH precompile call to 0x2 with disabledMemory, disabledStack, disabledStorage set to true', async function () {
@@ -885,6 +966,238 @@ describe('@OpcodeLogger Test Suite', async function () {
         expect(sl.memory).to.not.equal(null);
         expect(sl.stack).to.not.equal(null);
       });
+    });
+
+    it('successful ETH precompile call to 0x2 with disabledStorage set to false, disabledMemory, disabledStack set to true', async function () {
+      const tx = await precompiles.modExp(5644, 3, 2);
+      await tx.wait();
+
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: false,
+        disableMemory: true,
+        disableStack: true
+      });
+
+      expect(res.failed).to.be.false;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.not.equal(null);
+        expect(sl.memory).to.equal(null);
+        expect(sl.stack).to.equal(null);
+      });
+    });
+
+    it('failing ETH precompile call to 0x2 with disabledStorage set to false, disabledMemory, disabledStack set to true', async function () {
+      const tx = await precompiles.modExp(5644, 3, 2, { gasLimit: 21_496 });
+      await expect(tx.wait()).to.be.rejectedWith(Error);
+
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: false,
+        disableMemory: true,
+        disableStack: true
+      });
+
+      expect(res.failed).to.be.true;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.not.equal(null);
+        expect(sl.memory).to.equal(null);
+        expect(sl.stack).to.equal(null);
+      });
+    });
+
+    it('successful ETH precompile call to 0x2 with disabledMemory set to false, disabledStorage, disabledStack set to true', async function () {
+      const tx = await precompiles.modExp(5644, 3, 2);
+      await tx.wait();
+
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: true,
+        disableMemory: false,
+        disableStack: true
+      });
+
+      expect(res.failed).to.be.false;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.equal(null);
+        expect(sl.memory).to.not.equal(null);
+        expect(sl.stack).to.equal(null);
+      });
+    });
+
+    it('failing ETH precompile call to 0x2 with disabledMemory set to false, disabledStorage, disabledStack set to true', async function () {
+      const tx = await precompiles.modExp(5644, 3, 2, { gasLimit: 21_496 });
+      await expect(tx.wait()).to.be.rejectedWith(Error);
+
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: true,
+        disableMemory: false,
+        disableStack: true
+      });
+
+      expect(res.failed).to.be.true;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.equal(null);
+        expect(sl.memory).to.not.equal(null);
+        expect(sl.stack).to.equal(null);
+      });
+    });
+
+    it('successful ETH precompile call to 0x2 with disabledStack set to false, disabledStorage, disabledMemory set to true', async function () {
+      const tx = await precompiles.modExp(5644, 3, 2);
+      await tx.wait();
+
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: true,
+        disableMemory: true,
+        disableStack: false
+      });
+
+      expect(res.failed).to.be.false;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.equal(null);
+        expect(sl.memory).to.equal(null);
+        expect(sl.stack).to.not.equal(null);
+      });
+    });
+
+    it('failing ETH precompile call to 0x2 with disabledStack set to false, disabledStorage, disabledMemory set to true', async function () {
+      const tx = await precompiles.modExp(5644, 3, 2, { gasLimit: 21_496 });
+      await expect(tx.wait()).to.be.rejectedWith(Error);
+
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: true,
+        disableMemory: true,
+        disableStack: false
+      });
+
+      expect(res.failed).to.be.true;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.equal(null);
+        expect(sl.memory).to.equal(null);
+        expect(sl.stack).to.not.equal(null);
+      });
+    });
+
+    it('successful tokenCreate call with disabledStorage, disabledMemory, disabledStack  set to true', async function () {
+      const res = await executeDebugTraceTransaction(tokenCreateTx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: true,
+        disableMemory: true,
+        disableStack: true
+      });
+
+      expect(res.failed).to.be.false;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.equal(null);
+        expect(sl.memory).to.equal(null);
+        expect(sl.stack).to.equal(null);
+      });
+    });
+
+    it('successful tokenCreate call with disabledStorage, disabledMemory, disabledStack  set to false', async function () {
+      const res = await executeDebugTraceTransaction(tokenCreateTx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: false,
+        disableMemory: false,
+        disableStack: false
+      });
+
+      expect(res.failed).to.be.false;
+      expect(res.structLogs.length).to.be.greaterThan(0);
+      res.structLogs.map(function (sl) {
+        expect(sl.storage).to.not.equal(null);
+        expect(sl.memory).to.not.equal(null);
+        expect(sl.stack).to.not.equal(null);
+      });
+    });
+
+    it('should not contain revert operation when GAS is depleted (insufficient)', async function () {
+      const tx = await tokenCreateContract.createNonFungibleTokenPublic(
+        tokenCreateContractAddress,
+        { gasLimit: 21432 }
+      );
+
+      const res = await executeDebugTraceTransaction(tx.hash, {
+        tracer: 'opcodeLogger',
+        disableStorage: true,
+        disableMemory: true,
+        disableStack: true
+      });
+
+      const revertOperations = res.structLogs.filter(function (opLog) {
+        return opLog.op === "REVERT"
+      });
+      expect(revertOperations.length).to.equal(0);
+    });
+  });
+
+  describe('negative', async function () {
+    it('should fail to debug a transaction with invalid hash', async function () {
+      const res = await executeDebugTraceTransaction('0x0fdfb3da2d40cd9ac8776ca02c17cb4aae634d2726f5aad049ab4ce5056b1a5c', {
+        tracer: 'opcodeLogger',
+        disableStorage: true,
+        disableMemory: true,
+        disableStack: true
+      });
+
+      expect(res.failed).to.be.true;
+      expect(res.structLogs).to.be.empty;
+    });
+
+    it('should fail with invalid parameter value type for disableMemory, disableStack or disableStorage', async function () {
+      const tx = await opcodeLogger.call(opcodeLogger.target, '0xdbdf7fce'); // calling resetCounter()
+      await tx.wait();
+      try {
+        await executeDebugTraceTransaction(tx.hash, {
+          tracer: 'opcodeLogger',
+          disableStorage: 'true',
+          disableMemory: 1,
+          disableStack: 0
+        });
+
+      } catch (error) {
+        expect(error.name).to.equal('ProviderError');
+        expect(error._isProviderError).to.be.true;
+        expect(error._stack).to.contain('Invalid parameter 2: Invalid tracerConfig');
+
+        return;
+      }
+
+      assert.fail('Executing debug trace transaction with invalid parameter value types did not result in error')
+    });
+
+    it('should fail when executing debug trace transaction with incorrect tracer parameter', async function () {
+      const tx = await opcodeLogger.call(opcodeLogger.target, '0xdbdf7fce'); // calling resetCounter()
+      await tx.wait();
+      const incorrectTracer = 'opcodeLogger1';
+
+      try {
+        await executeDebugTraceTransaction(tx.hash, {
+          tracer: incorrectTracer,
+          disableStorage: true,
+          disableMemory: true,
+          disableStack: true
+        });
+      } catch (error) {
+        expect(error.name).to.equal('ProviderError');
+        expect(error._isProviderError).to.be.true;
+        expect(error._stack).to.contain(`Invalid parameter 1: Invalid tracer type, value: ${incorrectTracer}`);
+
+        return;
+      }
+
+      assert.fail('Executing debug trace transaction with incorrect tracer parameter did not result in error')
     });
   });
 });
