@@ -960,6 +960,7 @@ class Utils {
     }
   }
 
+
   /**
    * This method fetches the transaction actions from the mirror node corresponding to the current network,
    * filters the actions to find the one directed to the Hedera Token Service (HTS) system contract,
@@ -1002,12 +1003,7 @@ class Utils {
     return BigInt(precompileAction.result_data).toString();
   }
 
-  static async setupNft(
-    tokenCreateContract,
-    owner,
-    airdropContract,
-    cancelAirdropContract
-  ) {
+  static async setupNft(tokenCreateContract, owner, contractAddresses) {
     const nftTokenAddress =
       await this.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
         tokenCreateContract,
@@ -1017,10 +1013,7 @@ class Utils {
 
     await this.updateTokenKeysViaHapi(
       nftTokenAddress,
-      [
-        await airdropContract.getAddress(),
-        await tokenCreateContract.getAddress(),
-      ],
+      contractAddresses,
       true,
       true,
       false,
@@ -1039,7 +1032,7 @@ class Utils {
     return nftTokenAddress;
   }
 
-  static async setupToken(tokenCreateContract, owner, airdropContract) {
+  static async setupToken(tokenCreateContract, owner, contractAddresses) {
     const tokenAddress =
       await this.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
         tokenCreateContract,
@@ -1049,10 +1042,7 @@ class Utils {
 
     await this.updateTokenKeysViaHapi(
       tokenAddress,
-      [
-        await airdropContract.getAddress(),
-        await tokenCreateContract.getAddress(),
-      ],
+      contractAddresses,
       true,
       true,
       false,
@@ -1112,6 +1102,21 @@ class Utils {
     }
 
     return { senders, receivers, tokens, serials, amounts };
+  }
+  /**
+   * Retrieves the maximum number of automatic token associations for an account from the mirror node
+   * @param {string} evmAddress - The EVM address of the account to query
+   * @returns {Promise<number>} Returns:
+   *  - -1 if unlimited automatic associations are enabled
+   *  - 0 if automatic associations are disabled
+   *  - positive number for the maximum number of automatic associations allowed
+   * @throws {Error} If there was an error fetching the data from mirror node
+   */
+  static async getMaxAutomaticTokenAssociations(evmAddress) {
+    const network = hre.network.name;
+    const mirrorNodeUrl = getMirrorNodeUrl(network);
+    const response = await axios.get(`${mirrorNodeUrl}/accounts/${evmAddress}`);
+    return response.data.max_automatic_token_associations;
   }
 }
 

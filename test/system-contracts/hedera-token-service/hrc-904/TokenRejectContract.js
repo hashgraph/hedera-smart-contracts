@@ -31,6 +31,7 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
   let owner;
   let receiver;
   let walletIHRC904AccountFacade;
+  let contractAddresses;
 
   before(async function () {
     signers = await ethers.getSigners();
@@ -52,20 +53,16 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
       value: ethers.parseEther('100'),
     });
 
-    await utils.updateAccountKeysViaHapi([
+    contractAddresses = [
       await tokenRejectContract.getAddress(),
       await tokenCreateContract.getAddress(),
       await airdropContract.getAddress(),
-    ]);
+    ];
+    await utils.updateAccountKeysViaHapi(contractAddresses);
 
-    await utils.updateAccountKeysViaHapi(
-      [
-        await tokenRejectContract.getAddress(),
-        await tokenCreateContract.getAddress(),
-        await airdropContract.getAddress(),
-      ],
-      [receiverPrivateKey]
-    );
+    await utils.updateAccountKeysViaHapi(contractAddresses, [
+      receiverPrivateKey,
+    ]);
 
     const IHRC904AccountFacade = new ethers.Interface(
       (await hre.artifacts.readArtifact('IHRC904AccountFacade')).abi
@@ -82,7 +79,7 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
     const tokenAddress = await utils.setupToken(
       tokenCreateContract,
       owner,
-      airdropContract
+      contractAddresses
     );
     const receiver = signers[1];
 
@@ -117,7 +114,7 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
     const nftTokenAddress = await utils.setupNft(
       tokenCreateContract,
       owner,
-      airdropContract
+      contractAddresses
     );
     const receiver = signers[1];
 
@@ -153,7 +150,7 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
     const tokenAddress = await utils.setupToken(
       tokenCreateContract,
       owner,
-      airdropContract
+      contractAddresses
     );
     const receivers = signers.slice(1, 3);
 
@@ -185,7 +182,7 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
     const tokenAddress = await utils.setupToken(
       tokenCreateContract,
       owner,
-      airdropContract
+      contractAddresses
     );
 
     await walletIHRC904AccountFacade.setUnlimitedAutomaticAssociations(false, {
@@ -218,7 +215,7 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
     const tokenAddress = await utils.setupToken(
       tokenCreateContract,
       owner,
-      airdropContract
+      contractAddresses
     );
     const receiver = signers[1];
 
@@ -237,7 +234,7 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
     const nftTokenAddress = await utils.setupNft(
       tokenCreateContract,
       owner,
-      airdropContract
+      contractAddresses
     );
 
     const tx = await tokenRejectContract.rejectTokens(
@@ -256,7 +253,7 @@ describe('HIP904 TokenRejectContract Test Suite', function () {
     const nftTokenAddress = await utils.setupNft(
       tokenCreateContract,
       owner,
-      airdropContract
+      contractAddresses
     );
     const receiver = signers[1];
 
