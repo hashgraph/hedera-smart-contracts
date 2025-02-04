@@ -208,6 +208,8 @@ const Contract = {
   Airdrop: 'Airdrop',
   TokenReject: 'TokenReject',
   AliasAccountUtility: 'AliasAccountUtility',
+  Airdrop: 'Airdrop',
+  CancelAirdrop: 'CancelAirdrop',
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';

@@ -960,7 +960,6 @@ class Utils {
     }
   }
 
-
   /**
    * This method fetches the transaction actions from the mirror node corresponding to the current network,
    * filters the actions to find the one directed to the Hedera Token Service (HTS) system contract,
@@ -978,7 +977,6 @@ class Utils {
     );
     const precompileAction = res.data.actions.find(
       (x) => x.recipient === Constants.HTS_SYSTEM_CONTRACT_ADDRESS
-
     );
     return BigInt(precompileAction.result_data).toString();
   }
@@ -1062,6 +1060,46 @@ class Utils {
     return tokenAddress;
   }
 
+  static async createPendingAirdrops(
+    count,
+    tokenCreateContract,
+    owner,
+    airdropContract,
+    receiver
+  ) {
+    const senders = [];
+    const receivers = [];
+    const tokens = [];
+    const serials = [];
+    const amounts = [];
+
+    for (let i = 0; i < count; i++) {
+      const tokenAddress = await this.setupToken(tokenCreateContract, owner, [
+        await airdropContract.getAddress(),
+      ]);
+      const ftAmount = BigInt(i + 1); // Different amount for each airdrop
+
+      const airdropTx = await airdropContract.tokenAirdrop(
+        tokenAddress,
+        owner,
+        receiver,
+        ftAmount,
+        {
+          value: Constants.ONE_HBAR,
+          gasLimit: 2_000_000,
+        }
+      );
+      await airdropTx.wait();
+
+      senders.push(owner);
+      receivers.push(receiver);
+      tokens.push(tokenAddress);
+      serials.push(0); // 0 for fungible tokens
+      amounts.push(ftAmount);
+    }
+
+    return { senders, receivers, tokens, serials, amounts };
+  }
   /**
    * Retrieves the maximum number of automatic token associations for an account from the mirror node
    * @param {string} evmAddress - The EVM address of the account to query
