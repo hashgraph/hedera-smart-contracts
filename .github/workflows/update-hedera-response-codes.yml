@@ -1,12 +1,7 @@
-name: Make HederaResponseCodes up-to-date with the latest protobufs
+name: HederaResponseCodes.sol update
 
 on:
   workflow_dispatch:
-    inputs:
-      networkNodeTag:
-        description: 'Specify desired Network Node image tag'
-        required: true
-        default: ''
 
 jobs:
   parse-and-update:
