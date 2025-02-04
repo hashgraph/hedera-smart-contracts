@@ -1,5 +1,8 @@
 name: Update HederaResponseCodes contract
 
+on:
+  workflow_dispatch:
+
 jobs:
   update:
     name: Index ERC Contracts on Hedera ${{ github.event.inputs.HEDERA_NETWORK }} and Update Registry
