@@ -960,7 +960,6 @@ class Utils {
     }
   }
 
-
   /**
    * This method fetches the transaction actions from the mirror node corresponding to the current network,
    * filters the actions to find the one directed to the Hedera Token Service (HTS) system contract,
@@ -1075,11 +1074,9 @@ class Utils {
     const amounts = [];
 
     for (let i = 0; i < count; i++) {
-      const tokenAddress = await this.setupToken(
-        tokenCreateContract,
-        owner,
-        airdropContract
-      );
+      const tokenAddress = await this.setupToken(tokenCreateContract, owner, [
+        await airdropContract.getAddress(),
+      ]);
       const ftAmount = BigInt(i + 1); // Different amount for each airdrop
 
       const airdropTx = await airdropContract.tokenAirdrop(

@@ -32,6 +32,7 @@ describe('HIP904 CancelAirdropContract Test Suite', function () {
   let signers;
   let owner;
   let receiver;
+  let contractAddresses;
 
   before(async function () {
     signers = await ethers.getSigners();
@@ -58,16 +59,18 @@ describe('HIP904 CancelAirdropContract Test Suite', function () {
     );
     owner = signers[0].address;
 
-    await utils.updateAccountKeysViaHapi([
+    contractAddresses = [
       await airdropContract.getAddress(),
       await tokenCreateContract.getAddress(),
       await cancelAirdropContract.getAddress(),
-    ]);
+    ];
+
+    await utils.updateAccountKeysViaHapi(contractAddresses);
 
     tokenAddress = await utils.setupToken(
       tokenCreateContract,
       owner,
-      airdropContract
+      contractAddresses
     );
 
     const IHRC904AccountFacade = new ethers.Interface(
@@ -97,7 +100,7 @@ describe('HIP904 CancelAirdropContract Test Suite', function () {
     const tokenAddress = await utils.setupToken(
       tokenCreateContract,
       owner,
-      airdropContract
+      contractAddresses
     );
 
     const initialBalance = await erc20Contract.balanceOf(
@@ -137,8 +140,7 @@ describe('HIP904 CancelAirdropContract Test Suite', function () {
     const nftTokenAddress = await utils.setupNft(
       tokenCreateContract,
       owner,
-      airdropContract,
-      cancelAirdropContract
+      contractAddresses
     );
 
     const serialNumber = await utils.mintNFTToAddress(
@@ -209,7 +211,7 @@ describe('HIP904 CancelAirdropContract Test Suite', function () {
     const tokenAddress = await utils.setupToken(
       tokenCreateContract,
       owner,
-      airdropContract
+      contractAddresses
     );
 
     const tx = await cancelAirdropContract.cancelAirdrop(
@@ -227,7 +229,7 @@ describe('HIP904 CancelAirdropContract Test Suite', function () {
     const tokenAddress = await utils.setupToken(
       tokenCreateContract,
       owner,
-      airdropContract
+      contractAddresses
     );
 
     const tx = await cancelAirdropContract.cancelAirdrop(
@@ -245,7 +247,7 @@ describe('HIP904 CancelAirdropContract Test Suite', function () {
     const tokenAddress = await utils.setupToken(
       tokenCreateContract,
       owner,
-      airdropContract
+      contractAddresses
     );
 
     const tx = await cancelAirdropContract.cancelAirdrop(
@@ -329,8 +331,7 @@ describe('HIP904 CancelAirdropContract Test Suite', function () {
     const nftTokenAddress = await utils.setupNft(
       tokenCreateContract,
       owner,
-      airdropContract,
-      cancelAirdropContract
+      contractAddresses
     );
     const invalidSerialNumber = 999;
 
