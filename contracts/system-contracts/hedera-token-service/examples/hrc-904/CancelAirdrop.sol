@@ -71,7 +71,7 @@ contract CancelAirdrop is HederaTokenService {
     // @param tokens Array of token addresses for the pending airdrops
     // @param serials Array of serial numbers for NFT airdrops (use 0 for fungible tokens)
     // @return responseCode The response code from the batch cancel operation (22 = success)
-    function cancelAirdrops(address[] memory senders, address[] memory receivers, address[] memory tokens, int64[] memory serials) public returns (int64 responseCode) {
+    function cancelMultipleAirdrops(address[] memory senders, address[] memory receivers, address[] memory tokens, int64[] memory serials) public returns (int64 responseCode) {
         uint length = senders.length;
         IHederaTokenService.PendingAirdrop[] memory pendingAirdrops = new IHederaTokenService.PendingAirdrop[](length);
         for (uint i = 0; i < length; i++) {

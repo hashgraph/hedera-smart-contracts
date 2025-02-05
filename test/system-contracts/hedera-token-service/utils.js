@@ -36,6 +36,10 @@ const {
   ContractInfoQuery,
 } = require('@hashgraph/sdk');
 const Constants = require('../../constants');
+const axios = require('axios');
+const {
+  getMirrorNodeUrl,
+} = require('../native/evm-compatibility-ecrecover/utils');
 
 class Utils {
   //createTokenCost is cost for creating the token, which is passed to the system-contracts. This is equivalent of 40 and 60hbars, any excess hbars are refunded.
@@ -64,6 +68,19 @@ class Utils {
     SECP256K1: 3,
     DELEGETABLE_CONTRACT_ID: 4,
   };
+
+  static async deployContract(
+    contractPath,
+    gasLimit = Constants.GAS_LIMIT_1_000_000
+  ) {
+    const factory = await ethers.getContractFactory(contractPath);
+    const contract = await factory.deploy(gasLimit);
+
+    return await ethers.getContractAt(
+      contractPath,
+      await contract.getAddress()
+    );
+  }
 
   static async deployERC20Mock() {
     const erc20MockFactory = await ethers.getContractFactory(
@@ -941,6 +958,171 @@ class Utils {
       default:
         return;
     }
+  }
+
+  /**
+   * This method fetches the transaction actions from the mirror node corresponding to the current network,
+   * filters the actions to find the one directed to the Hedera Token Service (HTS) system contract,
+   * and extracts the result data from the precompile action. The result data is converted from a BigInt
+   * to a string before being returned.
+   *
+   * @param {string} txHash - The transaction hash to query.
+   * @returns {string} - The response code as a string.
+   */
+  static async getHTSResponseCode(txHash) {
+    const network = hre.network.name;
+    const mirrorNodeUrl = getMirrorNodeUrl(network);
+    const res = await axios.get(
+      `${mirrorNodeUrl}/contracts/results/${txHash}/actions`
+    );
+    const precompileAction = res.data.actions.find(
+      (x) => x.recipient === Constants.HTS_SYSTEM_CONTRACT_ID
+    );
+    return BigInt(precompileAction.result_data).toString();
+  }
+
+  /**
+   * This method fetches the transaction actions from the mirror node corresponding to the current network,
+   * filters the actions to find the one directed to the Hedera Account Service (HAS) system contract,
+   * and extracts the result data from the precompile action. The result data is converted from a BigInt
+   * to a string before being returned.
+   *
+   * @param {string} txHash - The transaction hash to query.
+   * @returns {string} - The response code as a string.
+   */
+  static async getHASResponseCode(txHash) {
+    const network = hre.network.name;
+    const mirrorNodeUrl = getMirrorNodeUrl(network);
+    const res = await axios.get(
+      `${mirrorNodeUrl}/contracts/results/${txHash}/actions`
+    );
+    const precompileAction = res.data.actions.find(
+      (x) => x.recipient === Constants.HAS_SYSTEM_CONTRACT_ID
+    );
+    return BigInt(precompileAction.result_data).toString();
+  }
+
+  static async setupNft(tokenCreateContract, owner, contractAddresses) {
+    const nftTokenAddress =
+      await this.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
+        tokenCreateContract,
+        owner,
+        this.getSignerCompressedPublicKey()
+      );
+
+    await this.updateTokenKeysViaHapi(
+      nftTokenAddress,
+      contractAddresses,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false
+    );
+
+    await this.associateToken(
+      tokenCreateContract,
+      nftTokenAddress,
+      Constants.Contract.TokenCreateContract
+    );
+
+    return nftTokenAddress;
+  }
+
+  static async setupToken(tokenCreateContract, owner, contractAddresses) {
+    const tokenAddress =
+      await this.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
+        tokenCreateContract,
+        owner,
+        this.getSignerCompressedPublicKey()
+      );
+
+    await this.updateTokenKeysViaHapi(
+      tokenAddress,
+      contractAddresses,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false
+    );
+
+    await this.associateToken(
+      tokenCreateContract,
+      tokenAddress,
+      Constants.Contract.TokenCreateContract
+    );
+
+    return tokenAddress;
+  }
+
+  /**
+   * Creates multiple pending airdrops for testing purposes
+   * @param {Contract} airdropContract - The airdrop contract instance
+   * @param {string} owner - The owner's address
+   * @param {Contract} tokenCreateContract - The token create contract instance
+   * @param {number} count - Number of pending airdrops to create
+   * @returns {Object} Object containing arrays of senders, receivers, tokens, serials, and amounts
+   */
+  static async createPendingAirdrops(
+    count,
+    tokenCreateContract,
+    owner,
+    airdropContract,
+    receiver
+  ) {
+    const senders = [];
+    const receivers = [];
+    const tokens = [];
+    const serials = [];
+    const amounts = [];
+
+    for (let i = 0; i < count; i++) {
+      const tokenAddress = await this.setupToken(tokenCreateContract, owner, [
+        await airdropContract.getAddress(),
+      ]);
+      const ftAmount = BigInt(i + 1); // Different amount for each airdrop
+
+      const airdropTx = await airdropContract.tokenAirdrop(
+        tokenAddress,
+        owner,
+        receiver,
+        ftAmount,
+        {
+          value: Constants.ONE_HBAR,
+          gasLimit: 2_000_000,
+        }
+      );
+      await airdropTx.wait();
+
+      senders.push(owner);
+      receivers.push(receiver);
+      tokens.push(tokenAddress);
+      serials.push(0); // 0 for fungible tokens
+      amounts.push(ftAmount);
+    }
+
+    return { senders, receivers, tokens, serials, amounts };
+  }
+
+  /**
+   * Retrieves the maximum number of automatic token associations for an account from the mirror node
+   * @param {string} evmAddress - The EVM address of the account to query
+   * @returns {Promise<number>} Returns:
+   *  - -1 if unlimited automatic associations are enabled
+   *  - 0 if automatic associations are disabled
+   *  - positive number for the maximum number of automatic associations allowed
+   * @throws {Error} If there was an error fetching the data from mirror node
+   */
+  static async getMaxAutomaticTokenAssociations(evmAddress) {
+    const network = hre.network.name;
+    const mirrorNodeUrl = getMirrorNodeUrl(network);
+    const response = await axios.get(`${mirrorNodeUrl}/accounts/${evmAddress}`);
+    return response.data.max_automatic_token_associations;
   }
 }
 
