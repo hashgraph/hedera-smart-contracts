@@ -347,20 +347,9 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     const snBefore = await getServicesNonce(signers[0].address);
     const mnBefore = await getMirrorNodeNonce(signers[0].address);
 
-    try {
-      const tx = await erc20Contract
-          .connect(signers[0])
-          .transfer(
-              tokenAddress,
-              signers[1].address,
-              amount,
-              Constants.GAS_LIMIT_1_000_000
-          );
-      await tx.wait();
-    } catch (e) {
-      expect(e).to.exist;
-      expect(e.code).to.eq(Constants.CALL_EXCEPTION);
-    }
+    await Utils.expectToFail(
+        erc20Contract.transfer(tokenAddress, signers[1].address, amount, Constants.GAS_LIMIT_1_000_000)
+    );
 
     const snAfter = await getServicesNonce(signers[0].address);
     const mnAfter = await getMirrorNodeNonce(signers[0].address);
@@ -439,7 +428,7 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     expectIncrementedNonce(snBefore, mnBefore, snAfter, mnAfter);
   });
 
-  it('should not update nonces when deploying on an address with an already existing account', async function () {
+  it('should reset nonce when an account has been deleted and created again', async function () {
     // create a hollow account
     const wallet = await createNewAccountWithBalance(ethers.parseEther('3.1'));
     const snAfterCreate = await getServicesNonce(wallet.address);
@@ -477,7 +466,7 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     expectNonIncrementedNonce(snAfterNewCreate, mnAfterNewCreate, 0, 0);
   });
 
-  it('Nonce should NOT be incremented upon static call', async function () {
+  it('should not increment nonce upon static call', async function () {
     const snBeforeTransfer = await getServicesNonce(signers[0].address);
     const mnBeforeTransfer = await getMirrorNodeNonce(signers[0].address);
     const tx = await internalCallerContract.staticCallExternalFunction.staticCall(signers[1].address)
@@ -488,8 +477,7 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     expectNonIncrementedNonce(snBeforeTransfer, mnBeforeTransfer, snAfterTransfer, mnAfterTransfer)
   });
 
-  it('Nonce should NOT be incremented upon unsuccessfull sent with Direct call - not enough balance', async function () {
-    const initialValue = 100000 * Utils.tinybarToWeibarCoef
+  it('should not increment nonce upon unsuccessful sent with direct call - not enough balance', async function () {
     const initialWalletBalance = Utils.tinybarToWeibarCoef;
 
     const newWallet = await createNewAccountWithBalance(initialWalletBalance);
@@ -511,7 +499,7 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     expectNonIncrementedNonce(snWallet1Before, mnWallet1Before, snWallet1After, mnWallet1After)
   });
 
-  it('should update signer nonce upon transfer to non-existing account with enough gas limit >600K', async function () {
+  it('should update nonce upon transfer to non-existing account with enough gas limit > 600k (hollow account creation)', async function () {
     const snBeforeTransfer = await getServicesNonce(signers[0].address);
     const mnBeforeTransfer = await getMirrorNodeNonce(signers[0].address);
 
@@ -529,7 +517,7 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     expectIncrementedNonce(snBeforeTransfer, mnBeforeTransfer, snAfterCreate, mnAfterCreate);
   });
 
-  it('should not update nonce upon unsuccessfull transaction due to wrong chain id', async function () {
+  it('should not update nonce upon unsuccessful transaction due to wrong chain id', async function () {
     const wallet1 = ethers.Wallet.createRandom();
     const snBeforeTransfer = await getServicesNonce(signers[0].address);
     const mnBeforeTransfer = await getMirrorNodeNonce(signers[0].address);
@@ -630,7 +618,7 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     expectIncrementedNonce(snBeforeTransfer, mnBeforeTransfer, snAfterCreate, mnAfterCreate);
   });
 
-  it('hollow account that is finalized with the same transaction that should upgrade its nonce', async function () {
+  it('should update nonce on hollow account finalization', async function () {
     const wallet = await createNewAccountWithBalance(ethers.parseEther('10'));
     const wallet2 = ethers.Wallet.createRandom().connect(ethers.provider);
 
@@ -656,7 +644,7 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     expectIncrementedNonce(snBeforeTransfer, mnBeforeTransfer, snAfterCreate, mnAfterCreate);
   });
 
-  it('hollow account that is finilized with the same transaction that should not upgrade its nonce when offered gas price and and allowance fail check ', async function () {
+  it('should not update nonce on hollow account finalization due to reversion when offered gas price and allowance fail check', async function () {
     const wallet = await createNewAccountWithBalance(ethers.parseEther('10'));
 
     let infoBefore = await Utils.getAccountInfo(wallet.address, sdkClient);
