@@ -36,6 +36,9 @@ jobs:
       - name: Parse and update response codes
         run: node scripts/hedera-response-codes-protobuf-parser.js
 
+      - name: Compile the contracts
+        run: npx hardhat compile
+
       - name: Import GPG Key
         id: gpg_importer
         uses: step-security/ghaction-import-gpg@6c8fe4d0126a59d57c21f87c9ae5dd3451fa3cca # v6.1.0
@@ -60,7 +63,6 @@ jobs:
           title: 'chore: update HederaResponseContract.sol with the latest protobufs'
           body: >
             **Description**:
-
-            This PR updates HederaResponseCodes.sol with these from https://github.com/hashgraph/hedera-services/blob/main/hapi/hedera-protobufs/services/response_code.proto.
+            This PR fetches the latest hedera response codes from [hedera-services:main/hapi/hedera-protobufs/services/response_code.proto](https://github.com/hashgraph/hedera-services/blob/main/hapi/hedera-protobufs/services/response_code.proto) and put them into `HederaResponseCodes.sol` contract.
           labels: 'internal'
           assignees: 'swirlds-automation'
