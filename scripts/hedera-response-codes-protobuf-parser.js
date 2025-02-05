@@ -24,8 +24,8 @@ const protobufjs = require('protobufjs');
 
 async function main() {
   const version = (await axios.get('https://raw.githubusercontent.com/hashgraph/hedera-services/refs/heads/main/version.txt')).data.replace('\n', '');
-  const res = await axios.get('https://raw.githubusercontent.com/hashgraph/hedera-services/refs/heads/main/hapi/hedera-protobufs/services/response_code.proto');
-  const parsedProto = protobufjs.parse(res.data, {
+  const res = (await axios.get('https://raw.githubusercontent.com/hashgraph/hedera-services/refs/heads/main/hapi/hedera-protobufs/services/response_code.proto')).data;
+  const parsedProto = protobufjs.parse(res, {
     keepCase: true,
     alternateCommentMode: true,
     preferTrailingComment: true

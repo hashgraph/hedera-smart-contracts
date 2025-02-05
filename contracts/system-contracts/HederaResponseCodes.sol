@@ -1041,7 +1041,4 @@ library HederaResponseCodes {
     // The provided max custom fee list contains fees with duplicate account id.
     int32 internal constant DUPLICATE_ACCOUNT_ID_IN_MAX_CUSTOM_FEE_LIST = 386;
 
-    // Max custom fees list is not supported for this operation.
-    int32 internal constant MAX_CUSTOM_FEES_IS_NOT_SUPPORTED = 387;
-
 }
