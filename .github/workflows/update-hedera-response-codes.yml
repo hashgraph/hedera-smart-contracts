@@ -52,9 +52,9 @@ jobs:
       - name: Install jq
         run: sudo apt-get install jq
 
-      - name: Set Environment Variables
+      - name: Set the value
         run: |
-          export PR_MILESTONE=$(curl -s https://api.github.com/repos/hashgraph/hedera-smart-contracts/milestones | jq '.'[0].number)
+          echo "PR_MILESTONE=$(curl -s https://api.github.com/repos/hashgraph/hedera-smart-contracts/milestones | jq '.'[0].number)" >> $GITHUB_ENV
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
@@ -70,6 +70,7 @@ jobs:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           delete-branch: true
           signoff: true
+          milestone: ${{ env.PR_MILESTONE }}
           title: 'chore: update HederaResponseContract.sol with the latest protobufs'
           body: >
             **Description**: <br><br>
