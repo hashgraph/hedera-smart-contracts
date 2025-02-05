@@ -49,6 +49,14 @@ jobs:
           gpg_private_key: ${{ secrets.GPG_KEY_CONTENTS }}
           passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
 
+
+      - name: Set Environment Variables
+        run: |
+          export "PR_MILESTONE=${{ curl https://api.github.com/repos/hashgraph/hedera-smart-contracts/milestones | jq '.'[0].number }}
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+
       - name: Create Pull Request Target hedera-smart-contracts Repository
         uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
         with:
@@ -60,7 +68,7 @@ jobs:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           delete-branch: true
           signoff: true
-          milestone: ${{$(curl -s https://api.github.com/repos/hashgraph/hedera-smart-contracts/milestones |  jq '.'[0].number)}}
+          milestone: ${ (curl -s https://api.github.com/repos/hashgraph/hedera-smart-contracts/milestones |  jq '.'[0].number) }
           title: 'chore: update HederaResponseContract.sol with the latest protobufs'
           body: >
             **Description**: <br><br>
