@@ -62,7 +62,7 @@ jobs:
           signoff: true
           title: 'chore: update HederaResponseContract.sol with the latest protobufs'
           body: >
-            **Description**:
+            **Description**:\n\n
             This PR fetches the latest hedera response codes from [hedera-services:main/hapi/hedera-protobufs/services/response_code.proto](https://github.com/hashgraph/hedera-services/blob/main/hapi/hedera-protobufs/services/response_code.proto) and put them into `HederaResponseCodes.sol` contract.
           labels: 'internal'
           assignees: 'swirlds-automation'
