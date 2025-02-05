@@ -61,7 +61,7 @@ jobs:
           delete-branch: true
           signoff: true
           title: 'chore: update HederaResponseContract.sol with the latest protobufs'
-          milestone: '0.12.0'
+          milestone: 1
           body: >
             **Description**: <br><br>
             This PR fetches the latest hedera response codes from [hedera-services:main/hapi/hedera-protobufs/services/response_code.proto](https://github.com/hashgraph/hedera-services/blob/main/hapi/hedera-protobufs/services/response_code.proto) and put them into `HederaResponseCodes.sol` contract.
