@@ -2,8 +2,8 @@
 
 This is the first app that is needed to use the shadowing. After starting it, proceed to run the others in order:
 
-- #2 [TX Checker](https://github.com/Kamil-chmielewski-ariane/transaction-checker)
-- #3 [Shadowing main app](https://github.com/Kamil-chmielewski-ariane/hedera-ethereum-shadowing)
+- #2 [TX Checker](../transaction-checker)
+- #3 [Shadowing main app](../hedera-ethereum-shadowing)
 
 ### System requirements
 

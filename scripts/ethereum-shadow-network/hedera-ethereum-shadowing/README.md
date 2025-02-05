@@ -2,8 +2,8 @@
 
 This is the third and last service needed to start the comparsion, exact process is described [here](#how-does-it-work). You can find the rest of the services below:
 
-- #1 [transaction checker](https://github.com/Kamil-chmielewski-ariane/transaction-checker)
-- #2 [SC comparator](https://github.com/Kamil-chmielewski-ariane/hedera-shadowing-smart-contract-comparison)
+- #1 [transaction checker](../transaction-checker)
+- #2 [SC comparator](../hedera-shadowing-smart-contract-comparsion/)
 
 ### Description
 

@@ -2,16 +2,16 @@
 
 This is second part of the shadowing app.
 
-This is an API used to send transaction informations for asynchronous check for the transaction status that we are pushing to Hedera consensus node via transfer transaction or EthereumTransaction method. After the check is completed a response is sent to [hedera shadowing smart contract comparison](https://github.com/Kamil-chmielewski-ariane/hedera-shadowing-smart-contract-comparison) to check smart contract states between Hedera and Sepolia.
+This is an API used to send transaction informations for asynchronous check for the transaction status that we are pushing to Hedera consensus node via transfer transaction or EthereumTransaction method. After the check is completed a response is sent to [hedera shadowing smart contract comparison](../hedera-shadowing-smart-contract-comparsion/) to check smart contract states between Hedera and Sepolia.
 
 You can find the rest of the services here:
 
-- #1 [hedera shadowing smart contract comparison](https://github.com/Kamil-chmielewski-ariane/hedera-shadowing-smart-contract-comparison)
-- #3 [Shadowing main app](https://github.com/Kamil-chmielewski-ariane/hedera-ethereum-shadowing)
+- #1 [hedera shadowing smart contract comparison](../hedera-shadowing-smart-contract-comparsion/)
+- #3 [Shadowing main app](../hedera-ethereum-shadowing/)
 
 ### Pre-requsities
 
-Before runing this app make sure that everything required in [hedera shadowing smart contract comparison](https://github.com/Kamil-chmielewski-ariane/hedera-shadowing-smart-contract-comparison) is up and running.
+Before runing this app make sure that everything required in [hedera shadowing smart contract comparison](../hedera-shadowing-smart-contract-comparsion/) is up and running.
 
 Create a `.env` file in the root of project and add all variables as in `.env.example`. API key for `OPERATOR_PRIVATE` should be added from the shadowing.
 
