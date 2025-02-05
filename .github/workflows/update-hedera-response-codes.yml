@@ -55,9 +55,9 @@ jobs:
         run: apt-get install jq
 
 
-      - name: Set Environment Variables
-        run: |
-          export "PR_MILESTONE=${{ curl https://api.github.com/repos/hashgraph/hedera-smart-contracts/milestones | jq '.'[0].number }}
+#      - name: Set Environment Variables
+#        run: |
+#          export "PR_MILESTONE=${{ curl https://api.github.com/repos/hashgraph/hedera-smart-contracts/milestones | jq '.'[0].number }}
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
