@@ -52,7 +52,7 @@ jobs:
 
 
       - name: Install jq
-        run: apt-get install jq
+        run: sudo apt-get install jq
 
 
 #      - name: Set Environment Variables
