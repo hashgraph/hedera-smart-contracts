@@ -2,9 +2,10 @@ name: Update HederaResponseCodes.sol
 
 on:
   workflow_dispatch:
+  push:
 
 jobs:
-  parse-and-update:
+  parse-and-update-hedera-response-codes:
     name: Make HederaResponseCodes up-to-date with the latest protobufs
     runs-on: smart-contracts-linux-large
 
@@ -33,7 +34,7 @@ jobs:
           version: nightly
 
       - name: Parse and update response codes
-        run: node .github/scripts/hedera-response-codes-protobuf-parser.js
+        run: node scripts/hedera-response-codes-protobuf-parser.js
 
       - name: Import GPG Key
         id: gpg_importer
