@@ -50,6 +50,11 @@ jobs:
           passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
 
 
+
+      - name: Install jq
+        run: apt-get install jq
+
+
       - name: Set Environment Variables
         run: |
           export "PR_MILESTONE=${{ curl https://api.github.com/repos/hashgraph/hedera-smart-contracts/milestones | jq '.'[0].number }}
