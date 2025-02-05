@@ -13,7 +13,6 @@ This is achieved by re-executing all Ethereum transaction on by one on local Hed
 ### System requirements
 
 - [Node.js](https://nodejs.org/en) >= 22.x
-- [PNPM](https://pnpm.io/) >= 9.x
 - [Docker](https://www.docker.com/) > 24.x
 - [Docker Compose](https://docs.docker.com/compose/) > 2.22.0
 - [PM2](https://pm2.keymetrics.io/) - Optional
@@ -45,20 +44,6 @@ pm2 start ecosystem.config.js
 Configure `ecosystem.config.js` file according to preferences. Find more about [pm2 configuration here](https://pm2.keymetrics.io/docs/usage/application-declaration/).
 
 Running with this method shadowing will create inside log directory a pm2 directory with errors and output from the pm2.
-
-##### With PNPM
-
-Install packages:
-
-```
-pnpm install
-```
-
-Start the app:
-
-```
-pnpm run dev
-```
 
 ##### With NPM
 

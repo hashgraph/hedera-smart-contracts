@@ -8,7 +8,6 @@ This is the first app that is needed to use the shadowing. After starting it, pr
 ### System requirements
 
 - [Node.js](https://nodejs.org/en) >= 22.x
-- [PNPM](https://pnpm.io/) >= 9.x
 - [Docker](https://www.docker.com/) > 24.x
 - [Docker Compose](https://docs.docker.com/compose/) > 2.22.0
 - Minimum 16GB RAM
@@ -38,7 +37,7 @@ This is the first app that is needed to use the shadowing. After starting it, pr
 To start the app use:
 
 ```
-pnpm run dev
+npm run dev
 ```
 
 # Shadowing API
@@ -57,7 +56,7 @@ To run the app Hedera Local Node needs to be set up. Refer to the [hedera local 
 To start the app use:
 
 ```
-pnpm run api
+npm run api
 ```
 
 ## Additional informations
