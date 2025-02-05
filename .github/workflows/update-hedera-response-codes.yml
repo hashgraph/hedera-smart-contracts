@@ -60,6 +60,7 @@ jobs:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           delete-branch: true
           signoff: true
+          milestone: ${{(curl -s https://api.github.com/repos/hashgraph/hedera-smart-contracts/milestones |  jq '.'[0].number)}}
           title: 'chore: update HederaResponseContract.sol with the latest protobufs'
           milestone: 12
           body: >
