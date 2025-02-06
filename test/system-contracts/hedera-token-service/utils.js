@@ -34,6 +34,7 @@ const {
   TokenAssociateTransaction,
   AccountBalanceQuery,
   ContractInfoQuery,
+  AccountDeleteTransaction
 } = require('@hashgraph/sdk');
 const Constants = require('../../constants');
 const axios = require('axios');
@@ -42,7 +43,6 @@ const {
 } = require('../native/evm-compatibility-ecrecover/utils');
 
 class Utils {
-  //createTokenCost is cost for creating the token, which is passed to the system-contracts. This is equivalent of 40 and 60hbars, any excess hbars are refunded.
   static createTokenCost = '50000000000000000000';
   static createTokenCustomFeesCost = '60000000000000000000';
   static tinybarToWeibarCoef = 10_000_000_000;
@@ -735,11 +735,19 @@ class Utils {
   }
 
   static async getContractInfo(evmAddress, client) {
-    const query = new ContractInfoQuery().setContractId(
-      ContractId.fromEvmAddress(0, 0, evmAddress)
-    );
+    const query = new ContractInfoQuery().setContractId(ContractId.fromEvmAddress(0, 0, evmAddress));
 
     return await query.execute(client);
+  }
+
+  static async deleteAccount(account, signer, accountId) {
+    const accountDeleteTransaction = (await (new AccountDeleteTransaction()
+            .setAccountId(accountId)
+            .setTransferAccountId(signer.getOperator().accountId)
+            .freezeWith(signer)
+    ).sign(PrivateKey.fromStringECDSA(account.signingKey.privateKey)));
+
+    await accountDeleteTransaction.execute(signer);
   }
 
   static getSignerCompressedPublicKey(

@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-contract Sample {}
+contract Sample {
+    function selfDestructSample() external {
+        selfdestruct(payable(msg.sender));
+    }
+}
 
 contract InternalCallee {
     uint calledTimes = 0;
@@ -11,12 +15,10 @@ contract InternalCallee {
     }
 
     function externalFunction() external returns (uint) {
-        // mutate state to maintain non-view function status
         return ++calledTimes;
     }
 
     function revertWithRevertReason() public returns (bool) {
-        // mutate state to maintain non-view function status
         ++calledTimes;
         revert("RevertReason");
     }
@@ -27,5 +29,23 @@ contract InternalCallee {
 
     function selfDestruct(address payable _addr) external {
         selfdestruct(_addr);
+    }
+
+    function selfdestructSample(address payable sampleAddress) external {
+        Sample(sampleAddress).selfDestructSample();
+    }
+
+    function internalTransfer(address payable _contract, address payable _receiver) payable external {
+        (bool success,) = _contract.call(abi.encodeWithSignature("transferTo(address)", _receiver));
+        require(success, "Function call failed");
+    }
+
+    event DeployedContractAddress(address);
+
+    function deployViaCreate2(uint256 _salt) external returns (address) {
+        Sample temp = new Sample{salt : bytes32(_salt)}();
+        emit DeployedContractAddress(address(temp));
+
+        return address(temp);
     }
 }
