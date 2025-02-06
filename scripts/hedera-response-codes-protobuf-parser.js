@@ -40,7 +40,10 @@ async function main() {
       `\n// https://github.com/hashgraph/hedera-services/blob/main/hapi/hedera-protobufs/services/response_code.proto\n\n` +
       `library HederaResponseCodes {\n`;
   for (const [name, code] of Object.entries(responseCodes.values)) {
-    contract += `    // ${responseCodes.comments[name]?.replaceAll('\n', ' ')}\n`;
+    const comment = responseCodes?.comments[name];
+    if (comment) {
+      contract += `    /// ${comment.replaceAll('\n', ' ') ?? ''}\n`;
+    }
     contract += `    int32 internal constant ${name} = ${code};\n\n`;
   }
   contract += '}\n';
