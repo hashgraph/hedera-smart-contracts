@@ -24,6 +24,7 @@ artifacts/contracts/system-contracts/*
 artifacts/contracts/system-contracts/hedera-token-service/*
 !artifacts/contracts/system-contracts/hedera-token-service/examples
 !artifacts/contracts/system-contracts/hedera-token-service/IHRC719.sol
+!artifacts/contracts/system-contracts/hedera-token-service/hts-fungible-token
 
 !artifacts/contracts/exchange-rate-precompile
 artifacts/contracts/exchange-rate-precompile/*

@@ -222,6 +222,19 @@ class Utils {
     );
   }
 
+  static async deployContract(contractName, args) {
+    const contractFactory = await ethers.getContractFactory(contractName);
+    const deployedContract = await contractFactory.deploy(
+      ...args,
+      Constants.GAS_LIMIT_1_000_000
+    );
+
+    return await ethers.getContractAt(
+      contractName,
+      await deployedContract.getAddress()
+    );
+  }
+
   static async createFungibleToken(contract, treasury) {
     const tokenAddressTx = await contract.createFungibleTokenPublic(treasury, {
       value: BigInt(this.createTokenCost),
