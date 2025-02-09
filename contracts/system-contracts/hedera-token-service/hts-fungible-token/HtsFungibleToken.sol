@@ -5,7 +5,6 @@ import "./interfaces/IHtsFungibleToken.sol";
 import "../IHederaTokenService.sol";
 import "../../HederaResponseCodes.sol";
 import "../KeyHelper.sol";
-import "../IHRC719.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
