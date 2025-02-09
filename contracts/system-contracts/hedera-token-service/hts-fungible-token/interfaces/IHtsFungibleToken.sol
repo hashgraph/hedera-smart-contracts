@@ -10,5 +10,4 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
  * @dev This interface defines a native fungible HTS token that supports ERC20 functions. Currently it does not yet support all the IHTSTokenService functions.
  */
 interface IHtsFungibleToken is IERC20 {
-
 }

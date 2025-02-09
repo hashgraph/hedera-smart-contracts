@@ -23,7 +23,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 
 
-describe('HTS Fungible Token Standard Test Suite', function () {
+describe('HTSFungibleTokenStandard Test Suite', function () {
     describe('ExampleHtsFungibleToken Tests', function () {
 
         const name = 'testToken';

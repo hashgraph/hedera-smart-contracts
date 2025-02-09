@@ -123,6 +123,12 @@ jobs:
     with:
       testfilter: HIP904
 
+  HTSFungibleTokenStandard:
+    name: HTSFungibleTokenStandard Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: HTSFungibleTokenStandard
+
   PublishResults:
     name: Publish Results
     if: ${{ !cancelled() }}
