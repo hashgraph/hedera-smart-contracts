@@ -93,4 +93,17 @@ abstract contract HtsFungibleToken is IHtsFungibleToken, KeyHelper {
         require(success, "Delegate approve call failed");
         return success;
     }
+
+    /// Query fungible token info
+    /// @return responseCode The response code for the status of the request. SUCCESS is 22.
+    /// @return fungibleTokenInfo FungibleTokenInfo info for `token`
+    function getFungibleTokenInfo() external returns (int64 responseCode, FungibleTokenInfo memory fungibleTokenInfo) {
+        (bool success, bytes memory result) = htsSystemContractAddress.call(
+            abi.encodeWithSelector(IHederaTokenService.getFungibleTokenInfo.selector, htsTokenAddress)
+        );
+
+        FungibleTokenInfo memory defaultTokenInfo;
+        (responseCode, fungibleTokenInfo) = success ? abi.decode(result, (int64, FungibleTokenInfo)) : (HederaResponseCodes.UNKNOWN, defaultTokenInfo);
+        require(responseCode == HederaResponseCodes.SUCCESS, "HTS: getFungibleTokenInfo failed");
+    }
 }
