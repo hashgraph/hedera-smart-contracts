@@ -123,11 +123,11 @@ jobs:
     with:
       testfilter: HIP904
 
-  HTSFungibleTokenStandard:
-    name: HTSFungibleTokenStandard Test Suite
+  NativeTokenStandard:
+    name: NativeTokenStandard Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
-      testfilter: HTSFungibleTokenStandard
+      testfilter: NativeTokenStandard
 
   PublishResults:
     name: Publish Results
