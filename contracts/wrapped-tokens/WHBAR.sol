@@ -13,6 +13,7 @@ contract WHBAR {
 
     error InsufficientFunds();
     error InsufficientAllowance();
+    error SendFailed();
 
     mapping(address user => uint balance) public balanceOf;
     mapping(address owner => mapping(address spender => uint amount)) public allowance;
@@ -37,7 +38,10 @@ contract WHBAR {
         }
 
         balanceOf[msg.sender] -= wad;
-        payable(msg.sender).call{value: wad}("");
+        bool success = payable(msg.sender).send(wad);
+        if (!success) {
+            revert SendFailed();
+        }
 
         emit Withdrawal(msg.sender, wad);
     }
