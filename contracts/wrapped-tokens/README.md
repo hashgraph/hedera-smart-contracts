@@ -22,6 +22,7 @@ The WHBAR contract for Wrapped HBAR to help transactions that use native token p
 ##### Errors:
 - InsufficientFunds - ```error InsufficientFunds()```
 - InsufficientAllowance - ```error InsufficientAllowance()```
+- SendFailed - ```error SendFailed()```
 
 ##### Methods:
 - receive - ```receive() external payable```
