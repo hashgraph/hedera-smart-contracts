@@ -38,8 +38,8 @@ describe('NativeTokenStandard Test Suite', function () {
 
             const contractFactory = await ethers.getContractFactory('ExampleHtsFungibleToken');
             const contractCreate = await contractFactory.deploy(defaultName, defaultSymbol, defaultInitialSupply, defaultDecimals, {
-            gasLimit: 500_000,
-            value: '30000000000000000000' // 30 hbars
+            gasLimit: 505_000,
+            value: '10000000000000000000' // 10 hbars
             });
 
             await contractCreate.waitForDeployment();
@@ -81,8 +81,8 @@ describe('NativeTokenStandard Test Suite', function () {
 
             const contractFactory = await ethers.getContractFactory('ExampleHtsFungibleTokenSupplyManager');
             const contractCreate = await contractFactory.deploy(defaultName, defaultSymbol, defaultInitialSupply, defaultDecimals, {
-            gasLimit: 550_000,
-            value: '30000000000000000000' // 30 hbars
+            gasLimit: 590_000,
+            value: '10000000000000000000' // 10 hbars
             });
 
             await contractCreate.waitForDeployment();

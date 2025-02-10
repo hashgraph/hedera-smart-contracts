@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.4.9 <0.9.0;
 
-
 import "../HtsFungibleTokenSupplyManager.sol";
 
 contract ExampleHtsFungibleTokenSupplyManager is HtsFungibleTokenSupplyManager {

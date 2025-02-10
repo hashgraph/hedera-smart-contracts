@@ -5,8 +5,6 @@ import "./interfaces/IHtsFungibleToken.sol";
 import "../IHederaTokenService.sol";
 import "../../HederaResponseCodes.sol";
 import "../KeyHelper.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
 /**
  * @title HtsFungibleToken
@@ -51,45 +49,45 @@ abstract contract HtsFungibleToken is IHtsFungibleToken, KeyHelper {
         emit TokenCreated(tokenAddress, address(this));
     }
 
-    function name() public view returns (string memory) {
-        return IERC20Metadata(htsTokenAddress).name();
+    function name() external view returns (string memory) {
+        return IHtsFungibleToken(htsTokenAddress).name();
     }
 
-    function symbol() public view returns (string memory) {
-        return IERC20Metadata(htsTokenAddress).symbol();
+    function symbol() external view returns (string memory) {
+        return IHtsFungibleToken(htsTokenAddress).symbol();
     }
 
-    function decimals() public view returns (uint8) {
-        return IERC20Metadata(htsTokenAddress).decimals();
+    function decimals() external view returns (uint8) {
+        return IHtsFungibleToken(htsTokenAddress).decimals();
     }
 
     function totalSupply() external view returns (uint256) {
-        return IERC20(htsTokenAddress).totalSupply();
+        return IHtsFungibleToken(htsTokenAddress).totalSupply();
     }
 
     function balanceOf(address account) external view returns (uint256) {
-        return IERC20(htsTokenAddress).balanceOf(account);
+        return IHtsFungibleToken(htsTokenAddress).balanceOf(account);
     }
 
     function allowance(address owner, address spender) external view returns (uint256) {
-        return IERC20(htsTokenAddress).allowance(owner, spender);
+        return IHtsFungibleToken(htsTokenAddress).allowance(owner, spender);
     }
 
     // native token transfer, transferFrom and approve functions intended to operate on native HTS token require 
     function transfer(address recipient, uint256 amount) external returns (bool) {
-        (bool success, ) = address(IERC20(htsTokenAddress)).delegatecall(abi.encodeWithSignature("transfer(address,uint256)", recipient, amount));
+        (bool success, ) = address(IHtsFungibleToken(htsTokenAddress)).delegatecall(abi.encodeWithSignature("transfer(address,uint256)", recipient, amount));
         require(success, "Delegate transfer call failed");
         return success;
     }
 
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool) {
-        (bool success, ) = address(IERC20(htsTokenAddress)).delegatecall(abi.encodeWithSignature("transferFrom(address,address,uint256)", sender, recipient, amount));
+        (bool success, ) = address(IHtsFungibleToken(htsTokenAddress)).delegatecall(abi.encodeWithSignature("transferFrom(address,address,uint256)", sender, recipient, amount));
         require(success, "Delegate transferFrom call failed");
         return success;
     }
 
     function approve(address spender, uint256 amount) external returns (bool) {
-        (bool success, ) = address(IERC20(htsTokenAddress)).delegatecall(abi.encodeWithSignature("approve(address,uint256)", spender, amount));
+        (bool success, ) = address(IHtsFungibleToken(htsTokenAddress)).delegatecall(abi.encodeWithSignature("approve(address,uint256)", spender, amount));
         require(success, "Delegate approve call failed");
         return success;
     }

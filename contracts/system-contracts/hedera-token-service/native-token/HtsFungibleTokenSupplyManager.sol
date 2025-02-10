@@ -3,11 +3,7 @@ pragma solidity >=0.4.9 <0.9.0;
 
 import "./HtsFungibleToken.sol";
 import "../IHederaTokenService.sol";
-import "../IHTSStructs.sol";
 import "../../HederaResponseCodes.sol";
-import "../KeyHelper.sol";
-import "../examples/hrc-719/HRC719Contract.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
