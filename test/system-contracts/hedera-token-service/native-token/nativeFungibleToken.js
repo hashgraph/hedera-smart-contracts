@@ -119,21 +119,26 @@ describe('NativeTokenStandard Test Suite', function () {
             const burnAmount = 50;
 
             // mint Flow
-            await htsFungibleToken.mint(mintAmount, { gasLimit: 1000000 });
+            const mintTx = await htsFungibleToken.mint(mintAmount, { gasLimit: 1000000 });
+            await mintTx.wait();
+
             expect(await htsFungibleToken.totalSupply()).to.equal(defaultInitialSupply + mintAmount); // Total Supply after mint
             expect(await htsFungibleToken.balanceOf(deployedContractAddress)).to.equal(defaultInitialSupply + mintAmount); // Contract Balance after mint
             expect(await htsFungibleToken.balanceOf(signers[0].address)).to.equal(0); // Balance of signer 0 after mint       
         
             // mintTo Flow
             expect(await htsFungibleTokenProxy.isAssociated()).to.be.false; // confirm signer 0 is not associated prior to mintTo
-            await htsFungibleToken.mintTo(signers[0].address, mintToAmount, { gasLimit: 1000000 });
+            
+            const mintToTx = await htsFungibleToken.mintTo(signers[0].address, mintToAmount, { gasLimit: 1000000 });
+            await mintToTx.wait();
             expect(await htsFungibleTokenProxy.isAssociated()).to.be.true; // confirm signer 0 is associated prior to mintTo
             expect(await htsFungibleToken.totalSupply()).to.equal(defaultInitialSupply + mintAmount + mintToAmount); // Total Supply after mint
             expect(await htsFungibleToken.balanceOf(deployedContractAddress)).to.equal(defaultInitialSupply + mintAmount); // Contract Balance after mint
             expect(await htsFungibleToken.balanceOf(signers[0].address)).to.equal(mintToAmount); // Balance of signer 0 after mint
         
             // burn Flow
-            await htsFungibleToken.burn(burnAmount);
+            const burnTx = await htsFungibleToken.burn(burnAmount);
+            await burnTx.wait();
             expect(await htsFungibleToken.totalSupply()).to.equal(defaultInitialSupply + mintAmount + mintToAmount - burnAmount); // Total Supply after mint
             expect(await htsFungibleToken.balanceOf(deployedContractAddress)).to.equal(defaultInitialSupply + mintAmount - burnAmount); // Contract Balance after mint
             expect(await htsFungibleToken.balanceOf(signers[0].address)).to.equal(mintToAmount); // Balance of signer 0 after mint
