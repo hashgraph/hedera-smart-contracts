@@ -151,6 +151,7 @@ const Contract = {
   Ballot: 'Ballot',
   Bitwise: 'Bitwise',
   ContractCaller: 'ContractCaller',
+  Target: 'Target',
   TargetContract: 'TargetContract',
   ContractCreator: 'ContractCreator',
   DataAllocation: 'DataAllocation',
