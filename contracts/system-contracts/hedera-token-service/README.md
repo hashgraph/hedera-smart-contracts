@@ -97,12 +97,15 @@ The table below outlines the available Hedera Token Service (HTS) System Contrac
 | `rejectTokenNFTs`     | `0xa869c78a`  | [0.56](https://docs.hedera.com/hedera/networks/release-notes/services#release-v0.56)  | [HIP 904](https://hips.hedera.com/hip/hip-904) | `rejectTokenNFTs(int64[] memory serialNumbers) external returns (int64 responseCode)` |
 
 
-## Token Solidity Standards
+## Native Token Solidity Standards
 HTS offers a vast array of functionality with support for ERC 20 and ERC 721 functions. 
 To enable improved developer experiences the following standards are provided to allow developers to quickly create native tokens and management contracts.
 
 ### HTS Fungible ERC20
-The `IHtsFungibleToken` interface is provided which combines the `IERC20` and teh fungible functions of `IHederaTokenService` interfaces.
-Contracts may be found under [hts-fungible-token](./hts-fungible-token/)
+The [`IHtsFungibleToken`](./native-token/interfaces/IHtsFungibleToken.sol) interface is provided which combines the `IERC20Metadata` and the fungible functions of `IHederaTokenService` interfaces.
+[`IHtsFungibleTokenProxy`](./native-token/interfaces/IHtsFungibleTokenProxy.sol) provides an interface to interact with any deployed fungible HTS token.
+[`ExampleHtsFungibleToken`](./native-token/examples/ExampleHtsFungibleToken.sol) provides an example contract to create a new fungible HTS token.
 
 ### HTS Non Fungible ERC 721
+The [`IHtsNonFungibleToken`](./native-token/interfaces/IHtsNonFungibleToken.sol) interface is provided which combines the `IERC721Metadata` and the fungible functions of `IHederaTokenService` interfaces.
+[`IHtsNonFungibleTokenProxy`](./native-token/interfaces/IHtsNonFungibleTokenProxy.sol) provides an interface to interact with any deployed fungible HTS token.

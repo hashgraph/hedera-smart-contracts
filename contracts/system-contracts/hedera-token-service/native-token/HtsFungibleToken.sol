@@ -15,12 +15,9 @@ import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 abstract contract HtsFungibleToken is IHtsFungibleToken, KeyHelper {
 
     address constant htsSystemContractAddress = address(0x167);
-
-    event TokenCreated(address tokenAddress, address creatorAddress);
-
     address public htsTokenAddress;
     
-    // missing event emissions
+    event TokenCreated(address tokenAddress, address creatorAddress);
 
     constructor(
         string memory _name,
