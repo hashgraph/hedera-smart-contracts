@@ -1,7 +1,3 @@
-:warning: :bangbang: All examples under this folder are exploration code and have NOT been audited. Use them at your own risk! :bangbang: :warning:
-
----
-
 # Layer Zero examples
 
 ### OApp

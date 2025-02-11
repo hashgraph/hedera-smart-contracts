@@ -1,3 +1,5 @@
+:warning: :bangbang: ***All examples and contracts in this repository are exploration code and have NOT been audited. Use them at your own risk!*** :bangbang: :warning:
+
 # Hedera Smart Contracts
 
 Reference library for Smart Contracts utilized by the Hedera network with supporting files and examples.
