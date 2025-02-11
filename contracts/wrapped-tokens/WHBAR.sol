@@ -38,7 +38,7 @@ contract WHBAR {
         }
 
         balanceOf[msg.sender] -= wad;
-        bool success = payable(msg.sender).send(wad);
+        (bool success, ) = payable(msg.sender).call{value: wad}("");
         if (!success) {
             revert SendFailed();
         }
