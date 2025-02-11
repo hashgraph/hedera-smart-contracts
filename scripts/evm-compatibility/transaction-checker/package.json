@@ -1,0 +1,28 @@
+{
+  "engines": {
+    "node": "22.12.0"
+  },
+  "name": "evm-compatibility-transaction-checker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "node -r ts-node/register dist/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@hashgraph/sdk": "^2.56.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  }
+}
