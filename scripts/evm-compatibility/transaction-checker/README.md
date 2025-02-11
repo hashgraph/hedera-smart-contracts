@@ -1,36 +1,46 @@
-### Transaction checker
-This is third part of the shadowing app
+# Transaction checker
 
-This app is an API implemented by our team that we use to send transaction information for asynchronous check for the transaction status that we are pushing to
-Hedera consensus node via transfer transaction or EthereumTransaction method. Also after the check is completed in there a response is send to our other application (hedera-shadowing-smart-contract-comparison) to check smart contract states between Hedera and Sepolia.
+This is second part of the shadowing app.
 
-# Recommend tools
-* [hedera shadowing smart contract comparison](https://github.com/Kamil-chmielewski-ariane/hedera-shadowing-smart-contract-comparison))
+This is an API used to send transaction informations for asynchronous check for the transaction status that we are pushing to Hedera consensus node via transfer transaction or EthereumTransaction method. After the check is completed a response is sent to [hedera shadowing smart contract comparison](https://github.com/Kamil-chmielewski-ariane/hedera-shadowing-smart-contract-comparison) to check smart contract states between Hedera and Sepolia.
 
-# !!! IMPORTANT !!!
+You can find the rest of the services here:
 
-Before runing this app, the hedera local node and hedera shadowing smart contract comparison must be running.
-[Hedera Shadowing Smart Contract Comparison](https://github.com/Kamil-chmielewski-ariane/hedera-shadowing-smart-contract-comparison)
+- #1 [hedera shadowing smart contract comparison](https://github.com/Kamil-chmielewski-ariane/hedera-shadowing-smart-contract-comparison)
+- #3 [Shadowing main app](https://github.com/Kamil-chmielewski-ariane/hedera-ethereum-shadowing)
 
-# USAGE
+### Pre-requsities
 
-Create a ```.env``` file in the root of project and add all variables as in ```.env.example```. Api key for ```OPERATOR_PRIVATE``` should be added from the shadowing
+Before runing this app make sure that everything required in [hedera shadowing smart contract comparison](https://github.com/Kamil-chmielewski-ariane/hedera-shadowing-smart-contract-comparison) is up and running.
 
-- ``PORT``- port which app will be running on - default is 8081
-- ``LOG_TO_FILE``- true or false, determining whether logs should be saved to a file
-- ``LOG_FILE_PATH``- directory to store logs
-- ``LOG_FILE_NAME``- file name stored log
-- ``NETWORK_WORKERS``- max network workers - default 128
-- ``MIRROR_WORKERS``- max mirror workers - default is 64
-- ``NETWORK_QUEUE_CAPACITY``- max network que capacity - default is 65536
-- ``MIRROR_QUEUE_CAPACITY``- max mirror queue capacity - default is 65536
-- ``NETWORK_URL``- url for the network node api
-- ``NETWORK_ACCOUNT``- id for network account
-- ``OPERATOR_ACCOUNT``- id for operator account
-- ``OPERATOR_ACCOUNT_KEY``- operator key - get this from the shadowing app
-- ``MIRROR_NODE_URL``- url for the mirror node api
-- ``SHADOWING_API_URL`` - url for the shadowing api - get it from the hedera-shadowing-smart-contract-comparison app
-- ``HEDERA_CLIENT_MIRROR_NETWORK_URL`` - url for the hedera client mirror (grpc api)
-## Docker
-``docker compose up -d``
+Create a `.env` file in the root of project and add all variables as in `.env.example`. API key for `OPERATOR_PRIVATE` should be added from the shadowing.
 
+- `PORT`- port on which app will be running on - default is 8081
+- `LOG_TO_FILE` - whether the app should log to files
+- `LOG_FILE_PATH`- directory to store the logs
+- `LOG_FILE_NAME`- logfile name
+- `NETWORK_WORKERS`- max network workers - default 128
+- `MIRROR_WORKERS`- max mirror workers - default is 64
+- `NETWORK_QUEUE_CAPACITY`- max network queue capacity - default is 65536
+- `MIRROR_QUEUE_CAPACITY`- max mirror queue capacity - default is 65536
+- `NETWORK_URL`- URL of the network node API exposed by hedera local node
+- `NETWORK_ACCOUNT`- id of network account
+- `OPERATOR_ACCOUNT`- id of operator account
+- `OPERATOR_ACCOUNT_KEY`- operator key [can be found in this article](https://docs.hedera.com/hedera/sdks-and-apis/sdks/client)
+- `MIRROR_NODE_URL`- URL of the mirror exposed by hedera local node
+- `SHADOWING_API_URL` - URL of the shadowing API from the first service
+- `HEDERA_CLIENT_MIRROR_NETWORK_URL` - URL of the Hedera local node's mirror network
+
+### Usage
+
+Install packages:
+
+```shell
+npm install
+```
+
+To start the checker run:
+
+```shell
+npm run dev
+```
