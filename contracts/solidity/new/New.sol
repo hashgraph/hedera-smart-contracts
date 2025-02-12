@@ -7,6 +7,13 @@ contract Target {
     function setMessage(string calldata _message) external {
         message = _message;
     }
+
+    event WithdrawResponse(bool, bytes);
+
+    function tryToWithdraw(address to, uint wad) external {
+        (bool success, bytes memory res) = to.call(abi.encodeWithSignature("withdraw(uint256)", wad));
+        emit WithdrawResponse(success, res);
+    }
 }
 
 contract TargetWithConstructor {

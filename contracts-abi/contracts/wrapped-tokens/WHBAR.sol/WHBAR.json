@@ -10,6 +10,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "SendFailed",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {

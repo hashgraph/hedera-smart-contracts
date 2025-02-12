@@ -220,4 +220,35 @@ describe('WHBAR', function() {
     await expect(contractWithNewSigner.transferFrom(signers[0].address, receiverAddress, amount))
         .to.be.revertedWithCustomError(contractWithNewSigner, `InsufficientAllowance`);
   });
+
+  it('should throw SendFailed error on withdrawal from a contract with no receive/fallback method', async() => {
+    const contractWithoutReceiveFactory = await ethers.getContractFactory('Target');
+    const contractWithoutReceive = await contractWithoutReceiveFactory.deploy();
+    await contractWithoutReceive.waitForDeployment();
+
+    const receiver = contractWithoutReceive.target;
+    const receiverBalanceBefore = await contract.balanceOf(receiver);
+
+    const txDeposit = await contract.deposit({
+      value: ONE_HBAR_AS_WEIBAR
+    });
+    await txDeposit.wait();
+
+    const txTransfer = await contract.transfer(contractWithoutReceive, ONE_HBAR);
+    await txTransfer.wait();
+
+    const receiverBalanceAfter = await contract.balanceOf(receiver);
+    expect(receiverBalanceBefore).to.equal(0);
+    expect(receiverBalanceAfter).to.equal(ONE_HBAR);
+
+    const tryToWithdrawTx = await contractWithoutReceive.tryToWithdraw(contract.target, ONE_HBAR);
+    const tryToWithdrawReceipt = await tryToWithdrawTx.wait();
+
+    expect(tryToWithdrawReceipt.logs).to.not.be.empty;
+    expect(tryToWithdrawReceipt.logs[0].fragment.name).to.equal('WithdrawResponse');
+    // revert with SendFailed()
+    expect(tryToWithdrawReceipt.logs[0].args[0]).to.be.false;
+    // first 4 bytes of the SendError selector - keccak256("SendFailed()") = 0x81063e51806c3994c498b39c9d9f4124c2e61b7cd154bc84f959aea44d44ce4f
+    expect(tryToWithdrawReceipt.logs[0].args[1]).to.equal('0x81063e51');
+  });
 });
