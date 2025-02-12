@@ -202,9 +202,7 @@ describe('HIP904 AirdropContract Test Suite', function () {
     expect(nftOwner).to.equal(receiver);
   });
 
-  // TODO: Test skipped due to missing error code support in services implementation
-  // See: https://github.com/hashgraph/hedera-services/issues/17409
-  it.skip('should airdrop non-fungible tokens (NFT) to multiple accounts', async function () {
+  it('should airdrop non-fungible tokens (NFT) to multiple accounts', async function () {
     const nftTokenAddress = await utils.setupNft(
       tokenCreateContract,
       owner,
