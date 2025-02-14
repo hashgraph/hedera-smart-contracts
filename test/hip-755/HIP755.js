@@ -51,29 +51,43 @@ const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
+const createScheduleTransactionForTransfer = async (senderInfo, receiverInfo, client) => {
+  const transferAmountAsTinybars = getRandomInt(1, 100_000_000);
+  const transferAmountAsWeibar = BigInt(transferAmountAsTinybars) * BigInt(Utils.tinybarToWeibarCoef);
+
+  let transferTx = await new TransferTransaction()
+      .addHbarTransfer(senderInfo.accountId, new Hbar(-transferAmountAsTinybars, HbarUnit.Tinybar))
+      .addHbarTransfer(receiverInfo.accountId, new Hbar(transferAmountAsTinybars, HbarUnit.Tinybar));
+
+  const {scheduleId} = await (await new ScheduleCreateTransaction()
+      .setScheduledTransaction(transferTx)
+      .execute(client)).getReceipt(client);
+
+  return {scheduleId, transferAmountAsWeibar};
+};
+
 describe('HIP755 Test Suite', function () {
-  let genesisSdkClient, signers, signerSender, signerReceiver;
+  let genesisSdkClient, signers, signerSender, signerReceiver, senderInfo, receiverInfo, contractHRC755;
 
   before(async () => {
     genesisSdkClient = await Utils.createSDKClient();
     signers = await ethers.getSigners();
     signerSender = signers[0];
     signerReceiver = signers[1];
+
+    senderInfo = await Utils.getAccountInfo(signerSender.address, genesisSdkClient);
+    receiverInfo = await Utils.getAccountInfo(signerReceiver.address, genesisSdkClient);
+
+    const contractHRC755Factory = await ethers.getContractFactory('HRC755Contract');
+    contractHRC755 = await contractHRC755Factory.deploy();
+    await contractHRC755.waitForDeployment();
   });
 
   it('should be able to signSchedule via IHRC755ScheduleFacade', async () => {
-    const senderInfo = await Utils.getAccountInfo(signerSender.address, genesisSdkClient);
-    const receiverInfo = await Utils.getAccountInfo(signerReceiver.address, genesisSdkClient);
-
-    const amount = getRandomInt(1, 100_000_000);
-    const amountAsWeibar = BigInt(amount) * BigInt(Utils.tinybarToWeibarCoef);
-    let transferTx = await new TransferTransaction()
-        .addHbarTransfer(senderInfo.accountId, new Hbar(-amount, HbarUnit.Tinybar))
-        .addHbarTransfer(receiverInfo.accountId, new Hbar(amount, HbarUnit.Tinybar));
-
-    const {scheduleId} = await (await new ScheduleCreateTransaction()
-        .setScheduledTransaction(transferTx)
-        .execute(genesisSdkClient)).getReceipt(genesisSdkClient);
+    const {
+      scheduleId,
+      transferAmountAsWeibar
+    } = await createScheduleTransactionForTransfer(senderInfo, receiverInfo, genesisSdkClient);
 
     const senderBalanceBefore = await signers[0].provider.getBalance(signerSender);
     const receiverBalanceBefore = await signers[0].provider.getBalance(signerReceiver);
@@ -91,27 +105,15 @@ describe('HIP755 Test Suite', function () {
 
     expect(receiverBalanceBefore).to.not.equal(receiverBalanceAfter);
     expect(senderBalanceBefore).to.not.equal(senderBalanceAfter);
-    expect(senderBalanceAfter + amountAsWeibar).to.be.lessThanOrEqual(senderBalanceBefore);
-    expect(receiverBalanceBefore + amountAsWeibar).to.equal(receiverBalanceAfter);
+    expect(senderBalanceAfter + transferAmountAsWeibar).to.be.lessThanOrEqual(senderBalanceBefore);
+    expect(receiverBalanceBefore + transferAmountAsWeibar).to.equal(receiverBalanceAfter);
   });
 
   it('should be able to signSchedule via HRC755 contract', async () => {
-    const senderInfo = await Utils.getAccountInfo(signerSender.address, genesisSdkClient);
-    const receiverInfo = await Utils.getAccountInfo(signerReceiver.address, genesisSdkClient);
-
-    const contractHRC755Factory = await ethers.getContractFactory('HRC755Contract');
-    const contractHRC755 = await contractHRC755Factory.deploy();
-    await contractHRC755.waitForDeployment();
-
-    const amount = getRandomInt(1, 100_000_000);
-    const amountAsWeibar = BigInt(amount) * BigInt(Utils.tinybarToWeibarCoef);
-    let transferTx = await new TransferTransaction()
-        .addHbarTransfer(senderInfo.accountId, new Hbar(-amount, HbarUnit.Tinybar))
-        .addHbarTransfer(receiverInfo.accountId, new Hbar(amount, HbarUnit.Tinybar));
-
-    const {scheduleId} = await (await new ScheduleCreateTransaction()
-        .setScheduledTransaction(transferTx)
-        .execute(genesisSdkClient)).getReceipt(genesisSdkClient);
+    const {
+      scheduleId,
+      transferAmountAsWeibar
+    } = await createScheduleTransactionForTransfer(senderInfo, receiverInfo, genesisSdkClient);
 
     const privateKey = PrivateKey.fromStringECDSA(Utils.getHardhatSignerPrivateKeyByIndex(0));
     const scheduleIdAsBytes = convertScheduleIdToUint8Array(scheduleId.toString());
@@ -137,7 +139,28 @@ describe('HIP755 Test Suite', function () {
 
     expect(receiverBalanceBefore).to.not.equal(receiverBalanceAfter);
     expect(senderBalanceBefore).to.not.equal(senderBalanceAfter);
-    expect(senderBalanceAfter + amountAsWeibar).to.be.lessThanOrEqual(senderBalanceBefore);
-    expect(receiverBalanceBefore + amountAsWeibar).to.equal(receiverBalanceAfter);
+    expect(senderBalanceAfter + transferAmountAsWeibar).to.be.lessThanOrEqual(senderBalanceBefore);
+    expect(receiverBalanceBefore + transferAmountAsWeibar).to.equal(receiverBalanceAfter);
+  });
+
+  it('should be able to authorizeSchedule via HRC755 contract', async () => {
+    const {scheduleId} = await createScheduleTransactionForTransfer(senderInfo, receiverInfo, genesisSdkClient);
+
+    const signScheduleCallTx = await contractHRC755.authorizeScheduleCall(
+        Utils.convertAccountIdToLongZeroAddress(scheduleId.toString(), true),
+        Constants.GAS_LIMIT_2_000_000
+    );
+    await signScheduleCallTx.wait();
+
+    const debugTraceRes = await signers[0].provider.send('debug_traceTransaction', [
+          signScheduleCallTx.hash, {
+            tracer: 'callTracer',
+            tracerConfig: {
+              onlyTopCall: true,
+            }
+          }
+        ]
+    );
+    expect(parseInt(debugTraceRes.output)).to.equal(Constants.TX_SUCCESS_CODE);
   });
 });
