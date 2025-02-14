@@ -9,11 +9,11 @@ pragma experimental ABIEncoderV2;
 contract HRC755Contract is HederaScheduleService {
     function authorizeScheduleCall(address schedule) external returns (int64 responseCode) {
         (responseCode) = HederaScheduleService.authorizeSchedule(schedule);
-        require(responseCode == HederaResponseCodes.SUCCESS, "Authorize schedule failed");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Authorize schedule failed.");
     }
 
     function signScheduleCall(address schedule, bytes memory signatureMap) external returns (int64 responseCode) {
         (responseCode) = HederaScheduleService.signSchedule(schedule, signatureMap);
-        require(responseCode == HederaResponseCodes.SUCCESS, "Authorize schedule failed");
+        require(responseCode == HederaResponseCodes.SUCCESS, "Sign schedule failed.");
     }
 }
