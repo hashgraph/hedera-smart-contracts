@@ -239,7 +239,7 @@ describe('HIP904 CancelAirdropContract Test Suite', function () {
       Constants.GAS_LIMIT_2_000_000
     );
     const responseCode = await utils.getHTSResponseCode(tx.hash);
-    expect(responseCode).to.eq('15'); // INVALID_ACCOUNT_ID code
+    expect(responseCode).to.eq('367'); // INVALID_PENDING_AIRDROP_ID code
   });
 
   it('should fail when receiver account is invalid', async function () {
