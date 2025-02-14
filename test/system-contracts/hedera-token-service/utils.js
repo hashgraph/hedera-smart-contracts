@@ -772,6 +772,10 @@ class Utils {
     );
   }
 
+  static getHardhatSignerPrivateKeyByIndex(index = 0) {
+    return hre.config.networks[hre.network.name].accounts[index];
+  }
+
   static async updateAccountKeysViaHapi(
     contractAddresses,
     ecdsaPrivateKeys = []
@@ -873,8 +877,10 @@ class Utils {
     return hre.network.name;
   }
 
-  static async convertAccountIdToLongZeroAddress(accountId) {
-    return AccountId.fromString(accountId).toSolidityAddress();
+  static convertAccountIdToLongZeroAddress(accountId, prepend0x = false) {
+    const address = AccountId.fromString(accountId).toSolidityAddress();
+
+    return prepend0x ? '0x' + address : address;
   }
 
   static async associateWithSigner(privateKey, tokenAddress) {

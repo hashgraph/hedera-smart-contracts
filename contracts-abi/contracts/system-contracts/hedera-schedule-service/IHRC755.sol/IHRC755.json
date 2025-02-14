@@ -1,0 +1,45 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "schedule",
+        "type": "address"
+      }
+    ],
+    "name": "authorizeSchedule",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "schedule",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "signatureMap",
+        "type": "bytes"
+      }
+    ],
+    "name": "signSchedule",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
