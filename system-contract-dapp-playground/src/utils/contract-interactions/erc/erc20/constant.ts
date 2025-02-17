@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+
 import { HEDERA_SHARED_PARAM_INPUT_FIELDS } from '@/utils/common/constants';
 
 export const mintParamFields = [

@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+
 import Footer from '@/components/footer';
 import Navbar from '@/components/navbar';
 import LandingPage from '@/sections/landing';
