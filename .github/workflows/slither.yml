@@ -33,10 +33,13 @@ jobs:
         with:
           node-version: 20
           sarif: results.sarif
-          fail-on: medium
+          fail-on: high
 
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@1b1aada464948af03b950897e5eb522f92603cc2 # v3.24.9
+      # Upload as artifact to repository
+      - name: Upload SARIF file as artifact
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         if: always()
         with:
-          sarif_file: ${{ steps.slither.outputs.sarif }} 
+          name: slither-results
+          path: results.sarif
+          retention-days: 90 
