@@ -7,8 +7,8 @@ This is the third and last service needed to start the comparsion, exact process
 
 ### Description
 
-Goal of the Hedera shadowing process is to research the Hedera EVM and Ethereum EVM equivalence.
-This is achieved by re-executing all Ethereum transaction on by one on local Hedera network. Each transaction is verified by states match.
+Goal of the Hedera shadowing process is to research the Hedera EVM and Ethereum EVM equivalence, which enables detailed equivalence analysis between the two platforms.
+This is achieved by re-executing all Ethereum transaction one by one on a local Hedera network. Each transaction is verified by states match: both slots and values must be consistent between Hedera and Ethereum. For example, when identifying a smart contract address on Hedera, we fetch all the contract's slots using the Mirror Node Rest API, which provides the contract address and its associated values. These values are then compared to the corresponding data on Ethereum using the RPC API, such as on the Sepolia testnet. If the values match, the transaction is considered valid. Any discrepancies or missing values are logged for further investigation.
 
 ### System requirements
 
@@ -64,8 +64,8 @@ npm run dev
 This is an outline of what the script does:
 
 1. First step populates the empty Hedera local node with Sepolia genesis block accounts and assigns them proper balances by transferring funds from the treasury account in Hedera (Account Id 0.0.2). The genesis state is provided from [genesis_block_transactions.json](./src/genesis_block_transactions.json).
-2. The last block from Sepolia is read, we iterate through all the block in a loop, starting from genesis block.
-3. For each block its miners and uncles are read. The reward for block calculated is sent to an account in Hedera using the `TransferTransaction` method from the Hashgraph SDK.
+2. We iterate through all the Sepolia blocks in a loop, starting from the genesis block.
+3. For each block its miners and uncles are read. The reward for block calculated is sent to an account in Hedera using the `TransferTransaction` method from the Hashgraph SDK. This is necessary to ensure node account balances are accurate as Ethereum and Hedera rewards nodes in different ways.
 4. Then the iteration starts through all the transactions present in the block. A transfer is sent to the transaction recipient's EVM address, provided it does not already exist in the Hedera node. The raw transaction body is read from Sepolia using the RPC API provided by Erigon and sent to the Hedera Consensus Node using the `EthereumTransaction` method from the Hedera SDK.
 5. If no error occurs, all transactions sent to Hedera in step 4 are asynchronously forwarded to the transaction checker API, which verifies the success of the transactions.
 6. In the background, the system listens for a response from the Receipt API. Once the response is received, the state root of the contract is compared, if it was present in the current block. This step is done by making an API call to `GET /api/v1/contracts/${contractAddress}/state?timestamp=${timestamp}` in the Hedera Mirror Node REST API, where `contractAddress` is the transaction recipient address, and `timestamp` is the Hedera transaction timestamp. If states for this address are present, each state is checked using an RPC API call to the eth_getStorageAt method provided by Erigon, and the values at the same address are compared. If the values differ, the occurrence is logged to a separate file.
