@@ -143,6 +143,7 @@ jobs:
       - Proxy
       - SafeHTS
       - HIP583
+      - HIP755
       - Multicall
       - HRC
       - ShanghaiOpcodes
