@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@hashgraph/hedera-local": "^2.34.0",
-    "@hashgraph/sdk": "^2.58.0",
+    "@hashgraph/sdk": "^2.59.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.8",
     "@nomicfoundation/hardhat-foundry": "^1.1.3",
     "@openzeppelin/contracts": "^5.0.2",
@@ -45,7 +45,7 @@
     "husky": "^9.1.7",
     "mocha-junit-reporter": "^2.2.0",
     "mocha-multi-reporters": "^1.5.1",
-    "prettier": "3.4.2"
+    "prettier": "3.5.1"
   },
   "dependencies": {
     "@nomicfoundation/solidity-analyzer": "^0.1.2",
