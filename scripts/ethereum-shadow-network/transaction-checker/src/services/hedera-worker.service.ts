@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import {networkQueue, mirrorQueue} from '../app';
 import {sendAndLogToFile} from '../config/logger.config';
 import {getTransactionReceiptFromHederaNode} from "../utils/hedera-client.util";

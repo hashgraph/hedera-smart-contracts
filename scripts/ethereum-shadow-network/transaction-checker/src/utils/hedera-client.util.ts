@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import {Client, TransactionReceiptQuery} from '@hashgraph/sdk';
 import {TransactionPayload} from "../models/transaction-payload.model";
 

@@ -1,5 +1,5 @@
 {
-  "name": "hedera-eth-shadowing",
+  "name": "@hashgraph/hedera-smart-contracts/scripts/ethereum-shadow-network/hedera-ethereum-shadowing",
   "version": "1.0.0",
   "description": "",
   "main": "src/apps/shadowing/index.ts",

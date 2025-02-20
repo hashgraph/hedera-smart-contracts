@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { getBlockByNumber } from "@/api/erigon/get-block-by-number";
 import { sendHbarToAlias } from "@/apps/shadowing/transfers/send-hbar-to-alias";
 import {

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import frontier from '@/frontier.json';
 import genesis from '@/genesis_block_transactions.json';
 import { Account, Genesis } from '@/utils/types';

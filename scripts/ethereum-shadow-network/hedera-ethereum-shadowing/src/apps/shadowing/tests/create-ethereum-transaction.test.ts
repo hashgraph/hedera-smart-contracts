@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { describe, it, expect } from '@jest/globals';
 import { getRawTransaction } from '@/api/erigon/get-raw-transaction';
 import { sendRawTransaction } from '@/api/hedera/send-raw-transaction';

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import express from 'express'
 import contractValue from './routes/contract-value';
 import { WebSocket, WebSocketServer } from 'ws';

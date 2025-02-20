@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { getMirrorNodeTransaction } from '@/api/hedera-mirror-node/get-mirror-node-transaction';
 import { getHederaContractStatesByTimestamp } from '@/apps/smart-contract-comparison/blockchain-utils/get-hedera-contract-states-by-timestamp';
 import { getStorageAt } from '@/api/erigon/get-storage-at';

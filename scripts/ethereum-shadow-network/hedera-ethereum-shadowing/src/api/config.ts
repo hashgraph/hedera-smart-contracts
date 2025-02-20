@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import axios from 'axios';
 
 export const axiosInstanceErigon = axios.create({

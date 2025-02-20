@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { getContractState } from "@/api/hedera-mirror-node/get-contract-state";
 
 export class StateData {

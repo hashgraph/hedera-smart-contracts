@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import express from 'express';
 import {networkQueue} from "./app";
 import {TransactionPayload} from "./models/transaction-payload.model";

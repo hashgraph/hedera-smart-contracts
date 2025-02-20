@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import WebSocket from 'isomorphic-ws';
 import EventEmitter from 'events';
 import dotenv from 'dotenv';

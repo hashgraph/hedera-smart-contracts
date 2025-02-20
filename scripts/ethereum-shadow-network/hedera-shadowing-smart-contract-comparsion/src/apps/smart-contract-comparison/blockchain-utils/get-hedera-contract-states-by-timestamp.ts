@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { getContractStateByTimestamp } from '@/api/hedera-mirror-node/get-contract-state-by-timestamp';
 import { StateData } from '@/utils/types';
 

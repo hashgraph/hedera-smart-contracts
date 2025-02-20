@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { TransactionId } from '@hashgraph/sdk';
 import { axiosReceiptApi } from '../config';
 import { AxiosError, isAxiosError } from 'axios';

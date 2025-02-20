@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import {mirrorQueue} from "../app";
 import {checkTransactionOnMirrorNode} from "../utils/mirror-node-client.util";
 import {sendAndLogToFile} from "../config/logger.config";

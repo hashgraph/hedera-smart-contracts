@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { getRawTransaction } from '@/api/erigon/get-raw-transaction';
 import {
 	AccountId,

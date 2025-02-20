@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { getBlockByNumber } from '@/api/erigon/get-block-by-number';
 import { AccountId, Client } from '@hashgraph/sdk';
 import { sendBlockReward } from '@/apps/shadowing/transfers/send-block-reward';
