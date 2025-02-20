@@ -1,5 +1,5 @@
 {
-  "name": "hedera-shadowing-smart-contract-comparision",
+  "name": "@hashgraph/hedera-smart-contracts/scripts/ethereum-shadow-network/hedera-shadowing-smart-contract-comparision",
   "version": "1.0.0",
   "description": "",
   "main": "src/apps/smart-contract-comparison/index.ts",
