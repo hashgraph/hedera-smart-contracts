@@ -8,7 +8,7 @@ This is the third and last service needed to start the comparsion, exact process
 ### Description
 
 Goal of the Hedera shadowing process is to research the Hedera EVM and Ethereum EVM equivalence, which enables detailed equivalence analysis between the two platforms.
-This is achieved by re-executing all Ethereum transaction one by one on a local Hedera network. Each transaction is verified by states match: both slots and values must be consistent between Hedera and Ethereum. For example, when identifying a smart contract address on Hedera, we fetch all the contract's slots using the Mirror Node Rest API, which provides the contract address and its associated values. These values are then compared to the corresponding data on Ethereum using the RPC API, such as on the Sepolia testnet. If the values match, the transaction is considered valid. Any discrepancies or missing values are logged for further investigation.
+This is achieved by re-executing all Ethereum transaction one by one on a local Hedera network. Each transaction is verified; ordinary transactions between users are checked for corectness, while smart contract calls by a states match: both slots and values must be consistent between Hedera and Ethereum. If the values match, the transaction is considered valid. Any discrepancies or missing values are logged for further investigation.
 
 ### System requirements
 
