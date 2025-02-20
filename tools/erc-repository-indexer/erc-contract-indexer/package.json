@@ -12,7 +12,7 @@
   "license": "Apache-2.0",
   "description": "ERC Contracts Indexer",
   "devDependencies": {
-    "@hashgraph/sdk": "^2.55.0",
+    "@hashgraph/sdk": "^2.59.0",
     "@types/ahocorasick": "^1.0.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.1",
