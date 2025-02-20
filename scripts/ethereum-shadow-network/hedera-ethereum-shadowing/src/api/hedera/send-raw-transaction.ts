@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { axiosInstanceHederaRpcApi } from '@/api/config';
 import { errorHandler } from '@/utils/helpers/api/error-handler';
 

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { TRANSACTION_CHECKER_LOGGER } from '@/utils/file-logger';
 import { TransactionStatusResponse } from '@/utils/types';
 

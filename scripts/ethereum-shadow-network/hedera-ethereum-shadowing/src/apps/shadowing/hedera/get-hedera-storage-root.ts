@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { keccak256, toBuffer } from "ethereumjs-util";
 import { BaseTrie } from "merkle-patricia-tree";
 import { getContractStateTimestamp } from '@/api/hedera-mirror-node/get-contract-state-timestamp';

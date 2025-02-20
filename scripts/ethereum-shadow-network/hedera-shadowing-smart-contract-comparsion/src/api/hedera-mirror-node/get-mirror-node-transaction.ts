@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import axios from 'axios';
 import { getCurrentTimestamp } from '@/utils/helpers/get-current-unix-timestamp';
 

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { Genesis } from '@/utils/types';
 import { getLastBlockNumber } from '@/api/erigon/get-last-block-number';
 import { convertHexIntoDecimal } from '@/utils/helpers/convert-hex-into-decimal';

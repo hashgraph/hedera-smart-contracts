@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { AccountId, AccountInfoQuery, Client } from '@hashgraph/sdk';
 import { getOperatorAccountBalance } from '@/apps/shadowing/hedera/get-operator-account-balance';
 

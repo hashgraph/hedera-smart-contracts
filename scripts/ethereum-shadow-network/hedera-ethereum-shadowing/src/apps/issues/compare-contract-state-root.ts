@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { getTransaction } from "@/api/hedera/get-transaction";
 import { createEthereumTransaction } from "../shadowing/ethereum/create-ethereum-transaction";
 import { sendHbarToAlias } from "../shadowing/transfers/send-hbar-to-alias";

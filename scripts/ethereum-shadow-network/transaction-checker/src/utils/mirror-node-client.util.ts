@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import {env} from "../config/environment-variables.config";
 import {TransactionPayload} from "../models/transaction-payload.model";
 import axios from 'axios';

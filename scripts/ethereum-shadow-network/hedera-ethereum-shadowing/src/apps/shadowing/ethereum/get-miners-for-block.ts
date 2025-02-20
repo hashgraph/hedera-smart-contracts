@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { getBlockByHashErigon } from "@/api/erigon/get-block-by-hash";
 
 export async function getMinersForBlock(block: any): Promise<any> {

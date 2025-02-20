@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { getRawTransaction } from "@/api/erigon/get-raw-transaction";
 import { writeLogFile } from "@/utils/helpers/write-log-file";
 import { AccountId, Client, EthereumTransaction, Hbar, PrivateKey, TransactionId, TransferTransaction } from "@hashgraph/sdk";

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import axios from 'axios';
 const ERIGON_API_HOST = process.env.ERIGON_API_HOST;
 

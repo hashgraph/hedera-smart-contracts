@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { getAllGenesisData } from '@/apps/shadowing/frontier/get-all-genesis-data';
 import { Client, AccountId } from '@hashgraph/sdk';
 import dotenv from 'dotenv';

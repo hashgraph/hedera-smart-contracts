@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import {HederaTransactionsResponse} from '@/utils/types';
 import axios from 'axios';
 import {errorHandler} from '@/utils/helpers/api/error-handler';

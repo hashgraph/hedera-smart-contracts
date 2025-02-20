@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { getStorageAt } from "@/api/erigon/get-storage-at";
 import { getHederaContractStates } from "@/apps/shadowing/hedera/get-hedera-contract-states";
 import fs from "fs";

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { transactionNoGas } from '@/apps/issues/transaction-no-gas';
 import { AccountId, Client } from '@hashgraph/sdk';
 import dotenv from 'dotenv';

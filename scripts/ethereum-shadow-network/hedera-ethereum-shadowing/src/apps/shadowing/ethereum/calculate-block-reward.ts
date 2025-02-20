@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { getTransactionReceipt } from "@/api/erigon/get-transaction-receipt";
 import { ethers } from "ethers";
 import { BigNumber } from "@ethersproject/bignumber";

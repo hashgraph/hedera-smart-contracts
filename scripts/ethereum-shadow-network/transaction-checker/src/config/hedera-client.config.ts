@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import {AccountId, Client, PrivateKey} from "@hashgraph/sdk";
 import {env} from "./environment-variables.config";
 

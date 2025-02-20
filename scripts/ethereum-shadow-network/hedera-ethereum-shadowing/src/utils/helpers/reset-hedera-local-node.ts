@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import shell from 'shelljs';
 import { writeLogFile } from '@/utils/helpers/write-log-file';
 
