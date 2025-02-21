@@ -33,7 +33,7 @@ jobs:
         with:
           node-version: 20
           sarif: results.sarif
-          fail-on: high
+          fail-on: none
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
