@@ -2,8 +2,8 @@
 
 const {expect} = require('chai');
 const {ethers} = require('hardhat');
-const Utils = require('../../system-contracts/hedera-token-service/utils');
-const Constants = require('../../constants');
+const Utils = require('../../hedera-token-service/utils');
+const Constants = require('../../../constants');
 const HashgraphProto = require('@hashgraph/proto');
 
 const {
