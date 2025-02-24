@@ -34,8 +34,7 @@ jobs:
           node-version: 20
           sarif: results.sarif
           fail-on: high
-          target: "contracts/system-contracts"
-          slither-args: "--exclude-dependencies --exclude-informational --exclude-optimization --exclude-low --exclude-medium"
+          slither-args: "--exclude-dependencies --exclude-informational --exclude-optimization --exclude-low --exclude-medium --filter-paths system-contracts"
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
