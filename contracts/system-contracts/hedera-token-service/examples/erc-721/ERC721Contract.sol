@@ -39,6 +39,7 @@ contract ERC721Contract {
 
     // The `to` address will receive approval by msg.sender
     function delegateApprove(address token, address to, uint256 tokenId) external payable {
+        // slither-disable-next-line 0-1-controlled-delegatecall
         (bool success, ) = address(IERC721(token)).delegatecall(abi.encodeWithSignature("approve(address,uint256)", to, tokenId));
         require(success, "Delegate call failed");
     }
@@ -51,6 +52,7 @@ contract ERC721Contract {
 
     // The `to` address will receive approval by msg.sender
     function delegateSetApprovalForAll(address token, address operator, bool approved) external {
+        // slither-disable-next-line 0-1-controlled-delegatecall
         (bool success, ) = address(IERC721(token)).delegatecall(abi.encodeWithSignature("setApprovalForAll(address,bool)", operator, approved));
         require(success, "Delegate call failed");
     }
@@ -70,6 +72,7 @@ contract ERC721Contract {
 
     // The call will be executed by the msg.sender address
     function delegateTransferFrom(address token, address from, address to, uint256 tokenId) external payable {
+        // slither-disable-next-line 0-1-controlled-delegatecall
         (bool success, ) = address(IERC721(token)).delegatecall(abi.encodeWithSignature("transferFrom(address,address,uint256)", from, to, tokenId));
         require(success, "Delegate call failed");
     }
