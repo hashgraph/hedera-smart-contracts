@@ -36,9 +36,6 @@ jobs:
           fail-on: high
           slither-args: "--include-paths system-contracts --exclude-dependencies --exclude-informational --exclude-optimization --exclude-low --exclude-medium"
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-
       - name: Upload SARIF file as artifact
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         if: always()
