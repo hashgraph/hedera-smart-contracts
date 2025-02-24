@@ -34,7 +34,7 @@ jobs:
           node-version: 20
           sarif: results.sarif
           fail-on: high
-          slither-args: "--exclude-dependencies --exclude-informational --exclude-optimization --exclude-low --exclude-medium filter-path: node_modules"
+          slither-args: "--exclude-dependencies --exclude-informational --exclude-optimization --exclude-low --exclude-medium --filter-path node_modules"
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
