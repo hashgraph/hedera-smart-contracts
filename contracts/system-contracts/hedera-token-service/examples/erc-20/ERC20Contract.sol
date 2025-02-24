@@ -39,6 +39,7 @@ contract ERC20Contract {
     }
 
     function transferFrom(address token, address sender, address recipient, uint256 amount) external returns (bool) {
+        // slither-disable-next-line arbitrary-send-erc20
         return IERC20(token).transferFrom(sender, recipient, amount);
     }
 

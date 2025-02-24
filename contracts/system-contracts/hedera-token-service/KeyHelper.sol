@@ -6,6 +6,7 @@ import "./HederaTokenService.sol";
 
 abstract contract KeyHelper {
     using Bits for uint256;
+    // slither-disable-next-line uninitialized-state
     address supplyContract;
 
     mapping(KeyType => uint256) keyTypes;

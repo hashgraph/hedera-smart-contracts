@@ -67,6 +67,7 @@ contract ERC721Contract {
 
     // The call will be executed by the contract itself, so the contract address has to be the owner of `tokenId`
     function transferFrom(address token, address from, address to, uint256 tokenId) external payable {
+        // slither-disable-next-line arbitrary-send-erc20
         IERC721(token).transferFrom(from, to, tokenId);
     }
 
