@@ -34,7 +34,7 @@ jobs:
           node-version: 20
           sarif: results.sarif
           fail-on: high
-          slither-args: "--include-paths system-contracts --solc-disable-warnings --exclude-dependencies --exclude-informational --exclude-optimization --exclude-low --exclude-medium"
+          slither-args: "--include-paths system-contracts --exclude-dependencies --exclude-informational --exclude-optimization --exclude-low --exclude-medium"
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3

@@ -43,19 +43,19 @@ contract ERC20Contract {
     }
 
     function delegateTransfer(address token, address recipient, uint256 amount) public {
-        // slither-disable-next-line 0-1-controlled-delegatecall
+        // slither-disable-next-line controlled-delegatecall
         (bool success, ) = address(IERC20(token)).delegatecall(abi.encodeWithSignature("transfer(address,uint256)", recipient, amount));
         require(success, "Delegate call failed");
     }
 
     function delegateApprove(address token, address recipient, uint256 amount) public {
-        // slither-disable-next-line 0-1-controlled-delegatecall
+        // slither-disable-next-line controlled-delegatecall
         (bool success, ) = address(IERC20(token)).delegatecall(abi.encodeWithSignature("approve(address,uint256)", recipient, amount));
         require(success, "Delegate call failed");
     }
 
     function delegateTransferFrom(address token, address from, address to, uint256 amount) external payable {
-        // slither-disable-next-line 0-1-controlled-delegatecall
+        // slither-disable-next-line controlled-delegatecall
         (bool success, ) = address(IERC20(token)).delegatecall(abi.encodeWithSignature("transferFrom(address,address,uint256)", from, to, amount));
         require(success, "Delegate call failed");
     }
