@@ -123,6 +123,12 @@ jobs:
     with:
       testfilter: HIP904
 
+  NativeTokenStandard:
+    name: NativeTokenStandard Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: NativeTokenStandard
+
   PublishResults:
     name: Publish Results
     if: ${{ !cancelled() }}
