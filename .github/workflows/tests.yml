@@ -81,6 +81,12 @@ jobs:
     with:
       testfilter: HIP583
 
+  HIP755:
+    name: HIP755 Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: HIP755
+
   Multicall:
     name: Multicall Test Suite
     uses: ./.github/workflows/test-workflow.yml
@@ -137,6 +143,7 @@ jobs:
       - Proxy
       - SafeHTS
       - HIP583
+      - HIP755
       - Multicall
       - HRC
       - ShanghaiOpcodes
