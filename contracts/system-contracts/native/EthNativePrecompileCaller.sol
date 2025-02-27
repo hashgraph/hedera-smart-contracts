@@ -62,6 +62,8 @@ contract EthNativePrecompileCaller {
             exp,
             modulus
         );
+
+        // slither-disable-next-line encode-packed-collision
         bytes memory callData = abi.encodePacked(fixed32BytesCalldata, dynamicCallData);
 
         (bool success, bytes memory result) = address(5).call(callData);
