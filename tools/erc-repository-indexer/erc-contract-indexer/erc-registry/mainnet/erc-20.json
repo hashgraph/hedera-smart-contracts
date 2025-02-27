@@ -4430,5 +4430,1365 @@
     "symbol": "UNI-V2",
     "totalSupply": 607972,
     "decimals": 18
+  },
+  {
+    "contractId": "0.0.8107676",
+    "address": "0x756518916045c643c9bad4b08c1a975afb53e3b5",
+    "name": "Sonix",
+    "symbol": "SONIX",
+    "totalSupply": 1e+30,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8107764",
+    "address": "0x664f55a26ca283aed47f7002804ee96323fafc2d",
+    "name": "Sonix",
+    "symbol": "SONIX",
+    "totalSupply": 1e+30,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8116253",
+    "address": "0x15eb6a32d90674cd07473ae4ce5f93028dada8d4",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 500000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8128542",
+    "address": "0x95e1085101645e4af744fb4e162d1a43d63aa79d",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 4472,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131485",
+    "address": "0xf42b5300ebbe858a0819a52ad780fdd26fa80472",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131487",
+    "address": "0x0a0e511ecc2592add09f2906e1aee82948e6a876",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131491",
+    "address": "0xb0c2a40eb2be971a778f5ab1b436239e3008c739",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131496",
+    "address": "0xa52072b9eac69918dabdacf53436ee448016be92",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131505",
+    "address": "0x260a06606beda47164f804b3dee6cba63c2bf236",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131509",
+    "address": "0xa5e382545c579665918e39cc649d4f7a9eeb5d1e",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131582",
+    "address": "0xcd0903991ee75f633813949e4eecfdf25a9bc023",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131585",
+    "address": "0x8dd015b93809f605313bb2586a4d876d9f4448d6",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131590",
+    "address": "0xf8b2e206e18e81251a5f087ec0c456e32498dc3c",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131594",
+    "address": "0xb147603c7d6961d073d1f037bd2953d1a3c43996",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131604",
+    "address": "0x9458c4401591af062f421e6487ad64d1c1e230c0",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131609",
+    "address": "0x8dcf707675c128c41893895bd4812492561a12df",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131828",
+    "address": "0xf1e633ba14f65589a54983315ce3f35c5b2707b7",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131841",
+    "address": "0x259995cc9b9b8650551211fc59495dbdf4b13d32",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131845",
+    "address": "0x9a3225bdb2769f9fd5da03819847ae17fd74d2c5",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131852",
+    "address": "0x83e77059fc7b3812600515e3c7be2be666e66470",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131861",
+    "address": "0xbe190fe9f693be18d8d7f257200cc34423b13ab0",
+    "name": "Metaverseme",
+    "symbol": "MVSM",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131906",
+    "address": "0xdcad1091cded6b751c1f1e6a103e226e43649af2",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131914",
+    "address": "0x2d9784684afb6177d6526992f864a1f788abc223",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131918",
+    "address": "0x2ff0396b59205295f28ed415a2c4f55d7892636a",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131922",
+    "address": "0x33111fe745ac7ab77ee9139b664c0703f46bf70d",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131934",
+    "address": "0x69cbf16a53dc4e56fe18be14fb76caf2a7ad94ef",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8131939",
+    "address": "0x3cb02e4a62d41e7c6c5227354b5ffa42fd6a3324",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8132630",
+    "address": "0xbdc5d143ad90cb8c8396c24198e6f23e169f5f61",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8132639",
+    "address": "0x3616e28aced6dca5c3d1cebe964b19a38ab45cf5",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8132647",
+    "address": "0x96be65f8e607b7b40c2b5e4f13b21ef9f71437b2",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8132652",
+    "address": "0xb44f037126bb8d47d9e85c7ba4effee922d7a297",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8132665",
+    "address": "0x178013cfa3e5ab831aa67179df850aa8fcf6fc53",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8132673",
+    "address": "0xaf7faccdd51ef1c15b8a15912f5175e67fa66c54",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8136502",
+    "address": "0x3d364edebc4b35a3a1dacf94302f3a1411190252",
+    "name": "Metaverseme",
+    "symbol": "MVSM",
+    "totalSupply": 2.6968e+22,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8144163",
+    "address": "0x187c13c5e5556c58aff7805f9b5ab4b7bbd109dc",
+    "name": "Wrapped Hedera",
+    "symbol": "WHBAR",
+    "totalSupply": 1039544797,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.8144204",
+    "address": "0x7000761c8debc6edc7d5f4c8f80f5157a39f4374",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.8144208",
+    "address": "0xe6b9d64cfb9702c47b92c1aeabd31c706b592f22",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.8144712",
+    "address": "0x7e78dfbcc0f60b167ad22921c64ad6bd43a57296",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8144715",
+    "address": "0xf23a06a5817569d5e93ebf498fe9330af0f7a47c",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8144718",
+    "address": "0x12efe3c9cd6d987aacd5c41d0a39176fd3b78162",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8144724",
+    "address": "0x9d6cc21e43d0f78a5948d0020767c28d67d6356a",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8144732",
+    "address": "0x7ab3601aa56bad5fb7b926705a249e6a3c6ea3e5",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8144737",
+    "address": "0x3b292269273d0526dda6184f526f63374ed2c81c",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8145984",
+    "address": "0xe48c5ed01be75e3489e119a232cc627e1cdbc9bb",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8145999",
+    "address": "0xa7d6bb6589c2745fdae28563482a41cd95ae6b24",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8146005",
+    "address": "0x9d71fc0319e0578dc19718aed3e7c5be7159d728",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8146014",
+    "address": "0x4bec0aaa155d8501142810f847472b8cc888e324",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8146035",
+    "address": "0x72d2be5176ba1abea072decaa6a24e8356549848",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8146059",
+    "address": "0x5551371dc3a5c5727e4d69ec9488ffa44b0e8595",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8146398",
+    "address": "0x505bb7d6a9e6fffd21169d3268af4b3651bd752e",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8146403",
+    "address": "0xd6a491577f1b3f55d3e650797a3f60ecbc0dae9c",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8146407",
+    "address": "0x35e441f1f035f55a36ef980c71566dde6ba31cc1",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8146412",
+    "address": "0x5b98769a591ff2266a8c615875d3df6010947435",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8146424",
+    "address": "0x7c9d626222527f8d812a368e4f8979340dcbcce7",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8149120",
+    "address": "0xa6ab339a936407fad436c6a7a1f2847530d8de19",
+    "name": "KAPPA",
+    "symbol": "kppa",
+    "totalSupply": 100000000000000000,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.8151825",
+    "address": "0xbb8f90d4c074c1c1fefe88061c6f8ca568050165",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8151832",
+    "address": "0xaeca210ed65a1a547dcbcd709f408fc372c5d94f",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8151836",
+    "address": "0x27759dc1d23ffec5b5c5bba6e0031ac4795bf4ad",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8151842",
+    "address": "0x20ab99e71c8d60cb92547d5d9e280096f41e8722",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8151850",
+    "address": "0x86702bfadfefe71b54ad8bcc5a4897b775e9bb70",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8151859",
+    "address": "0x580d5ca4bb585fafbe537c1c8060385d46b76353",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8158784",
+    "address": "0x2cc6426edb87c5e4d10521cbc7ff4f7eb68abf05",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8158790",
+    "address": "0xdaf854b6b02fb0809511bfcd9e321d1393a4cb51",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8158796",
+    "address": "0x8f2c42015f0177787ae755c6b795e30f72529bed",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8158801",
+    "address": "0x0015f4b965989a9d997356542913b155588dbac3",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8158812",
+    "address": "0xb1de0ff5bfa502f5015043a43fd71c1e5b5df0ab",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8158819",
+    "address": "0xb1c4441dada8e073debaa7a79d887769094a32b5",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8161272",
+    "address": "0x168acb5055d47c24134fcfdf27d257ab0f9991ea",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8161278",
+    "address": "0xda18111de010ba42a3bebe7cac660541a5c2568d",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8161283",
+    "address": "0x4120ac9f6fb6cc531a0cc3e500749deb33e0e770",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8161286",
+    "address": "0x49a472143065060ced2ed093e52f92fdf806fbb2",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8161301",
+    "address": "0x907bc83b0fedbd022ec9b29a4eb2bf296dee6241",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8161312",
+    "address": "0x5db6c0fcbef3318c1b7443c555c9bbd5012dee33",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8161354",
+    "address": "0x5f45710d0c6d3e57c8498e8319395039e87a6e94",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8161362",
+    "address": "0xb6a50b15b7b0fa9000d19e199f41d7eacaddd85a",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8161368",
+    "address": "0xaa87775e2ea867cc74601ff29cbdd4322ea85454",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8161375",
+    "address": "0x1a30a05b82c3adb3637cb9d56cf848a89fd41835",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8161386",
+    "address": "0xa2a48f622ba0927d178c3eb1518e5ba842a5aa50",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8161393",
+    "address": "0x777a06116536c61b30efdacc37945decc83e16c0",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8164034",
+    "address": "0xfb733147eeb7637f17e2802cd122c56022986d9c",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8164046",
+    "address": "0x17d777c13d8865b09cb214fac88038b0385ea539",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8164059",
+    "address": "0x2ab7aa2abbf32c7e9905175913cea70c860e2257",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8164069",
+    "address": "0x5dc1c2871f718b559ba0d6b24ae0b346d4ab390a",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8164092",
+    "address": "0x11472ba6cfc6be64f6cc1c345a90a9a1ac1a328c",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8164231",
+    "address": "0xd1a65f08ca484bd895249126eae6adfae98a4c6a",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8164242",
+    "address": "0xf556104dc1e7c6aa19bf2fc2664bf78c1200e3ee",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8164252",
+    "address": "0xc65cb8679eab787628f840ba27ddf82079576fb2",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8164261",
+    "address": "0x8742ae9f3a185defc1394bc223e939a609dc974c",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8164280",
+    "address": "0x0bab5a0303cc24aa0e7199acb56745eb852e1af5",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8164287",
+    "address": "0x7306db6b21ee13a31a0e2f9a4c1710be0311773a",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8164361",
+    "address": "0xa20705d99c461de2fbc64aa31b975520b8ed4fe2",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8164367",
+    "address": "0x9fc24062c60607d3516e87ea87acab2e9dfbfe0b",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8164374",
+    "address": "0x2a8286bc1ccb90a32d8593b618574e768ea56141",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8164386",
+    "address": "0xacce7f23700763ce579dac568de78506ba45273e",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8164397",
+    "address": "0x8864041fa865e7ea1fcd28f6bad366f9bd9cf53a",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8164404",
+    "address": "0xff5d2628b96fdfa8b8e8aad90c15a967cb6873b5",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169215",
+    "address": "0xa75216b5cc94afbabf28c708248464cf4b700db5",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169223",
+    "address": "0x553d194b4b674edee7e9a7e20e2e3bd049144787",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169229",
+    "address": "0x73db1a1971345ab8e282e769426bc570d604fe0f",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169241",
+    "address": "0x17a15e4132a3d27269510890468a7cbccaf77eb1",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169268",
+    "address": "0xa629184c903435553c04edae9ca92298eefe591b",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169276",
+    "address": "0x9a2d2b1e5e829294ffce90a84f48cf562d85c0af",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169358",
+    "address": "0xcbe1efd4ba5d7a104445ce9b7830aaf952e18eb7",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169389",
+    "address": "0xa810340ca70e24af6d6c3e59a3d2b88e6d5f1f27",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169401",
+    "address": "0x086edae2722fe6f355793adf8f19faee93aca7d6",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169414",
+    "address": "0xdd9fa7c0080062df71d729fba6eef074c5f03a45",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169417",
+    "address": "0x7d0f4cd67301afadbbbf3512f31af9247a37e7a7",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169428",
+    "address": "0xb9a76104658abbb998c8b146df9c523b3b3d271b",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169435",
+    "address": "0x23e49b26d82674eea26e49f447d8a00dae7ff01b",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169606",
+    "address": "0xe4eb67904bb9cb93e9562dc64a19a84a65ef64b2",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169612",
+    "address": "0x72d72162df1eda88ab041cc29c33f5efa909be9f",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169618",
+    "address": "0x84531383039e6a7469be29619f4f0df2aac18f9c",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169623",
+    "address": "0x9636868f4d20d2ab1d9d55cf0b8be11604ad7f0e",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169632",
+    "address": "0x7a71c8e54cd7f5f882a6a2e4bbdfdd41af1b3f2a",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169636",
+    "address": "0x8134c72c49f42c458171f1dda36925beb319fd75",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169835",
+    "address": "0xb74af372e919662e5d564cc86debba5dd18ff072",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169838",
+    "address": "0xd822c9b43b653aee8b5baa1d0e1c0959e525a5b0",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169847",
+    "address": "0x8d178cf31a24d3de3e935c3d42b98158f0c81758",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169855",
+    "address": "0x8999f1386ab75383f30bf9439da69d9824086cb5",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169867",
+    "address": "0x2015306c5c8b331a8353cad5c471c5ab0b3387a4",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169874",
+    "address": "0xf0799957f5f28118b5f1356624627689683100db",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169924",
+    "address": "0x0463f48194a9ec91f06eefa89545245333432c68",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169926",
+    "address": "0x39262d5dfdd70e295b2f19dce15c28404bd2e94a",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8169931",
+    "address": "0x47b9c7cc09e2cc2deea64d727ee14993bfec3088",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8170005",
+    "address": "0x9a9a4649ea3198f43c0b0b48442c10a5085d52f3",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8170012",
+    "address": "0xc7ac0b0da0e18f7513f95f101a09c5730eeb9985",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8170018",
+    "address": "0x08a184aadf7e1c2a078e156888c6fc37ac2a455c",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8170024",
+    "address": "0x44cb8440e60a51266a5b52463d334dc6948400e0",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8170032",
+    "address": "0x395d222ee61bac6968b2212618c159e54f07b55b",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8173276",
+    "address": "0x2f1968f754f06458c35a08d542c294832dafe9c7",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8173279",
+    "address": "0x65359e4eac65c0dd081b0db29356fef8ffd3e898",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8173283",
+    "address": "0x5b45bcc0d50f843d8911a5efe9c4301b082d7a0e",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8173287",
+    "address": "0xf3a19d51f8b74768969cd9e0f97759f587f51304",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8173296",
+    "address": "0x7356bae0019e8f754f68652995fcd3f76dca86bd",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8173299",
+    "address": "0x7322ff1cc889e10e524e3aac3caff9c74d4569bf",
+    "name": "pack",
+    "symbol": "packl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8173348",
+    "address": "0x78773bb7102452812684344813cff125132b3135",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.8173350",
+    "address": "0x8b41fbfed66562ac03df90da824d02b61cca93c1",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8173406",
+    "address": "0xf0c0c5cb2de1bac6c445551ca79ba07b650231e4",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8173480",
+    "address": "0x471171b3984820b58280b3eb7fe891c084e8b505",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8181614",
+    "address": "0x2def9a3965e7015e6a656165e653621b0c53afd3",
+    "name": "MICVA2024",
+    "symbol": "MICVA2024",
+    "totalSupply": 100000,
+    "decimals": 2
+  },
+  {
+    "contractId": "0.0.8190321",
+    "address": "0x4ac62b979e64d8474a1729771c3be8595c7bdb78",
+    "name": "usdc",
+    "symbol": "usdcl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8190326",
+    "address": "0xc5391f150684f1c9ae5e791ef6e593a9018214b5",
+    "name": "weth",
+    "symbol": "wethl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8190328",
+    "address": "0xda30a98b4d4913f55f78a91304fad9de2c036404",
+    "name": "hbarx",
+    "symbol": "hbarxl",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8190332",
+    "address": "0xe7e8d6785ba285fba29acdf86e3ef981e2986d8b",
+    "name": "xsauce",
+    "symbol": "xsauce",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8190339",
+    "address": "0xdca534181991f01fcc4d4416082179fb4cbad648",
+    "name": "hsuite",
+    "symbol": "hsuitel",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8246540",
+    "address": "0x27f7f5198af26cdbdf75ffbedf5fbdf1127584b7",
+    "name": "UATTEST20250206001",
+    "symbol": "UATTEST20250206001",
+    "totalSupply": 267230000,
+    "decimals": 4
+  },
+  {
+    "contractId": "0.0.8249017",
+    "address": "0x67512ffe82388c9e0c6593a67a7abb4eb7063930",
+    "name": "HEDERA TEST",
+    "symbol": "HBAR594",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.8249026",
+    "address": "0x988ef6cb3d1b27590f7cb792a17f5b238163b6e2",
+    "name": "Test Hedera",
+    "symbol": "HBAR108",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.8261030",
+    "address": "0x1c62ef2e4ba4ff7735993dc9d4b813213fceab35",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 24750561592254,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8267038",
+    "address": "0xb7eb6aff8c7aa141a54c082651dab512e35d8e3c",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.8267054",
+    "address": "0x67e130e403c14903f8ecd7b8e59532751d1772fb",
+    "name": "Warhammer 40K",
+    "symbol": "W40K",
+    "totalSupply": 100000000000000000,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.8270257",
+    "address": "0x1d8912d3d447f9c7d42e37ea0aa57e98d21de5b5",
+    "name": "Retail HBAR",
+    "symbol": "HBAR398",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.8270930",
+    "address": "0x5e9ba62fc145b9af00306126079404747d5d81f4",
+    "name": "MyToken",
+    "symbol": "MTK",
+    "totalSupply": 1,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8271454",
+    "address": "0x8173ab40adf104d2d33c5bf353fe8582bcee45ce",
+    "name": "Galleria Luxury Collection",
+    "symbol": "HBAR493",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.8273772",
+    "address": "0x80c8cf570744c8e5bcd57158aa2435a8f94be016",
+    "name": "TEST",
+    "symbol": "TEST",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8276580",
+    "address": "0x3c3533658d7d19bb0e8ab909dc2cd8eccb28e573",
+    "name": "BasicToken",
+    "symbol": "BTK",
+    "totalSupply": 1,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8277822",
+    "address": "0x98027ab7b1c0d4bedb2bde56bff7efa4e54dfd7c",
+    "name": "BasicToken",
+    "symbol": "BT",
+    "totalSupply": 1,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8301211",
+    "address": "0xa867c9391fbab1a3189cb35ac84c7ef8bb6e73d2",
+    "name": "MyToken",
+    "symbol": "MTK",
+    "totalSupply": 1e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8303245",
+    "address": "0xc5d1e550b8bf0155e86e137590cac1ce3d781017",
+    "name": "Wrapped HBAR",
+    "symbol": "WHBAR",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8314727",
+    "address": "0x84a6c5b9aa582948e8238f44e097b0757e97ad30",
+    "name": "MyToken",
+    "symbol": "MTK",
+    "totalSupply": 6,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8315243",
+    "address": "0x1ad421f2680714f3a84dc30430a0e25cbeb0003a",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8315732",
+    "address": "0x912b6bec08cf87cccca41b0ff9bb4b2969986954",
+    "name": "20 FEB2025 Hedera",
+    "symbol": "HEDERAUAETEST",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.8316902",
+    "address": "0xfba3d32cc317cbe0c44027b11b8f791961ed2f5c",
+    "name": "Wrapped HBAR",
+    "symbol": "WHBAR",
+    "totalSupply": 4710928641,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.8319204",
+    "address": "0x73dfe0714a21586dbe7bf0fd5e85ba71bf0b1833",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 459604342040292,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8319216",
+    "address": "0x482eafbbf6768d11f5a5fe3507e3883d631c2531",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 2295678145210078,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8343825",
+    "address": "0x8231fff8423eefacfb3551fec925e212399fddb8",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.8345411",
+    "address": "0xba857f9c9c2b95dde03c4e2584f475dc7aeb87b6",
+    "name": "Wrapped HBAR 911",
+    "symbol": "WHBAR911",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8345877",
+    "address": "0x654b7634c9dbf0ed567b8e9603f729378cf584ee",
+    "name": "Wrapped HBAR 911",
+    "symbol": "WHBAR911",
+    "totalSupply": 320000000,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.8349955",
+    "address": "0x0ed07965f00a1f0087e2622e18c7c00b834daccf",
+    "name": "Wrapped HBAR 911",
+    "symbol": "WHBAR911",
+    "totalSupply": 0,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.8350151",
+    "address": "0x6e910fca76eadeeddad488db2cde2a2936b5585b",
+    "name": "Wrapped HBAR 911",
+    "symbol": "WHBAR911",
+    "totalSupply": 0,
+    "decimals": 8
   }
 ]
