@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"target": "es2016",
+		"module": "commonjs",
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
+		"forceConsistentCasingInFileNames": true,
+		"allowImportingTsExtensions": false,
+		"strict": true,
+		"skipLibCheck": true,
+		"types": ["@types/jest"],
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./src/*"]
+		}
+	}
+}
