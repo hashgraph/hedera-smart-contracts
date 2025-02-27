@@ -1,24 +1,33 @@
 // SPDX-License-Identifier: Apache-2.0
 
-const { expect } = require('chai');
+const {expect} = require('chai');
 const hre = require('hardhat');
 const Utils = require("../system-contracts/hedera-token-service/utils");
-const { Hbar, TransferTransaction, PrivateKey } = require('@hashgraph/sdk');
-const { ethers } = hre;
+const {Hbar, TransferTransaction, PrivateKey} = require('@hashgraph/sdk');
+const {ethers} = hre;
 
+/**
+ * How to run solidity coverage?
+ * - change the defaultNetwork in hardhat.config.js to hardhat - defaultNetwork: 'hardhat'
+ * - change the ONE_HBAR constant to the proper one
+ *     - for solidity-coverage use 1_000_000_000_000_000_000n
+ *     - for tests again local node use 100_000_000n
+ * - run `npx hardhat coverage --sources wrapped-tokens/WHBAR.sol --testfiles test/wrapped-tokens/WHBAR.js`
+ */
 const ONE_HBAR = 1n * 100_000_000n;
-const WEIBAR_COEF = 10_000_000_000n;
-const ONE_HBAR_AS_WEIBAR = ONE_HBAR * WEIBAR_COEF;
 
-describe('WHBAR', function() {
+const WEIBAR_COEF = 10_000_000_000n;
+const ONE_HBAR_AS_WEIBAR = 100_000_000n * WEIBAR_COEF;
+
+describe('WHBAR', function () {
   let signers;
   let contract;
 
-  before(async function() {
+  before(async function () {
     signers = await ethers.getSigners();
   });
 
-  it('should deploy the WHBAR contract', async function() {
+  it('should deploy the WHBAR contract', async function () {
     const contractFactory = await ethers.getContractFactory('WHBAR');
     contract = await contractFactory.deploy();
     console.log(`WHBAR address: ${contract.target}`);
@@ -27,19 +36,19 @@ describe('WHBAR', function() {
     expect(contract).to.not.be.undefined;
   });
 
-  it('should get name', async function() {
+  it('WHBAR-001 should get name', async function () {
     expect(await contract.name()).to.equal('Wrapped HBAR');
   });
 
-  it('should get symbol', async function() {
+  it('WHBAR-002 should get symbol', async function () {
     expect(await contract.symbol()).to.equal('WHBAR');
   });
 
-  it('should get decimals', async function() {
+  it('WHBAR-003 should get decimals', async function () {
     expect(await contract.decimals()).to.equal(8);
   });
 
-  it('should not update total supply after CryptoTransfer tx', async function() {
+  it('WHBAR-004 should not update total supply after CryptoTransfer tx', async function () {
     // initial values for contract's total supply and balance
     const totalSupplyBefore = await contract.totalSupply();
     const balanceBefore = await signers[0].provider.getBalance(contract.target);
@@ -72,7 +81,7 @@ describe('WHBAR', function() {
     expect(balanceBefore + ONE_HBAR_AS_WEIBAR).to.equal(balanceAfter);
   });
 
-  it('should deposit 1 hbar and check totalSupply', async function() {
+  it('WHBAR-005 should deposit 1 hbar and check totalSupply', async function () {
 
     const hbarBalanceBefore = await ethers.provider.getBalance(signers[0].address);
     const whbarBalanceBefore = await contract.balanceOf(signers[0].address);
@@ -92,7 +101,7 @@ describe('WHBAR', function() {
     expect(totalSupplyBefore + ONE_HBAR).to.equal(totalSupplyAfter);
   });
 
-  it('should withdraw 1 hbar and check totalSupply', async function() {
+  it('WHBAR-006 should withdraw 1 hbar and check totalSupply', async function () {
     const txDeposit = await contract.deposit({
       value: ONE_HBAR_AS_WEIBAR
     });
@@ -114,7 +123,7 @@ describe('WHBAR', function() {
     expect(totalSupplyBefore - ONE_HBAR).to.equal(totalSupplyAfter);
   });
 
-  it('should be able to transfer', async function() {
+  it('WHBAR-007 should be able to transfer', async function () {
     const receiver = (ethers.Wallet.createRandom()).address;
     const receiverBalanceBefore = await contract.balanceOf(receiver);
 
@@ -131,7 +140,7 @@ describe('WHBAR', function() {
     expect(receiverBalanceAfter).to.equal(ONE_HBAR);
   });
 
-  it('should be able to transferFrom', async function() {
+  it('WHBAR-008 should be able to transferFrom', async function () {
     const amount = 1;
 
     // create a random receiver
@@ -172,7 +181,7 @@ describe('WHBAR', function() {
     expect(receiverBalanceAfter).to.equal(amount);
   });
 
-  it('should be able to approve', async function() {
+  it('WHBAR-009 should be able to approve', async function () {
     const receiverAddress = (ethers.Wallet.createRandom()).address;
     const amount = 5644;
 
@@ -182,7 +191,7 @@ describe('WHBAR', function() {
     expect(await contract.allowance(signers[0].address, receiverAddress)).to.equal(amount);
   });
 
-  it('should be able to deposit via contract`s fallback method', async function () {
+  it('WHBAR-010 should be able to deposit via contract`s fallback method', async function () {
     const whbarSigner0Before = await contract.balanceOf(signers[0].address);
 
     const txFallback = await signers[0].sendTransaction({
@@ -196,7 +205,7 @@ describe('WHBAR', function() {
     expect(whbarSigner0After - whbarSigner0Before).to.equal(ONE_HBAR);
   });
 
-  it('should be able to deposit via contract`s receive method', async function () {
+  it('WHBAR-011 should be able to deposit via contract`s receive method', async function () {
     const whbarSigner0Before = await contract.balanceOf(signers[0].address);
 
     const txReceive = await signers[0].sendTransaction({
@@ -209,12 +218,18 @@ describe('WHBAR', function() {
     expect(whbarSigner0After - whbarSigner0Before).to.equal(ONE_HBAR);
   });
 
-  it('should throw InsufficientFunds error on withdraw', async function() {
+  it('WHBAR-012 should throw InsufficientFunds error on withdraw', async function () {
     await expect(contract.withdraw(BigInt(100) * ONE_HBAR))
         .to.be.revertedWithCustomError(contract, `InsufficientFunds`);
   });
 
-  it('should throw InsufficientAllowance error on withdraw', async function () {
+  it('WHBAR-013 should throw InsufficientFunds error on transferFrom', async function () {
+    const receiverAddress = (ethers.Wallet.createRandom()).address;
+    await expect(contract.transferFrom(signers[1].address, receiverAddress, BigInt(100) * ONE_HBAR))
+        .to.be.revertedWithCustomError(contract, `InsufficientFunds`);
+  });
+
+  it('WHBAR-014 should throw InsufficientAllowance error on withdraw', async function () {
     const amount = 1;
     const receiverAddress = (ethers.Wallet.createRandom()).address;
     const newSigner = ethers.Wallet.createRandom().connect(signers[0].provider);
@@ -235,7 +250,7 @@ describe('WHBAR', function() {
         .to.be.revertedWithCustomError(contractWithNewSigner, `InsufficientAllowance`);
   });
 
-  it('should throw SendFailed error on withdrawal from a contract with no receive/fallback method', async() => {
+  it('WHBAR-015 should throw SendFailed error on withdrawal from a contract with no receive/fallback method', async () => {
     const contractWithoutReceiveFactory = await ethers.getContractFactory('Target');
     const contractWithoutReceive = await contractWithoutReceiveFactory.deploy();
     await contractWithoutReceive.waitForDeployment();
