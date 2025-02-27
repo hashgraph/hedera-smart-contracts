@@ -129,6 +129,12 @@ jobs:
     with:
       testfilter: HIP904
 
+  WHBAR:
+    name: WHBAR Contract Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: WHBAR
+
   PublishResults:
     name: Publish Results
     if: ${{ !cancelled() }}
@@ -151,6 +157,7 @@ jobs:
       - BLSSignatureVerification
       - HederaAccountService
       - HIP904
+      - WHBAR
 
     runs-on: smart-contracts-linux-large
     steps:
