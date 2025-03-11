@@ -81,6 +81,12 @@ jobs:
     with:
       testfilter: HIP583
 
+  HIP755:
+    name: HIP755 Test Suite
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: HIP755
+
   Multicall:
     name: Multicall Test Suite
     uses: ./.github/workflows/test-workflow.yml
@@ -137,6 +143,7 @@ jobs:
       - Proxy
       - SafeHTS
       - HIP583
+      - HIP755
       - Multicall
       - HRC
       - ShanghaiOpcodes
@@ -153,7 +160,7 @@ jobs:
           egress-policy: audit
 
       - name: Download Test Reports
-        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
         with:
           pattern: Test Results (*)
           merge-multiple: true

@@ -2,6 +2,8 @@
 
 const { expect } = require('chai');
 const hre = require('hardhat');
+const Utils = require("../system-contracts/hedera-token-service/utils");
+const { Hbar, TransferTransaction, PrivateKey } = require('@hashgraph/sdk');
 const { ethers } = hre;
 
 const ONE_HBAR = 1n * 100_000_000n;
@@ -19,6 +21,7 @@ describe('WHBAR', function() {
   it('should deploy the WHBAR contract', async function() {
     const contractFactory = await ethers.getContractFactory('WHBAR');
     contract = await contractFactory.deploy();
+    console.log(`WHBAR address: ${contract.target}`);
 
     await contract.waitForDeployment();
     expect(contract).to.not.be.undefined;
@@ -36,11 +39,40 @@ describe('WHBAR', function() {
     expect(await contract.decimals()).to.equal(8);
   });
 
-  it('should get totalSupply', async function() {
-    expect(await contract.totalSupply()).to.equal(0);
+  it('should not update total supply after CryptoTransfer tx', async function() {
+    // initial values for contract's total supply and balance
+    const totalSupplyBefore = await contract.totalSupply();
+    const balanceBefore = await signers[0].provider.getBalance(contract.target);
+
+    // build a client for fetching signer's id and contract's id dynamically
+    const client = await Utils.createSDKClient();
+    const signerId = await Utils.getAccountId(signers[0].address, client);
+    const contractId = await Utils.getAccountId(contract.target, client);
+    client.setOperator(signerId, PrivateKey.fromStringECDSA((await Utils.getHardhatSignersPrivateKeys(false))[0]));
+
+    // send 1 hbar to the contract via CryptoTransfer
+    const tx = new TransferTransaction()
+        .addHbarTransfer(signerId, Hbar.fromTinybars(Number(ONE_HBAR)).negated())
+        .addHbarTransfer(contractId, Hbar.fromTinybars(Number(ONE_HBAR)));
+    const txResponse = await tx.execute(client);
+    const receipt = await txResponse.getReceipt(client);
+    if (receipt.status._code !== 22) {
+      throw new Error(`Funding tx with id ${txResponse.transactionId.toString()} failed.`);
+    }
+
+    // wait for the mirror node data population
+    await new Promise(r => setTimeout(r, 3000));
+
+    // get updated contract's total supply and balance
+    const totalSupplyAfter = await contract.totalSupply();
+    const balanceAfter = await signers[0].provider.getBalance(contract.target);
+
+    // checks
+    expect(totalSupplyBefore).to.equal(totalSupplyAfter);
+    expect(balanceBefore + ONE_HBAR_AS_WEIBAR).to.equal(balanceAfter);
   });
 
-  it('should deposit 1 hbar', async function() {
+  it('should deposit 1 hbar and check totalSupply', async function() {
 
     const hbarBalanceBefore = await ethers.provider.getBalance(signers[0].address);
     const whbarBalanceBefore = await contract.balanceOf(signers[0].address);
@@ -60,7 +92,7 @@ describe('WHBAR', function() {
     expect(totalSupplyBefore + ONE_HBAR).to.equal(totalSupplyAfter);
   });
 
-  it('should withdraw 1 hbar', async function() {
+  it('should withdraw 1 hbar and check totalSupply', async function() {
     const txDeposit = await contract.deposit({
       value: ONE_HBAR_AS_WEIBAR
     });

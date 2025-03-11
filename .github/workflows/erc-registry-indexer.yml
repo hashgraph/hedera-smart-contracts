@@ -149,7 +149,7 @@ jobs:
         run: echo "CURRENT_DATE=$(date -u +"%m-%d-%Y")" >> $GITHUB_ENV
 
       - name: Create Pull Request Target hedera-smart-contracts Repository
-        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
           branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
           commit-message: 'chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
@@ -192,7 +192,7 @@ jobs:
           cp -r /tmp/erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/* ./public/${{ github.event.inputs.HEDERA_NETWORK }}
 
       - name: Create Pull Request Target hedera-mirror-node-explorer
-        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
           branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
           commit-message: 'chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
