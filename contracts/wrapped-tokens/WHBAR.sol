@@ -66,9 +66,6 @@ contract WHBAR {
     }
 
     function transferFrom(address src, address dst, uint wad) public returns (bool) {
-        if (dst == address(this)) {
-            revert SendFailed();
-        }
         if (!(balanceOf[src] >= wad)) {
             revert InsufficientFunds();
         }
