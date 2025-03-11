@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
+const chai = require('chai');
 const { expect } = require('chai');
 const hre = require('hardhat');
 const Utils = require('../system-contracts/hedera-token-service/utils');
+const chaiAsPromised = require('chai-as-promised');
 const { Hbar, TransferTransaction, PrivateKey } = require('@hashgraph/sdk');
 const { ethers } = hre;
+chai.use(chaiAsPromised);
 
 /**
  * How to run solidity coverage?
@@ -367,6 +370,7 @@ describe('WHBAR', function () {
 
   it('WHBAR-013 should throw InsufficientFunds error on transferFrom', async function () {
     const receiverAddress = ethers.Wallet.createRandom().address;
+
     await expect(
       contract.transferFrom(signers[1].address, receiverAddress, HUNDRED_HBAR)
     ).to.be.revertedWithCustomError(contract, `InsufficientFunds`);
@@ -454,12 +458,9 @@ describe('WHBAR', function () {
     });
     await txDeposit.wait();
 
-    try {
-      await contract.transfer(receiver, OVERFLOW_VALUE);
-      expect.fail('Should have thrown an error');
-    } catch (error) {
-      expect(error.message).to.include('value out-of-bounds');
-    }
+    await expect(
+      contract.transfer(receiver, OVERFLOW_VALUE)
+    ).to.be.rejectedWith('value out-of-bounds');
 
     // Test with MAX_UINT256 which should revert with InsufficientFunds
     await expect(
@@ -471,119 +472,86 @@ describe('WHBAR', function () {
     const spender = ethers.Wallet.createRandom().address;
     const MAX_UINT256 = ethers.MaxUint256;
 
-    try {
-      await contract.approve(spender, OVERFLOW_VALUE);
-      expect.fail('Should have thrown an error');
-    } catch (error) {
-      expect(error.message).to.include('value out-of-bounds');
-    }
+    await expect(contract.approve(spender, OVERFLOW_VALUE)).to.be.rejectedWith(
+      'value out-of-bounds'
+    );
 
     // Test with MAX_UINT256 which should work (no overflow in approve)
     await expect(contract.approve(spender, MAX_UINT256)).not.to.be.reverted;
   });
 
   it('WHBAR-018 should revert on negative value for deposit', async function () {
-    try {
-      await contract.deposit({ value: '-1' });
-      expect.fail('Should have thrown an error');
-    } catch (error) {
-      expect(error.message).to.include('unsigned value cannot be negative');
-    }
+    await expect(contract.deposit({ value: '-1' })).to.be.rejectedWith(
+      'unsigned value cannot be negative'
+    );
   });
 
   it('WHBAR-019 should revert on negative value for withdraw', async function () {
-    try {
-      await contract.withdraw('-1');
-      expect.fail('Should have thrown an error');
-    } catch (error) {
-      expect(error.message).to.include('value out-of-bounds');
-    }
+    await expect(contract.withdraw('-1')).to.be.rejectedWith(
+      'value out-of-bounds'
+    );
   });
 
   it('WHBAR-020 should revert on negative value for approve', async function () {
     const spender = ethers.Wallet.createRandom().address;
 
-    try {
-      await contract.approve(spender, '-1');
-      expect.fail('Should have thrown an error');
-    } catch (error) {
-      expect(error.message).to.include('value out-of-bounds');
-    }
+    await expect(contract.approve(spender, '-1')).to.be.rejectedWith(
+      'value out-of-bounds'
+    );
   });
 
   it('WHBAR-021 should revert on negative value for transfer', async function () {
     const receiver = ethers.Wallet.createRandom().address;
 
-    try {
-      await contract.transfer(receiver, '-1');
-      expect.fail('Should have thrown an error');
-    } catch (error) {
-      expect(error.message).to.include('value out-of-bounds');
-    }
+    await expect(contract.transfer(receiver, '-1')).to.be.rejectedWith(
+      'value out-of-bounds'
+    );
   });
 
   it('WHBAR-022 should revert on negative value for transferFrom', async function () {
     const sender = signers[0].address;
     const receiver = ethers.Wallet.createRandom().address;
 
-    try {
-      await contract.transferFrom(sender, receiver, '-1');
-      expect.fail('Should have thrown an error');
-    } catch (error) {
-      expect(error.message).to.include('value out-of-bounds');
-    }
+    await expect(
+      contract.transferFrom(sender, receiver, '-1')
+    ).to.be.rejectedWith('value out-of-bounds');
   });
 
   it('WHBAR-023 should revert on value > MaxUint256 for deposit', async function () {
-    try {
-      await contract.deposit({ value: OVERFLOW_VALUE });
-      expect.fail('Should have thrown an error');
-    } catch (error) {
-      expect(error.message).to.include('value cannot exceed MAX_INTEGER');
-    }
+    await expect(
+      contract.deposit({ value: OVERFLOW_VALUE })
+    ).to.be.rejectedWith('value cannot exceed MAX_INTEGER');
   });
 
   it('WHBAR-024 should revert on value > MaxUint256 for withdraw', async function () {
-    try {
-      await contract.withdraw(OVERFLOW_VALUE);
-      expect.fail('Should have thrown an error');
-    } catch (error) {
-      expect(error.message).to.include('value out-of-bounds');
-    }
+    await expect(contract.withdraw(OVERFLOW_VALUE)).to.be.rejectedWith(
+      'value out-of-bounds'
+    );
   });
 
   it('WHBAR-025 should revert on value > MaxUint256 for transfer', async function () {
     const receiver = ethers.Wallet.createRandom().address;
 
-    try {
-      await contract.transfer(receiver, OVERFLOW_VALUE);
-      expect.fail('Should have thrown an error');
-    } catch (error) {
-      expect(error.message).to.include('value out-of-bounds');
-    }
+    await expect(
+      contract.transfer(receiver, OVERFLOW_VALUE)
+    ).to.be.rejectedWith('value out-of-bounds');
   });
 
   it('WHBAR-026 should revert on value > MaxUint256 for approve', async function () {
     const spender = ethers.Wallet.createRandom().address;
 
-    try {
-      await contract.approve(spender, OVERFLOW_VALUE);
-      expect.fail('Should have thrown an error');
-    } catch (error) {
-      expect(error.message).to.include('value out-of-bounds');
-    }
+    await expect(contract.approve(spender, OVERFLOW_VALUE)).to.be.rejectedWith(
+      'value out-of-bounds'
+    );
   });
 
   it('WHBAR-027 should revert on value > MaxUint256 for transferFrom', async function () {
     const sender = signers[0].address;
     const receiver = ethers.Wallet.createRandom().address;
 
-    try {
-      await contract.transferFrom(sender, receiver, OVERFLOW_VALUE);
-      expect.fail('Should have thrown an error');
-    } catch (error) {
-      expect(error.message).to.include('value out-of-bounds');
-    }
+    await expect(
+      contract.transferFrom(sender, receiver, OVERFLOW_VALUE)
+    ).to.be.rejectedWith('value out-of-bounds');
   });
 
   it('WHBAR-032 Sending small amount of hbar should work and have the same value on WHBAR', async function () {
