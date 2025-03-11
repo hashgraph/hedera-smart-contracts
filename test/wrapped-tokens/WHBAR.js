@@ -10,7 +10,7 @@ const ONE_HBAR = 1n * 100_000_000n;
 const WEIBAR_COEF = 10_000_000_000n;
 const ONE_HBAR_AS_WEIBAR = ONE_HBAR * WEIBAR_COEF;
 
-describe.only('WHBAR', function() {
+describe('WHBAR', function() {
   let signers;
   let contract;
 
