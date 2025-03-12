@@ -42,4 +42,3 @@ jobs:
         with:
           name: slither-results
           path: results.sarif
-          retention-days: 90
