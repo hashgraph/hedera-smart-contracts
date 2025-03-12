@@ -39,17 +39,20 @@ contract ERC20Contract {
     }
 
     function transferFrom(address token, address sender, address recipient, uint256 amount) external returns (bool) {
+        // detect when msg.sender is not used as from in transferFrom, ignored because it is needed to run the test properly
         // slither-disable-next-line arbitrary-send-erc20
         return IERC20(token).transferFrom(sender, recipient, amount);
     }
 
     function delegateTransfer(address token, address recipient, uint256 amount) public {
+        // detect .delegatecall to an address controlled by the user, ignored because it is needed to run the test properly
         // slither-disable-next-line controlled-delegatecall
         (bool success, ) = address(IERC20(token)).delegatecall(abi.encodeWithSignature("transfer(address,uint256)", recipient, amount));
         require(success, "Delegate call failed");
     }
 
     function delegateApprove(address token, address recipient, uint256 amount) public {
+        // detect .delegatecall to an address controlled by the user, ignored because it is needed to run the test properly
         // slither-disable-next-line controlled-delegatecall
         (bool success, ) = address(IERC20(token)).delegatecall(abi.encodeWithSignature("approve(address,uint256)", recipient, amount));
         require(success, "Delegate call failed");

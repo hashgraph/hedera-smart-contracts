@@ -39,6 +39,7 @@ contract ERC721Contract {
 
     // The `to` address will receive approval by msg.sender
     function delegateApprove(address token, address to, uint256 tokenId) external payable {
+        // detect .delegatecall to an address controlled by the user, ignored because it is needed to run the test properly
         // slither-disable-next-line controlled-delegatecall
         (bool success, ) = address(IERC721(token)).delegatecall(abi.encodeWithSignature("approve(address,uint256)", to, tokenId));
         require(success, "Delegate call failed");
@@ -52,6 +53,7 @@ contract ERC721Contract {
 
     // The `to` address will receive approval by msg.sender
     function delegateSetApprovalForAll(address token, address operator, bool approved) external {
+        // detect .delegatecall to an address controlled by the user, ignored because it is needed to run the test properly
         // slither-disable-next-line controlled-delegatecall
         (bool success, ) = address(IERC721(token)).delegatecall(abi.encodeWithSignature("setApprovalForAll(address,bool)", operator, approved));
         require(success, "Delegate call failed");
@@ -67,12 +69,14 @@ contract ERC721Contract {
 
     // The call will be executed by the contract itself, so the contract address has to be the owner of `tokenId`
     function transferFrom(address token, address from, address to, uint256 tokenId) external payable {
+        // detect when msg.sender is not used as from in transferFrom, ignored because it is needed to run the test properly
         // slither-disable-next-line arbitrary-send-erc20
         IERC721(token).transferFrom(from, to, tokenId);
     }
 
     // The call will be executed by the msg.sender address
     function delegateTransferFrom(address token, address from, address to, uint256 tokenId) external payable {
+        // detect .delegatecall to an address controlled by the user, ignored because it is needed to run the test properly
         // slither-disable-next-line controlled-delegatecall
         (bool success, ) = address(IERC721(token)).delegatecall(abi.encodeWithSignature("transferFrom(address,address,uint256)", from, to, tokenId));
         require(success, "Delegate call failed");
