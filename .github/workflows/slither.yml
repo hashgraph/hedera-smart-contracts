@@ -14,8 +14,8 @@ permissions:
 jobs:
   analyze:
     name: Slither Static Analysis
-    runs-on: smart-contracts-linux-large
-    
+    runs-on: smart-contracts-linux-medium
+
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
@@ -34,7 +34,7 @@ jobs:
           node-version: 20
           sarif: results.sarif
           fail-on: high
-          slither-args: "--include-paths system-contracts --exclude-dependencies --exclude-informational --exclude-optimization --exclude-low --exclude-medium"
+          slither-args: "--include-paths system-contracts"
 
       - name: Upload SARIF file as artifact
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
