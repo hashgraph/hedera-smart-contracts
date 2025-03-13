@@ -756,5 +756,39 @@ describe('WHBAR', function () {
     // Balance should be back to initial
     const balanceAfterWithdraw = await contract.balanceOf(signers[0].address);
     expect(balanceAfterWithdraw).to.equal(initialBalance);
+  it('should not be able to transfer WHBAR to the actual WHBAR contract', async () => {
+    const txDeposit = await contract.deposit({
+      value: ONE_HBAR_AS_WEIBAR
+    });
+    await txDeposit.wait();
+
+    await expect(contract.transfer(contract.target, ONE_HBAR))
+        .to.be.revertedWithCustomError(contract, `SendFailed`);
+  });
+
+  it('should not be able to transferFrom WHBAR to the actual WHBAR contract', async () => {
+    const amount = 1;
+
+    // create a new random signer
+    const newSigner = ethers.Wallet.createRandom().connect(signers[0].provider);
+
+    // add some balance for gas covering
+    await (await signers[0].sendTransaction({
+      to: newSigner.address,
+      value: ONE_HBAR_AS_WEIBAR
+    })).wait();
+
+    // deposit 1 hbar with signer[0]
+    await (await contract.deposit({
+      value: ONE_HBAR_AS_WEIBAR
+    })).wait();
+
+    // approve the newSigner from signer[0]
+    await (await contract.approve(newSigner.address, amount)).wait();
+
+    // execute transferFrom with newSigner using signers[0] approval
+    const contractWithNewSigner = await contract.connect(newSigner);
+    await expect(contractWithNewSigner.transferFrom(signers[0].address, contractWithNewSigner.target, amount))
+        .to.be.revertedWithCustomError(contractWithNewSigner, `SendFailed`);
   });
 });

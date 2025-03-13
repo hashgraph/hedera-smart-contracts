@@ -28,7 +28,7 @@ jobs:
         run: npm install
 
       - name: Install Foundry
-        uses: step-security/foundry-toolchain@01e2d127ea061e2ce8fa34340de71ca8518f093e # v1.2.1
+        uses: step-security/foundry-toolchain@9997259130641e12dec5e2bfa071f3e370c0a250 # v1.2.2
         with:
           version: nightly
 
@@ -56,7 +56,7 @@ jobs:
           echo "PR_MILESTONE=$(curl -s https://api.github.com/repos/hashgraph/hedera-smart-contracts/milestones | jq '.'[0].number)" >> $GITHUB_ENV
 
       - name: Create Pull Request Target hedera-smart-contracts Repository
-        uses: peter-evans/create-pull-request@dd2324fc52d5d43c699a5636bcf19fceaa70c284 # v7.0.7
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
           branch: HederaResponseCodes-Periodical-Update/${{ github.run_id }}
           commit-message: 'chore: update HederaResponseContract.sol with the latest protobufs'
