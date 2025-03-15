@@ -1,0 +1,44 @@
+name: Slither Analysis
+
+on:
+  pull_request:
+    branches: [main, release/**]
+  push:
+    branches: [main, release/**]
+    tags: [v*]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  analyze:
+    name: Slither Static Analysis
+    runs-on: smart-contracts-linux-medium
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        with:
+          egress-policy: audit
+
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          submodules: recursive
+
+      - name: Run Slither
+        uses: crytic/slither-action@f197989dea5b53e986d0f88c60a034ddd77ec9a8 # v0.4.0
+        id: slither
+        with:
+          node-version: 20
+          sarif: results.sarif
+          fail-on: high
+          slither-args: "--include-paths system-contracts"
+
+      - name: Upload SARIF file as artifact
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        if: always()
+        with:
+          name: slither-results
+          path: results.sarif

@@ -62,6 +62,9 @@ contract EthNativePrecompileCaller {
             exp,
             modulus
         );
+
+        // detect collision due to dynamic type usages in encodePacked, ignored because it is needed to run the test properly
+        // slither-disable-next-line encode-packed-collision
         bytes memory callData = abi.encodePacked(fixed32BytesCalldata, dynamicCallData);
 
         (bool success, bytes memory result) = address(5).call(callData);
