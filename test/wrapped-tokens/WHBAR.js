@@ -728,7 +728,7 @@ describe('WHBAR', function () {
     const receiptDeposit = await txDeposit.wait();
 
     const depositEvents = receiptDeposit.logs.filter(
-      (log) => log.fragment && log.fragment.name === 'Deposit'
+        (log) => log.fragment && log.fragment.name === 'Deposit'
     );
     expect(depositEvents.length).to.equal(1);
     expect(depositEvents[0].args[0]).to.equal(signers[0].address); // dst
@@ -747,7 +747,7 @@ describe('WHBAR', function () {
 
     // Verify Withdrawal event was emitted with correct parameters
     const withdrawalEvents = receiptWithdraw.logs.filter(
-      (log) => log.fragment && log.fragment.name === 'Withdrawal'
+        (log) => log.fragment && log.fragment.name === 'Withdrawal'
     );
     expect(withdrawalEvents.length).to.equal(1);
     expect(withdrawalEvents[0].args[0]).to.equal(signers[0].address); // src
@@ -756,6 +756,8 @@ describe('WHBAR', function () {
     // Balance should be back to initial
     const balanceAfterWithdraw = await contract.balanceOf(signers[0].address);
     expect(balanceAfterWithdraw).to.equal(initialBalance);
+  });
+
   it('should not be able to transfer WHBAR to the actual WHBAR contract', async () => {
     const txDeposit = await contract.deposit({
       value: ONE_HBAR_AS_WEIBAR
