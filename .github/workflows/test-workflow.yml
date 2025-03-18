@@ -65,7 +65,7 @@ jobs:
       - name: Install Foundry
         uses: step-security/foundry-toolchain@9997259130641e12dec5e2bfa071f3e370c0a250 # v1.2.2
         with:
-          version: nightly
+          version: stable
 
       - name: Start the local node
         run: npx hedera start -d --network-tag=${{inputs.networkTag}} --mirror-tag=${{inputs.mirrorTag}} --relay-tag=${{inputs.relayTag}} --verbose=trace

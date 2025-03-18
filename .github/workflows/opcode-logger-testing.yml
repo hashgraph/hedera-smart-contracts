@@ -2,15 +2,14 @@ name: Opcode logger testing
 
 on:
   pull_request:
-    branches: [ main, release/** ]
+    branches: [main, release/**]
   push:
-    branches: [ main, release/** ]
-    tags: [ v* ]
+    branches: [main, release/**]
+    tags: [v*]
 
 jobs:
   check:
-    name:
-      Opcode logger comparison between besu and hedera
+    name: Opcode logger comparison between besu and hedera
     runs-on: smart-contracts-linux-large
     steps:
       - name: Harden Runner
@@ -46,7 +45,7 @@ jobs:
       - name: Install Foundry
         uses: step-security/foundry-toolchain@9997259130641e12dec5e2bfa071f3e370c0a250 # v1.2.2
         with:
-          version: nightly
+          version: stable
 
       - name: Run besu node
         run: npm run besu:start
