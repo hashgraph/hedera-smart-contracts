@@ -30,7 +30,7 @@ jobs:
       - name: Install Foundry
         uses: step-security/foundry-toolchain@9997259130641e12dec5e2bfa071f3e370c0a250 # v1.2.2
         with:
-          version: nightly
+          version: stable
 
       - name: Parse and update response codes
         run: node scripts/hedera-response-codes-protobuf-parser.js
