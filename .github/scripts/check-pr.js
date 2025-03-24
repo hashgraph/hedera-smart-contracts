@@ -261,7 +261,7 @@ async function run() {
             return;
         } else {
             const cleanBody = cleanText(pr.body);
-            await processIssueReferencesInText(cleanBody);
+            // await processIssueReferencesInText(cleanBody);
         }
 
         const contributors = await getContributors();
