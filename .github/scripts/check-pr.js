@@ -254,14 +254,14 @@ async function run() {
             throw new Error(`PR #${GITHUB_PR_NUMBER} not found.`);
         }
 
-        // await checkPRLabelsAndMilestone(pr);
+        await checkPRLabelsAndMilestone(pr);
 
         if (isDependabotOrSnykPR(pr)) {
             console.log('Dependabot or snyk PR detected. Skipping issue reference requirement.');
             return;
         } else {
             const cleanBody = cleanText(pr.body);
-            // await processIssueReferencesInText(cleanBody);
+            await processIssueReferencesInText(cleanBody);
         }
 
         const contributors = await getContributors();
