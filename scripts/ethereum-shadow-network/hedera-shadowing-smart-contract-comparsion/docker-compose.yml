@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  shadowing-api:
+    build:
+      context: .
+      dockerfile: docker/shadowing-api/Dockerfile
+    container_name: shadowing-api-container
+    env_file:
+      - .env
+    ports:
+      - "3005:3005"
+      - "8085:8085"
+    networks:
+      - shadowing
+
+  hedera-shadowing-smart-contract-comparison:
+    build:
+      context: .
+      dockerfile: docker/hedera-shadowing-smart-contract-comparison/Dockerfile
+    container_name: hedera-shadowing-smart-contract-comparison-container
+    links:
+      - shadowing-api
+    volumes:
+      - ./logs:/usr/src/app/logs
+    depends_on:
+      - shadowing-api
+    networks:
+      - hedera-mirror-node
+      - hedera-network-node
+      - shadowing
+
+networks:
+  hedera-mirror-node:
+    external: true
+  hedera-network-node:
+    external: true
+  shadowing:
+    driver: bridge
+    name: shadowing
