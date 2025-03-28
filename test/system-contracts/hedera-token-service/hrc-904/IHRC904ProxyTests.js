@@ -506,11 +506,7 @@ describe('HIP904 IHRC904Facade ContractTest Suite', function () {
     expect(responseCode).to.eq('354'); // INVALID_OWNER_ID code
   });
 
-  // TODO: The following test is skipped because it is not supported by the current implementation in services
-  // It does not return the correct error code and we can currently only check if it reverts
-  // therefore it will be skipped until the implementation is updated
-  // https://github.com/hashgraph/hedera-services/issues/17534
-  it.skip('should revert when trying to reject NFT tokens when 11 or more serials are provided', async function () {
+  it('should revert when trying to reject NFT tokens when 11 or more serials are provided', async function () {
     let serialNumbers = [];
     for (let i = 0; i < 11; i++) {
       serialNumbers.push(
@@ -518,7 +514,10 @@ describe('HIP904 IHRC904Facade ContractTest Suite', function () {
       );
     }
 
-    await expect(walletIHRC904NftFacadeReceiver.rejectTokenNFTs(serialNumbers))
-      .to.be.reverted;
+    const tx =
+      await walletIHRC904NftFacadeReceiver.rejectTokenNFTs(serialNumbers);
+    const responseCode = await utils.getHTSResponseCode(tx.hash);
+    const responseText = utils.decimalToAscii(responseCode);
+    expect(responseText).to.eq('TOKEN_REFERENCE_LIST_SIZE_LIMIT_EXCEEDED');
   });
 });

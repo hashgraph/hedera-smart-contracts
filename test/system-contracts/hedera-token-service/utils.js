@@ -16,7 +16,7 @@ const {
   TokenAssociateTransaction,
   AccountBalanceQuery,
   ContractInfoQuery,
-  AccountDeleteTransaction
+  AccountDeleteTransaction,
 } = require('@hashgraph/sdk');
 const Constants = require('../../constants');
 const axios = require('axios');
@@ -717,17 +717,19 @@ class Utils {
   }
 
   static async getContractInfo(evmAddress, client) {
-    const query = new ContractInfoQuery().setContractId(ContractId.fromEvmAddress(0, 0, evmAddress));
+    const query = new ContractInfoQuery().setContractId(
+      ContractId.fromEvmAddress(0, 0, evmAddress)
+    );
 
     return await query.execute(client);
   }
 
   static async deleteAccount(account, signer, accountId) {
-    const accountDeleteTransaction = (await (new AccountDeleteTransaction()
-            .setAccountId(accountId)
-            .setTransferAccountId(signer.getOperator().accountId)
-            .freezeWith(signer)
-    ).sign(PrivateKey.fromStringECDSA(account.signingKey.privateKey)));
+    const accountDeleteTransaction = await new AccountDeleteTransaction()
+      .setAccountId(accountId)
+      .setTransferAccountId(signer.getOperator().accountId)
+      .freezeWith(signer)
+      .sign(PrivateKey.fromStringECDSA(account.signingKey.privateKey));
 
     await accountDeleteTransaction.execute(signer);
   }
@@ -1119,6 +1121,11 @@ class Utils {
     const mirrorNodeUrl = getMirrorNodeUrl(network);
     const response = await axios.get(`${mirrorNodeUrl}/accounts/${evmAddress}`);
     return response.data.max_automatic_token_associations;
+  }
+
+  static decimalToAscii(decimalStr) {
+    const hex = BigInt(decimalStr).toString(16);
+    return Buffer.from(hex, 'hex').toString('ascii');
   }
 }
 
