@@ -28,7 +28,7 @@ jobs:
           submodules: recursive
 
       - name: Run Slither
-        uses: crytic/slither-action@f197989dea5b53e986d0f88c60a034ddd77ec9a8 # v0.4.0
+        uses: crytic/slither-action@4fd765aeef19915d04ddf0be90c2930036a774d8 # v0.4.1
         id: slither
         with:
           node-version: 20
