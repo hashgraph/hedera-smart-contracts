@@ -242,71 +242,56 @@ describe('HIP904 CancelAirdropContract Test Suite', function () {
     expect(responseCode).to.eq('367'); // INVALID_PENDING_AIRDROP_ID code
   });
 
-  // TODO: Test is skipped because current implementation does not return correct error code for non-existent tokens
-  // https://github.com/hashgraph/hedera-services/issues/17534
-  it.skip('should fail when token does not exist', async function () {
+  it('should fail when token does not exist', async function () {
     const invalidToken = ethers.Wallet.createRandom().address;
 
-    try {
-      const tx = await cancelAirdropContract.cancelAirdrop(
-        owner,
-        receiver,
-        invalidToken,
-        Constants.GAS_LIMIT_2_000_000
-      );
-      await tx.wait();
-      expect.fail('Should revert');
-    } catch (error) {
-      expect(error.shortMessage).to.eq('transaction execution reverted');
-    }
+    const tx = await cancelAirdropContract.cancelAirdrop(
+      owner,
+      receiver,
+      invalidToken,
+      Constants.GAS_LIMIT_2_000_000
+    );
+    const responseCode = await utils.getHTSResponseCode(tx.hash);
+    const responseText = utils.decimalToAscii(responseCode);
+    expect(responseText).to.eq('INVALID_TOKEN_ID');
   });
 
-  // TODO: Test is skipped because current implementation does not return correct error code for non-existent NFTs
-  // https://github.com/hashgraph/hedera-services/issues/17534
-  it.skip('should fail when NFT does not exist', async function () {
+  it('should fail when NFT does not exist', async function () {
     const invalidNftToken = ethers.Wallet.createRandom().address;
     const serialNumber = 1;
 
-    try {
-      const tx = await cancelAirdropContract.cancelNFTAirdrop(
-        owner,
-        receiver,
-        invalidNftToken,
-        serialNumber,
-        Constants.GAS_LIMIT_2_000_000
-      );
-      await tx.wait();
-      expect.fail('Should revert');
-    } catch (error) {
-      expect(error.shortMessage).to.eq('transaction execution reverted');
-    }
+    const tx = await cancelAirdropContract.cancelNFTAirdrop(
+      owner,
+      receiver,
+      invalidNftToken,
+      serialNumber,
+      Constants.GAS_LIMIT_2_000_000
+    );
+    const responseCode = await utils.getHTSResponseCode(tx.hash);
+    const responseText = utils.decimalToAscii(responseCode);
+    expect(responseText).to.eq('INVALID_TOKEN_ID');
   });
 
-  // TODO: Test is skipped because current implementation does not support checking for maximum number of pending airdrops
-  // https://github.com/hashgraph/hedera-services/issues/17534
-  it.skip('should fail when more than 10 pending airdrops provided', async function () {
-    try {
-      const { senders, receivers, tokens, serials } =
-        await utils.createPendingAirdrops(
-          11,
-          tokenCreateContract,
-          owner,
-          airdropContract,
-          receiver
-        );
-
-      const tx = await cancelAirdropContract.cancelMultipleAirdrops(
-        senders,
-        receivers,
-        tokens,
-        serials,
-        Constants.GAS_LIMIT_2_000_000
+  it('should fail when more than 10 pending airdrops provided', async function () {
+    const { senders, receivers, tokens, serials } =
+      await utils.createPendingAirdrops(
+        11,
+        tokenCreateContract,
+        owner,
+        airdropContract,
+        receiver
       );
-      await tx.wait();
-      expect.fail('Should revert');
-    } catch (error) {
-      expect(error.shortMessage).to.eq('transaction execution reverted');
-    }
+
+    const tx = await cancelAirdropContract.cancelMultipleAirdrops(
+      senders,
+      receivers,
+      tokens,
+      serials,
+      Constants.GAS_LIMIT_2_000_000
+    );
+    const responseCode = await utils.getHTSResponseCode(tx.hash);
+    const responseText = utils.decimalToAscii(responseCode);
+    expect(responseText).to.eq('PENDING_AIRDROP_ID_LIST_TOO_LONG');
   });
 
   it('should fail when NFT serial number does not exist', async function () {
