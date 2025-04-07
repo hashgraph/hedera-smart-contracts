@@ -142,5 +142,9 @@
   {
     "contractId": "0.0.8144532",
     "address": "0xd9f3bfed52ec008a13cf08c7382a917eb364cc32"
+  },
+  {
+    "contractId": "0.0.8804581",
+    "address": "0x2d9f04e30222503ae7b401e876c3b69d3252bfcd"
   }
 ]
