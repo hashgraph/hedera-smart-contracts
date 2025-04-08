@@ -44,7 +44,7 @@ describe('@HAS IHRC-632 Test Suite', () => {
 
   describe('getEvmAddressAlias', () => {
     // skipping since there's a bug in getEvmAddressAlias in the services
-    xit('Should execute getEvmAddressAliasPublic and get the corressponded evmAddressAlias', async () => {
+    it('Should execute getEvmAddressAliasPublic and get the corressponded evmAddressAlias', async () => {
       const tx = await aliasAccountUtility.getEvmAddressAliasPublic(
         walletAHederaAccountNumAlias,
         Constants.GAS_LIMIT_1_000_000
