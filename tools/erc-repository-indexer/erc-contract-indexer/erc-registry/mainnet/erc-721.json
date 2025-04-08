@@ -1060,5 +1060,53 @@
     "address": "0x5f5ee5a825dca1d52f14558eb7e22dacebf7b9c6",
     "name": "Baby Doge",
     "symbol": "CGPT"
+  },
+  {
+    "contractId": "0.0.8361146",
+    "address": "0xdac4b4c23c1522b781dea26f6e733d58e5436998",
+    "name": "Pizza Lion",
+    "symbol": "PLION"
+  },
+  {
+    "contractId": "0.0.8399708",
+    "address": "0x82511fa799497bb888876313af2c1ba521cd7c3d",
+    "name": "Test",
+    "symbol": "COOL"
+  },
+  {
+    "contractId": "0.0.8462095",
+    "address": "0x48eff4014cd676b6590f4043d7ae22c3dac9335b",
+    "name": "",
+    "symbol": ""
+  },
+  {
+    "contractId": "0.0.8757477",
+    "address": "0x55d98801c214950cd29d874ff6b2559b8b7dcef5",
+    "name": "Spheraheads Freemint",
+    "symbol": "SPH"
+  },
+  {
+    "contractId": "0.0.8760797",
+    "address": "0x6fe5eeddb29d41aa6eba786843ba2a6334bcb8bd",
+    "name": "Lion Test",
+    "symbol": "LT"
+  },
+  {
+    "contractId": "0.0.8760850",
+    "address": "0x9f0334ce0884941e66bba02dbf31f33fda7105eb",
+    "name": "Cyborg Pup",
+    "symbol": "CPUP"
+  },
+  {
+    "contractId": "0.0.8801729",
+    "address": "0xd5fb468462b7c8b9ed9c7b5e8061c734cf44b0f8",
+    "name": "SoulBoundToken",
+    "symbol": "SBT"
+  },
+  {
+    "contractId": "0.0.8814475",
+    "address": "0xedf0d6cbd43e30b5208b02fd56d926d2c872709b",
+    "name": "Free Sphera NFT",
+    "symbol": "SPH"
   }
 ]
