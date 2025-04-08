@@ -5790,5 +5790,365 @@
     "symbol": "WHBAR911",
     "totalSupply": 0,
     "decimals": 8
+  },
+  {
+    "contractId": "0.0.8369065",
+    "address": "0x154650bd0b40e449214f9c544ce693889ae65f27",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8369072",
+    "address": "0x00f2a8ed50ab6d5f0138aa26f6aac0cb25fa692a",
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8405885",
+    "address": "0x7ed0c3bec6019afbcd9b5f99eaf3da2b9359a34e",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.8405930",
+    "address": "0xce9c16886608612771aa08b74c8931b3902a5230",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.8405997",
+    "address": "0x6dc665acd4319088b41c8fcd5c122912ec27761a",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.8406000",
+    "address": "0x2356acc4429be62eeb2728f626523b06b5593b2a",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8406012",
+    "address": "0x5b3c7745663cdbec53b53576efd895be3db6bd09",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8406022",
+    "address": "0x9cb9358d8dfb1a1a0fd6e6de55131df243cffc99",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8406031",
+    "address": "0x3e3b6124690c3e3be8f98417a2f7b5869acdb214",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8406118",
+    "address": "0x1675803afd66c62e21c1fb7148ab7dbc4eea104a",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8406191",
+    "address": "0xc123a35df5f299c1ab97d32bfc2e055ce0643fb5",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8406227",
+    "address": "0x052ba090651a33a0920d32de37774d12fdc07a22",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8406254",
+    "address": "0x42270e06b07d597b0406494220deaf32e0e4befd",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8406333",
+    "address": "0x4a7fe96d38803d441d9d2818cc57a268cb03c779",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8406691",
+    "address": "0x37f182ba6cfdf918049325f7f23d35503bb42623",
+    "name": "USDF-ECDC LP",
+    "symbol": "USDFECDC-LP",
+    "totalSupply": 14816884269447606,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8480057",
+    "address": "0x4b51916e57c4cf20c10c47dba763f3b8bbaa5987",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8480058",
+    "address": "0xebbccabe42a667a96ffd963d04410e6cbf9fb2cc",
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8489717",
+    "address": "0x9ca255fa2f50cfa45a85521cc3f61c1997b3ab02",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8489720",
+    "address": "0xf06155d5b527816c908df162b681e47c16b6ca28",
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8490190",
+    "address": "0x1e74bc6d2b9e7b84996f711aee54814b6bf15d91",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8490214",
+    "address": "0x97eae8cc3300e70f74d361da8efd2f27f267f37a",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8490217",
+    "address": "0x27d8867ea70f58a748d6be3693c0bbef73697efe",
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8533313",
+    "address": "0xcf890bcab939162d193e34e7a7e73b1a117de0c1",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8533330",
+    "address": "0x8c1b17128ea966730c56937cab07d4192773ba90",
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8533511",
+    "address": "0xc86ae422680c3d96b861556fd2e3a5ca0fdac1db",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8533521",
+    "address": "0x8854f45eed8183a49af62a31f7eaf362e43568a1",
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8533752",
+    "address": "0xcde9aafe43d001b48a44befbad8ae78c3a7503b7",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8533763",
+    "address": "0x871bf71eb4dbe566442af051b31293d9a3a23b5e",
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8533845",
+    "address": "0xd197d40ee8c5cbedd0dd1669b46a464b6b788f90",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8533855",
+    "address": "0xa4eb4998c0977ae8945cd97acb3e54d6cafbb781",
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8533950",
+    "address": "0xa26d88782dcf91a91b96512ea2ea10a43eb31aa4",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8533960",
+    "address": "0x9e2f88c56ced18c5cc728075fbd824aa65ee4e9b",
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8534126",
+    "address": "0x2583bd82b4059c2df469879a054f42dcf1fb36f4",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8534136",
+    "address": "0x5cec25332e8b39d87b050d3faf8d0a6086e81854",
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8534318",
+    "address": "0x91683e220826be8c8be5e557802fda4446937a35",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8534321",
+    "address": "0x7b32517003c892052e483572be39f9a09fa07c1b",
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8534409",
+    "address": "0x2d0cd38cb82a728f2b6068b4a9dcd50b6588d627",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8534419",
+    "address": "0xb6342d77eb47d8709c08cacdc946eb52a6702b83",
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8600100",
+    "address": "0x0000000000000000000000000000000000833a24",
+    "name": "TestToken",
+    "symbol": "TT",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8678112",
+    "address": "0xee210fd8580bc3f0dd04537b40bb24f9cd56b4bf",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8678115",
+    "address": "0x2a8b2c9ae8e56b2a4c038a0ce69d0f1e070586e6",
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8813922",
+    "address": "0x81e609b897393731a3d23c1d311330340cebb9e9",
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8834179",
+    "address": "0x3c8d693d1d697de8f3c952c628e62a9969c580ff",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 201364,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8834182",
+    "address": "0x8512e12fcb44b65f6056abf6e541cd96f07aa9d7",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8840785",
+    "address": "0xb1f616b8134f602c3bb465fb5b5e6565ccad37ed",
+    "name": "Wrapped HBAR",
+    "symbol": "WHBAR",
+    "totalSupply": 0,
+    "decimals": 8
   }
 ]
