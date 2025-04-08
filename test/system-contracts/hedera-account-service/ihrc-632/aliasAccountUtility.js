@@ -94,7 +94,7 @@ describe('@HAS IHRC-632 Test Suite', () => {
       ); // evm address
     });
 
-    it('Should execute getEvmAddressAliasPublic with not long zero address and get INVALID_ACOUNT_ID', async () => {
+    it('Should execute getEvmAddressAliasPublic with long zero address and get the corresponded evm address', async () => {
       const tx = await aliasAccountUtility.getEvmAddressAliasPublic(
         walletAHederaAccountNumAlias, // a long zero address
         Constants.GAS_LIMIT_1_000_000
@@ -105,8 +105,8 @@ describe('@HAS IHRC-632 Test Suite', () => {
       const evmAddressAlias = receipt.logs.find(
         (log) => log.fragment.name === 'AddressAliasResponse'
       ).args;
-      expect(evmAddressAlias[0]).to.eq(15); // responseCode 15 = INVALID_ACCOUNT_ID
-      expect(evmAddressAlias[1]).to.eq(ethers.ZeroAddress);
+      expect(evmAddressAlias[0]).to.eq(22); // responseCode 22 = success
+      expect(evmAddressAlias[1]).to.eq(walletA.address);
     });
   });
 
