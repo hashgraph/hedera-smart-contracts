@@ -183,7 +183,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           submodules: recursive
-          repository: hashgraph/hedera-mirror-node-explorer
+          repository: hiero-ledger/hiero-mirror-node-explorer
           token: ${{ secrets.GH_ACCESS_TOKEN_MIRROR_NODE_EXPLORER }}
 
       - name: Restore erc-registry from Temporary Directory
