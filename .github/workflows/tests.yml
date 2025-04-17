@@ -123,11 +123,23 @@ jobs:
     with:
       testfilter: HAS
 
-  HIP904:
-    name: HIP904 Contract Test Suite
+  HIP904Batch1:
+    name: HIP904 Contract Test Suite Batch 1
     uses: ./.github/workflows/test-workflow.yml
     with:
-      testfilter: HIP904
+      testfilter: HIP904Batch1
+
+  HIP904Batch2:
+    name: HIP904 Contract Test Suite Batch 2
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: HIP904Batch2
+
+  HIP904Batch3:
+    name: HIP904 Contract Test Suite Batch 3
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: HIP904Batch3
 
   WHBAR:
     name: WHBAR Contract Test Suite
@@ -156,7 +168,9 @@ jobs:
       - PrngSystemContract
       - BLSSignatureVerification
       - HederaAccountService
-      - HIP904
+      - HIP904Batch1
+      - HIP904Batch2
+      - HIP904Batch3
       - WHBAR
 
     runs-on: smart-contracts-linux-large
