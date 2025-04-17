@@ -6,7 +6,7 @@ const utils = require('../utils');
 const Constants = require('../../../constants');
 const { Contract } = require('ethers');
 
-describe('HIP904-Batch-2 IHRC904Facade ContractTest Suite', function () {
+describe('HIP904Batch2 IHRC904Facade Contract Test Suite', function () {
   let airdropContract;
   let tokenAddress;
   let nftTokenAddress;
