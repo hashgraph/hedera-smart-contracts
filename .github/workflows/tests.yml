@@ -168,7 +168,9 @@ jobs:
       - PrngSystemContract
       - BLSSignatureVerification
       - HederaAccountService
-      - HIP904
+      - HIP904Batch1
+      - HIP904Batch2
+      - HIP904Batch3
       - WHBAR
 
     runs-on: smart-contracts-linux-large
