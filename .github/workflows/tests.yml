@@ -123,11 +123,23 @@ jobs:
     with:
       testfilter: HAS
 
-  HIP904:
-    name: HIP904 Contract Test Suite
+  HIP904-Batch-1:
+    name: HIP904 Contract Test Suite Batch 1
     uses: ./.github/workflows/test-workflow.yml
     with:
-      testfilter: HIP904
+      testfilter: HIP904-Batch-1
+
+  HIP904-Batch-2:
+    name: HIP904 Contract Test Suite Batch 2
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: HIP904-Batch-2
+
+  HIP904-Batch-3:
+    name: HIP904 Contract Test Suite Batch 3
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: HIP904-Batch-3
 
   WHBAR:
     name: WHBAR Contract Test Suite
