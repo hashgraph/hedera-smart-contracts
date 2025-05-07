@@ -180,7 +180,7 @@ export const SharedSigningKeysComponent = ({
           For comprehensive details about keys, please visit{' '}
           <Link
             href={
-              'https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/hts-precompile/IHederaTokenService.sol#L116'
+              'https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L116'
             }
             target="_blank"
             className="text-hedera-purple underline font-medium"

@@ -57,6 +57,7 @@ const Events = {
   TinyCents: 'TinyCents',
   PseudoRandomSeed: 'PseudoRandomSeed',
   CryptoAllowance: 'CryptoAllowance',
+  IsAssociated: 'IsAssociated',
 };
 
 const Path = {
@@ -197,6 +198,7 @@ const Contract = {
   EthNativePrecompileCaller: 'EthNativePrecompileCaller',
   AtomicHTS: 'AtomicHTS',
   BLSTest: 'BLSTest',
+  BlsBn254: 'BlsBn254',
   CryptoAllowance: 'CryptoAllowance',
   CryptoOwner: 'CryptoOwner',
   CancunOpcodes: 'CancunOpcodes',

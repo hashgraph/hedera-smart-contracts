@@ -1,0 +1,28 @@
+{
+  "name": "@hashgraph/erc-contract-indexer",
+  "version": "0.1.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "test:unit": "jest --testPathPattern=tests/unit --detectOpenHandles",
+    "test:acceptance": "jest --testPathPattern=tests/acceptance --detectOpenHandles"
+  },
+  "keywords": [],
+  "author": "Hedera Smart Contracts Team",
+  "license": "Apache-2.0",
+  "description": "ERC Contracts Indexer",
+  "devDependencies": {
+    "@hashgraph/sdk": "^2.55.0",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.10.1",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.4",
+    "sevm": "^0.7.3"
+  }
+}

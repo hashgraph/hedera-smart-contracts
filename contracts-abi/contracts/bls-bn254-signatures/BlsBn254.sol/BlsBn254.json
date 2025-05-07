@@ -1,0 +1,196 @@
+[
+  {
+    "inputs": [],
+    "name": "nG1x",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nG1y",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nG2x0",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nG2x1",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nG2y0",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nG2y1",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[2][]",
+        "name": "pubKeysG1",
+        "type": "uint256[2][]"
+      },
+      {
+        "internalType": "uint256[4][]",
+        "name": "msgsG2",
+        "type": "uint256[4][]"
+      },
+      {
+        "internalType": "uint256[4]",
+        "name": "sigG2",
+        "type": "uint256[4]"
+      }
+    ],
+    "name": "verifyMultipleG1PubKeyG2SigAndMsg",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[4][]",
+        "name": "pubKeysG2",
+        "type": "uint256[4][]"
+      },
+      {
+        "internalType": "uint256[2][]",
+        "name": "msgsG1",
+        "type": "uint256[2][]"
+      },
+      {
+        "internalType": "uint256[2]",
+        "name": "sigG1",
+        "type": "uint256[2]"
+      }
+    ],
+    "name": "verifyMultipleG1SigAndMsgG2PubKey",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[2]",
+        "name": "pubKeyG1",
+        "type": "uint256[2]"
+      },
+      {
+        "internalType": "uint256[4]",
+        "name": "msgG2",
+        "type": "uint256[4]"
+      },
+      {
+        "internalType": "uint256[4]",
+        "name": "sigG2",
+        "type": "uint256[4]"
+      }
+    ],
+    "name": "verifySingleG1PubKeyG2SigAndMsg",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[4]",
+        "name": "pubKeyG2",
+        "type": "uint256[4]"
+      },
+      {
+        "internalType": "uint256[2]",
+        "name": "msgG1",
+        "type": "uint256[2]"
+      },
+      {
+        "internalType": "uint256[2]",
+        "name": "sigG1",
+        "type": "uint256[2]"
+      }
+    ],
+    "name": "verifySingleG1SigAndMsgG2PubKey",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

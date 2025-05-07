@@ -1,0 +1,110 @@
+[
+  {
+    "contractId": "0.0.1778110",
+    "address": "0x00000000000000000000000000000000001b21be",
+    "name": "Genesis SpheraHead",
+    "symbol": "SPH"
+  },
+  {
+    "contractId": "0.0.2015187",
+    "address": "0x00000000000000000000000000000000001ebfd3",
+    "name": "UserNftMinter",
+    "symbol": "UMT"
+  },
+  {
+    "contractId": "0.0.4153903",
+    "address": "0xb495fd2ddc7319ae5ac4249fcbf3802e22bc1dfe",
+    "name": "Miidas_Collection",
+    "symbol": "Miidas_Collection_3250"
+  },
+  {
+    "contractId": "0.0.4153915",
+    "address": "0x22b2677b2755efad609760b51b34a786e8c02455",
+    "name": "Miidas_Collection",
+    "symbol": "Miidas_Collection_5137"
+  },
+  {
+    "contractId": "0.0.4153936",
+    "address": "0x2809fb581c5e06cdcf5122ede74432a9c1850da6",
+    "name": "Miidas_Collection",
+    "symbol": "Miidas_Collection_1737"
+  },
+  {
+    "contractId": "0.0.4153998",
+    "address": "0x207d96e61a03e05c9aef4974a7771fcbb748dcfd",
+    "name": "Miidas_Collection_2",
+    "symbol": "Miidas_Collection_2_8532"
+  },
+  {
+    "contractId": "0.0.6328870",
+    "address": "0xf21c21d85658fec7a407ba99b41b8764a6c4adde",
+    "name": "StreamNFT",
+    "symbol": "StreamNFT"
+  },
+  {
+    "contractId": "0.0.6447035",
+    "address": "0xb0d4916a3ac08ec5bbfa0434648493ac562c825c",
+    "name": "MyToken",
+    "symbol": "MTK"
+  },
+  {
+    "contractId": "0.0.6984943",
+    "address": "0x809ab4666be233c491b11e98472115a70817fb5c",
+    "name": "test",
+    "symbol": "test"
+  },
+  {
+    "contractId": "0.0.7490436",
+    "address": "0x104df0a11626af3d03233ac8be1bb7ce423ac550",
+    "name": "MyToken",
+    "symbol": "MTK"
+  },
+  {
+    "contractId": "0.0.7490447",
+    "address": "0xe911ea6db87ccdc72dd1fb9a5e315f7a55565d30",
+    "name": "MyToken",
+    "symbol": "MTK"
+  },
+  {
+    "contractId": "0.0.7490768",
+    "address": "0x4ad9b5633d5c0a53fadbd72f00a6046ca6a51c17",
+    "name": "MyToken",
+    "symbol": "MTK"
+  },
+  {
+    "contractId": "0.0.7490777",
+    "address": "0x07bad17dc76f765501d5bcd2b5bd688c3e58cc49",
+    "name": "MyToken",
+    "symbol": "MTK"
+  },
+  {
+    "contractId": "0.0.7522715",
+    "address": "0xd989c8c1906120e5ab3d9e899196b095750e8348",
+    "name": "MyToken",
+    "symbol": "MTK"
+  },
+  {
+    "contractId": "0.0.7546407",
+    "address": "0x664c57d5d606fa2e96ff603927d7910144b484cf",
+    "name": "BITSAlumni",
+    "symbol": "BALT"
+  },
+  {
+    "contractId": "0.0.7802209",
+    "address": "0xb80b3c7a68fb94d45aed4758ed80c001888eb8aa",
+    "name": "FSCO | Declaration",
+    "symbol": "FSD"
+  },
+  {
+    "contractId": "0.0.7802222",
+    "address": "0x1fab9abe71e379599708b951666ae9e9e9cc0827",
+    "name": "FSCO | Proofs",
+    "symbol": "FSP"
+  },
+  {
+    "contractId": "0.0.7802229",
+    "address": "0x5f41bf318082c9fb7b9d737ed3c2c44795f283a3",
+    "name": "FSCO | Proof Links",
+    "symbol": "FSPL"
+  }
+]

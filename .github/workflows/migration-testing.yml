@@ -41,17 +41,23 @@ jobs:
     name:
       Migration testing (${{ inputs.preMigrationTestTags }}/${{ inputs.postMigrationTestTags }}) with initial N:${{ inputs.initialNetworkNodeTag }}, M:${{ inputs.initialMirrorNodeTag }}, R:${{ inputs.initialRelayTag }} and
       target N:${{ inputs.targetNetworkNodeTag }}, M:${{ inputs.targetMirrorNodeTag }}, R:${{ inputs.targetRelayTag }}
-    runs-on: [self-hosted, Linux, large, ephemeral]
+    runs-on: smart-contracts-linux-large
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - name: Harden Runner
+        uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
+        with:
+          egress-policy: audit
+      
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           submodules: recursive
 
-      - name: Use Node.js [18.15]
-        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
+      - name: Use Node.js [20]
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
-          node-version: 18.15
-          cache: npm
+          node-version: 20
+          #cache: npm Disabling this because it causes the workflow to hang and eventually timeout
 
       - name: Create .env file
         run: cp local.env .env
@@ -59,11 +65,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Upgrade @hashgraph/hedera-local to v2.25.2
-        run: npm install @hashgraph/hedera-local@2.25.2 --save
-
       - name: Install Foundry
-        uses: step-security/foundry-toolchain@c8ec18dbd1287becdc38602c6a02beaccf13c89f # v1.2.0
+        uses: step-security/foundry-toolchain@01e2d127ea061e2ce8fa34340de71ca8518f093e # v1.2.1
         with:
           version: nightly
 
