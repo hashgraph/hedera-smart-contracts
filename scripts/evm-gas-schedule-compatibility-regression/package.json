@@ -1,0 +1,26 @@
+{
+  "name": "test-runner",
+  "version": "1.0.0",
+  "main": "config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/mocha  --timeout 120000",
+    "test:direct": "mocha test/test.js --timeout 120000"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "mocha": "^11.1.0"
+  },
+  "devDependencies": {
+    "@hashgraph/sdk": "^2.63.0",
+    "axios": "^1.9.0",
+    "assert": "^2.1.0",
+    "dotenv": "^16.5.0",
+    "ethers": "^6.13.7",
+    "fs": "^0.0.1-security"
+  }
+}
