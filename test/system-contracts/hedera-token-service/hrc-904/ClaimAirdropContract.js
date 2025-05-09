@@ -1,29 +1,11 @@
-/*-
- *
- * Hedera Smart Contracts
- *
- * Copyright (C) 2025 Hedera Hashgraph, LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
+// SPDX-License-Identifier: Apache-2.0
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const utils = require('../utils');
 const Constants = require('../../../constants');
 
-describe('HIP904 ClaimAirdropContract Test Suite', function () {
+describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
   let airdropContract;
   let claimAirdropContract;
   let tokenCreateContract;
@@ -276,70 +258,59 @@ describe('HIP904 ClaimAirdropContract Test Suite', function () {
     expect(responseCode).to.eq('15'); // INVALID_ACCOUNT_ID code
   });
 
-  // TODO: Test is skipped because current services implementation does not support checking for maximum number of pending airdrops
-  // https://github.com/hashgraph/hedera-services/issues/17534
-  it.skip('should fail to claim more than 10 pending airdrops at once', async function () {
-    try {
-      const { senders, receivers, tokens, serials } =
-        await utils.createPendingAirdrops(
-          airdropContract,
-          owner,
-          tokenCreateContract,
-          receiver.address,
-          11
-        );
-
-      const tx = await claimAirdropContract.claimMultipleAirdrops(
-        senders,
-        receivers,
-        tokens,
-        serials,
-        Constants.GAS_LIMIT_10_000_000
+  it('should fail to claim more than 10 pending airdrops at once', async function () {
+    const { senders, receivers, tokens, serials, amounts } =
+      await utils.createPendingAirdrops(
+        11,
+        tokenCreateContract,
+        owner,
+        airdropContract,
+        receiver.address
       );
-      await tx.wait();
-      expect.fail('Should revert');
-    } catch (error) {
-      expect(error.shortMessage).to.eq('transaction execution reverted');
+
+    for (let token of tokens) {
+      await utils.associateWithSigner(receiverPrivateKey, token);
     }
+
+    const tx = await claimAirdropContract.claimMultipleAirdrops(
+      senders,
+      receivers,
+      tokens,
+      serials,
+      Constants.GAS_LIMIT_10_000_000
+    );
+    const responseCode = await utils.getHTSResponseCode(tx.hash);
+    const responseText = utils.decimalToAscii(responseCode);
+    expect(responseText).to.eq('PENDING_AIRDROP_ID_LIST_TOO_LONG');
   });
 
-  // TODO: Test is skipped because current services implementation does not return correct error code for non-existent tokens
-  // https://github.com/hashgraph/hedera-services/issues/17534
-  it.skip('should fail to claim airdrops when token does not exist', async function () {
+  it('should fail to claim airdrops when token does not exist', async function () {
     const nonExistentToken = '0x1234567890123456789012345678901234567890';
 
-    try {
-      const tx = await claimAirdropContract.claim(
-        owner,
-        receiver.address,
-        nonExistentToken,
-        Constants.GAS_LIMIT_2_000_000
-      );
-      await tx.wait();
-      expect.fail('Should revert');
-    } catch (error) {
-      expect(error.shortMessage).to.eq('transaction execution reverted');
-    }
+    const tx = await claimAirdropContract.claim(
+      owner,
+      receiver.address,
+      nonExistentToken,
+      Constants.GAS_LIMIT_2_000_000
+    );
+    const responseCode = await utils.getHTSResponseCode(tx.hash);
+    const responseText = utils.decimalToAscii(responseCode);
+    expect(responseText).to.eq('INVALID_TOKEN_ID');
   });
 
-  // TODO: Test is skipped because current services implementation does not return correct error code for non-existent NFTs
-  // https://github.com/hashgraph/hedera-services/issues/17534
-  it.skip('should fail to claim airdrops when NFT does not exist', async function () {
+  it('should fail to claim airdrops when NFT does not exist', async function () {
     const nonExistentNft = '0x1234567890123456789012345678901234567890';
 
-    try {
-      const tx = await claimAirdropContract.claimNFTAirdrop(
-        owner,
-        receiver.address,
-        nonExistentNft,
-        1,
-        Constants.GAS_LIMIT_2_000_000
-      );
-      await tx.wait();
-      expect.fail('Should revert');
-    } catch (error) {
-      expect(error.shortMessage).to.eq('transaction execution reverted');
-    }
+    const tx = await claimAirdropContract.claimNFTAirdrop(
+      owner,
+      receiver.address,
+      nonExistentNft,
+      1,
+      Constants.GAS_LIMIT_2_000_000
+    );
+    const responseCode = await utils.getHTSResponseCode(tx.hash);
+    const responseText = utils.decimalToAscii(responseCode);
+    expect(responseText).to.eq('INVALID_TOKEN_ID');
   });
 
   it('should fail to claim airdrops when NFT serial number does not exist', async function () {

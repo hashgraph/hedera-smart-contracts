@@ -1,22 +1,4 @@
-/*-
- *
- * Hedera Smart Contracts
- *
- * Copyright (C) 2025 Hedera Hashgraph, LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
+// SPDX-License-Identifier: Apache-2.0
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
@@ -24,7 +6,7 @@ const utils = require('../utils');
 const Constants = require('../../../constants');
 const { Contract } = require('ethers');
 
-describe('HIP904 IHRC904Facade ContractTest Suite', function () {
+describe('HIP904Batch2 IHRC904Facade Contract Test Suite', function () {
   let airdropContract;
   let tokenAddress;
   let nftTokenAddress;
@@ -524,11 +506,7 @@ describe('HIP904 IHRC904Facade ContractTest Suite', function () {
     expect(responseCode).to.eq('354'); // INVALID_OWNER_ID code
   });
 
-  // TODO: The following test is skipped because it is not supported by the current implementation in services
-  // It does not return the correct error code and we can currently only check if it reverts
-  // therefore it will be skipped until the implementation is updated
-  // https://github.com/hashgraph/hedera-services/issues/17534
-  it.skip('should revert when trying to reject NFT tokens when 11 or more serials are provided', async function () {
+  it('should revert when trying to reject NFT tokens when 11 or more serials are provided', async function () {
     let serialNumbers = [];
     for (let i = 0; i < 11; i++) {
       serialNumbers.push(
@@ -536,7 +514,10 @@ describe('HIP904 IHRC904Facade ContractTest Suite', function () {
       );
     }
 
-    await expect(walletIHRC904NftFacadeReceiver.rejectTokenNFTs(serialNumbers))
-      .to.be.reverted;
+    const tx =
+      await walletIHRC904NftFacadeReceiver.rejectTokenNFTs(serialNumbers);
+    const responseCode = await utils.getHTSResponseCode(tx.hash);
+    const responseText = utils.decimalToAscii(responseCode);
+    expect(responseText).to.eq('TOKEN_REFERENCE_LIST_SIZE_LIMIT_EXCEEDED');
   });
 });

@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -20,7 +20,7 @@ jobs:
           submodules: recursive
 
       - name: Use Node.js [20]
-        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 20
 
@@ -28,9 +28,9 @@ jobs:
         run: npm install
 
       - name: Install Foundry
-        uses: step-security/foundry-toolchain@01e2d127ea061e2ce8fa34340de71ca8518f093e # v1.2.1
+        uses: step-security/foundry-toolchain@9997259130641e12dec5e2bfa071f3e370c0a250 # v1.2.2
         with:
-          version: nightly
+          version: stable
 
       - name: Parse and update response codes
         run: node scripts/hedera-response-codes-protobuf-parser.js
@@ -56,7 +56,7 @@ jobs:
           echo "PR_MILESTONE=$(curl -s https://api.github.com/repos/hashgraph/hedera-smart-contracts/milestones | jq '.'[0].number)" >> $GITHUB_ENV
 
       - name: Create Pull Request Target hedera-smart-contracts Repository
-        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
           branch: HederaResponseCodes-Periodical-Update/${{ github.run_id }}
           commit-message: 'chore: update HederaResponseContract.sol with the latest protobufs'

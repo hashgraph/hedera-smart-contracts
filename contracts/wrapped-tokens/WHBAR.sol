@@ -5,6 +5,7 @@ contract WHBAR {
     string public name = "Wrapped HBAR";
     string public symbol = "WHBAR";
     uint8 public decimals = 8;
+    uint256 private whbarTotalSupply = 0;
 
     event Approval(address indexed src, address indexed guy, uint wad);
     event Transfer(address indexed src, address indexed dst, uint wad);
@@ -13,6 +14,7 @@ contract WHBAR {
 
     error InsufficientFunds();
     error InsufficientAllowance();
+    error SendFailed();
 
     mapping(address user => uint balance) public balanceOf;
     mapping(address owner => mapping(address spender => uint amount)) public allowance;
@@ -27,6 +29,7 @@ contract WHBAR {
 
     function deposit() public payable {
         balanceOf[msg.sender] += msg.value;
+        whbarTotalSupply += msg.value;
 
         emit Deposit(msg.sender, msg.value);
     }
@@ -37,13 +40,17 @@ contract WHBAR {
         }
 
         balanceOf[msg.sender] -= wad;
-        payable(msg.sender).call{value: wad}("");
+        whbarTotalSupply -= wad;
+        (bool success, ) = payable(msg.sender).call{value: wad}("");
+        if (!success) {
+            revert SendFailed();
+        }
 
         emit Withdrawal(msg.sender, wad);
     }
 
     function totalSupply() public view returns (uint) {
-        return address(this).balance;
+        return whbarTotalSupply;
     }
 
     function approve(address guy, uint wad) public returns (bool) {
@@ -59,6 +66,9 @@ contract WHBAR {
     }
 
     function transferFrom(address src, address dst, uint wad) public returns (bool) {
+        if (dst == address(this)) {
+            revert SendFailed();
+        }
         if (!(balanceOf[src] >= wad)) {
             revert InsufficientFunds();
         }

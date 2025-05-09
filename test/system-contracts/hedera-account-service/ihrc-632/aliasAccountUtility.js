@@ -1,22 +1,4 @@
-/*-
- *
- * Hedera Smart Contracts
- *
- * Copyright (C) 2024 Hedera Hashgraph, LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
+// SPDX-License-Identifier: Apache-2.0
 
 const Utils = require('../../hedera-token-service/utils');
 const { expect } = require('chai');
@@ -62,7 +44,7 @@ describe('@HAS IHRC-632 Test Suite', () => {
 
   describe('getEvmAddressAlias', () => {
     // skipping since there's a bug in getEvmAddressAlias in the services
-    xit('Should execute getEvmAddressAliasPublic and get the corressponded evmAddressAlias', async () => {
+    it('Should execute getEvmAddressAliasPublic and get the corressponded evmAddressAlias', async () => {
       const tx = await aliasAccountUtility.getEvmAddressAliasPublic(
         walletAHederaAccountNumAlias,
         Constants.GAS_LIMIT_1_000_000
@@ -112,7 +94,7 @@ describe('@HAS IHRC-632 Test Suite', () => {
       ); // evm address
     });
 
-    it('Should execute getEvmAddressAliasPublic with not long zero address and get INVALID_ACOUNT_ID', async () => {
+    it('Should execute getEvmAddressAliasPublic with long zero address and get the corresponded evm address', async () => {
       const tx = await aliasAccountUtility.getEvmAddressAliasPublic(
         walletAHederaAccountNumAlias, // a long zero address
         Constants.GAS_LIMIT_1_000_000
@@ -123,8 +105,8 @@ describe('@HAS IHRC-632 Test Suite', () => {
       const evmAddressAlias = receipt.logs.find(
         (log) => log.fragment.name === 'AddressAliasResponse'
       ).args;
-      expect(evmAddressAlias[0]).to.eq(15); // responseCode 15 = INVALID_ACCOUNT_ID
-      expect(evmAddressAlias[1]).to.eq(ethers.ZeroAddress);
+      expect(evmAddressAlias[0]).to.eq(22); // responseCode 22 = success
+      expect(evmAddressAlias[1]).to.eq(walletA.address);
     });
   });
 

@@ -1,10 +1,8 @@
-:warning: :bangbang: ***All examples under this folder are exploration code and have NOT been audited. Use them at your own risk!*** :bangbang: :warning:
-
----
-
 ### WHBAR
 
 The WHBAR contract for Wrapped HBAR to help transactions that use native token payments.
+
+*Note: Always use the `deposit()` function to wrap HBAR. HBAR sent directly to the contract (via non-contract functions e.g via `CryptoTransfer` ) will be permanently locked in the contract due to Hedera’s `CryptoTransfer` mechanics.*
 
 ##### Properties:
 - name - ```string``` "Wrapped HBAR"
@@ -22,6 +20,7 @@ The WHBAR contract for Wrapped HBAR to help transactions that use native token p
 ##### Errors:
 - InsufficientFunds - ```error InsufficientFunds()```
 - InsufficientAllowance - ```error InsufficientAllowance()```
+- SendFailed - ```error SendFailed()```
 
 ##### Methods:
 - receive - ```receive() external payable```

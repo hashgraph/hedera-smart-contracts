@@ -6,7 +6,7 @@ import "./HederaTokenService.sol";
 
 abstract contract KeyHelper {
     using Bits for uint256;
-    address supplyContract;
+    address supplyContract = 0x0000000000000000000000000000000000000000;
 
     mapping(KeyType => uint256) keyTypes;
 

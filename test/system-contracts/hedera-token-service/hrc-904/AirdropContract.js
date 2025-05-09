@@ -1,29 +1,11 @@
-/*-
- *
- * Hedera Smart Contracts
- *
- * Copyright (C) 2025 Hedera Hashgraph, LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
+// SPDX-License-Identifier: Apache-2.0
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const utils = require('../utils');
 const Constants = require('../../../constants');
 
-describe('HIP904 AirdropContract Test Suite', function () {
+describe('HIP904Batch1 AirdropContract Test Suite', function () {
   let airdropContract;
   let tokenCreateContract;
   let erc20Contract;
@@ -202,9 +184,7 @@ describe('HIP904 AirdropContract Test Suite', function () {
     expect(nftOwner).to.equal(receiver);
   });
 
-  // TODO: Test skipped due to missing error code support in services implementation
-  // See: https://github.com/hashgraph/hedera-services/issues/17409
-  it.skip('should airdrop non-fungible tokens (NFT) to multiple accounts', async function () {
+  it('should airdrop non-fungible tokens (NFT) to multiple accounts', async function () {
     const nftTokenAddress = await utils.setupNft(
       tokenCreateContract,
       owner,
@@ -373,64 +353,55 @@ describe('HIP904 AirdropContract Test Suite', function () {
     expect(responseCode).to.eq('50'); // INVALID_TRANSACTION_BODY code
   });
 
-  // TODO: The following 2 tests are skipped because they are not supported by the current implementation in services
-  // They do not return the correct error code and we can currently only check if they revert
-  // therefore they will be skipped until the implementation is updated
-  it.skip('should fail when 11 or more NFT airdrops are provided', async function () {
-    try {
-      const nftTokens = [];
-      const nftSerials = [];
-      for (let i = 0; i < 11; i++) {
-        const tokenAddress = await utils.setupNft(
-          tokenCreateContract,
-          owner,
-          contractAddresses
-        );
-        const serial = await utils.mintNFTToAddress(
-          tokenCreateContract,
-          tokenAddress
-        );
-        nftTokens.push(tokenAddress);
-        nftSerials.push(serial);
-      }
-
-      const tx = await airdropContract.multipleNftAirdrop(
-        nftTokens,
+  it('should fail when 11 or more NFT airdrops are provided', async function () {
+    const nftTokens = [];
+    const nftSerials = [];
+    for (let i = 0; i < 11; i++) {
+      const tokenAddress = await utils.setupNft(
+        tokenCreateContract,
         owner,
-        signers[1].address,
-        nftSerials,
-        {
-          gasLimit: 15_000_000,
-        }
+        contractAddresses
       );
-      await tx.wait();
-      expect.fail('Should revert');
-    } catch (error) {
-      expect(error.shortMessage).to.eq('transaction execution reverted');
+      const serial = await utils.mintNFTToAddress(
+        tokenCreateContract,
+        tokenAddress
+      );
+      nftTokens.push(tokenAddress);
+      nftSerials.push(serial);
     }
+
+    const tx = await airdropContract.multipleNftAirdrop(
+      nftTokens,
+      owner,
+      signers[1].address,
+      nftSerials,
+      {
+        gasLimit: 15_000_000,
+      }
+    );
+    const responseCode = await utils.getHTSResponseCode(tx.hash);
+    const responseText = utils.decimalToAscii(responseCode);
+    expect(responseText).to.eq('TOKEN_REFERENCE_LIST_SIZE_LIMIT_EXCEEDED');
   });
 
-  it.skip('should fail when 11 or more token airdrops are provided', async function () {
-    try {
-      const ftAmount = BigInt(1);
-      const tokens = [];
-      for (let i = 0; i < 6; i++) {
-        tokens.push(
-          await utils.setupToken(tokenCreateContract, airdropContract, owner)
-        );
-      }
-      const tx = await airdropContract.multipleFtAirdrop(
-        tokens,
-        owner,
-        signers[1].address,
-        ftAmount,
-        Constants.GAS_LIMIT_2_000_000
+  it('should fail when 11 or more token airdrops are provided', async function () {
+    const ftAmount = BigInt(1);
+    const tokens = [];
+    for (let i = 0; i < 6; i++) {
+      tokens.push(
+        await utils.setupToken(tokenCreateContract, owner, contractAddresses)
       );
-      await tx.wait();
-      expect.fail('Should revert');
-    } catch (error) {
-      expect(error.shortMessage).to.eq('transaction execution reverted');
     }
+    const tx = await airdropContract.multipleFtAirdrop(
+      tokens,
+      owner,
+      signers[1].address,
+      ftAmount,
+      Constants.GAS_LIMIT_2_000_000
+    );
+    const responseCode = await utils.getHTSResponseCode(tx.hash);
+    const responseText = utils.decimalToAscii(responseCode);
+    expect(responseText).to.eq('TOKEN_REFERENCE_LIST_SIZE_LIMIT_EXCEEDED');
   });
 
   it('should handle airdrop to account with no available association slots', async function () {
@@ -453,9 +424,7 @@ describe('HIP904 AirdropContract Test Suite', function () {
     const disableAutoAssociations =
       await walletIHRC904AccountFacade.setUnlimitedAutomaticAssociations(
         false,
-        {
-          gasLimit: 2_000_000,
-        }
+        Constants.GAS_LIMIT_2_000_000
       );
     await disableAutoAssociations.wait();
 

@@ -1,22 +1,4 @@
-/*-
- *
- * Hedera Smart Contracts
- *
- * Copyright (C) 2023 Hedera Hashgraph, LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
+// SPDX-License-Identifier: Apache-2.0
 
 const hre = require('hardhat');
 const { ethers } = hre;
@@ -34,7 +16,7 @@ const {
   TokenAssociateTransaction,
   AccountBalanceQuery,
   ContractInfoQuery,
-  AccountDeleteTransaction
+  AccountDeleteTransaction,
 } = require('@hashgraph/sdk');
 const Constants = require('../../constants');
 const axios = require('axios');
@@ -735,17 +717,19 @@ class Utils {
   }
 
   static async getContractInfo(evmAddress, client) {
-    const query = new ContractInfoQuery().setContractId(ContractId.fromEvmAddress(0, 0, evmAddress));
+    const query = new ContractInfoQuery().setContractId(
+      ContractId.fromEvmAddress(0, 0, evmAddress)
+    );
 
     return await query.execute(client);
   }
 
   static async deleteAccount(account, signer, accountId) {
-    const accountDeleteTransaction = (await (new AccountDeleteTransaction()
-            .setAccountId(accountId)
-            .setTransferAccountId(signer.getOperator().accountId)
-            .freezeWith(signer)
-    ).sign(PrivateKey.fromStringECDSA(account.signingKey.privateKey)));
+    const accountDeleteTransaction = await new AccountDeleteTransaction()
+      .setAccountId(accountId)
+      .setTransferAccountId(signer.getOperator().accountId)
+      .freezeWith(signer)
+      .sign(PrivateKey.fromStringECDSA(account.signingKey.privateKey));
 
     await accountDeleteTransaction.execute(signer);
   }
@@ -770,6 +754,10 @@ class Utils {
     return hre.config.networks[network].accounts.map((pk) =>
       add0xPrefix ? pk : pk.replace('0x', '')
     );
+  }
+
+  static getHardhatSignerPrivateKeyByIndex(index = 0) {
+    return hre.config.networks[hre.network.name].accounts[index];
   }
 
   static async updateAccountKeysViaHapi(
@@ -873,8 +861,10 @@ class Utils {
     return hre.network.name;
   }
 
-  static async convertAccountIdToLongZeroAddress(accountId) {
-    return AccountId.fromString(accountId).toSolidityAddress();
+  static convertAccountIdToLongZeroAddress(accountId, prepend0x = false) {
+    const address = AccountId.fromString(accountId).toSolidityAddress();
+
+    return prepend0x ? '0x' + address : address;
   }
 
   static async associateWithSigner(privateKey, tokenAddress) {
@@ -1131,6 +1121,11 @@ class Utils {
     const mirrorNodeUrl = getMirrorNodeUrl(network);
     const response = await axios.get(`${mirrorNodeUrl}/accounts/${evmAddress}`);
     return response.data.max_automatic_token_associations;
+  }
+
+  static decimalToAscii(decimalStr) {
+    const hex = BigInt(decimalStr).toString(16);
+    return Buffer.from(hex, 'hex').toString('ascii');
   }
 }
 

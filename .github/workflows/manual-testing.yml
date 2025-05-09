@@ -197,11 +197,29 @@ jobs:
       mirrorTag: ${{inputs.mirrorNodeTag}}
       relayTag: ${{inputs.relayTag}}
 
-  HIP904:
-    name: HIP904 Contract Test Suite
+  HIP904Batch1:
+    name: HIP904 Contract Test Suite Batch 1
     uses: ./.github/workflows/test-workflow.yml
     with:
-      testfilter: 'HIP904'
+      testfilter: 'HIP904Batch1'
+      networkTag: ${{inputs.networkNodeTag}}
+      mirrorTag: ${{inputs.mirrorNodeTag}}
+      relayTag: ${{inputs.relayTag}}
+
+  HIP904Batch2:
+    name: HIP904 Contract Test Suite Batch 2
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: 'HIP904Batch2'
+      networkTag: ${{inputs.networkNodeTag}}
+      mirrorTag: ${{inputs.mirrorNodeTag}}
+      relayTag: ${{inputs.relayTag}}
+
+  HIP904Batch3:
+    name: HIP904 Contract Test Suite Batch 3
+    uses: ./.github/workflows/test-workflow.yml
+    with:
+      testfilter: 'HIP904Batch3'
       networkTag: ${{inputs.networkNodeTag}}
       mirrorTag: ${{inputs.mirrorNodeTag}}
       relayTag: ${{inputs.relayTag}}
