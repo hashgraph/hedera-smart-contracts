@@ -14,7 +14,7 @@ To verify that smart contract execution on Hedera (via EVM-compatible relay or S
 4. Full console output for transparency.
 5. Easily extendable to other networks.
 
-## Use cases covered (PoC)
+## Use cases covered
 1. Deploying a new smart contract
 2. Deploying a smart contract
 3. Deploying a smart contract with a deterministic address
