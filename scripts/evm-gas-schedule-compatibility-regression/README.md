@@ -39,7 +39,7 @@ $ npm install
 ### Test
 
 ```shell
-$ npm run test -- --executors=Sepolia::EVM,Hedera::Testnet::EVM,Hedera::Testnet::SDK,Hedera::Testnet::Sdk-ethTx
+$ npm run test --executors=Sepolia::EVM,Hedera::Testnet::EVM,Hedera::Testnet::SDK,Hedera::Testnet::Sdk-ethTx
 ```
 
 To run your tests, you need to provide two options:
