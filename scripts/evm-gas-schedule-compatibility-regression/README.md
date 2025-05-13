@@ -66,7 +66,6 @@ To run your tests, you need to provide two options:
    | `erc721::transferFrom`      | Transfer ERC721 Token    | Transfers an NFT from one account to another.                               |
    | `erc721::safeTransferFrom`  | Safe Transfer (ERC721)   | Securely transfers an NFT, checking the recipient can handle it.            |
 
-
 Use the example above if you’re using the default configuration (i.e., if you’ve copied .env.example to your .env file).
 
 ### Adding a new EVM network for comparison
@@ -143,13 +142,13 @@ The account ID of the node you want to connect to (defaults to 0.0.3 if not spec
 #### Available Executors
 
 1. **SDK**: Uses ContractCreate and ContractCall to submit transactions via the Hedera SDK. Example:
- ```shell
-$ npm run test --executors=Hedera::Testnet::SDK
- ```
+   ```shell
+   $ npm run test --executors=Hedera::Testnet::SDK
+   ```
 2. **SDK-EthTx**: Sends raw Ethereum-style transaction data using the SDK. Example:
- ```shell
-$ npm run test --executors=Hedera::Testnet::SDK-EthTx
- ```
+   ```shell
+   $ npm run test --executors=Hedera::Testnet::SDK-EthTx
+   ```
 
 ## Tolerance thresholds
 
