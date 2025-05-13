@@ -39,12 +39,29 @@ $ npm install
 ### Test
 
 ```shell
-$ npm run test -- --executors=Sepolia::EVM,Hedera::Testnet::EVM,Hedera::Testnet::SDK,Hedera::Testnet::Sdk-ethTx --operations=new-contract::deploy,erc20::transfer
+$ npm run test -- --executors=Sepolia::EVM,Hedera::Testnet::EVM,Hedera::Testnet::SDK,Hedera::Testnet::Sdk-ethTx
 ```
 
 To run your tests, you need to provide two options:
 1. A comma-separated list of executors.
-2. A comma-separated list of operations (currently, the PoC supports new-contract::deploy and erc20::transfer).
+2. A comma-separated list of operations. All tests will be executed by default if this option is omitted. Currently supported operations:
+   - new-contract::deploy
+   - create2::deploy
+   - deterministic::deploy
+   - delegate::call
+   - erc20::deploy
+   - erc20::mint
+   - erc20::burn
+   - erc20::transfer
+   - erc20::approve
+   - erc20::transferFrom
+   - erc721::deploy
+   - erc721::mint
+   - erc721::burn
+   - erc721::approve
+   - erc721::setApprovalForAll
+   - erc721::transferFrom
+   - erc721::safeTransferFrom
 
 Use the example above if you’re using the default configuration (i.e., if you’ve copied .env.example to your .env file).
 
@@ -67,7 +84,7 @@ To test against a new network:
 Run the script using your `NETWORK_ALIAS` as a command-line option. For example, if you named your network `MYNET`, run the tests like this:
 
 ```shell
-npm run test --executors=MYNET::EVM
+$ npm run test --executors=MYNET::EVM
 ```
 
 ### Comparison with non-EVM Hedera client calls
@@ -79,12 +96,12 @@ To enable SDK-based comparisons, additional executors have been added specifical
 #### Hedera SDK executors setup
 
 To use these SDK-based executors, you’ll need to define the following environment variable in your .env file:
-```
+```env
 HEDERA_{NETWORK}_ACCOUNT_ID=
 ```
 Replace {NETWORK} with the Hedera network you’re testing against. Available options:
 
-```
+```env
 HEDERA_TESTNET_ACCOUNT_ID=
 HEDERA_PREVIEWNET_ACCOUNT_ID=
 HEDERA_MAINNET_ACCOUNT_ID=
@@ -92,19 +109,23 @@ HEDERA_CUSTOM_ACCOUNT_ID=
 ```
 This variable should contain your operator account ID, which is required to initialize the Hedera SDK client.
 
+Additionally, `HEDERA_{NETWORK}_PRIVATE_KEY` must be set (ensure that you use the correct Hedera ECDSA private key).
+To run the `SDK-ETHTX` executor tests, the JSON-RPC URL must also be set in the `HEDERA_{NETWORK}_RPC_URL` variable.
+
+
 If you’re testing against a custom network, you also need to set the following variables:
-```
+```env
 HEDERA_CUSTOM_GRPC_URL=
 ```
 
 The address and port of your consensus node, e.g., 127.0.0.1:50211.
 
-```
+```env
 HEDERA_CUSTOM_MIRRORNODE_URL=
 ```
 The URL of the mirror node for your custom Hedera network, e.g., http://127.0.0.1:5551/api/v1
 
-```
+```env
 HEDERA_CUSTOM_NODE_ACCOUNT=
 ```
 The account ID of the node you want to connect to (defaults to 0.0.3 if not specified).
@@ -119,11 +140,11 @@ The account ID of the node you want to connect to (defaults to 0.0.3 if not spec
 
 1. **SDK**: Uses ContractCreate and ContractCall to submit transactions via the Hedera SDK. Example:
  ```shell
-  npm run test --executors=Hedera::Testnet::SDK
+$ npm run test --executors=Hedera::Testnet::SDK
  ```
 2. **SDK-EthTx**: Sends raw Ethereum-style transaction data using the SDK. Example:
  ```shell
-  npm run test --executors=Hedera::Testnet::SDK-EthTx
+$ npm run test --executors=Hedera::Testnet::SDK-EthTx
  ```
 
 ## Tolerance thresholds
@@ -134,13 +155,13 @@ The tolerances determine the maximum permissible differences between executor ou
 
 To configure tolerance thresholds, define environment variables with the naming convention:
 
-```
+```env
 TOLERANCE_{EXECUTOR_1}_{EXECUTOR_2}
 ```
 
 Where `{EXECUTOR_1}` and `{EXECUTOR_2}` follow the format:
 
-```
+```env
 {NETWORK}_{TYPE}
 ```
 
@@ -159,7 +180,7 @@ Where `{EXECUTOR_1}` and `{EXECUTOR_2}` follow the format:
 
 Set these thresholds as environment variables before running tests to customize your acceptance criteria (or update the values stored in the `.env` file):
 
-```bash
+```shell
 export TOLERANCE_SEPOLIA_EVM_HEDERA_TESTNET_EVM=90
 export TOLERANCE_SEPOLIA_EVM_HEDERA_TESTNET_SDK=90
 # ...other tolerances

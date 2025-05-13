@@ -57,8 +57,8 @@ const tests = [
 ];
 
 const executors = get('executors');
-if (executors.length === 1) {
-    console.error('Please specify at least two executors. E.g. --executors=Sepolia::EVM,Hedera::Testnet::SDk');
+if (executors.length === 0) {
+    console.error(`Please specify at least one executor, e.g.: \nnpm run test --executors=Hedera::Testnet::EVM\n`);
     process.exit(1);
 }
 

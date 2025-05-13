@@ -69,6 +69,24 @@ for (const test of tests) {
                 const comparisonsMade = [];
                 for (const executor of executors) {
                     for (const toCompare of executors) {
+                        if (executor === toCompare && executors.length === 1) {
+                            it(
+                                'Should skip comparison when only one executor was provided (nothing to compare)',
+                                function () {
+                                    const valueToCompare = (element) => element?.additionalData?.gasConsumed || element?.gasUsed || null;
+                                    console.table(
+                                        Object.entries(gasUsages).map(([key, element]) => ({
+                                            'Executor': key,
+                                            'Gas used': element.gasUsed,
+                                            'Consumed': valueToCompare(element),
+                                            'Transaction hash': element.transactionHash,
+                                            'Error': element.error || null,
+                                        })),
+                                    );
+                                    this.skip();
+                                }
+                            );
+                        }
                         if (executor === toCompare || comparisonsMade.includes(`${toCompare}::${executor}`)) continue;
                         comparisonsMade.push(`${executor}::${toCompare}`);
                         it(
