@@ -1,0 +1,11 @@
+# Compiler files
+cache/
+
+# Npm dependencies
+node_modules/
+
+# Dotenv file
+.env
+
+# WebStorm
+.idea
