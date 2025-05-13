@@ -84,6 +84,8 @@ To test against a new network:
 
 > ✅ Make sure the private key is prefixed with `0x`. Only ECDSA keys are supported.
 
+> ⚠️ **Warning:** All tests require transactions to be mined, which means the private key you provide must belong to an account with sufficient funds. Transaction fees will be paid by this account. To avoid unintended costs, **always use a test networks** to run this script unless you are absolutely sure you want to cover all expenses on the main networks.
+
 Run the script using your `NETWORK_ALIAS` as a command-line option. For example, if you named your network `MYNET`, run the tests like this:
 
 ```shell
@@ -115,6 +117,9 @@ This variable should contain your operator account ID, which is required to init
 Additionally, `HEDERA_{NETWORK}_PRIVATE_KEY` must be set (ensure that you use the correct Hedera ECDSA private key).
 To run the `SDK-ETHTX` executor tests, the JSON-RPC URL must also be set in the `HEDERA_{NETWORK}_RPC_URL` variable.
 
+> ✅ Make sure the private key is prefixed with `0x`. Only ECDSA keys are supported.
+
+> ⚠️ **Warning:** All tests require transactions to be mined, which means the private key you provide must belong to an account with sufficient funds. Transaction fees will be paid by this account. To avoid unintended costs, **always use a test networks** to run this script unless you are absolutely sure you want to cover all expenses on the main networks.
 
 If you’re testing against a custom network, you also need to set the following variables:
 ```env
