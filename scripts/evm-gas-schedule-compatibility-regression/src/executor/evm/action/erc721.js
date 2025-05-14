@@ -1,6 +1,7 @@
 const { ethers: { ContractFactory, Wallet, Contract } } = require('ethers');
 const { loadArtifact } = require('../../../utils/artifact');
 const { options } = require('../options');
+
 const artifact = loadArtifact('ERC721');
 
 /**
@@ -59,7 +60,7 @@ const mint = async function (wallet, cache) {
   const contract = getContract(contractAddress, wallet);
   const tx = await contract.mint(wallet.address, await options(wallet, 200000));
   const receipt = await tx.wait();
-  if (!receipt) throw new Error("Failed to get transaction receipt");
+  if (!receipt) throw new Error('Failed to get transaction receipt');
   const totalTokens = Number(cache.read('erc721::total') || '0');
   cache.write('erc721::total', `${totalTokens + 1}`);
   cache.write('erc721::last', `${totalTokens + 1}`);
@@ -81,7 +82,7 @@ const burn = async function (wallet, cache) {
   const tx = await contract.burn(lastToken - 1, await options(wallet, 200000));
   cache.write('erc721::last', '0');
   const receipt = await tx.wait();
-  if (!receipt) throw new Error("Failed to get transaction receipt");
+  if (!receipt) throw new Error('Failed to get transaction receipt');
   return {
     success: true,
     gasUsed: Number(receipt.gasUsed) || 0,
@@ -100,7 +101,7 @@ const approve = async function (wallet, cache) {
   const tx = await contract.approve(randomWallet.address, lastToken - 1, await options(wallet, 200000));
   cache.write('erc721::last', '0');
   const receipt = await tx.wait();
-  if (!receipt) throw new Error("Failed to get transaction receipt");
+  if (!receipt) throw new Error('Failed to get transaction receipt');
   return {
     success: true,
     gasUsed: Number(receipt.gasUsed) || 0,
@@ -120,7 +121,7 @@ const setApprovalForAll = async function (wallet, cache) {
   const randomWallet = Wallet.createRandom();
   const tx = await contract.setApprovalForAll(randomWallet.address, true, await options(wallet, 200000));
   const receipt = await tx.wait();
-  if (!receipt) throw new Error("Failed to get transaction receipt");
+  if (!receipt) throw new Error('Failed to get transaction receipt');
   return {
     success: true,
     gasUsed: Number(receipt.gasUsed) || 0,
@@ -139,7 +140,7 @@ const transferFrom = async function (wallet, cache) {
   const tx = await contract.transferFrom(wallet.address, randomWallet.address, lastToken - 1, await options(wallet, 200000));
   cache.write('erc721::last', '0');
   const receipt = await tx.wait();
-  if (!receipt) throw new Error("Failed to get transaction receipt");
+  if (!receipt) throw new Error('Failed to get transaction receipt');
   return {
     success: true,
     gasUsed: Number(receipt.gasUsed) || 0,
@@ -158,7 +159,7 @@ const safeTransferFrom = async function (wallet, cache) {
   const tx = await contract['safeTransferFrom(address,address,uint256)'](wallet.address, randomWallet.address, lastToken - 1, await options(wallet, 200000));
   cache.write('erc721::last', '0');
   const receipt = await tx.wait();
-  if (!receipt) throw new Error("Failed to get transaction receipt");
+  if (!receipt) throw new Error('Failed to get transaction receipt');
   return {
     success: true,
     gasUsed: Number(receipt.gasUsed) || 0,

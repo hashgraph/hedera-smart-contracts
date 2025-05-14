@@ -2,8 +2,8 @@
 
 const { Client, PrivateKey, AccountId } = require('@hashgraph/sdk');
 const dotenv = require('dotenv');
-const { Cache } = require('../../cache');
 const { JsonRpcProvider, Wallet } = require('ethers');
+const { Cache } = require('../../cache');
 
 dotenv.config();
 
@@ -34,7 +34,7 @@ class HederaSdkExecutor {
       mainnet: () => Client.forMainnet(),
       testnet: () => Client.forTestnet(),
       previewnet: () => Client.forPreviewnet(),
-      custom: () => Client.forNetwork(getGrpcConfig())
+      custom: () => Client.forNetwork(getGrpcConfig()),
     }[name.split('::')[1].toLowerCase()] || null;
     if (networkClient === null) throw new Error(`Unknown hedera network: ${name.split('::')[1]}`);
     this.client = networkClient().setOperator(operatorId, operatorPrivateKey);

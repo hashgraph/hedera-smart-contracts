@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
+const { ContractFunctionParameters } = require('@hashgraph/sdk');
 const { loadArtifact } = require('../../../../utils/artifact');
 const hedera = require('../../client');
-const { ContractFunctionParameters } = require('@hashgraph/sdk');
+
 const artifact = loadArtifact('Counter');
 
 /**

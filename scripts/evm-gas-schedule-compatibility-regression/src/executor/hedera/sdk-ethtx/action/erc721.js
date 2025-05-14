@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
-const { loadArtifact } = require('../../../../utils/artifact');
-const hedera = require('../../client');
-const { options } = require("../../../evm/options");
 const { ethers: { ContractFactory, Wallet, Contract } } = require('ethers');
+const hedera = require('../../client');
+const { loadArtifact } = require('../../../../utils/artifact');
+const { options } = require('../../../evm/options');
+
 const artifact = loadArtifact('ERC721');
 
 /**
@@ -22,6 +23,25 @@ const getContract = function (address, wallet) {
  * @param {import('@hashgraph/sdk').Client} client
  * @param {import('ethers').Wallet} wallet
  * @param {Cache} cache
+ * @returns {Promise<{lastToken: number, tx: import('ethers').PreparedTransactionRequest, contract: import('ethers').BaseContract }>}
+ */
+const initTokenId = async function (client, wallet, cache) {
+  let contractAddress = cache.read('erc721::contract::sdk-ethTx');
+  if (contractAddress === null) contractAddress = (await deploy(client, wallet, cache)).additionalData.contractAddress;
+  const contract = getContract(contractAddress, wallet);
+  let lastToken = Number(cache.read('erc721::last::sdk-ethTx') || '0');
+  if (!lastToken) lastToken = (await mint(client, wallet, cache)).additionalData.lastToken;
+  const tx = {
+    ...(await options(wallet, 200000)),
+    to: contractAddress,
+  };
+  return { lastToken, tx, contract };
+}
+
+/**
+ * @param {import('@hashgraph/sdk').Client} client
+ * @param {import('ethers').Wallet} wallet
+ * @param {Cache} cache
  * @returns {Promise<{gasUsed: (number|number), success: boolean, additionalData: {contractAddress: string}, transactionHash: string}>}
  */
 const deploy = async function (client, wallet, cache) {
@@ -34,7 +54,7 @@ const deploy = async function (client, wallet, cache) {
     { ...tx, to: null, type: 2, accessList: [] }
   );
   const contractAddress = evmAddress || contractId.toSolidityAddress();
-  cache.write('erc721::contract::sdk-ethtx', contractAddress);
+  cache.write('erc721::contract::sdk-ethTx', contractAddress);
   return {
     success: status,
     gasUsed,
@@ -47,10 +67,10 @@ const deploy = async function (client, wallet, cache) {
  * @param {import('@hashgraph/sdk').Client} client
  * @param {import('ethers').Wallet} wallet
  * @param {Cache} cache
- * @returns {Promise<{gasUsed: (number|number), success: boolean, transactionHash: string, additionalData: { hederaTxId: string }}>}
+ * @returns {Promise<{gasUsed: (number|number), success: boolean, transactionHash: string, additionalData: { lastToken: number, hederaTxId: string }}>}
  */
 const mint = async function (client, wallet, cache) {
-  let contractAddress = cache.read('erc721::contract::sdk-ethtx');
+  let contractAddress = cache.read('erc721::contract::sdk-ethTx');
   if (contractAddress === null) contractAddress = (await deploy(client, wallet, cache)).additionalData.contractAddress;
   const contract = getContract(contractAddress, wallet);
   const txData = contract.interface.encodeFunctionData('mint(address)', [wallet.address]);
@@ -66,9 +86,9 @@ const mint = async function (client, wallet, cache) {
     { ...tx, type: 2, accessList: [] }
   );
 
-  const totalTokens = Number(cache.read('erc721::total::sdk-ethtx') || '0');
-  cache.write('erc721::total::sdk-ethtx', `${totalTokens + 1}`);
-  cache.write('erc721::last::sdk-ethtx', `${totalTokens + 1}`);
+  const totalTokens = Number(cache.read('erc721::total::sdk-ethTx') || '0');
+  cache.write('erc721::total::sdk-ethTx', `${totalTokens + 1}`);
+  cache.write('erc721::last::sdk-ethTx', `${totalTokens + 1}`);
   return {
     success: status,
     gasUsed,
@@ -84,18 +104,9 @@ const mint = async function (client, wallet, cache) {
  * @returns {Promise<{gasUsed: (number|number), success: boolean, transactionHash: string, additionalData: { hederaTxId: string }}>}
  */
 const burn = async function (client, wallet, cache) {
-  let contractAddress = cache.read('erc721::contract::sdk-ethtx');
-  if (contractAddress === null) contractAddress = (await deploy(client, wallet, cache)).additionalData.contractAddress;
-  const contract = getContract(contractAddress, wallet);
-  let lastToken = Number(cache.read('erc721::last::sdk-ethtx') || '0');
-  if (!lastToken) lastToken = (await mint(client, wallet, cache)).additionalData.lastToken;
-  const txData = contract.interface.encodeFunctionData('burn(uint256)', [lastToken - 1]);
-  const tx = {
-    ...(await options(wallet, 200000)),
-    to: contractAddress,
-    data: txData,
-  };
-  cache.write('erc721::last::sdk-ethtx', '0');
+  const { tx, lastToken, contract } = await initTokenId(client, wallet, cache);
+  tx.data = contract.interface.encodeFunctionData('burn(uint256)', [lastToken - 1]);
+  cache.write('erc721::last::sdk-ethTx', '0');
   const { status, gasUsed, contractId, transactionHash } = await hedera.forward(
       client,
       client.getOperator().accountId,
@@ -106,7 +117,7 @@ const burn = async function (client, wallet, cache) {
     success: status,
     gasUsed,
     transactionHash: '',
-    additionalData: { contractAddress, contractId, hederaTxId: `0x${transactionHash}` },
+    additionalData: { contractId, hederaTxId: `0x${transactionHash}` },
   };
 };
 
@@ -117,19 +128,9 @@ const burn = async function (client, wallet, cache) {
  * @returns {Promise<{gasUsed: (number|number), success: boolean, transactionHash: string, additionalData: { hederaTxId: string }}>}
  */
 const approve = async function (client, wallet, cache) {
-  let contractAddress = cache.read('erc721::contract::sdk-ethtx');
-  if (contractAddress === null) contractAddress = (await deploy(client, wallet, cache)).additionalData.contractAddress;
-  const contract = getContract(contractAddress, wallet);
-  let lastToken = Number(cache.read('erc721::last::sdk-ethtx') || '0');
-  if (!lastToken) lastToken = (await mint(client, wallet, cache)).additionalData.lastToken;
-  const randomWallet = Wallet.createRandom();
-  cache.write('erc721::last::sdk-ethtx', '0');
-  const txData = contract.interface.encodeFunctionData('approve(address,uint256)', [randomWallet.address, lastToken - 1]);
-  const tx = {
-    ...(await options(wallet, 200000)),
-    to: contractAddress,
-    data: txData,
-  };
+  const { tx, lastToken, contract } = await initTokenId(client, wallet, cache);
+  tx.data = contract.interface.encodeFunctionData('approve(address,uint256)', [Wallet.createRandom().address, lastToken - 1]);
+  cache.write('erc721::last::sdk-ethTx', '0');
   const { status, gasUsed, contractId, transactionHash } = await hedera.forward(
     client,
     client.getOperator().accountId,
@@ -140,7 +141,7 @@ const approve = async function (client, wallet, cache) {
     success: status,
     gasUsed,
     transactionHash: '',
-    additionalData: { contractAddress, contractId, hederaTxId: `0x${transactionHash}` },
+    additionalData: { contractId, hederaTxId: `0x${transactionHash}` },
   };
 };
 
@@ -151,7 +152,7 @@ const approve = async function (client, wallet, cache) {
  * @returns {Promise<{gasUsed: (number|number), success: boolean, transactionHash: string, additionalData: { hederaTxId: string }}>}
  */
 const setApprovalForAll = async function (client, wallet, cache) {
-  let contractAddress = cache.read('erc721::contract::sdk-ethtx');
+  let contractAddress = cache.read('erc721::contract::sdk-ethTx');
   if (contractAddress === null) contractAddress = (await deploy(client, wallet, cache)).additionalData.contractAddress;
   const contract = getContract(contractAddress, wallet);
   const randomWallet = Wallet.createRandom();
@@ -182,19 +183,9 @@ const setApprovalForAll = async function (client, wallet, cache) {
  * @returns {Promise<{gasUsed: (number|number), success: boolean, transactionHash: string, additionalData: { hederaTxId: string }}>}
  */
 const transferFrom = async function (client, wallet, cache) {
-  let contractAddress = cache.read('erc721::contract::sdk-ethtx');
-  if (contractAddress === null) contractAddress = (await deploy(client, wallet, cache)).additionalData.contractAddress;
-  const contract = getContract(contractAddress, wallet);
-  let lastToken = Number(cache.read('erc721::last::sdk-ethtx') || '0');
-  if (!lastToken) lastToken = (await mint(client, wallet, cache)).additionalData.lastToken;
-  const randomWallet = Wallet.createRandom();
-  const txData = contract.interface.encodeFunctionData('transferFrom(address,address,uint256)', [wallet.address, randomWallet.address, lastToken - 1]);
-  const tx = {
-    ...(await options(wallet, 200000)),
-    to: contractAddress,
-    data: txData,
-  };
-  cache.write('erc721::last::sdk-ethtx', '0');
+  const { tx, lastToken, contract } = await initTokenId(client, wallet, cache);
+  tx.data = contract.interface.encodeFunctionData('transferFrom(address,address,uint256)', [wallet.address, Wallet.createRandom().address, lastToken - 1]);
+  cache.write('erc721::last::sdk-ethTx', '0');
   const { status, gasUsed, contractId, transactionHash } = await hedera.forward(
     client,
     client.getOperator().accountId,
@@ -205,7 +196,7 @@ const transferFrom = async function (client, wallet, cache) {
     success: status,
     gasUsed,
     transactionHash: '',
-    additionalData: { contractAddress, contractId, hederaTxId: `0x${transactionHash}` },
+    additionalData: { contractId, hederaTxId: `0x${transactionHash}` },
   };
 };
 
@@ -216,30 +207,20 @@ const transferFrom = async function (client, wallet, cache) {
  * @returns {Promise<{gasUsed: (number|number), success: boolean, transactionHash: string, additionalData: { hederaTxId: string }}>}
  */
 const safeTransferFrom = async function (client, wallet, cache) {
-  let contractAddress = cache.read('erc721::contract::sdk-ethtx');
-  if (contractAddress === null) contractAddress = (await deploy(client, wallet, cache)).additionalData.contractAddress;
-  const contract = getContract(contractAddress, wallet);
-  let lastToken = Number(cache.read('erc721::last::sdk-ethtx') || '0');
-  if (!lastToken) lastToken = (await mint(client, wallet, cache)).additionalData.lastToken;
-  const randomWallet = Wallet.createRandom();
-  const txData = contract.interface.encodeFunctionData('transferFrom(address,address,uint256)', [wallet.address, randomWallet.address, lastToken - 1]);
-  const tx = {
-    ...(await options(wallet, 200000)),
-    to: contractAddress,
-    data: txData,
-  };
-  cache.write('erc721::last::sdk-ethtx', '0');
+  const { tx, lastToken, contract } = await initTokenId(client, wallet, cache);
+  tx.data = contract.interface.encodeFunctionData('safeTransferFrom(address,address,uint256)', [wallet.address, Wallet.createRandom().address, lastToken - 1]);
+  cache.write('erc721::last::sdk-ethTx', '0');
   const { status, gasUsed, contractId, transactionHash } = await hedera.forward(
-    client,
-    client.getOperator().accountId,
-    wallet,
-    { ...tx, type: 2, accessList: [] }
+      client,
+      client.getOperator().accountId,
+      wallet,
+      { ...tx, type: 2, accessList: [] }
   );
   return {
     success: status,
     gasUsed,
     transactionHash: '',
-    additionalData: { contractAddress, contractId, hederaTxId: `0x${transactionHash}` },
+    additionalData: { contractId, hederaTxId: `0x${transactionHash}` },
   };
 };
 

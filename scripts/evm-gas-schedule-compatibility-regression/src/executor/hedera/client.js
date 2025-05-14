@@ -1,9 +1,16 @@
 // SPDX-License-Identifier: Apache-2.0
 
-const { TransactionId, EthereumTransaction, Hbar,
-  ContractFunctionParameters, ContractCreateFlow, ContractExecuteTransaction, FileCreateTransaction,
-  FileAppendTransaction, EthereumTransactionData
-} = require("@hashgraph/sdk");
+const {
+  TransactionId,
+  EthereumTransaction,
+  Hbar,
+  ContractFunctionParameters,
+  ContractCreateFlow,
+  ContractExecuteTransaction,
+  FileCreateTransaction,
+  FileAppendTransaction,
+  EthereumTransactionData,
+} = require('@hashgraph/sdk');
 
 const FILE_APPEND_CHUNK_SIZE = 5120;
 const FILE_APPEND_MAX_CHUNKS = 30;
@@ -34,9 +41,9 @@ async function createFile(callData, client) {
 
 module.exports = {
   /**
-   * @param {import("@hashgraph/sdk").Client} client
-   * @param {import("@hashgraph/sdk").AccountId} accountId
-   * @param {import("ethers").Wallet} wallet
+   * @param {import('@hashgraph/sdk').Client} client
+   * @param {import('@hashgraph/sdk').AccountId} accountId
+   * @param {import('ethers').Wallet} wallet
    * @param {import('ethers').PreparedTransactionRequest} ethTransaction
    * @returns {Promise<{ status: boolean, gasUsed: number, transactionId: string }>}
    */
@@ -81,10 +88,10 @@ module.exports = {
   },
 
   /**
-   * @param {import("@hashgraph/sdk").Client} client
+   * @param {import('@hashgraph/sdk').Client} client
    * @param {string} bytecode
    * @param {ContractFunctionParameters|undefined} parameters
-   * @returns {Promise<{ status: boolean, gasUsed: number, transactionId: string, transactionHash: string, contractId: import("@hashgraph/sdk").ContractId }>}
+   * @returns {Promise<{ status: boolean, gasUsed: number, transactionId: string, transactionHash: string, contractId: import('@hashgraph/sdk').ContractId }>}
    */
   deploy: async function (client, bytecode, parameters) {
     const contractTx = await new ContractCreateFlow()
@@ -104,8 +111,8 @@ module.exports = {
   },
 
   /**
-   * @param {import("@hashgraph/sdk").Client} client
-   * @param {import("@hashgraph/sdk").ContractId} contractId
+   * @param {import('@hashgraph/sdk').Client} client
+   * @param {import('@hashgraph/sdk').ContractId} contractId
    * @param {string} method
    * @param {ContractFunctionParameters|undefined} parameters
    * @returns {Promise<{ status: boolean, gasUsed: number, transactionId: string, transactionHash: string, contractAddress: string }>}

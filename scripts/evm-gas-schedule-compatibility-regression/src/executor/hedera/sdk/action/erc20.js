@@ -1,10 +1,19 @@
 // SPDX-License-Identifier: Apache-2.0
 
-const { loadArtifact } = require('../../../../utils/artifact');
-const hedera = require('../../client');
 const { ContractFunctionParameters, ContractId } = require('@hashgraph/sdk');
 const { Wallet } = require('ethers');
+const hedera = require('../../client');
+const { loadArtifact } = require('../../../../utils/artifact');
+
 const artifact = loadArtifact('ERC20');
+
+const initContractId = async function(client, cache) {
+  let contractAddress = cache.read('erc20::contract');
+  if (contractAddress === null) contractAddress = (await deploy(client, cache)).additionalData.contractAddress;
+  return ContractId.fromEvmAddress(0, 0, contractAddress);
+}
+
+const amount = Number(BigInt(100) * BigInt(10**18));
 
 /**
  * @param {import('@hashgraph/sdk').Client} client
@@ -34,15 +43,12 @@ const deploy = async function (client, cache) {
  * @returns {Promise<{gasUsed: (number|number), success: boolean, transactionHash: string}>}
  */
 const mint = async function (client, cache) {
-  let contractAddress = cache.read('erc20::contract');
-  if (contractAddress === null) contractAddress = (await deploy(client, cache)).additionalData.contractAddress;
-  const transferAmount = BigInt(100) * BigInt(10**18);
-  const contractId = ContractId.fromEvmAddress(0, 0, contractAddress);
+  const contractId = await initContractId(client, cache);
   const { status, gasUsed, transactionHash } = await hedera.call(
     client,
     contractId,
     'mint',
-    new ContractFunctionParameters().addUint256(Number(transferAmount)),
+    new ContractFunctionParameters().addUint256(amount),
   );
 
   return {
@@ -59,15 +65,12 @@ const mint = async function (client, cache) {
  * @returns {Promise<{gasUsed: (number|number), success: boolean, transactionHash: string}>}
  */
 const burn = async function (client, cache) {
-  let contractAddress = cache.read('erc20::contract');
-  if (contractAddress === null) contractAddress = (await deploy(client, cache)).additionalData.contractAddress;
-  const transferAmount = BigInt(100) * BigInt(10**18);
-  const contractId = ContractId.fromEvmAddress(0, 0, contractAddress);
+  const contractId = await initContractId(client, cache);
   const { status, gasUsed, transactionHash } = await hedera.call(
     client,
     contractId,
     'burn',
-    new ContractFunctionParameters().addUint256(Number(transferAmount)),
+    new ContractFunctionParameters().addUint256(amount),
   );
 
   return {
@@ -84,18 +87,14 @@ const burn = async function (client, cache) {
  * @returns {Promise<{gasUsed: (number|number), success: boolean, transactionHash: string}>}
  */
 const transfer = async function (client, cache) {
-  let contractAddress = cache.read('erc20::contract');
-  if (contractAddress === null) contractAddress = (await deploy(client, cache)).additionalData.contractAddress;
-  const transferAmount = BigInt(100) * BigInt(10**18);
-  const randomWallet = Wallet.createRandom();
-  const contractId = ContractId.fromEvmAddress(0, 0, contractAddress);
+  const contractId = await initContractId(client, cache);
   const { status, gasUsed, transactionHash } = await hedera.call(
     client,
     contractId,
     'transfer',
     new ContractFunctionParameters()
-      .addAddress(randomWallet.address)
-      .addUint256(Number(transferAmount)),
+      .addAddress(Wallet.createRandom().address)
+      .addUint256(amount),
   );
 
   return {
@@ -112,18 +111,14 @@ const transfer = async function (client, cache) {
  * @returns {Promise<{gasUsed: (number|number), success: boolean, transactionHash: string}>}
  */
 const approve = async function (client, cache) {
-  let contractAddress = cache.read('erc20::contract');
-  if (contractAddress === null) contractAddress = (await deploy(client, cache)).additionalData.contractAddress;
-  const transferAmount = BigInt(100) * BigInt(10**18);
-  const randomWallet = Wallet.createRandom();
-  const contractId = ContractId.fromEvmAddress(0, 0, contractAddress);
+  const contractId = await initContractId(client, cache);
   const { status, gasUsed, transactionHash } = await hedera.call(
     client,
     contractId,
     'approve',
     new ContractFunctionParameters()
-      .addAddress(randomWallet.address)
-      .addUint256(Number(transferAmount)),
+      .addAddress(Wallet.createRandom().address)
+      .addUint256(amount),
   );
 
   return {
@@ -140,19 +135,15 @@ const approve = async function (client, cache) {
  * @returns {Promise<{gasUsed: (number|number), success: boolean, transactionHash: string}>}
  */
 const transferFrom = async function (client, cache) {
-  let contractAddress = cache.read('erc20::contract');
-  if (contractAddress === null) contractAddress = (await deploy(client, cache)).additionalData.contractAddress;
-  const transferAmount = BigInt(100) * BigInt(10**18);
-  const randomWallet = Wallet.createRandom();
-  const contractId = ContractId.fromEvmAddress(0, 0, contractAddress);
+  const contractId = await initContractId(client, cache);
   const { status, gasUsed, transactionHash } = await hedera.call(
     client,
     contractId,
     'transferFrom',
     new ContractFunctionParameters()
       .addAddress(`${client.getOperator().publicKey.toEvmAddress()}`)
-      .addAddress(randomWallet.address)
-      .addUint256(Number(transferAmount)),
+      .addAddress(Wallet.createRandom().address)
+      .addUint256(amount),
   );
 
   return {

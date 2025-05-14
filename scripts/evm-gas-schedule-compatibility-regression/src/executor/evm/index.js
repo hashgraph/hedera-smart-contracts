@@ -2,7 +2,7 @@
 
 const { ethers: { JsonRpcProvider, Wallet } } = require('ethers');
 const dotenv = require('dotenv');
-const { Cache } = require("../../cache");
+const { Cache } = require('../../cache');
 
 dotenv.config();
 
@@ -11,11 +11,11 @@ class EvmExecutor {
     const envVariablePrefix = name.split('::EVM')[0].split('::').join('_').toUpperCase();
     const getEnvVar = (variable) => {
       const value = process.env[`${envVariablePrefix}_${variable}`] || '';
-      if (!value) throw new Error(`Missing environment variable: ${envVariablePrefix}_${variable}. It needs to be set in order for executor ${name} to work correctly`);
+      if (!value) throw new Error(`Missing environment variable: ${envVariablePrefix}_${variable}. It needs to be set in order for evm executor ${name} to work correctly`);
       return value;
     };
-    const privateKey = getEnvVar('PRIVATE_KEY');
     const rpcUrl = getEnvVar('RPC_URL');
+    const privateKey = getEnvVar('PRIVATE_KEY');
     if (!privateKey.startsWith('0x')) throw new Error(`Private key ${envVariablePrefix}_PRIVATE_KEY must start with 0x prefix`);
     try { new URL(rpcUrl); } catch (_) {  throw new Error(`RPC URL: ${envVariablePrefix}_RPC_URL must be a valid url.`); }
 

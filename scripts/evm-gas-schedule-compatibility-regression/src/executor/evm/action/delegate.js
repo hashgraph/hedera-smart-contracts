@@ -29,7 +29,7 @@ const initCaller = async function (wallet, cache) {
   const contractAddress = await tx.getAddress();
   const receipt = await tx.deploymentTransaction().wait();
   if (!receipt) throw new Error('Failed to get transaction receipt');
-  cache.write('delegatecall::caller', contractAddress);
+  cache.write('delegate::call::caller', contractAddress);
   return {
     success: true,
     gasUsed: Number(receipt.gasUsed) || 0,
@@ -49,7 +49,7 @@ const initCounter = async function (wallet, cache) {
   const contractAddress = await tx.getAddress();
   const receipt = await tx.deploymentTransaction().wait();
   if (!receipt) throw new Error('Failed to get transaction receipt');
-  cache.write('delegatecall::counter', contractAddress);
+  cache.write('delegate::call::counter', contractAddress);
   return {
     success: true,
     gasUsed: Number(receipt.gasUsed) || 0,
@@ -64,14 +64,14 @@ const initCounter = async function (wallet, cache) {
  * @returns {Promise<{gasUsed: (number|number), success: boolean, transactionHash: string}>}
  */
 const call = async function (wallet, cache) {
-  let callerAddress = cache.read('delegatecall::caller');
-  let counterAddress = cache.read('delegatecall::counter');
+  let callerAddress = cache.read('delegate::call::caller');
+  let counterAddress = cache.read('delegate::call::counter');
   if (callerAddress === null) callerAddress = (await initCaller(wallet, cache)).additionalData.contractAddress;
   if (counterAddress === null) counterAddress = (await initCounter(wallet, cache)).additionalData.contractAddress;
   const caller = getCallerContract(callerAddress, wallet);
   const tx = await caller.callIncrement(counterAddress);
   const receipt = await tx.wait();
-  if (!receipt) throw new Error("Failed to get transaction receipt");
+  if (!receipt) throw new Error('Failed to get transaction receipt');
   return {
     success: true,
     gasUsed: Number(receipt.gasUsed) || 0,

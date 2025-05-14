@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 const { ethers: { ContractFactory, Wallet, Contract } } = require('ethers');
+const hedera = require('../../client');
 const { loadArtifact } = require('../../../../utils/artifact');
-const { options } = require("../../../evm/options");
-const hedera = require("../../client");
+const { options } = require('../../../evm/options');
 
-const factoryArtifact = loadArtifact('Factory');
-const counterArtifact = loadArtifact('Counter');
+const [factoryArtifact, counterArtifact] = [
+  loadArtifact('Factory'),
+  loadArtifact('Counter')
+];
 
 /**
  * @param {string} address
@@ -16,9 +18,7 @@ const counterArtifact = loadArtifact('Counter');
  *    deploy2: (string, number) => Promise<import('ethers').TransactionResponse>,
  * }}
  */
-const getFactoryContract = function (address, wallet) {
-  return new Contract(address, factoryArtifact.abi, wallet);
-}
+const getFactoryContract = (address, wallet) => new Contract(address, factoryArtifact.abi, wallet);
 
 /**
  * @param {import('@hashgraph/sdk').Client} client

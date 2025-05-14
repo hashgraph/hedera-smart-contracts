@@ -25,14 +25,14 @@ const getFactoryContract = function (address, wallet) {
  * @returns {Promise<{gasUsed: number, success: boolean, additionalData: object, transactionHash: string}>}
  */
 async function deploy(wallet, cache) {
-    let factoryAddress = cache.read("evm::factory");
+    let factoryAddress = cache.read('evm::factory');
     let factory;
     if (!factoryAddress) {
         const contractFactory = new ContractFactory(factoryArtifact.abi, factoryArtifact.bytecode, wallet);
         const factoryContract = await contractFactory.deploy(await options(wallet, 5000000));
         await factoryContract.deploymentTransaction().wait();
         factoryAddress = await factoryContract.getAddress();
-        cache.write("evm::factory", factoryAddress);
+        cache.write('evm::factory', factoryAddress);
         factory = factoryContract;
     } else {
         factory = getFactoryContract(factoryAddress, wallet);
@@ -49,7 +49,7 @@ async function deploy(wallet, cache) {
 
     const event = receipt.logs.find(log => {
         try {
-            return factory.interface.parseLog(log)?.name === "Deployed";
+            return factory.interface.parseLog(log)?.name === 'Deployed';
         } catch (e) {
             return false;
         }

@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
-const { loadArtifact } = require('../../../../utils/artifact');
-const hedera = require('../../client');
-const { options } = require("../../../evm/options");
 const { ethers: { ContractFactory, parseUnits, Wallet, Contract } } = require('ethers');
+const hedera = require('../../client');
+const { loadArtifact } = require('../../../../utils/artifact');
+const { options } = require('../../../evm/options');
+
 const artifact = loadArtifact('ERC20');
 
 /**

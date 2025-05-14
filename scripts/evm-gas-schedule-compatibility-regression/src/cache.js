@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
-const path = require('path');
 const fs = require('fs');
+const path = require('path');
+
 const storage = path.resolve(__dirname, '../cache/tmp');
 
 class Cache {

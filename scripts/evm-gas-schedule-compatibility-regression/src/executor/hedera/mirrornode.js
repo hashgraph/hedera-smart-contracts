@@ -76,7 +76,7 @@ class HederaMirrorNode {
     } catch (error) {
       // ignore
     }
-    if (attempt > 10) return 0;
+    if (attempt > 10) return { gasConsumed: 0, hash: undefined };
     await delay(2000);
     return await this.getGasConsumedOnTransaction(evmHash, attempt + 1);
   }
