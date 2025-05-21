@@ -78,9 +78,11 @@ contract CreateTokenVersioned is HederaTokenService, KeyHelper, FeeHelper {
         token.metadata = bytes("testmeta");
         token.symbol = "test";
         token.treasury = address(this);
-        token.tokenKeys = new IHederaTokenService.TokenKey[](1);
+        token.tokenKeys = new IHederaTokenService.TokenKey[](2);
         IHederaTokenService.TokenKey memory tokenKey = super.getSingleKey(KeyType.METADATA, KeyValueType.CONTRACT_ID, address(this));
         token.tokenKeys[0] = tokenKey;
+        IHederaTokenService.TokenKey memory adminKey = super.getSingleKey(KeyType.ADMIN, KeyValueType.CONTRACT_ID, address(this));
+        token.tokenKeys[1] = adminKey;
         IHederaTokenService.FixedFee[] memory fixedFees = createSingleFixedFeeForHbars(10, address(this));
         IHederaTokenService.FractionalFee[] memory fractionalFees = new IHederaTokenService.FractionalFee[](0);
         (int responseCode, address tokenAddress) = HederaTokenService.createFungibleTokenWithCustomFees(token, 100, 8, fixedFees, fractionalFees);
@@ -162,11 +164,13 @@ contract CreateTokenVersioned is HederaTokenService, KeyHelper, FeeHelper {
         token.symbol = "nft";
         token.metadata = bytes("testmeta");
         token.treasury = address(this);
-        token.tokenKeys = new IHederaTokenService.TokenKey[](2);
+        token.tokenKeys = new IHederaTokenService.TokenKey[](3);
         IHederaTokenService.TokenKey memory tokenMetaKey = super.getSingleKey(KeyType.METADATA, KeyValueType.CONTRACT_ID, address(this));
         IHederaTokenService.TokenKey memory tokenSupplyKey = super.getSingleKey(KeyType.SUPPLY, KeyValueType.CONTRACT_ID, address(this));
+        IHederaTokenService.TokenKey memory adminKey = super.getSingleKey(KeyType.ADMIN, KeyValueType.CONTRACT_ID, address(this));
         token.tokenKeys[0] = tokenMetaKey;
         token.tokenKeys[1] = tokenSupplyKey;
+        token.tokenKeys[2] = adminKey;
         IHederaTokenService.FixedFee[] memory fixedFees = createSingleFixedFeeForHbars(10, address(this));
         IHederaTokenService.RoyaltyFee[] memory royaltyFees = new IHederaTokenService.RoyaltyFee[](0);
         (int responseCode, address tokenAddress) = HederaTokenService.createNonFungibleTokenWithCustomFees(token, fixedFees, royaltyFees);
@@ -217,29 +221,7 @@ contract CreateTokenVersioned is HederaTokenService, KeyHelper, FeeHelper {
         emit NonFungibleTokenInfo(retrievedTokenInfo);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    function updateTokenMetadata(address token, string memory metadata) public {
+    function updateTokenMetadata(address token, string memory metadata) external {
         IHederaTokenService.HederaToken memory tokenInfo;
         tokenInfo.metadata = bytes(metadata);
 
@@ -250,12 +232,14 @@ contract CreateTokenVersioned is HederaTokenService, KeyHelper, FeeHelper {
         }
     }
 
-    function updateTokenKeys(address token, bytes memory ed25519, address contractID) public {
+    function updateTokenKeys(address token, address contractID) public {
         IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](1);
         keys[0] = getSingleKey(KeyType.METADATA, KeyValueType.CONTRACT_ID, contractID);
-        //metadata 7
 
         (int256 responseCode) = HederaTokenService.updateTokenKeys(token, keys);
-        require(responseCode == HederaResponseCodes.SUCCESS);
+
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert();
+        }
     }
 }
