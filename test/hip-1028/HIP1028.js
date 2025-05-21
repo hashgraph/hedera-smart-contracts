@@ -216,4 +216,26 @@ describe('HIP1028 Test Suite', function () {
       expect(ethers.toUtf8String((ethers.decodeBase64(infoAfter.metadata)))).to.equal(UPDATED_METADATA);
     });
   });
+
+  describe('update token keys', async () => {
+    it('should verify updateTokenKeys updates the metadata key value for a token', async () => {
+      const infoBefore = await utils.asyncGetTokenInfoByMN(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress);
+      await (
+          await createTokenContract.updateTokenKeys(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress, signers[1].address, {gasLimit: 5_000_000})
+      ).wait();
+
+      const infoAfter = await utils.asyncGetTokenInfoByMN(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress);
+      expect(infoBefore.metadata_key.key).to.not.equal(infoAfter.metadata_key.key);
+    });
+
+    it('should verify updateTokenKeys updates the metadata key value for an nft', async () => {
+      const infoBefore = await utils.asyncGetTokenInfoByMN(nftWithMetadataAndMetadataKeyAndCustomFeeAddress);
+      await (
+          await createTokenContract.updateTokenKeys(nftWithMetadataAndMetadataKeyAndCustomFeeAddress, signers[1].address, {gasLimit: 5_000_000})
+      ).wait();
+
+      const infoAfter = await utils.asyncGetTokenInfoByMN(nftWithMetadataAndMetadataKeyAndCustomFeeAddress);
+      expect(infoBefore.metadata_key.key).to.not.equal(infoAfter.metadata_key.key);
+    });
+  });
 });
