@@ -43,9 +43,9 @@ describe('WHBAR', function () {
     signers = await ethers.getSigners();
   });
 
-  it.only('WHBAR-000 should deploy the WHBAR contract', async function () {
+  it('WHBAR-000 should deploy the WHBAR contract', async function () {
     const contractFactory = await ethers.getContractFactory('WHBAR');
-    contract = await contractFactory.deploy({gasLimit: 5_000_000});
+    contract = await contractFactory.deploy();
 
     await contract.waitForDeployment();
     expect(contract).to.not.be.undefined;
