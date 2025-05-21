@@ -16,7 +16,7 @@ describe('HIP1028 Test Suite', function () {
 
   before(async () => {
     signers = await ethers.getSigners();
-    createTokenContract = await ethers.getContractFactory('CreateTokenVersioned');
+    createTokenContract = await ethers.getContractFactory('TokenCreateHIP1028');
     createTokenContract = await createTokenContract.deploy({gasLimit: 5_000_000});
     await createTokenContract.waitForDeployment();
   });
