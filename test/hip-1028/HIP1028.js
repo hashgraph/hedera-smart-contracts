@@ -6,7 +6,7 @@ const utils = require('../system-contracts/hedera-token-service/utils');
 
 describe('HIP1028 Test Suite', function () {
   let signers;
-  let createTokenContract;
+  let hip1028Contract;
   let tokenWithMetadataAndMetadataKeyAndCustomFeeAddress;
   let nftWithMetadataAndMetadataKeyAndCustomFeeAddress;
 
@@ -16,14 +16,14 @@ describe('HIP1028 Test Suite', function () {
 
   before(async () => {
     signers = await ethers.getSigners();
-    createTokenContract = await ethers.getContractFactory('TokenCreateHIP1028');
-    createTokenContract = await createTokenContract.deploy({gasLimit: 5_000_000});
-    await createTokenContract.waitForDeployment();
+    hip1028Contract = await (await ethers.getContractFactory('TokenCreateHIP1028'))
+        .deploy({gasLimit: 5_000_000});
+    await hip1028Contract.waitForDeployment();
   });
 
   describe('create token', async () => {
     it('should verify createTokenWithMetadata creates a fungible token with metadata', async () => {
-      const receipt = await (await createTokenContract.createTokenWithMetadata({
+      const receipt = await (await hip1028Contract.createTokenWithMetadata({
         value: TWENTY_HBARS,
         gasLimit: 5_000_000
       })).wait();
@@ -36,7 +36,7 @@ describe('HIP1028 Test Suite', function () {
     });
 
     it('should verify createTokenWithMetadataAndCustomFees creates a fungible token with metadata and custom fee', async () => {
-      const receipt = await (await createTokenContract.createTokenWithMetadataAndCustomFees({
+      const receipt = await (await hip1028Contract.createTokenWithMetadataAndCustomFees({
         value: TWENTY_HBARS,
         gasLimit: 5_000_000
       })).wait();
@@ -49,7 +49,7 @@ describe('HIP1028 Test Suite', function () {
     });
 
     it('should verify createTokenWithMetadataAndKey creates a fungible token with metadata and metadata key', async () => {
-      const receipt = await (await createTokenContract.createTokenWithMetadataAndKey({
+      const receipt = await (await hip1028Contract.createTokenWithMetadataAndKey({
         value: TWENTY_HBARS,
         gasLimit: 5_000_000
       })).wait();
@@ -62,7 +62,7 @@ describe('HIP1028 Test Suite', function () {
     });
 
     it('should verify createTokenWithMetadataAndKeyAndCustomFees creates a fungible token with metadata and metadata key and custom fee', async () => {
-      const receipt = await (await createTokenContract.createTokenWithMetadataAndKeyAndCustomFees({
+      const receipt = await (await hip1028Contract.createTokenWithMetadataAndKeyAndCustomFees({
         value: TWENTY_HBARS,
         gasLimit: 5_000_000
       })).wait();
@@ -76,7 +76,7 @@ describe('HIP1028 Test Suite', function () {
     });
 
     it('should verify createNftWithMetadata creates a non-fungible token with metadata', async () => {
-      const receipt = await (await createTokenContract.createNftWithMetadata({
+      const receipt = await (await hip1028Contract.createNftWithMetadata({
         value: TWENTY_HBARS,
         gasLimit: 5_000_000
       })).wait();
@@ -89,7 +89,7 @@ describe('HIP1028 Test Suite', function () {
     });
 
     it('should verify createNftWithMetadataAndCustomFees creates a non-fungible token with metadata and custom fee', async () => {
-      const receipt = await (await createTokenContract.createNftWithMetadataAndCustomFees({
+      const receipt = await (await hip1028Contract.createNftWithMetadataAndCustomFees({
         value: TWENTY_HBARS,
         gasLimit: 5_000_000
       })).wait();
@@ -102,7 +102,7 @@ describe('HIP1028 Test Suite', function () {
     });
 
     it('should verify createNftWithMetaAndKey creates a non-fungible token with metadata and metadata key', async () => {
-      const receipt = await (await createTokenContract.createNftWithMetaAndKey({
+      const receipt = await (await hip1028Contract.createNftWithMetaAndKey({
         value: TWENTY_HBARS,
         gasLimit: 5_000_000
       })).wait();
@@ -115,7 +115,7 @@ describe('HIP1028 Test Suite', function () {
     });
 
     it('should verify createNftWithMetaAndKeyAndCustomFees creates a fungible token with metadata and metadata key and custom fee', async () => {
-      const receipt = await (await createTokenContract.createNftWithMetaAndKeyAndCustomFees({
+      const receipt = await (await hip1028Contract.createNftWithMetaAndKeyAndCustomFees({
         value: TWENTY_HBARS,
         gasLimit: 5_000_000
       })).wait();
@@ -132,7 +132,7 @@ describe('HIP1028 Test Suite', function () {
   describe('get token info', async () => {
     it('should verify getInformationForToken returns the correct metadata and metadata key and custom fee for a token', async () => {
       const infoReceipt = await (
-          await createTokenContract.getInformationForToken(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress, {gasLimit: 5_000_000})
+          await hip1028Contract.getInformationForToken(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress, {gasLimit: 5_000_000})
       ).wait();
 
       const info = infoReceipt.logs[0].args[0];
@@ -147,7 +147,7 @@ describe('HIP1028 Test Suite', function () {
 
     it('should verify getInformationForToken returns the correct metadata and metadata key and custom fee for an nft', async () => {
       const infoReceipt = await (
-          await createTokenContract.getInformationForToken(nftWithMetadataAndMetadataKeyAndCustomFeeAddress, {gasLimit: 5_000_000})
+          await hip1028Contract.getInformationForToken(nftWithMetadataAndMetadataKeyAndCustomFeeAddress, {gasLimit: 5_000_000})
       ).wait();
 
       const info = infoReceipt.logs[0].args[0];
@@ -162,7 +162,7 @@ describe('HIP1028 Test Suite', function () {
 
     it('should verify getInformationForFungibleToken returns the correct metadata and metadata key and custom fee for a token', async () => {
       const infoReceipt = await (
-          await createTokenContract.getInformationForFungibleToken(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress, {gasLimit: 5_000_000})
+          await hip1028Contract.getInformationForFungibleToken(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress, {gasLimit: 5_000_000})
       ).wait();
 
       const info = infoReceipt.logs[0].args[0][0];
@@ -177,7 +177,7 @@ describe('HIP1028 Test Suite', function () {
 
     it('should verify getInformationForNonFungibleToken returns the correct metadata and metadata key and custom fee for an nft', async () => {
       const infoReceipt = await (
-          await createTokenContract.getInformationForNonFungibleToken(nftWithMetadataAndMetadataKeyAndCustomFeeAddress, 1, {gasLimit: 5_000_000})
+          await hip1028Contract.getInformationForNonFungibleToken(nftWithMetadataAndMetadataKeyAndCustomFeeAddress, 1, {gasLimit: 5_000_000})
       ).wait();
 
       const info = infoReceipt.logs[0].args[0][0];
@@ -197,7 +197,7 @@ describe('HIP1028 Test Suite', function () {
     it('should verify updateTokenMetadata updates the metadata value for a token', async () => {
       const infoBefore = await utils.asyncGetTokenInfoByMN(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress);
       await (
-          await createTokenContract.updateTokenMetadata(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress, UPDATED_METADATA, {gasLimit: 5_000_000})
+          await hip1028Contract.updateTokenMetadata(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress, UPDATED_METADATA, {gasLimit: 5_000_000})
       ).wait();
 
       const infoAfter = await utils.asyncGetTokenInfoByMN(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress);
@@ -208,7 +208,7 @@ describe('HIP1028 Test Suite', function () {
     it('should verify updateNFTsMetadata updates the metadata value for an nft', async () => {
       const infoBefore = await utils.asyncGetTokenInfoByMN(nftWithMetadataAndMetadataKeyAndCustomFeeAddress);
       await (
-          await createTokenContract.updateTokenMetadata(nftWithMetadataAndMetadataKeyAndCustomFeeAddress, UPDATED_METADATA, {gasLimit: 5_000_000})
+          await hip1028Contract.updateTokenMetadata(nftWithMetadataAndMetadataKeyAndCustomFeeAddress, UPDATED_METADATA, {gasLimit: 5_000_000})
       ).wait();
 
       const infoAfter = await utils.asyncGetTokenInfoByMN(nftWithMetadataAndMetadataKeyAndCustomFeeAddress);
@@ -221,7 +221,7 @@ describe('HIP1028 Test Suite', function () {
     it('should verify updateTokenKeys updates the metadata key value for a token', async () => {
       const infoBefore = await utils.asyncGetTokenInfoByMN(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress);
       await (
-          await createTokenContract.updateTokenKeys(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress, signers[1].address, {gasLimit: 5_000_000})
+          await hip1028Contract.updateTokenKeys(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress, signers[1].address, {gasLimit: 5_000_000})
       ).wait();
 
       const infoAfter = await utils.asyncGetTokenInfoByMN(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress);
@@ -231,7 +231,7 @@ describe('HIP1028 Test Suite', function () {
     it('should verify updateTokenKeys updates the metadata key value for an nft', async () => {
       const infoBefore = await utils.asyncGetTokenInfoByMN(nftWithMetadataAndMetadataKeyAndCustomFeeAddress);
       await (
-          await createTokenContract.updateTokenKeys(nftWithMetadataAndMetadataKeyAndCustomFeeAddress, signers[1].address, {gasLimit: 5_000_000})
+          await hip1028Contract.updateTokenKeys(nftWithMetadataAndMetadataKeyAndCustomFeeAddress, signers[1].address, {gasLimit: 5_000_000})
       ).wait();
 
       const infoAfter = await utils.asyncGetTokenInfoByMN(nftWithMetadataAndMetadataKeyAndCustomFeeAddress);
