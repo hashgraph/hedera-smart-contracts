@@ -4,7 +4,7 @@ const {expect} = require('chai');
 const {ethers} = require('hardhat');
 const utils = require('../hedera-token-service/utils');
 
-describe.only('HIP1028 Test Suite', function () {
+describe('HIP1028 Test Suite', function () {
   let signers;
   let hip1028Contract;
   let tokenWithMetadataAndMetadataKeyAndCustomFeeAddress;
