@@ -4,7 +4,7 @@ const {expect} = require('chai');
 const {ethers} = require('hardhat');
 const utils = require('../hedera-token-service/utils');
 
-describe('HIP1028 Test Suite', function () {
+describe.only('HIP1028 Test Suite', function () {
   let signers;
   let hip1028Contract;
   let tokenWithMetadataAndMetadataKeyAndCustomFeeAddress;
@@ -16,7 +16,7 @@ describe('HIP1028 Test Suite', function () {
 
   before(async () => {
     signers = await ethers.getSigners();
-    hip1028Contract = await (await ethers.getContractFactory('TokenCreateHIP1028'))
+    hip1028Contract = await (await ethers.getContractFactory('HIP1028Contract'))
         .deploy({gasLimit: 5_000_000});
     await hip1028Contract.waitForDeployment();
   });

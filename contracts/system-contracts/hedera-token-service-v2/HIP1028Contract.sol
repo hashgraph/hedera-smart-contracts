@@ -7,7 +7,7 @@ import "./HederaTokenService/HederaTokenService.sol";
 import "./HederaTokenService/KeyHelper.sol";
 import "./HederaTokenService/FeeHelper.sol";
 
-contract TokenCreateHIP1028 is HederaTokenService, KeyHelper, FeeHelper {
+contract HIP1028Contract is HederaTokenService, KeyHelper, FeeHelper {
     event TokenAddress(address);
     event TokenInfo(IHederaTokenService.TokenInfo);
     event FungibleTokenInfo(IHederaTokenService.FungibleTokenInfo);
