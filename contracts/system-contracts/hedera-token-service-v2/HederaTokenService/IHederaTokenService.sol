@@ -123,7 +123,7 @@ interface IHederaTokenService {
         // 4th bit: supplyKey
         // 5th bit: feeScheduleKey
         // 6th bit: pauseKey
-        // 7th bit: ignored
+        // 7th bit: metadataKey
         uint keyType;
 
         // the value that will be set to the key type
