@@ -520,7 +520,7 @@ describe('WHBAR', function () {
   it('WHBAR-023 should revert on value > MaxUint256 for deposit', async function () {
     await expect(
       contract.deposit({ value: OVERFLOW_VALUE })
-    ).to.be.rejectedWith('value cannot exceed MAX_INTEGER');
+    ).to.be.rejectedWith('fields had validation errors');
   });
 
   it('WHBAR-024 should revert on value > MaxUint256 for withdraw', async function () {
