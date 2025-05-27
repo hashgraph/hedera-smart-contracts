@@ -92,34 +92,60 @@ for (const test of tests) {
                         it(
                           `Should respect tolerance for gas usage between ${executor} and ${toCompare} – ${testCase.name}`,
                           async function () {
-                              const valueToCompare = (element) => element?.additionalData?.gasConsumed || element?.gasUsed || null;
+                            const intrinsicGasAdjustment = (inputDataHex) => {
+                                let numZeroBytes = 0;
+                                for (var i=0; i<inputDataHex.length; i+=2) {
+                                    if (inputDataHex[i] == "0" && inputDataHex[i+1] == "0") {
+                                        numZeroBytes += 1;
+                                    }
+                                }
+                                const discountPerZeroByte = 12;
+                                return numZeroBytes * discountPerZeroByte;
+                            };
+
+                            const gasSummary = (element) => {
+                                const gasConsumedOrUsed = element.additionalData?.gasConsumed || element.gasUsed;
+                                if (element.additionalData && !element.additionalData.contractCreated) {
+                                    const inputDataHex = element.additionalData.inputData.replace("0x", "");
+                                    const normalizedGas = gasConsumedOrUsed + intrinsicGasAdjustment(inputDataHex);
+                                    return {
+                                        gasConsumedOrUsed: gasConsumedOrUsed,
+                                        normalizedGas: normalizedGas,
+                                    };
+                                } else {
+                                    return {
+                                        gasConsumedOrUsed: gasConsumedOrUsed,
+                                        normalizedGas: gasConsumedOrUsed,
+                                    };
+                                }
+                            };
+
+                            const left = gasSummary(gasUsages[toCompare]);
+                            const right = gasSummary(gasUsages[executor]);
+
                               if (!printed) {
                                   console.table(
-                                    Object.entries(gasUsages).map(([key, element]) => ({
-                                        'Executor': key,
-                                        'Gas used': element.gasUsed,
-                                        'Consumed': valueToCompare(element),
-                                        'Transaction hash': element.transactionHash,
-                                        'Error': element.error || null,
-                                    }))
+                                    Object.entries(gasUsages).map(([key, element]) => {
+                                        const summary = gasSummary(element);
+                                        return {
+                                            'Executor': key,
+                                            'Gas used': element.gasUsed,
+                                            'Consumed or used': summary.gasConsumedOrUsed,
+                                            'Normalized gas': summary.normalizedGas,
+                                            'Transaction hash': element.transactionHash,
+                                            'Error': element.error || null,
+                                        };
+                                    })
                                   );
                                   printed = true;
                               }
-
-                              const left = valueToCompare(gasUsages[toCompare] || null);
-                              const right = valueToCompare(gasUsages[executor] || null);
-                              if (left === null || right === null) {
-                                  this.skip();
-                                  return;
-                              }
-
-                              const within = isWithinTolerance(executor, toCompare, right, left);
-                                assert.equal(
-                                    within,
-                                    true,
-                                    `Different gas usage detected (outside tolerance).
-                                    ${right} (${executor}) vs ${left} (${toCompare})`,
-                                );
+                              const normalizedGasWithinTolerance = isWithinTolerance(executor, toCompare, right.normalizedGas, left.normalizedGas);
+                              assert.equal(
+                                  normalizedGasWithinTolerance,
+                                  true,
+                                  `Different gas usage detected (outside tolerance).
+                                  ${right.normalizedGas} (${executor}) vs ${left.normalizedGas} (${toCompare})`,
+                              );
                             },
                         );
                     }

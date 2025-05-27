@@ -15,10 +15,14 @@ class HederaExecutorsWrapper {
         searchBy = await this.mirrorNode.getEvmAddressOfTheTransaction(result.additionalData?.hederaTxId);
       }
       if (searchBy) {
-        const { gasConsumed, hash } = await this.mirrorNode.getGasConsumedOnTransaction(searchBy);
-        if (!result.additionalData) result.additionalData = {};
-        if (gasConsumed) result.additionalData.gasConsumed = gasConsumed;
-        if (!result.transactionHash && hash) result.transactionHash = hash;
+        const { contractResult } = await this.mirrorNode.getContractResult(searchBy);
+        if (contractResult) {
+          if (!result.additionalData) result.additionalData = {};
+          result.additionalData.gasConsumed = contractResult.gas_consumed;
+          result.additionalData.inputData = contractResult.function_parameters;
+          result.additionalData.contractCreated = (contractResult.created_contract_ids.length > 0);
+          if (!result.transactionHash) result.transactionHash = contractResult.hash;
+        }
       }
     }
     return results;

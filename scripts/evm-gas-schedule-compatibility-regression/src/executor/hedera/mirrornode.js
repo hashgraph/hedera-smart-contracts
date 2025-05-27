@@ -67,16 +67,16 @@ class HederaMirrorNode {
   /**
    * @param {string} evmHash
    * @param {number} attempt
-   * @returns {Promise<{ gasConsumed: number, hash: string }>}
+   * @returns {Promise<{ contractResult }>}
    */
-  async getGasConsumedOnTransaction(evmHash, attempt = 0) {
+  async getContractResult(evmHash, attempt = 0) {
     try {
       const result = /** @type {{data: { gas_consumed: number|undefined, hash: string|undefined }}} */ await axios.get(`${this.url}/contracts/results/${evmHash}`);
-      if (result.data.gas_consumed) return { gasConsumed: result.data.gas_consumed, hash: result.data.hash };
+      if (result.data) return { contractResult: result.data };
     } catch (error) {
       // ignore
     }
-    if (attempt > 10) return { gasConsumed: 0, hash: undefined };
+    if (attempt > 10) return { contractResult: undefined };
     await delay(2000);
     return await this.getGasConsumedOnTransaction(evmHash, attempt + 1);
   }
