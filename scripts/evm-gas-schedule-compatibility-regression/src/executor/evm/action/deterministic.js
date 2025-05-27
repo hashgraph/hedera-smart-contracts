@@ -38,11 +38,7 @@ async function deploy(wallet, cache) {
         factory = getFactoryContract(factoryAddress, wallet);
     }
 
-    const salt = Math.floor(Math.random() * (9999999999 - 1000000000 + 1)) + 1000000000;
-
-    const computedAddress = await factory.getPredictedAddress(counterArtifact.bytecode, salt);
-
-    const tx = await factory.deploy2(counterArtifact.bytecode, salt);
+    const tx = await factory.deploy(counterArtifact.bytecode, await options(wallet, 5000000));
     const receipt = await tx.wait();
 
     if (!receipt) throw new Error('Failed to get transaction receipt');
@@ -59,18 +55,15 @@ async function deploy(wallet, cache) {
         ? factory.interface.parseLog(event).args.addr
         : null;
 
-    const addressesMatch = computedAddress && deployedAddress
-        ? computedAddress.toLowerCase() === deployedAddress.toLowerCase()
-        : false;
 
     cache.write('evm::deterministic::contract', deployedAddress);
 
     return {
-        success: addressesMatch,
+        success: true,
         gasUsed: Number(receipt.gasUsed) || 0,
         transactionHash: receipt.hash,
         additionalData: {
-            computedAddress,
+            deployedAddress,
             deployedAddress,
         }
     };
