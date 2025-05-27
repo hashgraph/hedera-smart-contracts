@@ -96,7 +96,7 @@ module.exports = {
   deploy: async function (client, bytecode, parameters) {
     const contractTx = await new ContractCreateFlow()
       .setBytecode(bytecode)
-      .setGas(1000000);
+      .setGas(5000000);
     if (parameters) contractTx.setConstructorParameters(parameters);
     const contractResponse = await contractTx.execute(client);
     const contractReceipt = await contractResponse.getReceipt(client);
@@ -120,7 +120,7 @@ module.exports = {
   call: async function (client, contractId, method, parameters) {
     const executeTx = new ContractExecuteTransaction()
       .setContractId(contractId)
-      .setGas(2000000)
+      .setGas(5000000)
       .setFunction(method, parameters);
     const response = await executeTx.execute(client);
     const receipt = await response.getReceipt(client);

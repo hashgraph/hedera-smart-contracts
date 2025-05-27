@@ -58,7 +58,7 @@ const mint = async function (wallet, cache) {
   let contractAddress = cache.read('erc721::contract');
   if (contractAddress === null) contractAddress = (await deploy(wallet, cache)).additionalData.contractAddress;
   const contract = getContract(contractAddress, wallet);
-  const tx = await contract.mint(wallet.address, await options(wallet, 200000));
+  const tx = await contract.mint(wallet.address, await options(wallet, 5000000));
   const receipt = await tx.wait();
   if (!receipt) throw new Error('Failed to get transaction receipt');
   const totalTokens = Number(cache.read('erc721::total') || '0');
@@ -79,7 +79,7 @@ const mint = async function (wallet, cache) {
  */
 const burn = async function (wallet, cache) {
   const { contract, lastToken } = await initTokenId(wallet, cache);
-  const tx = await contract.burn(lastToken - 1, await options(wallet, 200000));
+  const tx = await contract.burn(lastToken - 1, await options(wallet, 5000000));
   cache.write('erc721::last', '0');
   const receipt = await tx.wait();
   if (!receipt) throw new Error('Failed to get transaction receipt');
@@ -98,7 +98,7 @@ const burn = async function (wallet, cache) {
 const approve = async function (wallet, cache) {
   const { contract, lastToken } = await initTokenId(wallet, cache);
   const randomWallet = Wallet.createRandom();
-  const tx = await contract.approve(randomWallet.address, lastToken - 1, await options(wallet, 200000));
+  const tx = await contract.approve(randomWallet.address, lastToken - 1, await options(wallet, 5000000));
   cache.write('erc721::last', '0');
   const receipt = await tx.wait();
   if (!receipt) throw new Error('Failed to get transaction receipt');
@@ -119,7 +119,7 @@ const setApprovalForAll = async function (wallet, cache) {
   if (contractAddress === null) contractAddress = (await deploy(wallet, cache)).additionalData.contractAddress;
   const contract = getContract(contractAddress, wallet);
   const randomWallet = Wallet.createRandom();
-  const tx = await contract.setApprovalForAll(randomWallet.address, true, await options(wallet, 200000));
+  const tx = await contract.setApprovalForAll(randomWallet.address, true, await options(wallet, 5000000));
   const receipt = await tx.wait();
   if (!receipt) throw new Error('Failed to get transaction receipt');
   return {
@@ -137,7 +137,7 @@ const setApprovalForAll = async function (wallet, cache) {
 const transferFrom = async function (wallet, cache) {
   const { contract, lastToken } = await initTokenId(wallet, cache);
   const randomWallet = Wallet.createRandom();
-  const tx = await contract.transferFrom(wallet.address, randomWallet.address, lastToken - 1, await options(wallet, 200000));
+  const tx = await contract.transferFrom(wallet.address, randomWallet.address, lastToken - 1, await options(wallet, 5000000));
   cache.write('erc721::last', '0');
   const receipt = await tx.wait();
   if (!receipt) throw new Error('Failed to get transaction receipt');
@@ -156,7 +156,7 @@ const transferFrom = async function (wallet, cache) {
 const safeTransferFrom = async function (wallet, cache) {
   const { contract, lastToken } = await initTokenId(wallet, cache);
   const randomWallet = Wallet.createRandom();
-  const tx = await contract['safeTransferFrom(address,address,uint256)'](wallet.address, randomWallet.address, lastToken - 1, await options(wallet, 200000));
+  const tx = await contract['safeTransferFrom(address,address,uint256)'](wallet.address, randomWallet.address, lastToken - 1, await options(wallet, 5000000));
   cache.write('erc721::last', '0');
   const receipt = await tx.wait();
   if (!receipt) throw new Error('Failed to get transaction receipt');

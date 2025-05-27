@@ -32,7 +32,7 @@ const initTokenId = async function (client, wallet, cache) {
   let lastToken = Number(cache.read('erc721::last::sdk-ethTx') || '0');
   if (!lastToken) lastToken = (await mint(client, wallet, cache)).additionalData.lastToken;
   const tx = {
-    ...(await options(wallet, 200000)),
+    ...(await options(wallet, 5000000)),
     to: contractAddress,
   };
   return { lastToken, tx, contract };
@@ -75,7 +75,7 @@ const mint = async function (client, wallet, cache) {
   const contract = getContract(contractAddress, wallet);
   const txData = contract.interface.encodeFunctionData('mint(address)', [wallet.address]);
   const tx = {
-    ...(await options(wallet, 200000)),
+    ...(await options(wallet, 5000000)),
     to: contractAddress,
     data: txData,
   };
@@ -158,7 +158,7 @@ const setApprovalForAll = async function (client, wallet, cache) {
   const randomWallet = Wallet.createRandom();
   const txData = contract.interface.encodeFunctionData('setApprovalForAll(address,bool)', [randomWallet.address, true]);
   const tx = {
-    ...(await options(wallet, 200000)),
+    ...(await options(wallet, 5000000)),
     to: contractAddress,
     data: txData,
   };

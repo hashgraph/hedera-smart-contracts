@@ -69,7 +69,7 @@ const call = async function (wallet, cache) {
   if (callerAddress === null) callerAddress = (await initCaller(wallet, cache)).additionalData.contractAddress;
   if (counterAddress === null) counterAddress = (await initCounter(wallet, cache)).additionalData.contractAddress;
   const caller = getCallerContract(callerAddress, wallet);
-  const tx = await caller.callIncrement(counterAddress);
+  const tx = await caller.callIncrement(counterAddress, await options(wallet, 5000000));
   const receipt = await tx.wait();
   if (!receipt) throw new Error('Failed to get transaction receipt');
   return {
