@@ -6150,5 +6150,245 @@
     "symbol": "WHBAR",
     "totalSupply": 0,
     "decimals": 8
+  },
+  {
+    "contractId": "0.0.8928686",
+    "address": "0xe0cbdb042ab3cc797277b00a668aba817becee68",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.8968318",
+    "address": "0x96522d4a5adff69a573f982d5c1cd184d98fa141",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.8968421",
+    "address": "0x60a49273f8f2f522b6f38b1101745bb8a2267de6",
+    "name": "iShares $ Treasury Bond 0-1yr UCITS ETF",
+    "symbol": "TBONDS01",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9052871",
+    "address": "0x0e4c0cdde2ed72f52abfaee75a2f1585fe7db2fb",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 14456832,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9079686",
+    "address": "0x00000000000000000000000000000000008a8b86",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.9088180",
+    "address": "0x00125adcf9d5f8ea03be9ddd4c677c38cfa42367",
+    "name": "test",
+    "symbol": "test",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9088271",
+    "address": "0xe3283992519b06676356ef4885196fa14afa9889",
+    "name": "APPLE INC.",
+    "symbol": "AAPL",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9088297",
+    "address": "0xea8b81d5acac877716055172345cce1b416a6e1b",
+    "name": "TESLA INC. DL - 001",
+    "symbol": "TSLA",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9088304",
+    "address": "0x1e60d225c9f2516e01f5a0b5b9d1ad9e3a84b644",
+    "name": "iShares $ Treasury Bond 1-3yr UCITS ETF",
+    "symbol": "TBONDS13",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9088309",
+    "address": "0xd988b56f6cbe989c41d3c1d953df8f577e918afe",
+    "name": "Coinbase Global Inc - Class A",
+    "symbol": "COIN",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9088315",
+    "address": "0x003a17f61c3fef3a2b15ce7bb39e45e5740a4e6d",
+    "name": "NVIDIA Corp",
+    "symbol": "NVDA",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9088322",
+    "address": "0x1437b3be2c089cdaf15164e9a6d2e4ce54010c8f",
+    "name": "Microsoft Corporation",
+    "symbol": "MSFT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9088328",
+    "address": "0x2448c1546f40ff0e4bd6511b9105ee13b64c06cf",
+    "name": "Microstrategy Inc - Class A",
+    "symbol": "MSTR",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9088333",
+    "address": "0x94a70ce35932acd716352c15ffb230dd7715762f",
+    "name": "Intel Corp",
+    "symbol": "INTC",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9088335",
+    "address": "0x8e18efdbf8dedf53aeae3bb11ef4f914ba49a8a4",
+    "name": "Coupang Inc - Class A",
+    "symbol": "CPNG",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9088339",
+    "address": "0xad904dd7f90b3d2039f3eadb3e2a983e1220f230",
+    "name": "Blackrock Inc",
+    "symbol": "BLK",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9088344",
+    "address": "0x20e40c881d4899f1f8a292e9555139f033d33a87",
+    "name": "Gamestop Corporation - Class A",
+    "symbol": "GME",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9131671",
+    "address": "0xdcf34e6c4ce2eb54a87c15c6375e4d9c8b66983c",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 19606121492,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9146119",
+    "address": "0x6942def0021ba89864e7a79b9a3b5f73c18f8ee9",
+    "name": "One Million Token",
+    "symbol": "MIL",
+    "totalSupply": 1e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9146200",
+    "address": "0x9d7f60db5eb9458c8b52dbf8f77078753f08a81b",
+    "name": "Glint Token",
+    "symbol": "GLINT",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9170426",
+    "address": "0x21b1cc3f6de9b335e20a2fafe7adb36594d3976b",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.9180927",
+    "address": "0xd82540272590c321c553229cbf481d028a47db7a",
+    "name": "MyToken",
+    "symbol": "MTK",
+    "totalSupply": 1.4e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9181953",
+    "address": "0xd3a6a3f851ec843df96860aeb2086267b47249e8",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9200853",
+    "address": "0xda2a70a1507aaeb1c1db297c87d4cd68ab27a36f",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9200859",
+    "address": "0xe5ac590affd0bcf033423bfa9d786dfc933e6ee2",
+    "name": "WurenTek Pool",
+    "symbol": "WUR",
+    "totalSupply": 150000000000,
+    "decimals": 10
+  },
+  {
+    "contractId": "0.0.9215395",
+    "address": "0xc4ad9d3cd4daf6dd47491d1a5a9380b9bfe7d123",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9215406",
+    "address": "0xb463fac356b2d7913d8c4daa79cc5b895d3f84c9",
+    "name": "WurenTek Pool",
+    "symbol": "WUR",
+    "totalSupply": 439926706760,
+    "decimals": 10
+  },
+  {
+    "contractId": "0.0.9217348",
+    "address": "0x0f25045d15c163478bb67c56c5d9d602628f4f62",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9217369",
+    "address": "0xebadaf3d0ee4bbaa94717bd9029244b1df2f47aa",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9218580",
+    "address": "0xf3224f0429ebc2cc36479a2433d862af5468ea1f",
+    "name": "MyToken",
+    "symbol": "MTK",
+    "totalSupply": 0,
+    "decimals": 18
   }
 ]
