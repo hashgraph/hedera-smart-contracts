@@ -108,7 +108,7 @@ class Utils {
     const receipt = await tx.wait();
     const { tokenAddress } = receipt.logs.find(
       (e) => e.fragment.name === Constants.Events.CreatedToken
-    ).args;
+    )[0].args;
 
     return tokenAddress;
   }
