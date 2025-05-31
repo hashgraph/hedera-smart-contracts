@@ -65,43 +65,43 @@ class Utils {
   }
 
   static async deployERC20Mock() {
-    return this.deployContract(Constants.Path.HIP583_ERC20Mock);
+    return await this.deployContract(Constants.Path.HIP583_ERC20Mock);
   }
 
   static async deployERC721Mock() {
-    return this.deployContract(Constants.Path.HIP583_ERC721Mock);
+    return await this.deployContract(Constants.Path.HIP583_ERC721Mock);
   }
 
   static async deployTokenCreateContract() {
-    return this.deployContract(Constants.Contract.TokenCreateContract);
+    return await this.deployContract(Constants.Contract.TokenCreateContract);
   }
 
   static async deployTokenCreateCustomContract() {
-    return this.deployContract(Constants.Contract.TokenCreateCustomContract);
+    return await this.deployContract(Constants.Contract.TokenCreateCustomContract);
   }
 
   static async deployTokenManagementContract() {
-    return this.deployContract(Constants.Contract.TokenManagementContract);
+    return await this.deployContract(Constants.Contract.TokenManagementContract);
   }
 
   static async deployTokenQueryContract() {
-    return this.deployContract(Constants.Contract.TokenQueryContract);
+    return await this.deployContract(Constants.Contract.TokenQueryContract);
   }
 
   static async deployTokenTransferContract() {
-    return this.deployContract(Constants.Contract.TokenTransferContract);
+    return await this.deployContract(Constants.Contract.TokenTransferContract);
   }
 
   static async deployHRC719Contract() {
-    return this.deployContract(Constants.Contract.HRC719Contract);
+    return await this.deployContract(Constants.Contract.HRC719Contract);
   }
 
   static async deployERC20Contract() {
-    return this.deployContract(Constants.Contract.ERC20Contract);
+    return await this.deployContract(Constants.Contract.ERC20Contract);
   }
 
   static async deployERC721Contract() {
-    return this.deployContract(Constants.Contract.ERC721Contract);
+    return await this.deployContract(Constants.Contract.ERC721Contract);
   }
 
   static async getTokenAddress(tx) {
