@@ -106,7 +106,7 @@ class Utils {
 
   static async getTokenAddress(tx) {
     const receipt = await tx.wait();
-    const { tokenAddress } = receipt.logs.find(
+    const { tokenAddress } = receipt.logs.filter(
       (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args;
 
@@ -133,7 +133,7 @@ class Utils {
     freezeDefaultStatus,
     treasury
   ) {
-    return await this.getTokenAddress(
+    return await this.await(
       await contract.createFungibleTokenWithPresetKeys(
         name,
         symbol,
