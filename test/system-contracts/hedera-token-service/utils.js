@@ -101,7 +101,7 @@ class Utils {
   }
 
   static async deployERC721Contract() {
-    return this.deployContract(Constants.Contract.ERC20Contract);
+    return this.deployContract(Constants.Contract.ERC721Contract);
   }
 
   static async getTokenAddress(tx) {
@@ -761,7 +761,7 @@ class Utils {
    *                See https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L128
    *                for more information
    *
-   * @param keyValyeType INHERIT_ACCOUNT_KEY | CONTRACT_ID | ED25519 | SECP256K1 | DELEGETABLE_CONTRACT_ID
+   * @param keyValueType INHERIT_ACCOUNT_KEY | CONTRACT_ID | ED25519 | SECP256K1 | DELEGETABLE_CONTRACT_ID
    *
    * @param value bytes value, public address of an account, or boolean
    *            See https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L92
