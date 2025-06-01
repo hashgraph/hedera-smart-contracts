@@ -133,7 +133,7 @@ class Utils {
     freezeDefaultStatus,
     treasury
   ) {
-    return await this.await(
+    return await this.getTokenAddress(
       await contract.createFungibleTokenWithPresetKeys(
         name,
         symbol,
