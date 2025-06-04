@@ -979,7 +979,7 @@ class Utils {
     return BigInt(precompileAction.result_data).toString();
   }
 
-  static async asyncGetTokenInfoByMN(tokenAddress) {
+  static async getTokenInfoByMN(tokenAddress) {
     const network = hre.network.name;
     const mirrorNodeUrl = getMirrorNodeUrl(network);
     const res = await axios.get(

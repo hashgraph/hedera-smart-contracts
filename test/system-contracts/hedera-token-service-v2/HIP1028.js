@@ -23,12 +23,12 @@ describe('HIP1028 Test Suite', function () {
 
   describe('create token', async () => {
     it('should verify createTokenWithMetadata creates a fungible token with metadata', async () => {
-      const receipt = await (await hip1028Contract.createTokenWithMetadata({
+      const receipt = await (await hip1028Contract.createTokenWithMetadata(META_TEXT, {
         value: TWENTY_HBARS,
         gasLimit: 5_000_000
       })).wait();
 
-      const info = await utils.asyncGetTokenInfoByMN(receipt.logs[0].args[0]);
+      const info = await utils.getTokenInfoByMN(receipt.logs[0].args[0]);
       expect(ethers.toUtf8String((ethers.decodeBase64(info.metadata)))).to.equal(META_TEXT);
       expect(info.metadata_key).to.be.null;
       expect(info.custom_fees.fixed_fees).to.be.empty;
@@ -36,12 +36,12 @@ describe('HIP1028 Test Suite', function () {
     });
 
     it('should verify createTokenWithMetadataAndCustomFees creates a fungible token with metadata and custom fee', async () => {
-      const receipt = await (await hip1028Contract.createTokenWithMetadataAndCustomFees({
+      const receipt = await (await hip1028Contract.createTokenWithMetadataAndCustomFees(META_TEXT, {
         value: TWENTY_HBARS,
         gasLimit: 5_000_000
       })).wait();
 
-      const info = await utils.asyncGetTokenInfoByMN(receipt.logs[0].args[0]);
+      const info = await utils.getTokenInfoByMN(receipt.logs[0].args[0]);
       expect(ethers.toUtf8String((ethers.decodeBase64(info.metadata)))).to.equal(META_TEXT);
       expect(info.metadata_key).to.be.null;
       expect(info.custom_fees.fixed_fees).to.not.be.empty;
@@ -49,12 +49,12 @@ describe('HIP1028 Test Suite', function () {
     });
 
     it('should verify createTokenWithMetadataAndKey creates a fungible token with metadata and metadata key', async () => {
-      const receipt = await (await hip1028Contract.createTokenWithMetadataAndKey({
+      const receipt = await (await hip1028Contract.createTokenWithMetadataAndKey(META_TEXT, {
         value: TWENTY_HBARS,
         gasLimit: 5_000_000
       })).wait();
 
-      const info = await utils.asyncGetTokenInfoByMN(receipt.logs[0].args[0]);
+      const info = await utils.getTokenInfoByMN(receipt.logs[0].args[0]);
       expect(ethers.toUtf8String((ethers.decodeBase64(info.metadata)))).to.equal(META_TEXT);
       expect(info.metadata_key).to.not.be.null;
       expect(info.custom_fees.fixed_fees).to.be.empty;
@@ -62,13 +62,13 @@ describe('HIP1028 Test Suite', function () {
     });
 
     it('should verify createTokenWithMetadataAndKeyAndCustomFees creates a fungible token with metadata and metadata key and custom fee', async () => {
-      const receipt = await (await hip1028Contract.createTokenWithMetadataAndKeyAndCustomFees({
+      const receipt = await (await hip1028Contract.createTokenWithMetadataAndKeyAndCustomFees(META_TEXT, {
         value: TWENTY_HBARS,
         gasLimit: 5_000_000
       })).wait();
 
       tokenWithMetadataAndMetadataKeyAndCustomFeeAddress = receipt.logs[0].args[0];
-      const info = await utils.asyncGetTokenInfoByMN(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress);
+      const info = await utils.getTokenInfoByMN(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress);
       expect(ethers.toUtf8String((ethers.decodeBase64(info.metadata)))).to.equal(META_TEXT);
       expect(info.metadata_key).to.not.be.null;
       expect(info.custom_fees.fixed_fees).to.not.be.empty;
@@ -76,12 +76,12 @@ describe('HIP1028 Test Suite', function () {
     });
 
     it('should verify createNftWithMetadata creates a non-fungible token with metadata', async () => {
-      const receipt = await (await hip1028Contract.createNftWithMetadata({
+      const receipt = await (await hip1028Contract.createNftWithMetadata(META_TEXT, {
         value: TWENTY_HBARS,
         gasLimit: 5_000_000
       })).wait();
 
-      const info = await utils.asyncGetTokenInfoByMN(receipt.logs[0].args[0]);
+      const info = await utils.getTokenInfoByMN(receipt.logs[0].args[0]);
       expect(ethers.toUtf8String((ethers.decodeBase64(info.metadata)))).to.equal(META_TEXT);
       expect(info.metadata_key).to.be.null;
       expect(info.custom_fees.fixed_fees).to.be.empty;
@@ -89,12 +89,12 @@ describe('HIP1028 Test Suite', function () {
     });
 
     it('should verify createNftWithMetadataAndCustomFees creates a non-fungible token with metadata and custom fee', async () => {
-      const receipt = await (await hip1028Contract.createNftWithMetadataAndCustomFees({
+      const receipt = await (await hip1028Contract.createNftWithMetadataAndCustomFees(META_TEXT, {
         value: TWENTY_HBARS,
         gasLimit: 5_000_000
       })).wait();
 
-      const info = await utils.asyncGetTokenInfoByMN(receipt.logs[0].args[0]);
+      const info = await utils.getTokenInfoByMN(receipt.logs[0].args[0]);
       expect(ethers.toUtf8String((ethers.decodeBase64(info.metadata)))).to.equal(META_TEXT);
       expect(info.metadata_key).to.be.null;
       expect(info.custom_fees.fixed_fees).to.not.be.empty;
@@ -102,12 +102,12 @@ describe('HIP1028 Test Suite', function () {
     });
 
     it('should verify createNftWithMetaAndKey creates a non-fungible token with metadata and metadata key', async () => {
-      const receipt = await (await hip1028Contract.createNftWithMetaAndKey({
+      const receipt = await (await hip1028Contract.createNftWithMetaAndKey(META_TEXT, {
         value: TWENTY_HBARS,
         gasLimit: 5_000_000
       })).wait();
 
-      const info = await utils.asyncGetTokenInfoByMN(receipt.logs[0].args[0]);
+      const info = await utils.getTokenInfoByMN(receipt.logs[0].args[0]);
       expect(ethers.toUtf8String((ethers.decodeBase64(info.metadata)))).to.equal(META_TEXT);
       expect(info.metadata_key).to.not.be.null;
       expect(info.custom_fees.fixed_fees).to.be.empty;
@@ -115,13 +115,13 @@ describe('HIP1028 Test Suite', function () {
     });
 
     it('should verify createNftWithMetaAndKeyAndCustomFees creates a fungible token with metadata and metadata key and custom fee', async () => {
-      const receipt = await (await hip1028Contract.createNftWithMetaAndKeyAndCustomFees({
+      const receipt = await (await hip1028Contract.createNftWithMetaAndKeyAndCustomFees(META_TEXT, {
         value: TWENTY_HBARS,
         gasLimit: 5_000_000
       })).wait();
 
       nftWithMetadataAndMetadataKeyAndCustomFeeAddress = receipt.logs[0].args[0];
-      const info = await utils.asyncGetTokenInfoByMN(nftWithMetadataAndMetadataKeyAndCustomFeeAddress);
+      const info = await utils.getTokenInfoByMN(nftWithMetadataAndMetadataKeyAndCustomFeeAddress);
       expect(ethers.toUtf8String((ethers.decodeBase64(info.metadata)))).to.equal(META_TEXT);
       expect(info.metadata_key).to.not.be.null;
       expect(info.custom_fees.fixed_fees).to.not.be.empty;
@@ -195,23 +195,23 @@ describe('HIP1028 Test Suite', function () {
     const UPDATED_METADATA = '5644';
 
     it('should verify updateTokenMetadata updates the metadata value for a token', async () => {
-      const infoBefore = await utils.asyncGetTokenInfoByMN(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress);
+      const infoBefore = await utils.getTokenInfoByMN(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress);
       await (
           await hip1028Contract.updateTokenMetadata(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress, UPDATED_METADATA, {gasLimit: 5_000_000})
       ).wait();
 
-      const infoAfter = await utils.asyncGetTokenInfoByMN(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress);
+      const infoAfter = await utils.getTokenInfoByMN(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress);
       expect(infoBefore.metadata).to.not.equal(infoAfter.metadata);
       expect(ethers.toUtf8String((ethers.decodeBase64(infoAfter.metadata)))).to.equal(UPDATED_METADATA);
     });
 
     it('should verify updateNFTsMetadata updates the metadata value for an nft', async () => {
-      const infoBefore = await utils.asyncGetTokenInfoByMN(nftWithMetadataAndMetadataKeyAndCustomFeeAddress);
+      const infoBefore = await utils.getTokenInfoByMN(nftWithMetadataAndMetadataKeyAndCustomFeeAddress);
       await (
           await hip1028Contract.updateTokenMetadata(nftWithMetadataAndMetadataKeyAndCustomFeeAddress, UPDATED_METADATA, {gasLimit: 5_000_000})
       ).wait();
 
-      const infoAfter = await utils.asyncGetTokenInfoByMN(nftWithMetadataAndMetadataKeyAndCustomFeeAddress);
+      const infoAfter = await utils.getTokenInfoByMN(nftWithMetadataAndMetadataKeyAndCustomFeeAddress);
       expect(infoBefore.metadata).to.not.equal(infoAfter.metadata);
       expect(ethers.toUtf8String((ethers.decodeBase64(infoAfter.metadata)))).to.equal(UPDATED_METADATA);
     });
@@ -219,22 +219,22 @@ describe('HIP1028 Test Suite', function () {
 
   describe('update token keys', async () => {
     it('should verify updateTokenKeys updates the metadata key value for a token', async () => {
-      const infoBefore = await utils.asyncGetTokenInfoByMN(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress);
+      const infoBefore = await utils.getTokenInfoByMN(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress);
       await (
           await hip1028Contract.updateTokenKeys(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress, signers[1].address, {gasLimit: 5_000_000})
       ).wait();
 
-      const infoAfter = await utils.asyncGetTokenInfoByMN(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress);
+      const infoAfter = await utils.getTokenInfoByMN(tokenWithMetadataAndMetadataKeyAndCustomFeeAddress);
       expect(infoBefore.metadata_key.key).to.not.equal(infoAfter.metadata_key.key);
     });
 
     it('should verify updateTokenKeys updates the metadata key value for an nft', async () => {
-      const infoBefore = await utils.asyncGetTokenInfoByMN(nftWithMetadataAndMetadataKeyAndCustomFeeAddress);
+      const infoBefore = await utils.getTokenInfoByMN(nftWithMetadataAndMetadataKeyAndCustomFeeAddress);
       await (
           await hip1028Contract.updateTokenKeys(nftWithMetadataAndMetadataKeyAndCustomFeeAddress, signers[1].address, {gasLimit: 5_000_000})
       ).wait();
 
-      const infoAfter = await utils.asyncGetTokenInfoByMN(nftWithMetadataAndMetadataKeyAndCustomFeeAddress);
+      const infoAfter = await utils.getTokenInfoByMN(nftWithMetadataAndMetadataKeyAndCustomFeeAddress);
       expect(infoBefore.metadata_key.key).to.not.equal(infoAfter.metadata_key.key);
     });
   });

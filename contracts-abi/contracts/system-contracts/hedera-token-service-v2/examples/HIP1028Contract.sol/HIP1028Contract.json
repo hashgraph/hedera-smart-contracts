@@ -853,7 +853,13 @@
     "type": "event"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "metadata",
+        "type": "string"
+      }
+    ],
     "name": "createNftWithMetaAndKey",
     "outputs": [
       {
@@ -866,7 +872,13 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "metadata",
+        "type": "string"
+      }
+    ],
     "name": "createNftWithMetaAndKeyAndCustomFees",
     "outputs": [
       {
@@ -879,7 +891,13 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "metadata",
+        "type": "string"
+      }
+    ],
     "name": "createNftWithMetadata",
     "outputs": [
       {
@@ -892,7 +910,13 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "metadata",
+        "type": "string"
+      }
+    ],
     "name": "createNftWithMetadataAndCustomFees",
     "outputs": [
       {
@@ -905,7 +929,13 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "metadata",
+        "type": "string"
+      }
+    ],
     "name": "createTokenWithMetadata",
     "outputs": [
       {
@@ -918,7 +948,13 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "metadata",
+        "type": "string"
+      }
+    ],
     "name": "createTokenWithMetadataAndCustomFees",
     "outputs": [
       {
@@ -931,7 +967,13 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "metadata",
+        "type": "string"
+      }
+    ],
     "name": "createTokenWithMetadataAndKey",
     "outputs": [
       {
@@ -944,7 +986,13 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "metadata",
+        "type": "string"
+      }
+    ],
     "name": "createTokenWithMetadataAndKeyAndCustomFees",
     "outputs": [
       {

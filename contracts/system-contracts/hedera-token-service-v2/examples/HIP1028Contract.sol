@@ -2,10 +2,10 @@
 pragma solidity >=0.5.0 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-import "./HederaTokenService/HederaResponseCodes.sol";
-import "./HederaTokenService/HederaTokenService.sol";
-import "./HederaTokenService/KeyHelper.sol";
-import "./HederaTokenService/FeeHelper.sol";
+import "../HederaResponseCodes.sol";
+import "../HederaTokenService.sol";
+import "../KeyHelper.sol";
+import "../FeeHelper.sol";
 
 contract HIP1028Contract is HederaTokenService, KeyHelper, FeeHelper {
     event TokenAddress(address);
@@ -13,10 +13,10 @@ contract HIP1028Contract is HederaTokenService, KeyHelper, FeeHelper {
     event FungibleTokenInfo(IHederaTokenService.FungibleTokenInfo);
     event NonFungibleTokenInfo(IHederaTokenService.NonFungibleTokenInfo);
 
-    function createTokenWithMetadata() public payable returns (address createdAddress) {
+    function createTokenWithMetadata(string memory metadata) public payable returns (address createdAddress) {
         IHederaTokenService.HederaToken memory token;
         token.name = "testToken";
-        token.metadata = bytes("testmeta");
+        token.metadata = bytes(metadata);
         token.symbol = "test";
         token.treasury = address(this);
         token.tokenKeys = new IHederaTokenService.TokenKey[](0);
@@ -32,10 +32,10 @@ contract HIP1028Contract is HederaTokenService, KeyHelper, FeeHelper {
         emit TokenAddress(createdAddress);
     }
 
-    function createTokenWithMetadataAndCustomFees() public payable returns (address createdAddress) {
+    function createTokenWithMetadataAndCustomFees(string memory metadata) public payable returns (address createdAddress) {
         IHederaTokenService.HederaToken memory token;
         token.name = "testToken";
-        token.metadata = bytes("testmeta");
+        token.metadata = bytes(metadata);
         token.symbol = "test";
         token.treasury = address(this);
         token.tokenKeys = new IHederaTokenService.TokenKey[](0);
@@ -52,10 +52,10 @@ contract HIP1028Contract is HederaTokenService, KeyHelper, FeeHelper {
         emit TokenAddress(createdAddress);
     }
 
-    function createTokenWithMetadataAndKey() public payable returns (address createdAddress) {
+    function createTokenWithMetadataAndKey(string memory metadata) public payable returns (address createdAddress) {
         IHederaTokenService.HederaToken memory token;
         token.name = "testToken";
-        token.metadata = bytes("testmeta");
+        token.metadata = bytes(metadata);
         token.symbol = "test";
         token.treasury = address(this);
         token.tokenKeys = new IHederaTokenService.TokenKey[](1);
@@ -72,10 +72,10 @@ contract HIP1028Contract is HederaTokenService, KeyHelper, FeeHelper {
         emit TokenAddress(createdAddress);
     }
 
-    function createTokenWithMetadataAndKeyAndCustomFees() public payable returns (address createdAddress) {
+    function createTokenWithMetadataAndKeyAndCustomFees(string memory metadata) public payable returns (address createdAddress) {
         IHederaTokenService.HederaToken memory token;
         token.name = "testToken";
-        token.metadata = bytes("testmeta");
+        token.metadata = bytes(metadata);
         token.symbol = "test";
         token.treasury = address(this);
         token.tokenKeys = new IHederaTokenService.TokenKey[](2);
@@ -97,11 +97,11 @@ contract HIP1028Contract is HederaTokenService, KeyHelper, FeeHelper {
         emit TokenAddress(createdAddress);
     }
 
-    function createNftWithMetadata() public payable returns (address createdAddress) {
+    function createNftWithMetadata(string memory metadata) public payable returns (address createdAddress) {
         IHederaTokenService.HederaToken memory token;
         token.name = "nft";
         token.symbol = "nft";
-        token.metadata = bytes("testmeta");
+        token.metadata = bytes(metadata);
         token.treasury = address(this);
         token.tokenKeys = new IHederaTokenService.TokenKey[](1);
         IHederaTokenService.TokenKey memory tokenSupplyKey = super.getSingleKey(KeyType.SUPPLY, KeyValueType.CONTRACT_ID, address(this));
@@ -116,11 +116,11 @@ contract HIP1028Contract is HederaTokenService, KeyHelper, FeeHelper {
         emit TokenAddress(createdAddress);
     }
 
-    function createNftWithMetadataAndCustomFees() public payable returns (address createdAddress) {
+    function createNftWithMetadataAndCustomFees(string memory metadata) public payable returns (address createdAddress) {
         IHederaTokenService.HederaToken memory token;
         token.name = "nft";
         token.symbol = "nft";
-        token.metadata = bytes("testmeta");
+        token.metadata = bytes(metadata);
         token.treasury = address(this);
         token.tokenKeys = new IHederaTokenService.TokenKey[](1);
         IHederaTokenService.TokenKey memory tokenSupplyKey = super.getSingleKey(KeyType.SUPPLY, KeyValueType.CONTRACT_ID, address(this));
@@ -137,11 +137,11 @@ contract HIP1028Contract is HederaTokenService, KeyHelper, FeeHelper {
         emit TokenAddress(createdAddress);
     }
 
-    function createNftWithMetaAndKey() public payable returns (address createdAddress) {
+    function createNftWithMetaAndKey(string memory metadata) public payable returns (address createdAddress) {
         IHederaTokenService.HederaToken memory token;
         token.name = "nft";
         token.symbol = "nft";
-        token.metadata = bytes("testmeta");
+        token.metadata = bytes(metadata);
         token.treasury = address(this);
         token.tokenKeys = new IHederaTokenService.TokenKey[](2);
         IHederaTokenService.TokenKey memory tokenKey = super.getSingleKey(KeyType.METADATA, KeyValueType.CONTRACT_ID, address(this));
@@ -158,11 +158,11 @@ contract HIP1028Contract is HederaTokenService, KeyHelper, FeeHelper {
         emit TokenAddress(createdAddress);
     }
 
-    function createNftWithMetaAndKeyAndCustomFees() public payable returns (address createdAddress) {
+    function createNftWithMetaAndKeyAndCustomFees(string memory metadata) public payable returns (address createdAddress) {
         IHederaTokenService.HederaToken memory token;
         token.name = "nft";
         token.symbol = "nft";
-        token.metadata = bytes("testmeta");
+        token.metadata = bytes(metadata);
         token.treasury = address(this);
         token.tokenKeys = new IHederaTokenService.TokenKey[](3);
         IHederaTokenService.TokenKey memory tokenMetaKey = super.getSingleKey(KeyType.METADATA, KeyValueType.CONTRACT_ID, address(this));
