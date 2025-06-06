@@ -979,6 +979,16 @@ class Utils {
     return BigInt(precompileAction.result_data).toString();
   }
 
+  static async getTokenInfoByMN(tokenAddress) {
+    const network = hre.network.name;
+    const mirrorNodeUrl = getMirrorNodeUrl(network);
+    const res = await axios.get(
+        `${mirrorNodeUrl}/tokens/${tokenAddress}`
+    );
+
+    return res.data;
+  }
+
   /**
    * This method fetches the transaction actions from the mirror node corresponding to the current network,
    * filters the actions to find the one directed to the Hedera Account Service (HAS) system contract,
