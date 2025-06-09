@@ -1,0 +1,638 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IHtsNonFungibleToken",
+  "sourceName": "contracts/system-contracts/hedera-token-service/native-token/interfaces/IHtsNonFungibleToken.sol",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "approved",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "Approval",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "approved",
+          "type": "bool"
+        }
+      ],
+      "name": "ApprovalForAll",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "balance",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getApproved",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "int64",
+          "name": "serialNumber",
+          "type": "int64"
+        }
+      ],
+      "name": "getNonFungibleTokenInfo",
+      "outputs": [
+        {
+          "internalType": "int64",
+          "name": "responseCode",
+          "type": "int64"
+        },
+        {
+          "components": [
+            {
+              "components": [
+                {
+                  "components": [
+                    {
+                      "internalType": "string",
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "symbol",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "treasury",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "memo",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "bool",
+                      "name": "tokenSupplyType",
+                      "type": "bool"
+                    },
+                    {
+                      "internalType": "int64",
+                      "name": "maxSupply",
+                      "type": "int64"
+                    },
+                    {
+                      "internalType": "bool",
+                      "name": "freezeDefault",
+                      "type": "bool"
+                    },
+                    {
+                      "components": [
+                        {
+                          "internalType": "uint256",
+                          "name": "keyType",
+                          "type": "uint256"
+                        },
+                        {
+                          "components": [
+                            {
+                              "internalType": "bool",
+                              "name": "inheritAccountKey",
+                              "type": "bool"
+                            },
+                            {
+                              "internalType": "address",
+                              "name": "contractId",
+                              "type": "address"
+                            },
+                            {
+                              "internalType": "bytes",
+                              "name": "ed25519",
+                              "type": "bytes"
+                            },
+                            {
+                              "internalType": "bytes",
+                              "name": "ECDSA_secp256k1",
+                              "type": "bytes"
+                            },
+                            {
+                              "internalType": "address",
+                              "name": "delegatableContractId",
+                              "type": "address"
+                            }
+                          ],
+                          "internalType": "struct IHTSStructs.KeyValue",
+                          "name": "key",
+                          "type": "tuple"
+                        }
+                      ],
+                      "internalType": "struct IHTSStructs.TokenKey[]",
+                      "name": "tokenKeys",
+                      "type": "tuple[]"
+                    },
+                    {
+                      "components": [
+                        {
+                          "internalType": "int64",
+                          "name": "second",
+                          "type": "int64"
+                        },
+                        {
+                          "internalType": "address",
+                          "name": "autoRenewAccount",
+                          "type": "address"
+                        },
+                        {
+                          "internalType": "int64",
+                          "name": "autoRenewPeriod",
+                          "type": "int64"
+                        }
+                      ],
+                      "internalType": "struct IHTSStructs.Expiry",
+                      "name": "expiry",
+                      "type": "tuple"
+                    }
+                  ],
+                  "internalType": "struct IHTSStructs.HederaToken",
+                  "name": "token",
+                  "type": "tuple"
+                },
+                {
+                  "internalType": "int64",
+                  "name": "totalSupply",
+                  "type": "int64"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "deleted",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "defaultKycStatus",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "pauseStatus",
+                  "type": "bool"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "int64",
+                      "name": "amount",
+                      "type": "int64"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "tokenId",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "bool",
+                      "name": "useHbarsForPayment",
+                      "type": "bool"
+                    },
+                    {
+                      "internalType": "bool",
+                      "name": "useCurrentTokenForPayment",
+                      "type": "bool"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "feeCollector",
+                      "type": "address"
+                    }
+                  ],
+                  "internalType": "struct IHTSStructs.FixedFee[]",
+                  "name": "fixedFees",
+                  "type": "tuple[]"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "int64",
+                      "name": "numerator",
+                      "type": "int64"
+                    },
+                    {
+                      "internalType": "int64",
+                      "name": "denominator",
+                      "type": "int64"
+                    },
+                    {
+                      "internalType": "int64",
+                      "name": "minimumAmount",
+                      "type": "int64"
+                    },
+                    {
+                      "internalType": "int64",
+                      "name": "maximumAmount",
+                      "type": "int64"
+                    },
+                    {
+                      "internalType": "bool",
+                      "name": "netOfTransfers",
+                      "type": "bool"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "feeCollector",
+                      "type": "address"
+                    }
+                  ],
+                  "internalType": "struct IHTSStructs.FractionalFee[]",
+                  "name": "fractionalFees",
+                  "type": "tuple[]"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "int64",
+                      "name": "numerator",
+                      "type": "int64"
+                    },
+                    {
+                      "internalType": "int64",
+                      "name": "denominator",
+                      "type": "int64"
+                    },
+                    {
+                      "internalType": "int64",
+                      "name": "amount",
+                      "type": "int64"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "tokenId",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "bool",
+                      "name": "useHbarsForPayment",
+                      "type": "bool"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "feeCollector",
+                      "type": "address"
+                    }
+                  ],
+                  "internalType": "struct IHTSStructs.RoyaltyFee[]",
+                  "name": "royaltyFees",
+                  "type": "tuple[]"
+                },
+                {
+                  "internalType": "string",
+                  "name": "ledgerId",
+                  "type": "string"
+                }
+              ],
+              "internalType": "struct IHTSStructs.TokenInfo",
+              "name": "tokenInfo",
+              "type": "tuple"
+            },
+            {
+              "internalType": "int64",
+              "name": "serialNumber",
+              "type": "int64"
+            },
+            {
+              "internalType": "address",
+              "name": "ownerId",
+              "type": "address"
+            },
+            {
+              "internalType": "int64",
+              "name": "creationTime",
+              "type": "int64"
+            },
+            {
+              "internalType": "bytes",
+              "name": "metadata",
+              "type": "bytes"
+            },
+            {
+              "internalType": "address",
+              "name": "spenderId",
+              "type": "address"
+            }
+          ],
+          "internalType": "struct IHTSStructs.NonFungibleTokenInfo",
+          "name": "nonFungibleTokenInfo",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        }
+      ],
+      "name": "isApprovedForAll",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "name",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ownerOf",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "safeTransferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "safeTransferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "approved",
+          "type": "bool"
+        }
+      ],
+      "name": "setApprovalForAll",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "interfaceId",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "symbol",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenURI",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
