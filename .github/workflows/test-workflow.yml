@@ -82,7 +82,7 @@ jobs:
           path: test-*.xml
 
       - name: Publish Test Report
-        uses: step-security/publish-unit-test-result-action@b495e9a82021fc8f34737416de688298581b847d # v2.19.0
+        uses: step-security/publish-unit-test-result-action@e88bfc6c0dffc68a1067d63526c80c81f248da11 # v2.20.0
         if: ${{ !cancelled() }}
         with:
           check_name: 'Unit Tests results' # Set to empty to disable check run
