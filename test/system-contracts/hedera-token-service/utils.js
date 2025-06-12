@@ -65,157 +65,61 @@ class Utils {
   }
 
   static async deployERC20Mock() {
-    const erc20MockFactory = await ethers.getContractFactory(
-      Constants.Path.HIP583_ERC20Mock
-    );
-    const erc20Mock = await erc20MockFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Path.HIP583_ERC20Mock,
-      await erc20Mock.getAddress()
-    );
+    return await this.deployContract(Constants.Path.HIP583_ERC20Mock);
   }
 
   static async deployERC721Mock() {
-    const erc721MockFactory = await ethers.getContractFactory(
-      Constants.Path.HIP583_ERC721Mock
-    );
-    const erc721Mock = await erc721MockFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Path.HIP583_ERC721Mock,
-      await erc721Mock.getAddress()
-    );
+    return await this.deployContract(Constants.Path.HIP583_ERC721Mock);
   }
 
   static async deployTokenCreateContract() {
-    const tokenCreateFactory = await ethers.getContractFactory(
-      Constants.Contract.TokenCreateContract
-    );
-    const tokenCreate = await tokenCreateFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Contract.TokenCreateContract,
-      await tokenCreate.getAddress()
-    );
+    return await this.deployContract(Constants.Contract.TokenCreateContract);
   }
 
   static async deployTokenCreateCustomContract() {
-    const tokenCreateCustomFactory = await ethers.getContractFactory(
-      Constants.Contract.TokenCreateCustomContract
-    );
-    const tokenCreateCustom = await tokenCreateCustomFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Contract.TokenCreateCustomContract,
-      await tokenCreateCustom.getAddress()
-    );
+    return await this.deployContract(Constants.Contract.TokenCreateCustomContract);
   }
 
   static async deployTokenManagementContract() {
-    const tokenManagementFactory = await ethers.getContractFactory(
-      Constants.Contract.TokenManagementContract
-    );
-    const tokenManagement = await tokenManagementFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Contract.TokenManagementContract,
-      await tokenManagement.getAddress()
-    );
+    return await this.deployContract(Constants.Contract.TokenManagementContract);
   }
 
   static async deployTokenQueryContract() {
-    const tokenQueryFactory = await ethers.getContractFactory(
-      Constants.Contract.TokenQueryContract
-    );
-    const tokenQuery = await tokenQueryFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Contract.TokenQueryContract,
-      await tokenQuery.getAddress()
-    );
+    return await this.deployContract(Constants.Contract.TokenQueryContract);
   }
 
   static async deployTokenTransferContract() {
-    const tokenTransferFactory = await ethers.getContractFactory(
-      Constants.Contract.TokenTransferContract
-    );
-    const tokenTransfer = await tokenTransferFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Contract.TokenTransferContract,
-      await tokenTransfer.getAddress()
-    );
+    return await this.deployContract(Constants.Contract.TokenTransferContract);
   }
 
   static async deployHRC719Contract() {
-    const hrcContractFactory = await ethers.getContractFactory(
-      Constants.Contract.HRC719Contract
-    );
-    const hrcContract = await hrcContractFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Contract.HRC719Contract,
-      await hrcContract.getAddress()
-    );
+    return await this.deployContract(Constants.Contract.HRC719Contract);
   }
 
   static async deployERC20Contract() {
-    const erc20ContractFactory = await ethers.getContractFactory(
-      Constants.Contract.ERC20Contract
-    );
-    const erc20Contract = await erc20ContractFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Contract.ERC20Contract,
-      await erc20Contract.getAddress()
-    );
+    return await this.deployContract(Constants.Contract.ERC20Contract);
   }
 
   static async deployERC721Contract() {
-    const erc721ContractFactory = await ethers.getContractFactory(
-      Constants.Contract.ERC721Contract
-    );
-    const erc721Contract = await erc721ContractFactory.deploy(
-      Constants.GAS_LIMIT_1_000_000
-    );
-
-    return await ethers.getContractAt(
-      Constants.Contract.ERC721Contract,
-      await erc721Contract.getAddress()
-    );
+    return await this.deployContract(Constants.Contract.ERC721Contract);
   }
 
-  static async createFungibleToken(contract, treasury) {
-    const tokenAddressTx = await contract.createFungibleTokenPublic(treasury, {
-      value: BigInt(this.createTokenCost),
-      gasLimit: 1_000_000,
-    });
-    const tokenAddressReceipt = await tokenAddressTx.wait();
-
-    const { tokenAddress } = tokenAddressReceipt.logs.filter(
+  static async getTokenAddress(tx) {
+    const receipt = await tx.wait();
+    const { tokenAddress } = receipt.logs.filter(
       (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args;
 
     return tokenAddress;
+  }
+
+  static async createFungibleToken(contract, treasury) {
+    return await this.getTokenAddress(
+      await contract.createFungibleTokenPublic(treasury, {
+        value: BigInt(this.createTokenCost),
+        gasLimit: 1_000_000,
+      })
+    );
   }
 
   static async createFungibleTokenWithPresetKeysPublic(
@@ -229,27 +133,22 @@ class Utils {
     freezeDefaultStatus,
     treasury
   ) {
-    const tokenAddressTx = await contract.createFungibleTokenWithPresetKeys(
-      name,
-      symbol,
-      memo,
-      initialSupply,
-      maxSupply,
-      decimals,
-      freezeDefaultStatus,
-      treasury,
-      {
-        value: BigInt(this.createTokenCost),
-        gasLimit: 1_000_000,
-      }
+    return await this.getTokenAddress(
+      await contract.createFungibleTokenWithPresetKeys(
+        name,
+        symbol,
+        memo,
+        initialSupply,
+        maxSupply,
+        decimals,
+        freezeDefaultStatus,
+        treasury,
+        {
+          value: BigInt(this.createTokenCost),
+          gasLimit: 1_000_000,
+        }
+      )
     );
-    const tokenAddressReceipt = await tokenAddressTx.wait();
-
-    const { tokenAddress } = tokenAddressReceipt.logs.filter(
-      (e) => e.fragment.name === Constants.Events.CreatedToken
-    )[0].args;
-
-    return tokenAddress;
   }
 
   static async createFungibleTokenPublic(
@@ -293,7 +192,7 @@ class Utils {
     treasury,
     adminKey
   ) {
-    const tokenAddressTx =
+    return await this.getTokenAddress(
       await contract.createFungibleTokenWithSECP256K1AdminKeyPublic(
         treasury,
         adminKey,
@@ -301,13 +200,8 @@ class Utils {
           value: BigInt(this.createTokenCost),
           gasLimit: 1_000_000,
         }
-      );
-    const tokenAddressReceipt = await tokenAddressTx.wait();
-    const { tokenAddress } = tokenAddressReceipt.logs.filter(
-      (e) => e.fragment.name === Constants.Events.CreatedToken
-    )[0].args;
-
-    return tokenAddress;
+      )
+    );
   }
 
   static async createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
@@ -315,7 +209,7 @@ class Utils {
     treasury,
     adminKey
   ) {
-    const tokenAddressTx =
+    return await this.getTokenAddress(
       await contract.createFungibleTokenWithSECP256K1AdminKeyWithoutKYCPublic(
         treasury,
         adminKey,
@@ -323,13 +217,8 @@ class Utils {
           value: BigInt(this.createTokenCost),
           gasLimit: 1_000_000,
         }
-      );
-    const tokenAddressReceipt = await tokenAddressTx.wait();
-    const { tokenAddress } = tokenAddressReceipt.logs.filter(
-      (e) => e.fragment.name === Constants.Events.CreatedToken
-    )[0].args;
-
-    return tokenAddress;
+      )
+    );
   }
 
   static async createFungibleTokenWithSECP256K1AdminKeyAssociateAndTransferToAddress(
@@ -338,7 +227,7 @@ class Utils {
     adminKey,
     initialBalance = 300
   ) {
-    const tokenAddressTx =
+    return await this.getTokenAddress(
       await contract.createFungibleTokenWithSECP256K1AdminKeyAssociateAndTransferToAddressPublic(
         treasury,
         adminKey,
@@ -347,17 +236,12 @@ class Utils {
           value: BigInt(this.createTokenCost),
           gasLimit: 1_000_000,
         }
-      );
-    const tokenAddressReceipt = await tokenAddressTx.wait();
-    const { tokenAddress } = tokenAddressReceipt.logs.filter(
-      (e) => e.fragment.name === Constants.Events.CreatedToken
-    )[0].args;
-
-    return tokenAddress;
+      )
+    );
   }
 
   static async createFungibleTokenWithCustomFees(contract, feeTokenAddress) {
-    const tokenAddressTx =
+    return await this.getTokenAddress(
       await contract.createFungibleTokenWithCustomFeesPublic(
         await contract.getAddress(),
         feeTokenAddress,
@@ -365,13 +249,8 @@ class Utils {
           value: BigInt(this.createTokenCustomFeesCost),
           gasLimit: 10_000_000,
         }
-      );
-    const tokenAddressReceipt = await tokenAddressTx.wait();
-    const { tokenAddress } = tokenAddressReceipt.logs.filter(
-      (e) => e.fragment.name === Constants.Events.CreatedToken
-    )[0].args;
-
-    return tokenAddress;
+      )
+    );
   }
 
   // Helper function to associate and grant KYC
@@ -408,13 +287,7 @@ class Utils {
         gasLimit: 1_000_000,
       }
     );
-    const updateFeesReceipt = await updateFeesTx.wait();
-
-    const { tokenAddress } = updateFeesReceipt.logs.filter(
-      (e) => e.fragment.name === Constants.Events.CreatedToken
-    )[0].args;
-
-    return tokenAddress;
+    return await this.getTokenAddress(updateFeesTx);
   }
 
   static async createNonFungibleTokenWithCustomRoyaltyFeeAndKeys(
@@ -424,7 +297,7 @@ class Utils {
     royaltyFees,
     keys
   ) {
-    const tokenAddressTx =
+    return await this.getTokenAddress(
       await contract.createNonFungibleTokenWithCustomFeesPublic(
         treasury,
         'Non Fungible Token With Custom Fees',
@@ -438,13 +311,8 @@ class Utils {
           value: BigInt(this.createTokenCost),
           gasLimit: 1_000_000,
         }
-      );
-    const tokenAddressReceipt = await tokenAddressTx.wait();
-    const { tokenAddress } = tokenAddressReceipt.logs.filter(
-      (e) => e.fragment.name === Constants.Events.CreatedToken
-    )[0].args;
-
-    return tokenAddress;
+      )
+    );
   }
 
   static async createNonFungibleToken(contract, treasury) {
@@ -455,12 +323,7 @@ class Utils {
         gasLimit: 1_000_000,
       }
     );
-    const tokenAddressReceipt = await tokenAddressTx.wait();
-    const { tokenAddress } = tokenAddressReceipt.logs.filter(
-      (e) => e.fragment.name === Constants.Events.CreatedToken
-    )[0].args;
-
-    return tokenAddress;
+    return await this.getTokenAddress(tokenAddressTx);
   }
 
   static async createNonFungibleTokenWithSECP256K1AdminKey(
@@ -468,7 +331,7 @@ class Utils {
     treasury,
     adminKey
   ) {
-    const tokenAddressTx =
+    return await this.getTokenAddress(
       await contract.createNonFungibleTokenWithSECP256K1AdminKeyPublic(
         treasury,
         adminKey,
@@ -476,13 +339,8 @@ class Utils {
           value: BigInt(this.createTokenCost),
           gasLimit: 1_000_000,
         }
-      );
-    const tokenAddressReceipt = await tokenAddressTx.wait();
-    const { tokenAddress } = tokenAddressReceipt.logs.filter(
-      (e) => e.fragment.name === Constants.Events.CreatedToken
-    )[0].args;
-
-    return tokenAddress;
+      )
+    );
   }
 
   static async createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
@@ -490,7 +348,7 @@ class Utils {
     treasury,
     adminKey
   ) {
-    const tokenAddressTx =
+    return await this.getTokenAddress(
       await contract.createNonFungibleTokenWithSECP256K1AdminKeyWithoutKYCPublic(
         treasury,
         adminKey,
@@ -498,13 +356,8 @@ class Utils {
           value: BigInt(this.createTokenCost),
           gasLimit: 1_000_000,
         }
-      );
-    const tokenAddressReceipt = await tokenAddressTx.wait();
-    const { tokenAddress } = tokenAddressReceipt.logs.filter(
-      (e) => e.fragment.name === Constants.Events.CreatedToken
-    )[0].args;
-
-    return tokenAddress;
+      )
+    );
   }
 
   static hexToASCII(str) {
@@ -582,6 +435,15 @@ class Utils {
     const receipt = await updateFees.wait();
   }
 
+  static async getSerialNumbers(mintNftTx) {
+    const tokenAddressReceipt = await mintNftTx.wait();
+    const { serialNumbers } = tokenAddressReceipt.logs.filter(
+      (e) => e.fragment.name === Constants.Events.MintedToken
+    )[0].args;
+
+    return parseInt(serialNumbers);
+  }
+
   static async mintNFT(contract, nftTokenAddress, data = ['0x01']) {
     const mintNftTx = await contract.mintTokenPublic(
       nftTokenAddress,
@@ -589,12 +451,8 @@ class Utils {
       data,
       Constants.GAS_LIMIT_1_000_000
     );
-    const tokenAddressReceipt = await mintNftTx.wait();
-    const { serialNumbers } = tokenAddressReceipt.logs.filter(
-      (e) => e.fragment.name === Constants.Events.MintedToken
-    )[0].args;
 
-    return parseInt(serialNumbers);
+    return await this.getSerialNumbers(mintNftTx);
   }
 
   static async mintNFTToAddress(contract, nftTokenAddress, data = ['0x01']) {
@@ -604,12 +462,8 @@ class Utils {
       data,
       Constants.GAS_LIMIT_1_000_000
     );
-    const tokenAddressReceipt = await mintNftTx.wait();
-    const { serialNumbers } = tokenAddressReceipt.logs.filter(
-      (e) => e.fragment.name === Constants.Events.MintedToken
-    )[0].args;
 
-    return parseInt(serialNumbers);
+    return await this.getSerialNumbers(mintNftTx);
   }
 
   // Add Token association via hedera.js sdk
@@ -907,7 +761,7 @@ class Utils {
    *                See https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L128
    *                for more information
    *
-   * @param keyValyeType INHERIT_ACCOUNT_KEY | CONTRACT_ID | ED25519 | SECP256K1 | DELEGETABLE_CONTRACT_ID
+   * @param keyValueType INHERIT_ACCOUNT_KEY | CONTRACT_ID | ED25519 | SECP256K1 | DELEGETABLE_CONTRACT_ID
    *
    * @param value bytes value, public address of an account, or boolean
    *            See https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L92
