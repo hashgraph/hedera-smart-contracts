@@ -187,7 +187,7 @@ jobs:
           merge-multiple: true
 
       - name: Publish Test Report
-        uses: step-security/publish-unit-test-result-action@b495e9a82021fc8f34737416de688298581b847d # v2.19.0
+        uses: step-security/publish-unit-test-result-action@201bbe166c323b2f9dab6dfbf9d6b6c001bd0dce # v2.20.1
         with:
           check_name: Test Results
           json_thousands_separator: ','
