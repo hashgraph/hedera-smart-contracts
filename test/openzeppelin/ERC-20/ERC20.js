@@ -67,6 +67,8 @@ describe('@OZERC20 Test Suite', function () {
     );
     const balanceAfter = await erc20.balanceOf(await erc20.getAddress());
 
+    console.log(`balanceBefore = *${balanceBefore}*`);
+    console.log(`balanceAfter = *${balanceAfter}*`);
     expect(balanceBefore).to.not.eq(balanceAfter);
     expect(balanceAfter).to.eq(parseInt(balanceBefore) + amount);
   });
