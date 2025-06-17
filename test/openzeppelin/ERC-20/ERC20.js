@@ -22,10 +22,6 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 describe('@OZERC20 Test Suite', function () {
   const amount = 33;
   let signers;
@@ -57,40 +53,16 @@ describe('@OZERC20 Test Suite', function () {
   });
 
   it('should be able to execute totalSupply()', async function () {
-    let res = await erc20.totalSupply();
-    // Try if res match 1000, if not the same, try it a few times then throw error
-    const maxTry = 10;
-    let tryCount = 0;
-    while (res !== 1000) {
-      tryCount++;
-      if (tryCount > maxTry) {
-        throw new Error('totalSupply() does not match 1000');
-      }
-      res = await erc20.totalSupply();
-      res = parseInt(res.toString());
-      sleep(1000);
-    }
-    expect(res).to.equal(1000);
+    const res = await erc20.totalSupply();
+    expect(parseInt(res)).to.equal(1000);
   });
 
   it('should be able to get execute balanceOf(address)', async function () {
-    let res = await erc20.balanceOf(signers[0].address);
-    // Try if res match 1000, if not the same, try it a few times then throw error
-    const maxTry = 10;
-    let tryCount = 0;
-    while (res !== 1000) {
-      tryCount++;
-      if (tryCount > maxTry) {
-        throw new Error('balanceOf() does not match 1000');
-      }
-      res = await erc20.balanceOf(signers[0].address);
-      res = parseInt(res.toString());
-      sleep(1000);
-    }
-    expect(res).to.equal(1000);
+    const res1 = await erc20.balanceOf(signers[0].address);
+    expect(res1).to.equal(1000);
 
     const res2 = await erc20.balanceOf(signers[1].address);
-    expect(res2).to.equal(0);
+    expect(parseInt(res2)).to.equal(0);
   });
 
   it('should be able to execute approve(address,uint256)', async function () {
@@ -103,41 +75,17 @@ describe('@OZERC20 Test Suite', function () {
   });
 
   it('should be able to execute allowance(address,address,uint256)', async function () {
-    let res = await erc20.allowance(
+    const res = await erc20.allowance(
       signers[0].address,
       await erc20.getAddress()
     );
-    // Try if res match amount, if not the same, try it a few times then throw error
-    const maxTry = 10;
-    let tryCount = 0;
-    while (res !== amount) {
-      tryCount++;
-      if (tryCount > maxTry) {
-        throw new Error('allowance() does not match amount');
-      }
-      res = await erc20.allowance(signers[0].address, await erc20.getAddress());
-      res = parseInt(res.toString());
-      sleep(1000);
-    }
-    expect(res).to.eq(amount);
+    expect(parseInt(res)).to.eq(amount);
   });
 
   it('should be able to execute transfer(address,uint256)', async function () {
-    const balanceBefore = await erc20.balanceOf(signers[1].address);
+    const balanceBefore = parseInt(await erc20.balanceOf(signers[1].address));
     await erc20.transfer(signers[1].address, 33);
-    let balanceAfter = await erc20.balanceOf(signers[1].address);
-    // Try if res match 1000
-    const maxTry = 10;
-    let tryCount = 0;
-    while (balanceBefore !== balanceAfter) {
-      tryCount++;
-      if (tryCount > maxTry) {
-        throw new Error('balanceBefore does not match balanceAfter');
-      }
-      balanceAfter = await erc20.balanceOf(signers[1].address);
-      res = parseInt(res.toString());
-      sleep(1000);
-    }
+    const balanceAfter = parseInt(await erc20.balanceOf(signers[1].address));
     expect(balanceBefore).to.not.eq(balanceAfter);
     expect(balanceAfter).to.eq(parseInt(balanceBefore) + amount);
   });
@@ -146,13 +94,13 @@ describe('@OZERC20 Test Suite', function () {
     await erc20.approve(signers[1].address, amount);
     const erc20Signer2 = erc20.connect(signers[1]);
 
-    const balanceBefore = await erc20.balanceOf(await erc20.getAddress());
+    const balanceBefore = parseInt(await erc20.balanceOf(await erc20.getAddress()));
     await erc20Signer2.transferFrom(
       signers[0].address,
       await erc20.getAddress(),
       33
     );
-    const balanceAfter = await erc20.balanceOf(await erc20.getAddress());
+    const balanceAfter = parseInt(await erc20.balanceOf(await erc20.getAddress()));
 
     console.log(`balanceBefore = *${balanceBefore}*`);
     console.log(`balanceAfter = *${balanceAfter}*`);
