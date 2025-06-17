@@ -22,6 +22,10 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 describe('@OZERC20 Test Suite', function () {
   const amount = 33;
   let signers;
@@ -53,7 +57,7 @@ describe('@OZERC20 Test Suite', function () {
   });
 
   it('should be able to execute totalSupply()', async function () {
-    const res = await erc20.totalSupply();
+    let res = await erc20.totalSupply();
     // Try if res match 1000, if not the same, try it a few times then throw error
     const maxTry = 10;
     let tryCount = 0;
@@ -63,22 +67,24 @@ describe('@OZERC20 Test Suite', function () {
         throw new Error('totalSupply() does not match 1000');
       }
       res = await erc20.totalSupply();
+      res = parseInt(res.toString());
       sleep(1000);
     }
     expect(res).to.equal(1000);
   });
 
   it('should be able to get execute balanceOf(address)', async function () {
-    const res1 = await erc20.balanceOf(signers[0].address);
+    let res = await erc20.balanceOf(signers[0].address);
     // Try if res match 1000, if not the same, try it a few times then throw error
     const maxTry = 10;
     let tryCount = 0;
     while (res !== 1000) {
       tryCount++;
       if (tryCount > maxTry) {
-        throw new Error('totalSupply() does not match 1000');
+        throw new Error('balanceOf() does not match 1000');
       }
-      res = await erc20.totalSupply();
+      res = await erc20.balanceOf(signers[0].address);
+      res = parseInt(res.toString());
       sleep(1000);
     }
     expect(res).to.equal(1000);
@@ -97,7 +103,7 @@ describe('@OZERC20 Test Suite', function () {
   });
 
   it('should be able to execute allowance(address,address,uint256)', async function () {
-    const res = await erc20.allowance(
+    let res = await erc20.allowance(
       signers[0].address,
       await erc20.getAddress()
     );
@@ -110,6 +116,7 @@ describe('@OZERC20 Test Suite', function () {
         throw new Error('allowance() does not match amount');
       }
       res = await erc20.allowance(signers[0].address, await erc20.getAddress());
+      res = parseInt(res.toString());
       sleep(1000);
     }
     expect(res).to.eq(amount);
@@ -118,7 +125,7 @@ describe('@OZERC20 Test Suite', function () {
   it('should be able to execute transfer(address,uint256)', async function () {
     const balanceBefore = await erc20.balanceOf(signers[1].address);
     await erc20.transfer(signers[1].address, 33);
-    const balanceAfter = await erc20.balanceOf(signers[1].address);
+    let balanceAfter = await erc20.balanceOf(signers[1].address);
     // Try if res match 1000
     const maxTry = 10;
     let tryCount = 0;
@@ -128,6 +135,7 @@ describe('@OZERC20 Test Suite', function () {
         throw new Error('balanceBefore does not match balanceAfter');
       }
       balanceAfter = await erc20.balanceOf(signers[1].address);
+      res = parseInt(res.toString());
       sleep(1000);
     }
     expect(balanceBefore).to.not.eq(balanceAfter);
