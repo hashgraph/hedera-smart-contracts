@@ -54,7 +54,7 @@ describe('@OZERC20 Test Suite', function () {
 
   it('should be able to execute totalSupply()', async function () {
     const res = await erc20.totalSupply();
-    expect(res).to.equal(1000);
+    expect(parseInt(res)).to.equal(1000);
   });
 
   it('should be able to get execute balanceOf(address)', async function () {
@@ -62,7 +62,7 @@ describe('@OZERC20 Test Suite', function () {
     expect(res1).to.equal(1000);
 
     const res2 = await erc20.balanceOf(signers[1].address);
-    expect(res2).to.equal(0);
+    expect(parseInt(res2)).to.equal(0);
   });
 
   it('should be able to execute approve(address,uint256)', async function () {
@@ -79,32 +79,32 @@ describe('@OZERC20 Test Suite', function () {
       signers[0].address,
       await erc20.getAddress()
     );
-    expect(res).to.eq(amount);
+    expect(parseInt(res)).to.eq(amount);
   });
 
   it('should be able to execute transfer(address,uint256)', async function () {
-    const balanceBefore = await erc20.balanceOf(signers[1].address);
+    const balanceBefore = parseInt(await erc20.balanceOf(signers[1].address));
     await erc20.transfer(signers[1].address, 33);
-    const balanceAfter = await erc20.balanceOf(signers[1].address);
+    const balanceAfter = parseInt(await erc20.balanceOf(signers[1].address));
     expect(balanceBefore).to.not.eq(balanceAfter);
-    expect(balanceAfter).to.eq(parseInt(balanceBefore) + amount);
+    expect(balanceAfter).to.eq(balanceBefore + amount);
   });
 
   it('should be able to execute transferFrom(address,address,uint256)', async function () {
     await erc20.approve(signers[1].address, amount);
     const erc20Signer2 = erc20.connect(signers[1]);
 
-    const balanceBefore = await erc20.balanceOf(await erc20.getAddress());
+    const balanceBefore = parseInt(await erc20.balanceOf(await erc20.getAddress()));
     await erc20Signer2.transferFrom(
       signers[0].address,
       await erc20.getAddress(),
       33
     );
-    const balanceAfter = await erc20.balanceOf(await erc20.getAddress());
+    const balanceAfter = parseInt(await erc20.balanceOf(await erc20.getAddress()));
 
     console.log(`balanceBefore = *${balanceBefore}*`);
     console.log(`balanceAfter = *${balanceAfter}*`);
     expect(balanceBefore).to.not.eq(balanceAfter);
-    expect(balanceAfter).to.eq(parseInt(balanceBefore) + amount);
+    expect(balanceAfter).to.eq(balanceBefore + amount);
   });
 });
