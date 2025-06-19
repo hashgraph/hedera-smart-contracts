@@ -78,7 +78,7 @@ class HederaMirrorNode {
     }
     if (attempt > 10) return { contractResult: undefined };
     await delay(2000);
-    return await this.getGasConsumedOnTransaction(evmHash, attempt + 1);
+    return await this.getContractResult(evmHash, attempt + 1);
   }
 }
 module.exports = { create };
