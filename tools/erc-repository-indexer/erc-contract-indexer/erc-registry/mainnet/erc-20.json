@@ -6390,5 +6390,197 @@
     "symbol": "MTK",
     "totalSupply": 0,
     "decimals": 18
+  },
+  {
+    "contractId": "0.0.9225185",
+    "address": "0x29086141ecdc310058fc23273f8ef7881d20c2f7",
+    "name": "VotesToken",
+    "symbol": "VTK",
+    "totalSupply": 1e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9228314",
+    "address": "0xfe965815975eeda37da521f964dde9e1d016b6c5",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 3872983346207,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9229148",
+    "address": "0x023ec3207d8e7fd8b1f85d99888ddb4568f825e4",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 282842712474,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9233285",
+    "address": "0x2177cf58e4ff44527078bf14d32cd42b76e66aa8",
+    "name": "MyToken",
+    "symbol": "MTK",
+    "totalSupply": 1e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9252909",
+    "address": "0x8bd7093f075afc93d358147063feddb51944fcec",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 1000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9252911",
+    "address": "0x79a18b7dd49f810bdc8aeb8c76c8917f357aad60",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 24264150152819,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9254035",
+    "address": "0x50c8cbf41bc020f69fc12079b848bad36fa726c1",
+    "name": "MyToken",
+    "symbol": "MTK",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9254043",
+    "address": "0xe723b5e0bc12a7e2aa12b8e71c9839beabd4d806",
+    "name": "MyToken",
+    "symbol": "MTK",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9264252",
+    "address": "0xe294df6ed5654d146a368ea3e14aada715f2e22c",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1216141439,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9271310",
+    "address": "0x6a8adcab6f0a51923d05fa7343c597c8d1f11f6b",
+    "name": "Ledgity Token",
+    "symbol": "LDY",
+    "totalSupply": 7.5e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9271340",
+    "address": "0x8635ca41f9218ed322c8a3b1270900c08cd605a3",
+    "name": "Ledgity Token",
+    "symbol": "LDY",
+    "totalSupply": 7.5e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9271349",
+    "address": "0x4a511857c26fca7be931e650470c2557a782d097",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9271355",
+    "address": "0xd3dcd6bac90de2b7d9fc8a49ae4e23080003d12c",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9271357",
+    "address": "0xdb762c18a7c8a3ae4b4eaab82767b3fb88fc35f8",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9277697",
+    "address": "0x9588f69388e905dc55cf36f70c769da96aee069f",
+    "name": "Ledgity Token",
+    "symbol": "LDY",
+    "totalSupply": 7.5e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9277706",
+    "address": "0x13e64a9a7d4f5975eaf301624e5a8bad692cd93b",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9277708",
+    "address": "0xdaa43f127046c25cd594955248ac0488e0e61ec0",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9277714",
+    "address": "0xb90498cea9b1c9049b1667c3ef6ecfe33e878fbb",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9277716",
+    "address": "0x39cd9179d278a42d447947e6040c0c88fed614ad",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9279963",
+    "address": "0xb3bde066afde18747bc347df90042e6afd32be9b",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9279983",
+    "address": "0x53990bdec017085153eb807236e744ca63c21ff4",
+    "name": "WurenTek Pool",
+    "symbol": "WUR",
+    "totalSupply": 0,
+    "decimals": 10
+  },
+  {
+    "contractId": "0.0.9281237",
+    "address": "0xe8937ce3c9a9b9482231d999d2603cf527d233b1",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9281245",
+    "address": "0x27ead7ba11451cd63818ea3372508f11cd44dbde",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9281247",
+    "address": "0xb7dc2048229cfea2690b245e02f9d3d027edbaae",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
   }
 ]
