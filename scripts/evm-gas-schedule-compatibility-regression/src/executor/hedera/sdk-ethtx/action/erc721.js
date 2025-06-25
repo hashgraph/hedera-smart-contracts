@@ -3,7 +3,7 @@
 const { ethers: { ContractFactory, Wallet, Contract } } = require('ethers');
 const hedera = require('../../client');
 const { loadArtifact } = require('../../../../utils/artifact');
-const { options } = require('../../../evm/options');
+const { options, DEFAULT_GAS_LIMIT } = require('../../../evm/options');
 
 const artifact = loadArtifact('ERC721');
 
@@ -32,7 +32,7 @@ const initTokenId = async function (client, wallet, cache) {
   let lastToken = Number(cache.read('erc721::last::sdk-ethTx') || '0');
   if (!lastToken) lastToken = (await mint(client, wallet, cache)).additionalData.lastToken;
   const tx = {
-    ...(await options(wallet, 5000000)),
+    ...(await options(wallet, DEFAULT_GAS_LIMIT)),
     to: contractAddress,
   };
   return { lastToken, tx, contract };

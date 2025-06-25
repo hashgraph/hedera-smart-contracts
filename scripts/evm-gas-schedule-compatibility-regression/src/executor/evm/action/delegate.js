@@ -2,7 +2,7 @@
 
 const { ethers: { ContractFactory,  Wallet, Contract } } = require('ethers');
 const { loadArtifact } = require('../../../utils/artifact');
-const { options } = require('../options');
+const { options, DEFAULT_GAS_LIMIT } = require('../options');
 
 const callerArtifact = loadArtifact('Caller');
 const counterArtifact = loadArtifact('Counter');
@@ -25,7 +25,7 @@ const getCallerContract = function (address, wallet) {
  */
 const initCaller = async function (wallet, cache) {
   const contractFactory = new ContractFactory(callerArtifact.abi, callerArtifact.bytecode, wallet);
-  const tx = await contractFactory.deploy(await options(wallet, 5000000));
+  const tx = await contractFactory.deploy(await options(wallet, DEFAULT_GAS_LIMIT));
   const contractAddress = await tx.getAddress();
   const receipt = await tx.deploymentTransaction().wait();
   if (!receipt) throw new Error('Failed to get transaction receipt');
@@ -45,7 +45,7 @@ const initCaller = async function (wallet, cache) {
  */
 const initCounter = async function (wallet, cache) {
   const contractFactory = new ContractFactory(counterArtifact.abi, counterArtifact.bytecode, wallet);
-  const tx = await contractFactory.deploy(await options(wallet, 5000000));
+  const tx = await contractFactory.deploy(await options(wallet, DEFAULT_GAS_LIMIT));
   const contractAddress = await tx.getAddress();
   const receipt = await tx.deploymentTransaction().wait();
   if (!receipt) throw new Error('Failed to get transaction receipt');
@@ -69,7 +69,7 @@ const call = async function (wallet, cache) {
   if (callerAddress === null) callerAddress = (await initCaller(wallet, cache)).additionalData.contractAddress;
   if (counterAddress === null) counterAddress = (await initCounter(wallet, cache)).additionalData.contractAddress;
   const caller = getCallerContract(callerAddress, wallet);
-  const tx = await caller.callIncrement(counterAddress, await options(wallet, 5000000));
+  const tx = await caller.callIncrement(counterAddress, await options(wallet, DEFAULT_GAS_LIMIT));
   const receipt = await tx.wait();
   if (!receipt) throw new Error('Failed to get transaction receipt');
   return {

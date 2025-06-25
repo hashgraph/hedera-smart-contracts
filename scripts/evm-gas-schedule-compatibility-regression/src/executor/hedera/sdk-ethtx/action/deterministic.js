@@ -3,7 +3,7 @@
 const { ethers: { ContractFactory, Wallet, Contract } } = require('ethers');
 const hedera = require('../../client');
 const { loadArtifact } = require('../../../../utils/artifact');
-const { options } = require('../../../evm/options');
+const { options, DEFAULT_GAS_LIMIT } = require('../../../evm/options');
 
 const factoryArtifact = loadArtifact('Factory');
 const counterArtifact = loadArtifact('Counter');
@@ -28,7 +28,7 @@ const getFactoryContract = function (address, wallet) {
  */
 const initFactory = async function (client, wallet, cache) {
     const contractFactory = new ContractFactory(factoryArtifact.abi, factoryArtifact.bytecode, wallet);
-    const tx = await contractFactory.getDeployTransaction(await options(wallet, 5000000));
+    const tx = await contractFactory.getDeployTransaction(await options(wallet, DEFAULT_GAS_LIMIT));
     const { status, gasUsed, evmAddress, contractId, transactionHash } = await hedera.forward(
       client,
       client.getOperator().accountId,

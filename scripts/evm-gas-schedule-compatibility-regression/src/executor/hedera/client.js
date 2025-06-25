@@ -14,6 +14,7 @@ const {
 
 const FILE_APPEND_CHUNK_SIZE = 5120;
 const FILE_APPEND_MAX_CHUNKS = 30;
+const DEFAULT_GAS_LIMIT = 5000000;
 
 async function extractCorrectNonceForAddress(wallet)
 {
@@ -96,7 +97,7 @@ module.exports = {
   deploy: async function (client, bytecode, parameters) {
     const contractTx = await new ContractCreateFlow()
       .setBytecode(bytecode)
-      .setGas(5000000);
+      .setGas(DEFAULT_GAS_LIMIT);
     if (parameters) contractTx.setConstructorParameters(parameters);
     const contractResponse = await contractTx.execute(client);
     const contractReceipt = await contractResponse.getReceipt(client);
@@ -120,7 +121,7 @@ module.exports = {
   call: async function (client, contractId, method, parameters) {
     const executeTx = new ContractExecuteTransaction()
       .setContractId(contractId)
-      .setGas(5000000)
+      .setGas(DEFAULT_GAS_LIMIT)
       .setFunction(method, parameters);
     const response = await executeTx.execute(client);
     const receipt = await response.getReceipt(client);

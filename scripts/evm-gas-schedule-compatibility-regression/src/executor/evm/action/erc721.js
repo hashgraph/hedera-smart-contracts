@@ -1,6 +1,6 @@
 const { ethers: { ContractFactory, Wallet, Contract } } = require('ethers');
 const { loadArtifact } = require('../../../utils/artifact');
-const { options } = require('../options');
+const { options, DEFAULT_GAS_LIMIT } = require('../options');
 
 const artifact = loadArtifact('ERC721');
 
@@ -119,7 +119,7 @@ const setApprovalForAll = async function (wallet, cache) {
   if (contractAddress === null) contractAddress = (await deploy(wallet, cache)).additionalData.contractAddress;
   const contract = getContract(contractAddress, wallet);
   const randomWallet = Wallet.createRandom();
-  const tx = await contract.setApprovalForAll(randomWallet.address, true, await options(wallet, 5000000));
+  const tx = await contract.setApprovalForAll(randomWallet.address, true, await options(wallet, DEFAULT_GAS_LIMIT));
   const receipt = await tx.wait();
   if (!receipt) throw new Error('Failed to get transaction receipt');
   return {
@@ -156,7 +156,7 @@ const transferFrom = async function (wallet, cache) {
 const safeTransferFrom = async function (wallet, cache) {
   const { contract, lastToken } = await initTokenId(wallet, cache);
   const randomWallet = Wallet.createRandom();
-  const tx = await contract['safeTransferFrom(address,address,uint256)'](wallet.address, randomWallet.address, lastToken - 1, await options(wallet, 5000000));
+  const tx = await contract['safeTransferFrom(address,address,uint256)'](wallet.address, randomWallet.address, lastToken - 1, await options(wallet, DEFAULT_GAS_LIMIT));
   cache.write('erc721::last', '0');
   const receipt = await tx.wait();
   if (!receipt) throw new Error('Failed to get transaction receipt');

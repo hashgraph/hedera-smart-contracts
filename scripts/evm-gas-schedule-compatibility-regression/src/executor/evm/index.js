@@ -6,6 +6,8 @@ const { Cache } = require('../../cache');
 
 dotenv.config();
 
+const DEFAULT_GAS_LIMIT = 5000000;
+
 class EvmExecutor {
   constructor(name) {
     const envVariablePrefix = name.split('::EVM')[0].split('::').join('_').toUpperCase();

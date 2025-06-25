@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 module.exports = {
+  DEFAULT_GAS_LIMIT: 5000000,
   options: async function (wallet, gasLimit) {
     const feeData = await wallet.provider.getFeeData();
     const options = { gasLimit };

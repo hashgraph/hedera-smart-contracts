@@ -2,7 +2,7 @@
 
 const { ethers: { ContractFactory, Wallet, Contract } } = require('ethers');
 const { loadArtifact } = require('../../../utils/artifact');
-const { options } = require('../options');
+const { options, DEFAULT_GAS_LIMIT } = require('../options');
 
 const factoryArtifact = loadArtifact('Factory');
 const counterArtifact = loadArtifact('Counter');
@@ -29,7 +29,7 @@ async function deploy(wallet, cache) {
     let factory;
     if (!factoryAddress) {
         const contractFactory = new ContractFactory(factoryArtifact.abi, factoryArtifact.bytecode, wallet);
-        const factoryContract = await contractFactory.deploy(await options(wallet, 5000000));
+        const factoryContract = await contractFactory.deploy(await options(wallet, DEFAULT_GAS_LIMIT));
         await factoryContract.deploymentTransaction().wait();
         factoryAddress = await factoryContract.getAddress();
         cache.write('evm::factory', factoryAddress);
@@ -38,7 +38,7 @@ async function deploy(wallet, cache) {
         factory = getFactoryContract(factoryAddress, wallet);
     }
 
-    const tx = await factory.deploy(counterArtifact.bytecode, await options(wallet, 5000000));
+    const tx = await factory.deploy(counterArtifact.bytecode, await options(wallet, DEFAULT_GAS_LIMIT));
     const receipt = await tx.wait();
 
     if (!receipt) throw new Error('Failed to get transaction receipt');
