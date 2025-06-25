@@ -56,7 +56,7 @@ async function deploy(wallet, cache) {
         : null;
 
 
-    cache.write('evm::deterministic::contract', deployedAddress);
+    cache.write('evm::create-via-factory::contract', deployedAddress);
 
     return {
         success: true,

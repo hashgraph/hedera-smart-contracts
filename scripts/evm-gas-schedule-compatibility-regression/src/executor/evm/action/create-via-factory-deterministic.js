@@ -30,7 +30,7 @@ const initFactory = async function (wallet, cache) {
   const contractAddress = await tx.getAddress();
   const receipt = await tx.deploymentTransaction().wait();
   if (!receipt) throw new Error('Failed to get transaction receipt');
-  cache.write('create2::contract', contractAddress);
+  cache.write('create-via-factory-deterministic::contract', contractAddress);
   return {
     success: true,
     gasUsed: Number(receipt.gasUsed) || 0,
@@ -45,7 +45,7 @@ const initFactory = async function (wallet, cache) {
  * @returns {Promise<{gasUsed: (number|number), success: boolean, transactionHash: string}>}
  */
 const deploy = async function (wallet, cache) {
-  let contractAddress = cache.read('create2::contract');
+  let contractAddress = cache.read('create-via-factory-deterministic::contract');
   if (contractAddress === null) contractAddress = (await initFactory(wallet, cache)).additionalData.contractAddress;
   const contract = getFactoryContract(contractAddress, wallet);
   const counterFactory = new ContractFactory(counterArtifact.abi, counterArtifact.bytecode, wallet);

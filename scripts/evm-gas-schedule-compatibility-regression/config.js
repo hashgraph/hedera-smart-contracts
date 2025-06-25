@@ -14,15 +14,15 @@ const tests = [
         ],
     },
     {
-        name: 'Sample Smart Contract deployment using Create2',
+        name: 'Sample Smart Contract deployment via a factory',
         cases: [
-            { name:  'Deploying a new contract', code: 'create2::deploy' },
+            { name:  'Deploying a new contract', code: 'create-via-factory::deploy' },
         ],
     },
     {
-        name: 'Sample Smart Contract deployment with deterministic address',
+        name: 'Sample Smart Contract deployment via a factory with deterministic addressing (using CREATE2)',
         cases: [
-            { name:  'Deploying a new contract', code: 'deterministic::deploy' },
+            { name:  'Deploying a new contract', code: 'create-via-factory-deterministic::deploy' },
         ],
     },
     {

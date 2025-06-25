@@ -17,8 +17,8 @@ To verify that smart contract execution on Hedera (via EVM-compatible relay or S
 ## Use cases covered
 1. Deploying a new smart contract
 2. Deploying a smart contract
-3. Deploying a smart contract with a deterministic address
-4. Deploying a smart contract using `CREATE2` with a deterministic address
+3. Deploying a smart contract via a factory
+4. Deploying a smart contract via a factory using `CREATE2` and checking the deterministic address
 5. Executing a delegate call
 6. Erc20,721 token mechanics and calls
 
@@ -46,25 +46,25 @@ To run your tests, you need to provide two options:
 1. A comma-separated list of executors.
 2. A comma-separated list of operations. All tests will be executed by default if this option is omitted. Currently supported operations:
 
-   | Operation                   | Name                     | Description                                                                 |
-   | --------------------------- |--------------------------|-----------------------------------------------------------------------------|
-   | `new-contract::deploy`      | Deploy New Contract      | Deploys a standard smart contract using the default creation opcode.        |
-   | `create2::deploy`           | Deploy with CREATE2      | Deploys a contract with `CREATE2` for deterministic addressing.             |
-   | `deterministic::deploy`     | Deterministic Deployment | Deploys a contract to a predictable address.                                |
-   | `delegate::call`            | Delegate Call            | Executes a `DELEGATECALL` to another contract for shared context execution. |
-   | `erc20::deploy`             | Deploy ERC20 Token       | Deploys a standard ERC20 token contract.                                    |
-   | `erc20::mint`               | Mint ERC20 Tokens        | Mints new tokens to an account associated with the provided private key.    |
-   | `erc20::burn`               | Burn ERC20 Tokens        | Destroys some amount of tokens from an account.                             |
-   | `erc20::transfer`           | Transfer ERC20 Tokens    | Transfers tokens from the caller to a random account.                       |
-   | `erc20::approve`            | Approve ERC20 Allowance  | Approves a spender to use tokens on behalf of the owner.                    |
-   | `erc20::transferFrom`       | Transfer From (ERC20)    | Transfers tokens using the transfer from method.                            |
-   | `erc721::deploy`            | Deploy ERC721 Token      | Deploys a standard ERC721 (NFT) contract.                                   |
-   | `erc721::mint`              | Mint ERC721 Token        | Mints a new NFT to a caller address.                                        |
-   | `erc721::burn`              | Burn ERC721 Token        | Destroys an NFT token.                                                      |
-   | `erc721::approve`           | Approve ERC721 Token     | Grants approval to a random address for a single NFT.                       |
-   | `erc721::setApprovalForAll` | Approve All (ERC721)     | Authorizes operator approval for all tokens owned by a user.                |
-   | `erc721::transferFrom`      | Transfer ERC721 Token    | Transfers an NFT from one account to another.                               |
-   | `erc721::safeTransferFrom`  | Safe Transfer (ERC721)   | Securely transfers an NFT, checking the recipient can handle it.            |
+   | Operation                                  | Name                     | Description                                                                 |
+   | ------------------------------------------ |--------------------------|-----------------------------------------------------------------------------|
+   | `new-contract::deploy`                     | Deploy New Contract      | Deploys a standard smart contract using the default creation opcode.        |
+   | `create-via-factory-deterministic::deploy` | Deploy with CREATE2      | Deploys a contract with `CREATE2` for deterministic addressing.             |
+   | `create-via-factory::deploy`               | Factory Deployment       | Deploys a contract via a factory.                                           |
+   | `delegate::call`                           | Delegate Call            | Executes a `DELEGATECALL` to another contract for shared context execution. |
+   | `erc20::deploy`                            | Deploy ERC20 Token       | Deploys a standard ERC20 token contract.                                    |
+   | `erc20::mint`                              | Mint ERC20 Tokens        | Mints new tokens to an account associated with the provided private key.    |
+   | `erc20::burn`                              | Burn ERC20 Tokens        | Destroys some amount of tokens from an account.                             |
+   | `erc20::transfer`                          | Transfer ERC20 Tokens    | Transfers tokens from the caller to a random account.                       |
+   | `erc20::approve`                           | Approve ERC20 Allowance  | Approves a spender to use tokens on behalf of the owner.                    |
+   | `erc20::transferFrom`                      | Transfer From (ERC20)    | Transfers tokens using the transfer from method.                            |
+   | `erc721::deploy`                           | Deploy ERC721 Token      | Deploys a standard ERC721 (NFT) contract.                                   |
+   | `erc721::mint`                             | Mint ERC721 Token        | Mints a new NFT to a caller address.                                        |
+   | `erc721::burn`                             | Burn ERC721 Token        | Destroys an NFT token.                                                      |
+   | `erc721::approve`                          | Approve ERC721 Token     | Grants approval to a random address for a single NFT.                       |
+   | `erc721::setApprovalForAll`                | Approve All (ERC721)     | Authorizes operator approval for all tokens owned by a user.                |
+   | `erc721::transferFrom`                     | Transfer ERC721 Token    | Transfers an NFT from one account to another.                               |
+   | `erc721::safeTransferFrom`                 | Safe Transfer (ERC721)   | Securely transfers an NFT, checking the recipient can handle it.            |
 
 Use the example above if you’re using the default configuration (i.e., if you’ve copied .env.example to your .env file).
 
