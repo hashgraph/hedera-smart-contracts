@@ -83,7 +83,7 @@ describe('@OZERC20 Test Suite', function () {
     console.log(`signers[0]balanceAfter = *${balanceAfter}*`);
 
     expect(balanceBefore).to.not.eq(balanceAfter);
-    expect(balanceAfter).to.eq(balanceBefore + transferAmount);
+    expect(balanceAfter).to.eq(balanceBefore - transferAmount);
   });
 
   describe('should be able to approve an amount and read a corresponding allowance', function () {
