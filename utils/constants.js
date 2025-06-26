@@ -25,7 +25,7 @@ const NETWORKS = {
     networkNodeUrl: '127.0.0.1:50211',
     nodeId: '3',
     mirrorNode: 'http://127.0.0.1:5600',
-    timeout: 60_000,
+    timeout: 360_000,
   },
   testnet: {
     name: 'testnet',
