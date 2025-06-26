@@ -18,7 +18,13 @@ describe('@OZERC20 Test Suite', function () {
     );
     erc20 = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL');
     await erc20.mint(signers[0].address, firstMintAmount);
-  });
+
+    console.log(`signers[0] address = ${signers[0].address}`);
+    console.log(`signers[1] address = ${signers[1].address}`);
+    console.log(`signers[0] JSON = ${JSON.stringify(signers[0])}`);
+    console.log(`signers[1] JSON = ${JSON.stringify(signers[1])}`);
+    console.log(`erc20 address = ${await erc20.getAddress()}`);
+ });
 
   it('should be able to execute name()', async function () {
     const res = await erc20.name();
@@ -53,10 +59,10 @@ describe('@OZERC20 Test Suite', function () {
 
   it('should be able to execute transfer(address,uint256)', async function () {
     const balanceBefore = BigInt(await erc20.balanceOf(signers[1].address));
-    console.log(`balanceBefore = *${balanceBefore}*`);
+    console.log(`signers[1]balanceBefore = *${balanceBefore}*`);
     await erc20.transfer(signers[1].address, transferAmount);
     const balanceAfter = BigInt(await erc20.balanceOf(signers[1].address));
-    console.log(`balanceAfter = *${balanceAfter}*`);
+    console.log(`signers[1]balanceAfter = *${balanceAfter}*`);
     expect(balanceBefore).to.not.eq(balanceAfter);
     expect(balanceAfter).to.eq(balanceBefore + transferAmount);
   });
@@ -65,16 +71,16 @@ describe('@OZERC20 Test Suite', function () {
     await erc20.approve(signers[1].address, transferAmount);
     const erc20Signer2 = erc20.connect(signers[1]);
 
-    const balanceBefore = BigInt(await erc20.balanceOf(await erc20.getAddress()));
-    console.log(`balanceBefore = *${balanceBefore}*`);
+    const balanceBefore = BigInt(await erc20.balanceOf(signers[0].address));
+    console.log(`signers[0]balanceBefore = *${balanceBefore}*`);
 
     await erc20Signer2.transferFrom(
       signers[0].address,
-      await erc20.getAddress(),
+      signers[1].address,
       transferAmount
     );
-    const balanceAfter = BigInt(await erc20.balanceOf(await erc20.getAddress()));
-    console.log(`balanceAfter = *${balanceAfter}*`);
+    const balanceAfter = BigInt(await erc20.balanceOf(signers[0].address));
+    console.log(`signers[0]balanceAfter = *${balanceAfter}*`);
 
     expect(balanceBefore).to.not.eq(balanceAfter);
     expect(balanceAfter).to.eq(balanceBefore + transferAmount);
