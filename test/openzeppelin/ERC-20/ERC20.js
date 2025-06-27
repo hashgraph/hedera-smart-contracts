@@ -4,14 +4,6 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
-async function safeCall(callback) {
-  try {
-    return await callback();
-  }catch (error) {
-    console.error(`Error in safeCall: ${error.message}`, error);
-  }
-}
-
 describe('@OZERC20 Test Suite', function () {
   const transferAmount = BigInt(33);
   const firstMintAmount = BigInt(1000);
@@ -19,8 +11,6 @@ describe('@OZERC20 Test Suite', function () {
   let erc20Contract;
   let wallet1;
   let wallet2;
-  let erc20Wallet1;
-  let erc20Wallet2;
   const DEFAULT_TIMEOUT = 30000;
 
   before(async function () {
@@ -40,13 +30,7 @@ describe('@OZERC20 Test Suite', function () {
       erc20Contract = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL');
       console.log(`erc20Contract = ${await erc20Contract.getAddress()}`);
 
-      erc20Wallet1 = erc20Contract.connect(signers[0]);
-      erc20Wallet2 = erc20Contract.connect(signers[1]);
-
-      const mintResponse = await erc20Contract.mint(wallet1, firstMintAmount);
-      console.log(`mintResponse = ${await safeCall(async () => {
-        JSON.stringify(await mintResponse?.wait());
-      })}`);
+      await erc20Contract.mint(wallet1, firstMintAmount);
     } catch (error) {
       console.error(`Error in before hook: ${error.message}`, error);
       throw error; // Re-throw to fail the test suite
@@ -87,10 +71,7 @@ describe('@OZERC20 Test Suite', function () {
   it('should be able to execute transfer(address,uint256)', async function () {
     const wallet2BalanceBefore = BigInt(await erc20Contract.balanceOf(wallet2));
     console.log(`wallet2BalanceBefore = *${wallet2BalanceBefore}*`);
-    const transferResponse = await erc20Wallet1.transfer(wallet2, transferAmount);
-    console.log(`transferResponse = ${await safeCall(async () => {
-      JSON.stringify(await transferResponse?.wait());
-    })}`);
+    await erc20Contract.connect(signers[0]).transfer(wallet2, transferAmount);
     const wallet2BalanceAfter = BigInt(await erc20Contract.balanceOf(wallet2));
     console.log(`wallet2BalanceAfter = *${wallet2BalanceAfter}*`);
     expect(wallet2BalanceBefore).to.not.eq(wallet2BalanceAfter);
@@ -98,22 +79,16 @@ describe('@OZERC20 Test Suite', function () {
   }).timeout(DEFAULT_TIMEOUT);
 
   it('should be able to execute transferFrom(address,address,uint256)', async function () {
-    const approveResponse = await erc20Wallet1.approve(wallet2, transferAmount);
-    console.log(`approveResponse = ${await safeCall(async () => {
-      JSON.stringify(await approveResponse?.wait());
-    })}`);
+    await erc20Contract.connect(signers[0]).approve(wallet2, transferAmount);
 
     const wallet1BalanceBefore = BigInt(await erc20Contract.balanceOf(wallet1));
     console.log(`wallet1BalanceBefore = *${wallet1BalanceBefore}*`);
 
-    const transferFromResponse = await erc20Wallet2.transferFrom(
+    await erc20Contract.connect(signers[1]).transferFrom(
       wallet1,
       wallet2,
       transferAmount
     );
-    console.log(`transferFromResponse = ${await safeCall(async () => {
-      JSON.stringify(await transferFromResponse?.wait());
-    })}`);
 
     const wallet1BalanceAfter = BigInt(await erc20Contract.balanceOf(wallet1));
     console.log(`wallet1BalanceAfter = *${wallet1BalanceAfter}*`);
