@@ -85,7 +85,7 @@ describe('@OZERC20 Test Suite', function () {
   it('should be able to execute transfer(address,uint256)', async function () {
     const wallet2BalanceBefore = BigInt(await erc20Contract.balanceOf(wallet2));
     console.log(`wallet2BalanceBefore = *${wallet2BalanceBefore}*`);
-    const transferResponse = await erc20Contract.transfer(wallet2, transferAmount);
+    const transferResponse = await erc20Wallet1.transfer(wallet2, transferAmount);
     console.log(`transferResponse = ${await safeCall(async () => {
       JSON.stringify(await transferResponse?.wait());
     })}`);
