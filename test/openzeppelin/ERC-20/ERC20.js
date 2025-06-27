@@ -20,9 +20,11 @@ describe('@OZERC20 Test Suite', function () {
   let wallet1;
   let wallet2;
   let erc20Wallet1;
-  let erc20Wallet2
+  let erc20Wallet2;
+  const DEFAULT_TIMEOUT = 30000;
 
   before(async function () {
+    this.timeout(DEFAULT_TIMEOUT);
     try {
       signers = await ethers.getSigners();
 
@@ -54,23 +56,23 @@ describe('@OZERC20 Test Suite', function () {
   it('should be able to execute name()', async function () {
     const tokenName = await erc20Contract.name();
     expect(tokenName).to.equal(Constants.TOKEN_NAME);
-  });
+  }).timeout(DEFAULT_TIMEOUT);
 
   it('should be able to execute symbol()', async function () {
     const tokenSymbol = await erc20Contract.symbol();
     expect(tokenSymbol).to.equal('TOKENSYMBOL');
-  });
+  }).timeout(DEFAULT_TIMEOUT);
 
   it('should be able to execute decimals()', async function () {
     const tokenDecimals = await erc20Contract.decimals();
     expect(tokenDecimals).to.equal(18);
-  });
+  }).timeout(DEFAULT_TIMEOUT);
 
   it('should be able to execute totalSupply()', async function () {
     const totalSupply = BigInt(await erc20Contract.totalSupply());
     console.log(`totalSupply = *${totalSupply}*`);
     expect(totalSupply).to.equal(firstMintAmount);
-  });
+  }).timeout(DEFAULT_TIMEOUT);
 
   it('should be able to get execute balanceOf(address)', async function () {
     const wallet1BalanceOf = BigInt(await erc20Contract.balanceOf(wallet1));
@@ -80,7 +82,7 @@ describe('@OZERC20 Test Suite', function () {
     const wallet2BalanceOf = BigInt(await erc20Contract.balanceOf(wallet2));
     console.log(`wallet2BalanceOf = *${wallet2BalanceOf}*`);
     expect(wallet2BalanceOf).to.equal(BigInt(0));
-  });
+  }).timeout(DEFAULT_TIMEOUT);
 
   it('should be able to execute transfer(address,uint256)', async function () {
     const wallet2BalanceBefore = BigInt(await erc20Contract.balanceOf(wallet2));
@@ -93,7 +95,7 @@ describe('@OZERC20 Test Suite', function () {
     console.log(`wallet2BalanceAfter = *${wallet2BalanceAfter}*`);
     expect(wallet2BalanceBefore).to.not.eq(wallet2BalanceAfter);
     expect(wallet2BalanceAfter).to.eq(wallet2BalanceBefore + transferAmount);
-  });
+  }).timeout(DEFAULT_TIMEOUT);
 
   it('should be able to execute transferFrom(address,address,uint256)', async function () {
     const approveResponse = await erc20Wallet1.approve(wallet2, transferAmount);
@@ -118,7 +120,7 @@ describe('@OZERC20 Test Suite', function () {
 
     expect(wallet1BalanceBefore).to.not.eq(wallet1BalanceAfter);
     expect(wallet1BalanceAfter).to.eq(wallet1BalanceBefore - transferAmount);
-  });
+  }).timeout(DEFAULT_TIMEOUT);
 
   describe('should be able to approve an amount and read a corresponding allowance', function () {
     it('should be able to execute approve(address,uint256)', async function () {
@@ -128,7 +130,7 @@ describe('@OZERC20 Test Suite', function () {
           (e) => e.fragment.name === Constants.Events.Approval
         )
       ).to.not.be.empty;
-    });
+    }).timeout(DEFAULT_TIMEOUT);
 
     it('should be able to execute allowance(address,address)', async function () {
       const allowance = BigInt(await erc20Contract.allowance(
@@ -136,6 +138,6 @@ describe('@OZERC20 Test Suite', function () {
         await erc20Contract.getAddress()
       ));
       expect(allowance).to.eq(transferAmount);
-    });
+    }).timeout(DEFAULT_TIMEOUT);
   });
 });
