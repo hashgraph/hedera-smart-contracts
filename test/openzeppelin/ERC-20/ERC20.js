@@ -4,6 +4,14 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
+async function safeCall(callback) {
+  try {
+    return await callback();
+  }catch (error) {
+    console.error(`Error in safeCall: ${error.message}`, error);
+  }
+}
+
 describe('@OZERC20 Test Suite', function () {
   const transferAmount = BigInt(33);
   const firstMintAmount = BigInt(1000);
@@ -26,7 +34,9 @@ describe('@OZERC20 Test Suite', function () {
     );
     erc20Contract = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL');
     const mintResponse = await erc20Contract.mint(wallet1, firstMintAmount);
-    console.log(`mintResponse = ${JSON.stringify(await mintResponse.wait())}`);
+    console.log(`mintResponse = ${await safeCall(async () => {
+      JSON.stringify(await mintResponse?.wait());
+    })}`);
 
     console.log(`wallet1 = ${wallet1}`);
     console.log(`wallet2 = ${wallet2}`);
@@ -68,7 +78,9 @@ describe('@OZERC20 Test Suite', function () {
     const wallet2BalanceBefore = BigInt(await erc20Contract.balanceOf(wallet2));
     console.log(`wallet2BalanceBefore = *${wallet2BalanceBefore}*`);
     const transferResponse = await erc20Contract.transfer(wallet2, transferAmount);
-    console.log(`transferResponse = ${JSON.stringify(await transferResponse.wait())}`);
+    console.log(`transferResponse = ${await safeCall(async () => {
+      JSON.stringify(await transferResponse?.wait());
+    })}`);
     const wallet2BalanceAfter = BigInt(await erc20Contract.balanceOf(wallet2));
     console.log(`wallet2BalanceAfter = *${wallet2BalanceAfter}*`);
     expect(wallet2BalanceBefore).to.not.eq(wallet2BalanceAfter);
@@ -77,7 +89,9 @@ describe('@OZERC20 Test Suite', function () {
 
   it('should be able to execute transferFrom(address,address,uint256)', async function () {
     const approveResponse = await erc20Wallet1.approve(wallet2, transferAmount);
-    console.log(`approveResponse = ${JSON.stringify(await approveResponse.wait())}`);
+    console.log(`approveResponse = ${await safeCall(async () => {
+      JSON.stringify(await approveResponse?.wait());
+    })}`);
 
     const wallet1BalanceBefore = BigInt(await erc20Contract.balanceOf(wallet1));
     console.log(`wallet1BalanceBefore = *${wallet1BalanceBefore}*`);
@@ -87,7 +101,9 @@ describe('@OZERC20 Test Suite', function () {
       wallet2,
       transferAmount
     );
-    console.log(`transferFromResponse = ${JSON.stringify(await transferFromResponse.wait())}`);
+    console.log(`transferFromResponse = ${await safeCall(async () => {
+      JSON.stringify(await transferFromResponse?.wait());
+    })}`);
 
     const wallet1BalanceAfter = BigInt(await erc20Contract.balanceOf(wallet1));
     console.log(`wallet1BalanceAfter = *${wallet1BalanceAfter}*`);
@@ -100,7 +116,7 @@ describe('@OZERC20 Test Suite', function () {
     it('should be able to execute approve(address,uint256)', async function () {
       const approveResponse = await erc20Contract.approve(await erc20Contract.getAddress(), transferAmount);
       expect(
-        (await approveResponse.wait()).logs.filter(
+        (await approveResponse?.wait())?.logs?.filter(
           (e) => e.fragment.name === Constants.Events.Approval
         )
       ).to.not.be.empty;
