@@ -4,6 +4,10 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 describe('@OZERC20 Test Suite', function () {
   const transferAmount = BigInt(33);
   const firstMintAmount = BigInt(1000);
@@ -28,9 +32,11 @@ describe('@OZERC20 Test Suite', function () {
         Constants.Contract.OZERC20Mock
       );
       erc20Contract = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL');
+      await sleep(3500); // wait for consensus on write transactions
       console.log(`erc20Contract = ${await erc20Contract.getAddress()}`);
 
       await erc20Contract.mint(wallet1, firstMintAmount);
+      await sleep(3500); // wait for consensus on write transactions
     } catch (error) {
       console.error(`Error in before hook: ${error.message}`, error);
       throw error; // Re-throw to fail the test suite
@@ -72,6 +78,7 @@ describe('@OZERC20 Test Suite', function () {
     const wallet2BalanceBefore = BigInt(await erc20Contract.balanceOf(wallet2));
     console.log(`wallet2BalanceBefore = *${wallet2BalanceBefore}*`);
     await erc20Contract.connect(signers[0]).transfer(wallet2, transferAmount);
+    await sleep(3500); // wait for consensus on write transactions
     const wallet2BalanceAfter = BigInt(await erc20Contract.balanceOf(wallet2));
     console.log(`wallet2BalanceAfter = *${wallet2BalanceAfter}*`);
     expect(wallet2BalanceBefore).to.not.eq(wallet2BalanceAfter);
@@ -80,6 +87,7 @@ describe('@OZERC20 Test Suite', function () {
 
   it('should be able to execute transferFrom(address,address,uint256)', async function () {
     await erc20Contract.connect(signers[0]).approve(wallet2, transferAmount);
+    await sleep(3500); // wait for consensus on write transactions
 
     const wallet1BalanceBefore = BigInt(await erc20Contract.balanceOf(wallet1));
     console.log(`wallet1BalanceBefore = *${wallet1BalanceBefore}*`);
@@ -89,6 +97,7 @@ describe('@OZERC20 Test Suite', function () {
       wallet2,
       transferAmount
     );
+    await sleep(3500); // wait for consensus on write transactions
 
     const wallet1BalanceAfter = BigInt(await erc20Contract.balanceOf(wallet1));
     console.log(`wallet1BalanceAfter = *${wallet1BalanceAfter}*`);
@@ -105,6 +114,7 @@ describe('@OZERC20 Test Suite', function () {
           (e) => e.fragment.name === Constants.Events.Approval
         )
       ).to.not.be.empty;
+      await sleep(3500); // wait for consensus on write transactions
     }).timeout(DEFAULT_TIMEOUT);
 
     it('should be able to execute allowance(address,address)', async function () {
