@@ -8,100 +8,110 @@ describe('@OZERC20 Test Suite', function () {
   const transferAmount = BigInt(33);
   const firstMintAmount = BigInt(1000);
   let signers;
-  let erc20;
+  let erc20Contract;
+  let wallet1;
+  let wallet2;
+  let erc20Wallet1;
+  let erc20Wallet2
 
   before(async function () {
     signers = await ethers.getSigners();
+    wallet1 = signers[0].address;
+    wallet2 = signers[1].address;
+    erc20Wallet1 = erc20Contract.connect(signers[0]);
+    erc20Wallet2 = erc20Contract.connect(signers[1]);
 
     const factory = await ethers.getContractFactory(
       Constants.Contract.OZERC20Mock
     );
-    erc20 = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL');
-    await erc20.mint(signers[0].address, firstMintAmount);
+    erc20Contract = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL');
+    const mintResponse = await erc20Contract.mint(wallet1, firstMintAmount);
+    console.log(`mintResponse = ${JSON.stringify(await mintResponse.wait())}`);
 
-    console.log(`signers[0] address = ${signers[0].address}`);
-    console.log(`signers[1] address = ${signers[1].address}`);
-    console.log(`signers[0] JSON = ${JSON.stringify(signers[0])}`);
-    console.log(`signers[1] JSON = ${JSON.stringify(signers[1])}`);
-    console.log(`erc20 address = ${await erc20.getAddress()}`);
+    console.log(`wallet1 = ${wallet1}`);
+    console.log(`wallet2 = ${wallet2}`);
+    console.log(`erc20Contract = ${await erc20Contract.getAddress()}`);
  });
 
   it('should be able to execute name()', async function () {
-    const res = await erc20.name();
-    expect(res).to.equal(Constants.TOKEN_NAME);
+    const tokenName = await erc20Contract.name();
+    expect(tokenName).to.equal(Constants.TOKEN_NAME);
   });
 
   it('should be able to execute symbol()', async function () {
-    const res = await erc20.symbol();
-    expect(res).to.equal('TOKENSYMBOL');
+    const tokenSymbol = await erc20Contract.symbol();
+    expect(tokenSymbol).to.equal('TOKENSYMBOL');
   });
 
   it('should be able to execute decimals()', async function () {
-    const res = await erc20.decimals();
-    expect(res).to.equal(18);
+    const tokenDecimals = await erc20Contract.decimals();
+    expect(tokenDecimals).to.equal(18);
   });
 
   it('should be able to execute totalSupply()', async function () {
-    const res = BigInt(await erc20.totalSupply());
-    console.log(`totalSupply = *${res}*`);
-    expect(res).to.equal(firstMintAmount);
+    const totalSupply = BigInt(await erc20Contract.totalSupply());
+    console.log(`totalSupply = *${totalSupply}*`);
+    expect(totalSupply).to.equal(firstMintAmount);
   });
 
   it('should be able to get execute balanceOf(address)', async function () {
-    const res1 = BigInt(await erc20.balanceOf(signers[0].address));
-    console.log(`balanceOf(signers[0]) = *${res1}*`);
-    expect(res1).to.equal(firstMintAmount);
+    const wallet1BalanceOf = BigInt(await erc20Contract.balanceOf(wallet1));
+    console.log(`wallet1BalanceOf = *${wallet1BalanceOf}*`);
+    expect(wallet1BalanceOf).to.equal(firstMintAmount);
 
-    const res2 = BigInt(await erc20.balanceOf(signers[1].address));
-    console.log(`balanceOf(signers[1]) = *${res2}*`);
-    expect(res2).to.equal(BigInt(0));
+    const wallet2BalanceOf = BigInt(await erc20Contract.balanceOf(wallet2));
+    console.log(`wallet2BalanceOf = *${wallet2BalanceOf}*`);
+    expect(wallet2BalanceOf).to.equal(BigInt(0));
   });
 
   it('should be able to execute transfer(address,uint256)', async function () {
-    const balanceBefore = BigInt(await erc20.balanceOf(signers[1].address));
-    console.log(`signers[1]balanceBefore = *${balanceBefore}*`);
-    await erc20.transfer(signers[1].address, transferAmount);
-    const balanceAfter = BigInt(await erc20.balanceOf(signers[1].address));
-    console.log(`signers[1]balanceAfter = *${balanceAfter}*`);
-    expect(balanceBefore).to.not.eq(balanceAfter);
-    expect(balanceAfter).to.eq(balanceBefore + transferAmount);
+    const wallet2BalanceBefore = BigInt(await erc20Contract.balanceOf(wallet2));
+    console.log(`wallet2BalanceBefore = *${wallet2BalanceBefore}*`);
+    const transferResponse = await erc20Contract.transfer(wallet2, transferAmount);
+    console.log(`transferResponse = ${JSON.stringify(await transferResponse.wait())}`);
+    const wallet2BalanceAfter = BigInt(await erc20Contract.balanceOf(wallet2));
+    console.log(`wallet2BalanceAfter = *${wallet2BalanceAfter}*`);
+    expect(wallet2BalanceBefore).to.not.eq(wallet2BalanceAfter);
+    expect(wallet2BalanceAfter).to.eq(wallet2BalanceBefore + transferAmount);
   });
 
   it('should be able to execute transferFrom(address,address,uint256)', async function () {
-    await erc20.approve(signers[1].address, transferAmount);
-    const erc20Signer2 = erc20.connect(signers[1]);
+    const approveResponse = await erc20Wallet1.approve(wallet2, transferAmount);
+    console.log(`approveResponse = ${JSON.stringify(await approveResponse.wait())}`);
 
-    const balanceBefore = BigInt(await erc20.balanceOf(signers[0].address));
-    console.log(`signers[0]balanceBefore = *${balanceBefore}*`);
+    const wallet1BalanceBefore = BigInt(await erc20Contract.balanceOf(wallet1));
+    console.log(`wallet1BalanceBefore = *${wallet1BalanceBefore}*`);
 
-    await erc20Signer2.transferFrom(
-      signers[0].address,
-      signers[1].address,
+    const transferFromResponse = await erc20Wallet2.transferFrom(
+      wallet1,
+      wallet2,
       transferAmount
     );
-    const balanceAfter = BigInt(await erc20.balanceOf(signers[0].address));
-    console.log(`signers[0]balanceAfter = *${balanceAfter}*`);
+    console.log(`transferFromResponse = ${JSON.stringify(await transferFromResponse.wait())}`);
 
-    expect(balanceBefore).to.not.eq(balanceAfter);
-    expect(balanceAfter).to.eq(balanceBefore - transferAmount);
+    const wallet1BalanceAfter = BigInt(await erc20Contract.balanceOf(wallet1));
+    console.log(`wallet1BalanceAfter = *${wallet1BalanceAfter}*`);
+
+    expect(wallet1BalanceBefore).to.not.eq(wallet1BalanceAfter);
+    expect(wallet1BalanceAfter).to.eq(wallet1BalanceBefore - transferAmount);
   });
 
   describe('should be able to approve an amount and read a corresponding allowance', function () {
     it('should be able to execute approve(address,uint256)', async function () {
-      const res = await erc20.approve(await erc20.getAddress(), transferAmount);
+      const approveResponse = await erc20Contract.approve(await erc20Contract.getAddress(), transferAmount);
       expect(
-        (await res.wait()).logs.filter(
+        (await approveResponse.wait()).logs.filter(
           (e) => e.fragment.name === Constants.Events.Approval
         )
       ).to.not.be.empty;
     });
 
     it('should be able to execute allowance(address,address)', async function () {
-      const res = BigInt(await erc20.allowance(
-        signers[0].address,
-        await erc20.getAddress()
+      const allowance = BigInt(await erc20Contract.allowance(
+        wallet1,
+        await erc20Contract.getAddress()
       ));
-      expect(res).to.eq(transferAmount);
+      expect(allowance).to.eq(transferAmount);
     });
   });
 });
