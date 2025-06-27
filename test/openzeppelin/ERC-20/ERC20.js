@@ -23,24 +23,32 @@ describe('@OZERC20 Test Suite', function () {
   let erc20Wallet2
 
   before(async function () {
-    signers = await ethers.getSigners();
-    wallet1 = signers[0].address;
-    wallet2 = signers[1].address;
-    erc20Wallet1 = erc20Contract.connect(signers[0]);
-    erc20Wallet2 = erc20Contract.connect(signers[1]);
+    try {
+      signers = await ethers.getSigners();
 
-    const factory = await ethers.getContractFactory(
-      Constants.Contract.OZERC20Mock
-    );
-    erc20Contract = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL');
-    const mintResponse = await erc20Contract.mint(wallet1, firstMintAmount);
-    console.log(`mintResponse = ${await safeCall(async () => {
-      JSON.stringify(await mintResponse?.wait());
-    })}`);
+      wallet1 = signers[0].address;
+      console.log(`wallet1 = ${wallet1}`);
 
-    console.log(`wallet1 = ${wallet1}`);
-    console.log(`wallet2 = ${wallet2}`);
-    console.log(`erc20Contract = ${await erc20Contract.getAddress()}`);
+      wallet2 = signers[1].address;
+      console.log(`wallet2 = ${wallet2}`);
+
+      const factory = await ethers.getContractFactory(
+        Constants.Contract.OZERC20Mock
+      );
+      erc20Contract = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL');
+      console.log(`erc20Contract = ${await erc20Contract.getAddress()}`);
+
+      erc20Wallet1 = erc20Contract.connect(signers[0]);
+      erc20Wallet2 = erc20Contract.connect(signers[1]);
+
+      const mintResponse = await erc20Contract.mint(wallet1, firstMintAmount);
+      console.log(`mintResponse = ${await safeCall(async () => {
+        JSON.stringify(await mintResponse?.wait());
+      })}`);
+    } catch (error) {
+      console.error(`Error in before hook: ${error.message}`, error);
+      throw error; // Re-throw to fail the test suite
+    }
  });
 
   it('should be able to execute name()', async function () {
