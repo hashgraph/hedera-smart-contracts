@@ -2,7 +2,7 @@
 
 const { ethers: { ContractFactory } } = require('ethers');
 const { loadArtifact } = require('../../../utils/artifact');
-const { options } = require('../options');
+const { options, DEFAULT_GAS_LIMIT } = require('../options');
 
 const artifact = loadArtifact('Counter');
 
@@ -14,7 +14,7 @@ module.exports = {
    */
   deploy: async function (wallet, _) {
     const contractFactory = new ContractFactory(artifact.abi, artifact.bytecode, wallet);
-    const tx = await contractFactory.deploy(await options(wallet, 5000000));
+    const tx = await contractFactory.deploy(await options(wallet, DEFAULT_GAS_LIMIT));
     const contractAddress = await tx.getAddress();
     const receipt = await tx.deploymentTransaction().wait();
     if (!receipt) throw new Error('Failed to get transaction receipt');

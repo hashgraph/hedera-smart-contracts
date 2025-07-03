@@ -6,6 +6,8 @@ const { Cache } = require('../../cache');
 
 dotenv.config();
 
+const DEFAULT_GAS_LIMIT = 5000000;
+
 class EvmExecutor {
   constructor(name) {
     const envVariablePrefix = name.split('::EVM')[0].split('::').join('_').toUpperCase();
@@ -43,7 +45,13 @@ class EvmExecutor {
     for (const operation of operations) {
       try {
         const [type, action] = operation.split('::');
-        results.push(await require(`./action/${type}`)[action](this.wallet, this.cache));
+        let result = await require(`./action/${type}`)[action](this.wallet, this.cache);
+        const receipt = await this.provider.getTransactionReceipt(result.transactionHash);
+        const transaction = await this.provider.getTransaction(result.transactionHash);
+        if (!result.additionalData) result.additionalData = {};
+        result.additionalData.inputData = transaction.data;
+        result.additionalData.contractCreated = (receipt.contractAddress != null);
+        results.push(result);
       } catch (error) {
         results.push({ success: false, gasUsed: 0, error: error.shortMessage || (error instanceof Error ? error.message : String(error)) });
       }

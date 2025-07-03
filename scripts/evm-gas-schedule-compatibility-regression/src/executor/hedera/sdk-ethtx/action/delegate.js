@@ -96,7 +96,7 @@ const call = async function (client, wallet, cache) {
   const contract = getContract(callerAddress, wallet);
   const txData = contract.interface.encodeFunctionData('callIncrement(address)', [counterAddress]);
   const tx = {
-    ...(await options(wallet, 200000)),
+    ...(await options(wallet, 5000000)),
     to: callerAddress,
     data: txData,
   };

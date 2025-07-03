@@ -3,7 +3,7 @@
 const { ethers: { ContractFactory, Wallet, Contract } } = require('ethers');
 const hedera = require('../../client');
 const { loadArtifact } = require('../../../../utils/artifact');
-const { options } = require('../../../evm/options');
+const { options, DEFAULT_GAS_LIMIT } = require('../../../evm/options');
 
 const factoryArtifact = loadArtifact('Factory');
 const counterArtifact = loadArtifact('Counter');
@@ -28,7 +28,7 @@ const getFactoryContract = function (address, wallet) {
  */
 const initFactory = async function (client, wallet, cache) {
     const contractFactory = new ContractFactory(factoryArtifact.abi, factoryArtifact.bytecode, wallet);
-    const tx = await contractFactory.getDeployTransaction(await options(wallet, 5000000));
+    const tx = await contractFactory.getDeployTransaction(await options(wallet, DEFAULT_GAS_LIMIT));
     const { status, gasUsed, evmAddress, contractId, transactionHash } = await hedera.forward(
       client,
       client.getOperator().accountId,
@@ -36,7 +36,7 @@ const initFactory = async function (client, wallet, cache) {
       { ...tx, to: null, type: 2, accessList: [] }
     );
     const contractAddress = evmAddress || contractId.toSolidityAddress();
-    cache.write('create2::contract', contractAddress);
+    cache.write('create-via-factory::contract', contractAddress);
     return {
         success: status,
         gasUsed,
@@ -52,13 +52,13 @@ const initFactory = async function (client, wallet, cache) {
  * @returns {Promise<{gasUsed: (number|number), success: boolean, transactionHash: string}>}
  */
 const deploy = async function (client, wallet, cache) {
-    let contractAddress = cache.read('create2::contract');
+    let contractAddress = cache.read('create-via-factory::contract');
     if (contractAddress === null) contractAddress = (await initFactory(client, wallet, cache)).additionalData.contractAddress;
     const contract = getFactoryContract(contractAddress, wallet);
     const counterFactory = new ContractFactory(counterArtifact.abi, counterArtifact.bytecode, wallet);
     const txData = contract.interface.encodeFunctionData('deploy(bytes)', [counterFactory.bytecode]);
     const tx = {
-        ...(await options(wallet, 5000000)),
+        ...(await options(wallet, DEFAULT_GAS_LIMIT)),
         to: contractAddress,
         data: txData,
     };

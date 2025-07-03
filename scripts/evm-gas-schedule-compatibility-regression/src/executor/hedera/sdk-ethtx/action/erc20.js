@@ -56,7 +56,7 @@ const mint = async function (client, wallet, cache) {
   const contract = getContract(contractAddress, wallet);
   const txData = contract.interface.encodeFunctionData('mint(uint256)', [parseUnits('100', 18)]);
   const tx = {
-    ...(await options(wallet, 200000)),
+    ...(await options(wallet, 5000000)),
     to: contractAddress,
     data: txData,
   };
@@ -86,7 +86,7 @@ const burn = async function (client, wallet, cache) {
   const contract = getContract(contractAddress, wallet);
   const txData = contract.interface.encodeFunctionData('burn(uint256)', [parseUnits('100', 18)]);
   const tx = {
-    ...(await options(wallet, 200000)),
+    ...(await options(wallet, 5000000)),
     to: contractAddress,
     data: txData,
   };
@@ -117,7 +117,7 @@ const transfer = async function (client, wallet, cache) {
   const randomWallet = Wallet.createRandom();
   const txData = contract.interface.encodeFunctionData('transfer(address,uint256)', [randomWallet.address, parseUnits('100', 18)]);
   const tx = {
-    ...(await options(wallet, 200000)),
+    ...(await options(wallet, 5000000)),
     to: contractAddress,
     data: txData,
   };
@@ -148,7 +148,7 @@ const approve = async function (client, wallet, cache) {
   const randomWallet = Wallet.createRandom();
   const txData = contract.interface.encodeFunctionData('approve(address,uint256)', [randomWallet.address, parseUnits('100', 18)]);
   const tx = {
-    ...(await options(wallet, 200000)),
+    ...(await options(wallet, 5000000)),
     to: contractAddress,
     data: txData,
   };
@@ -179,7 +179,7 @@ const transferFrom = async function (client, wallet, cache) {
   const randomWallet = Wallet.createRandom();
   const txData = contract.interface.encodeFunctionData('transferFrom(address,address,uint256)', [wallet.address, randomWallet.address, parseUnits('100', 18)]);
   const tx = {
-    ...(await options(wallet, 200000)),
+    ...(await options(wallet, 5000000)),
     to: contractAddress,
     data: txData,
   };

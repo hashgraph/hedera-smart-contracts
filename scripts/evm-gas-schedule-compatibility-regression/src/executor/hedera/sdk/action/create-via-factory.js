@@ -16,7 +16,7 @@ const initFactory = async function (client, cache) {
     const { status, gasUsed, contractId, transactionHash } =
       await hedera.deploy(client, factoryArtifact.bytecode, new ContractFunctionParameters());
     const contractAddress = contractId.toSolidityAddress();
-    cache.write('create2::contract', contractAddress);
+    cache.write('create-via-factory::contract', contractAddress);
     return {
         success: status,
         gasUsed,
@@ -31,7 +31,7 @@ const initFactory = async function (client, cache) {
  * @returns {Promise<{gasUsed: (number|number), success: boolean, transactionHash: string}>}
  */
 const deploy = async function (client, cache) {
-    let contractAddress = cache.read('create2::contract');
+    let contractAddress = cache.read('create-via-factory::contract');
     if (contractAddress === null) contractAddress = (await initFactory(client, cache)).additionalData.contractAddress;
     const contractId = ContractId.fromEvmAddress(0, 0, contractAddress);
     const { status, gasUsed, transactionHash } = await hedera.call(
