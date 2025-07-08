@@ -50,7 +50,7 @@
   "dependencies": {
     "@nomicfoundation/solidity-analyzer": "^0.1.2",
     "bn.js": "^5.2.2",
-    "dotenv": "^17.0.1",
+    "dotenv": "^17.1.0",
     "elliptic": "^6.6.1",
     "mcl-wasm": "^1.8.0",
     "protobufjs": "^7.5.3",
