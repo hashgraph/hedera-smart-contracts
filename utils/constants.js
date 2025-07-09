@@ -23,8 +23,8 @@ const NETWORKS = {
     url: 'http://localhost:7546',
     chainId: 298,
     networkNodeUrl: '127.0.0.1:50211',
-    nodeId: '3',
-    mirrorNode: 'http://127.0.0.1:5600',
+    nodeId: '0',
+    mirrorNode: 'http://127.0.0.1:8081',
     timeout: 360_000,
   },
   testnet: {
