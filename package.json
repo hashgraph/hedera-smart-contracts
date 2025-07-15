@@ -52,7 +52,7 @@
     "bn.js": "^5.2.2",
     "dotenv": "^17.2.0",
     "elliptic": "^6.6.1",
-    "mcl-wasm": "^1.8.0",
+    "mcl-wasm": "^2.0.0",
     "protobufjs": "^7.5.3",
     "solidity-coverage": "^0.8.16"
   }
