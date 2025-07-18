@@ -31,11 +31,11 @@ describe('@OZERC20 Test Suite', function () {
       const factory = await ethers.getContractFactory(
         Constants.Contract.OZERC20Mock
       );
-      erc20Contract = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL');
+      erc20Contract = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL', Constants.GAS_LIMIT_10_000_000);
       await sleep(3500); // wait for consensus on write transactions
       console.log(`erc20Contract = ${await erc20Contract.getAddress()}`);
 
-      await erc20Contract.mint(wallet1, firstMintAmount);
+      await erc20Contract.mint(wallet1, firstMintAmount, Constants.GAS_LIMIT_10_000_000);
       await sleep(3500); // wait for consensus on write transactions
     } catch (error) {
       console.error(`Error in before hook: ${error.message}`, error);
