@@ -37,7 +37,7 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
         with:
           egress-policy: audit
 
@@ -63,7 +63,7 @@ jobs:
 
       # This step is required to avoid "HardhatFoundryError: Couldn't run `forge`"
       - name: Install Foundry
-        uses: step-security/foundry-toolchain@9997259130641e12dec5e2bfa071f3e370c0a250 # v1.2.2
+        uses: step-security/foundry-toolchain@ced99da5c56c695ce707ab2715ca678d6e8a7038 # v1.4.0
         with:
           version: stable
 
@@ -82,7 +82,7 @@ jobs:
           path: test-*.xml
 
       - name: Publish Test Report
-        uses: step-security/publish-unit-test-result-action@cc82caac074385ae176d39d2d143ad05e1130b2d # v2.18.0
+        uses: step-security/publish-unit-test-result-action@201bbe166c323b2f9dab6dfbf9d6b6c001bd0dce # v2.20.1
         if: ${{ !cancelled() }}
         with:
           check_name: 'Unit Tests results' # Set to empty to disable check run
