@@ -6,7 +6,9 @@
     "/contracts/**/*.sol",
     "/contracts/**/**/**/*.sol",
     "/test/foundry/mocks/**/*.sol",
-    "/test/foundry/mocks/**/**/**/*.sol"
+    "/test/foundry/mocks/**/**/**/*.sol",
+    "/test/foundry/utils/**/*.sol",
+    "/test/foundry/utils/**/**/**/*.sol"
   ],
   "repository": {
     "type": "git",
