@@ -19,27 +19,49 @@ describe('@OZERC20 Test Suite', function () {
 
   before(async function () {
     this.timeout(DEFAULT_TIMEOUT);
-    try {
-      signers = await ethers.getSigners();
+    const maxRetries = 5;
+    let retryCount = 0;
+    let success = false;
+    console.log('Try if network is up and running...');
+    while (!success && retryCount < maxRetries) {
+      try {
+        signers = await ethers.getSigners();
 
-      wallet1 = signers[0].address;
-      console.log(`wallet1 = ${wallet1}`);
+        wallet1 = signers[0].address;
+        console.log(`wallet1 = ${wallet1}`);
 
-      wallet2 = signers[1].address;
-      console.log(`wallet2 = ${wallet2}`);
+        wallet2 = signers[1].address;
+        console.log(`wallet2 = ${wallet2}`);
 
-      const factory = await ethers.getContractFactory(
-        Constants.Contract.OZERC20Mock
-      );
-      erc20Contract = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL', Constants.GAS_LIMIT_10_000_000);
-      await sleep(3500); // wait for consensus on write transactions
-      console.log(`erc20Contract = ${await erc20Contract.getAddress()}`);
+        const factory = await ethers.getContractFactory(
+          Constants.Contract.OZERC20Mock
+        );
+        erc20Contract = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL', Constants.GAS_LIMIT_10_000_000);
+        await sleep(3500); // wait for consensus on write transactions
+        console.log(`erc20Contract = ${await erc20Contract.getAddress()}`);
 
-      await erc20Contract.mint(wallet1, firstMintAmount, Constants.GAS_LIMIT_10_000_000);
-      await sleep(3500); // wait for consensus on write transactions
-    } catch (error) {
-      console.error(`Error in before hook: ${error.message}`, error);
-      throw error; // Re-throw to fail the test suite
+        await erc20Contract.mint(wallet1, firstMintAmount, Constants.GAS_LIMIT_10_000_000);
+        await sleep(3500); // wait for consensus on write transactions
+
+        success = true; // If we reach here, everything succeeded
+      } catch (error) {
+        console.error(`Error in before hook (attempt ${retryCount + 1}/${maxRetries}): ${error.message}`, error);
+
+        // Check if error message contains "HH108: Cannot connect to the network local"
+        if (error.message.includes("HH108: Cannot connect to the network local")) {
+          retryCount++;
+          if (retryCount < maxRetries) {
+            console.log(`Retrying in 3 seconds... (attempt ${retryCount + 1}/${maxRetries})`);
+            await sleep(3000); // Wait 3 seconds before retrying
+          } else {
+            console.error("Maximum retry attempts reached. Failing test suite.");
+            throw error; // Re-throw after max retries
+          }
+        } else {
+          // For other errors, don't retry
+          throw error; // Re-throw to fail the test suite
+        }
+      }
     }
  });
 
