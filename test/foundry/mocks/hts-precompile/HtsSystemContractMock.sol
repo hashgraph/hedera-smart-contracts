@@ -43,6 +43,18 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsSystemContractM
     // HTS token -> paused
     mapping(address => TokenConfig) internal _tokenPaused;
 
+    // - - - test only - - -
+
+    mapping(address => bool) public activeHederaAccount;
+
+    function setActiveHederaAccount(address account, bool isActive) external {
+        activeHederaAccount[account] = isActive;
+    }
+
+    function getKeyTypeTestOnly(KeyType keyType) external view returns (uint256) {
+        return getKeyType(keyType);
+    }
+
     // - - - - - - EVENTS - - - - - -
 
     // emitted for convenience of having the token address accessible in a Hardhat environment
@@ -1251,14 +1263,8 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsSystemContractM
         keyTypeValue = 2 ** uint(keyType);
     }
 
-    function _getBalance(address account) internal view returns (uint256 balance) {
-        balance = account.balance;
-    }
-
-    // TODO: validate account exists wherever applicable; transfers, mints, burns, etc
-    // is account(either an EOA or contract) has a non-zero balance then assume it exists
     function _doesAccountExist(address account) internal view returns (bool exists) {
-        exists = _getBalance(account) > 0;
+        exists = activeHederaAccount[account] || activeHederaAccount[address(0)] || account.balance > 0 || account.code.length > 0;
     }
 
     // IHederaTokenService public/external state-changing functions:
@@ -1886,7 +1892,7 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsSystemContractM
 
     function updateFungibleTokenCustomFees(address token,  IHederaTokenService.FixedFee[] memory fixedFees, IHederaTokenService.FractionalFee[] memory fractionalFees) external returns (int64 responseCode){}
     function updateNonFungibleTokenCustomFees(address token, IHederaTokenService.FixedFee[] memory fixedFees, IHederaTokenService.RoyaltyFee[] memory royaltyFees) external returns (int64 responseCode){}
-    
+
     // TODO
     function redirectForToken(address token, bytes memory encodedFunctionSelector) external noDelegateCall override returns (int64 responseCode, bytes memory response) {}
 
