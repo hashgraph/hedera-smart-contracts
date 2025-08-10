@@ -839,7 +839,7 @@ interface IHederaTokenService {
     /// @notice Recipients will receive tokens in one of these ways:
     /// @notice     - Immediately if already associated with the token
     /// @notice     - Immediately with auto-association if they have available slots
-    /// @notice     - As a pending airdrop requiring claim if they have "receiver signature required" 
+    /// @notice     - As a pending airdrop requiring claim if they have "receiver signature required"
     /// @notice     - As a pending airdrop requiring claim if they have no available auto-association slots
     /// @notice Immediate airdrops are irreversible, pending airdrops can be canceled
     /// @notice All transfer fees and auto-renewal rent costs are charged to the transaction submitter

@@ -545,7 +545,7 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsSystemContractM
 
         (success, responseCode) = success ? HederaTokenValidation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
         (success, responseCode) = success ? _validateTreasuryKey(token) : (success, responseCode);
-        (success, responseCode) = success ? HederaTokenValidation._validateTokenSufficiency(token, _getTreasuryAccount(token), amount, serialNumbers[0], _isFungible, _isNonFungible, _partialNonFungibleTokenInfos) : (success, responseCode);
+        (success, responseCode) = success ? HederaTokenValidation._validateTokenSufficiency(token, _getTreasuryAccount(token), amount, _isFungible[token] ? int64(0) : serialNumbers[0], _isFungible, _isNonFungible, _partialNonFungibleTokenInfos) : (success, responseCode);
     }
 
     // TODO: implement multiple NFTs being wiped, instead of just index 0
@@ -560,7 +560,7 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsSystemContractM
         (success, responseCode) = success ? HederaTokenValidation._validateToken(token, _tokenDeleted, _isFungible, _isNonFungible) : (success, responseCode);
         (success, responseCode) = success ? HederaTokenValidation._validBurnInput(token, _isFungible, _isNonFungible, amount, serialNumbers) : (success, responseCode);
         (success, responseCode) = success ? _validateWipeKey(token) : (success, responseCode);
-        (success, responseCode) = success ? HederaTokenValidation._validateTokenSufficiency(token, account, amount, serialNumbers[0], _isFungible, _isNonFungible, _partialNonFungibleTokenInfos) : (success, responseCode);
+        (success, responseCode) = success ? HederaTokenValidation._validateTokenSufficiency(token, account, amount, _isFungible[token] ? int64(0) : serialNumbers[0], _isFungible, _isNonFungible, _partialNonFungibleTokenInfos) : (success, responseCode);
     }
 
     function _precheckGetApproved(
