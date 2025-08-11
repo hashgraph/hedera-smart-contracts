@@ -1,0 +1,12 @@
+{
+  "name": "offchain-signing",
+  "version": "1.0.0",
+  "description": "Off-chain signing script for an \"AccountDelete\" transaction",
+  "scripts": {},
+  "author": "Hedera Smart Contracts Team",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@hashgraph/sdk": "^2.47.0",
+    "dotenv": "^16.4.5"
+  }
+}
