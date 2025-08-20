@@ -200,19 +200,26 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsSystemContractM
         // TODO: Handle copying of other arrays (fixedFees, fractionalFees, and royaltyFees) if needed
     }
 
-    function _setFungibleTokenKeys(address token, TokenKey[] memory tokenKeys) internal {
+    function _processTokenKey(address token, TokenKey memory tokenKey) internal {
+        /// @dev contractId can in fact be any address including an EOA address
+        ///      The KeyHelper lists 5 types for KeyValueType; however only CONTRACT_ID is considered
+        for (uint256 j; j < 256; j++) {
+            uint256 keyType = uint256(1) << j;
+            // NOTE: allow for a single tokenKey.keyType to be a composite key type containing >1 key
+            if (tokenKey.keyType & keyType != 0) {
+                _tokenKeys[token][keyType] = tokenKey.key.contractId;
+            }
+        }
+    }
 
+    function _setFungibleTokenKeys(address token, TokenKey[] memory tokenKeys) internal {
         // Copy the tokenKeys array
         uint256 length = tokenKeys.length;
         for (uint256 i = 0; i < length; i++) {
             TokenKey memory tokenKey = tokenKeys[i];
             _fungibleTokenInfos[token].tokenInfo.token.tokenKeys.push(tokenKey);
-
-            /// @dev contractId can in fact be any address including an EOA address
-            ///      The KeyHelper lists 5 types for KeyValueType; however only CONTRACT_ID is considered
-            _tokenKeys[token][tokenKey.keyType] = tokenKey.key.contractId;
+            _processTokenKey(token, tokenKey);
         }
-
     }
 
     function _setFungibleTokenInfo(FungibleTokenInfo memory fungibleTokenInfo) internal returns (address treasury) {
@@ -260,10 +267,7 @@ contract HtsSystemContractMock is NoDelegateCall, KeyHelper, IHtsSystemContractM
         for (uint256 i = 0; i < length; i++) {
             TokenKey memory tokenKey = tokenKeys[i];
             _nftTokenInfos[token].token.tokenKeys.push(tokenKey);
-
-            /// @dev contractId can in fact be any address including an EOA address
-            ///      The KeyHelper lists 5 types for KeyValueType; however only CONTRACT_ID is considered
-            _tokenKeys[token][tokenKey.keyType] = tokenKey.key.contractId;
+            _processTokenKey(token, tokenKey);
         }
     }
 
