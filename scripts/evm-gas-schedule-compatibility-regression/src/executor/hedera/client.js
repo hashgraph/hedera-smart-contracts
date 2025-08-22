@@ -92,13 +92,15 @@ module.exports = {
    * @param {import('@hashgraph/sdk').Client} client
    * @param {string} bytecode
    * @param {ContractFunctionParameters|undefined} parameters
+   * @param {Hbar} initialBalance
    * @returns {Promise<{ status: boolean, gasUsed: number, transactionId: string, transactionHash: string, contractId: import('@hashgraph/sdk').ContractId }>}
    */
-  deploy: async function (client, bytecode, parameters) {
+  deploy: async function (client, bytecode, parameters, initialBalance) {
     const contractTx = await new ContractCreateFlow()
       .setBytecode(bytecode)
       .setGas(DEFAULT_GAS_LIMIT);
     if (parameters) contractTx.setConstructorParameters(parameters);
+    if (initialBalance) contractTx.setInitialBalance(initialBalance);
     const contractResponse = await contractTx.execute(client);
     const contractReceipt = await contractResponse.getReceipt(client);
     const record = await contractResponse.getRecord(client);
