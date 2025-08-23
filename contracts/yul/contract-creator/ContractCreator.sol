@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.20;
 
+import "../../system-contracts/contract-creation/ContractCreationHandler.sol";
+
 /**
  * @notice The unit tests for the `ContractCreator` contract will utilize a predefined bytecode of a contract that inherits the `ITargetContract` interface.
  */
@@ -9,7 +11,7 @@ interface ITargetContract {
     function getCount() external view returns (uint);
 }
 
-contract ContractCreator {
+contract ContractCreator is ContractCreationHandler {
     event NewContractCreated(address contractAddress);
 
     /// create(v, p, n) is used to create a new contract
@@ -17,7 +19,15 @@ contract ContractCreator {
     /// `p`: The address of the location in memory where the code for the new contract is stored.
     /// `n`: The size of the code in memory.
     function createNewContract(bytes memory bytecode) external payable {
+        // Validate contract creation parameters
+        int32 validationCode = validateContractCreation(bytecode, uint64(msg.value));
+        if (validationCode != HederaResponseCodes.SUCCESS) {
+            handleContractCreationResult(validationCode, 0);
+            revert();
+        }
+
         address newContractAddress;
+        uint64 contractNum;
         assembly {
             // get msgValue
             let msgValue := callvalue()
@@ -35,12 +45,15 @@ contract ContractCreator {
 
             // check if the contract creation was sucessful
             if iszero(extcodesize(newContractAddress)) {
+                // Get contract number from the transaction
+                contractNum := mload(0x40)
+                // Handle failed contract creation
+                handleContractCreationResult(HederaResponseCodes.CONTRACT_REVERT_EXECUTED, contractNum)
                 revert(0, 0)
             }
         }
         emit NewContractCreated(newContractAddress);
     }
-
 
     /// create2(v, p, n, s) is used to create a new contract
     /// `v`: The value (in wei) to be transferred to the newly created contract.
@@ -48,7 +61,15 @@ contract ContractCreator {
     /// `n`: The size of the code in memory.
     /// `s`: The random 256-bit salt
     function create2NewContract(bytes memory bytecode, uint256 salt) external payable {
+        // Validate contract creation parameters
+        int32 validationCode = validateContractCreation(bytecode, uint64(msg.value));
+        if (validationCode != HederaResponseCodes.SUCCESS) {
+            handleContractCreationResult(validationCode, 0);
+            revert();
+        }
+
         address newContractAddress;
+        uint64 contractNum;
         assembly {
             // get msgValue
             let msgValue := callvalue()
@@ -66,7 +87,11 @@ contract ContractCreator {
 
             // check if the contract creation was sucessful
             if iszero(extcodesize(newContractAddress)) {
-                revert (0,0)
+                // Get contract number from the transaction
+                contractNum := mload(0x40)
+                // Handle failed contract creation
+                handleContractCreationResult(HederaResponseCodes.CONTRACT_REVERT_EXECUTED, contractNum)
+                revert(0, 0)
             }
         }
         emit NewContractCreated(newContractAddress);
