@@ -75,9 +75,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
     const disableAutoAssociations =
       await walletIHRC904AccountFacade.setUnlimitedAutomaticAssociations(
         false,
-        {
-          gasLimit: 2_000_000,
-        }
+        Constants.GAS_LIMIT_2_000_000
       );
     await disableAutoAssociations.wait();
   });
@@ -103,7 +101,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
       ftAmount,
       {
         value: Constants.ONE_HBAR,
-        gasLimit: 2_000_000,
+        ...Constants.GAS_LIMIT_2_000_000
       }
     );
     await airdropTx.wait();
@@ -144,7 +142,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
       serialNumber,
       {
         value: Constants.ONE_HBAR,
-        gasLimit: 2_000_000,
+        ...Constants.GAS_LIMIT_2_000_000
       }
     );
     await airdropTx.wait();
@@ -335,7 +333,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
       serialNumber,
       {
         value: Constants.ONE_HBAR,
-        gasLimit: 2_000_000,
+        ...Constants.GAS_LIMIT_2_000_000
       }
     );
     await airdropTx.wait();
@@ -373,7 +371,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
         serialNumber,
         {
           value: Constants.ONE_HBAR,
-          gasLimit: 2_000_000,
+          ...Constants.GAS_LIMIT_2_000_000
         }
     );
     await airdropTx.wait();
@@ -385,16 +383,12 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
         serialNumber,
         {
           value: Constants.ONE_HBAR,
-          gasLimit: 2_000_000,
+          ...Constants.GAS_LIMIT_2_000_000
         }
     );
 
-    try {
-      await airdropTx2.wait();
-      Utils.expectFailed();
-    } catch (e) {
-      expect(await Utils.getHTSResponseCode(airdropTx2.hash)).to.equal('237'); // SENDER_DOES_NOT_OWN_NFT_SERIAL_NO
-    }
+    await expect(airdropTx2.wait()).to.be.rejectedWith('transaction execution reverted');
+    expect(await Utils.getHTSResponseCode(airdropTx2.hash)).to.equal('237'); // SENDER_DOES_NOT_OWN_NFT_SERIAL_NO
   });
 
   it('should fail with `PENDING_NFT_AIRDROP_ALREADY_EXISTS` when contract airdrops multiple duplicated NFT tokens to an account with max auto associations disabled', async function () {
@@ -419,7 +413,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
         serialNumber,
         {
           value: Constants.ONE_HBAR,
-          gasLimit: 2_000_000,
+          ...Constants.GAS_LIMIT_2_000_000
         }
     );
     await airdropTx.wait();
@@ -431,19 +425,15 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
         serialNumber,
         {
           value: Constants.ONE_HBAR,
-          gasLimit: 2_000_000,
+          ...Constants.GAS_LIMIT_2_000_000
         }
     );
 
-    try {
-      await airdropTx2.wait();
-      Utils.expectFailed();
-    } catch (e) {
-      expect(await Utils.getHTSResponseCode(airdropTx2.hash)).to.equal('364'); // PENDING_NFT_AIRDROP_ALREADY_EXISTS
-    }
+    await expect(airdropTx2.wait()).to.be.rejectedWith('transaction execution reverted');
+    expect(await Utils.getHTSResponseCode(airdropTx2.hash)).to.equal('364'); // PENDING_NFT_AIRDROP_ALREADY_EXISTS
   });
 
-  it('should fail to airdrop a token to itself', async function () {
+  it('should fail to airdrop a token to themselves', async function () {
     const ftAmount = BigInt(1);
     const sender = signers[0].address;
     const tokenAddress = await utils.setupToken(
@@ -459,16 +449,12 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
         ftAmount,
         {
           value: Constants.ONE_HBAR,
-          gasLimit: 2_000_000,
+          ...Constants.GAS_LIMIT_2_000_000
         }
     );
 
-    try {
-      await airdropTx.wait();
-      Utils.expectFailed();
-    } catch (e) {
-      expect(await Utils.getHTSResponseCode(airdropTx.hash)).to.equal('74'); // ACCOUNT_REPEATED_IN_ACCOUNT_AMOUNTS
-    }
+    await expect(airdropTx.wait()).to.be.rejectedWith('transaction execution reverted');
+    expect(await Utils.getHTSResponseCode(airdropTx.hash)).to.equal('74'); // ACCOUNT_REPEATED_IN_ACCOUNT_AMOUNTS
   });
 
   it('should fail to delete contract if there is pending airdrop', async function () {
@@ -491,7 +477,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
         ftAmount,
         {
           value: Constants.ONE_HBAR,
-          gasLimit: 2_000_000,
+          ...Constants.GAS_LIMIT_2_000_000
         }
     );
     await airdropTx.wait();
@@ -520,7 +506,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
           Number.MAX_SAFE_INTEGER + 1,
           {
             value: Constants.ONE_HBAR,
-            gasLimit: 2_000_000,
+            ...Constants.GAS_LIMIT_2_000_000
           }
       )).wait();
       Utils.expectFailed();
