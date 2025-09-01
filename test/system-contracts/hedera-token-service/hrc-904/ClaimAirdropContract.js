@@ -483,12 +483,10 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
     await airdropTx.wait();
 
     const deleteTx = await sampleContract.selfDestructSample();
-    try {
-      await deleteTx.wait();
-    } catch (e) {
-      const cr = await Utils.getContractResultFromMN(deleteTx.hash);
-      expect(cr.error_message).to.equal('CONTRACT_STILL_OWNS_NFTS');
-    }
+
+    await expect(deleteTx.wait()).to.be.rejectedWith('reverted');
+    const cr = await Utils.getContractResultFromMN(deleteTx.hash);
+    expect(cr.error_message).to.equal('CONTRACT_STILL_OWNS_NFTS');
   });
 
   it('should fail to airdrop Number.MAX_SAFE_INTEGER + 1 tokens', async function () {
@@ -498,20 +496,15 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
         contractAddresses
     );
 
-    try {
-      await (await airdropContract.tokenAirdrop(
-          tokenAddress,
-          signers[0].address,
-          receiver.address,
-          Number.MAX_SAFE_INTEGER + 1,
-          {
-            value: Constants.ONE_HBAR,
-            ...Constants.GAS_LIMIT_2_000_000
-          }
-      )).wait();
-      Utils.expectFailed();
-    } catch (e) {
-      expect(e.shortMessage).to.equal('overflow');
-    }
+    await expect(airdropContract.tokenAirdrop(
+        tokenAddress,
+        signers[0].address,
+        receiver.address,
+        Number.MAX_SAFE_INTEGER + 1,
+        {
+          value: Constants.ONE_HBAR,
+          ...Constants.GAS_LIMIT_2_000_000
+        }
+    )).to.be.rejectedWith('overflow');
   });
 });

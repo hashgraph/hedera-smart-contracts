@@ -533,10 +533,6 @@ class Utils {
     }
   }
 
-  static expectFailed() {
-    expect(true).to.equal(false);
-  }
-
   static async createSDKClient(operatorId, operatorKey) {
     const network = Utils.getCurrentNetwork();
 
