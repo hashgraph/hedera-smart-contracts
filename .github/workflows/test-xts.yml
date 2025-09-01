@@ -87,7 +87,7 @@ jobs:
       - name: Setup Kind
         uses: helm/kind-action@a1b0e391336a6ee6713a0583f8c6240d70863de3 # v1.12.0
         with:
-          node_image: kindest/node:v1.30.4 # stable K8s image
+          node_image: kindest/node:v1.31.4@sha256:2cb39f7295fe7eafee0842b1052a599a4fb0f8bcf3f83d96c7f4864c357c6c30
           version: v0.22.0 # stable kind version
           kubectl_version: v1.30.4
           verbosity: 3
@@ -126,14 +126,6 @@ jobs:
           name: JSON-RPC Relay Regression Test Report
           path: '**/regression-tests/platform-sdk/regression/mochawesome-report/mochawesome.*'
           retention-days: 7
-
-      - name: Dump CN/MN logs on failure
-        if: failure()
-        run: |
-          kubectl get pods -n ${SOLO_NAMESPACE} -o wide || true
-          kubectl describe pods -n ${SOLO_NAMESPACE} || true
-          kubectl logs -n ${SOLO_NAMESPACE} deploy/hedera-consensus-node --tail=200 || true
-          kubectl logs -n ${SOLO_NAMESPACE} statefulset/mirror-node-postgres --tail=200 || true
       - name: Stop solo
         if: ${{ always() }}
         run: |
