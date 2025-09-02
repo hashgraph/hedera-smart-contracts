@@ -4,6 +4,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const utils = require('../utils');
 const Constants = require('../../../constants');
+const Utils = require("../utils");
 
 describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
   let airdropContract;
@@ -74,9 +75,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
     const disableAutoAssociations =
       await walletIHRC904AccountFacade.setUnlimitedAutomaticAssociations(
         false,
-        {
-          gasLimit: 2_000_000,
-        }
+        Constants.GAS_LIMIT_2_000_000
       );
     await disableAutoAssociations.wait();
   });
@@ -102,7 +101,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
       ftAmount,
       {
         value: Constants.ONE_HBAR,
-        gasLimit: 2_000_000,
+        ...Constants.GAS_LIMIT_2_000_000
       }
     );
     await airdropTx.wait();
@@ -143,7 +142,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
       serialNumber,
       {
         value: Constants.ONE_HBAR,
-        gasLimit: 2_000_000,
+        ...Constants.GAS_LIMIT_2_000_000
       }
     );
     await airdropTx.wait();
@@ -334,7 +333,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
       serialNumber,
       {
         value: Constants.ONE_HBAR,
-        gasLimit: 2_000_000,
+        ...Constants.GAS_LIMIT_2_000_000
       }
     );
     await airdropTx.wait();
@@ -348,5 +347,164 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
     );
     const responseCode = await utils.getHTSResponseCode(tx.hash);
     expect(responseCode).to.eq('367'); // INVALID_PENDING_AIRDROP_ID code
+  });
+
+  it('should fail with `SENDER_DOES_NOT_OWN_NFT_SERIAL_NO` when contract airdrops multiple duplicated NFT tokens to an account with max auto associations enable', async function () {
+    const sender = signers[0].address;
+    const receiverTemp = signers[1].address;
+
+    const nftTokenAddress = await utils.setupNft(
+        tokenCreateContract,
+        owner,
+        contractAddresses
+    );
+
+    const serialNumber = await utils.mintNFTToAddress(
+        tokenCreateContract,
+        nftTokenAddress
+    );
+
+    const airdropTx = await airdropContract.nftAirdrop(
+        nftTokenAddress,
+        sender,
+        receiverTemp,
+        serialNumber,
+        {
+          value: Constants.ONE_HBAR,
+          ...Constants.GAS_LIMIT_2_000_000
+        }
+    );
+    await airdropTx.wait();
+
+    const airdropTx2 = await airdropContract.nftAirdrop(
+        nftTokenAddress,
+        sender,
+        receiverTemp,
+        serialNumber,
+        {
+          value: Constants.ONE_HBAR,
+          ...Constants.GAS_LIMIT_2_000_000
+        }
+    );
+
+    await expect(airdropTx2.wait()).to.be.rejectedWith('transaction execution reverted');
+    expect(await Utils.getHTSResponseCode(airdropTx2.hash)).to.equal('237'); // SENDER_DOES_NOT_OWN_NFT_SERIAL_NO
+  });
+
+  it('should fail with `PENDING_NFT_AIRDROP_ALREADY_EXISTS` when contract airdrops multiple duplicated NFT tokens to an account with max auto associations disabled', async function () {
+    const sender = signers[0].address;
+    const receiverTemp = receiver;
+
+    const nftTokenAddress = await utils.setupNft(
+        tokenCreateContract,
+        owner,
+        contractAddresses
+    );
+
+    const serialNumber = await utils.mintNFTToAddress(
+        tokenCreateContract,
+        nftTokenAddress
+    );
+
+    const airdropTx = await airdropContract.nftAirdrop(
+        nftTokenAddress,
+        sender,
+        receiverTemp,
+        serialNumber,
+        {
+          value: Constants.ONE_HBAR,
+          ...Constants.GAS_LIMIT_2_000_000
+        }
+    );
+    await airdropTx.wait();
+
+    const airdropTx2 = await airdropContract.nftAirdrop(
+        nftTokenAddress,
+        sender,
+        receiverTemp,
+        serialNumber,
+        {
+          value: Constants.ONE_HBAR,
+          ...Constants.GAS_LIMIT_2_000_000
+        }
+    );
+
+    await expect(airdropTx2.wait()).to.be.rejectedWith('transaction execution reverted');
+    expect(await Utils.getHTSResponseCode(airdropTx2.hash)).to.equal('364'); // PENDING_NFT_AIRDROP_ALREADY_EXISTS
+  });
+
+  it('should fail to airdrop a token to themselves', async function () {
+    const ftAmount = BigInt(1);
+    const sender = signers[0].address;
+    const tokenAddress = await utils.setupToken(
+        tokenCreateContract,
+        owner,
+        contractAddresses
+    );
+
+    const airdropTx = await airdropContract.tokenAirdrop(
+        tokenAddress,
+        sender,
+        sender,
+        ftAmount,
+        {
+          value: Constants.ONE_HBAR,
+          ...Constants.GAS_LIMIT_2_000_000
+        }
+    );
+
+    await expect(airdropTx.wait()).to.be.rejectedWith('transaction execution reverted');
+    expect(await Utils.getHTSResponseCode(airdropTx.hash)).to.equal('74'); // ACCOUNT_REPEATED_IN_ACCOUNT_AMOUNTS
+  });
+
+  it('should fail to delete contract if there is pending airdrop', async function () {
+    const sampleContractFactory = await ethers.getContractFactory('Sample');
+    const sampleContract = await sampleContractFactory.deploy();
+    await sampleContract.waitForDeployment();
+
+    const ftAmount = BigInt(5);
+    const sender = signers[0].address;
+    const tokenAddress = await utils.setupToken(
+        tokenCreateContract,
+        owner,
+        contractAddresses
+    );
+
+    const airdropTx = await airdropContract.tokenAirdrop(
+        tokenAddress,
+        sender,
+        sampleContract.target,
+        ftAmount,
+        {
+          value: Constants.ONE_HBAR,
+          ...Constants.GAS_LIMIT_2_000_000
+        }
+    );
+    await airdropTx.wait();
+
+    const deleteTx = await sampleContract.selfDestructSample();
+
+    await expect(deleteTx.wait()).to.be.rejectedWith('reverted');
+    const cr = await Utils.getContractResultFromMN(deleteTx.hash);
+    expect(cr.error_message).to.equal('CONTRACT_STILL_OWNS_NFTS');
+  });
+
+  it('should fail to airdrop Number.MAX_SAFE_INTEGER + 1 tokens', async function () {
+    const tokenAddress = await utils.setupToken(
+        tokenCreateContract,
+        owner,
+        contractAddresses
+    );
+
+    await expect(airdropContract.tokenAirdrop(
+        tokenAddress,
+        signers[0].address,
+        receiver.address,
+        Number.MAX_SAFE_INTEGER + 1,
+        {
+          value: Constants.ONE_HBAR,
+          ...Constants.GAS_LIMIT_2_000_000
+        }
+    )).to.be.rejectedWith('overflow');
   });
 });

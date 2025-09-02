@@ -53,7 +53,7 @@ class Utils {
 
   static async deployContract(
     contractPath,
-    gasLimit = Constants.GAS_LIMIT_1_000_000
+    gasLimit = Constants.GAS_LIMIT_5_000_000
   ) {
     const factory = await ethers.getContractFactory(contractPath);
     const contract = await factory.deploy(gasLimit);
@@ -838,6 +838,22 @@ class Utils {
     const mirrorNodeUrl = getMirrorNodeUrl(network);
     const res = await axios.get(
         `${mirrorNodeUrl}/tokens/${tokenAddress}`
+    );
+
+    return res.data;
+  }
+
+  /**
+   * This method fetches the transaction contract results from the mirror node corresponding to the current network. The
+   * response contains extra information that can not be gathered by `eth_getTransactionReceipt` and that might be
+   * needed for test assertions (e.g., revert messages).
+   *
+   * @param txHash - The transaction hash to query.
+   * @returns {Promise<any>} - The response from the MN.
+   */
+  static async getContractResultFromMN(txHash) {
+    const res = await axios.get(
+        `${getMirrorNodeUrl(hre.network.name)}/contracts/results/${txHash}`
     );
 
     return res.data;
