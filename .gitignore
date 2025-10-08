@@ -2,39 +2,12 @@ node_modules
 cache
 .idea
 
-# ignore non repo contract related aritifacts
-.openzeppelin/unknown-298.json
 .env
 test-results.*
-contracts-abi/*
-!contracts-abi/contracts
-
-# Ignore all default artifacts except for TokenCreateCustomContract, TokenManagementContract, TokenQueryContract, TokenTransferContract, IHRC729Contract, PrngSystemContract, ERC20Mock, ERC721Mock
-# because the System Contract DApp requires the bytecode of these contracts
-artifacts/contracts/*
-artifacts/build-info
-artifacts/@openzeppelin
-artifacts/contracts/**/**/*.dbg.json
-
-!artifacts/contracts/system-contracts
-artifacts/contracts/system-contracts/*
-!artifacts/contracts/system-contracts/exchange-rate
-!artifacts/contracts/system-contracts/pseudo-random-number-generator
-!artifacts/contracts/system-contracts/hedera-token-service
-artifacts/contracts/system-contracts/hedera-token-service/*
-!artifacts/contracts/system-contracts/hedera-token-service/examples
-!artifacts/contracts/system-contracts/hedera-token-service/IHRC719.sol
-
-!artifacts/contracts/exchange-rate-precompile
-artifacts/contracts/exchange-rate-precompile/*
-!artifacts/contracts/exchange-rate-precompile/ExchangeRateMock.sol
-
-!artifacts/contracts/util-precompile
-
-!artifacts/contracts/openzeppelin
-artifacts/contracts/openzeppelin/*
-!artifacts/contracts/openzeppelin/ERC-20
-!artifacts/contracts/openzeppelin/ERC-721
+contracts-abi/
+artifacts/
+test/state-registry/states.json
+test/state-registry/ercStates.json
 
 ## --- Foundry Gitignore ---
 # Compiler files
@@ -46,15 +19,7 @@ out/
 /broadcast/*/31337/
 /broadcast/**/dry-run/
 
-
 # Coverage
 lcov.info
 coverage/
-
-## --- Hardhat Gitignore for Foundry artifacts ---
-artifacts/forge-std
-artifacts/ds-test
-test/state-registry/states.json
-test/state-registry/ercStates.json
-
 coverage.json
