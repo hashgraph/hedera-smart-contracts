@@ -9,11 +9,6 @@ artifacts/
 test/state-registry/states.json
 test/state-registry/ercStates.json
 
-## --- Foundry Gitignore ---
-# Compiler files
-forge-cache/
-out/
-
 # Ignores development broadcast logs
 !/broadcast
 /broadcast/*/31337/

@@ -27,11 +27,6 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Install Foundry
-        uses: step-security/foundry-toolchain@ced99da5c56c695ce707ab2715ca678d6e8a7038 # v1.4.0
-        with:
-          version: stable
-
       - name: Parse and update response codes
         run: node scripts/hedera-response-codes-protobuf-parser.js
 

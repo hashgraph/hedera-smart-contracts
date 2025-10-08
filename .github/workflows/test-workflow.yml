@@ -61,12 +61,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # This step is required to avoid "HardhatFoundryError: Couldn't run `forge`"
-      - name: Install Foundry
-        uses: step-security/foundry-toolchain@ced99da5c56c695ce707ab2715ca678d6e8a7038 # v1.4.0
-        with:
-          version: stable
-
       - name: Start the local node
         run: npx hedera start -d --network-tag=${{inputs.networkTag}} --mirror-tag=${{inputs.mirrorTag}} --relay-tag=${{inputs.relayTag}} --verbose=trace
         timeout-minutes: 5
