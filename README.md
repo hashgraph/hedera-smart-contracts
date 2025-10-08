@@ -14,34 +14,34 @@ The system contract functions are defined in this library and implemented by the
 
 ### Hedera Token Service (HTS) System Contract
 
-The Hedera Token Service (HTS) functionality is defined by the [IHederaTokenService.sol](contracts/system-contracts/hedera-token-service/IHederaTokenService.sol) interface smart contract as defined in [HIP 206](https://hips.hedera.com/hip/hip-206), [HIP 376](https://hips.hedera.com/hip/hip-376) and [HIP 514](https://hips.hedera.com/hip/hip-514). The contract is exposed via the `0x167` address.
-Reference smart contracts to call these functions as well as examples can be found under [contracts/system-contracts/hedera-token-service](contracts/system-contracts/hedera-token-service)
+The Hedera Token Service (HTS) functionality is defined by the [IHederaTokenService.sol](contracts/hedera-token-service/IHederaTokenService.sol) interface smart contract as defined in [HIP 206](https://hips.hedera.com/hip/hip-206), [HIP 376](https://hips.hedera.com/hip/hip-376) and [HIP 514](https://hips.hedera.com/hip/hip-514). The contract is exposed via the `0x167` address.
+Reference smart contracts to call these functions as well as examples can be found under [contracts/system-contracts/hedera-token-service](contracts/hedera-token-service)
 
-For further details on methods, hashes and availability please refer to [HTS System Contract Methods](contracts/system-contracts/hedera-token-service/README.md)
+For further details on methods, hashes and availability please refer to [HTS System Contract Methods](contracts/hedera-token-service/README.md)
 
 - Solidity files updated on April 20, 2022 to add token create support
 - Solidity files updated on Jan 18, 2022
 
 ### Hedera Account Service (HAS) System Contract
 
-The Hedera Account Service (HAS) functionality is defined by the [IHederaAccountService.sol](contracts/system-contracts/hedera-account-service/IHederaAccountService.sol) interface smart contract as defined in [HIP 632](https://hips.hedera.com/hip/hip-632) and [HIP 906](https://hips.hedera.com/hip/hip-906). The contract is exposed via the `0x16a` address.
-Reference smart contracts to call these functions as well as examples can be found under [contracts/system-contracts/hedera-account-service](contracts/system-contracts/hedera-account-service)
+The Hedera Account Service (HAS) functionality is defined by the [IHederaAccountService.sol](contracts/hedera-account-service/IHederaAccountService.sol) interface smart contract as defined in [HIP 632](https://hips.hedera.com/hip/hip-632) and [HIP 906](https://hips.hedera.com/hip/hip-906). The contract is exposed via the `0x16a` address.
+Reference smart contracts to call these functions as well as examples can be found under [contracts/system-contracts/hedera-account-service](contracts/hedera-account-service)
 
-For further details on methods, hashes and availability please refer to [HAS System Contract Methods](contracts/system-contracts/hedera-account-service/README.md)
+For further details on methods, hashes and availability please refer to [HAS System Contract Methods](contracts/hedera-account-service/README.md)
 
 ### Exchange Rate System Contract
 
-The Exchange Rate functionality is defined by the [IExchangeRate.sol](contracts/system-contracts/exchange-rate/IExchangeRate.sol) interface smart contract as defined in [HIP 475](https://hips.hedera.com/hip/hip-475) and exposed via the `0x168` address.
-Reference smart contracts to call these functions as well as examples can be found under [contracts/system-contracts/exchange-rate](contracts/system-contracts/exchange-rate)
+The Exchange Rate functionality is defined by the [IExchangeRate.sol](contracts/exchange-rate/IExchangeRate.sol) interface smart contract as defined in [HIP 475](https://hips.hedera.com/hip/hip-475) and exposed via the `0x168` address.
+Reference smart contracts to call these functions as well as examples can be found under [contracts/system-contracts/exchange-rate](contracts/exchange-rate)
 
-For further details on methods, hashes and availability please refer to [Exchange Rate System Contract Methods](contracts/system-contracts/exchange-rate/README.md)
+For further details on methods, hashes and availability please refer to [Exchange Rate System Contract Methods](contracts/exchange-rate/README.md)
 
 ### Prng System Contract
 
-The PRNG functionality is defined by the [IPrngSystemContract.sol](contracts/system-contracts/pseudo-random-number-generator/IPrngSystemContract.sol) interface smart contract as defined in [HIP 351](https://hips.hedera.com/hip/hip-351) and exposed via the `0x169` address.
-Reference smart contracts to call these functions as well as examples can be found under [contracts/system-contracts/pseudo-random-number-generator](contracts/system-contracts/pseudo-random-number-generator)
+The PRNG functionality is defined by the [IPrngSystemContract.sol](contracts/pseudo-random-number-generator/IPrngSystemContract.sol) interface smart contract as defined in [HIP 351](https://hips.hedera.com/hip/hip-351) and exposed via the `0x169` address.
+Reference smart contracts to call these functions as well as examples can be found under [contracts/system-contracts/pseudo-random-number-generator](contracts/pseudo-random-number-generator)
 
-For further details on methods, hashes and availability please refer to [PRNG System Contract Methods](contracts/system-contracts/pseudo-random-number-generator/README.md)
+For further details on methods, hashes and availability please refer to [PRNG System Contract Methods](contracts/pseudo-random-number-generator/README.md)
 
 ## Development guidelines
 

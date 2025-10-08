@@ -22,13 +22,13 @@ This folder serves as a comprehensive collection of smart contracts developed an
 | [solidity/](solidity)                       | A diverse collection of smart contracts that exemplify the equivalence of Solidity at the language layer on the Hedera network. |
 | [state-registry/](state-registry)           | Contracts managing state registry functionality.                                                                                |
 | [system-contracts/](system-contracts)       | Collection of core Hedera System Contracts.                                                                                     |
-| [system-contracts/exchange-rate/](system-contracts/exchange-rate) | System contracts related to exchange rate functionality.                                                     |
-| [system-contracts/hedera-account-service/](system-contracts/hedera-account-service) | System contracts related to Hedera account services.                                     |
-| [system-contracts/hedera-schedule-service/](system-contracts/hedera-schedule-service) | System contracts for Hedera schedule services.                                         |
-| [system-contracts/hedera-token-service/](system-contracts/hedera-token-service) | System contracts related to Hedera token services.                                           |
-| [system-contracts/hedera-token-service-v2/](system-contracts/hedera-token-service-v2) | Enhanced version of Hedera token service system contracts.                             |
-| [system-contracts/native/](system-contracts/native) | Native system contracts for core Hedera functionality.                                                               |
-| [system-contracts/pseudo-random-number-generator/](system-contracts/pseudo-random-number-generator) | System contracts for generating pseudo-random numbers.                   |
+| [system-contracts/exchange-rate/](exchange-rate) | System contracts related to exchange rate functionality.                                                     |
+| [system-contracts/hedera-account-service/](hedera-account-service) | System contracts related to Hedera account services.                                     |
+| [system-contracts/hedera-schedule-service/](hedera-schedule-service) | System contracts for Hedera schedule services.                                         |
+| [system-contracts/hedera-token-service/](hedera-token-service) | System contracts related to Hedera token services.                                           |
+| [system-contracts/hedera-token-service-v2/](hedera-token-service-v2) | Enhanced version of Hedera token service system contracts.                             |
+| [system-contracts/native/](native) | Native system contracts for core Hedera functionality.                                                               |
+| [system-contracts/pseudo-random-number-generator/](pseudo-random-number-generator) | System contracts for generating pseudo-random numbers.                   |
 | [wrapped-tokens/](wrapped-tokens)           | Contracts implementing wrapped token functionality.                                                                             |
 | [yul/](yul)                                 | Smart contracts showcasing Yul inline-assembly equivalence on the Hedera network.                                               |
 
