@@ -109,14 +109,14 @@ describe('TokenCreateCustomContract Test Suite', () => {
     const tx =
       await tokenCreateCustomContract.createFungibleTokenWithCustomFeesPublic(
         await tokenCreateCustomContract.getAddress(),
-        fixedFeeTokenAddress,
         tokenName,
         tokenSymbol,
         tokenMemo,
         initialSupply,
         maxSupply,
         decimals,
-        feeAmount,
+        [],
+        [],
         keys,
         {
           value: '35000000000000000000',
@@ -158,12 +158,12 @@ describe('TokenCreateCustomContract Test Suite', () => {
     const tx =
       await tokenCreateCustomContract.createNonFungibleTokenWithCustomFeesPublic(
         await tokenCreateCustomContract.getAddress(),
-        fixedFeeTokenAddress,
         tokenName,
         tokenSymbol,
         tokenMemo,
         maxSupply,
-        feeAmount,
+        [],
+        [],
         keys,
         {
           value: '20000000000000000000',
@@ -230,7 +230,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
         await tokenCreateCustomContract.mintTokenPublic(
           prepFungibleTokenAddress,
           amountToMint,
-          ['0x02'],
+          [],
           Constants.GAS_LIMIT_1_000_000
         );
 
@@ -275,7 +275,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
         prepFungibleTokenAddress,
         signers[1].address,
         amountToMint,
-        ['0x02'],
+        [],
         Constants.GAS_LIMIT_1_000_000
       );
 
@@ -337,7 +337,7 @@ describe('TokenCreateCustomContract Test Suite', () => {
 
       const tx = await tokenCreateCustomContract.associateTokensPublic(
         signers[0].address,
-        [prepFungibleTokenAddress, prepNonFungibeTokenAddress],
+        [prepFungibleTokenAddress],
         Constants.GAS_LIMIT_1_000_000
       );
 

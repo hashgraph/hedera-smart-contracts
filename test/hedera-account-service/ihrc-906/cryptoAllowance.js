@@ -7,7 +7,7 @@ const { ethers } = require('hardhat');
 const Constants = require('../../constants');
 const {
   pollForNewSignerBalanceUsingProvider,
-} = require('../../../utils/helpers');
+} = require('../../helpers');
 
 describe('@HAS IHRC-906 Test Suite', () => {
   let walletA,

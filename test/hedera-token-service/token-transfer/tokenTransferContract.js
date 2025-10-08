@@ -7,7 +7,7 @@ const Constants = require('../../constants');
 const {
   pollForNewERC20Balance,
   pollForNewSignerBalanceUsingProvider,
-} = require('../../../utils/helpers');
+} = require('../../helpers');
 
 describe('TokenTransferContract Test Suite', function () {
   const TX_SUCCESS_CODE = 22;

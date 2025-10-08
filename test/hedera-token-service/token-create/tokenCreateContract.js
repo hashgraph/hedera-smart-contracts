@@ -5,7 +5,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const { expectValidHash } = require('../assertions');
 const Constants = require('../../constants');
-const { pollForNewERC20Balance } = require('../../../utils/helpers');
+const { pollForNewERC20Balance } = require('../../helpers');
 const {
   TokenCreateTransaction,
   TransactionId,

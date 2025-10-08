@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const utils = require('../utils');
 const Constants = require('../../constants');
-const { pollForNewERC20Balance } = require('../../../utils/helpers');
+const { pollForNewERC20Balance } = require('../../helpers');
 
 describe('TokenManagmentContract Test Suite', function () {
   const TX_SUCCESS_CODE = 22;

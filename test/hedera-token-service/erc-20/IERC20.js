@@ -7,7 +7,7 @@ const Constants = require('../../constants');
 const {
   pollForNewBalance,
   pollForNewSignerBalance,
-} = require('../../../utils/helpers');
+} = require('../../helpers');
 
 describe('IERC20 Test Suite', function () {
   let tokenCreateContract;

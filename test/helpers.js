@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 require('dotenv').config();
-const Constants = require('../test/constants');
+const Constants = require('./constants');
 
 const delay = (ms) => {
   return new Promise((resolve) =>
