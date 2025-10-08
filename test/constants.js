@@ -45,7 +45,7 @@ const Events = {
 const Path = {
   BLOCK_INFO: 'contracts/solidity/block/BlockInfo.sol:BlockInfo',
   CRYPTO_MATH: 'contracts/solidity/cryptomath/CryptoMath.sol:CryptoMath',
-  HIP583_ERC20Mock: 'contracts/hip-583/ERC20Mock.sol:ERC20Mock',
+  HIP583_ERC20Mock: 'contracts/mocks/ERC20Mock.sol:ERC20Mock',
   HIP583_ERC721Mock: 'contracts/hip-583/ERC721Mock.sol:ERC721Mock',
   HRC: 'contracts/hrc/HRC.sol:HRC',
   TYPE_OPS: 'contracts/solidity/typeops/TypeOps.sol:TypeOps',
