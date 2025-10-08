@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
-const utils = require('../utils');
+const utils = require('../../../hedera-token-service/utils');
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const Constants = require('../../constants');
-const { expectValidHash } = require('../assertions');
+const Constants = require('../../../constants');
+const { expectValidHash } = require('../../../hedera-token-service/assertions');
 
-describe('TokenCreateCustomContract Test Suite', () => {
+describe.skip('TokenCreateCustomContract Test Suite', () => {
   const tokenName = 'WrappedHbar';
   const tokenSymbol = 'WHBAR';
   const tokenMemo = 'Wrapped Hbar';

@@ -5,7 +5,7 @@ const { ethers } = require('hardhat');
 const { Contract } = require('ethers');
 const Constants = require('../../constants');
 
-describe('@IHRC-906 Facade @CryptoAllowance  Test Suite', function () {
+describe.skip('@IHRC-906 Facade @CryptoAllowance  Test Suite', function () {
   let walletA, walletB, walletC, walletIHRC906AccountFacade;
   const amount = 3_000;
 

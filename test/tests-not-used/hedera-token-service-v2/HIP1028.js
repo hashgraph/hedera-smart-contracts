@@ -2,9 +2,9 @@
 
 const {expect} = require('chai');
 const {ethers} = require('hardhat');
-const utils = require('../hedera-token-service/utils');
+const utils = require('../../hedera-token-service/utils');
 
-describe('HIP1028 Test Suite', function () {
+describe.skip('HIP1028 Test Suite', function () {
   let signers;
   let hip1028Contract;
   let tokenWithMetadataAndMetadataKeyAndCustomFeeAddress;

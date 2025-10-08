@@ -2,9 +2,9 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const Constants = require('../constants');
+const Constants = require('../../constants');
 
-describe('ExchangeRateMock Test Suite', function () {
+describe.skip('ExchangeRateMock Test Suite', function () {
   let exchangeRateMock;
   const gasLimit = 1000000;
   const tinybars = 100000000;

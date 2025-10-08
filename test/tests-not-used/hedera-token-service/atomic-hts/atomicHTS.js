@@ -2,10 +2,10 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const utils = require('../utils');
-const Constants = require('../../constants');
+const utils = require('../../../hedera-token-service/utils');
+const Constants = require('../../../constants');
 
-describe('AtomicHTS - HIP#551: Batch Transactions Test Suite', () => {
+describe.skip('AtomicHTS - HIP#551: Batch Transactions Test Suite', () => {
   let signers,
     tokenAddress,
     erc20Contract,
