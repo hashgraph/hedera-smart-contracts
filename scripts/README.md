@@ -8,13 +8,13 @@ Subfolders
 
 ## How to run
 1) Install dependencies at the repository root: npm install
-2) Copy example.env to local.env and populate required variables.
+2) Copy .example.env to .env and populate required variables.
 3) Run a script from its folder, for example:
    - node scripts/offchain-signing/index.js
    - node scripts/offchain-signed-tx-executor-cron/index.js
 
 ## Environment
-- Configuration is read from local.env and process.env.
+- Configuration is read from .env and process.env.
 - See example.env for expected variables.
 
 ## Related docs

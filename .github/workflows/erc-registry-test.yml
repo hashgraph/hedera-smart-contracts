@@ -33,7 +33,7 @@ jobs:
           node-version: 20
 
       - name: Create .env file
-        run: cp ${{env.INDEXER_PATH}}/local.env ${{env.INDEXER_PATH}}/.env
+        run: cp ${{env.INDEXER_PATH}}/.env.example ${{env.INDEXER_PATH}}/.env
 
       - name: Install Dependencies
         run: |

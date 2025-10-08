@@ -34,7 +34,7 @@ jobs:
           #cache: npm Disabling this because it causes the workflow to hang and eventually timeout
 
       - name: Create .env file
-        run: cp local.env .env
+        run: cp .env.example .env
 
       - name: Install dependencies
         run: npm install

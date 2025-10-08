@@ -10,7 +10,7 @@ cp .env.example .env # copy and fill the .env
 npm run start # run the cron that tracks when the transaction should be executed
 ```
 
-`.env.example` format:
+`.env` format:
 ```bash
 SIGNED_TX_BYTES= # hex encoded signed transaction bytes
 ```

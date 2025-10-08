@@ -60,7 +60,7 @@ jobs:
           #cache: npm Disabling this because it causes the workflow to hang and eventually timeout
 
       - name: Create .env file
-        run: cp local.env .env
+        run: cp .env.example .env
 
       - name: Install dependencies
         run: npm install
@@ -77,12 +77,6 @@ jobs:
       - name: Run pre-migration tests
         run: npx hardhat test --grep ${{ inputs.preMigrationTestTags }}
         timeout-minutes: 15
-
-      - name: Freeze the network
-        run: |
-          npx hardhat run scripts/freeze-network-node.js
-          sleep 30
-        timeout-minutes: 5
 
       - name: Stop docker containers (network node)
         run: docker stop network-node json-rpc-relay json-rpc-relay-ws

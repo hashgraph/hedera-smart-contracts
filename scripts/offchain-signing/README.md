@@ -10,7 +10,7 @@ cp .env.example .env # copy and fill the .env
 node scripts/signAccountDeleteTransaction.js # run the script and get the signed transaction bytes
 ```
 
-`.env.example` format:
+`.env` format:
 ```bash
 DELETABLE_ACCOUNT_NUM=   # uint - the account id we want to delete - e.g. 6056440
 DELETABLE_ACCOUNT_PK=    # hex encoded 32 bytes - the account's private key - e.g. 0x0e98be035c311a4053db957b088497e326e62964ecad8672ad797370506ff9bf
