@@ -47,8 +47,6 @@ For further details on methods, hashes and availability please refer to [PRNG Sy
 
 This project is set up using the Hardhat development environment. To get started, please follow this [test setup guide](./TEST_SETUP.md).
 
-For using this project as a library in a Foundry project see [Foundry Testing](FOUNDRY_TESTING.md)
-
 ## Support
 
 If you have a question on how to use the product, please see our

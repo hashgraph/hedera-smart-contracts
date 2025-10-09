@@ -4,9 +4,7 @@
   "description": "Hedera Smart Contract Service supporting files",
   "files": [
     "/contracts/**/*.sol",
-    "/contracts/**/**/**/*.sol",
-    "/test/foundry/mocks/**/*.sol",
-    "/test/foundry/mocks/**/**/**/*.sol"
+    "/contracts/**/**/**/*.sol"
   ],
   "repository": {
     "type": "git",
@@ -19,16 +17,11 @@
   },
   "homepage": "https://github.com/hashgraph/hedera-smart-contracts#readme",
   "scripts": {
-    "forge:build": "forge build",
-    "forge:test": "forge test",
-    "forge:coverage": "forge coverage",
-    "forge:coverage:report": "forge coverage --report lcov",
-    "forge:coverage:html": "forge coverage --report lcov && genhtml lcov.info --branch-coverage --output-dir coverage",
     "hh:compile": "hardhat compile",
     "hh:test": "hardhat test",
     "hedera:start": "npx @hashgraph/hedera-local start --limits=false --dev=true --balance=10000000",
     "hedera:stop": "npx @hashgraph/hedera-local stop",
-    "prepare": "husky install",
+    "prepare": "husky",
     "besu:start": "docker run -d -v ./utils/besu-configs:/var/lib/besu/ -p 8540:8545 -p 8541:8546 hyperledger/besu:24.6.0 --config-file=/var/lib/besu/customConfigFile.toml"
   },
   "devDependencies": {

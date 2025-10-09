@@ -2,7 +2,6 @@
 
 require('hardhat-abi-exporter');
 require('@openzeppelin/hardhat-upgrades');
-require('@nomicfoundation/hardhat-chai-matchers');
 require('solidity-coverage');
 require('dotenv').config();
 
