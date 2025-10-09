@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
+const ethers = require('ethers');
+
 const Events = {
   Success: 'success',
   ResponseCode: 'ResponseCode',
@@ -203,12 +205,13 @@ const GAS_LIMIT_5_000_000 = { gasLimit: 5_000_000 };
 const GAS_LIMIT_10_000_000 = { gasLimit: 10_000_000 };
 const GAS_LIMIT_800000 = { gasLimit: 800000 };
 const GAS_LIMIT_8000000 = { gasLimit: 8000000 };
+const WEI = 1;
 const ONE_HBAR = ethers.parseEther('1');
 const TOKEN_NAME = 'tokenName';
 const TOKEN_SYMBOL = 'tokenSymbol';
 const TOKEN_URL = 'tokenUrl';
 const TX_SUCCESS_CODE = 22;
-const SECOND = (WEI = 1);
+const SECOND = 1;
 const MINUTE = 60 * SECOND;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
@@ -243,5 +246,4 @@ module.exports = {
   GWEI,
   HTS_SYSTEM_CONTRACT_ID,
   HAS_SYSTEM_CONTRACT_ID,
-  ONE_HBAR,
 };

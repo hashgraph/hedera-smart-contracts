@@ -41,6 +41,7 @@
     "bn.js": "^5.2.2",
     "dotenv": "^17.2.1",
     "elliptic": "^6.6.1",
+    "ethers": "^6.15.0",
     "mcl-wasm": "^2.0.0",
     "protobufjs": "^7.5.3"
   },

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.7;
 
-import "../../token-service/IHRC719.sol";
+import "../token-service/IHRC719.sol";
 
 contract HRC719Contract {
     event IsAssociated(bool status);
