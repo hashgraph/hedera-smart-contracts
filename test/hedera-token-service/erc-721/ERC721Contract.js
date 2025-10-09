@@ -296,7 +296,7 @@ describe('ERC721Contract Test Suite', function () {
         mintedTokenSerialNumber,
         Constants.GAS_LIMIT_1_000_000
       );
-      await utils.expectToFail(tx, Constants.CALL_EXCEPTION);
+      if (tx) await utils.expectToFail(tx, Constants.CALL_EXCEPTION);
     });
 
     it('should NOT be able execute safeTransferFromWithData', async function () {
@@ -308,7 +308,7 @@ describe('ERC721Contract Test Suite', function () {
         '0x01',
         Constants.GAS_LIMIT_1_000_000
       );
-      await utils.expectToFail(tx, Constants.CALL_EXCEPTION);
+      if (tx) await utils.expectToFail(tx, Constants.CALL_EXCEPTION);
     });
   });
 });

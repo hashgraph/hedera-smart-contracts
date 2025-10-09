@@ -76,7 +76,7 @@ describe('RedirectForToken Test Suite', function () {
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
 
     IERC20 = new ethers.Interface(
-      (await hre.artifacts.readArtifact('ERC20')).abi
+      (await hre.artifacts.readArtifact('ERC20Mock')).abi
     );
   });
 

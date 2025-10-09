@@ -24,10 +24,10 @@ For further details on methods, hashes and availability please refer to [HTS Sys
 
 ### Hedera Account Service (HAS) System Contract
 
-The Hedera Account Service (HAS) functionality is defined by the [IHederaAccountService.sol](contracts/hedera-account-service/IHederaAccountService.sol) interface smart contract as defined in [HIP 632](https://hips.hedera.com/hip/hip-632) and [HIP 906](https://hips.hedera.com/hip/hip-906). The contract is exposed via the `0x16a` address.
+The Hedera Account Service (HAS) functionality is defined by the [IHederaAccountService.sol](contracts/account-service/IHederaAccountService.sol) interface smart contract as defined in [HIP 632](https://hips.hedera.com/hip/hip-632) and [HIP 906](https://hips.hedera.com/hip/hip-906). The contract is exposed via the `0x16a` address.
 Reference smart contracts to call these functions as well as examples can be found under [contracts/system-contracts/hedera-account-service](contracts/hedera-account-service)
 
-For further details on methods, hashes and availability please refer to [HAS System Contract Methods](contracts/hedera-account-service/README.md)
+For further details on methods, hashes and availability please refer to [HAS System Contract Methods](contracts/account-service/README.md)
 
 ### Exchange Rate System Contract
 

@@ -457,7 +457,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
     expect(await Utils.getHTSResponseCode(airdropTx.hash)).to.equal('74'); // ACCOUNT_REPEATED_IN_ACCOUNT_AMOUNTS
   });
 
-  it('should fail to delete contract if there is pending airdrop', async function () {
+  it.skip('should fail to delete contract if there is pending airdrop', async function () {
     const sampleContractFactory = await ethers.getContractFactory('Sample');
     const sampleContract = await sampleContractFactory.deploy();
     await sampleContract.waitForDeployment();

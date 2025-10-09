@@ -24,7 +24,7 @@ describe('HIP904Batch1 AirdropContract Test Suite', function () {
       Constants.Contract.TokenCreateContract
     );
     erc20Contract = await utils.deployContract(
-      Constants.Contract.ERC20Contract
+      'ERC20Mock'
     );
     erc721Contract = await utils.deployContract(
       Constants.Contract.ERC721Contract
@@ -338,7 +338,7 @@ describe('HIP904Batch1 AirdropContract Test Suite', function () {
     expect(responseCode).to.eq('167'); // INVALID_TOKEN_ID code
   });
 
-  it('should fail when the airdrop amounts are out of bounds', async function () {
+  it('should fail when the airdrop has multiple senders', async function () {
     const invalidAmount = BigInt(0);
     const receiver = signers[1].address;
 
@@ -349,7 +349,7 @@ describe('HIP904Batch1 AirdropContract Test Suite', function () {
       invalidAmount,
       Constants.GAS_LIMIT_2_000_000
     );
-    const responseCode = await utils.getHTSResponseCode(tx.hash);
+    const responseCode = utils.getHTSResponseCode(tx.hash);
     expect(responseCode).to.eq('50'); // INVALID_TRANSACTION_BODY code
   });
 

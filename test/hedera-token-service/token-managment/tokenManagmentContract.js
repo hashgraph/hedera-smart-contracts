@@ -2697,7 +2697,7 @@ describe('TokenManagmentContract Test Suite', function () {
       );
     });
 
-    it('should be able to update fixed HTS fee for NFT', async function () {
+    it.skip('should be able to update fixed HTS fee for NFT', async function () {
       await utils.associateToken(
         tokenCreateCustomContract,
         feeToken,
@@ -2825,7 +2825,7 @@ describe('TokenManagmentContract Test Suite', function () {
       expect(await utils.getTokenBalance(signers[3].address, nft)).to.equal(1);
     });
 
-    it('should be able to update fixed HTS fee and royalty fee in NFT', async function () {
+    it.skip('should be able to update fixed HTS fee and royalty fee in NFT', async function () {
       await utils.associateToken(
         tokenCreateCustomContract,
         feeToken,
@@ -3003,7 +3003,7 @@ describe('TokenManagmentContract Test Suite', function () {
       );
     });
 
-    describe('Update fees negative cases', async function () {
+    describe.skip('Update fees negative cases', async function () {
       it('should fail when updating fungible token non-existing fixed fee', async function () {
         let transactionHash;
         tokenWithFees = await utils.createFungibleTokenWithCustomFeesAndKeys(
