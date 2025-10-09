@@ -30,7 +30,7 @@ describe.skip('@IHRC-906 Facade @CryptoAllowance  Test Suite', function () {
   });
 
   // @notice: skipping until mirror-node fully enables HIP906
-  xit('should execute hbarAllowance() by an EOA to retrieve allowance granted to a spender', async () => {
+  it('should execute hbarAllowance() by an EOA to retrieve allowance granted to a spender', async () => {
     const approveTx = await walletIHRC906AccountFacade.hbarApprove(
       walletC.address,
       amount,
