@@ -36,8 +36,6 @@ At root, create a `.env` file using the `example.env` as the template and fill o
 
 #### 3. Configure Hardhat
 
-Adjust the `defaultNetwork` field in the [hardhat.config.js](hardhat.config.js) file based on the network your accounts (specified in the .env file) are associated with.
-
 Available Networks:
 
 - local for reference and how to setup a local besu node please follow the [link](https://docs.hedera.com/hedera/sdks-and-apis/sdks/set-up-your-local-network)
@@ -56,8 +54,6 @@ Available Networks:
 ##### 5.1 Set up `Hedera Local Node`
 
 - Set env variables in your `.env` file.
-
-- Ensure that the `defaultNetwork` in [hardhat.config.js](./hardhat.config.js) is set to `NETWORKS.local.name`.
 
 - From the root of your project directory, execute the following command to start up a `Hedera local node`:
 
