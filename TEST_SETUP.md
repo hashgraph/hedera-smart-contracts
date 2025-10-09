@@ -36,8 +36,6 @@ At root, create a `.env` file using the `example.env` as the template and fill o
 
 #### 3. Configure Hardhat
 
-Adjust the `defaultNetwork` field in the [hardhat.config.js](hardhat.config.js) file based on the network your accounts (specified in the .env file) are associated with.
-
 Available Networks:
 
 - local for reference and how to setup a local besu node please follow the [link](https://docs.hedera.com/hedera/sdks-and-apis/sdks/set-up-your-local-network)
@@ -45,37 +43,17 @@ Available Networks:
 - previewnet
 - besu_local for reference and how to setup a local besu node please follow the [link](https://besu.hyperledger.org/)
 
-#### 4. Installing the `foundry-rs` toolkit for the `forge` testing framework
-
-**_Motivation_**: This step is necessary for the project as it utilizes the `hardhat-foundry` plugin, enabling Hardhat to use dependencies from the `./lib` folder, which are installed using `forge`. Consequently, the plugin attempts to execute `forge install` to make these dependencies accessible to Hardhat. Therefore, it is crucial to install the `forge` testing framework, which is a part of the `foundry-rs` toolkit.
-
-**_Notes_**: If you already have `foundry-rs` and `forge` correctly installed locally, you can skip this step.
-
-##### 4.a. First, download the `foundry-rs` installer by running the following command:
-
-```bash
-curl -L https://foundry.paradigm.xyz | bash
-```
-
-##### 4.b. Next, to install `Foundry` and `forge`, simply execute:
-
-```bash
-foundryup
-```
-
-#### 5. Compile smart contracts
+#### 4. Compile smart contracts
 
 ```
     npx hardhat compile
 ```
 
-#### 6. Test smart contracts
+#### 5. Test smart contracts
 
-##### 6.1 Set up `Hedera Local Node`
+##### 5.1 Set up `Hedera Local Node`
 
 - Set env variables in your `.env` file.
-
-- Ensure that the `defaultNetwork` in [hardhat.config.js](./hardhat.config.js) is set to `NETWORKS.local.name`.
 
 - From the root of your project directory, execute the following command to start up a `Hedera local node`:
 
@@ -85,7 +63,7 @@ foundryup
 
 **_Important_**: Before running the `hedera local node`, verify that there are no other instances of Hedera docker containers or json-rpc-relay running in the background, as they might interfere with the functionality of the `hedera local node`.
 
-##### 6.2 Execute test suites
+##### 5.2 Execute test suites
 
 Run below command to execute the tests
 

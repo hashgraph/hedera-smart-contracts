@@ -1,25 +1,19 @@
-// SPDX-License-Identifier: Apache-2.0
-
-require('hardhat-abi-exporter');
-require('@openzeppelin/hardhat-upgrades');
-require('@nomicfoundation/hardhat-chai-matchers');
-require('solidity-coverage');
-require('dotenv').config();
-
-const { ethers } = require('ethers');
+import 'dotenv/config';
+import type { HardhatUserConfig } from 'hardhat/types/config';
+import hardhatMocha from '@nomicfoundation/hardhat-mocha';
+import hardhatAbiExporter from '@solidstate/hardhat-abi-exporter';
 
 /**  @type string */
-const OPERATOR_ID_A = process.env.OPERATOR_ID_A
-  ? process.env.OPERATOR_ID_A
-  : '0.0.0';
-
+const OPERATOR_ID_A: string = process.env.OPERATOR_ID_A ?? '0.0.0';
 /**  @type string */
-const OPERATOR_KEY_A = process.env.OPERATOR_KEY_A
-  ? process.env.OPERATOR_KEY_A
-  : ethers.ZeroHash;
+const OPERATOR_KEY_A: string =
+  process.env.OPERATOR_KEY_A ??
+  '0x0000000000000000000000000000000000000000000000000000000000000000';
 
-const PRIVATE_KEYS = process.env.PRIVATE_KEYS
-  ? process.env.PRIVATE_KEYS.split(',').map((key) => key.trim())
+const PRIVATE_KEYS: string[] = process.env.PRIVATE_KEYS
+  ? process.env.PRIVATE_KEYS.split(',')
+      .map((k) => k.trim())
+      .filter(Boolean)
   : [];
 
 const NETWORKS = {
@@ -56,26 +50,9 @@ const NETWORKS = {
     gas: 1_000_000_000,
     timeout: 60_000,
   },
-};
+} as const;
 
-
-/** @type import('hardhat/config').HardhatUserConfig */
-module.exports = {
-  mocha: {
-    timeout: 3600000,
-    color: true,
-    failZero: Boolean(process.env.CI),
-    forbidOnly: Boolean(process.env.CI),
-    reporter: 'mocha-multi-reporters',
-    reporterOption: {
-      reporterEnabled: 'spec, mocha-junit-reporter',
-      mochaJunitReporterReporterOptions: {
-        mochaFile: 'test-results.[hash].xml',
-        includePending: true,
-        outputs: true,
-      },
-    },
-  },
+const config: HardhatUserConfig = {
   solidity: {
     version: '0.8.24',
     settings: {
@@ -86,13 +63,9 @@ module.exports = {
       evmVersion: 'cancun',
     },
   },
-  abiExporter: {
-    path: './contracts-abi',
-    runOnCompile: true,
-  },
-  defaultNetwork: NETWORKS.local.name,
   networks: {
     local: {
+      type: 'http',
       url: NETWORKS.local.url,
       accounts: PRIVATE_KEYS,
       chainId: NETWORKS.local.chainId,
@@ -103,8 +76,9 @@ module.exports = {
         nodeId: NETWORKS.local.nodeId,
         mirrorNode: NETWORKS.local.mirrorNode,
       },
-    },
+    } as any,
     testnet: {
+      type: 'http',
       url: NETWORKS.testnet.url,
       accounts: PRIVATE_KEYS,
       chainId: NETWORKS.testnet.chainId,
@@ -115,8 +89,9 @@ module.exports = {
         nodeId: NETWORKS.testnet.nodeId,
         mirrorNode: NETWORKS.testnet.mirrorNode,
       },
-    },
+    } as any,
     previewnet: {
+      type: 'http',
       url: NETWORKS.previewnet.url,
       accounts: PRIVATE_KEYS,
       chainId: NETWORKS.previewnet.chainId,
@@ -127,20 +102,47 @@ module.exports = {
         nodeId: NETWORKS.previewnet.nodeId,
         mirrorNode: NETWORKS.previewnet.mirrorNode,
       },
-    },
+    } as any,
     besu_local: {
+      type: 'http',
       url: NETWORKS.besu.url,
-      allowUnlimitedContractSize: NETWORKS.besu.allowUnlimitedContractSize,
-      blockGasLimit: NETWORKS.besu.blockGasLimit,
+      allowUnlimitedContractSize: NETWORKS.besu
+        .allowUnlimitedContractSize as any,
+      blockGasLimit: NETWORKS.besu.blockGasLimit as any,
       gas: NETWORKS.besu.gas,
       timeout: NETWORKS.besu.timeout,
       chainId: NETWORKS.besu.chainId,
       accounts: [
-        // private keys are configured in the genesis file https://github.com/hyperledger/besu/blob/main/config/src/main/resources/dev.json#L20
         '0xae6ae8e5ccbfb04590405997ee2d52d2b330726137b875053c36d94e974d162f',
         '0xc87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3',
-        '0x8f2a55949038a9610f50fb23b5883af3b4ecb3c3bb792cbcefbd1542c692be63'
+        '0x8f2a55949038a9610f50fb23b5883af3b4ecb3c3bb792cbcefbd1542c692be63',
       ],
+    } as any,
+  },
+  abiExporter: {
+    path: './contracts-abi',
+    runOnCompile: true,
+  },
+  test: {
+    mocha: {
+      timeout: 3600000,
+      color: true,
+      failZero: Boolean(process.env.CI),
+      forbidOnly: Boolean(process.env.CI),
+      reporter: 'mocha-multi-reporters',
+      reporterOption: {
+        reporterEnabled: 'spec, mocha-junit-reporter',
+        mochaJunitReporterReporterOptions: {
+          mochaFile: 'test-results.[hash].xml',
+          includePending: true,
+          outputs: true,
+        },
+      },
     },
   },
+};
+
+export default {
+  plugins: [hardhatMocha, hardhatAbiExporter],
+  ...config,
 };
