@@ -1,7 +1,4 @@
 import 'dotenv/config';
-import 'hardhat-abi-exporter';
-import '@openzeppelin/hardhat-upgrades';
-import 'solidity-coverage';
 import type { HardhatUserConfig } from 'hardhat/types/config';
 import hardhatMocha from '@nomicfoundation/hardhat-mocha';
 import hardhatAbiExporter from '@solidstate/hardhat-abi-exporter';
@@ -68,6 +65,7 @@ const config: HardhatUserConfig = {
   },
   networks: {
     local: {
+      type: 'http',
       url: NETWORKS.local.url,
       accounts: PRIVATE_KEYS,
       chainId: NETWORKS.local.chainId,
@@ -80,6 +78,7 @@ const config: HardhatUserConfig = {
       },
     } as any,
     testnet: {
+      type: 'http',
       url: NETWORKS.testnet.url,
       accounts: PRIVATE_KEYS,
       chainId: NETWORKS.testnet.chainId,
@@ -92,6 +91,7 @@ const config: HardhatUserConfig = {
       },
     } as any,
     previewnet: {
+      type: 'http',
       url: NETWORKS.previewnet.url,
       accounts: PRIVATE_KEYS,
       chainId: NETWORKS.previewnet.chainId,
@@ -104,6 +104,7 @@ const config: HardhatUserConfig = {
       },
     } as any,
     besu_local: {
+      type: 'http',
       url: NETWORKS.besu.url,
       allowUnlimitedContractSize: NETWORKS.besu
         .allowUnlimitedContractSize as any,
