@@ -1,146 +1,141 @@
 // SPDX-License-Identifier: Apache-2.0
 
-const {expect} = require('chai');
-const hre = require('hardhat');
+const {expect} = require("chai");
+const hre = require("hardhat");
 const {ethers} = hre;
-const Constants = require('../../../constants');
+const Constants = require("../../../constants");
 const Utils = require("../../native/evm-compatibility-ecrecover/utils");
 const axios = require("axios");
 
-describe.only('HIP1215 Test Suite', function () {
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+const getScheduleInfoFromMN = async (scheduleAddress) => {
+  const url = Utils.getMirrorNodeUrl(hre.network.name) + `/schedules/0.0.${Number(scheduleAddress)}`;
+
+  return axios.get(url).then(r => r.data);
+};
+
+const FIVE_MINUTES_AS_SECONDS = 300n;
+
+describe("HIP1215 Test Suite", function () {
   let internalCalleeContract;
-
   let HIP1215Contract;
-
   let signers;
+
+  const executeScheduleCallExample = async (timestampOffset = 0) => {
+    return (await HIP1215Contract.scheduleCallExample(
+        internalCalleeContract.target,
+        "0x3a32b549",
+        timestampOffset,
+        0,
+        0,
+        Constants.GAS_LIMIT_2_000_000
+    )).wait();
+  };
 
   before(async () => {
     signers = await ethers.getSigners();
 
-    const internalCalleeContractFactory = await ethers.getContractFactory(Constants.Contract.InternalCallee);
-    internalCalleeContract = await internalCalleeContractFactory.deploy();
+    internalCalleeContract = await (
+        await ethers.getContractFactory(Constants.Contract.InternalCallee)
+    ).deploy();
     await internalCalleeContract.waitForDeployment();
 
-    const HIP1215ContractFactory = await ethers.getContractFactory('HIP1215Contract');
-    HIP1215Contract = await HIP1215ContractFactory.deploy({value: '5000000000000000000'}); // 5 hbars
+    HIP1215Contract = await (
+        await ethers.getContractFactory("HIP1215Contract")
+    ).deploy({value: ethers.parseEther("5")}); // fund the contract with 5 HBARs
     await HIP1215Contract.waitForDeployment();
   });
 
-  xit('should be able to scheduleCallExample', async () => {
+  it("should be able to execute scheduleCallExample", async () => {
     const beforeCount = await internalCalleeContract.calledTimes();
 
-    const tx = await HIP1215Contract.scheduleCallExample(
+    await executeScheduleCallExample();
+    await sleep(10_000);
+
+    const afterCount = await internalCalleeContract.calledTimes();
+
+    expect(afterCount).to.equal(beforeCount + 1n);
+  });
+
+  it("should be able to execute  scheduleCallWithPayerExample", async () => {
+    const beforeCount = await internalCalleeContract.calledTimes();
+
+    await (await HIP1215Contract.scheduleCallWithPayerExample(
+        HIP1215Contract.target,
         internalCalleeContract.target,
         "0x3a32b549",
         0,
-        {gasLimit: 3_000_000}
-    );
-    await tx.wait();
-    console.log({hash: tx.hash});
-
-    await new Promise(r => setTimeout(r, 15_000));
-
-    const afterCount = await internalCalleeContract.calledTimes();
-    expect(beforeCount + BigInt(1)).to.equal(afterCount);
-  });
-
-  it('should be able to scheduleCallWithPayerExample', async () => {
-    const beforeCount = await internalCalleeContract.calledTimes();
-
-    const tx = await HIP1215Contract.scheduleCallWithPayerExample(
-        internalCalleeContract.target,
-        internalCalleeContract.target,
-        "0x3a32b549",
         0,
-        {gasLimit: 3_000_000}
-    );
-    await tx.wait();
-    console.log({hash: tx.hash});
-
-    await new Promise(r => setTimeout(r, 30_000));
+        0,
+        Constants.GAS_LIMIT_2_000_000
+    )).wait();
+    await sleep(10_000);
 
     const afterCount = await internalCalleeContract.calledTimes();
-    expect(beforeCount + BigInt(1)).to.equal(afterCount);
+    expect(afterCount).to.equal(beforeCount + 1n);
   });
 
-  it('should be able to executeCallOnPayerSignatureExample', async () => {
+  it("should be able to execute executeCallOnPayerSignatureExample", async () => {
     const beforeCount = await internalCalleeContract.calledTimes();
 
-    const tx = await HIP1215Contract.executeCallOnPayerSignatureExample(
+    const receipt = await (await HIP1215Contract.executeCallOnPayerSignatureExample(
         signers[0].address,
         internalCalleeContract.target,
         "0x3a32b549",
-        (await HIP1215Contract.getBlockTimestamp()) + BigInt(10_000),
-        {gasLimit: 3_000_000}
-    );
-    const receipt = await tx.wait();
+        (await HIP1215Contract.getBlockTimestamp()) + FIVE_MINUTES_AS_SECONDS, // add buffer to the expiry
+        0,
+        0,
+        Constants.GAS_LIMIT_2_000_000
+    )).wait();
     const scheduleAddress = receipt.logs[0].args[0];
-    console.log({hash: tx.hash, scheduleAddress});
 
     const IHRC755Facade = await ethers.getContractAt(
-        'IHRC755ScheduleFacade',
+        "IHRC755ScheduleFacade",
         scheduleAddress,
         signers[0]
     );
-    const signScheduleTx = await IHRC755Facade.signSchedule({gasLimit: 3_000_000});
-    await signScheduleTx.wait();
+    await (await IHRC755Facade.signSchedule(Constants.GAS_LIMIT_2_000_000)).wait();
 
     const afterCount = await internalCalleeContract.calledTimes();
-    expect(beforeCount + BigInt(1)).to.equal(afterCount);
+    expect(afterCount).to.equal(beforeCount + 1n);
   });
 
-  it('should be able to execute hasScheduleCapacityProxyExample', async () => {
-    const res = await HIP1215Contract.hasScheduleCapacityProxyExample(
-        (await HIP1215Contract.getBlockTimestamp()) + BigInt(20),
-        200_000
-    );
+  it("should be able to execute hasScheduleCapacityProxyExample", async () => {
+    const timestamp = (await HIP1215Contract.getBlockTimestamp()) + 20n;
 
-    expect(res).to.be.true;
+    expect(
+        await HIP1215Contract.hasScheduleCapacityProxyExample(timestamp, 200_000n)
+    ).to.be.true;
   });
 
-  it('should be able to execute deleteScheduleExample', async () => {
-    const tx = await HIP1215Contract.scheduleCallExample(
-        internalCalleeContract.target,
-        "0x3a32b549",
-        (await HIP1215Contract.getBlockTimestamp()) + BigInt(1000),
-        {gasLimit: 3_000_000}
-    );
-    const receipt = await tx.wait();
-    const scheduleAddress = receipt.logs[0].args[0];
-    const mnInfoQueryLink = Utils.getMirrorNodeUrl(hre.network.name) + `/schedules/0.0.${Number(scheduleAddress)}`;
-
+  it("should be able to execute deleteScheduleExample", async () => {
+    const timestamp = (await HIP1215Contract.getBlockTimestamp()) + FIVE_MINUTES_AS_SECONDS;
+    const scheduleAddress = (await executeScheduleCallExample(timestamp)).logs[0].args[0];
     expect(scheduleAddress).to.not.be.null;
 
-    const resBefore = await axios.get(mnInfoQueryLink);
-    expect(resBefore.data.deleted).to.be.false;
+    const before = await getScheduleInfoFromMN(scheduleAddress);
+    expect(before.deleted).to.be.false;
 
-    const txDelete = await HIP1215Contract.deleteScheduleExample(scheduleAddress);
-    await txDelete.wait();
+    await (await HIP1215Contract.deleteScheduleExample(scheduleAddress)).wait();
 
-    const resAfter = await axios.get(mnInfoQueryLink);
-    expect(resAfter.data.deleted).to.be.true;
+    const after = await getScheduleInfoFromMN(scheduleAddress);
+    expect(after.deleted).to.be.true;
   });
 
-  it('should be able to execute deleteScheduleProxyExample', async () => {
-    const tx = await HIP1215Contract.scheduleCallExample(
-        internalCalleeContract.target,
-        "0x3a32b549",
-        (await HIP1215Contract.getBlockTimestamp()) + BigInt(1000),
-        {gasLimit: 3_000_000}
-    );
-    const receipt = await tx.wait();
-    const scheduleAddress = receipt.logs[0].args[0];
-    const mnInfoQueryLink = Utils.getMirrorNodeUrl(hre.network.name) + `/schedules/0.0.${Number(scheduleAddress)}`;
-
+  it("should be able to execute deleteScheduleProxyExample", async () => {
+    const timestamp = (await HIP1215Contract.getBlockTimestamp()) + FIVE_MINUTES_AS_SECONDS;
+    const scheduleAddress = (await executeScheduleCallExample(timestamp)).logs[0].args[0];
     expect(scheduleAddress).to.not.be.null;
 
-    const resBefore = await axios.get(mnInfoQueryLink);
-    expect(resBefore.data.deleted).to.be.false;
+    const before = await getScheduleInfoFromMN(scheduleAddress);
+    expect(before.deleted).to.be.false;
 
-    const txDelete = await HIP1215Contract.deleteScheduleProxyExample(scheduleAddress);
-    await txDelete.wait();
+    await (
+        await HIP1215Contract.deleteScheduleProxyExample(scheduleAddress)
+    ).wait();
 
-    const resAfter = await axios.get(mnInfoQueryLink);
-    expect(resAfter.data.deleted).to.be.true;
+    const after = await getScheduleInfoFromMN(scheduleAddress);
+    expect(after.deleted).to.be.true;
   });
 });
