@@ -25,7 +25,7 @@ describe("HIP1215 Test Suite", function () {
   const executeScheduleCallExample = async (timestampOffset = 0) => {
     return (await HIP1215Contract.scheduleCallExample(
         internalCalleeContract.target,
-        "0x3a32b549",
+        "0x3a32b549", // selector of externalFunction() in Internal Callee
         timestampOffset,
         0,
         0,
@@ -64,7 +64,7 @@ describe("HIP1215 Test Suite", function () {
     await (await HIP1215Contract.scheduleCallWithPayerExample(
         HIP1215Contract.target,
         internalCalleeContract.target,
-        "0x3a32b549",
+        "0x3a32b549", // selector of externalFunction() in Internal Callee
         0,
         0,
         0,
@@ -82,7 +82,7 @@ describe("HIP1215 Test Suite", function () {
     const receipt = await (await HIP1215Contract.executeCallOnPayerSignatureExample(
         signers[0].address,
         internalCalleeContract.target,
-        "0x3a32b549",
+        "0x3a32b549", // selector of externalFunction() in Internal Callee
         (await HIP1215Contract.getBlockTimestamp()) + FIVE_MINUTES_AS_SECONDS, // add buffer to the expiry
         0,
         0,
