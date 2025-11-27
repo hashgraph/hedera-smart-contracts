@@ -18,7 +18,7 @@ const getScheduleInfoFromMN = async (scheduleAddress) => {
 const FIVE_MINUTES_AS_SECONDS = 300n;
 const SCHEDULE_GAS_LIMIT = 1_000_000n;
 
-describe.only("HIP1215 Test Suite", function () {
+describe("HIP1215 Test Suite", function () {
   let internalCalleeContract;
   let HIP1215Contract;
   let signers;
@@ -90,6 +90,7 @@ describe.only("HIP1215 Test Suite", function () {
         Constants.GAS_LIMIT_2_000_000
     )).wait();
     const scheduleAddress = receipt.logs[0].args[0];
+    const beforeSignScheduleInfo = await getScheduleInfoFromMN(scheduleAddress);
 
     const IHRC755Facade = await ethers.getContractAt(
         "IHRC755ScheduleFacade",
@@ -98,8 +99,11 @@ describe.only("HIP1215 Test Suite", function () {
     );
     await (await IHRC755Facade.signSchedule(Constants.GAS_LIMIT_2_000_000)).wait();
 
+    const afterSignScheduleInfo = await getScheduleInfoFromMN(scheduleAddress);
     const afterCount = await internalCalleeContract.calledTimes();
     expect(afterCount).to.equal(beforeCount + 1n);
+    expect(beforeSignScheduleInfo.executed_timestamp).to.be.null;
+    expect(afterSignScheduleInfo.executed_timestamp).to.not.be.null;
   });
 
   it("should be able to execute hasScheduleCapacityProxyExample", async () => {
@@ -108,6 +112,22 @@ describe.only("HIP1215 Test Suite", function () {
     expect(
         await HIP1215Contract.hasScheduleCapacityProxyExample(timestamp, 200_000n)
     ).to.be.true;
+  });
+
+  it("should be able to execute hasScheduleCapacityProxyExample and get false if it's not after current consensus time", async () => {
+    const timestamp = (await HIP1215Contract.getBlockTimestamp()) - 200n;
+
+    expect(
+        await HIP1215Contract.hasScheduleCapacityProxyExample(timestamp, 200_000n)
+    ).to.be.false;
+  });
+
+  it("should be able to execute hasScheduleCapacityProxyExample and get false if it's too far in the future", async () => {
+    const timestamp = (await HIP1215Contract.getBlockTimestamp()) + 100_000_000n;
+
+    expect(
+        await HIP1215Contract.hasScheduleCapacityProxyExample(timestamp, 200_000n)
+    ).to.be.false;
   });
 
   it("should be able to execute deleteScheduleExample", async () => {
