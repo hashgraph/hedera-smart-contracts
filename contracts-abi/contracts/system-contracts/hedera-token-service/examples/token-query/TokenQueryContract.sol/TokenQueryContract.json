@@ -1,0 +1,2557 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "AllowanceValue",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "approved",
+        "type": "bool"
+      }
+    ],
+    "name": "Approved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "approved",
+        "type": "address"
+      }
+    ],
+    "name": "ApprovedAddress",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "CallResponseEvent",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "frozen",
+        "type": "bool"
+      }
+    ],
+    "name": "Frozen",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "symbol",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "treasury",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "memo",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "tokenSupplyType",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "maxSupply",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "freezeDefault",
+                    "type": "bool"
+                  },
+                  {
+                    "components": [
+                      {
+                        "internalType": "uint256",
+                        "name": "keyType",
+                        "type": "uint256"
+                      },
+                      {
+                        "components": [
+                          {
+                            "internalType": "bool",
+                            "name": "inheritAccountKey",
+                            "type": "bool"
+                          },
+                          {
+                            "internalType": "address",
+                            "name": "contractId",
+                            "type": "address"
+                          },
+                          {
+                            "internalType": "bytes",
+                            "name": "ed25519",
+                            "type": "bytes"
+                          },
+                          {
+                            "internalType": "bytes",
+                            "name": "ECDSA_secp256k1",
+                            "type": "bytes"
+                          },
+                          {
+                            "internalType": "address",
+                            "name": "delegatableContractId",
+                            "type": "address"
+                          }
+                        ],
+                        "internalType": "struct IHederaTokenService.KeyValue",
+                        "name": "key",
+                        "type": "tuple"
+                      }
+                    ],
+                    "internalType": "struct IHederaTokenService.TokenKey[]",
+                    "name": "tokenKeys",
+                    "type": "tuple[]"
+                  },
+                  {
+                    "components": [
+                      {
+                        "internalType": "int64",
+                        "name": "second",
+                        "type": "int64"
+                      },
+                      {
+                        "internalType": "address",
+                        "name": "autoRenewAccount",
+                        "type": "address"
+                      },
+                      {
+                        "internalType": "int64",
+                        "name": "autoRenewPeriod",
+                        "type": "int64"
+                      }
+                    ],
+                    "internalType": "struct IHederaTokenService.Expiry",
+                    "name": "expiry",
+                    "type": "tuple"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.HederaToken",
+                "name": "token",
+                "type": "tuple"
+              },
+              {
+                "internalType": "int64",
+                "name": "totalSupply",
+                "type": "int64"
+              },
+              {
+                "internalType": "bool",
+                "name": "deleted",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "defaultKycStatus",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "pauseStatus",
+                "type": "bool"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "int64",
+                    "name": "amount",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "tokenId",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "useHbarsForPayment",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "useCurrentTokenForPayment",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "feeCollector",
+                    "type": "address"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.FixedFee[]",
+                "name": "fixedFees",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "int64",
+                    "name": "numerator",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "denominator",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "minimumAmount",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "maximumAmount",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "netOfTransfers",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "feeCollector",
+                    "type": "address"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.FractionalFee[]",
+                "name": "fractionalFees",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "int64",
+                    "name": "numerator",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "denominator",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "amount",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "tokenId",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "useHbarsForPayment",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "feeCollector",
+                    "type": "address"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.RoyaltyFee[]",
+                "name": "royaltyFees",
+                "type": "tuple[]"
+              },
+              {
+                "internalType": "string",
+                "name": "ledgerId",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct IHederaTokenService.TokenInfo",
+            "name": "tokenInfo",
+            "type": "tuple"
+          },
+          {
+            "internalType": "int32",
+            "name": "decimals",
+            "type": "int32"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IHederaTokenService.FungibleTokenInfo",
+        "name": "tokenInfo",
+        "type": "tuple"
+      }
+    ],
+    "name": "FungibleTokenInfo",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "isToken",
+        "type": "bool"
+      }
+    ],
+    "name": "IsToken",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "kycGranted",
+        "type": "bool"
+      }
+    ],
+    "name": "KycGranted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "symbol",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "treasury",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "memo",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "tokenSupplyType",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "maxSupply",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "freezeDefault",
+                    "type": "bool"
+                  },
+                  {
+                    "components": [
+                      {
+                        "internalType": "uint256",
+                        "name": "keyType",
+                        "type": "uint256"
+                      },
+                      {
+                        "components": [
+                          {
+                            "internalType": "bool",
+                            "name": "inheritAccountKey",
+                            "type": "bool"
+                          },
+                          {
+                            "internalType": "address",
+                            "name": "contractId",
+                            "type": "address"
+                          },
+                          {
+                            "internalType": "bytes",
+                            "name": "ed25519",
+                            "type": "bytes"
+                          },
+                          {
+                            "internalType": "bytes",
+                            "name": "ECDSA_secp256k1",
+                            "type": "bytes"
+                          },
+                          {
+                            "internalType": "address",
+                            "name": "delegatableContractId",
+                            "type": "address"
+                          }
+                        ],
+                        "internalType": "struct IHederaTokenService.KeyValue",
+                        "name": "key",
+                        "type": "tuple"
+                      }
+                    ],
+                    "internalType": "struct IHederaTokenService.TokenKey[]",
+                    "name": "tokenKeys",
+                    "type": "tuple[]"
+                  },
+                  {
+                    "components": [
+                      {
+                        "internalType": "int64",
+                        "name": "second",
+                        "type": "int64"
+                      },
+                      {
+                        "internalType": "address",
+                        "name": "autoRenewAccount",
+                        "type": "address"
+                      },
+                      {
+                        "internalType": "int64",
+                        "name": "autoRenewPeriod",
+                        "type": "int64"
+                      }
+                    ],
+                    "internalType": "struct IHederaTokenService.Expiry",
+                    "name": "expiry",
+                    "type": "tuple"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.HederaToken",
+                "name": "token",
+                "type": "tuple"
+              },
+              {
+                "internalType": "int64",
+                "name": "totalSupply",
+                "type": "int64"
+              },
+              {
+                "internalType": "bool",
+                "name": "deleted",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "defaultKycStatus",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "pauseStatus",
+                "type": "bool"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "int64",
+                    "name": "amount",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "tokenId",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "useHbarsForPayment",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "useCurrentTokenForPayment",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "feeCollector",
+                    "type": "address"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.FixedFee[]",
+                "name": "fixedFees",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "int64",
+                    "name": "numerator",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "denominator",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "minimumAmount",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "maximumAmount",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "netOfTransfers",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "feeCollector",
+                    "type": "address"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.FractionalFee[]",
+                "name": "fractionalFees",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "int64",
+                    "name": "numerator",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "denominator",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "amount",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "tokenId",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "useHbarsForPayment",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "feeCollector",
+                    "type": "address"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.RoyaltyFee[]",
+                "name": "royaltyFees",
+                "type": "tuple[]"
+              },
+              {
+                "internalType": "string",
+                "name": "ledgerId",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct IHederaTokenService.TokenInfo",
+            "name": "tokenInfo",
+            "type": "tuple"
+          },
+          {
+            "internalType": "int64",
+            "name": "serialNumber",
+            "type": "int64"
+          },
+          {
+            "internalType": "address",
+            "name": "ownerId",
+            "type": "address"
+          },
+          {
+            "internalType": "int64",
+            "name": "creationTime",
+            "type": "int64"
+          },
+          {
+            "internalType": "bytes",
+            "name": "metadata",
+            "type": "bytes"
+          },
+          {
+            "internalType": "address",
+            "name": "spenderId",
+            "type": "address"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IHederaTokenService.NonFungibleTokenInfo",
+        "name": "tokenInfo",
+        "type": "tuple"
+      }
+    ],
+    "name": "NonFungibleTokenInfo",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "int256",
+        "name": "responseCode",
+        "type": "int256"
+      }
+    ],
+    "name": "ResponseCode",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "int64",
+            "name": "amount",
+            "type": "int64"
+          },
+          {
+            "internalType": "address",
+            "name": "tokenId",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "useHbarsForPayment",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "useCurrentTokenForPayment",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "feeCollector",
+            "type": "address"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IHederaTokenService.FixedFee[]",
+        "name": "fixedFees",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int64",
+            "name": "numerator",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "denominator",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "minimumAmount",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "maximumAmount",
+            "type": "int64"
+          },
+          {
+            "internalType": "bool",
+            "name": "netOfTransfers",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "feeCollector",
+            "type": "address"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IHederaTokenService.FractionalFee[]",
+        "name": "fractionalFees",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int64",
+            "name": "numerator",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "denominator",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "amount",
+            "type": "int64"
+          },
+          {
+            "internalType": "address",
+            "name": "tokenId",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "useHbarsForPayment",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "feeCollector",
+            "type": "address"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IHederaTokenService.RoyaltyFee[]",
+        "name": "royaltyFees",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "TokenCustomFees",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "defaultFreezeStatus",
+        "type": "bool"
+      }
+    ],
+    "name": "TokenDefaultFreezeStatus",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "defaultKycStatus",
+        "type": "bool"
+      }
+    ],
+    "name": "TokenDefaultKycStatus",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "int64",
+            "name": "second",
+            "type": "int64"
+          },
+          {
+            "internalType": "address",
+            "name": "autoRenewAccount",
+            "type": "address"
+          },
+          {
+            "internalType": "int64",
+            "name": "autoRenewPeriod",
+            "type": "int64"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IHederaTokenService.Expiry",
+        "name": "expiryInfo",
+        "type": "tuple"
+      }
+    ],
+    "name": "TokenExpiryInfo",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+              },
+              {
+                "internalType": "address",
+                "name": "treasury",
+                "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "memo",
+                "type": "string"
+              },
+              {
+                "internalType": "bool",
+                "name": "tokenSupplyType",
+                "type": "bool"
+              },
+              {
+                "internalType": "int64",
+                "name": "maxSupply",
+                "type": "int64"
+              },
+              {
+                "internalType": "bool",
+                "name": "freezeDefault",
+                "type": "bool"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint256",
+                    "name": "keyType",
+                    "type": "uint256"
+                  },
+                  {
+                    "components": [
+                      {
+                        "internalType": "bool",
+                        "name": "inheritAccountKey",
+                        "type": "bool"
+                      },
+                      {
+                        "internalType": "address",
+                        "name": "contractId",
+                        "type": "address"
+                      },
+                      {
+                        "internalType": "bytes",
+                        "name": "ed25519",
+                        "type": "bytes"
+                      },
+                      {
+                        "internalType": "bytes",
+                        "name": "ECDSA_secp256k1",
+                        "type": "bytes"
+                      },
+                      {
+                        "internalType": "address",
+                        "name": "delegatableContractId",
+                        "type": "address"
+                      }
+                    ],
+                    "internalType": "struct IHederaTokenService.KeyValue",
+                    "name": "key",
+                    "type": "tuple"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.TokenKey[]",
+                "name": "tokenKeys",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "int64",
+                    "name": "second",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "autoRenewAccount",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "autoRenewPeriod",
+                    "type": "int64"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.Expiry",
+                "name": "expiry",
+                "type": "tuple"
+              }
+            ],
+            "internalType": "struct IHederaTokenService.HederaToken",
+            "name": "token",
+            "type": "tuple"
+          },
+          {
+            "internalType": "int64",
+            "name": "totalSupply",
+            "type": "int64"
+          },
+          {
+            "internalType": "bool",
+            "name": "deleted",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "defaultKycStatus",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "pauseStatus",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "internalType": "int64",
+                "name": "amount",
+                "type": "int64"
+              },
+              {
+                "internalType": "address",
+                "name": "tokenId",
+                "type": "address"
+              },
+              {
+                "internalType": "bool",
+                "name": "useHbarsForPayment",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "useCurrentTokenForPayment",
+                "type": "bool"
+              },
+              {
+                "internalType": "address",
+                "name": "feeCollector",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct IHederaTokenService.FixedFee[]",
+            "name": "fixedFees",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "int64",
+                "name": "numerator",
+                "type": "int64"
+              },
+              {
+                "internalType": "int64",
+                "name": "denominator",
+                "type": "int64"
+              },
+              {
+                "internalType": "int64",
+                "name": "minimumAmount",
+                "type": "int64"
+              },
+              {
+                "internalType": "int64",
+                "name": "maximumAmount",
+                "type": "int64"
+              },
+              {
+                "internalType": "bool",
+                "name": "netOfTransfers",
+                "type": "bool"
+              },
+              {
+                "internalType": "address",
+                "name": "feeCollector",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct IHederaTokenService.FractionalFee[]",
+            "name": "fractionalFees",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "int64",
+                "name": "numerator",
+                "type": "int64"
+              },
+              {
+                "internalType": "int64",
+                "name": "denominator",
+                "type": "int64"
+              },
+              {
+                "internalType": "int64",
+                "name": "amount",
+                "type": "int64"
+              },
+              {
+                "internalType": "address",
+                "name": "tokenId",
+                "type": "address"
+              },
+              {
+                "internalType": "bool",
+                "name": "useHbarsForPayment",
+                "type": "bool"
+              },
+              {
+                "internalType": "address",
+                "name": "feeCollector",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct IHederaTokenService.RoyaltyFee[]",
+            "name": "royaltyFees",
+            "type": "tuple[]"
+          },
+          {
+            "internalType": "string",
+            "name": "ledgerId",
+            "type": "string"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IHederaTokenService.TokenInfo",
+        "name": "tokenInfo",
+        "type": "tuple"
+      }
+    ],
+    "name": "TokenInfo",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "inheritAccountKey",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "contractId",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes",
+            "name": "ed25519",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "ECDSA_secp256k1",
+            "type": "bytes"
+          },
+          {
+            "internalType": "address",
+            "name": "delegatableContractId",
+            "type": "address"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IHederaTokenService.KeyValue",
+        "name": "key",
+        "type": "tuple"
+      }
+    ],
+    "name": "TokenKey",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "int32",
+        "name": "tokenType",
+        "type": "int32"
+      }
+    ],
+    "name": "TokenType",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "spender",
+        "type": "address"
+      }
+    ],
+    "name": "allowancePublic",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "responseCode",
+        "type": "int256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "serialNumber",
+        "type": "uint256"
+      }
+    ],
+    "name": "getApprovedPublic",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "responseCode",
+        "type": "int256"
+      },
+      {
+        "internalType": "address",
+        "name": "approved",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "getFungibleTokenInfoPublic",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "responseCode",
+        "type": "int256"
+      },
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "symbol",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "treasury",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "memo",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "tokenSupplyType",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "maxSupply",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "freezeDefault",
+                    "type": "bool"
+                  },
+                  {
+                    "components": [
+                      {
+                        "internalType": "uint256",
+                        "name": "keyType",
+                        "type": "uint256"
+                      },
+                      {
+                        "components": [
+                          {
+                            "internalType": "bool",
+                            "name": "inheritAccountKey",
+                            "type": "bool"
+                          },
+                          {
+                            "internalType": "address",
+                            "name": "contractId",
+                            "type": "address"
+                          },
+                          {
+                            "internalType": "bytes",
+                            "name": "ed25519",
+                            "type": "bytes"
+                          },
+                          {
+                            "internalType": "bytes",
+                            "name": "ECDSA_secp256k1",
+                            "type": "bytes"
+                          },
+                          {
+                            "internalType": "address",
+                            "name": "delegatableContractId",
+                            "type": "address"
+                          }
+                        ],
+                        "internalType": "struct IHederaTokenService.KeyValue",
+                        "name": "key",
+                        "type": "tuple"
+                      }
+                    ],
+                    "internalType": "struct IHederaTokenService.TokenKey[]",
+                    "name": "tokenKeys",
+                    "type": "tuple[]"
+                  },
+                  {
+                    "components": [
+                      {
+                        "internalType": "int64",
+                        "name": "second",
+                        "type": "int64"
+                      },
+                      {
+                        "internalType": "address",
+                        "name": "autoRenewAccount",
+                        "type": "address"
+                      },
+                      {
+                        "internalType": "int64",
+                        "name": "autoRenewPeriod",
+                        "type": "int64"
+                      }
+                    ],
+                    "internalType": "struct IHederaTokenService.Expiry",
+                    "name": "expiry",
+                    "type": "tuple"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.HederaToken",
+                "name": "token",
+                "type": "tuple"
+              },
+              {
+                "internalType": "int64",
+                "name": "totalSupply",
+                "type": "int64"
+              },
+              {
+                "internalType": "bool",
+                "name": "deleted",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "defaultKycStatus",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "pauseStatus",
+                "type": "bool"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "int64",
+                    "name": "amount",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "tokenId",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "useHbarsForPayment",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "useCurrentTokenForPayment",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "feeCollector",
+                    "type": "address"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.FixedFee[]",
+                "name": "fixedFees",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "int64",
+                    "name": "numerator",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "denominator",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "minimumAmount",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "maximumAmount",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "netOfTransfers",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "feeCollector",
+                    "type": "address"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.FractionalFee[]",
+                "name": "fractionalFees",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "int64",
+                    "name": "numerator",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "denominator",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "amount",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "tokenId",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "useHbarsForPayment",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "feeCollector",
+                    "type": "address"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.RoyaltyFee[]",
+                "name": "royaltyFees",
+                "type": "tuple[]"
+              },
+              {
+                "internalType": "string",
+                "name": "ledgerId",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct IHederaTokenService.TokenInfo",
+            "name": "tokenInfo",
+            "type": "tuple"
+          },
+          {
+            "internalType": "int32",
+            "name": "decimals",
+            "type": "int32"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.FungibleTokenInfo",
+        "name": "tokenInfo",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "int64",
+        "name": "serialNumber",
+        "type": "int64"
+      }
+    ],
+    "name": "getNonFungibleTokenInfoPublic",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "responseCode",
+        "type": "int256"
+      },
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "symbol",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "treasury",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "memo",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "tokenSupplyType",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "maxSupply",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "freezeDefault",
+                    "type": "bool"
+                  },
+                  {
+                    "components": [
+                      {
+                        "internalType": "uint256",
+                        "name": "keyType",
+                        "type": "uint256"
+                      },
+                      {
+                        "components": [
+                          {
+                            "internalType": "bool",
+                            "name": "inheritAccountKey",
+                            "type": "bool"
+                          },
+                          {
+                            "internalType": "address",
+                            "name": "contractId",
+                            "type": "address"
+                          },
+                          {
+                            "internalType": "bytes",
+                            "name": "ed25519",
+                            "type": "bytes"
+                          },
+                          {
+                            "internalType": "bytes",
+                            "name": "ECDSA_secp256k1",
+                            "type": "bytes"
+                          },
+                          {
+                            "internalType": "address",
+                            "name": "delegatableContractId",
+                            "type": "address"
+                          }
+                        ],
+                        "internalType": "struct IHederaTokenService.KeyValue",
+                        "name": "key",
+                        "type": "tuple"
+                      }
+                    ],
+                    "internalType": "struct IHederaTokenService.TokenKey[]",
+                    "name": "tokenKeys",
+                    "type": "tuple[]"
+                  },
+                  {
+                    "components": [
+                      {
+                        "internalType": "int64",
+                        "name": "second",
+                        "type": "int64"
+                      },
+                      {
+                        "internalType": "address",
+                        "name": "autoRenewAccount",
+                        "type": "address"
+                      },
+                      {
+                        "internalType": "int64",
+                        "name": "autoRenewPeriod",
+                        "type": "int64"
+                      }
+                    ],
+                    "internalType": "struct IHederaTokenService.Expiry",
+                    "name": "expiry",
+                    "type": "tuple"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.HederaToken",
+                "name": "token",
+                "type": "tuple"
+              },
+              {
+                "internalType": "int64",
+                "name": "totalSupply",
+                "type": "int64"
+              },
+              {
+                "internalType": "bool",
+                "name": "deleted",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "defaultKycStatus",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "pauseStatus",
+                "type": "bool"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "int64",
+                    "name": "amount",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "tokenId",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "useHbarsForPayment",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "useCurrentTokenForPayment",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "feeCollector",
+                    "type": "address"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.FixedFee[]",
+                "name": "fixedFees",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "int64",
+                    "name": "numerator",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "denominator",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "minimumAmount",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "maximumAmount",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "netOfTransfers",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "feeCollector",
+                    "type": "address"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.FractionalFee[]",
+                "name": "fractionalFees",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "int64",
+                    "name": "numerator",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "denominator",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "amount",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "tokenId",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "useHbarsForPayment",
+                    "type": "bool"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "feeCollector",
+                    "type": "address"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.RoyaltyFee[]",
+                "name": "royaltyFees",
+                "type": "tuple[]"
+              },
+              {
+                "internalType": "string",
+                "name": "ledgerId",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct IHederaTokenService.TokenInfo",
+            "name": "tokenInfo",
+            "type": "tuple"
+          },
+          {
+            "internalType": "int64",
+            "name": "serialNumber",
+            "type": "int64"
+          },
+          {
+            "internalType": "address",
+            "name": "ownerId",
+            "type": "address"
+          },
+          {
+            "internalType": "int64",
+            "name": "creationTime",
+            "type": "int64"
+          },
+          {
+            "internalType": "bytes",
+            "name": "metadata",
+            "type": "bytes"
+          },
+          {
+            "internalType": "address",
+            "name": "spenderId",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.NonFungibleTokenInfo",
+        "name": "tokenInfo",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "getTokenCustomFeesPublic",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int64",
+            "name": "amount",
+            "type": "int64"
+          },
+          {
+            "internalType": "address",
+            "name": "tokenId",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "useHbarsForPayment",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "useCurrentTokenForPayment",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "feeCollector",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.FixedFee[]",
+        "name": "fixedFees",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int64",
+            "name": "numerator",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "denominator",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "minimumAmount",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "maximumAmount",
+            "type": "int64"
+          },
+          {
+            "internalType": "bool",
+            "name": "netOfTransfers",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "feeCollector",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.FractionalFee[]",
+        "name": "fractionalFees",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int64",
+            "name": "numerator",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "denominator",
+            "type": "int64"
+          },
+          {
+            "internalType": "int64",
+            "name": "amount",
+            "type": "int64"
+          },
+          {
+            "internalType": "address",
+            "name": "tokenId",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "useHbarsForPayment",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "feeCollector",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.RoyaltyFee[]",
+        "name": "royaltyFees",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "getTokenDefaultFreezeStatusPublic",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "responseCode",
+        "type": "int256"
+      },
+      {
+        "internalType": "bool",
+        "name": "defaultFreezeStatus",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "getTokenDefaultKycStatusPublic",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "responseCode",
+        "type": "int256"
+      },
+      {
+        "internalType": "bool",
+        "name": "defaultKycStatus",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "getTokenExpiryInfoPublic",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "responseCode",
+        "type": "int256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "int64",
+            "name": "second",
+            "type": "int64"
+          },
+          {
+            "internalType": "address",
+            "name": "autoRenewAccount",
+            "type": "address"
+          },
+          {
+            "internalType": "int64",
+            "name": "autoRenewPeriod",
+            "type": "int64"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.Expiry",
+        "name": "expiryInfo",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "getTokenInfoPublic",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "responseCode",
+        "type": "int256"
+      },
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+              },
+              {
+                "internalType": "address",
+                "name": "treasury",
+                "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "memo",
+                "type": "string"
+              },
+              {
+                "internalType": "bool",
+                "name": "tokenSupplyType",
+                "type": "bool"
+              },
+              {
+                "internalType": "int64",
+                "name": "maxSupply",
+                "type": "int64"
+              },
+              {
+                "internalType": "bool",
+                "name": "freezeDefault",
+                "type": "bool"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint256",
+                    "name": "keyType",
+                    "type": "uint256"
+                  },
+                  {
+                    "components": [
+                      {
+                        "internalType": "bool",
+                        "name": "inheritAccountKey",
+                        "type": "bool"
+                      },
+                      {
+                        "internalType": "address",
+                        "name": "contractId",
+                        "type": "address"
+                      },
+                      {
+                        "internalType": "bytes",
+                        "name": "ed25519",
+                        "type": "bytes"
+                      },
+                      {
+                        "internalType": "bytes",
+                        "name": "ECDSA_secp256k1",
+                        "type": "bytes"
+                      },
+                      {
+                        "internalType": "address",
+                        "name": "delegatableContractId",
+                        "type": "address"
+                      }
+                    ],
+                    "internalType": "struct IHederaTokenService.KeyValue",
+                    "name": "key",
+                    "type": "tuple"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.TokenKey[]",
+                "name": "tokenKeys",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "int64",
+                    "name": "second",
+                    "type": "int64"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "autoRenewAccount",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "int64",
+                    "name": "autoRenewPeriod",
+                    "type": "int64"
+                  }
+                ],
+                "internalType": "struct IHederaTokenService.Expiry",
+                "name": "expiry",
+                "type": "tuple"
+              }
+            ],
+            "internalType": "struct IHederaTokenService.HederaToken",
+            "name": "token",
+            "type": "tuple"
+          },
+          {
+            "internalType": "int64",
+            "name": "totalSupply",
+            "type": "int64"
+          },
+          {
+            "internalType": "bool",
+            "name": "deleted",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "defaultKycStatus",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "pauseStatus",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "internalType": "int64",
+                "name": "amount",
+                "type": "int64"
+              },
+              {
+                "internalType": "address",
+                "name": "tokenId",
+                "type": "address"
+              },
+              {
+                "internalType": "bool",
+                "name": "useHbarsForPayment",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "useCurrentTokenForPayment",
+                "type": "bool"
+              },
+              {
+                "internalType": "address",
+                "name": "feeCollector",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct IHederaTokenService.FixedFee[]",
+            "name": "fixedFees",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "int64",
+                "name": "numerator",
+                "type": "int64"
+              },
+              {
+                "internalType": "int64",
+                "name": "denominator",
+                "type": "int64"
+              },
+              {
+                "internalType": "int64",
+                "name": "minimumAmount",
+                "type": "int64"
+              },
+              {
+                "internalType": "int64",
+                "name": "maximumAmount",
+                "type": "int64"
+              },
+              {
+                "internalType": "bool",
+                "name": "netOfTransfers",
+                "type": "bool"
+              },
+              {
+                "internalType": "address",
+                "name": "feeCollector",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct IHederaTokenService.FractionalFee[]",
+            "name": "fractionalFees",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "int64",
+                "name": "numerator",
+                "type": "int64"
+              },
+              {
+                "internalType": "int64",
+                "name": "denominator",
+                "type": "int64"
+              },
+              {
+                "internalType": "int64",
+                "name": "amount",
+                "type": "int64"
+              },
+              {
+                "internalType": "address",
+                "name": "tokenId",
+                "type": "address"
+              },
+              {
+                "internalType": "bool",
+                "name": "useHbarsForPayment",
+                "type": "bool"
+              },
+              {
+                "internalType": "address",
+                "name": "feeCollector",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct IHederaTokenService.RoyaltyFee[]",
+            "name": "royaltyFees",
+            "type": "tuple[]"
+          },
+          {
+            "internalType": "string",
+            "name": "ledgerId",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.TokenInfo",
+        "name": "tokenInfo",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "keyType",
+        "type": "uint256"
+      }
+    ],
+    "name": "getTokenKeyPublic",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "inheritAccountKey",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "contractId",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes",
+            "name": "ed25519",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "ECDSA_secp256k1",
+            "type": "bytes"
+          },
+          {
+            "internalType": "address",
+            "name": "delegatableContractId",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IHederaTokenService.KeyValue",
+        "name": "key",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "getTokenTypePublic",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      },
+      {
+        "internalType": "int32",
+        "name": "tokenType",
+        "type": "int32"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      }
+    ],
+    "name": "isApprovedForAllPublic",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "responseCode",
+        "type": "int256"
+      },
+      {
+        "internalType": "bool",
+        "name": "approved",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "isFrozenPublic",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "responseCode",
+        "type": "int256"
+      },
+      {
+        "internalType": "bool",
+        "name": "frozen",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "isKycPublic",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      },
+      {
+        "internalType": "bool",
+        "name": "kycGranted",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "isTokenPublic",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      },
+      {
+        "internalType": "bool",
+        "name": "isTokenFlag",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "encodedFunctionSelector",
+        "type": "bytes"
+      }
+    ],
+    "name": "redirectForToken",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "responseCode",
+        "type": "int256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "response",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "transferFrom",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "serialNumber",
+        "type": "uint256"
+      }
+    ],
+    "name": "transferFromNFT",
+    "outputs": [
+      {
+        "internalType": "int64",
+        "name": "responseCode",
+        "type": "int64"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

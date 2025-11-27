@@ -1,0 +1,16 @@
+[
+  {
+    "inputs": [],
+    "name": "processLongInput",
+    "outputs": [],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "processLongOutput",
+    "outputs": [],
+    "stateMutability": "pure",
+    "type": "function"
+  }
+]
