@@ -18,7 +18,8 @@ const getScheduleInfoFromMN = async (scheduleAddress) => {
 const FIVE_MINUTES_AS_SECONDS = 300n;
 const SCHEDULE_GAS_LIMIT = 1_000_000n;
 
-describe("HIP1215 Test Suite", function () {
+// disable the tests in CI until a new version of the local node with the latest CN is released
+xdescribe("HIP1215 Test Suite", function () {
   let internalCalleeContract;
   let HIP1215Contract;
   let signers;
