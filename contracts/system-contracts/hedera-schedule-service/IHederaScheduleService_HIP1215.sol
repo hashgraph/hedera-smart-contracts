@@ -19,11 +19,13 @@ interface IHederaScheduleService_HIP1215 {
     external returns (int64 responseCode, address scheduleAddress);
 
     /// Allows for the creation of a schedule transaction to schedule any contract call for a given smart contract
-    /// address, with a sender for the scheduled transaction, expiration time, the gas limit for the future call,
-    /// the value to send with that call and the call data to use.
+    /// address, with a payer for the scheduled transaction, expiration time, the gas limit for the future call,
+    /// the value to send with that call and the call data to use. The main difference with a scheduleCall is that
+    /// via scheduleCallWithPayer a payer can be specified and the scheduled call can only execute after receiving
+    /// enough valid signatures to activate the payer's key.
     /// Waits until the consensus second is not before `expirySecond` to execute.
     /// @param to the address of the smart contract for the future call
-    /// @param sender an account identifier of a `payer` for the scheduled transaction
+    /// @param payer an account identifier of a `payer` for the scheduled transaction
     /// @param expirySecond an expiration time of the future call
     /// @param gasLimit a maximum limit to the amount of gas to use for future call
     /// @param value an amount of tinybar sent via this future contract call
@@ -32,15 +34,18 @@ interface IHederaScheduleService_HIP1215 {
     /// arguments being passed to the function.
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     /// @return scheduleAddress The address of the newly created schedule transaction.
-    function scheduleCallWithPayer(address to, address sender, uint256 expirySecond, uint256 gasLimit, uint64 value, bytes memory callData)
+    function scheduleCallWithPayer(address to, address payer, uint256 expirySecond, uint256 gasLimit, uint64 value, bytes memory callData)
     external returns (int64 responseCode, address scheduleAddress);
 
     /// Allows for the creation of a schedule transaction to schedule any contract call for a given smart contract
-    /// address, with a sender for the scheduled transaction, expiration time, the gas limit for the future call,
+    /// address, with a payer for the scheduled transaction, expiration time, the gas limit for the future call,
     /// the value to send with that call and the call data to use.
     /// Executes as soon as the payer signs (unless consensus time is already past the `expirySecond`, of course).
+    /// The difference between scheduleCallWithPayer() and executeCallOnPayerSignature() is that the former still waits
+    /// until the consensus second is not before expirySecond to execute, while the latter executes as soon as the
+    /// payer signs (unless consensus time is already past the expirySecond, of course).
     /// @param to the address of the smart contract for the future call
-    /// @param sender an account identifier of a `payer` for the scheduled transaction
+    /// @param payer an account identifier of a `payer` for the scheduled transaction
     /// @param expirySecond an expiration time of the future call
     /// @param gasLimit a maximum limit to the amount of gas to use for future call
     /// @param value an amount of tinybar sent via this future contract call
@@ -49,7 +54,7 @@ interface IHederaScheduleService_HIP1215 {
     /// arguments being passed to the function.
     /// @return responseCode The response code for the status of the request. SUCCESS is 22.
     /// @return scheduleAddress The address of the newly created schedule transaction.
-    function executeCallOnPayerSignature(address to, address sender, uint256 expirySecond, uint256 gasLimit, uint64 value, bytes memory callData)
+    function executeCallOnPayerSignature(address to, address payer, uint256 expirySecond, uint256 gasLimit, uint64 value, bytes memory callData)
     external returns (int64 responseCode, address scheduleAddress);
 
     /// Delete the targeted schedule transaction.

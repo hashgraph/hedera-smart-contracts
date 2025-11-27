@@ -16,8 +16,9 @@ const getScheduleInfoFromMN = async (scheduleAddress) => {
 };
 
 const FIVE_MINUTES_AS_SECONDS = 300n;
+const SCHEDULE_GAS_LIMIT = 1_000_000n;
 
-describe("HIP1215 Test Suite", function () {
+describe.only("HIP1215 Test Suite", function () {
   let internalCalleeContract;
   let HIP1215Contract;
   let signers;
@@ -25,10 +26,10 @@ describe("HIP1215 Test Suite", function () {
   const executeScheduleCallExample = async (timestampOffset = 0) => {
     return (await HIP1215Contract.scheduleCallExample(
         internalCalleeContract.target,
-        "0x3a32b549", // selector of externalFunction() in Internal Callee
         timestampOffset,
+        SCHEDULE_GAS_LIMIT,
         0,
-        0,
+        "0x3a32b549", // selector of externalFunction() in Internal Callee
         Constants.GAS_LIMIT_2_000_000
     )).wait();
   };
@@ -62,12 +63,12 @@ describe("HIP1215 Test Suite", function () {
     const beforeCount = await internalCalleeContract.calledTimes();
 
     await (await HIP1215Contract.scheduleCallWithPayerExample(
-        HIP1215Contract.target,
         internalCalleeContract.target,
+        HIP1215Contract.target,
+        0,
+        SCHEDULE_GAS_LIMIT,
+        0,
         "0x3a32b549", // selector of externalFunction() in Internal Callee
-        0,
-        0,
-        0,
         Constants.GAS_LIMIT_2_000_000
     )).wait();
     await sleep(10_000);
@@ -80,12 +81,12 @@ describe("HIP1215 Test Suite", function () {
     const beforeCount = await internalCalleeContract.calledTimes();
 
     const receipt = await (await HIP1215Contract.executeCallOnPayerSignatureExample(
-        signers[0].address,
         internalCalleeContract.target,
-        "0x3a32b549", // selector of externalFunction() in Internal Callee
+        signers[0].address,
         (await HIP1215Contract.getBlockTimestamp()) + FIVE_MINUTES_AS_SECONDS, // add buffer to the expiry
+        SCHEDULE_GAS_LIMIT,
         0,
-        0,
+        "0x3a32b549", // selector of externalFunction() in Internal Callee
         Constants.GAS_LIMIT_2_000_000
     )).wait();
     const scheduleAddress = receipt.logs[0].args[0];

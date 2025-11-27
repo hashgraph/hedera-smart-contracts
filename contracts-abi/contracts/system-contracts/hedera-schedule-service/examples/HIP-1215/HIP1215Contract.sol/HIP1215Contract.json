@@ -21,7 +21,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "scheduleAddress",
+        "name": "_scheduleAddress",
         "type": "address"
       }
     ],
@@ -40,7 +40,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "scheduleAddress",
+        "name": "_scheduleAddress",
         "type": "address"
       }
     ],
@@ -59,18 +59,13 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_payer",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
         "name": "_to",
         "type": "address"
       },
       {
-        "internalType": "bytes",
-        "name": "_calldata",
-        "type": "bytes"
+        "internalType": "address",
+        "name": "_payer",
+        "type": "address"
       },
       {
         "internalType": "uint256",
@@ -86,6 +81,11 @@
         "internalType": "uint64",
         "name": "_value",
         "type": "uint64"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_calldata",
+        "type": "bytes"
       }
     ],
     "name": "executeCallOnPayerSignatureExample",
@@ -121,12 +121,12 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "expirySecond",
+        "name": "_expirySecond",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "gasLimit",
+        "name": "_gasLimit",
         "type": "uint256"
       }
     ],
@@ -149,11 +149,6 @@
         "type": "address"
       },
       {
-        "internalType": "bytes",
-        "name": "_calldata",
-        "type": "bytes"
-      },
-      {
         "internalType": "uint256",
         "name": "_expiry",
         "type": "uint256"
@@ -167,6 +162,11 @@
         "internalType": "uint64",
         "name": "_value",
         "type": "uint64"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_calldata",
+        "type": "bytes"
       }
     ],
     "name": "scheduleCallExample",
@@ -189,18 +189,13 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_payer",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
         "name": "_to",
         "type": "address"
       },
       {
-        "internalType": "bytes",
-        "name": "_calldata",
-        "type": "bytes"
+        "internalType": "address",
+        "name": "_payer",
+        "type": "address"
       },
       {
         "internalType": "uint256",
@@ -216,6 +211,11 @@
         "internalType": "uint64",
         "name": "_value",
         "type": "uint64"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_calldata",
+        "type": "bytes"
       }
     ],
     "name": "scheduleCallWithPayerExample",
