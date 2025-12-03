@@ -5,7 +5,12 @@ const hre = require("hardhat");
 const {ethers} = hre;
 const Constants = require("../../../constants");
 const Utils = require("../../native/evm-compatibility-ecrecover/utils");
+const HtsUtils = require('../../hedera-token-service/utils');
 const axios = require("axios");
+
+const {
+  PrivateKey
+} = require('@hashgraph/sdk');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -16,13 +21,13 @@ const getScheduleInfoFromMN = async (scheduleAddress) => {
 };
 
 const FIVE_MINUTES_AS_SECONDS = 300n;
-const SCHEDULE_GAS_LIMIT = 1_000_000n;
 
 // disable the tests in CI until a new version of the local node with the latest CN is released
 xdescribe("HIP1215 Test Suite", function () {
   let internalCalleeContract;
   let HIP1215Contract;
   let signers;
+  let SCHEDULE_GAS_LIMIT;
 
   const executeScheduleCallExample = async (timestampOffset = 0) => {
     return (await HIP1215Contract.scheduleCallExample(
@@ -47,6 +52,38 @@ xdescribe("HIP1215 Test Suite", function () {
         await ethers.getContractFactory("HIP1215Contract")
     ).deploy({value: ethers.parseEther("5")}); // fund the contract with 5 HBARs
     await HIP1215Contract.waitForDeployment();
+
+    SCHEDULE_GAS_LIMIT = await internalCalleeContract.externalFunction.estimateGas();
+  });
+
+  // disabled due to a issue
+  xit('should be able to execute IHRC1215ScheduleFacade.deleteSchedule()', async () => {
+    const signerSender = signers[0];
+    const signerReceiver = signers[1];
+    const genesisSdkClient = await HtsUtils.createSDKClient();
+    const senderInfo = await HtsUtils.getAccountInfo(signerSender.address, genesisSdkClient);
+    const receiverInfo = await HtsUtils.getAccountInfo(signerReceiver.address, genesisSdkClient);
+
+    const adminPrivateKey = PrivateKey.fromStringECDSA(HtsUtils.getHardhatSignerPrivateKeyByIndex(0));
+    const {
+      scheduleId
+    } = await HtsUtils.createScheduleTransactionForTransfer(senderInfo, receiverInfo, genesisSdkClient, adminPrivateKey, 10000000000000);
+    await new Promise(r => setTimeout(r, 2500));
+
+    const infoBefore = await getScheduleInfoFromMN(parseInt(scheduleId.num));
+
+    const contractIHRC1215 = await ethers.getContractAt(
+        'IHRC1215ScheduleFacade',
+        HtsUtils.convertAccountIdToLongZeroAddress(scheduleId.toString(), true),
+        signerSender
+    );
+    const deleteScheduleTx = await contractIHRC1215.deleteSchedule(Constants.GAS_LIMIT_2_000_000);
+    await deleteScheduleTx.wait();
+
+    const infoAfter = await getScheduleInfoFromMN(parseInt(scheduleId.num));
+
+    expect(infoBefore.deleted).to.be.false;
+    expect(infoAfter.deleted).to.be.true;
   });
 
   it("should be able to execute scheduleCallExample", async () => {
@@ -60,7 +97,7 @@ xdescribe("HIP1215 Test Suite", function () {
     expect(afterCount).to.equal(beforeCount + 1n);
   });
 
-  it("should be able to execute  scheduleCallWithPayerExample", async () => {
+  it("should be able to execute scheduleCallWithPayerExample", async () => {
     const beforeCount = await internalCalleeContract.calledTimes();
 
     await (await HIP1215Contract.scheduleCallWithPayerExample(
