@@ -2,8 +2,8 @@
 pragma solidity >=0.4.9 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-import "./IHRC755.sol";
-import "./IHRC1215.sol";
+import "./IHRC755ScheduleFacade.sol";
+import "./IHRC1215ScheduleFacade.sol";
 
-interface IHRCScheduleFacade is IHRC755, IHRC1215 {
+interface IHRCScheduleFacade is IHRC755ScheduleFacade, IHRC1215ScheduleFacade {
 }
