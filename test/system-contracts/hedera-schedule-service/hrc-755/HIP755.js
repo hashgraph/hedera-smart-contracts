@@ -86,7 +86,7 @@ describe('HIP755 Test Suite', function () {
     const senderBalanceBefore = await signers[0].provider.getBalance(signerSender);
     const receiverBalanceBefore = await signers[0].provider.getBalance(signerReceiver);
 
-    const signScheduleCallTx = await contractHRC755.signScheduleCall(
+    const signScheduleCallTx = await contractHRC755.signScheduleCallExample(
         Utils.convertAccountIdToLongZeroAddress(scheduleId.toString(), true),
         sigMapProtoEncoded,
         Constants.GAS_LIMIT_2_000_000
@@ -105,7 +105,7 @@ describe('HIP755 Test Suite', function () {
   it('should be able to authorizeSchedule via HRC755 contract', async () => {
     const {scheduleId} = await Utils.createScheduleTransactionForTransfer(senderInfo, receiverInfo, genesisSdkClient);
 
-    const signScheduleCallTx = await contractHRC755.authorizeScheduleCall(
+    const signScheduleCallTx = await contractHRC755.authorizeScheduleCallExample(
         Utils.convertAccountIdToLongZeroAddress(scheduleId.toString(), true),
         Constants.GAS_LIMIT_2_000_000
     );
