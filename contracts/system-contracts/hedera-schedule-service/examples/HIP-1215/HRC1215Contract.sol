@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.10;
+pragma solidity >=0.4.9 <0.9.0;
 
 import "../../HederaScheduleService.sol";
 import "../../IHRC1215ScheduleFacade.sol";
