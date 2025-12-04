@@ -23,7 +23,7 @@ const getScheduleInfoFromMN = async (scheduleAddress) => {
 const FIVE_MINUTES_AS_SECONDS = 300n;
 
 // disable the tests in CI until a new version of the local node with the latest CN is released
-describe("HIP1215 Test Suite", function () {
+xdescribe("HIP1215 Test Suite", function () {
   let internalCalleeContract;
   let HRC1215Contract;
   let signers;
