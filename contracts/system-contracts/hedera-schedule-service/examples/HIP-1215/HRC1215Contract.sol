@@ -8,6 +8,9 @@ contract HRC1215Contract is HederaScheduleService {
 
     constructor() payable {}
 
+    error FailToSchedule();
+    error FailToDeleteSchedule();
+
     event ScheduleCreated(address);
 
     /// Allows for the creation of a schedule transaction to schedule any contract call for a given smart contract
@@ -24,7 +27,7 @@ contract HRC1215Contract is HederaScheduleService {
         );
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert("Failed to schedule");
+            revert FailToSchedule();
         }
 
         emit ScheduleCreated(scheduleAddress);
@@ -45,7 +48,7 @@ contract HRC1215Contract is HederaScheduleService {
         );
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert("Failed to schedule");
+            revert FailToSchedule();
         }
 
         emit ScheduleCreated(scheduleAddress);
@@ -66,7 +69,7 @@ contract HRC1215Contract is HederaScheduleService {
         );
 
         if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert("Failed to schedule");
+            revert FailToSchedule();
         }
 
         emit ScheduleCreated(scheduleAddress);
@@ -76,7 +79,7 @@ contract HRC1215Contract is HederaScheduleService {
     function deleteScheduleExample(address _scheduleAddress) external returns (int64 responseCode) {
         (responseCode) = deleteSchedule(_scheduleAddress);
         if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert("Failed to delete schedule");
+            revert FailToDeleteSchedule();
         }
     }
 
@@ -84,7 +87,7 @@ contract HRC1215Contract is HederaScheduleService {
     function deleteScheduleProxyExample(address _scheduleAddress) external returns (int64 responseCode) {
         (responseCode) = IHRC1215ScheduleFacade(_scheduleAddress).deleteSchedule();
         if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert("Failed to delete schedule");
+            revert FailToDeleteSchedule();
         }
     }
 
