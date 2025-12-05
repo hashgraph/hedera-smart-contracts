@@ -4,6 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import "../HederaResponseCodes.sol";
 import "./IHRC755.sol";
+import "./IHRC756.sol";
 import "./IHRC1215.sol";
 
 abstract contract HederaScheduleService is IHederaScheduleService {
@@ -40,7 +41,7 @@ abstract contract HederaScheduleService is IHederaScheduleService {
     /// @return scheduleAddress The address of the newly created schedule transaction.
     function scheduleNative(address systemContractAddress, bytes memory callData, address payer) internal returns (int64 responseCode, address scheduleAddress) {
         (bool success, bytes memory result) = HSS.call(
-            abi.encodeWithSelector(IHRC755.scheduleNative.selector, systemContractAddress, callData, payer));
+            abi.encodeWithSelector(IHRC756.scheduleNative.selector, systemContractAddress, callData, payer));
         (responseCode, scheduleAddress) = success ? abi.decode(result, (int64, address)) : (int64(HederaResponseCodes.UNKNOWN), address(0));
     }
 
@@ -50,7 +51,7 @@ abstract contract HederaScheduleService is IHederaScheduleService {
     /// @return fungibleTokenInfo The token information for the scheduled fungible token create transaction
     function getScheduledCreateFungibleTokenInfo(address scheduleAddress) internal returns (int64 responseCode, IHederaTokenService.FungibleTokenInfo memory fungibleTokenInfo) {
         (bool success, bytes memory result) = HSS.call(
-            abi.encodeWithSelector(IHRC755.getScheduledCreateFungibleTokenInfo.selector, scheduleAddress));
+            abi.encodeWithSelector(IHRC756.getScheduledCreateFungibleTokenInfo.selector, scheduleAddress));
         IHederaTokenService.FungibleTokenInfo memory defaultTokenInfo;
         (responseCode, fungibleTokenInfo) = success ? abi.decode(result, (int64, IHederaTokenService.FungibleTokenInfo)) : (int64(HederaResponseCodes.UNKNOWN), defaultTokenInfo);
     }
@@ -61,7 +62,7 @@ abstract contract HederaScheduleService is IHederaScheduleService {
     /// @return nonFungibleTokenInfo The token information for the scheduled non fungible token create transaction
     function getScheduledCreateNonFungibleTokenInfo(address scheduleAddress) internal returns (int64 responseCode, IHederaTokenService.NonFungibleTokenInfo memory nonFungibleTokenInfo) {
         (bool success, bytes memory result) = HSS.call(
-            abi.encodeWithSelector(IHRC755.getScheduledCreateNonFungibleTokenInfo.selector, scheduleAddress));
+            abi.encodeWithSelector(IHRC756.getScheduledCreateNonFungibleTokenInfo.selector, scheduleAddress));
         IHederaTokenService.NonFungibleTokenInfo memory defaultTokenInfo;
         (responseCode, nonFungibleTokenInfo) = success ? abi.decode(result, (int64, IHederaTokenService.NonFungibleTokenInfo)) : (int64(HederaResponseCodes.UNKNOWN), defaultTokenInfo);
     }
