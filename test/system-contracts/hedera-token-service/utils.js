@@ -17,6 +17,11 @@ const {
   AccountBalanceQuery,
   ContractInfoQuery,
   AccountDeleteTransaction,
+  Hbar,
+  HbarUnit,
+  ScheduleCreateTransaction,
+  TransferTransaction,
+  Timestamp
 } = require('@hashgraph/sdk');
 const Constants = require('../../constants');
 const axios = require('axios');
@@ -986,6 +991,36 @@ class Utils {
 
     return { senders, receivers, tokens, serials, amounts };
   }
+
+  static getRandomInt = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+
+  static createScheduleTransactionForTransfer = async (senderInfo, receiverInfo, client, adminPrivateKey = null, expiryNs = 0) => {
+    const transferAmountAsTinybars = this.getRandomInt(1, 100_000_000);
+    const transferAmountAsWeibar = BigInt(transferAmountAsTinybars) * BigInt(Utils.tinybarToWeibarCoef);
+
+    let transferTx = await new TransferTransaction()
+        .addHbarTransfer(senderInfo.accountId, new Hbar(-transferAmountAsTinybars, HbarUnit.Tinybar))
+        .addHbarTransfer(receiverInfo.accountId, new Hbar(transferAmountAsTinybars, HbarUnit.Tinybar));
+
+    const tx = new ScheduleCreateTransaction()
+        .setScheduledTransaction(transferTx);
+
+    if (expiryNs) {
+      let timestamp = (Timestamp.generate()).plusNanos(expiryNs);
+      tx.setExpirationTime(timestamp);
+      tx.setWaitForExpiry(true);
+    }
+
+    if (adminPrivateKey) {
+      tx.setAdminKey(adminPrivateKey.publicKey);
+    }
+
+    const {scheduleId} = await (await tx.execute(client)).getReceipt(client);
+
+    return {scheduleId, transferAmountAsWeibar};
+  };
 
   /**
    * Retrieves the maximum number of automatic token associations for an account from the mirror node
