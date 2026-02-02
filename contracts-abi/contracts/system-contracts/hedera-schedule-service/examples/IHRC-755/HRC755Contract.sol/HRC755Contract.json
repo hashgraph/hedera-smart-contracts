@@ -7,7 +7,7 @@
         "type": "address"
       }
     ],
-    "name": "authorizeScheduleCall",
+    "name": "authorizeScheduleCallExample",
     "outputs": [
       {
         "internalType": "int64",
@@ -31,7 +31,7 @@
         "type": "bytes"
       }
     ],
-    "name": "signScheduleCall",
+    "name": "signScheduleCallExample",
     "outputs": [
       {
         "internalType": "int64",
