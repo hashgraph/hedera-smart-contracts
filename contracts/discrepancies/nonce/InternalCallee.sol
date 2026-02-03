@@ -8,7 +8,7 @@ contract Sample {
 }
 
 contract InternalCallee {
-    uint calledTimes = 0;
+    uint public calledTimes = 0;
 
     function factorySample() external returns (address) {
         return address(new Sample());
