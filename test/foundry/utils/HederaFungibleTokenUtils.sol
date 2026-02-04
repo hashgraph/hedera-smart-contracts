@@ -9,7 +9,7 @@ import '../mocks/hts-precompile/HederaFungibleToken.sol';
 import "./CommonUtils.sol";
 import "./HederaTokenUtils.sol";
 
-contract HederaFungibleTokenUtils is CommonUtils, HederaTokenUtils {
+abstract contract HederaFungibleTokenUtils is CommonUtils, HederaTokenUtils {
 
     function _getSimpleHederaFungibleTokenInfo(
         string memory name,
