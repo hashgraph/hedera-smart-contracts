@@ -32,6 +32,9 @@ contract ClprMiddlewareIT0 is IClprMiddlewareIT0 {
     /// @notice Thrown when routing metadata points to an invalid destination middleware or app.
     error InvalidDestination();
 
+    /// @notice Thrown when middleware is constructed with an invalid queue address.
+    error InvalidQueue();
+
     /// @notice Thrown when a response references an unknown message id.
     error UnknownMessage();
 
@@ -79,6 +82,7 @@ contract ClprMiddlewareIT0 is IClprMiddlewareIT0 {
 
     /// @param queueAddress Queue contract used for message transport callbacks.
     constructor(address queueAddress) {
+        if (queueAddress == address(0)) revert InvalidQueue();
         queue = queueAddress;
     }
 

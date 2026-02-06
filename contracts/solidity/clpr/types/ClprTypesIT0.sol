@@ -14,6 +14,7 @@ library ClprTypesIT0 {
         /// @notice Middleware contract that originated the message.
         address sourceMiddleware;
         /// @notice Middleware contract that should receive and process the message.
+        /// @dev IT0 carries explicit middleware addresses because connection objects are not introduced yet.
         address destinationMiddleware;
         /// @notice Source application contract address.
         address sourceApplication;
@@ -31,12 +32,14 @@ library ClprTypesIT0 {
         /// @notice Middleware contract that produced this response (destination side for the original request).
         address sourceMiddleware;
         /// @notice Middleware contract that should receive this response (source side for the original request).
+        /// @dev This explicit destination is an IT0 simplification and is expected to be abstracted by connection state later.
         address destinationMiddleware;
         /// @notice Application that produced the response payload.
         address sourceApplication;
         /// @notice Application that should receive the response payload.
         address destinationApplication;
         /// @notice Indicates whether destination application handling completed successfully.
+        /// @dev IT0 uses a boolean for the minimal echo flow; later iterations should use a richer status enum/code.
         bool success;
         /// @notice Opaque response payload from the destination application.
         bytes responsePayload;

@@ -19,6 +19,9 @@ contract SourceApplicationIT0 is IClprSourceApplicationIT0 {
     /// @notice Thrown when response origin metadata does not match configured peer addresses.
     error UnexpectedResponseSource();
 
+    /// @notice Thrown when contract is constructed with an invalid middleware address.
+    error InvalidMiddleware();
+
     /// @notice Local middleware used for send/response operations.
     address public immutable middleware;
 
@@ -57,6 +60,7 @@ contract SourceApplicationIT0 is IClprSourceApplicationIT0 {
 
     /// @param middlewareAddress Local middleware instance used for send and response callbacks.
     constructor(address middlewareAddress) {
+        if (middlewareAddress == address(0)) revert InvalidMiddleware();
         middleware = middlewareAddress;
     }
 

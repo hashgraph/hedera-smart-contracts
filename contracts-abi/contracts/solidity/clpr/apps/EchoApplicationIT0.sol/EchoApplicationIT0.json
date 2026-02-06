@@ -12,6 +12,11 @@
   },
   {
     "inputs": [],
+    "name": "InvalidMiddleware",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "MiddlewareOnly",
     "type": "error"
   },

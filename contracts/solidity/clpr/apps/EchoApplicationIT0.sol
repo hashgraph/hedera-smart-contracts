@@ -15,6 +15,9 @@ contract EchoApplicationIT0 is IClprDestinationApplicationIT0 {
     /// @notice Thrown when inbound message origin does not match configured source peers.
     error UnexpectedMessageSource();
 
+    /// @notice Thrown when contract is constructed with an invalid middleware address.
+    error InvalidMiddleware();
+
     /// @notice Local middleware that is allowed to invoke this contract.
     address public immutable middleware;
 
@@ -44,6 +47,7 @@ contract EchoApplicationIT0 is IClprDestinationApplicationIT0 {
 
     /// @param middlewareAddress Local middleware instance that invokes `handleClprMessage`.
     constructor(address middlewareAddress) {
+        if (middlewareAddress == address(0)) revert InvalidMiddleware();
         middleware = middlewareAddress;
     }
 

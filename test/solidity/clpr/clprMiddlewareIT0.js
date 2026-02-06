@@ -41,6 +41,30 @@ describe('@solidityequiv1 CLPR Middleware IT0-ECHO', function () {
     );
   });
 
+  it('rejects middleware deployment with zero queue address', async function () {
+    const middlewareFactory = await ethers.getContractFactory('ClprMiddlewareIT0');
+    await expect(middlewareFactory.deploy(ethers.ZeroAddress)).to.be.revertedWithCustomError(
+      middlewareFactory,
+      'InvalidQueue'
+    );
+  });
+
+  it('rejects source app deployment with zero middleware address', async function () {
+    const sourceAppFactory = await ethers.getContractFactory('SourceApplicationIT0');
+    await expect(sourceAppFactory.deploy(ethers.ZeroAddress)).to.be.revertedWithCustomError(
+      sourceAppFactory,
+      'InvalidMiddleware'
+    );
+  });
+
+  it('rejects echo app deployment with zero middleware address', async function () {
+    const echoAppFactory = await ethers.getContractFactory('EchoApplicationIT0');
+    await expect(echoAppFactory.deploy(ethers.ZeroAddress)).to.be.revertedWithCustomError(
+      echoAppFactory,
+      'InvalidMiddleware'
+    );
+  });
+
   it('routes request and response through mock queue with expected app addresses', async function () {
     // Act: source app sends one payload; queue + middleware pipeline runs end-to-end.
     const payload = ethers.toUtf8Bytes('it0-echo-payload');

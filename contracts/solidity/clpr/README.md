@@ -34,3 +34,5 @@ This iteration intentionally excludes connector logic, economics, and proof conc
 - Connector interfaces and implementations should be introduced separately from middleware internals.
 - Public interfaces in `interfaces/` should remain the stable integration surface for third-party developers.
 - Internal middleware implementation details should evolve without breaking established public APIs.
+- Explicit middleware addresses in IT0 envelopes are a temporary simplification until connection abstractions are added.
+- `ClprMessageResponse.success` should evolve from a boolean to a richer status model (e.g., enum/code taxonomy).
