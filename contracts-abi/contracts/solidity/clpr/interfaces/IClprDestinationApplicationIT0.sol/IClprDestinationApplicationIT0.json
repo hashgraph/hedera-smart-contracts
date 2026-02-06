@@ -1,0 +1,53 @@
+[
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint64",
+            "name": "appMessageId",
+            "type": "uint64"
+          },
+          {
+            "internalType": "address",
+            "name": "sourceMiddleware",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "destinationMiddleware",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "sourceApplication",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "destinationApplication",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes",
+            "name": "applicationPayload",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct ClprTypesIT0.ClprMessage",
+        "name": "message",
+        "type": "tuple"
+      }
+    ],
+    "name": "handleClprMessage",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "responsePayload",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

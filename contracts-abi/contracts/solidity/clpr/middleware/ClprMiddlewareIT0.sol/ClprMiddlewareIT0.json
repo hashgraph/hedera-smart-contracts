@@ -1,0 +1,370 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "queueAddress",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "ApplicationNotRegistered",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidDestination",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "QueueOnly",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ResponseMismatch",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "UnknownMessage",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "application",
+        "type": "address"
+      }
+    ],
+    "name": "ApplicationRegistered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "appMessageId",
+        "type": "uint64"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "queueMessageId",
+        "type": "uint64"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "destinationApplication",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "success",
+        "type": "bool"
+      }
+    ],
+    "name": "InboundMessageHandled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "appMessageId",
+        "type": "uint64"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "queueMessageId",
+        "type": "uint64"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sourceApplication",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "success",
+        "type": "bool"
+      }
+    ],
+    "name": "InboundResponseHandled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "appMessageId",
+        "type": "uint64"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "queueMessageId",
+        "type": "uint64"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sourceApplication",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "destinationApplication",
+        "type": "address"
+      }
+    ],
+    "name": "OutboundMessageQueued",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint64",
+            "name": "appMessageId",
+            "type": "uint64"
+          },
+          {
+            "internalType": "address",
+            "name": "sourceMiddleware",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "destinationMiddleware",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "sourceApplication",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "destinationApplication",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes",
+            "name": "applicationPayload",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct ClprTypesIT0.ClprMessage",
+        "name": "message",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint64",
+        "name": "queueMessageId",
+        "type": "uint64"
+      }
+    ],
+    "name": "handleMessage",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint64",
+            "name": "originalAppMessageId",
+            "type": "uint64"
+          },
+          {
+            "internalType": "address",
+            "name": "sourceMiddleware",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "destinationMiddleware",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "sourceApplication",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "destinationApplication",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "success",
+            "type": "bool"
+          },
+          {
+            "internalType": "bytes",
+            "name": "responsePayload",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct ClprTypesIT0.ClprMessageResponse",
+        "name": "response",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint64",
+        "name": "queueMessageId",
+        "type": "uint64"
+      }
+    ],
+    "name": "handleMessageResponse",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "localApplications",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nextAppMessageId",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "name": "pendingAppMessages",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "sourceApplication",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "destinationApplication",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "exists",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "queue",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "application",
+        "type": "address"
+      }
+    ],
+    "name": "registerLocalApplication",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "destinationMiddleware",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "destinationApplication",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "appPayload",
+        "type": "bytes"
+      }
+    ],
+    "name": "send",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "appMessageId",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "queueMessageId",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
