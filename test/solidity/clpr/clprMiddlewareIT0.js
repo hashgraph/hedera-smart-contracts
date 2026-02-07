@@ -8,6 +8,7 @@ describe('@solidityequiv1 CLPR Middleware IT0-ECHO', function () {
   let sourceMiddleware;
   let destinationMiddleware;
   let sourceApp;
+  let sourceApp2;
   let echoApp;
 
   beforeEach(async function () {
@@ -22,16 +23,22 @@ describe('@solidityequiv1 CLPR Middleware IT0-ECHO', function () {
     // Deploy reference applications that simulate app-to-app routing across ledgers.
     const sourceAppFactory = await ethers.getContractFactory('SourceApplicationIT0');
     sourceApp = await sourceAppFactory.deploy(await sourceMiddleware.getAddress());
+    sourceApp2 = await sourceAppFactory.deploy(await sourceMiddleware.getAddress());
 
     const echoAppFactory = await ethers.getContractFactory('EchoApplicationIT0');
     echoApp = await echoAppFactory.deploy(await destinationMiddleware.getAddress());
 
     // Register apps so middleware accepts them as local participants.
     await sourceMiddleware.registerLocalApplication(await sourceApp.getAddress());
+    await sourceMiddleware.registerLocalApplication(await sourceApp2.getAddress());
     await destinationMiddleware.registerLocalApplication(await echoApp.getAddress());
 
     // Configure explicit peers on both apps so they reject unexpected routes.
     await sourceApp.configurePeer(
+      await destinationMiddleware.getAddress(),
+      await echoApp.getAddress()
+    );
+    await sourceApp2.configurePeer(
       await destinationMiddleware.getAddress(),
       await echoApp.getAddress()
     );
@@ -130,5 +137,48 @@ describe('@solidityequiv1 CLPR Middleware IT0-ECHO', function () {
     // Assert: source middleware no longer tracks this message as pending.
     const pendingMessage = await sourceMiddleware.pendingAppMessages(1);
     expect(pendingMessage.exists).to.equal(false);
+  });
+
+  it('routes responses to the correct source app when multiple local apps call the same destination service', async function () {
+    const payload1 = ethers.toUtf8Bytes('it0-echo-payload-app1');
+    const payload2 = ethers.toUtf8Bytes('it0-echo-payload-app2');
+
+    // Echo app peer validation is strict in IT0, so set expected source app per call.
+    await echoApp.configurePeer(
+      await sourceMiddleware.getAddress(),
+      await sourceApp.getAddress()
+    );
+    await sourceApp.send(payload1);
+
+    await echoApp.configurePeer(
+      await sourceMiddleware.getAddress(),
+      await sourceApp2.getAddress()
+    );
+    await sourceApp2.send(payload2);
+
+    // Two sends should produce two message/response pairs through the queue.
+    expect(await queue.nextQueueMessageId()).to.equal(4n);
+
+    // Each source app receives exactly one response with its own payload.
+    expect(await sourceApp.responseCount()).to.equal(1n);
+    expect(await sourceApp2.responseCount()).to.equal(1n);
+    expect(await sourceApp.lastResponseAppMessageId()).to.equal(1n);
+    expect(await sourceApp2.lastResponseAppMessageId()).to.equal(2n);
+    expect(await sourceApp.lastResponseSourceApplication()).to.equal(
+      await echoApp.getAddress()
+    );
+    expect(await sourceApp2.lastResponseSourceApplication()).to.equal(
+      await echoApp.getAddress()
+    );
+    expect(await sourceApp.lastResponseSuccess()).to.equal(true);
+    expect(await sourceApp2.lastResponseSuccess()).to.equal(true);
+    expect(await sourceApp.lastResponsePayload()).to.equal(ethers.hexlify(payload1));
+    expect(await sourceApp2.lastResponsePayload()).to.equal(ethers.hexlify(payload2));
+
+    // Source middleware should have cleared both pending entries after response delivery.
+    const pendingMessage1 = await sourceMiddleware.pendingAppMessages(1);
+    const pendingMessage2 = await sourceMiddleware.pendingAppMessages(2);
+    expect(pendingMessage1.exists).to.equal(false);
+    expect(pendingMessage2.exists).to.equal(false);
   });
 });

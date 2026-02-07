@@ -44,7 +44,13 @@ Current IT0 split (use this as baseline for future CLPR iterations):
 
 - Keep SPDX header in Solidity/JS files:
   - `// SPDX-License-Identifier: Apache-2.0`
-- Follow existing Hardhat + Mocha/Chai test style.
+- Respect the maintainer’s Git workflow:
+  - Do not create commits unless explicitly requested.
+  - Do not move files between unstaged/staged states unless explicitly requested.
+  - Leave code changes unstaged by default so the maintainer can review/stage via GUI.
+- Keep both test stacks in mind:
+  - Hardhat + Mocha/Chai for JS integration/smoke coverage.
+  - Forge for Solidity unit testing (`test/foundry`).
 - Keep folder mirroring: contract folder and test folder names should match.
 - Prefer minimal diffs; avoid renaming/moving unrelated files.
 - If tests rely on shared contract name constants, update `test/constants.js`.
@@ -213,7 +219,9 @@ This keeps behavior aligned with the CLPR iteration plan while minimizing moving
 ## 9) Definition of done for each CLPR increment
 
 - Contracts compile (`npx hardhat compile`).
-- New tests pass (`npx hardhat test <target>`).
+- New tests pass:
+  - `npx hardhat test <target>`
+  - `forge test --match-path test/foundry/<target>.t.sol` (or equivalent CLPR target).
 - Smoke deploy succeeds on local SOLO via relay path.
 - At least one invocation path is proven end-to-end for the increment under development.
 - Changes are documented briefly in PR notes with exact files touched.
