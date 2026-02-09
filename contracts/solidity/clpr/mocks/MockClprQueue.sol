@@ -50,8 +50,8 @@ contract MockClprQueue is IClprQueue {
         uint64 indexed messageId,
         address indexed senderApplicationId,
         address indexed destinationApplicationId,
-        address sourceConnectorId,
-        address destinationConnectorId
+        bytes32 sourceConnectorId,
+        bytes32 destinationConnectorId
     );
 
     /// @notice Emitted when a response message is enqueued.

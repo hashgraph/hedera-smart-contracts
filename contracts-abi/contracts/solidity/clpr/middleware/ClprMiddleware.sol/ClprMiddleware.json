@@ -5,6 +5,11 @@
         "internalType": "address",
         "name": "queueAddress",
         "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "ledgerId_",
+        "type": "bytes32"
       }
     ],
     "stateMutability": "nonpayable",
@@ -12,7 +17,22 @@
   },
   {
     "inputs": [],
+    "name": "AdminOnly",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "ApplicationNotRegistered",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidAdmin",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidConnectorId",
     "type": "error"
   },
   {
@@ -53,18 +73,81 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "address",
+        "internalType": "bytes32",
+        "name": "connectorId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "ConnectorDeleted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "connectorId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "ConnectorDisabled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
         "name": "sourceConnectorId",
-        "type": "address"
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "newPenaltyCount",
+        "type": "uint64"
+      }
+    ],
+    "name": "ConnectorPenalized",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "connectorId",
+        "type": "bytes32"
       },
       {
         "indexed": true,
         "internalType": "address",
-        "name": "destinationConnectorId",
+        "name": "connectorAddress",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "expectedRemoteConnectorId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "remoteLedgerId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "admin",
         "type": "address"
       }
     ],
-    "name": "ConnectorPairConfigured",
+    "name": "ConnectorRegistered",
     "type": "event"
   },
   {
@@ -87,6 +170,12 @@
         "internalType": "enum ClprTypes.ClprMiddlewareStatus",
         "name": "status",
         "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "destinationConnectorId",
+        "type": "bytes32"
       }
     ],
     "name": "InboundMessageHandled",
@@ -118,6 +207,12 @@
         "internalType": "enum ClprTypes.ClprMiddlewareStatus",
         "name": "status",
         "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "destinationConnectorId",
+        "type": "bytes32"
       }
     ],
     "name": "InboundResponseHandled",
@@ -152,34 +247,122 @@
       },
       {
         "indexed": false,
-        "internalType": "address",
+        "internalType": "bytes32",
         "name": "sourceConnectorId",
-        "type": "address"
+        "type": "bytes32"
       },
       {
         "indexed": false,
-        "internalType": "address",
+        "internalType": "bytes32",
         "name": "destinationConnectorId",
-        "type": "address"
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "maxChargeCommitment",
+        "type": "uint256"
       }
     ],
     "name": "OutboundMessageEnqueued",
     "type": "event"
   },
   {
+    "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "destinationConnectorId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "availableBalance",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "safetyThreshold",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "minimumCharge",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "maximumCharge",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "unitHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "RemoteStatusUpdated",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "name": "connectors",
+    "outputs": [
+      {
         "internalType": "address",
-        "name": "sourceConnectorId",
+        "name": "connectorAddress",
         "type": "address"
       },
       {
+        "internalType": "bytes32",
+        "name": "remoteLedgerId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "expectedRemoteConnectorId",
+        "type": "bytes32"
+      },
+      {
         "internalType": "address",
-        "name": "destinationConnectorId",
+        "name": "admin",
         "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "enabled",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "exists",
+        "type": "bool"
       }
     ],
-    "name": "configureConnectorPair",
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "connectorId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "deleteConnector",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -187,20 +370,14 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
+        "internalType": "bytes32",
+        "name": "connectorId",
+        "type": "bytes32"
       }
     ],
-    "name": "destinationConnectorBySourceConnector",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "disableConnector",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -220,9 +397,26 @@
                 "type": "address"
               },
               {
-                "internalType": "address",
+                "internalType": "bytes32",
                 "name": "connectorId",
-                "type": "address"
+                "type": "bytes32"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "unit",
+                    "type": "string"
+                  }
+                ],
+                "internalType": "struct ClprTypes.ClprAmount",
+                "name": "maxCharge",
+                "type": "tuple"
               },
               {
                 "internalType": "bytes",
@@ -235,9 +429,9 @@
             "type": "tuple"
           },
           {
-            "internalType": "address",
+            "internalType": "bytes32",
             "name": "destinationConnectorId",
-            "type": "address"
+            "type": "bytes32"
           },
           {
             "components": [
@@ -278,9 +472,9 @@
               {
                 "components": [
                   {
-                    "internalType": "address",
+                    "internalType": "bytes32",
                     "name": "connectorId",
-                    "type": "address"
+                    "type": "bytes32"
                   },
                   {
                     "components": [
@@ -438,9 +632,9 @@
                   {
                     "components": [
                       {
-                        "internalType": "address",
+                        "internalType": "bytes32",
                         "name": "connectorId",
-                        "type": "address"
+                        "type": "bytes32"
                       },
                       {
                         "components": [
@@ -601,9 +795,9 @@
                   {
                     "components": [
                       {
-                        "internalType": "address",
+                        "internalType": "bytes32",
                         "name": "connectorId",
-                        "type": "address"
+                        "type": "bytes32"
                       },
                       {
                         "components": [
@@ -688,6 +882,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "ledgerId",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -728,6 +935,44 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "name": "outstandingCommitmentsByDestinationConnector",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "name": "penaltyCountBySourceConnector",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint64",
         "name": "",
         "type": "uint64"
@@ -744,6 +989,21 @@
         "internalType": "uint64",
         "name": "appMsgId",
         "type": "uint64"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "sourceConnectorId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "destinationConnectorId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxChargeCommitment",
+        "type": "uint256"
       },
       {
         "internalType": "bool",
@@ -770,6 +1030,34 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "connectorId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "remoteLedgerId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "expectedRemoteConnectorId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "admin",
+        "type": "address"
+      }
+    ],
+    "name": "registerConnector",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "application",
         "type": "address"
@@ -783,6 +1071,55 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "name": "remoteStatusByDestinationConnector",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "availableBalance",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "safetyThreshold",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "minimumCharge",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maximumCharge",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "unit",
+        "type": "string"
+      },
+      {
+        "internalType": "bool",
+        "name": "known",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "unavailable",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "components": [
           {
             "internalType": "address",
@@ -790,9 +1127,26 @@
             "type": "address"
           },
           {
-            "internalType": "address",
+            "internalType": "bytes32",
             "name": "connectorId",
-            "type": "address"
+            "type": "bytes32"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256"
+              },
+              {
+                "internalType": "string",
+                "name": "unit",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct ClprTypes.ClprAmount",
+            "name": "maxCharge",
+            "type": "tuple"
           },
           {
             "internalType": "bytes",

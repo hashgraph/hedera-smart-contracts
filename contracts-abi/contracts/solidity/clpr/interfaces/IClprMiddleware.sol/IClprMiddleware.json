@@ -2,6 +2,32 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "connectorId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "deleteConnector",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "connectorId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "disableConnector",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "components": [
           {
             "internalType": "address",
@@ -16,9 +42,26 @@
                 "type": "address"
               },
               {
-                "internalType": "address",
+                "internalType": "bytes32",
                 "name": "connectorId",
-                "type": "address"
+                "type": "bytes32"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "unit",
+                    "type": "string"
+                  }
+                ],
+                "internalType": "struct ClprTypes.ClprAmount",
+                "name": "maxCharge",
+                "type": "tuple"
               },
               {
                 "internalType": "bytes",
@@ -31,9 +74,9 @@
             "type": "tuple"
           },
           {
-            "internalType": "address",
+            "internalType": "bytes32",
             "name": "destinationConnectorId",
-            "type": "address"
+            "type": "bytes32"
           },
           {
             "components": [
@@ -74,9 +117,9 @@
               {
                 "components": [
                   {
-                    "internalType": "address",
+                    "internalType": "bytes32",
                     "name": "connectorId",
-                    "type": "address"
+                    "type": "bytes32"
                   },
                   {
                     "components": [
@@ -234,9 +277,9 @@
                   {
                     "components": [
                       {
-                        "internalType": "address",
+                        "internalType": "bytes32",
                         "name": "connectorId",
-                        "type": "address"
+                        "type": "bytes32"
                       },
                       {
                         "components": [
@@ -397,9 +440,9 @@
                   {
                     "components": [
                       {
-                        "internalType": "address",
+                        "internalType": "bytes32",
                         "name": "connectorId",
-                        "type": "address"
+                        "type": "bytes32"
                       },
                       {
                         "components": [
@@ -484,6 +527,47 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "ledgerId",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "connectorId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "remoteLedgerId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "expectedRemoteConnectorId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "admin",
+        "type": "address"
+      }
+    ],
+    "name": "registerConnector",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -506,9 +590,26 @@
             "type": "address"
           },
           {
-            "internalType": "address",
+            "internalType": "bytes32",
             "name": "connectorId",
-            "type": "address"
+            "type": "bytes32"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256"
+              },
+              {
+                "internalType": "string",
+                "name": "unit",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct ClprTypes.ClprAmount",
+            "name": "maxCharge",
+            "type": "tuple"
           },
           {
             "internalType": "bytes",

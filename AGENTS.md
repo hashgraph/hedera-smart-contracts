@@ -7,6 +7,9 @@ This file is a working guide for AI agents contributing to `hedera-smart-contrac
 - This repository is a reference library of Hedera/Hiero smart contracts and tests.
 - For CLPR work here, preserve existing repository style and placement patterns.
 - Build in small, testable increments. Prefer one flow at a time over broad scaffolding.
+- Keep the CLPR section in the top-level `README.md` current:
+  - reflect the current middleware capabilities, and
+  - reflect the tests that validate those capabilities.
 
 ## 2) Repository structure to preserve
 
@@ -58,6 +61,16 @@ Current CLPR split (use this as baseline for future CLPR iterations):
 - Prefer minimal diffs; avoid renaming/moving unrelated files.
 - If tests rely on shared contract name constants, update `test/constants.js`.
 - Do not modify generated `artifacts/` manually.
+
+CLPR test commands:
+
+```bash
+# Hardhat (in-process ephemeral chain). Note: repo default network is `local` and requires a node.
+npx hardhat test test/solidity/clpr/clprMiddleware.js --network hardhat
+
+# Foundry
+forge test --match-path test/foundry/ClprMiddleware.t.sol
+```
 
 ## 4) CLPR specification source of truth
 

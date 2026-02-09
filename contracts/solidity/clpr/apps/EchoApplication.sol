@@ -22,7 +22,7 @@ contract EchoApplication is IClprDestinationApplication {
     uint64 public requestCount;
 
     /// @notice Emitted when this app handles an inbound message.
-    event MessageHandled(address indexed connectorId, bytes payload);
+    event MessageHandled(bytes32 indexed connectorId, bytes payload);
 
     /// @param middlewareAddress Local middleware instance that invokes `handleMessage`.
     constructor(address middlewareAddress) {

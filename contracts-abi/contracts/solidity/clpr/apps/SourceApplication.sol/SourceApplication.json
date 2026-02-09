@@ -12,9 +12,19 @@
         "type": "address"
       },
       {
-        "internalType": "address",
-        "name": "connectorId",
-        "type": "address"
+        "internalType": "bytes32[]",
+        "name": "connectorIds",
+        "type": "bytes32[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxChargeValue",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "maxChargeUnit",
+        "type": "string"
       }
     ],
     "stateMutability": "nonpayable",
@@ -22,7 +32,17 @@
   },
   {
     "inputs": [],
+    "name": "InvalidConnectorId",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidDestinationApplication",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidMaxChargeUnit",
     "type": "error"
   },
   {
@@ -32,12 +52,12 @@
   },
   {
     "inputs": [],
-    "name": "InvalidSourceConnector",
+    "name": "MiddlewareOnly",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "MiddlewareOnly",
+    "name": "NoConnectors",
     "type": "error"
   },
   {
@@ -69,6 +89,12 @@
         "type": "uint64"
       },
       {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "connectorId",
+        "type": "bytes32"
+      },
+      {
         "indexed": false,
         "internalType": "enum ClprTypes.ClprSendStatus",
         "name": "status",
@@ -98,12 +124,64 @@
   },
   {
     "inputs": [],
+    "name": "currentConnectorIndex",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "defaultMaxChargeUnit",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "defaultMaxChargeValue",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "destinationApplicationId",
     "outputs": [
       {
         "internalType": "address",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getConnectorIds",
+    "outputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "connectorIds",
+        "type": "bytes32[]"
       }
     ],
     "stateMutability": "view",
@@ -189,16 +267,44 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "sourceConnectorId",
-    "outputs": [
+    "inputs": [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
+        "internalType": "bytes",
+        "name": "payload",
+        "type": "bytes"
       }
     ],
-    "stateMutability": "view",
+    "name": "sendWithFailover",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint64",
+            "name": "appMsgId",
+            "type": "uint64"
+          },
+          {
+            "internalType": "enum ClprTypes.ClprSendStatus",
+            "name": "status",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum ClprTypes.ClprSendFailureReason",
+            "name": "failureReason",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum ClprTypes.ClprSendFailureSide",
+            "name": "failureSide",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct ClprTypes.ClprSendMessageStatus",
+        "name": "status",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

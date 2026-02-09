@@ -4,8 +4,21 @@ pragma solidity ^0.8.24;
 /// @title CLPR Shared Types
 /// @author Hashgraph
 /// @notice Shared message and API types for the current CLPR prototype iteration.
-/// @dev This code currently implements IT1-CONN-AUTH behavior.
+/// @dev This code currently implements `IT1-CONN-AUTH` plus the MVP connector economics scaffolding
+///      needed for connector registration/pairing and destination-side funds checks.
 library ClprTypes {
+    // -------------------------------------------------------------------------
+    // Value Types
+    // -------------------------------------------------------------------------
+
+    /// @notice Ledger-specific amount container.
+    /// @dev `unit` is a free-form string and is expected to be consistent across
+    ///      all amounts for a given connector/ledger.
+    struct ClprAmount {
+        uint256 value;
+        string unit;
+    }
+
     // -------------------------------------------------------------------------
     // Application layer (MVP-shape, simplified for Solidity)
     // -------------------------------------------------------------------------
@@ -13,10 +26,13 @@ library ClprTypes {
     /// @notice Application-provided outbound request payload.
     /// @dev Mirrors `ClprApplicationMessage` from the spec:
     ///      - `recipientId` is the destination application contract address.
-    ///      - `connectorId` is the source-ledger connector contract chosen by the application.
+    ///      - `connectorId` is the source-ledger connector identifier chosen by the application.
+    ///      - `maxCharge` is the application-provided maximum charge limit for remote execution.
+    ///        The effective limit is the lower of this value and the connector-provided max.
     struct ClprApplicationMessage {
         address recipientId;
-        address connectorId;
+        bytes32 connectorId;
+        ClprAmount maxCharge;
         bytes data;
     }
 
@@ -59,13 +75,6 @@ library ClprTypes {
     // Connector layer (mocked in current prototype)
     // -------------------------------------------------------------------------
 
-    /// @notice Ledger-specific amount container (placeholder for MVP economics).
-    /// @dev For IT1-CONN-AUTH, economics are not enforced; fields are present for message-shape parity.
-    struct ClprAmount {
-        uint256 value;
-        string unit;
-    }
-
     /// @notice Connector-produced authorization metadata included in `ClprMessage`.
     struct ClprConnectorMessage {
         bool approve;
@@ -73,9 +82,20 @@ library ClprTypes {
         bytes data;
     }
 
-    /// @notice Connector-produced response metadata returned to the source connector (empty in IT1).
+    /// @notice Connector-produced response metadata returned to the source connector.
     struct ClprConnectorResponse {
         bytes data;
+    }
+
+    // -------------------------------------------------------------------------
+    // Billing (ledger-specific details, simplified for Solidity)
+    // -------------------------------------------------------------------------
+
+    /// @notice Ledger-specific billing details for a single message execution.
+    /// @dev The protocol only requires that sufficient billing context is provided to
+    ///      destination connectors. For this Solidity prototype, a single charge amount is used.
+    struct ClprBilling {
+        ClprAmount charge;
     }
 
     // -------------------------------------------------------------------------
@@ -90,15 +110,15 @@ library ClprTypes {
         ApplicationFailure
     }
 
-    /// @notice Balance report metadata (placeholder for MVP economics).
+    /// @notice Balance report metadata used by the middleware for MVP connector economics.
     struct ClprBalanceReport {
-        address connectorId;
+        bytes32 connectorId;
         ClprAmount availableBalance;
         ClprAmount safetyThreshold;
         ClprAmount outstandingCommitments;
     }
 
-    /// @notice Middleware-to-middleware message metadata (placeholder in IT1).
+    /// @notice Middleware-to-middleware message metadata.
     struct ClprMiddlewareMessage {
         ClprBalanceReport balanceReport;
         bytes data;
@@ -116,7 +136,7 @@ library ClprTypes {
     struct ClprMessageDraft {
         address senderApplicationId;
         ClprApplicationMessage applicationMessage;
-        address destinationConnectorId;
+        bytes32 destinationConnectorId;
     }
 
     /// @notice Canonical CLPR request envelope transported between ledgers.
@@ -124,7 +144,7 @@ library ClprTypes {
     struct ClprMessage {
         address senderApplicationId;
         ClprApplicationMessage applicationMessage;
-        address destinationConnectorId;
+        bytes32 destinationConnectorId;
         ClprConnectorMessage connectorMessage;
         ClprMiddlewareMessage middlewareMessage;
     }

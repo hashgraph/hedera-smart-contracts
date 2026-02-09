@@ -3,14 +3,37 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 
-describe('@solidityequiv1 CLPR Middleware IT1-CONN-AUTH', function () {
+describe('@solidityequiv1 CLPR Middleware MVP Connectors', function () {
+  const SOURCE_LEDGER_ID = ethers.keccak256(ethers.toUtf8Bytes('clpr-ledger-source'));
+  const DEST_LEDGER_ID = ethers.keccak256(ethers.toUtf8Bytes('clpr-ledger-destination'));
+  const ETH_UNIT = 'ETH';
+  const WETH_UNIT = 'WETH';
+
+  const DEST_MIN_CHARGE = 50n;
+  const DEST_SAFETY_THRESHOLD = 60n;
+
   let queue;
   let sourceMiddleware;
   let destinationMiddleware;
-  let sourceConnector;
-  let destinationConnector;
+  let weth;
+
+  let sourceConnector1;
+  let sourceConnector2;
+  let sourceConnector3;
+
+  let destinationConnector1;
+  let destinationConnector2;
+  let destinationConnector3;
+
+  let sourceConnectorId1;
+  let sourceConnectorId2;
+  let sourceConnectorId3;
+
+  let destinationConnectorId1;
+  let destinationConnectorId2;
+  let destinationConnectorId3;
+
   let sourceApp;
-  let sourceApp2;
   let echoApp;
 
   beforeEach(async function () {
@@ -19,8 +42,8 @@ describe('@solidityequiv1 CLPR Middleware IT1-CONN-AUTH', function () {
     queue = await queueFactory.deploy();
 
     const middlewareFactory = await ethers.getContractFactory('ClprMiddleware');
-    sourceMiddleware = await middlewareFactory.deploy(await queue.getAddress());
-    destinationMiddleware = await middlewareFactory.deploy(await queue.getAddress());
+    sourceMiddleware = await middlewareFactory.deploy(await queue.getAddress(), SOURCE_LEDGER_ID);
+    destinationMiddleware = await middlewareFactory.deploy(await queue.getAddress(), DEST_LEDGER_ID);
 
     await (
       await queue.configureEndpoints(
@@ -29,45 +52,158 @@ describe('@solidityequiv1 CLPR Middleware IT1-CONN-AUTH', function () {
       )
     ).wait();
 
-    // Deploy a mock connector pair (IT1: authorize hook always approves).
-    const connectorFactory = await ethers.getContractFactory('MockClprConnector');
-    sourceConnector = await connectorFactory.deploy();
-    destinationConnector = await connectorFactory.deploy();
+    // Destination ledger custom currency (wrapped ETH).
+    const wethFactory = await ethers.getContractFactory('OZERC20Mock');
+    weth = await wethFactory.deploy('Wrapped ETH', 'WETH');
+    await weth.waitForDeployment();
 
-    // Configure pairing (IT1 placeholder for connector registration state).
+    // Helper for deriving connector ids (models "hash over config" semantics from the spec).
+    const deriveId = (prefix, ownerKey, localLedger, remoteLedger) =>
+      ethers.keccak256(
+        ethers.solidityPacked(
+          ['string', 'bytes32', 'bytes32', 'bytes32'],
+          [prefix, ownerKey, localLedger, remoteLedger]
+        )
+      );
+
+    const ownerKey1 = ethers.keccak256(ethers.toUtf8Bytes('connector-owner-1'));
+    const ownerKey2 = ethers.keccak256(ethers.toUtf8Bytes('connector-owner-2'));
+    const ownerKey3 = ethers.keccak256(ethers.toUtf8Bytes('connector-owner-3'));
+
+    sourceConnectorId1 = deriveId('src', ownerKey1, SOURCE_LEDGER_ID, DEST_LEDGER_ID);
+    destinationConnectorId1 = deriveId('dst', ownerKey1, DEST_LEDGER_ID, SOURCE_LEDGER_ID);
+
+    sourceConnectorId2 = deriveId('src', ownerKey2, SOURCE_LEDGER_ID, DEST_LEDGER_ID);
+    destinationConnectorId2 = deriveId('dst', ownerKey2, DEST_LEDGER_ID, SOURCE_LEDGER_ID);
+
+    sourceConnectorId3 = deriveId('src', ownerKey3, SOURCE_LEDGER_ID, DEST_LEDGER_ID);
+    destinationConnectorId3 = deriveId('dst', ownerKey3, DEST_LEDGER_ID, SOURCE_LEDGER_ID);
+
+    // Deploy three connector pairs (source uses ETH, destination uses WETH).
+    const connectorFactory = await ethers.getContractFactory('MockClprConnector');
+
+    // Source connectors (native ETH balance reporting); outbound max charge commitment is in WETH.
+    const outboundMax = { value: DEST_MIN_CHARGE, unit: WETH_UNIT };
+    sourceConnector1 = await connectorFactory.deploy(
+      sourceConnectorId1,
+      destinationConnectorId1,
+      DEST_LEDGER_ID,
+      ETH_UNIT,
+      ethers.ZeroAddress,
+      0,
+      0,
+      ethers.MaxUint256,
+      outboundMax,
+      { value: ethers.parseEther('1') }
+    );
+    sourceConnector2 = await connectorFactory.deploy(
+      sourceConnectorId2,
+      destinationConnectorId2,
+      DEST_LEDGER_ID,
+      ETH_UNIT,
+      ethers.ZeroAddress,
+      0,
+      0,
+      ethers.MaxUint256,
+      outboundMax,
+      { value: ethers.parseEther('1') }
+    );
+    sourceConnector3 = await connectorFactory.deploy(
+      sourceConnectorId3,
+      destinationConnectorId3,
+      DEST_LEDGER_ID,
+      ETH_UNIT,
+      ethers.ZeroAddress,
+      0,
+      0,
+      ethers.MaxUint256,
+      outboundMax,
+      { value: ethers.parseEther('1') }
+    );
+
+    // Destination connectors (ERC20=WETH balance reporting + reimbursement).
+    const unbounded = ethers.MaxUint256;
+    destinationConnector1 = await connectorFactory.deploy(
+      destinationConnectorId1,
+      sourceConnectorId1,
+      SOURCE_LEDGER_ID,
+      WETH_UNIT,
+      await weth.getAddress(),
+      DEST_SAFETY_THRESHOLD,
+      DEST_MIN_CHARGE,
+      unbounded,
+      { value: unbounded, unit: WETH_UNIT }
+    );
+    destinationConnector2 = await connectorFactory.deploy(
+      destinationConnectorId2,
+      sourceConnectorId2,
+      SOURCE_LEDGER_ID,
+      WETH_UNIT,
+      await weth.getAddress(),
+      DEST_SAFETY_THRESHOLD,
+      DEST_MIN_CHARGE,
+      unbounded,
+      { value: unbounded, unit: WETH_UNIT }
+    );
+    destinationConnector3 = await connectorFactory.deploy(
+      destinationConnectorId3,
+      sourceConnectorId3,
+      SOURCE_LEDGER_ID,
+      WETH_UNIT,
+      await weth.getAddress(),
+      DEST_SAFETY_THRESHOLD,
+      DEST_MIN_CHARGE,
+      unbounded,
+      { value: unbounded, unit: WETH_UNIT }
+    );
+
+    // Seed destination connector funds (connector 1 intentionally underfunded).
+    // Connector 2 has enough for two reimbursements and then hits the safety threshold boundary.
+    await (await weth.mint(await destinationConnector2.getAddress(), 160n)).wait();
+    await (await weth.mint(await destinationConnector3.getAddress(), 500n)).wait();
+
+    // Register connectors with each middleware instance (self-registration via connector call).
+    await (await sourceConnector1.registerWithMiddleware(await sourceMiddleware.getAddress())).wait();
+    await (await sourceConnector2.registerWithMiddleware(await sourceMiddleware.getAddress())).wait();
+    await (await sourceConnector3.registerWithMiddleware(await sourceMiddleware.getAddress())).wait();
+
     await (
-      await sourceMiddleware.configureConnectorPair(
-        await sourceConnector.getAddress(),
-        await destinationConnector.getAddress()
-      )
+      await destinationConnector1.registerWithMiddleware(await destinationMiddleware.getAddress())
+    ).wait();
+    await (
+      await destinationConnector2.registerWithMiddleware(await destinationMiddleware.getAddress())
+    ).wait();
+    await (
+      await destinationConnector3.registerWithMiddleware(await destinationMiddleware.getAddress())
     ).wait();
 
     // Deploy the destination application first so source apps can be constructed with a known destination.
     const echoAppFactory = await ethers.getContractFactory('EchoApplication');
     echoApp = await echoAppFactory.deploy(await destinationMiddleware.getAddress());
 
-    // Deploy reference applications that simulate app-to-app routing across ledgers.
+    // Deploy a source app with three connectors in priority order.
     const sourceAppFactory = await ethers.getContractFactory('SourceApplication');
     sourceApp = await sourceAppFactory.deploy(
       await sourceMiddleware.getAddress(),
       await echoApp.getAddress(),
-      await sourceConnector.getAddress()
-    );
-    sourceApp2 = await sourceAppFactory.deploy(
-      await sourceMiddleware.getAddress(),
-      await echoApp.getAddress(),
-      await sourceConnector.getAddress()
+      [sourceConnectorId1, sourceConnectorId2, sourceConnectorId3],
+      DEST_MIN_CHARGE,
+      WETH_UNIT
     );
 
     // Register apps so middleware accepts them as local participants.
     await sourceMiddleware.registerLocalApplication(await sourceApp.getAddress());
-    await sourceMiddleware.registerLocalApplication(await sourceApp2.getAddress());
     await destinationMiddleware.registerLocalApplication(await echoApp.getAddress());
+
+    // Connector 1 "knows" it cannot be used (simulates a connector with known bad remote funding status).
+    await (await sourceConnector1.setDenyAuthorize(true)).wait();
   });
 
   it('rejects middleware deployment with zero queue address', async function () {
     const middlewareFactory = await ethers.getContractFactory('ClprMiddleware');
-    await expect(middlewareFactory.deploy(ethers.ZeroAddress)).to.be.revertedWithCustomError(
+    await expect(
+      middlewareFactory.deploy(ethers.ZeroAddress, SOURCE_LEDGER_ID)
+    ).to.be.revertedWithCustomError(
       middlewareFactory,
       'InvalidQueue'
     );
@@ -79,7 +215,9 @@ describe('@solidityequiv1 CLPR Middleware IT1-CONN-AUTH', function () {
       sourceAppFactory.deploy(
         ethers.ZeroAddress,
         '0x0000000000000000000000000000000000000001',
-        '0x0000000000000000000000000000000000000002'
+        ['0x' + '11'.repeat(32)],
+        1,
+        'WETH'
       )
     ).to.be.revertedWithCustomError(sourceAppFactory, 'InvalidMiddleware');
   });
@@ -92,165 +230,86 @@ describe('@solidityequiv1 CLPR Middleware IT1-CONN-AUTH', function () {
     );
   });
 
-  it('routes request and response through mock queue and invokes connector authorize hook', async function () {
-    // Act: source app sends one payload; queue + middleware pipeline runs end-to-end.
-    const payload = ethers.toUtf8Bytes('it1-echo-payload');
-    const sendTx = await sourceApp.send(payload);
-    const receipt = await sendTx.wait();
-    const blockNumber = receipt.blockNumber;
+  it('sends 3 messages with connector preference + failover and enforces destination funds safety threshold', async function () {
+    const payload1 = ethers.toUtf8Bytes('mvp-msg-1');
+    const payload2 = ethers.toUtf8Bytes('mvp-msg-2');
+    const payload3 = ethers.toUtf8Bytes('mvp-msg-3');
 
-    const messageEvents = await queue.queryFilter(
-      queue.filters.MessageEnqueued(),
-      blockNumber,
-      blockNumber
-    );
-    const queueResponseEvents = await queue.queryFilter(
-      queue.filters.MessageResponseEnqueued(),
-      blockNumber,
-      blockNumber
-    );
+    // Message 1: connector 1 rejects; connector 2 accepts.
+    const tx1 = await sourceApp.sendWithFailover(payload1);
+    const r1 = await tx1.wait();
+    const b1 = r1.blockNumber;
 
-    // Assert: request and response each passed through the queue exactly once.
-    expect(messageEvents.length).to.equal(1);
-    expect(queueResponseEvents.length).to.equal(1);
+    const sendEvents1 = await sourceApp.queryFilter(sourceApp.filters.SendAttempted(), b1, b1);
+    expect(sendEvents1.length).to.equal(2);
+    expect(sendEvents1[0].args.connectorId).to.equal(sourceConnectorId1);
+    expect(sendEvents1[0].args.status).to.equal(1n); // Rejected
+    expect(sendEvents1[1].args.connectorId).to.equal(sourceConnectorId2);
+    expect(sendEvents1[1].args.status).to.equal(0n); // Accepted
 
-    // Assert: queue assigns an outbound message id and copies it into the response original message id.
-    expect(messageEvents[0].args.messageId).to.equal(1n);
-    expect(messageEvents[0].args.senderApplicationId).to.equal(
-      await sourceApp.getAddress()
-    );
-    expect(messageEvents[0].args.destinationApplicationId).to.equal(
-      await echoApp.getAddress()
-    );
-    expect(messageEvents[0].args.sourceConnectorId).to.equal(await sourceConnector.getAddress());
-    expect(messageEvents[0].args.destinationConnectorId).to.equal(
-      await destinationConnector.getAddress()
-    );
-
-    expect(queueResponseEvents[0].args.originalMessageId).to.equal(1n);
-    expect(queueResponseEvents[0].args.status).to.equal(0n); // Success
-
-    // Response is enqueued but not delivered synchronously (mock queue simulates async boundary).
-    expect(await queue.hasPendingResponse(1n)).to.equal(true);
-
-    // Source middleware should be tracking the pending outbound message until response delivery.
-    const pendingBeforeDelivery = await sourceMiddleware.pendingByMessageId(1);
-    expect(pendingBeforeDelivery.exists).to.equal(true);
-
-    const deliverTx = await queue.deliverMessageResponse(messageEvents[0].args.messageId);
-    const deliverReceipt = await deliverTx.wait();
-    const deliverBlockNumber = deliverReceipt.blockNumber;
-
-    // Assert: source app observed successful response from configured destination app.
+    // Only the accepted attempt should enqueue a message.
     expect(await queue.nextMessageId()).to.equal(1n);
-    expect(await queue.nextResponseId()).to.equal(1n);
+    expect(await sourceConnector1.authorizeCount()).to.equal(1n);
+    expect(await sourceConnector2.authorizeCount()).to.equal(1n);
 
-    expect(await sourceConnector.authorizeCount()).to.equal(1n);
+    // Message 2: connector 2 accepts.
+    await (await sourceApp.sendWithFailover(payload2)).wait();
+    expect(await queue.nextMessageId()).to.equal(2n);
+    expect(await sourceConnector2.authorizeCount()).to.equal(2n);
 
-    const sendAttemptEvents = await sourceApp.queryFilter(
-      sourceApp.filters.SendAttempted(),
-      blockNumber,
-      blockNumber
-    );
-    expect(sendAttemptEvents.length).to.equal(1);
-    expect(sendAttemptEvents[0].args.appMsgId).to.equal(1n);
-    expect(sendAttemptEvents[0].args.status).to.equal(0n); // Accepted
-    expect(sendAttemptEvents[0].args.failureReason).to.equal(0n); // None
-    expect(sendAttemptEvents[0].args.failureSide).to.equal(0n); // None
-    expect(sendAttemptEvents[0].args.payload).to.equal(ethers.hexlify(payload));
-
-    // Assert: destination app received the original source app call.
-    expect(await echoApp.requestCount()).to.equal(1n);
-
-    const handledEvents = await echoApp.queryFilter(
-      echoApp.filters.MessageHandled(),
-      blockNumber,
-      blockNumber
-    );
-    expect(handledEvents.length).to.equal(1);
-    expect(handledEvents[0].args.connectorId).to.equal(await sourceConnector.getAddress());
-    expect(handledEvents[0].args.payload).to.equal(ethers.hexlify(payload));
+    // Deliver both responses so the source middleware learns the remote balance report for connector 2.
+    const deliverAllReceipt = await (await queue.deliverAllMessageResponses()).wait();
+    const deliverBlock = deliverAllReceipt.blockNumber;
 
     const responseEvents = await sourceApp.queryFilter(
       sourceApp.filters.ResponseReceived(),
-      deliverBlockNumber,
-      deliverBlockNumber
+      deliverBlock,
+      deliverBlock
     );
-    expect(responseEvents.length).to.equal(1);
-    expect(responseEvents[0].args.appMsgId).to.equal(1n);
-    expect(responseEvents[0].args.payload).to.equal(ethers.hexlify(payload));
+    expect(responseEvents.length).to.equal(2);
+    expect(responseEvents[0].args.payload).to.equal(ethers.hexlify(payload1));
+    expect(responseEvents[1].args.payload).to.equal(ethers.hexlify(payload2));
 
-    // Assert: source middleware no longer tracks this message as pending.
-    const pendingMessage = await sourceMiddleware.pendingByMessageId(1);
-    expect(pendingMessage.exists).to.equal(false);
+    // Destination connector 2 should now be at the safety threshold (out of funds for further sends).
+    expect(await weth.balanceOf(await destinationConnector2.getAddress())).to.equal(60n);
 
-    expect(await queue.hasPendingResponse(1n)).to.equal(false);
-  });
+    const remote2 = await sourceMiddleware.remoteStatusByDestinationConnector(destinationConnectorId2);
+    expect(remote2.known).to.equal(true);
+    expect(remote2.availableBalance).to.equal(60n);
+    expect(remote2.safetyThreshold).to.equal(60n);
 
-  it('routes responses to the correct source app when multiple local apps call the same destination service', async function () {
-    const payload1 = ethers.toUtf8Bytes('it1-echo-payload-app1');
-    const payload2 = ethers.toUtf8Bytes('it1-echo-payload-app2');
+    // Message 3: connector 2 is rejected pre-enqueue due to remote out-of-funds; connector 3 accepts.
+    const tx3 = await sourceApp.sendWithFailover(payload3);
+    const r3 = await tx3.wait();
+    const b3 = r3.blockNumber;
 
-    await (await sourceApp.send(payload1)).wait();
-    await (await sourceApp2.send(payload2)).wait();
+    const sendEvents3 = await sourceApp.queryFilter(sourceApp.filters.SendAttempted(), b3, b3);
+    expect(sendEvents3.length).to.equal(2);
+    expect(sendEvents3[0].args.connectorId).to.equal(sourceConnectorId2);
+    expect(sendEvents3[0].args.status).to.equal(1n); // Rejected
+    expect(sendEvents3[0].args.failureReason).to.equal(2n); // ConnectorOutOfFunds
+    expect(sendEvents3[0].args.failureSide).to.equal(2n); // Destination
 
-    const deliverAllTx = await queue.deliverAllMessageResponses();
-    const deliverAllReceipt = await deliverAllTx.wait();
-    const deliverAllBlockNumber = deliverAllReceipt.blockNumber;
+    expect(sendEvents3[1].args.connectorId).to.equal(sourceConnectorId3);
+    expect(sendEvents3[1].args.status).to.equal(0n); // Accepted
 
-    // Two sends should produce two message/response pairs.
-    expect(await queue.nextMessageId()).to.equal(2n);
-    expect(await queue.nextResponseId()).to.equal(2n);
+    // Pre-enqueue rejection should notify the connector without calling authorize again.
+    expect(await sourceConnector2.sendRejectedCount()).to.equal(1n);
+    expect(await sourceConnector2.authorizeCount()).to.equal(2n);
 
-    const responseEventsApp1 = await sourceApp.queryFilter(
+    expect(await queue.nextMessageId()).to.equal(3n);
+
+    const deliver3Receipt = await (await queue.deliverAllMessageResponses()).wait();
+    const deliver3Block = deliver3Receipt.blockNumber;
+    const responseEvents3 = await sourceApp.queryFilter(
       sourceApp.filters.ResponseReceived(),
-      deliverAllBlockNumber,
-      deliverAllBlockNumber
+      deliver3Block,
+      deliver3Block
     );
-    const responseEventsApp2 = await sourceApp2.queryFilter(
-      sourceApp2.filters.ResponseReceived(),
-      deliverAllBlockNumber,
-      deliverAllBlockNumber
-    );
-    expect(responseEventsApp1.length).to.equal(1);
-    expect(responseEventsApp2.length).to.equal(1);
-    expect(responseEventsApp1[0].args.appMsgId).to.equal(1n);
-    expect(responseEventsApp2[0].args.appMsgId).to.equal(1n);
-    expect(responseEventsApp1[0].args.payload).to.equal(ethers.hexlify(payload1));
-    expect(responseEventsApp2[0].args.payload).to.equal(ethers.hexlify(payload2));
+    expect(responseEvents3.length).to.equal(1);
+    expect(responseEvents3[0].args.payload).to.equal(ethers.hexlify(payload3));
 
-    // Source middleware should have cleared both pending entries after response delivery.
-    const pendingMessage1 = await sourceMiddleware.pendingByMessageId(1);
-    const pendingMessage2 = await sourceMiddleware.pendingByMessageId(2);
-    expect(pendingMessage1.exists).to.equal(false);
-    expect(pendingMessage2.exists).to.equal(false);
-  });
-
-  it('assigns per-application app msg ids monotonically (independent of message-layer ids)', async function () {
-    const payload1 = ethers.toUtf8Bytes('it1-app-msg-1');
-    const payload2 = ethers.toUtf8Bytes('it1-app-msg-2');
-
-    const sendReceipt1 = await (await sourceApp.send(payload1)).wait();
-    const sendBlock1 = sendReceipt1.blockNumber;
-    const sendEvents1 = await sourceApp.queryFilter(
-      sourceApp.filters.SendAttempted(),
-      sendBlock1,
-      sendBlock1
-    );
-    expect(sendEvents1.length).to.equal(1);
-    expect(sendEvents1[0].args.appMsgId).to.equal(1n);
-
-    const sendReceipt2 = await (await sourceApp.send(payload2)).wait();
-    const sendBlock2 = sendReceipt2.blockNumber;
-    const sendEvents2 = await sourceApp.queryFilter(
-      sourceApp.filters.SendAttempted(),
-      sendBlock2,
-      sendBlock2
-    );
-    expect(sendEvents2.length).to.equal(1);
-    expect(sendEvents2[0].args.appMsgId).to.equal(2n);
-
-    // Messaging-layer ids are per-connection and continue increasing across apps.
-    expect(await queue.nextMessageId()).to.equal(2n);
+    // Destination app handled three successful messages.
+    expect(await echoApp.requestCount()).to.equal(3n);
   });
 });

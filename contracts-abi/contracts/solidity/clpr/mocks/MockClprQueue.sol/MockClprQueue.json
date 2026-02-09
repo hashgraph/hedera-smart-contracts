@@ -66,15 +66,15 @@
       },
       {
         "indexed": false,
-        "internalType": "address",
+        "internalType": "bytes32",
         "name": "sourceConnectorId",
-        "type": "address"
+        "type": "bytes32"
       },
       {
         "indexed": false,
-        "internalType": "address",
+        "internalType": "bytes32",
         "name": "destinationConnectorId",
-        "type": "address"
+        "type": "bytes32"
       }
     ],
     "name": "MessageEnqueued",
@@ -199,9 +199,26 @@
                 "type": "address"
               },
               {
-                "internalType": "address",
+                "internalType": "bytes32",
                 "name": "connectorId",
-                "type": "address"
+                "type": "bytes32"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "unit",
+                    "type": "string"
+                  }
+                ],
+                "internalType": "struct ClprTypes.ClprAmount",
+                "name": "maxCharge",
+                "type": "tuple"
               },
               {
                 "internalType": "bytes",
@@ -214,9 +231,9 @@
             "type": "tuple"
           },
           {
-            "internalType": "address",
+            "internalType": "bytes32",
             "name": "destinationConnectorId",
-            "type": "address"
+            "type": "bytes32"
           },
           {
             "components": [
@@ -257,9 +274,9 @@
               {
                 "components": [
                   {
-                    "internalType": "address",
+                    "internalType": "bytes32",
                     "name": "connectorId",
-                    "type": "address"
+                    "type": "bytes32"
                   },
                   {
                     "components": [
@@ -423,9 +440,9 @@
                   {
                     "components": [
                       {
-                        "internalType": "address",
+                        "internalType": "bytes32",
                         "name": "connectorId",
-                        "type": "address"
+                        "type": "bytes32"
                       },
                       {
                         "components": [

@@ -16,9 +16,26 @@
                 "type": "address"
               },
               {
-                "internalType": "address",
+                "internalType": "bytes32",
                 "name": "connectorId",
-                "type": "address"
+                "type": "bytes32"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "unit",
+                    "type": "string"
+                  }
+                ],
+                "internalType": "struct ClprTypes.ClprAmount",
+                "name": "maxCharge",
+                "type": "tuple"
               },
               {
                 "internalType": "bytes",
@@ -31,9 +48,9 @@
             "type": "tuple"
           },
           {
-            "internalType": "address",
+            "internalType": "bytes32",
             "name": "destinationConnectorId",
-            "type": "address"
+            "type": "bytes32"
           }
         ],
         "internalType": "struct ClprTypes.ClprMessageDraft",
@@ -79,6 +96,676 @@
       }
     ],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "connectorId",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "enabled",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "expectedRemoteConnectorId",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "outstandingCommitments",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBalanceReport",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "connectorId",
+            "type": "bytes32"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256"
+              },
+              {
+                "internalType": "string",
+                "name": "unit",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct ClprTypes.ClprAmount",
+            "name": "availableBalance",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256"
+              },
+              {
+                "internalType": "string",
+                "name": "unit",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct ClprTypes.ClprAmount",
+            "name": "safetyThreshold",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256"
+              },
+              {
+                "internalType": "string",
+                "name": "unit",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct ClprTypes.ClprAmount",
+            "name": "outstandingCommitments",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct ClprTypes.ClprBalanceReport",
+        "name": "report",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "data",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct ClprTypes.ClprApplicationResponse",
+        "name": "response",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint64",
+        "name": "appMsgId",
+        "type": "uint64"
+      }
+    ],
+    "name": "handleApplicationResponse",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "data",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct ClprTypes.ClprConnectorResponse",
+        "name": "connectorResponse",
+        "type": "tuple"
+      }
+    ],
+    "name": "handleConnectorResponse",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "senderApplicationId",
+            "type": "address"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "recipientId",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "connectorId",
+                "type": "bytes32"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "unit",
+                    "type": "string"
+                  }
+                ],
+                "internalType": "struct ClprTypes.ClprAmount",
+                "name": "maxCharge",
+                "type": "tuple"
+              },
+              {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct ClprTypes.ClprApplicationMessage",
+            "name": "applicationMessage",
+            "type": "tuple"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "destinationConnectorId",
+            "type": "bytes32"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bool",
+                "name": "approve",
+                "type": "bool"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "unit",
+                    "type": "string"
+                  }
+                ],
+                "internalType": "struct ClprTypes.ClprAmount",
+                "name": "maxCharge",
+                "type": "tuple"
+              },
+              {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct ClprTypes.ClprConnectorMessage",
+            "name": "connectorMessage",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "bytes32",
+                    "name": "connectorId",
+                    "type": "bytes32"
+                  },
+                  {
+                    "components": [
+                      {
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                      },
+                      {
+                        "internalType": "string",
+                        "name": "unit",
+                        "type": "string"
+                      }
+                    ],
+                    "internalType": "struct ClprTypes.ClprAmount",
+                    "name": "availableBalance",
+                    "type": "tuple"
+                  },
+                  {
+                    "components": [
+                      {
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                      },
+                      {
+                        "internalType": "string",
+                        "name": "unit",
+                        "type": "string"
+                      }
+                    ],
+                    "internalType": "struct ClprTypes.ClprAmount",
+                    "name": "safetyThreshold",
+                    "type": "tuple"
+                  },
+                  {
+                    "components": [
+                      {
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                      },
+                      {
+                        "internalType": "string",
+                        "name": "unit",
+                        "type": "string"
+                      }
+                    ],
+                    "internalType": "struct ClprTypes.ClprAmount",
+                    "name": "outstandingCommitments",
+                    "type": "tuple"
+                  }
+                ],
+                "internalType": "struct ClprTypes.ClprBalanceReport",
+                "name": "balanceReport",
+                "type": "tuple"
+              },
+              {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct ClprTypes.ClprMiddlewareMessage",
+            "name": "middlewareMessage",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct ClprTypes.ClprMessage",
+        "name": "message",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint64",
+            "name": "originalMessageId",
+            "type": "uint64"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct ClprTypes.ClprApplicationResponse",
+            "name": "applicationResponse",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct ClprTypes.ClprConnectorResponse",
+            "name": "connectorResponse",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "enum ClprTypes.ClprMiddlewareStatus",
+                "name": "status",
+                "type": "uint8"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "unit",
+                    "type": "string"
+                  }
+                ],
+                "internalType": "struct ClprTypes.ClprAmount",
+                "name": "minimumCharge",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "unit",
+                    "type": "string"
+                  }
+                ],
+                "internalType": "struct ClprTypes.ClprAmount",
+                "name": "maximumCharge",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  {
+                    "components": [
+                      {
+                        "internalType": "bytes32",
+                        "name": "connectorId",
+                        "type": "bytes32"
+                      },
+                      {
+                        "components": [
+                          {
+                            "internalType": "uint256",
+                            "name": "value",
+                            "type": "uint256"
+                          },
+                          {
+                            "internalType": "string",
+                            "name": "unit",
+                            "type": "string"
+                          }
+                        ],
+                        "internalType": "struct ClprTypes.ClprAmount",
+                        "name": "availableBalance",
+                        "type": "tuple"
+                      },
+                      {
+                        "components": [
+                          {
+                            "internalType": "uint256",
+                            "name": "value",
+                            "type": "uint256"
+                          },
+                          {
+                            "internalType": "string",
+                            "name": "unit",
+                            "type": "string"
+                          }
+                        ],
+                        "internalType": "struct ClprTypes.ClprAmount",
+                        "name": "safetyThreshold",
+                        "type": "tuple"
+                      },
+                      {
+                        "components": [
+                          {
+                            "internalType": "uint256",
+                            "name": "value",
+                            "type": "uint256"
+                          },
+                          {
+                            "internalType": "string",
+                            "name": "unit",
+                            "type": "string"
+                          }
+                        ],
+                        "internalType": "struct ClprTypes.ClprAmount",
+                        "name": "outstandingCommitments",
+                        "type": "tuple"
+                      }
+                    ],
+                    "internalType": "struct ClprTypes.ClprBalanceReport",
+                    "name": "balanceReport",
+                    "type": "tuple"
+                  },
+                  {
+                    "internalType": "bytes",
+                    "name": "data",
+                    "type": "bytes"
+                  }
+                ],
+                "internalType": "struct ClprTypes.ClprMiddlewareMessage",
+                "name": "middlewareMessage",
+                "type": "tuple"
+              }
+            ],
+            "internalType": "struct ClprTypes.ClprMiddlewareResponse",
+            "name": "middlewareResponse",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct ClprTypes.ClprMessageResponse",
+        "name": "response",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256"
+              },
+              {
+                "internalType": "string",
+                "name": "unit",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct ClprTypes.ClprAmount",
+            "name": "charge",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct ClprTypes.ClprBilling",
+        "name": "billing",
+        "type": "tuple"
+      }
+    ],
+    "name": "handleMessage",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "data",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct ClprTypes.ClprConnectorResponse",
+        "name": "connectorResponse",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "maximumCharge",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "value",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "unit",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct ClprTypes.ClprAmount",
+        "name": "amount",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "minimumCharge",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "value",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "unit",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct ClprTypes.ClprAmount",
+        "name": "amount",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "senderApplicationId",
+            "type": "address"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "recipientId",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "connectorId",
+                "type": "bytes32"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "unit",
+                    "type": "string"
+                  }
+                ],
+                "internalType": "struct ClprTypes.ClprAmount",
+                "name": "maxCharge",
+                "type": "tuple"
+              },
+              {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct ClprTypes.ClprApplicationMessage",
+            "name": "applicationMessage",
+            "type": "tuple"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "destinationConnectorId",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct ClprTypes.ClprMessageDraft",
+        "name": "draft",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint64",
+        "name": "appMsgId",
+        "type": "uint64"
+      },
+      {
+        "internalType": "enum ClprTypes.ClprSendFailureReason",
+        "name": "reason",
+        "type": "uint8"
+      },
+      {
+        "internalType": "enum ClprTypes.ClprSendFailureSide",
+        "name": "side",
+        "type": "uint8"
+      }
+    ],
+    "name": "notifySendRejected",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "remoteLedgerId",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   }
 ]

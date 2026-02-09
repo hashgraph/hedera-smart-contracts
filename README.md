@@ -49,6 +49,49 @@ This project is set up using the Hardhat development environment. To get started
 
 For using this project as a library in a Foundry project see [Foundry Testing](FOUNDRY_TESTING.md)
 
+## CLPR Middleware (Prototype)
+
+This repository includes a Solidity prototype of the CLPR middleware layered on top of a mock messaging queue.
+The implementation is intentionally incremental and should stay aligned with the spec in PR `hiero-ledger/hiero-consensus-node#23333`
+(docs under `hedera-node/docs/clpr/` in that PR).
+
+The CLPR prototype lives under:
+
+- `contracts/solidity/clpr/`
+- `test/solidity/clpr/` (Hardhat)
+- `test/foundry/` (Foundry)
+
+Current capabilities (keep this list updated as the code evolves):
+
+- Message envelopes aligned to the current spec intent (`ClprMessageDraft`, `ClprMessage`, `ClprMessageResponse`)
+- Application allow-list registration (`registerLocalApplication`) and per-application message ids (`appMsgId`)
+- Connector registration + pairing (local connector id mapped to an expected remote connector id)
+- Source send path: connector `authorize(...)` hook before enqueue, plus max-charge commitment tracking
+- Destination receive path: destination connector funds check using available balance minus safety threshold vs minimum charge
+  - If underfunded: do not execute the destination application; return `ConnectorOutOfFunds`
+  - If funded: execute destination application and reimburse middleware via the destination connector
+- Remote status propagation via balance reports in responses; source middleware can reject sends pre-enqueue when the
+  latest-known remote connector status is out-of-funds
+- Reference app-level connector preference + failover behavior in `SourceApplication`
+
+Not yet modeled here (planned per spec): proofs, bundle formats, and integration with a real messaging layer.
+
+### CLPR tests
+
+Hardhat (in-process ephemeral chain):
+
+```bash
+npx hardhat test test/solidity/clpr/clprMiddleware.js --network hardhat
+```
+
+Foundry:
+
+```bash
+forge test --match-path test/foundry/ClprMiddleware.t.sol
+```
+
+For SOLO notes and CLI runbooks used during integration debugging, see `AGENTS.md`.
+
 ## Support
 
 If you have a question on how to use the product, please see our
