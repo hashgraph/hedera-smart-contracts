@@ -32,7 +32,7 @@ Recommended CLPR placement (repo-style consistent):
 - `test/solidity/clpr/...`
 - Optional helper scripts in `scripts/` (for deploy/invoke smoke checks).
 
-Current IT0 split (use this as baseline for future CLPR iterations):
+Current CLPR split (use this as baseline for future CLPR iterations):
 
 - `contracts/solidity/clpr/types/` shared envelopes and value types
 - `contracts/solidity/clpr/interfaces/` public API contracts for middleware/apps/queue
@@ -44,6 +44,9 @@ Current IT0 split (use this as baseline for future CLPR iterations):
 
 - Keep SPDX header in Solidity/JS files:
   - `// SPDX-License-Identifier: Apache-2.0`
+- CLPR in this repo is a prototype and is free to evolve:
+  - There are no external consumers to protect with backwards-compatible import paths or ABI layouts.
+  - Prefer the cleanest design and spec conformance over compatibility shims.
 - Respect the maintainer’s Git workflow:
   - Do not create commits unless explicitly requested.
   - Do not move files between unstaged/staged states unless explicitly requested.
@@ -78,6 +81,7 @@ Read in this order before changing CLPR contracts:
 Important planning notes from the spec set:
 
 - Iteration order is explicit: `IT0-ECHO`, `IT1-CONN-AUTH`, then MVP behaviors.
+  - This repo intentionally keeps only the current iteration source; earlier iterations live in git history.
 - Message/response flow must preserve full context and deterministic handling.
 - Middleware behavior, not implementation language, is the conformance target.
 
@@ -89,6 +93,13 @@ Important planning notes from the spec set:
   - `README.md`
   - `TEST_SETUP.md`
   - `test/README.md`
+
+Local implementation reference (important when debugging “EVM behavior” questions):
+
+- Sibling repo: `../hiero-consensus-node`
+  - Contains the consensus node codebase and the Besu EVM integration/adaptations used by Hiero.
+  - If reasoning about low-level EVM execution, traces, storage-slot effects, or revert behavior on SOLO,
+    confirm assumptions against this implementation (do not assume a vanilla geth/anvil environment).
 
 ## 6) Local SOLO runbook (CLI v0.55.0)
 
@@ -126,13 +137,53 @@ Known local endpoints used by this repo config:
 
 - JSON-RPC Relay: `http://127.0.0.1:7546`
 - Consensus node gRPC: `127.0.0.1:50211`
-- Mirror gRPC: `127.0.0.1:5600`
-- Explorer UI: `http://127.0.0.1:8080`
+- Mirror gRPC: `127.0.0.1:5600` (only if you port-forward it)
+- Mirror REST (ODIN default): `http://127.0.0.1:8080` (port-forward `mirror-ingress-controller` -> `:80`)
+- Explorer UI: varies (SOLO may port-forward it to `:8080`, which conflicts with ODIN’s default mirror port)
 
 Notes:
 
 - `utils/constants.js` local network values match these endpoints.
 - Explorer may show periodic background transfers from `mirror-1-monitor`; this is expected in SOLO.
+- If ODIN is in use, prefer dedicating `:8080` to mirror REST and run explorer on a different local port.
+
+SOLO v0.55.0 mirror/relay gotcha (important for JSON-RPC Relay stability):
+
+- Mirror’s `mirror-ingress-controller` is `haproxy-ingress` and only watches ingresses with
+  `spec.ingressClassName=mirror-ingress-class`.
+- The mirror chart currently creates `mirror-1-*` ingress resources without an ingress class, so
+  `mirror-ingress-controller` returns `404` for `/api/v1/*`.
+- The relay (`relay-1`) depends on mirror endpoints like `/api/v1/accounts/...` and `/api/v1/network/fees`;
+  when those return `404`, the relay crashes (observed as `Operator account '0.0.2' has no balance`).
+
+Fix (patch ingresses inside the SOLO namespace, then let relay restart):
+
+```bash
+ns=<solo-namespace>
+
+# Attach ingresses to the mirror ingress controller’s class.
+for ing in mirror-1-rest mirror-1-restjava mirror-1-web3 mirror-1-grpc mirror-1-monitor; do
+  kubectl patch ingress -n "$ns" "$ing" --type='json' \
+    -p='[{"op":"add","path":"/spec/ingressClassName","value":"mirror-ingress-class"}]'
+done
+
+# Ensure mirror REST routes all /api/v1/* paths (Prefix match).
+kubectl patch ingress -n "$ns" mirror-1-rest --type='json' \
+  -p='[{"op":"replace","path":"/spec/rules/0/http/paths/0/pathType","value":"Prefix"}]'
+
+# Ensure the relay’s fee lookups work (remove trailing "$" regex anchors).
+kubectl patch ingress -n "$ns" mirror-1-restjava --type='json' -p='[
+  {"op":"replace","path":"/spec/rules/0/http/paths/3/path","value":"/api/v1/network/fees"},
+  {"op":"replace","path":"/spec/rules/0/http/paths/3/pathType","value":"Prefix"},
+  {"op":"replace","path":"/spec/rules/0/http/paths/4/path","value":"/api/v1/network/stake"},
+  {"op":"replace","path":"/spec/rules/0/http/paths/4/pathType","value":"Prefix"}
+]'
+
+# Quick in-cluster verification:
+kubectl run -n "$ns" odin-curl --rm -i --restart=Never --image=curlimages/curl -- \
+  sh -lc 'curl -s -o /dev/null -w "%{http_code}\n" http://mirror-ingress-controller/api/v1/accounts/0.0.2;
+          curl -s -o /dev/null -w "%{http_code}\n" http://mirror-ingress-controller/api/v1/network/fees'
+```
 
 SOLO flake forensics (capture before reset):
 
@@ -205,16 +256,17 @@ If adding HAPI Ethereum transaction helpers, place them in `scripts/` and keep t
 
 ## 8) Minimal CLPR development strategy for this repo
 
-Start with one minimal, testable flow (`IT0-ECHO`) and do not skip ahead.
+Maintain a single current iteration in-tree (today: `IT1-CONN-AUTH` behavior) and evolve it in place:
 
-Suggested first increment:
-
-- Middleware contract that accepts a send request and routes through a mock queue.
-- Mock queue that delivers request to destination app and routes response back through queue.
-- Source and destination apps with explicit known addresses (simulated remote ledgers).
-- Single test proving full request/response round-trip and correct address-based routing.
+- Evolve in place; do not create `IT0`, `IT1`, `IT2`, ... file sprawl.
+- Keep one end-to-end flow passing (Hardhat + Foundry) at all times.
 
 This keeps behavior aligned with the CLPR iteration plan while minimizing moving parts.
+
+Naming:
+
+- Use durable, production-intended filenames and contract names (no `IT0`/`IT1` suffixes).
+- Track iteration progress via the spec iteration plan, test names, and git history rather than renaming files each time.
 
 ## 9) Definition of done for each CLPR increment
 
@@ -225,3 +277,51 @@ This keeps behavior aligned with the CLPR iteration plan while minimizing moving
 - Smoke deploy succeeds on local SOLO via relay path.
 - At least one invocation path is proven end-to-end for the increment under development.
 - Changes are documented briefly in PR notes with exact files touched.
+
+## 10) ODIN (OODA-Driven INtegration) IT1 on SOLO
+
+ODIN is a SOLO-backed “smoke/integration” harness for CLPR that runs multiple autonomous “agents” and evaluates pass/fail
+from structured markers in logs plus RPC/mirror sensing.
+
+Key pieces:
+
+- Orchestrator (this repo): `scripts/odin/run-clpr-it1-odin.js`
+  - Discovers a running SOLO namespace (or use `--namespace <ns>`).
+  - Discovers a funded ECDSA operator key from `account-key-*` secrets.
+  - Deploys CLPR contracts via `scripts/odin/deploy-clpr-it1.js`.
+  - Note: `MockClprQueue` stores responses and requires an explicit delivery step; `scripts/odin/agent-send.js` calls
+    `deliverAllMessageResponses` after submitting the application send transaction.
+  - Builds the Java runner JAR from the sibling repo and copies it into `tools/odin/lib/odin-it1-runner.jar`.
+  - Runs the JAR and fails non-zero if the run result is not `passed=true`.
+- Java runner (sibling repo): `../hiero-autonomous-agent-platform`
+  - Runner source: `../hiero-autonomous-agent-platform/src/main/java/org/hiero/odin/OdinRunner.java`
+  - Build script: `../hiero-autonomous-agent-platform/scripts/build-jar.sh`
+  - Output JAR: `../hiero-autonomous-agent-platform/build/libs/odin-it1-runner.jar` (or legacy `odin-it0-runner.jar`)
+- Test pack config (this repo):
+  - `test/odin/clpr/it1/endpoints.properties` (RPC + mirror URLs)
+  - `test/odin/clpr/it1/test-plan.properties` (agents + checks + command templates)
+  - Runtime outputs:
+    - `test/odin/clpr/it1/runtime/deployment.properties`
+    - `test/odin/clpr/it1/runtime/odin-result.json`
+    - `test/odin/clpr/it1/runtime/odin-runner.log`
+
+Run it:
+
+```bash
+node scripts/odin/run-clpr-it1-odin.js --namespace <solo-namespace>
+```
+
+Optional (dangerous) reset:
+
+```bash
+node scripts/odin/run-clpr-it1-odin.js --namespace <solo-namespace> --fresh
+```
+
+Reliability knobs (adjust as needed in `test/odin/clpr/it1/test-plan.properties`):
+
+- `agent.action.retries` and `agent.action.baseDelayMs`: retry “action” commands (SOLO/relay can intermittently revert).
+- `run.failOnRetries`: when `true`, any required retry makes the run fail (useful to detect SOLO flakiness).
+- `checks.*.maxWaitMs` and `checks.*.pollIntervalMs`: polling windows for:
+  - RPC receipts (`checks.rpcReceipt.*`)
+  - mirror contract results (`checks.mirrorResult.*`)
+  - on-chain source-app state via relay `eth_call` (`checks.sourceState.*`)

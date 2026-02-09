@@ -1,0 +1,27 @@
+[
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "data",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct ClprTypes.ClprApplicationResponse",
+        "name": "response",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint64",
+        "name": "appMsgId",
+        "type": "uint64"
+      }
+    ],
+    "name": "handleResponse",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

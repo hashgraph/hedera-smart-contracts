@@ -58,3 +58,7 @@ test/state-registry/states.json
 test/state-registry/ercStates.json
 
 coverage.json
+
+# ODIN (OODA-Driven INtegration) runtime artifacts
+test/odin/**/runtime/
+tools/odin/lib/*.jar
