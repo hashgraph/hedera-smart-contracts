@@ -1,0 +1,6 @@
+node_modules
+.idea
+.env
+coverage
+/logs/blocks-with-transactions.json
+.DS_Store
