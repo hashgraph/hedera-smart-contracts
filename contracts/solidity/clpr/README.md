@@ -47,6 +47,7 @@ This iteration still excludes proof concerns and uses an in-memory mock queue in
   - Current middleware implementation.
 - `mocks/`
   - In-memory messaging and connector mocks for deterministic local tests.
+  - Includes `MockClprRelayedQueue` for two-network testing with an off-chain relayer.
 - `apps/`
   - Reference source and echo applications used for validation.
 
@@ -56,3 +57,10 @@ This iteration still excludes proof concerns and uses an in-memory mock queue in
   In this repo, CLPR is still a prototype and interfaces may evolve as the spec is refined.
 - Connector registration/pairing and economic enforcement are modeled here with simplified mechanics.
   Later iterations should replace these mechanics with protocol-level operations and add proofs.
+
+## Two-network testing
+
+Before the real messaging layer is integrated, `MockClprRelayedQueue` can be used to run CLPR flows across
+two separate Solo deployments with an off-chain relayer loop.
+
+See: `test/network/clpr/README.md`.

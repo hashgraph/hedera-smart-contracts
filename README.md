@@ -84,6 +84,16 @@ Hardhat (in-process ephemeral chain):
 npx hardhat test test/solidity/clpr/clprMiddleware.js --network hardhat
 ```
 
+Two-network (bridged) test (requires two running Solo deployments with two reachable JSON-RPC endpoints):
+
+```bash
+export CLPR_SRC_RPC_URL=http://127.0.0.1:7546
+export CLPR_DST_RPC_URL=http://127.0.0.1:7547
+export CLPR_PRIVATE_KEY=<0x...>
+
+npx hardhat test test/network/clpr/clprBridgeRelayedQueue.js --network hardhat
+```
+
 Foundry:
 
 ```bash

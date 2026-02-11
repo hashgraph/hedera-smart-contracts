@@ -68,6 +68,10 @@ CLPR test commands:
 # Hardhat (in-process ephemeral chain). Note: repo default network is `local` and requires a node.
 npx hardhat test test/solidity/clpr/clprMiddleware.js --network hardhat
 
+# Hardhat (two-network bridged test). Requires two running Solo deployments with two reachable JSON-RPC endpoints.
+# See `test/network/clpr/README.md` for prerequisites.
+npx hardhat test test/network/clpr/clprBridgeRelayedQueue.js --network hardhat
+
 # Foundry
 forge test --match-path test/foundry/ClprMiddleware.t.sol
 ```
