@@ -16,12 +16,29 @@ on:
         description: 'The maximum number of contracts to scan per operation, with a default value of 100. Accepts only numeric values between 1 and 100.'
         required: false
 
+  schedule:
+    - cron: '0 14 * * *' # Daily at 14:00 UTC
+
 jobs:
   index-and-update:
-    name: Index ERC Contracts on Hedera ${{ github.event.inputs.HEDERA_NETWORK }} and Update Registry
+    name: Index ERC Contracts on Hedera ${{ github.event_name == 'schedule' && matrix.network || github.event.inputs.HEDERA_NETWORK }} and Update Registry
     runs-on: smart-contracts-linux-large
+
+    strategy:
+      matrix:
+        include:
+          - network: previewnet
+            mirror: https://previewnet.mirrornode.hedera.com
+          - network: testnet
+            mirror: https://testnet.mirrornode.hedera.com
+          - network: mainnet
+            mirror: https://mainnet.mirrornode.hedera.com
+
     env:
       INDEXER_PATH: ./tools/erc-repository-indexer/erc-contract-indexer
+
+      HEDERA_NETWORK: ${{ github.event_name == 'schedule' && matrix.network || github.event.inputs.HEDERA_NETWORK }}
+      MIRROR_NODE_URL: ${{ github.event_name == 'schedule' && matrix.mirror || github.event.inputs.MIRROR_NODE_URL }}
 
     steps:
       - name: Harden Runner
@@ -41,8 +58,8 @@ jobs:
 
       - name: Set Environment Variables
         run: |
-          echo "HEDERA_NETWORK=${{ github.event.inputs.HEDERA_NETWORK }}" >> ${{ env.INDEXER_PATH }}/.env
-          echo "MIRROR_NODE_URL=${{ github.event.inputs.MIRROR_NODE_URL }}" >> ${{ env.INDEXER_PATH }}/.env
+          echo "HEDERA_NETWORK=${HEDERA_NETWORK}" >> ${{ env.INDEXER_PATH }}/.env
+          echo "MIRROR_NODE_URL=${MIRROR_NODE_URL}" >> ${{ env.INDEXER_PATH }}/.env
           echo "STARTING_POINT=${{ github.event.inputs.STARTING_POINT }}" >> ${{ env.INDEXER_PATH }}/.env
           echo "SCAN_CONTRACT_LIMIT=${{ github.event.inputs.SCAN_CONTRACT_LIMIT }}" >> ${{ env.INDEXER_PATH }}/.env
 
@@ -54,8 +71,8 @@ jobs:
       - name: Backup Existing Registry
         run: |
           mkdir -p ${{ env.INDEXER_PATH }}/backup
-          if [ -d "${{ env.INDEXER_PATH }}/erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}" ] && [ "$(ls -A ${{ env.INDEXER_PATH }}/erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/*.json 2>/dev/null)" ]; then
-            cp ${{ env.INDEXER_PATH }}/erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/*.json ${{ env.INDEXER_PATH }}/backup/
+          if [ -d "${{ env.INDEXER_PATH }}/erc-registry/${HEDERA_NETWORK}" ] && [ "$(ls -A ${{ env.INDEXER_PATH }}/erc-registry/${HEDERA_NETWORK}/*.json 2>/dev/null)" ]; then
+            cp ${{ env.INDEXER_PATH }}/erc-registry/${HEDERA_NETWORK}/*.json ${{ env.INDEXER_PATH }}/backup/
             echo "Backup successful."
           else
             echo "No JSON files found to back up."
@@ -101,23 +118,23 @@ jobs:
           cd ${{ env.INDEXER_PATH }}
           # Determine the new amount of ERC-20 records
           if [ -f backup/erc-20.json ]; then
-            NEW_ERC20_RECORDS=$(jq -s '.[1] - .[0] | length' backup/erc-20.json erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/erc-20.json)
+            NEW_ERC20_RECORDS=$(jq -s '.[1] - .[0] | length' backup/erc-20.json erc-registry/${HEDERA_NETWORK}/erc-20.json)
           else
-            NEW_ERC20_RECORDS=$(jq '. | length' erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/erc-20.json)
+            NEW_ERC20_RECORDS=$(jq '. | length' erc-registry/${HEDERA_NETWORK}/erc-20.json)
           fi
 
           # Determine the new amount of of ERC-721 records
           if [ -f backup/erc-721.json ]; then
-            NEW_ERC721_RECORDS=$(jq -s '.[1] - .[0] | length' backup/erc-721.json erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/erc-721.json)
+            NEW_ERC721_RECORDS=$(jq -s '.[1] - .[0] | length' backup/erc-721.json erc-registry/${HEDERA_NETWORK}/erc-721.json)
           else
-            NEW_ERC721_RECORDS=$(jq '. | length' erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/erc-721.json)
+            NEW_ERC721_RECORDS=$(jq '. | length' erc-registry/${HEDERA_NETWORK}/erc-721.json)
           fi
 
           # Determine the new amount of ERC-1155 records
           if [ -f backup/erc-1155.json ]; then
-            NEW_ERC1155_RECORDS=$(jq -s '.[1] - .[0] | length' backup/erc-1155.json erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/erc-1155.json)
+            NEW_ERC1155_RECORDS=$(jq -s '.[1] - .[0] | length' backup/erc-1155.json erc-registry/${HEDERA_NETWORK}/erc-1155.json)
           else
-            NEW_ERC1155_RECORDS=$(jq '. | length' erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/erc-1155.json)
+            NEW_ERC1155_RECORDS=$(jq '. | length' erc-registry/${HEDERA_NETWORK}/erc-1155.json)
           fi
 
           # Export the results to GitHub environment variables
@@ -152,20 +169,20 @@ jobs:
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
           branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
-          commit-message: 'chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
+          commit-message: "chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${HEDERA_NETWORK}"
           committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
           author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           delete-branch: true
           signoff: true
-          title: 'chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
+          title: "chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${HEDERA_NETWORK}"
           body: >
             **Description**:
 
             This PR updates the ERC Registry to include the most recent ERC-20, ERC-721, and ERC-1155 tokens.
 
             **Registry Update Summary**:
-              - **Hedera Network**: ${{ github.event.inputs.HEDERA_NETWORK }}
+              - **Hedera Network**: ${HEDERA_NETWORK}
               - **New ERC-20 Records Added**: ${{ env.NEW_ERC20_RECORDS }}
               - **New ERC-721 Records Added**: ${{ env.NEW_ERC721_RECORDS }}
               - **New ERC-1155 Records Added**: ${{ env.NEW_ERC1155_RECORDS }}
@@ -176,8 +193,8 @@ jobs:
 
       - name: Backup erc-registry to Temporary Directory
         run: |
-          mkdir -p /tmp/erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}
-          cp -r ${{ env.INDEXER_PATH }}/erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/* /tmp/erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}
+          mkdir -p /tmp/erc-registry/${HEDERA_NETWORK}
+          cp -r ${{ env.INDEXER_PATH }}/erc-registry/${HEDERA_NETWORK}/* /tmp/erc-registry/${HEDERA_NETWORK}
 
       - name: Checkout hedera-mirror-node-explorer
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -198,27 +215,27 @@ jobs:
 
       - name: Restore erc-registry from Temporary Directory
         run: |
-          mkdir -p ./public/${{ github.event.inputs.HEDERA_NETWORK }}
-          cp -r /tmp/erc-registry/${{ github.event.inputs.HEDERA_NETWORK }}/* ./public/${{ github.event.inputs.HEDERA_NETWORK }}
+          mkdir -p ./public/_frontend/${HEDERA_NETWORK}
+          cp -r /tmp/erc-registry/${HEDERA_NETWORK}/* ./public/_frontend/${HEDERA_NETWORK}
 
       - name: Create Pull Request Target hedera-mirror-node-explorer
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
           branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
-          commit-message: 'chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
+          commit-message: "chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${HEDERA_NETWORK}"
           committer: ${{ steps.gpg_importer_mne.outputs.name }} <${{ steps.gpg_importer_mne.outputs.email }}>
           author: ${{ steps.gpg_importer_mne.outputs.name }} <${{ steps.gpg_importer_mne.outputs.email }}>
           token: ${{ secrets.GH_ACCESS_TOKEN_MIRROR_NODE_EXPLORER }}
           delete-branch: true
           signoff: true
-          title: 'chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{github.event.inputs.HEDERA_NETWORK}}'
+          title: "chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${HEDERA_NETWORK}"
           body: >
             **Description**:
 
             This PR updates the ERC Registry to include the most recent ERC-20, ERC-721, and ERC-1155 tokens.
 
             **Registry Update Summary**:
-              - **Hedera Network**: ${{ github.event.inputs.HEDERA_NETWORK }}
+              - **Hedera Network**: ${HEDERA_NETWORK}
               - **New ERC-20 Records Added**: ${{ env.NEW_ERC20_RECORDS }}
               - **New ERC-721 Records Added**: ${{ env.NEW_ERC721_RECORDS }}
               - **New ERC-1155 Records Added**: ${{ env.NEW_ERC1155_RECORDS }}
