@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       HEDERA_NETWORK:
-        description: 'Target Hedera Network (e.g., previewnet, testnet, mainnet).'
+        description: 'Target Hedera Network (e.g., testnet, mainnet).'
         required: true
       MIRROR_NODE_URL:
         description: 'Mirror Node Base URL (e.g., https://testnet.mirrornode.hedera.com).'
