@@ -27,8 +27,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - network: previewnet
-            mirror: https://previewnet.mirrornode.hedera.com
           - network: testnet
             mirror: https://testnet.mirrornode.hedera.com
           - network: mainnet
