@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       HEDERA_NETWORK:
-        description: 'Target Hedera Network (e.g., previewnet, testnet, mainnet).'
+        description: 'Target Hedera Network (e.g., testnet, mainnet).'
         required: true
       MIRROR_NODE_URL:
         description: 'Mirror Node Base URL (e.g., https://testnet.mirrornode.hedera.com).'
@@ -21,24 +21,27 @@ on:
 
 jobs:
   index-and-update:
-    name: Index ERC Contracts on Hedera ${{ github.event_name == 'schedule' && matrix.network || github.event.inputs.HEDERA_NETWORK }} and Update Registry
+    name: Index ERC Contracts on Hedera ${{ matrix.network }} and Update Registry
     runs-on: smart-contracts-linux-large
 
     strategy:
-      matrix:
-        include:
-          - network: previewnet
-            mirror: https://previewnet.mirrornode.hedera.com
-          - network: testnet
-            mirror: https://testnet.mirrornode.hedera.com
-          - network: mainnet
-            mirror: https://mainnet.mirrornode.hedera.com
+      fail-fast: false
+      matrix: ${{ fromJSON(
+        github.event_name == 'schedule'
+          && '{"include":[
+          {"network":"testnet","mirror":"https://testnet.mirrornode.hedera.com"},
+          {"network":"mainnet","mirror":"https://mainnet.mirrornode.hedera.com"}
+          ]}'
+        ||
+          format('{"include":[{{"network":"{0}","mirror":"{1}"}}]}',
+          github.event.inputs.HEDERA_NETWORK,
+          github.event.inputs.MIRROR_NODE_URL)) }}
 
     env:
       INDEXER_PATH: ./tools/erc-repository-indexer/erc-contract-indexer
 
-      HEDERA_NETWORK: ${{ github.event_name == 'schedule' && matrix.network || github.event.inputs.HEDERA_NETWORK }}
-      MIRROR_NODE_URL: ${{ github.event_name == 'schedule' && matrix.mirror || github.event.inputs.MIRROR_NODE_URL }}
+      HEDERA_NETWORK: ${{ matrix.network }}
+      MIRROR_NODE_URL: ${{ matrix.mirror }}
 
     steps:
       - name: Harden Runner
