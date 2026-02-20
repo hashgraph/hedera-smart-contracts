@@ -33,7 +33,7 @@ jobs:
           {"network":"mainnet","mirror":"https://mainnet.mirrornode.hedera.com"}
           ]}'
         ||
-          format('{"include":[{{"network":"{0}","mirror":"{1}"}}]}',
+          format('{{"include":[{{"network":"{0}","mirror":"{1}"}}]}}',
           github.event.inputs.HEDERA_NETWORK,
           github.event.inputs.MIRROR_NODE_URL)) }}
 
