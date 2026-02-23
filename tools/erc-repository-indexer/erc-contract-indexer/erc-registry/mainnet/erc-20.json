@@ -6390,5 +6390,4181 @@
     "symbol": "MTK",
     "totalSupply": 0,
     "decimals": 18
+  },
+  {
+    "contractId": "0.0.9225185",
+    "address": "0x29086141ecdc310058fc23273f8ef7881d20c2f7",
+    "name": "VotesToken",
+    "symbol": "VTK",
+    "totalSupply": 1e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9228314",
+    "address": "0xfe965815975eeda37da521f964dde9e1d016b6c5",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 3872983346207,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9229148",
+    "address": "0x023ec3207d8e7fd8b1f85d99888ddb4568f825e4",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 282842712474,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9233285",
+    "address": "0x2177cf58e4ff44527078bf14d32cd42b76e66aa8",
+    "name": "MyToken",
+    "symbol": "MTK",
+    "totalSupply": 1e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9252909",
+    "address": "0x8bd7093f075afc93d358147063feddb51944fcec",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 773142723632333,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9252911",
+    "address": "0x79a18b7dd49f810bdc8aeb8c76c8917f357aad60",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 2010699633472893,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9254035",
+    "address": "0x50c8cbf41bc020f69fc12079b848bad36fa726c1",
+    "name": "MyToken",
+    "symbol": "MTK",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9254043",
+    "address": "0xe723b5e0bc12a7e2aa12b8e71c9839beabd4d806",
+    "name": "MyToken",
+    "symbol": "MTK",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9264252",
+    "address": "0xe294df6ed5654d146a368ea3e14aada715f2e22c",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 1216141439,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9271310",
+    "address": "0x6a8adcab6f0a51923d05fa7343c597c8d1f11f6b",
+    "name": "Ledgity Token",
+    "symbol": "LDY",
+    "totalSupply": 7.5e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9271340",
+    "address": "0x8635ca41f9218ed322c8a3b1270900c08cd605a3",
+    "name": "Ledgity Token",
+    "symbol": "LDY",
+    "totalSupply": 7.5e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9271349",
+    "address": "0x4a511857c26fca7be931e650470c2557a782d097",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9271355",
+    "address": "0xd3dcd6bac90de2b7d9fc8a49ae4e23080003d12c",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9271357",
+    "address": "0xdb762c18a7c8a3ae4b4eaab82767b3fb88fc35f8",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9277697",
+    "address": "0x9588f69388e905dc55cf36f70c769da96aee069f",
+    "name": "Ledgity Token",
+    "symbol": "LDY",
+    "totalSupply": 7.5e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9277706",
+    "address": "0x13e64a9a7d4f5975eaf301624e5a8bad692cd93b",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9277708",
+    "address": "0xdaa43f127046c25cd594955248ac0488e0e61ec0",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9277714",
+    "address": "0xb90498cea9b1c9049b1667c3ef6ecfe33e878fbb",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9277716",
+    "address": "0x39cd9179d278a42d447947e6040c0c88fed614ad",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9279963",
+    "address": "0xb3bde066afde18747bc347df90042e6afd32be9b",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9279983",
+    "address": "0x53990bdec017085153eb807236e744ca63c21ff4",
+    "name": "WurenTek Pool",
+    "symbol": "WUR",
+    "totalSupply": 3404759474785767,
+    "decimals": 10
+  },
+  {
+    "contractId": "0.0.9281237",
+    "address": "0xe8937ce3c9a9b9482231d999d2603cf527d233b1",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9281245",
+    "address": "0x27ead7ba11451cd63818ea3372508f11cd44dbde",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9281247",
+    "address": "0xb7dc2048229cfea2690b245e02f9d3d027edbaae",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9298043",
+    "address": "0x90d7222c24d08b3bd10955f1bc9aff73e177b872",
+    "name": "Gold Standard",
+    "symbol": "AuBAR",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9298091",
+    "address": "0xfe5f97260aeb28cb713d447c62fea681b6e1c194",
+    "name": "Gold Standard",
+    "symbol": "AuBAR",
+    "totalSupply": 1e+26,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9298158",
+    "address": "0x41eab2b8c1591d3f7d14022d13c55436de321d54",
+    "name": "Gold Standard",
+    "symbol": "$AuBARx",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9317383",
+    "address": "0x4af056b045be468fec5bda16663e238a62e4c63d",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9317386",
+    "address": "0x2313e11d1d28324bacf46b5fecb8f8ffdc180171",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9317410",
+    "address": "0x714ace44e3b29c4a3e8fd90a3656f708df5222f5",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9317412",
+    "address": "0xac45727d0b167809173a62a836fcb7d6c8ae0cd4",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9317434",
+    "address": "0x83b642d45bc7779ac94baa928d0f031509dca5a2",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9317438",
+    "address": "0xc06261ab2b5f615b6361a8e6c03fd69e95c45c24",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9317453",
+    "address": "0x9f2d13fffca6e5c1dc31e98893203d7eb3525d35",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9317455",
+    "address": "0xa02f38d589177f56b86edce44018079f0d9d61c3",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9317525",
+    "address": "0x57d67c0ca8736988c028dc8d5aafe7f3e78bfb05",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9317526",
+    "address": "0xd2a590c19516bffbc3cf0494cf75ac15db38435b",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9317530",
+    "address": "0x25f17a1cf6f00a71ec66a20525651c7f323f6707",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9317532",
+    "address": "0x55ccd73994d944333bdd5913ee98f9ff8b8c3ecf",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9332680",
+    "address": "0x66275eb6c4fe8e153746e1fd4310365032646360",
+    "name": "Greenbay",
+    "symbol": "GTQ",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9338402",
+    "address": "0xf2a3555584c6e20b288094b137f670472ec1bb9c",
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9340451",
+    "address": "0x6378f35e1c8fbec277f14a49376936ec81f1afd0",
+    "name": "MyMockAssetOFT",
+    "symbol": "MockAsset",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9340466",
+    "address": "0x0a71d2204ca167027c8eef88eb385114b8b13378",
+    "name": "MyMockShareOFT",
+    "symbol": "MockShare",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9340482",
+    "address": "0x4363a99f50540b071a95bb17ad811de8fb7044de",
+    "name": "MyMockShareOFT",
+    "symbol": "MockShare",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9340483",
+    "address": "0xc919ef79c11f86f4aef95e64e7a7709b8392ebe5",
+    "name": "MyMockAssetOFT",
+    "symbol": "MockAsset",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9341062",
+    "address": "0x12286f683d2c6e2b7c33c17a07c76eb452b8216f",
+    "name": "MyMockShareOFT",
+    "symbol": "MockShare",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9341063",
+    "address": "0xa509024fdf63959cc4126fb6e6e59929315970c1",
+    "name": "MyMockAssetOFT",
+    "symbol": "MockAsset",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9341150",
+    "address": "0x11327b2c8b8e29be71e3790f249de9264133bc75",
+    "name": "MyMockShareOFT",
+    "symbol": "MockShare",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9341151",
+    "address": "0x7a6be5be1f6bd5bfccf259d29776bef665eaab3a",
+    "name": "MyMockAssetOFT",
+    "symbol": "MockAsset",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9341156",
+    "address": "0xdf162046c53e06b99670554f5458de4baa36b6db",
+    "name": "USDT0",
+    "symbol": "usdt0",
+    "totalSupply": 1e+21,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9371019",
+    "address": "0x3265161b38846b97e642328f55ab077dd2378e02",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9371032",
+    "address": "0xe7dceef5db40678fe90ed8ae59a39d087a8a43a9",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9371033",
+    "address": "0x092066a2930cf6bdc57b29c5b25911fc82548e40",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9371034",
+    "address": "0x4fb38404935bd1aabd72d864d819b04920d5e9d4",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9372585",
+    "address": "0xb9b16f3550f29b434a982cd99e3f76908ab02669",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9372586",
+    "address": "0x81af4bfac602996510b57e4e02831c4456e2af27",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9372587",
+    "address": "0xb9dadcb396c5110548343b5240e098d334985ff9",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9383873",
+    "address": "0xafb19d78bd4cd43239f9a5602251b0a9d28576be",
+    "name": "Beefy HBARX Leveraged Bonzo",
+    "symbol": "bvHBARX-LEV-BONZO",
+    "totalSupply": 5000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9384188",
+    "address": "0x0a1deffc3fe9f22f296b56106b843bb32735d55c",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9384190",
+    "address": "0xe4e5c040da6106947a234f29c69b949717a8cbd4",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9384193",
+    "address": "0xd1723f8cbbefdc261b04c377485880a5c7177927",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9389875",
+    "address": "0x7835c550ceab0854d34279fe34fa97aea0e03a7d",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9389878",
+    "address": "0xc2f7f45d0fca032a62b4deae9b8e4fcabe514592",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9389881",
+    "address": "0x225c0828ad4f689ab5026271f860776d5d5cbac1",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9405807",
+    "address": "0xa90859c257eac128599611a5cc2e6f0096d4dc7c",
+    "name": "xGold",
+    "symbol": "xGold",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9405930",
+    "address": "0x8ce1b5a2b8a8f45e5c32dc5a5c11a6a65851aa44",
+    "name": "xGold",
+    "symbol": "xGold",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9451134",
+    "address": "0xdaac5ad45c23c5a271c9faef1f45534041fb8ef1",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9451135",
+    "address": "0x873d7b9ff99f007a28a42d3105e5707fb76acf3e",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9451136",
+    "address": "0x7cf215d9120587259915a9d65b2a318f5649235a",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9462861",
+    "address": "0x102d758f688a4c1c5a80b116bd945d4455460282",
+    "name": "WETH",
+    "symbol": "WETH",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9470869",
+    "address": "0xca367694cdac8f152e33683bb36cc9d6a73f1ef2",
+    "name": "WETH",
+    "symbol": "WETH",
+    "totalSupply": 1.064124334e+21,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9474158",
+    "address": "0x847e25059a648db98fa5d53c38d96bd071c51e15",
+    "name": "Yieldera Vault Hbar",
+    "symbol": "YVHBAR",
+    "totalSupply": 3415619884,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9497247",
+    "address": "0xea5437ff7240a1ff7069e10e44f0f28b54f91657",
+    "name": "xGold",
+    "symbol": "xGold",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9497301",
+    "address": "0x3fa41d2b29c69f8da6e2d0bfc4f83c62d6582750",
+    "name": "xGold",
+    "symbol": "xGold",
+    "totalSupply": 565000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9503032",
+    "address": "0x73d15c38bbe3a58df22112da4e5e8266d60ebbad",
+    "name": "Ethereum",
+    "symbol": "ETH",
+    "totalSupply": 1e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9532184",
+    "address": "0x7566468aabac2f6981c134b1e5e7e2219ebe1bbf",
+    "name": "Test Token",
+    "symbol": "TEST",
+    "totalSupply": 1e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9569721",
+    "address": "0xdc0f663f0e30b59396e712ce3ecc686ee6620760",
+    "name": "MyToken",
+    "symbol": "MTK",
+    "totalSupply": 1e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9571788",
+    "address": "0x97fdd80108e0afe75d2078a8582c3fcec2c8c7a5",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9571826",
+    "address": "0x9e5c6659aa28fea0af8d2eb77ed86b148f1ff464",
+    "name": "Test Index",
+    "symbol": "TEST",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9571837",
+    "address": "0x11c973492a94b75ad3e2a0e0b907df1f9425d0bf",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9571843",
+    "address": "0x1c81ddcb028f08c5c9ef9168167bc0b86e8b37d7",
+    "name": "Blue Chip Crypto Index",
+    "symbol": "BCCI",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9571994",
+    "address": "0x100ca723462050bc53bad84fdd7bc018e6218c6c",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9572029",
+    "address": "0xc6d8ff5353ad5f83a5273ccc94d43dac349ca982",
+    "name": "Blue Chip Crypto Index",
+    "symbol": "BCCI",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9572038",
+    "address": "0x190c288c841121329c47220c22d8d7f9924ef245",
+    "name": "Hedera DeFi Index",
+    "symbol": "HDI",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9572121",
+    "address": "0xfb6e0f113c4df52012113ae3f250a5fb2261fad3",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9572175",
+    "address": "0x2e2ddfa97c3689e94b305b26d2a66f69b35b250c",
+    "name": "Blue Chip Crypto Index",
+    "symbol": "BCCI",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9572180",
+    "address": "0xa5a507e7b2f1b36818513d4eb74a5b17dc236326",
+    "name": "Hedera DeFi Index",
+    "symbol": "HDI",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9572397",
+    "address": "0xd10b4afdfcdc1b3d7bfc8c815ea6a9da790fb13b",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9572441",
+    "address": "0x43aa8e381201f9c7692d8a26331e1a3f885a5542",
+    "name": "Blue Chip Crypto Index",
+    "symbol": "BCCI",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9572449",
+    "address": "0x61989576a31b8e39eb4b6709eaf6ead70d231586",
+    "name": "Hedera DeFi Index",
+    "symbol": "HDI",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9572788",
+    "address": "0xf09044eac9c82d1fdcd77f45a7b40a067a96571a",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9572806",
+    "address": "0x970ccd31c45552b25ed79ff27146cdb2e8b7e986",
+    "name": "Blue Chip Crypto Index",
+    "symbol": "BCCI",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9572810",
+    "address": "0x019d0b1cc26045248bda6dc6b7cb7a7133d71877",
+    "name": "Hedera DeFi Index",
+    "symbol": "HDI",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9572870",
+    "address": "0xe33334a85ca382ff3eb51cfb1220687d6ab74cee",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9572876",
+    "address": "0x634b7888fe42619711460e1a07cc710167990cb3",
+    "name": "Blue Chip Crypto Index",
+    "symbol": "BCCI",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9572878",
+    "address": "0x36e8761fd442f1a26321d058b5d6add682f294df",
+    "name": "Hedera DeFi Index",
+    "symbol": "HDI",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9572916",
+    "address": "0x75d8c54ed9905d8e144a0a85d27bb01c1b03bfb5",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9572920",
+    "address": "0x999c9528ab7dd94d1523847f72dfddea71f2950a",
+    "name": "Blue Chip Crypto Index",
+    "symbol": "BCCI",
+    "totalSupply": 80645423281793740000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9572923",
+    "address": "0x521e1b9ebdb3429793e203f308411e49fd7fe145",
+    "name": "Hedera DeFi Index",
+    "symbol": "HDI",
+    "totalSupply": 1985000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9573088",
+    "address": "0x6bb22f32acb4a54cb9f3de3ac1cc8ed0f4a7ecd2",
+    "name": "test index",
+    "symbol": "TSTI",
+    "totalSupply": 995000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9573352",
+    "address": "0xe77442f6a9eefca38379a2de3fc53955032e2bcb",
+    "name": "Test Token 2",
+    "symbol": "TTT2",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9573429",
+    "address": "0x3dea404ea9a391909a1e7825f5e81997ab2e4866",
+    "name": "Levan's Index",
+    "symbol": "TOBY",
+    "totalSupply": 1990000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9692921",
+    "address": "0x21105988382b3b2c6141020876011ed3a31d02a1",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9692923",
+    "address": "0xe89dc427855a7bf372bb53c3ab72cce235e0ca66",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9692924",
+    "address": "0x996e3351258a1020f419a39d2478b05b8d647f7d",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9707461",
+    "address": "0x4fa116f8864ee7d7cee1f5fbb58d41b70d75a529",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9707528",
+    "address": "0x1b90b8f8ab3059cf40924338d5292ffbaed79089",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 17425946037239,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9707531",
+    "address": "0xebafabbd6610304d7ae89351c5c37b8cf40c76eb",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 107224432800296,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9712030",
+    "address": "0x1c7c08e6f6f0bfe1a540ba2affb5543a9a36af9e",
+    "name": "ME Token",
+    "symbol": "ME",
+    "totalSupply": 1e+26,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9712058",
+    "address": "0x7724759d83a42332d39c9a134dcd8a803ff7e983",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9712096",
+    "address": "0x03011137d47e86390e9f81566f25d6e0fdb0b6c7",
+    "name": "RewardToken5",
+    "symbol": "RWD",
+    "totalSupply": 2e+28,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9715219",
+    "address": "0xde9d783ecb271ba50b9ed33d3db290aa3c51b5b0",
+    "name": "hedemain",
+    "symbol": "HEDEMAIN",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9715246",
+    "address": "0xc579f423713678ee7c8c412ae107c7f94e0b6d20",
+    "name": "hedevava",
+    "symbol": "HEDEAVA",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9715846",
+    "address": "0x56d2937742d3aa0d04ed1236eb1a822f01389289",
+    "name": "RewardToken5",
+    "symbol": "RWD",
+    "totalSupply": 2e+28,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9715880",
+    "address": "0x2834b9116f88956422ec4a5cb472ed4f3f9efcf4",
+    "name": "hedeayo",
+    "symbol": "HEDEAYO",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9716061",
+    "address": "0x4e08589925d79482aca3940a59e9dab6c88a6775",
+    "name": "hederaham",
+    "symbol": "HEDEHAM",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9716089",
+    "address": "0x67bd05b48d9553b8e2ade496d46ebc06690196cc",
+    "name": "hedepop",
+    "symbol": "HEDEPOP",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9717460",
+    "address": "0xbd26b16b9c5ed004b8a39cb7d2fd7f9e4909eb42",
+    "name": "hederacrow",
+    "symbol": "HEDECROW",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9717527",
+    "address": "0x8acc17c5429849ce8e10ed0a11e520187530c369",
+    "name": "hederafinal",
+    "symbol": "HEDEFINAL",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9728235",
+    "address": "0x306c391409f71b8ddc60f94bac07747a049da1a3",
+    "name": "Ethereum",
+    "symbol": "ETH",
+    "totalSupply": 1e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9728237",
+    "address": "0xa82ce2b0afdfdc4d54122064042bd3d364d225ea",
+    "name": "USDT",
+    "symbol": "USDT",
+    "totalSupply": 1e+25,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.9728238",
+    "address": "0xe38b5f657ecc99eb85bc87e02974884d37b99559",
+    "name": "USDC",
+    "symbol": "USDC",
+    "totalSupply": 1e+25,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.9728239",
+    "address": "0x2972f83eadd08577c0dffa213dc40560f5a4e121",
+    "name": "Wrapped HBAR",
+    "symbol": "WHBAR",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9728240",
+    "address": "0x6dd2fd6ae19f3f2fc3e27b6f5a71c3787652879a",
+    "name": "Bitcoin",
+    "symbol": "BTC",
+    "totalSupply": 1e+25,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.9728241",
+    "address": "0xe0f921413c8a9250b86972fcf13b387f490b8ca8",
+    "name": "BNB",
+    "symbol": "BNB",
+    "totalSupply": 1e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9728266",
+    "address": "0xda99b9c0b1bf9d9d6728357f61914b1814929c22",
+    "name": "Ethereum",
+    "symbol": "ETH",
+    "totalSupply": 1e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9728269",
+    "address": "0x4d16f38d2cb201dadf967e765c6e63c9bf3b5d29",
+    "name": "USDT",
+    "symbol": "USDT",
+    "totalSupply": 1e+25,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.9728270",
+    "address": "0xf85b240a8ba4ce47b3888d0bf297422480734e1c",
+    "name": "USDC",
+    "symbol": "USDC",
+    "totalSupply": 1e+25,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.9728272",
+    "address": "0x018139bf4d473fd8916874f3ea470b5b0bd094ee",
+    "name": "Wrapped HBAR",
+    "symbol": "WHBAR",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9728273",
+    "address": "0x5f7d63b2fd18b8f9ac0fa671098306e9eeb0a26c",
+    "name": "Bitcoin",
+    "symbol": "BTC",
+    "totalSupply": 1e+25,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.9728276",
+    "address": "0x93230532647cbb082459cb2ec0e2833b654f135f",
+    "name": "BNB",
+    "symbol": "BNB",
+    "totalSupply": 1e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9728287",
+    "address": "0xe5dbeef3e07bcdb35c9985d1ddfbd1586be54298",
+    "name": "Ethereum",
+    "symbol": "ETH",
+    "totalSupply": 1e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9728288",
+    "address": "0xd5b0e28a774373945ea54912f6020f92ba7cbd32",
+    "name": "USDT",
+    "symbol": "USDT",
+    "totalSupply": 1e+25,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.9728289",
+    "address": "0xe8557956e276b8d85404c4b00281dec8c5a666ba",
+    "name": "USDC",
+    "symbol": "USDC",
+    "totalSupply": 1e+25,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.9728291",
+    "address": "0x5ea1b2b68e5fcbc31f6db33dc9deda95b7e58372",
+    "name": "Wrapped HBAR",
+    "symbol": "WHBAR",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9728293",
+    "address": "0x6fd00153490346a3b9f0984d291774abd285a216",
+    "name": "Bitcoin",
+    "symbol": "BTC",
+    "totalSupply": 1e+25,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.9728295",
+    "address": "0xb3e18e477526a2752954ce884ee72de031f33c0e",
+    "name": "BNB",
+    "symbol": "BNB",
+    "totalSupply": 1e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9739675",
+    "address": "0x41d44ac7e80779f7073df0abe13c213d8d58d55e",
+    "name": "Auspicioun",
+    "symbol": "AUSP",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9758581",
+    "address": "0xf6d6ef26d7d584ed8a89b87348f61506c89ab9c9",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.9764499",
+    "address": "0x4581fc9a57b6952339f7fe3ae96a1a7d4387d6bd",
+    "name": "MyToken",
+    "symbol": "MTKK",
+    "totalSupply": 1e+21,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9798918",
+    "address": "0xb8c4c3755d440ebd725fd8d4569f0eaec2d9230e",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9798942",
+    "address": "0x9a172113f519e99549459d7e086fbc74e374f698",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9800151",
+    "address": "0xff22c72e8acec8c535a1d413098452b9feb0e664",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 476131662674702850,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9800470",
+    "address": "0xa16e5380162a4b3d270fa1edc0b0711084d9919c",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 26322832465371104,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9800633",
+    "address": "0xbcd33267308766d630b8c6bdb31de30098f99768",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 3387782382290,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9800674",
+    "address": "0xd80bbccc4f5454cc9d346d7cb49ec3f34c746f56",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 1000100000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9800694",
+    "address": "0x178b9b0545614e85fc82620ed3b83b0082c25289",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 101821804684079040,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9800713",
+    "address": "0x7cf51f4c434596f4dc5e9497a6ca1506e480245b",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 33476321467417,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9800729",
+    "address": "0x2642a3dacf03d4597142b1a9776ba0c2338728b8",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 656114383552127500,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9805129",
+    "address": "0xa6f07c012c48868b5bdc359b6f7f8a52a64685fd",
+    "name": "DIPLOMA TOKEN",
+    "symbol": "DT",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.9805372",
+    "address": "0x1f68af8a1d2150537813b86c22c36a27f844bac7",
+    "name": "DIPLOMA TOKEN",
+    "symbol": "DT",
+    "totalSupply": 1114,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.9863434",
+    "address": "0x3c15a28bb78b6777f755a206425fdc9deacfac4d",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.9870849",
+    "address": "0xc7ad11a9c160045d1327303887a7aa2d47376e28",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9870874",
+    "address": "0x9e90f9a289e41c48122423478ecf7f7e97f56ca5",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9871137",
+    "address": "0xe76eca6464fadacbc51c60c8a35a4a88df915a46",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 53551253408781380,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9871140",
+    "address": "0x5b2ae7313e770cb732b37449b2759c79c450799b",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 20000001000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9871142",
+    "address": "0x4dfa1e77c5c9c3410d0286d454a81492d2892f03",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 48683132604957784,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9871145",
+    "address": "0x2c4d3542c1698813adba04541111289d9fd19043",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 67201328163957980,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9871147",
+    "address": "0x25733927ebade3929784dfc383d69f7d512e978d",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 67201328163957980,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9871150",
+    "address": "0xa11ab92765fc214499441dca145418bd700f0edf",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 343423763785,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9871151",
+    "address": "0xfb31caa42cf526b90d2bf0ddae1249b00dcafe54",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 343423763785,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9871159",
+    "address": "0x6757e68a44e5a66fb238b5bb7e6e6598a38a0c9f",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 138324843801908790000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9871167",
+    "address": "0xd85727d84ec3fd6d6363f5cafa187a448e38f603",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 7018638310861035,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9871171",
+    "address": "0xb3883ef8f493f4ab3a6d33abc48a0f53b21a1114",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 49676534931299500,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9888959",
+    "address": "0x242bf365cd9d418004e8c4d7e254f61930fd6b77",
+    "name": "Toradle Reward Token",
+    "symbol": "TRT",
+    "totalSupply": 1e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9934691",
+    "address": "0xcd80cd1307f00f3c2da3c9ac045cf00384889d25",
+    "name": "HAUS: RESIDENTIAL REIT ETF",
+    "symbol": "HAUS",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9936708",
+    "address": "0xe656d649da830ab78493f008d6352f1c8306253a",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9936713",
+    "address": "0xb700624df27283d855a93405c1f377b4a5a78ce1",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9936718",
+    "address": "0x02f26f13637e55a2b4dd0851d058c2b197618464",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9938277",
+    "address": "0xcb7fc0a60b264ea130ba9e2a4016a645b326fa7c",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 4950242443046830,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9938279",
+    "address": "0xe10f191b187ba809ee7dea641aaefef50e9611a6",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 20200001000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9938280",
+    "address": "0x766080d857c4c1f46edbaf8e54a50fd452dcd643",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 6806830539979576,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9938283",
+    "address": "0x45ca3382af0454f14846ad7add4c360e1d4e6412",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 345452483822,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9940079",
+    "address": "0xfb3b9805c425f03dd3b93b95cdf023a734b65225",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9951998",
+    "address": "0x00a63cab099ad6e9322f0e4b69e5bedaf94563dd",
+    "name": "Wrapped BTC",
+    "symbol": "WBTC",
+    "totalSupply": 0,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.9954971",
+    "address": "0xcdfb262351c63bcdd5a423fc9ac25e0e8e0bc1d4",
+    "name": "SQD ERC20 Tests",
+    "symbol": "SQDERC20",
+    "totalSupply": 1e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9956674",
+    "address": "0x915fe7c00730c08708581e30e27d9c0605be40bd",
+    "name": "BlockyDevs top token",
+    "symbol": "BDTT",
+    "totalSupply": 1e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9958041",
+    "address": "0xa4fab42f24af89d7f28dec363427b57ed4affcf2",
+    "name": "DeSmondToken",
+    "symbol": "DES",
+    "totalSupply": 1e+29,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9959264",
+    "address": "0xa605ca467e68df89c59b5debae71a24ce2863e91",
+    "name": "ChipRight Pool",
+    "symbol": "CRC",
+    "totalSupply": 3937871186320674,
+    "decimals": 10
+  },
+  {
+    "contractId": "0.0.9962585",
+    "address": "0x8a209b4ecb0a1627e7b54b221ca4229902fb75eb",
+    "name": "Mock USDC",
+    "symbol": "USDC",
+    "totalSupply": 1e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9962587",
+    "address": "0x05c91a0b4f648927d1baf7af1aa0f7f94f688056",
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9962590",
+    "address": "0x6323db89fc1c71dd6bad48bebea65de42af3d90e",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9962593",
+    "address": "0x71d3bb7ec628a07c50c145ec2ccf27aa010b9890",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9962596",
+    "address": "0x78edc7387d1cafb82fc0ea52be137efac910ca55",
+    "name": "HumanOS-cap_bottle",
+    "symbol": "HOS-cap_bottle",
+    "totalSupply": 101000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9962597",
+    "address": "0xe6e488a90c8b6f6296889f1ca4bd833e8f2a9d76",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 141421356237309510000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9962599",
+    "address": "0x6468e55679c526e84c99e13e98eddeba412e0d82",
+    "name": "HumanOS-uncap_pen",
+    "symbol": "HOS-uncap_pen",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9962600",
+    "address": "0x734b7450028c21243e1803cf3ab7e49a39526063",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 122474487139158900000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9962601",
+    "address": "0x6df56f0f1d5dd261c2df5e0114a902c837c13998",
+    "name": "HumanOS-use_mouse",
+    "symbol": "HOS-use_mouse",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9962602",
+    "address": "0xb906e0ce20eef555745b87101a8baf11d2273e32",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9965610",
+    "address": "0xa6d2a9d68e49c22f169352dbc8e91af4df50ee45",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.9966608",
+    "address": "0x6a57ca3f12578ce975af2c36aaa8f0cbb152f3b2",
+    "name": "Mock USDC",
+    "symbol": "USDC",
+    "totalSupply": 1e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9966609",
+    "address": "0xb6f00a53998e2b87272dfc016653caf708611c6b",
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9966611",
+    "address": "0x2b8b1bbb1320e111e14fc5886632b1b6daf3fb8d",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9966615",
+    "address": "0x846c3c2751726e8cb4ffec1430f9db85122c9161",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9966618",
+    "address": "0x90182c62fde0d8abd8b709a7302d5b919a5e9d31",
+    "name": "HumanOS-cap_bottle",
+    "symbol": "HOS-cap_bottle",
+    "totalSupply": 101000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9966619",
+    "address": "0xd42c36f2cafc373cc0d894c5ddb7b7d607aea626",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 141421356237309510000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9966620",
+    "address": "0x8655ef3a38e5e07ef330c84731cf8d889aec8cc7",
+    "name": "HumanOS-uncap_pen",
+    "symbol": "HOS-uncap_pen",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9966621",
+    "address": "0x2e9f4abb0f14fec9684f43a033b1569ae5727e32",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 122474487139158900000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9966625",
+    "address": "0x5fb99d6eb29b368ce5cdfdb706ee83e86a75354d",
+    "name": "HumanOS-use_mouse",
+    "symbol": "HOS-use_mouse",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9966626",
+    "address": "0x896a46af67008e7937d0eccfb70a30f164ae9ab4",
+    "name": "Uniswap V2",
+    "symbol": "UNI-V2",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9971147",
+    "address": "0x89436e2ef4f0ef218e44cdf29297cfc005662bdf",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9972319",
+    "address": "0x0000000000000000000000000000000000982a5f",
+    "name": "Hedera Test Token",
+    "symbol": "HTT",
+    "totalSupply": 1e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9974720",
+    "address": "0x00000000000000000000000000000000009833c0",
+    "name": "HushSense Token",
+    "symbol": "HUSH",
+    "totalSupply": 1e+28,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9974742",
+    "address": "0x00000000000000000000000000000000009833d6",
+    "name": "HushSense Token",
+    "symbol": "HUSH",
+    "totalSupply": 1.00000001e+28,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9989593",
+    "address": "0x575da285bb26a13f5025c92072a092c6222de805",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9989595",
+    "address": "0xd7c4e721df1292b7ef1880209dbad5f2aee4a7f2",
+    "name": "Test Hedera Meme",
+    "symbol": "THM",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9989596",
+    "address": "0xa972908a384bf589dea95a98ea0c65d088b53c9a",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9989611",
+    "address": "0xe1d70ac21b413a2924835f18fc910d9463865106",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9989614",
+    "address": "0xf36a5f4205e43af29cd5ec3324abf26babbe2be8",
+    "name": "Test Hedera Meme",
+    "symbol": "THM",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9989615",
+    "address": "0x27036b11e560bc2ad28ef6c6f38a1e277e1096ff",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9989630",
+    "address": "0xda56b0496668890df5326778fb0d6ba75790a19f",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9989632",
+    "address": "0xb0fce1ec1a378b665efc561c8994bbf0166e486b",
+    "name": "Test Hedera Meme",
+    "symbol": "THM",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9989633",
+    "address": "0xce47b89ca522784749bd68e08c0d5eac5ba36305",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9989640",
+    "address": "0x9478354291202ea259d213a0eec1ea8caff3f6a2",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9989641",
+    "address": "0x141a53b3733cd90ec2ef73e4d09502a86e960a69",
+    "name": "Test Simple",
+    "symbol": "TST",
+    "totalSupply": 1,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9989652",
+    "address": "0xa6ff4bcd9954bddaa3897d058df6e94b75ef2c7c",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9989654",
+    "address": "0x44c77880f04eb7a709e4e38f9443a0a04091e957",
+    "name": "Test Simple",
+    "symbol": "TST",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9989661",
+    "address": "0xbe20c019bd735e93c2c0e821fa30e21a9f969247",
+    "name": "Ultra Test",
+    "symbol": "ULTRA",
+    "totalSupply": 1000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9989674",
+    "address": "0xe215d253619db20a73d39fe0ac98cfd030de851e",
+    "name": "Working Meme",
+    "symbol": "WORK",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9989680",
+    "address": "0xd364ced9bff11ae6ced01e88e9680de963a29f46",
+    "name": "Working Meme",
+    "symbol": "WORK",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9989693",
+    "address": "0x3780d20668305340bd681edbb72d63d72c20a0fa",
+    "name": "Minimal Test",
+    "symbol": "MIN",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9989702",
+    "address": "0x740c6f56ab244c4c75ee51499af110e25ed99312",
+    "name": "Minimal Test",
+    "symbol": "MIN",
+    "totalSupply": 101000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9989716",
+    "address": "0x6054207f29a9047ace1cae2f4ce4c0f4d95a8994",
+    "name": "Math Test",
+    "symbol": "MATH",
+    "totalSupply": 1000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9989721",
+    "address": "0x4984ad78926175f1b7747969deb60bfb9200ac04",
+    "name": "Math Test",
+    "symbol": "MATH",
+    "totalSupply": 2000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9989731",
+    "address": "0xb859b0b0fe9a2657b935cf595a3157628e965cf0",
+    "name": "Working Math Meme",
+    "symbol": "WORK",
+    "totalSupply": 1.111e+21,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9989746",
+    "address": "0xe7953231919b832a3993a330dce2c7a34ec63bcd",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9989750",
+    "address": "0xd8a4fd888d8899b7e4f0531742d703737206b245",
+    "name": "Original Fixed Meme",
+    "symbol": "ORIG",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9989751",
+    "address": "0x910d3016ba08b89dd48598846bb1053d2a7385fb",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9989754",
+    "address": "0x2ea9dc0dc9d42ce1f636e907780977dfaf0bc964",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9989760",
+    "address": "0x30aa0de2037438160abc2617f93cbbfd6e8dda07",
+    "name": "Original Fixed Meme",
+    "symbol": "ORIG",
+    "totalSupply": 111000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9989761",
+    "address": "0xd7aa48c3191e595f85b400f32280ae65e3a94471",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9989780",
+    "address": "0x6bc86e9c613d21f5bbdee60253049fb02c4705e4",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9989786",
+    "address": "0x43267028f7d39710be7f52083020d498dd20b7f7",
+    "name": "MemeWarp Test Token",
+    "symbol": "MWTT",
+    "totalSupply": 1.111e+21,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9989787",
+    "address": "0xd5dc12465eb3340bbd1d090700a6d35f8ee39aff",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990154",
+    "address": "0xd40e6dabe785c000a652afcfbdae1f264fbfd8bf",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990156",
+    "address": "0x67e1f703afb79060db73eb6eabb8c234408d4f4c",
+    "name": "Test Hedera Meme",
+    "symbol": "THM",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990157",
+    "address": "0x36adf860062da2fd09604da4fcdfbad1f7ff5880",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990159",
+    "address": "0xff0d1cd540bdbcdb1877676b8742ab225664173f",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990162",
+    "address": "0xc2914ce3b67d8c72758d9a7dcc9518ba2f154053",
+    "name": "MemeWarp Test Token",
+    "symbol": "MWTT",
+    "totalSupply": 1.111e+21,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990163",
+    "address": "0x36d06f8e8e44f56f97eb9257206d2d13be489b75",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990168",
+    "address": "0x908ce56c4fe3fd948a84978b480a568add4e2a52",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990173",
+    "address": "0xe535661babb28b1a3cb02beb70765e4118792cf3",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990176",
+    "address": "0x2c75a084d5787b9b3f27a47da2a5093c91c9901e",
+    "name": "Test Hedera Meme",
+    "symbol": "THM",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990177",
+    "address": "0xeededdc5b17b027ce4936b69bdeabd2d1e7cac4d",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990179",
+    "address": "0x2833610f6387af3a56f7dce98ed0c9fdbb17a274",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990183",
+    "address": "0x46428dae3ecf84c697a64eaabf3e10951209a368",
+    "name": "MemeWarp Test Token",
+    "symbol": "MWTT",
+    "totalSupply": 1.111e+21,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990184",
+    "address": "0x95fae01be81a9beae535da48b2fc2ffe5c63edac",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990190",
+    "address": "0xebaba23e9abb0d3d96e036c1f865623ac1a832b8",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990192",
+    "address": "0xa9a941e0881ef2599e319177dcef39478748081e",
+    "name": "MemeWarp Test Token",
+    "symbol": "MWTT",
+    "totalSupply": 1.111e+21,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990193",
+    "address": "0xfe88ae76ca4ef35b80047550cb5f488128733394",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990204",
+    "address": "0x5e0f511ffc49971268fcba9de3abd3f9d3634249",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990207",
+    "address": "0x33e03bfbae6779186bdd716d31b3f27c4c338fa0",
+    "name": "MemeWarp Test Token",
+    "symbol": "MWTT",
+    "totalSupply": 1.111e+21,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990208",
+    "address": "0x00fe514d329b4ecb3d168501af61657b65321e99",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990213",
+    "address": "0x044cf6e6e7f30d2c5580f944728a7217f3a7e0ff",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990218",
+    "address": "0xe4328ae32cf669a50b29b10403da2783eecff27d",
+    "name": "MemeWarp Test Token",
+    "symbol": "MWTT",
+    "totalSupply": 1.111e+21,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990219",
+    "address": "0x9f9a8b6263713bf0012c6507321a3ae69b7ba13c",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990223",
+    "address": "0x2f4f4483336eab2d5d798aa2c32c9505e10346aa",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990232",
+    "address": "0x6cc09ae9372bf124b46d859d9e18084bb05f3348",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990234",
+    "address": "0x0135a6c601e0fd1c9a3b832c498ffa960d86359c",
+    "name": "MemeWarp Test Token",
+    "symbol": "MWTT",
+    "totalSupply": 3600000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990235",
+    "address": "0xc5ec3105c550ba8a75c0950538125c132dc1243c",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990255",
+    "address": "0x99fba9a16cc8b8dea25059d011a643f4111e5bed",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990257",
+    "address": "0x95708d95ac5ca5c2105f5d7d3055be57652a8a28",
+    "name": "MemeWarp Test Token",
+    "symbol": "MWTT",
+    "totalSupply": 3600000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990258",
+    "address": "0x8b6fd6b5df37d77af1cab4e1e4da055f78ce5d58",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990264",
+    "address": "0x3c80287bb2b1ae0113b539975bda5c680c1c08ba",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990266",
+    "address": "0xd9b12dc6d764e5b87471b1b1e6bee0ec5c726bc2",
+    "name": "MemeWarp Test Token",
+    "symbol": "MWTT",
+    "totalSupply": 3600000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990267",
+    "address": "0x429aa8fc1e94fd98219d1653c3c1f69fba94a8d1",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990274",
+    "address": "0x7284e0f1c81d74d66296edb0ec17c21d3f74616f",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990276",
+    "address": "0x910d8d8293cc9666a1ec5206a834d7df61cbef88",
+    "name": "MemeWarp Test Token",
+    "symbol": "MWTT",
+    "totalSupply": 3600000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990277",
+    "address": "0xea4c40001b2108314521bbfda0655430d356a6e9",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990293",
+    "address": "0x69de874eeeefdac70dd963b85d86dee4c00b316a",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990295",
+    "address": "0x343b380802fe852b9e3c70c3544bec84fc5df8b9",
+    "name": "MemeWarp Test Token",
+    "symbol": "MWTT",
+    "totalSupply": 3600000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990296",
+    "address": "0xa9c9896b1a0d54833c806bd04806640337b1204f",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990306",
+    "address": "0xdc2a1c6f5a546157cfb999f6bd6553915c53fc83",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990308",
+    "address": "0x11a84babb81cb9b14c62076239ed563d16d7e962",
+    "name": "MemeWarp Test Token",
+    "symbol": "MWTT",
+    "totalSupply": 3600000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990309",
+    "address": "0xc65cae882055422517101823557250e56132eff7",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990315",
+    "address": "0x72761c8b46fa7da467988de05a592c0af72f2f7a",
+    "name": "Simple Test",
+    "symbol": "SIMPLE",
+    "totalSupply": 10000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990319",
+    "address": "0xffda59ef03265b470b01410d1d5294924569a7a9",
+    "name": "Simple Test",
+    "symbol": "SIMPLE",
+    "totalSupply": 10000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990325",
+    "address": "0x40b36d7fec81a13aa7dee5b63227a791fe51e1cc",
+    "name": "Simple Test",
+    "symbol": "SIMPLE",
+    "totalSupply": 10000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990339",
+    "address": "0x4340b746f6d03f531bfece819f62e430b3f9465b",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990342",
+    "address": "0x4155b57592428a8e9c4dd4c598d4bb9172dfd309",
+    "name": "MemeWarp Test Token",
+    "symbol": "MWTT",
+    "totalSupply": 3600000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990343",
+    "address": "0xa7a9641f08788a73cf20e0d4493f055da12d9f60",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990353",
+    "address": "0x54b525e25a3bc7dce508c4c2a71fc1e7fcf41231",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990426",
+    "address": "0x754fadb0511fab6c8e4eb8f73d9caf5bfefd1642",
+    "name": "test",
+    "symbol": "TEST2",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990427",
+    "address": "0xb9adda56ffd1fef3ba41280df7b1f0a5f4b8269f",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990448",
+    "address": "0x4bcd3da9b25004d1e8b509fff78231a7615d59a3",
+    "name": "ETHGL",
+    "symbol": "ETHGL01",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990449",
+    "address": "0x5a2b4088d33af335f44c83b25ed0f06e1bcbdbd1",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990458",
+    "address": "0x3dc82aefdb931cacf082f58ee869c0e828e230ee",
+    "name": "ETHGL02",
+    "symbol": "ETHG02",
+    "totalSupply": 1e+21,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990459",
+    "address": "0xab221eb75d810949cf4557aef149f6ef3cdde520",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990756",
+    "address": "0x3774bf2c17bba949fe2bc63c26523960a1d9d80e",
+    "name": "test 3",
+    "symbol": "TEST4",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990757",
+    "address": "0xc4d14a5f8d82c4552fc3d82ae0937b96ef405634",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990772",
+    "address": "0x6eb88a0a7fba7754aca1ade896ed0b8fd8370ca0",
+    "name": "dqe",
+    "symbol": "ASD",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990773",
+    "address": "0x4e9e85249c93d5db2ffa67677652e2adbb3c2138",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990785",
+    "address": "0xe5095662d9b748c6d6a5b3cc00fc1ee355aaf6fb",
+    "name": "test",
+    "symbol": "WDA",
+    "totalSupply": 1000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990786",
+    "address": "0x3986773bf3a7ea4b4108f8dfc86e92c9aa843801",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9990915",
+    "address": "0xbbd75a4ccf1146851989c51ffe69eac73076a39c",
+    "name": "ETHDELHI01",
+    "symbol": "DELHI01",
+    "totalSupply": 147750000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9990916",
+    "address": "0x84beedce9bfc0ed00252e3451aadfd4c134240b3",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9991403",
+    "address": "0x73d4c81f4e517a80a27361a7f2de6dfc7122530f",
+    "name": "FORDEMO",
+    "symbol": "FORDEMO",
+    "totalSupply": 3000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9991404",
+    "address": "0xa09a7d1ab573ccdc148b5e0416875b3c7fe1204d",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9991428",
+    "address": "0xc51bbe5bea3b18387c44aab0ffc159152e1bf08c",
+    "name": "DEMO TOKEN",
+    "symbol": "DEMO",
+    "totalSupply": 5000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9991429",
+    "address": "0xfcdeda8834e05c086301259ff73a8daa616d49a0",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9991470",
+    "address": "0x12bc3c66aa599aa38b42883e0623bf0038caf45b",
+    "name": "DEMO2",
+    "symbol": "DEMO2",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9991471",
+    "address": "0xae0a67566044d8528e190c66c88523f386fb25f7",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9991496",
+    "address": "0x91d86b3eb14b5f044852250de931ccbc7e061ce5",
+    "name": "DEMO4",
+    "symbol": "DEMO4",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9991497",
+    "address": "0x4ce615e5a893de4f79cb137d359300988df03881",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9991508",
+    "address": "0x3bdb8b84df23ab6ce3eae73be4a3d7740353dc9a",
+    "name": "DEMO5",
+    "symbol": "DEMO5",
+    "totalSupply": 37100000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9991509",
+    "address": "0xe2d216db3aee7d5f7f2bcacc38318fa83b4c6bed",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9991524",
+    "address": "0x5f2fdb21a031ccb85b95bdc6fcb1e0099b77d04e",
+    "name": "VIDEO",
+    "symbol": "VIDEO",
+    "totalSupply": 312500000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9991525",
+    "address": "0x3ffc79882d1552e6cac0473802a327e559baa0d0",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9991533",
+    "address": "0xa4119c65ad39d71bc8fa0dd09828b8f39c22c33f",
+    "name": "VIDEO2",
+    "symbol": "VIDEO2",
+    "totalSupply": 322500000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9991534",
+    "address": "0x1eabe8c0f608ccb67cbb826afaa2be1da98ee9f5",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9991637",
+    "address": "0x2ab7ad170bc6c249c6ac6484311d55e3acd9ea38",
+    "name": "DEMO6",
+    "symbol": "DEMO6",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9991638",
+    "address": "0xfb515f5a8aedb6e4d85073cbb47f91bed534502f",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9992057",
+    "address": "0x0fa3863eb74a4c4cdab0d60736f7aff4faa448cc",
+    "name": "DEMOLIVE",
+    "symbol": "DEMOLIVE",
+    "totalSupply": 12000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9992058",
+    "address": "0x32797d2e3243d44c96b1a919f0c3c165d6b7a678",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9992091",
+    "address": "0x9a1afc6860c3a2049338b9741d073936f771b5a4",
+    "name": "HEDERADEMO",
+    "symbol": "HEDDEMO",
+    "totalSupply": 66500000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9992092",
+    "address": "0x2fcd50db18622ec97e09eb4507b8d4483cc07dbf",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9992208",
+    "address": "0x4697aabe315bb802588208818fee2aaf5d5f32e0",
+    "name": "FLOWDEMO",
+    "symbol": "FLOWDEMO",
+    "totalSupply": 123000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9992209",
+    "address": "0xfeaa24890fb2b604ded96d17acebb80c447fd652",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9992646",
+    "address": "0x1310b404c813dcbc2c8e7b6cf8f6b7a812b5af2d",
+    "name": "meh",
+    "symbol": "MEH",
+    "totalSupply": 177500000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9992647",
+    "address": "0xc264e8046af99617e2648565c7efe2825d0947e6",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9992974",
+    "address": "0xe664c51f1c5597b9b956b4c620493f61e170cfe9",
+    "name": "DEMO1",
+    "symbol": "DEMO1",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9992975",
+    "address": "0x3934ab10cc04c8e4b181ed1f4bff55bfe12b401f",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9993104",
+    "address": "0x5121a62bd9880d19769e26043acaf1fdf410bb4b",
+    "name": "demo99",
+    "symbol": "DEMO99",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9993105",
+    "address": "0x0fe902505752af6a751aafa04fcb19f7f82d8a6b",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9993112",
+    "address": "0xf823db26d897f74f2e75fa25bfd7c95357d840b2",
+    "name": "demi98",
+    "symbol": "DEMO98",
+    "totalSupply": 312500000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9993113",
+    "address": "0xe4fb83b04f609bd8af44b5691a8074831a2b3ec6",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9993211",
+    "address": "0x82ac0dd63a81f1b6928dd64b23c7332a036a15ef",
+    "name": "LIVEDEMO",
+    "symbol": "LIVEDEMO",
+    "totalSupply": 615000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9993212",
+    "address": "0x3edf3b1f84aa92752a99db587b957170d946f30c",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.9993300",
+    "address": "0x2db38ccc18ae25489c19cadee3274bb64bbd7471",
+    "name": "test123",
+    "symbol": "TEST123",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9993301",
+    "address": "0x043624e74f838a7aa0e0c7a1d9d242a3d31191b4",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10009367",
+    "address": "0x0f2da4e88da2d3ba1706b20fba1d483edc132af8",
+    "name": "multiprod",
+    "symbol": "MULTPROD",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10009465",
+    "address": "0x179e26e354813f01b2c4ac2787266820353ba34b",
+    "name": "mnp",
+    "symbol": "MNP",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10011728",
+    "address": "0x25cb05c36f9996fe1b6c1a24f11f8396d708a6f5",
+    "name": "Ibby and Puzz Rewards",
+    "symbol": "PUZZIES",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10018963",
+    "address": "0xf07781182b47e728b040f9e35321260e359ff9f7",
+    "name": "YUSD",
+    "symbol": "YUSD",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10018966",
+    "address": "0xc48ea88272e723366e124d9fd2607216969382ec",
+    "name": "Staked YUSD",
+    "symbol": "sYUSD",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10019219",
+    "address": "0x2f58fe3c9adcfe5d628fe7f3a19b60dcf3c21289",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10019220",
+    "address": "0xa505c458250598e100aa0ae777a001b23b2b4b03",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10019221",
+    "address": "0x6c8fb0711b35381a44089590f95162ebadcee8ed",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10019231",
+    "address": "0xe9f08ac8e02a9de5a22593c070a5e6bcf0f81d58",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10019232",
+    "address": "0x43f2b501cdefc9857b3712f77ab44558617038ae",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10019252",
+    "address": "0x2af17f5f15092b9777ab757d7e7d5ccc2fa5107d",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10019253",
+    "address": "0x3bc56bdf1517d4da8f92ab97cd5f17a29f109fed",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10019255",
+    "address": "0x6447d539fbdbe77b3ee3380e8575903aa2b050c9",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10019261",
+    "address": "0xc1d9639f297fac8f7eba0fbe23949cca5ba91f2f",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10019263",
+    "address": "0xe0e9714efc7ca3d6bb17ea219b1d6e94ced2a925",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10022380",
+    "address": "0x210482e0b5c29086f733e6dd44e2c19f32ae1757",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10022398",
+    "address": "0x891611398b53bbaaa3db04c158218c319c87d554",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10023538",
+    "address": "0xf50faa13dba32675c35d4d2ca2653b5982b730d4",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10023539",
+    "address": "0xe12c8cb22fa597fa866b4ed2406a86d00ecc9ac1",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10023540",
+    "address": "0x44c6f9268beb82939f051043dde0c6e637f6eac5",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10024250",
+    "address": "0x548b07b3f66ddc670166914ea91e99784addd5bd",
+    "name": "PALMERA",
+    "symbol": "PAL",
+    "totalSupply": 7.777777e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10024274",
+    "address": "0xd72d1efe44291811ae05ecadd443da5c2a98581d",
+    "name": "WBTC Mock",
+    "symbol": "WBTC",
+    "totalSupply": 0,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.10024292",
+    "address": "0x0079ff383089ae9c376a531844f018a894820578",
+    "name": "Wrapped BTC",
+    "symbol": "WBTC",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10024470",
+    "address": "0x0a39193830ab14e1ef90623993be294cc2240d76",
+    "name": "Test Token",
+    "symbol": "TEST",
+    "totalSupply": 1e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10024586",
+    "address": "0xfaf0418776e651a7dd9eb2327a3b75a6587957f9",
+    "name": "MyMockOFT",
+    "symbol": "MMOFT",
+    "totalSupply": 0,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.10024939",
+    "address": "0xb9fd14db5ed8523b21dfe6470d3be7335e857459",
+    "name": "LyncGrowfitter",
+    "symbol": "LGF",
+    "totalSupply": 1,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10025058",
+    "address": "0x3bf175dac5e46695db65b6dbffb3e6394319983e",
+    "name": "LyncGrowfitter",
+    "symbol": "LGF",
+    "totalSupply": 1000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10025060",
+    "address": "0x430bdbf81a0901d13fdf7d4318daa4474a868dc0",
+    "name": "LyncGrowfitter",
+    "symbol": "LGF",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10025176",
+    "address": "0x77a193a005606d71348a771d1b716ce1745a0b76",
+    "name": "LyncGrowfitter",
+    "symbol": "LGF",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10025360",
+    "address": "0x5a6c7c367c220edea79c0b3cdae517649d0be7c1",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10025361",
+    "address": "0x2a0f7051e6e4cb30bafcb69a3dba1fcec6a03669",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10025362",
+    "address": "0xc0a3aace6cd94bc5248bab9e92abf10ffd6ac88d",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10029333",
+    "address": "0x983c4d57de3512b1a8881366c422563ccf942347",
+    "name": "Test USD",
+    "symbol": "TUSD",
+    "totalSupply": 100000000000,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10030557",
+    "address": "0x9a7b3c4b0724226e2709bbd6f09ed28dfbf15500",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10030558",
+    "address": "0xa89e7c1a031e7f7ada33a941874e5e376b9556c3",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10030559",
+    "address": "0x811fd3ba20a065e2424dac6c02e239286a24c1c4",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10031110",
+    "address": "0x072bc950618a4e286683886ebc01c73090bc1c8a",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 12816768470898984,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10031113",
+    "address": "0xef55abc71271dceae4880b9000402a4b3f87d1ea",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 5026616165828050,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10031117",
+    "address": "0xc883f70804380c1a49e23a6d1dcf8e784d093a3f",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 14610699400,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10031118",
+    "address": "0x8e253f359ba5ddd62644b1e5dabd3d7748fb8193",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 214699848434,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10031120",
+    "address": "0x9696f2e42ce65f2c5bf26377391afe2dbd0f8a14",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 99860,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10031122",
+    "address": "0x0d634505888469e0f807be901c9649565c3fa7bb",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 100000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10031144",
+    "address": "0x55958da8d5ac662aa8ed45111f170c3d8e4fcb3b",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 565208433998,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10031150",
+    "address": "0x26c770f89d320da2c2341cbf410f132f44ef70cd",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 5071862228056,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10031155",
+    "address": "0xd406f0c0211836dbca3ebf3b84487137be400e57",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 13647854258,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10031160",
+    "address": "0x5d1e9bcae2c171c0c8af697bdd02908f280716bc",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 4335310897711,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10031161",
+    "address": "0x8f6a6441d5bb2afd8063181da52363b9d568f5be",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 7858202570272,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10031174",
+    "address": "0x938697baac6d574f77b848c4b98bfed0ec44a8b2",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 268252043714095,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10031183",
+    "address": "0xd1893fcfb1dbebccaa6813993074fefb1569fa5f",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 114287850981,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10031184",
+    "address": "0xacd982ee8b869f11aa928c4760cc3c0d4f30a6d3",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 1041452140469,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10033156",
+    "address": "0x0db93cfe4ba0b2a7c10c83fbee81fd2efb871864",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 2726551,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10033160",
+    "address": "0x31403d085c601f49b9644a4c9a493403fa14abfe",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 89504,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10033287",
+    "address": "0x5b21db581d72571a5e47ca6948f395989dbec42f",
+    "name": "almaris",
+    "symbol": "ALMA",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10043745",
+    "address": "0xad820f1325c5cb392ee29c812448ea2bc0b3f7b3",
+    "name": "Grelf USD",
+    "symbol": "GUSD",
+    "totalSupply": 10000000000,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10043747",
+    "address": "0x1940986189e8a66b24299cd8017e038321b14f97",
+    "name": "Grelf USD",
+    "symbol": "GUSD",
+    "totalSupply": 10000000000,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10043748",
+    "address": "0xcfd1be731c0f453162c61ac241749a5aa857dd7c",
+    "name": "Grelf USD",
+    "symbol": "GUSD",
+    "totalSupply": 131300000000,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10044959",
+    "address": "0x000000000000000000000000000000000099461f",
+    "name": "Grelf USD V2",
+    "symbol": "GUSD2",
+    "totalSupply": 1015000000000,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10045121",
+    "address": "0x20968165b7d2cdf33af632aab3e0539848d44bc8",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10045281",
+    "address": "0xf2663b722e0faccc6fb2743ab8cb30b1d8d93649",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10045284",
+    "address": "0x2f820c020ae2444edb41f4cb4d3b1f3dc2e0b818",
+    "name": "ZeroxWallet Beta Token",
+    "symbol": "ZWBT",
+    "totalSupply": 1e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10045692",
+    "address": "0xf1f9e5d806b6131fbc92bc165ec562175ba6f257",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10045985",
+    "address": "0x21af86e34f77e38b0d46f6cd398efa88a1796857",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10047837",
+    "address": "0xd7d4d91d64a6061fa00a94e2b3a2d2a5fb677849",
+    "name": "Wrapped BTC",
+    "symbol": "WBTC",
+    "totalSupply": 2421492711,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.10061868",
+    "address": "0x2f421057e9f7cced26e45fe09b9af82f099afade",
+    "name": "br18",
+    "symbol": "BR18",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10063339",
+    "address": "0x4e3823b3b825d948a44f76e726a0fc4814436739",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10065022",
+    "address": "0x7ceac46d61245c0e7e6b7fc6caa6e6c0e5527965",
+    "name": "North Hide Rewards Program",
+    "symbol": "NORTH",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10070390",
+    "address": "0x000000000000000000000000000000000099a976",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.10070559",
+    "address": "0x16b691c1fda63b32d60bf1269d80a325b6d405c9",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.10072131",
+    "address": "0x268b716666ef833917b10b81c2201aa2891ca933",
+    "name": "ATOKEN_IMPL",
+    "symbol": "ATOKEN_IMPL",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.10072132",
+    "address": "0x2bf2835b69144567784bb04cefe0f8d0a688e5c8",
+    "name": "ATOKEN_IMPL",
+    "symbol": "ATOKEN_IMPL",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.10072143",
+    "address": "0x49153c52a29106190c6a8f4bc9fbf341d74e7abb",
+    "name": "ATOKEN_IMPL",
+    "symbol": "ATOKEN_IMPL",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.10092631",
+    "address": "0xe72d25add538e8ef9cef85622ea8912a6cb98be6",
+    "name": "Factory-BnM-ERC20",
+    "symbol": "Factory-BnM-ERC20",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10092739",
+    "address": "0x61b7492a40ae4c403629703a38d24851caa1e7e4",
+    "name": "Factory-BnM-ERC20",
+    "symbol": "Factory-BnM-ERC20",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10092856",
+    "address": "0x51a6150400ed9f0ae240f5d1b15e3b45fc4339c7",
+    "name": "Factory-BnM-ERC20",
+    "symbol": "Factory-BnM-ERC20",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10094356",
+    "address": "0x9b10bb039e63ad4c579d4ad927d748882c2be3e6",
+    "name": "Test Token",
+    "symbol": "TEST",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10094370",
+    "address": "0xc9357d8fb84dd3041612dc5b2a2cd914d9405572",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10096022",
+    "address": "0xabf586910586b8dcbdf92f1c5e2ae14106f3dd16",
+    "name": "Factory-BnM-ERC20",
+    "symbol": "Factory-BnM-ERC20",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10097923",
+    "address": "0xfd666151f0fab90ea3b148fdc69637a1ebe1c9b5",
+    "name": "jsby",
+    "symbol": "JSBY",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10110137",
+    "address": "0xf7c833c9c962831721065c9774e2edbe8df6f42a",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10110139",
+    "address": "0x63620471a37a26b879e1b0b0ba9f2ee3287fd10d",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10110140",
+    "address": "0x4b0dd4c87c11b3248cb64c6c584e032c4767a7d1",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10116279",
+    "address": "0x3d0869ebcefa577097407aa3a3d371d364cca259",
+    "name": "SimpleToken",
+    "symbol": "STK",
+    "totalSupply": 100,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10117075",
+    "address": "0xadc8e8aca33d3e7cfb076c7309926afe3b469658",
+    "name": "Huffy Governance Token",
+    "symbol": "HTK",
+    "totalSupply": 1e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10117253",
+    "address": "0xc1f39b7cefd08ce0d8e5f678c97a6e8694acdffa",
+    "name": "Huffy Governance Token",
+    "symbol": "HTK",
+    "totalSupply": 1e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10118206",
+    "address": "0xdad12f1f2ce36d9db0bf15016c620592fe67884f",
+    "name": "MOCK ERC20",
+    "symbol": "$MOCK",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10118455",
+    "address": "0x0541a50f0cccbf7974bf2de9bc1f29013bc3726e",
+    "name": "MainnetToken",
+    "symbol": "MTK",
+    "totalSupply": 1000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10119052",
+    "address": "0x17c925ee24da3bfc7e1c85e765ace0d6aec1bb37",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10120424",
+    "address": "0xe716bb7cf4cf69f94d3ce4cf0115e76368107fca",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 103349,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10120438",
+    "address": "0x4431a822e59e12cea7fa614791ae39fe8b931d0f",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 225532,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10120444",
+    "address": "0x6450ca2ee98454c305c40dd478307b17cea9a882",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 1775234,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10120447",
+    "address": "0x3bcbae5374ec9114ba066c89fc79fbb98f2d7413",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 77595,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10120460",
+    "address": "0x15f9107b69ab7f7fa537b919f0f1f20038bf4a67",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 256627,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10120462",
+    "address": "0x6b068a06a23edc1de4f63c4d421e57d71e33573d",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 4084634,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10131351",
+    "address": "0xae4632980fd6b17997b9cacfba0c8785faf67f02",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10131353",
+    "address": "0x57fb23897b5dec7c69664ce4ebbe5fbee9a4729e",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10131354",
+    "address": "0xa714a77c28850292143a0fe725e874e85d56cf58",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10150320",
+    "address": "0x2c5c32e8f427f9c41c24a70340ca92885883b8be",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10153076",
+    "address": "0xfec7ce7588830d1d401c9bd7ef7709a7aa488981",
+    "name": "Voting Power XHedra",
+    "symbol": "VPX",
+    "totalSupply": 1e+21,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10159040",
+    "address": "0x765a5de623eb79df0ad4844d11d48278fbc69395",
+    "name": "PrimeBlockEquity",
+    "symbol": "PBE",
+    "totalSupply": 2100000000000000,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.10159391",
+    "address": "0xe9d35894e19e3c2b3c993fda86baab0d8f180086",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 15404297386,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10159434",
+    "address": "0xeab5de0668ea79b503417c44641cbacc138578a7",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 372327861177283,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10159435",
+    "address": "0x2668fe7a9730a122301f550ee1e108fac98859f8",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 290172033,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10160320",
+    "address": "0x812808053fc9bdc6c04acf54f40c4d76fe6f385b",
+    "name": "uio",
+    "symbol": "UIO",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10160945",
+    "address": "0x3624d43530e45937d82f884c74447adc8eb72a55",
+    "name": "MyERC20Token",
+    "symbol": "MET",
+    "totalSupply": 200,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10161517",
+    "address": "0xe68fc75752a96cbd6824482fbccab0f8ce163e77",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10161519",
+    "address": "0x14a1c86c8409309b7db2406b9477842d95008c0e",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10161520",
+    "address": "0xf84c3c08d309e6492fcaa7531595f46e8ebd5af1",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10161704",
+    "address": "0x693f3441a979b5906d03e522e113107fffd097cc",
+    "name": "Haven Socks Rewards",
+    "symbol": "HAVENSOCKS",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10163917",
+    "address": "0x6fd9dbe340d07911bd0839e94c0f384118c239e3",
+    "name": "Huffy Governance Token",
+    "symbol": "HTK",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10163928",
+    "address": "0xfa62ef587fc5201d98a76f739df1c5ceb032f592",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10164280",
+    "address": "0x08533fa3774ca6541ef7ea24e3e8f1a0523cf047",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10164282",
+    "address": "0x4ebb92aed1e5c1d6f64d18ea16bd02dacc8bb299",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10164283",
+    "address": "0x24cc12482062e057d8ad5db290faeeeb1a7fe15c",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10164306",
+    "address": "0x1edaa938f70c07dd27255ece5f6d2d26da973fa5",
+    "name": "MyOFT",
+    "symbol": "MOFT",
+    "totalSupply": 1e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10166238",
+    "address": "0x98d4a5e2363e079bc88dd3ecbfece43f8c26301e",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10166239",
+    "address": "0x9efa1da904770cfdc718f2af79da3573c60c7a70",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10166240",
+    "address": "0x60f406b2662a623f943b342f6ce020992a2b0e27",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10173329",
+    "address": "0x8fe9025900bf2c83b25c5d5d36d9a51d1266f31f",
+    "name": "Mock USD",
+    "symbol": "mUSD",
+    "totalSupply": 1e+22,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10173331",
+    "address": "0x4b9a69e6b5e74827d47068e2cf544bf02489f484",
+    "name": "iStable",
+    "symbol": "ISTB",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10173332",
+    "address": "0x9e59a56bb0c8541305548c64a1c28ad37b92c518",
+    "name": "MOCK",
+    "symbol": "MOCK",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10173346",
+    "address": "0xd755e5c03b184fc0e1ea4d53811265d4b71989e5",
+    "name": "Mock USD",
+    "symbol": "mUSD",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10173348",
+    "address": "0x01f59e8407e726489c9a8b73607eaa08d2145e60",
+    "name": "iStable",
+    "symbol": "ISTB",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10173349",
+    "address": "0xd304c7ccec87aacafe0b18e0077292526c24cc8c",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10173376",
+    "address": "0x5e34221f547c844700018a0a965d02a578a6019b",
+    "name": "Mock USD",
+    "symbol": "mUSD",
+    "totalSupply": 1e+22,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10173380",
+    "address": "0x4b18bfd438eab592e4652daf962e553ec4bc01cf",
+    "name": "iStable",
+    "symbol": "ISTB",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10173381",
+    "address": "0xc45d4b5b55fb3ab910c2097df1422bfca376843d",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10173382",
+    "address": "0x359dd08a88a78cc0108a68ecc10d4dbe452946d2",
+    "name": "FPMM",
+    "symbol": "FPMM",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10174662",
+    "address": "0x6cb872eabc2b761ed1382d4a69b6aa504b2a89eb",
+    "name": "Michatti Rewards",
+    "symbol": "MICH",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10176367",
+    "address": "0x1ea74c80b04b357cb3d993b9bcd058eac811503a",
+    "name": "FPMM",
+    "symbol": "FPMM",
+    "totalSupply": 10000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10180150",
+    "address": "0x0e0a65d3d9cd54b464d002648ff5017c3d6603d4",
+    "name": "LayerZero USDC",
+    "symbol": "lzUSDC",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10180151",
+    "address": "0xf40e6d4c723b9dd07149095a6f6818729db9f914",
+    "name": "LayerZero USDT",
+    "symbol": "lzUSDT",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10180209",
+    "address": "0x827e4ce7c0c7758e3b7cdec648ae1d3bfb0c60dd",
+    "name": "LayerZero USDC",
+    "symbol": "lzUSDC",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10180210",
+    "address": "0xaf631511d4c6afd0a07720a25d2cc9307b3fd5c2",
+    "name": "LayerZero USDT",
+    "symbol": "lzUSDT",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10181325",
+    "address": "0xfbaa99bc91ede3d67bec82b6304266e70cb1257c",
+    "name": "LayerZero USDC",
+    "symbol": "lzUSDC",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10181326",
+    "address": "0xfd2cc79b98dea1ac088ac14ea2062f96a3f4387a",
+    "name": "LayerZero USDT",
+    "symbol": "lzUSDT",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10182780",
+    "address": "0xb1d4c73b85e33e8435a41dabddc9ad7c64ea8ad1",
+    "name": "Vols LP",
+    "symbol": "VOLS LP",
+    "totalSupply": 16206644223043,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10197334",
+    "address": "0xef573b304d678d017aa9d2531f783f8294d5ac96",
+    "name": "Mock USD Coin",
+    "symbol": "USDC",
+    "totalSupply": 1000000000000,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10197351",
+    "address": "0xa9f0397807d2190b4cf1c7e735e1b4048cc3e9b4",
+    "name": "FPMM",
+    "symbol": "FPMM",
+    "totalSupply": 100000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10197377",
+    "address": "0xf82d74796c580a45523e5965bd572fa8ba6e7cd0",
+    "name": "FPMM",
+    "symbol": "FPMM",
+    "totalSupply": 10000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10197454",
+    "address": "0x2ee1fb46224a70c2b73710a109901a0c13a21b8f",
+    "name": "FPMM",
+    "symbol": "FPMM",
+    "totalSupply": 10000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10197482",
+    "address": "0x7181990cd4ba53cfda1c6dea14833eb89706c226",
+    "name": "FPMM",
+    "symbol": "FPMM",
+    "totalSupply": 10000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10198213",
+    "address": "0x5a9e250db561efa860b32a79057db08bd3e6ff1e",
+    "name": "FPMM",
+    "symbol": "FPMM",
+    "totalSupply": 10000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10208774",
+    "address": "0x6e8cb07b18756e9d816242eee3f8855402fab4c8",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10208775",
+    "address": "0x43f7173bd7e1b72f7944750470f7a9bcfbb43229",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10208777",
+    "address": "0xe7bdb12f4b3bd7c43388880c58e48c633bacc0b2",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10214537",
+    "address": "0x80fbe67d0511ec45f50663f842c98fd3f9f3384d",
+    "name": "Circle",
+    "symbol": "wUSDC",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10214546",
+    "address": "0xc7c4ab3d4ddb5a6a0ef3087cc7c793c5d167efa1",
+    "name": "Wrapped Circle",
+    "symbol": "wUSDC",
+    "totalSupply": 1135204000,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10218116",
+    "address": "0xa1ca4daed2164d6ebf732c6cd219a4038fe1aa81",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10218148",
+    "address": "0xc194defac59e616fb9972895a34b4a1db9b05595",
+    "name": "Byzanlink Vault V2",
+    "symbol": "BVV2",
+    "totalSupply": 1.100000001e+21,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10218258",
+    "address": "0x86f74931a430a8e3ab7308b63f28b99d55a605ed",
+    "name": "Mock USD",
+    "symbol": "mUSD",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10218274",
+    "address": "0xa988fd71fa8e1c88d39dffebd82a92a973c1d778",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10218325",
+    "address": "0x1d5ed98ff53bcb7757a1e1292080f650c4c5eb67",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10218377",
+    "address": "0xb809ac36156c97347fdf624ae132ec8cd278cf6d",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10218418",
+    "address": "0xd1bd8cf5d6c941ff4b02857a3e6f8a8b4dfeb401",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10219588",
+    "address": "0x9cc7435c90b2adb193fb5b02c88ff997b58dbb0d",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10219595",
+    "address": "0xf67f0363dfb66219e99e7bf5db906077a2e43387",
+    "name": "MyToken",
+    "symbol": "MTK",
+    "totalSupply": 1e+22,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10225063",
+    "address": "0xccb92fbcf6cca328cc5d432fb8791029ee6b5cf9",
+    "name": "Byzanlink Vault V2",
+    "symbol": "BVV2",
+    "totalSupply": 840126797028502900000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10226232",
+    "address": "0x940084da006e4d020d862c132f602b8a74a183c8",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10226296",
+    "address": "0xec6d73896fcab3253a8f8a2b68f3c8d036b64e88",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10228594",
+    "address": "0x5cd04d05ac3e1359206c020b5ff96b7628d24c27",
+    "name": "Credible Payfi Vault",
+    "symbol": "bCred",
+    "totalSupply": 120000001000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10229800",
+    "address": "0x1708c20b8008158749e580ffb68bbdb733a3adf9",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.10230091",
+    "address": "0x2c7805f4b904f9d6d641f614cb8aa4ca34e52fec",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 1000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10230098",
+    "address": "0x6b8dfa6aa5f803a886beb2492ef3307ec0ee16fb",
+    "name": "Credible Payfi Vault",
+    "symbol": "bCred",
+    "totalSupply": 1.0821392979112826e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10235083",
+    "address": "0xddcaa220797a9478893aee638c287d4c17c21670",
+    "name": "Aurum Vexillum",
+    "symbol": "AuVX",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10235088",
+    "address": "0x21b5450dd9b5b8330adcea493ff18da11b19dfe6",
+    "name": "Aurum Vexillum",
+    "symbol": "AuVX",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10235104",
+    "address": "0x9310016f0d5116c460a53168dfdcb8b80ae348b6",
+    "name": "Aurum Vexillum",
+    "symbol": "AuVX",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10238054",
+    "address": "0x41436803c7bf49c396497123ce57b74562ca44e0",
+    "name": "String HBAR",
+    "symbol": "SHBAR",
+    "totalSupply": 698600000,
+    "decimals": 9
+  },
+  {
+    "contractId": "0.0.10238093",
+    "address": "0xbec2f0d41ca2ae0fe3887d21dc93555f85fc1bc5",
+    "name": "String HBAR",
+    "symbol": "SHBAR",
+    "totalSupply": 0,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.10238169",
+    "address": "0x7d2b30d04e442174d707230b977a05bca4d7c39c",
+    "name": "SMHBAR",
+    "symbol": "SMHBAR",
+    "totalSupply": 1445600000,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.10238253",
+    "address": "0x2cb532cc62edd1ea7a9e5e2c3c9ea01fe35036bd",
+    "name": "Wrapped HBAR",
+    "symbol": "WHBAR",
+    "totalSupply": 448400000,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.10238262",
+    "address": "0x8902024813a850d6c3356e9f16913f8f39d08b4f",
+    "name": "STHBAR",
+    "symbol": "STHBAR",
+    "totalSupply": 747800000,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.10238268",
+    "address": "0x76832ccfff87cf4a3e878e5ea00440fc56722a82",
+    "name": "STHBAR",
+    "symbol": "STHBAR",
+    "totalSupply": 0,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.10239319",
+    "address": "0x8e37e7900e540729a6f9c985e4648c40e4ec7fa7",
+    "name": "WRX",
+    "symbol": "WRX",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10241039",
+    "address": "0x87b589879ab3e22de54c980396bd944ac2b5dc6c",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10246942",
+    "address": "0x59e82966a30b6c10e97bf34028c14f3cf9ba900c",
+    "name": "String WHBAR",
+    "symbol": "stWHBAR",
+    "totalSupply": 4145826083,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.10250403",
+    "address": "0x6a460564ccc601d2cd15399d8ebe52448b5dbb72",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.10250409",
+    "address": "0xbd3f0befa86794b999b29a91d201124d8fbdf777",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10253930",
+    "address": "0x8b8407c6184f1f0fd1082e83d6a3b8349caced12",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10253931",
+    "address": "0x5cca9d75df2dfc117855add4dd45727dee5287ec",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10264984",
+    "address": "0x8db2d64ef29e24fdffabfb019f17a2fbbcf637a6",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.10266729",
+    "address": "0xe3762d764d29dd0a6bad592c870ef85758af7666",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10266741",
+    "address": "0xd062189e87a8857842432cefe0cd489b43f88574",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10266786",
+    "address": "0x7c6ea2efef6f7872c669381770900b9504e1befb",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10267049",
+    "address": "0x58747d73dafad87bb623621dd8cc8b9ba6cb057e",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.10267166",
+    "address": "0x249d93ad980cb9e3e1388706748dbd4c8352ce38",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 12278916494462,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10267167",
+    "address": "0xdf49585b3ea21923e64a1f12f4f08356fb89962a",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 2427305819036,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10267181",
+    "address": "0xaeab13488a5995d9342ba5c356f5ec0039e4e058",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 76289329222150,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10267182",
+    "address": "0x3e8ebd644264f3ab744bb5f32be77a255d469219",
+    "name": "ICHI Vault Liquidity",
+    "symbol": "ICHI_Vault_LP",
+    "totalSupply": 439921418,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10269003",
+    "address": "0xf9992eaadfdde779cd894aafabd64cd43e4d2324",
+    "name": "Credible Payfi Vault",
+    "symbol": "bCredNew",
+    "totalSupply": 8000001000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10283361",
+    "address": "0x2190dd0d65af05ffc42ef03cb7857ca756b1d3d1",
+    "name": "Starbucks Rewardx",
+    "symbol": "SHANK",
+    "totalSupply": 1e+33,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10283523",
+    "address": "0x2584062835bb3ed341a48ec87bce239a96085539",
+    "name": "AAA",
+    "symbol": "AAA",
+    "totalSupply": 1e+27,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10283524",
+    "address": "0x384667f81d258f5e6948841bb626187e4de03501",
+    "name": "BBB",
+    "symbol": "BBB",
+    "totalSupply": 1e+27,
+    "decimals": 18
   }
 ]
