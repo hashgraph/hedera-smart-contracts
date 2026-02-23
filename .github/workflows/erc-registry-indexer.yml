@@ -172,20 +172,20 @@ jobs:
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
           branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
-          commit-message: "chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${HEDERA_NETWORK}"
+          commit-message: "chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{ env.HEDERA_NETWORK }}"
           committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
           author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           delete-branch: true
           signoff: true
-          title: "chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${HEDERA_NETWORK}"
+          title: "chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{ env.HEDERA_NETWORK }}"
           body: >
             **Description**:
 
             This PR updates the ERC Registry to include the most recent ERC-20, ERC-721, and ERC-1155 tokens.
 
             **Registry Update Summary**:
-              - **Hedera Network**: ${HEDERA_NETWORK}
+              - **Hedera Network**: ${{ env.HEDERA_NETWORK }}
               - **New ERC-20 Records Added**: ${{ env.NEW_ERC20_RECORDS }}
               - **New ERC-721 Records Added**: ${{ env.NEW_ERC721_RECORDS }}
               - **New ERC-1155 Records Added**: ${{ env.NEW_ERC1155_RECORDS }}
@@ -225,20 +225,20 @@ jobs:
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
           branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
-          commit-message: "chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${HEDERA_NETWORK}"
+          commit-message: "chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{ env.HEDERA_NETWORK }}"
           committer: ${{ steps.gpg_importer_mne.outputs.name }} <${{ steps.gpg_importer_mne.outputs.email }}>
           author: ${{ steps.gpg_importer_mne.outputs.name }} <${{ steps.gpg_importer_mne.outputs.email }}>
           token: ${{ secrets.GH_ACCESS_TOKEN_MIRROR_NODE_EXPLORER }}
           delete-branch: true
           signoff: true
-          title: "chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${HEDERA_NETWORK}"
+          title: "chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{ env.HEDERA_NETWORK }}"
           body: >
             **Description**:
 
             This PR updates the ERC Registry to include the most recent ERC-20, ERC-721, and ERC-1155 tokens.
 
             **Registry Update Summary**:
-              - **Hedera Network**: ${HEDERA_NETWORK}
+              - **Hedera Network**: ${{ env.HEDERA_NETWORK }}
               - **New ERC-20 Records Added**: ${{ env.NEW_ERC20_RECORDS }}
               - **New ERC-721 Records Added**: ${{ env.NEW_ERC721_RECORDS }}
               - **New ERC-1155 Records Added**: ${{ env.NEW_ERC1155_RECORDS }}
