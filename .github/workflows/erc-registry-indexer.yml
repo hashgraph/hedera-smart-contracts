@@ -17,7 +17,7 @@ on:
         required: false
 
   schedule:
-    - cron: '0 14 * * *' # Daily at 14:00 UTC
+    - cron: '0 14 * * 1-5' # Daily at 14:00 UTC, Monday-Friday
 
 jobs:
   index-and-update:
