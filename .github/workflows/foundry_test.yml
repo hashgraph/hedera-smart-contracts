@@ -39,7 +39,7 @@ jobs:
         run: npm ci
 
       - name: Install Foundry
-        uses: step-security/foundry-toolchain@ced99da5c56c695ce707ab2715ca678d6e8a7038 # v1.4.0
+        uses: step-security/foundry-toolchain@0f33b42dd54256dc78d44981318d1a5c5f1c4958 # v1.4.1
         with:
           version: stable
 
