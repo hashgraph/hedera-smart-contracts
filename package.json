@@ -53,7 +53,7 @@
     "dotenv": "^17.2.1",
     "elliptic": "^6.6.1",
     "mcl-wasm": "^2.0.0",
-    "protobufjs": "^7.5.3",
+    "protobufjs": "^7.5.4",
     "solidity-coverage": "^0.8.16"
   }
 }
