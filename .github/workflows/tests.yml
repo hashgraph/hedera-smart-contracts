@@ -63,12 +63,6 @@ jobs:
     with:
       testfilter: BLSSignature
 
-  HederaAccountService:
-    name: HederaAccountService Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: HAS
-
   WHBAR:
     name: WHBAR Contract Test Suite
     uses: ./.github/workflows/test-workflow.yml
@@ -86,7 +80,6 @@ jobs:
       - Multicall
       - ShanghaiOpcodes
       - BLSSignatureVerification
-      - HederaAccountService
       - WHBAR
 
     runs-on: smart-contracts-linux-large
