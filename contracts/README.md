@@ -20,11 +20,6 @@ This folder serves as a comprehensive collection of smart contracts developed an
 | [shanghai-opcodes/](shanghai-opcodes)                                                               | Smart contracts showcases the support of the new OPCODEs introduced in Shanghai.                                                |
 | [solidity/](solidity)                                                                               | A diverse collection of smart contracts that exemplify the equivalence of Solidity at the language layer on the Hedera network. |
 | [state-registry/](state-registry)                                                                   | Contracts managing state registry functionality.                                                                                |
-| [system-contracts/](system-contracts)                                                               | Collection of core Hedera System Contracts.                                                                                     |
-| [system-contracts/exchange-rate/](system-contracts/exchange-rate)                                   | System contracts related to exchange rate functionality.                                                                        |
-| [system-contracts/hedera-account-service/](system-contracts/hedera-account-service)                 | System contracts related to Hedera account services.                                                                            |
-| [system-contracts/hedera-token-service/](system-contracts/hedera-token-service)                     | System contracts related to Hedera token services.                                                                              |
-| [system-contracts/pseudo-random-number-generator/](system-contracts/pseudo-random-number-generator) | System contracts for generating pseudo-random numbers.                                                                          |
 | [yul/](yul)                                                                                         | Smart contracts showcasing Yul inline-assembly equivalence on the Hedera network.                                               |
 
 ## Usage:
