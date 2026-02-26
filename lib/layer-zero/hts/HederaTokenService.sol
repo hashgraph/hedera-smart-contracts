@@ -5,7 +5,7 @@ pragma experimental ABIEncoderV2;
 import "./IHederaTokenService.sol";
 
 abstract contract HederaTokenService {
-    // all response codes are defined here https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/HederaResponseCodes.sol
+    // all response codes are defined here https://github.com/hiero-ledger/hiero-contracts/blob/main/contracts/common/HederaResponseCodes.sol
     int32 constant UNKNOWN_CODE = 21;
     int32 constant SUCCESS_CODE = 22;
 

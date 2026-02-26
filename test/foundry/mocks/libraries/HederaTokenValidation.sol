@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.9;
 
-import '../../../../contracts/system-contracts/HederaResponseCodes.sol';
+import '@hiero-ledger/hiero-contracts/common/HederaResponseCodes.sol';
 import '../hts-precompile/HederaFungibleToken.sol';
 import '../hts-precompile/HederaNonFungibleToken.sol';
 import '../interfaces/IHtsSystemContractMock.sol';

@@ -2,9 +2,9 @@
 pragma solidity >=0.5.0 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-import "contracts/system-contracts/hedera-token-service/HederaTokenService.sol";
-import "contracts/system-contracts/hedera-token-service/ExpiryHelper.sol";
-import "contracts/system-contracts/hedera-token-service/KeyHelper.sol";
+import "@hiero-ledger/hiero-contracts/token-service/HederaTokenService.sol";
+import "@hiero-ledger/hiero-contracts/token-service/ExpiryHelper.sol";
+import "@hiero-ledger/hiero-contracts/token-service/KeyHelper.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract TokenCreateOpcodeLogger is HederaTokenService, ExpiryHelper, KeyHelper {
