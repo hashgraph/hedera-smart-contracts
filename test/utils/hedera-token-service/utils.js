@@ -101,6 +101,14 @@ class Utils {
     return await this.deployContract(Constants.Contract.HRC719Contract);
   }
 
+  static async deployERC20Contract() {
+    return await this.deployContract(Constants.Contract.ERC20Contract);
+  }
+
+  static async deployERC721Contract() {
+    return await this.deployContract(Constants.Contract.ERC721Contract);
+  }
+
   static async getTokenAddress(tx) {
     const receipt = await tx.wait();
     const { tokenAddress } = receipt.logs.filter(
