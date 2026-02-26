@@ -40,7 +40,7 @@ describe('@discrepancies - Nonce Test Suite', async () => {
       await tokenCreateContract.getAddress(),
       await tokenTransferContract.getAddress(),
     ]);
-    erc20Contract = await Utils.deployERC20Contract();
+    erc20Contract = await Utils.deployERC20Mock();
     tokenAddress = await Utils.createFungibleToken(
         tokenCreateContract,
         signers[0].address
@@ -340,7 +340,7 @@ describe('@discrepancies - Nonce Test Suite', async () => {
   })
 
   it('should update nonce after successful ERC721 token call', async function () {
-    erc721Contract = await Utils.deployERC721Contract();
+    erc721Contract = await Utils.deployERC721Mock();
     await Utils.updateTokenKeysViaHapi(tokenAddress, [
       await tokenCreateContract.getAddress(),
       await tokenTransferContract.getAddress(),

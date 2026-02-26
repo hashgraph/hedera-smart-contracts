@@ -32,8 +32,8 @@ describe('HIP583 Test Suite', function () {
       await tokenCreateContract.getAddress(),
       await tokenTransferContract.getAddress(),
     ]);
-    erc20Contract = await utils.deployERC20Contract();
-    erc721Contract = await utils.deployERC721Contract();
+    erc20Contract = await utils.deployERC20Mock();
+    erc721Contract = await utils.deployERC721Mock();
     tokenAddress =
       await utils.createFungibleTokenWithSECP256K1AdminKeyWithoutKYC(
         tokenCreateContract,
@@ -746,8 +746,8 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via system-contracts', functi
       await tokenQueryContract.getAddress(),
       await tokenTransferContract.getAddress(),
     ]);
-    erc20Contract = await utils.deployERC20Contract();
-    erc721Contract = await utils.deployERC721Contract();
+    erc20Contract = await utils.deployERC20Mock();
+    erc721Contract = await utils.deployERC721Mock();
   });
 
   const bootstrapHollowAccount = async function (

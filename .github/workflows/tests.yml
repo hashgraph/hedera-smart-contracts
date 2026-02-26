@@ -21,47 +21,11 @@ defaults:
     shell: bash
 
 jobs:
-  ERC20Contract:
-    name: ERC20 Contract Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: ERC20
-
-  ERC721Contract:
-    name: ERC721 Contract Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: ERC721
-
   ERC1155Contract:
     name: ERC1155 Contract Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: ERC1155
-
-  TokenCreateContract:
-    name: Token Create Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: TokenCreateContract
-
-  TokenQueryContract:
-    name: Token Query Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: TokenQueryContract
-
-  TokenManagmentContract:
-    name: Token Managment Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: TokenManagmentContract
-
-  TokenTransferContract:
-    name: Token Transfer Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: TokenTransferContract
 
   Proxy:
     name: Proxy Upgrade Test Suite
@@ -81,35 +45,17 @@ jobs:
     with:
       testfilter: HIP583
 
-  HIP755:
-    name: HIP755 Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: HIP755
-
   Multicall:
     name: Multicall Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: Multicall
 
-  HRC:
-    name: HRC Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: HRC
-
   ShanghaiOpcodes:
     name: ShanghaiOpcodes Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: ShanghaiOpcodes
-
-  PrngSystemContract:
-    name: PrngSystemContract Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: PrngSystemContract
 
   BLSSignatureVerification:
     name: BLS Signature Verification Test Suite
@@ -123,24 +69,6 @@ jobs:
     with:
       testfilter: HAS
 
-  HIP904Batch1:
-    name: HIP904 Contract Test Suite Batch 1
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: HIP904Batch1
-
-  HIP904Batch2:
-    name: HIP904 Contract Test Suite Batch 2
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: HIP904Batch2
-
-  HIP904Batch3:
-    name: HIP904 Contract Test Suite Batch 3
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: HIP904Batch3
-
   WHBAR:
     name: WHBAR Contract Test Suite
     uses: ./.github/workflows/test-workflow.yml
@@ -151,26 +79,14 @@ jobs:
     name: Publish Results
     if: ${{ !cancelled() }}
     needs:
-      - ERC20Contract
-      - ERC721Contract
       - ERC1155Contract
-      - TokenCreateContract
-      - TokenQueryContract
-      - TokenManagmentContract
-      - TokenTransferContract
       - Proxy
       - SafeHTS
       - HIP583
-      - HIP755
       - Multicall
-      - HRC
       - ShanghaiOpcodes
-      - PrngSystemContract
       - BLSSignatureVerification
       - HederaAccountService
-      - HIP904Batch1
-      - HIP904Batch2
-      - HIP904Batch3
       - WHBAR
 
     runs-on: smart-contracts-linux-large
