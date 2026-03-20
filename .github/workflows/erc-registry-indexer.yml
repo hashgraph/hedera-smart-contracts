@@ -141,9 +141,9 @@ jobs:
           fi
 
           # Export the results to GitHub environment variables
-          echo "NEW_ERC20_RECORDS=${{ env.NEW_ERC20_RECORDS }}" >> $GITHUB_ENV
-          echo "NEW_ERC721_RECORDS=${{ env.NEW_ERC721_RECORDS }}" >> $GITHUB_ENV
-          echo "NEW_ERC1155_RECORDS=${{ env.NEW_ERC1155_RECORDS }}" >> $GITHUB_ENV
+          echo "NEW_ERC20_RECORDS=${NEW_ERC20_RECORDS}" >> $GITHUB_ENV
+          echo "NEW_ERC721_RECORDS=${NEW_ERC721_RECORDS}" >> $GITHUB_ENV
+          echo "NEW_ERC1155_RECORDS=${NEW_ERC1155_RECORDS}" >> $GITHUB_ENV
 
       - name: Delete backup registry folder
         run: |
