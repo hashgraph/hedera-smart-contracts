@@ -197,7 +197,9 @@ jobs:
       - name: Backup erc-registry to Temporary Directory
         run: |
           mkdir -p /tmp/erc-registry/${{ env.HEDERA_NETWORK }}
+          ls -alh ${{ env.INDEXER_PATH }}/erc-registry/${{ env.HEDERA_NETWORK }}/*
           cp -r ${{ env.INDEXER_PATH }}/erc-registry/${{ env.HEDERA_NETWORK }}/* /tmp/erc-registry/${{ env.HEDERA_NETWORK }}
+          ls -alh /tmp/erc-registry/${{ env.HEDERA_NETWORK }}
 
       - name: Checkout hedera-mirror-node-explorer
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -218,8 +220,10 @@ jobs:
 
       - name: Restore erc-registry from Temporary Directory
         run: |
+          ls al -h ./_frontend/public/${{ env.HEDERA_NETWORK }}
           mkdir -p ./_frontend/public/${{ env.HEDERA_NETWORK }}
           cp -r /tmp/erc-registry/${{ env.HEDERA_NETWORK }}/* ./_frontend/public/${{ env.HEDERA_NETWORK }}
+          ls al -h ./_frontend/public/${{ env.HEDERA_NETWORK }}
 
       - name: Create Pull Request Target hedera-mirror-node-explorer
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
