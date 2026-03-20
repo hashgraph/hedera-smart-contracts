@@ -61,8 +61,8 @@ jobs:
 
       - name: Set Environment Variables
         run: |
-          echo "HEDERA_NETWORK=${HEDERA_NETWORK}" >> ${{ env.INDEXER_PATH }}/.env
-          echo "MIRROR_NODE_URL=${MIRROR_NODE_URL}" >> ${{ env.INDEXER_PATH }}/.env
+          echo "HEDERA_NETWORK=${{ env.HEDERA_NETWORK }}" >> ${{ env.INDEXER_PATH }}/.env
+          echo "MIRROR_NODE_URL=${{ env.MIRROR_NODE_URL }}" >> ${{ env.INDEXER_PATH }}/.env
           echo "STARTING_POINT=${{ github.event.inputs.STARTING_POINT }}" >> ${{ env.INDEXER_PATH }}/.env
           echo "SCAN_CONTRACT_LIMIT=${{ github.event.inputs.SCAN_CONTRACT_LIMIT }}" >> ${{ env.INDEXER_PATH }}/.env
 
@@ -74,8 +74,8 @@ jobs:
       - name: Backup Existing Registry
         run: |
           mkdir -p ${{ env.INDEXER_PATH }}/backup
-          if [ -d "${{ env.INDEXER_PATH }}/erc-registry/${HEDERA_NETWORK}" ] && [ "$(ls -A ${{ env.INDEXER_PATH }}/erc-registry/${HEDERA_NETWORK}/*.json 2>/dev/null)" ]; then
-            cp ${{ env.INDEXER_PATH }}/erc-registry/${HEDERA_NETWORK}/*.json ${{ env.INDEXER_PATH }}/backup/
+          if [ -d "${{ env.INDEXER_PATH }}/erc-registry/${{ env.HEDERA_NETWORK }}" ] && [ "$(ls -A ${{ env.INDEXER_PATH }}/erc-registry/${{ env.HEDERA_NETWORK }}/*.json 2>/dev/null)" ]; then
+            cp ${{ env.INDEXER_PATH }}/erc-registry/${{ env.HEDERA_NETWORK }}/*.json ${{ env.INDEXER_PATH }}/backup/
             echo "Backup successful."
           else
             echo "No JSON files found to back up."
@@ -121,29 +121,29 @@ jobs:
           cd ${{ env.INDEXER_PATH }}
           # Determine the new amount of ERC-20 records
           if [ -f backup/erc-20.json ]; then
-            NEW_ERC20_RECORDS=$(jq -s '.[1] - .[0] | length' backup/erc-20.json erc-registry/${HEDERA_NETWORK}/erc-20.json)
+            NEW_ERC20_RECORDS=$(jq -s '.[1] - .[0] | length' backup/erc-20.json erc-registry/${{ env.HEDERA_NETWORK }}/erc-20.json)
           else
-            NEW_ERC20_RECORDS=$(jq '. | length' erc-registry/${HEDERA_NETWORK}/erc-20.json)
+            NEW_ERC20_RECORDS=$(jq '. | length' erc-registry/${{ env.HEDERA_NETWORK }}/erc-20.json)
           fi
 
           # Determine the new amount of of ERC-721 records
           if [ -f backup/erc-721.json ]; then
-            NEW_ERC721_RECORDS=$(jq -s '.[1] - .[0] | length' backup/erc-721.json erc-registry/${HEDERA_NETWORK}/erc-721.json)
+            NEW_ERC721_RECORDS=$(jq -s '.[1] - .[0] | length' backup/erc-721.json erc-registry/${{ env.HEDERA_NETWORK }}/erc-721.json)
           else
-            NEW_ERC721_RECORDS=$(jq '. | length' erc-registry/${HEDERA_NETWORK}/erc-721.json)
+            NEW_ERC721_RECORDS=$(jq '. | length' erc-registry/${{ env.HEDERA_NETWORK }}/erc-721.json)
           fi
 
           # Determine the new amount of ERC-1155 records
           if [ -f backup/erc-1155.json ]; then
-            NEW_ERC1155_RECORDS=$(jq -s '.[1] - .[0] | length' backup/erc-1155.json erc-registry/${HEDERA_NETWORK}/erc-1155.json)
+            NEW_ERC1155_RECORDS=$(jq -s '.[1] - .[0] | length' backup/erc-1155.json erc-registry/${{ env.HEDERA_NETWORK }}/erc-1155.json)
           else
-            NEW_ERC1155_RECORDS=$(jq '. | length' erc-registry/${HEDERA_NETWORK}/erc-1155.json)
+            NEW_ERC1155_RECORDS=$(jq '. | length' erc-registry/${{ env.HEDERA_NETWORK }}/erc-1155.json)
           fi
 
           # Export the results to GitHub environment variables
-          echo "NEW_ERC20_RECORDS=${NEW_ERC20_RECORDS}" >> $GITHUB_ENV
-          echo "NEW_ERC721_RECORDS=${NEW_ERC721_RECORDS}" >> $GITHUB_ENV
-          echo "NEW_ERC1155_RECORDS=${NEW_ERC1155_RECORDS}" >> $GITHUB_ENV
+          echo "NEW_ERC20_RECORDS=${{ env.NEW_ERC20_RECORDS }}" >> $GITHUB_ENV
+          echo "NEW_ERC721_RECORDS=${{ env.NEW_ERC721_RECORDS }}" >> $GITHUB_ENV
+          echo "NEW_ERC1155_RECORDS=${{ env.NEW_ERC1155_RECORDS }}" >> $GITHUB_ENV
 
       - name: Delete backup registry folder
         run: |
@@ -171,7 +171,7 @@ jobs:
       - name: Create Pull Request Target hedera-smart-contracts Repository
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
-          branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
+          branch: ERC-Registry-Periodical-Update/${{ github.run_id }}/${{ env.HEDERA_NETWORK }}
           commit-message: "chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{ env.HEDERA_NETWORK }}"
           committer: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
           author: ${{ steps.gpg_importer.outputs.name }} <${{ steps.gpg_importer.outputs.email }}>
@@ -196,8 +196,8 @@ jobs:
 
       - name: Backup erc-registry to Temporary Directory
         run: |
-          mkdir -p /tmp/erc-registry/${HEDERA_NETWORK}
-          cp -r ${{ env.INDEXER_PATH }}/erc-registry/${HEDERA_NETWORK}/* /tmp/erc-registry/${HEDERA_NETWORK}
+          mkdir -p /tmp/erc-registry/${{ env.HEDERA_NETWORK }}
+          cp -r ${{ env.INDEXER_PATH }}/erc-registry/${{ env.HEDERA_NETWORK }}/* /tmp/erc-registry/${{ env.HEDERA_NETWORK }}
 
       - name: Checkout hedera-mirror-node-explorer
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -218,13 +218,13 @@ jobs:
 
       - name: Restore erc-registry from Temporary Directory
         run: |
-          mkdir -p ./_frontend/public/${HEDERA_NETWORK}
-          cp -r /tmp/erc-registry/${HEDERA_NETWORK}/* ./_frontend/public/${HEDERA_NETWORK}
+          mkdir -p ./_frontend/public/${{ env.HEDERA_NETWORK }}
+          cp -r /tmp/erc-registry/${{ env.HEDERA_NETWORK }}/* ./_frontend/public/${{ env.HEDERA_NETWORK }}
 
       - name: Create Pull Request Target hedera-mirror-node-explorer
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
-          branch: ERC-Registry-Periodical-Update/${{ github.run_id }}
+          branch: ERC-Registry-Periodical-Update/${{ github.run_id }}/${{ env.HEDERA_NETWORK }}
           commit-message: "chore: update ERC Registry with latest ERC-20, ERC-721, and ERC-1155 tokens on Hedera ${{ env.HEDERA_NETWORK }}"
           committer: ${{ steps.gpg_importer_mne.outputs.name }} <${{ steps.gpg_importer_mne.outputs.email }}>
           author: ${{ steps.gpg_importer_mne.outputs.name }} <${{ steps.gpg_importer_mne.outputs.email }}>
