@@ -222,6 +222,7 @@ jobs:
         run: |
           ls -alh ./_frontend/public/${{ env.HEDERA_NETWORK }}
           mkdir -p ./_frontend/public/${{ env.HEDERA_NETWORK }}
+          ls -alh /tmp/erc-registry/${{ env.HEDERA_NETWORK }}
           cp -r /tmp/erc-registry/${{ env.HEDERA_NETWORK }}/* ./_frontend/public/${{ env.HEDERA_NETWORK }}
           ls -alh ./_frontend/public/${{ env.HEDERA_NETWORK }}
 
