@@ -197,8 +197,10 @@ jobs:
       - name: Backup erc-registry to Temporary Directory
         run: |
           mkdir -p /tmp/erc-registry/${{ env.HEDERA_NETWORK }}
+          cat ${{ env.INDEXER_PATH }}/erc-registry/${{ env.HEDERA_NETWORK }}/next-pointer.json
           ls -alh ${{ env.INDEXER_PATH }}/erc-registry/${{ env.HEDERA_NETWORK }}/*
           cp -r ${{ env.INDEXER_PATH }}/erc-registry/${{ env.HEDERA_NETWORK }}/* /tmp/erc-registry/${{ env.HEDERA_NETWORK }}
+          cat /tmp/erc-registry/${{ env.HEDERA_NETWORK }}/next-pointer.json
           ls -alh /tmp/erc-registry/${{ env.HEDERA_NETWORK }}
 
       - name: Checkout hedera-mirror-node-explorer
@@ -220,10 +222,13 @@ jobs:
 
       - name: Restore erc-registry from Temporary Directory
         run: |
+          cat ./_frontend/public/${{ env.HEDERA_NETWORK }}/next-pointer.json
           ls -alh ./_frontend/public/${{ env.HEDERA_NETWORK }}
           mkdir -p ./_frontend/public/${{ env.HEDERA_NETWORK }}
+          cat /tmp/erc-registry/${{ env.HEDERA_NETWORK }}/next-pointer.json
           ls -alh /tmp/erc-registry/${{ env.HEDERA_NETWORK }}
           cp -r /tmp/erc-registry/${{ env.HEDERA_NETWORK }}/* ./_frontend/public/${{ env.HEDERA_NETWORK }}
+          cat ./_frontend/public/${{ env.HEDERA_NETWORK }}/next-pointer.json
           ls -alh ./_frontend/public/${{ env.HEDERA_NETWORK }}
 
       - name: Create Pull Request Target hedera-mirror-node-explorer
