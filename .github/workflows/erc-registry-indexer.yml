@@ -154,6 +154,11 @@ jobs:
             echo "backup folder not found, skipping deletion."
           fi
 
+      - name: Backup erc-registry to Temporary Directory
+        run: |
+          mkdir -p /tmp/erc-registry/${{ env.HEDERA_NETWORK }}
+          cp -r ${{ env.INDEXER_PATH }}/erc-registry/${{ env.HEDERA_NETWORK }}/* /tmp/erc-registry/${{ env.HEDERA_NETWORK }}
+
       - name: Import GPG Key
         id: gpg_importer
         uses: step-security/ghaction-import-gpg@c86c374c0659a6c2d1284bccf8af889e73ce8fe0 # v6.3.0
@@ -193,11 +198,6 @@ jobs:
               - **Last Indexed Time**: ${{ env.CURRENT_DATE }}
           labels: 'internal'
           assignees: 'swirlds-automation'
-
-      - name: Backup erc-registry to Temporary Directory
-        run: |
-          mkdir -p /tmp/erc-registry/${{ env.HEDERA_NETWORK }}
-          cp -r ${{ env.INDEXER_PATH }}/erc-registry/${{ env.HEDERA_NETWORK }}/* /tmp/erc-registry/${{ env.HEDERA_NETWORK }}
 
       - name: Checkout hedera-mirror-node-explorer
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
