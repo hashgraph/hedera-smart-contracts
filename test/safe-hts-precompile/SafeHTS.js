@@ -3,7 +3,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../constants');
-const utils = require('../system-contracts/hedera-token-service/utils');
+const utils = require('../utils/hedera-token-service/utils');
 const {
   pollForNewBalance,
   pollForNewHBarBalance,

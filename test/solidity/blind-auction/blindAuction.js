@@ -8,7 +8,7 @@ const Constants = require('../../constants');
 const {
   tinybarToHbarCoef,
   tinybarToWeibarCoef,
-} = require('../../system-contracts/hedera-token-service/utils');
+} = require('../../utils/hedera-token-service/utils');
 chai.use(chaiAsPromised);
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));

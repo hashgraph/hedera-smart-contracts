@@ -3,7 +3,7 @@
 const chai = require('chai');
 const { expect } = require('chai');
 const hre = require('hardhat');
-const Utils = require('../system-contracts/hedera-token-service/utils');
+const Utils = require('../utils/hedera-token-service/utils');
 const chaiAsPromised = require('chai-as-promised');
 const { Hbar, TransferTransaction, PrivateKey } = require('@hashgraph/sdk');
 const { ethers } = hre;

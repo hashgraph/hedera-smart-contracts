@@ -2,7 +2,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
-const Utils = require('../../system-contracts/hedera-token-service/utils');
+const Utils = require('../../utils/hedera-token-service/utils');
 const { genericPoll } = require('../../../utils/helpers');
 
 describe('@solidityequiv3 Simple Auction Test Suite', function () {

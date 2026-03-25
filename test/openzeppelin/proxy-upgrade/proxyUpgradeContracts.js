@@ -2,7 +2,7 @@
 
 const { expect } = require('chai');
 const { ethers, upgrades } = require('hardhat');
-const utils = require('../../system-contracts/hedera-token-service/utils');
+const utils = require('../../utils/hedera-token-service/utils');
 const Constants = require('../../constants');
 const { pollForNewCounterValue } = require('../../../utils/helpers');
 
@@ -35,7 +35,7 @@ describe('Proxy Upgrade Contracts Test Suite', function () {
         await tokenCreateContract.getAddress(),
       ]);
 
-      erc20Contract = await utils.deployERC20Contract();
+      erc20Contract = await utils.deployERC20Mock();
       proxyContract = await deployDEXProxyContract(tokenAddress);
       proxyAddress = await proxyContract.getAddress();
 

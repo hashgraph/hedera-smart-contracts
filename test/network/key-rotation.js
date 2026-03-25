@@ -9,7 +9,7 @@ const {
   AccountUpdateTransaction,
 } = require('@hashgraph/sdk');
 const { expect } = require('chai');
-const Utils = require('../system-contracts/hedera-token-service/utils');
+const Utils = require('../utils/hedera-token-service/utils');
 
 describe('Key Rotation Test Suite', function () {
   let client;

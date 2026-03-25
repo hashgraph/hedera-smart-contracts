@@ -2,7 +2,7 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
-const Utils = require('../../system-contracts/hedera-token-service/utils');
+const Utils = require('../../utils/hedera-token-service/utils');
 
 describe('@solidityequiv2 Modifiers Test Suite', function () {
   let accounts, contractB, derivedContract, modifiersContract, owner;

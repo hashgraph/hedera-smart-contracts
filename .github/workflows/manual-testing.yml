@@ -26,65 +26,11 @@ defaults:
     shell: bash
 
 jobs:
-  ERC20Contract:
-    name: ERC20 Contract Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: ERC20
-      networkTag: ${{inputs.networkNodeTag}}
-      mirrorTag: ${{inputs.mirrorNodeTag}}
-      relayTag: ${{inputs.relayTag}}
-
-  ERC721Contract:
-    name: ERC721 Contract Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: ERC721
-      networkTag: ${{inputs.networkNodeTag}}
-      mirrorTag: ${{inputs.mirrorNodeTag}}
-      relayTag: ${{inputs.relayTag}}
-
   ERC1155Contract:
     name: ERC1155 Contract Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: ERC1155
-      networkTag: ${{inputs.networkNodeTag}}
-      mirrorTag: ${{inputs.mirrorNodeTag}}
-      relayTag: ${{inputs.relayTag}}
-
-  TokenCreateContract:
-    name: Token Create Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: TokenCreateContract
-      networkTag: ${{inputs.networkNodeTag}}
-      mirrorTag: ${{inputs.mirrorNodeTag}}
-      relayTag: ${{inputs.relayTag}}
-
-  TokenQueryContract:
-    name: Token Query Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: TokenQueryContract
-      networkTag: ${{inputs.networkNodeTag}}
-      mirrorTag: ${{inputs.mirrorNodeTag}}
-      relayTag: ${{inputs.relayTag}}
-
-  TokenManagmentContract:
-    name: Token Managment Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: TokenManagmentContract
-      networkTag: ${{inputs.networkNodeTag}}
-      mirrorTag: ${{inputs.mirrorNodeTag}}
-      relayTag: ${{inputs.relayTag}}
-
-  TokenTransferContract:
-    name: Token Transfer Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: TokenTransferContract
       networkTag: ${{inputs.networkNodeTag}}
       mirrorTag: ${{inputs.mirrorNodeTag}}
       relayTag: ${{inputs.relayTag}}
@@ -125,29 +71,11 @@ jobs:
       mirrorTag: ${{inputs.mirrorNodeTag}}
       relayTag: ${{inputs.relayTag}}
 
-  HRC:
-    name: HRC Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: HRC
-      networkTag: ${{inputs.networkNodeTag}}
-      mirrorTag: ${{inputs.mirrorNodeTag}}
-      relayTag: ${{inputs.relayTag}}
-
   ShanghaiOpcodes:
     name: ShanghaiOpcodes Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: ShanghaiOpcodes
-      networkTag: ${{inputs.networkNodeTag}}
-      mirrorTag: ${{inputs.mirrorNodeTag}}
-      relayTag: ${{inputs.relayTag}}
-
-  PrngSystemContract:
-    name: PrngSystemContract Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: PrngSystemContract
       networkTag: ${{inputs.networkNodeTag}}
       mirrorTag: ${{inputs.mirrorNodeTag}}
       relayTag: ${{inputs.relayTag}}
@@ -193,33 +121,6 @@ jobs:
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: 'OZ'
-      networkTag: ${{inputs.networkNodeTag}}
-      mirrorTag: ${{inputs.mirrorNodeTag}}
-      relayTag: ${{inputs.relayTag}}
-
-  HIP904Batch1:
-    name: HIP904 Contract Test Suite Batch 1
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: 'HIP904Batch1'
-      networkTag: ${{inputs.networkNodeTag}}
-      mirrorTag: ${{inputs.mirrorNodeTag}}
-      relayTag: ${{inputs.relayTag}}
-
-  HIP904Batch2:
-    name: HIP904 Contract Test Suite Batch 2
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: 'HIP904Batch2'
-      networkTag: ${{inputs.networkNodeTag}}
-      mirrorTag: ${{inputs.mirrorNodeTag}}
-      relayTag: ${{inputs.relayTag}}
-
-  HIP904Batch3:
-    name: HIP904 Contract Test Suite Batch 3
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: 'HIP904Batch3'
       networkTag: ${{inputs.networkNodeTag}}
       mirrorTag: ${{inputs.mirrorNodeTag}}
       relayTag: ${{inputs.relayTag}}

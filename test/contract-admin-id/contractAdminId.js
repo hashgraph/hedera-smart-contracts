@@ -2,7 +2,6 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const utils = require('../system-contracts/hedera-token-service/utils');
 const Constants = require('../constants');
 
 describe('Admin Key and Contract ID Validation', function () {
