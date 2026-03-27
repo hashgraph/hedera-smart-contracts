@@ -10918,5 +10918,13 @@
     "symbol": "STRT",
     "totalSupply": 1e+21,
     "decimals": 18
+  },
+  {
+    "contractId": "0.0.10394990",
+    "address": "0x142c69b9bf82e3fe258c047574ea65e50e46885b",
+    "name": "Zurich Real Estate Token",
+    "symbol": "ZRET",
+    "totalSupply": 0,
+    "decimals": 18
   }
 ]
