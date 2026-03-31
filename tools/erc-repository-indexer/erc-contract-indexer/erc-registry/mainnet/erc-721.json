@@ -1816,5 +1816,17 @@
     "address": "0x044f36fb7e7ae2485d3fdabc15f6afe35483c83b",
     "name": "MCL / COLLECT / 2026 MIA GP",
     "symbol": "MCLMIA26"
+  },
+  {
+    "contractId": "0.0.10409318",
+    "address": "0x6ae0d238a586fb7d8d5a0417a6e99bab0db1c6d3",
+    "name": "Lando Norris Drop",
+    "symbol": "MCLN1"
+  },
+  {
+    "contractId": "0.0.10414086",
+    "address": "0x859ebef18e3cc690de220680667942ba8df37aea",
+    "name": "test collection 001",
+    "symbol": "tc001"
   }
 ]

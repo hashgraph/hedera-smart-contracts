@@ -10926,5 +10926,21 @@
     "symbol": "ZRET",
     "totalSupply": 0,
     "decimals": 18
+  },
+  {
+    "contractId": "0.0.10408143",
+    "address": "0xf3f24a278c1ef87c1d24087077155bda4bf80893",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.10412343",
+    "address": "0x04752e885dc8629a213469d0b3efb43d79c7d466",
+    "name": "VideoBond",
+    "symbol": "VB",
+    "totalSupply": 1e+23,
+    "decimals": 18
   }
 ]
