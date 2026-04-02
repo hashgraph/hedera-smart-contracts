@@ -5534,5 +5534,13 @@
   {
     "contractId": "0.0.8349136",
     "address": "0x88961fae336ba304f4603861aca2d24c837a8f6b"
+  },
+  {
+    "contractId": "0.0.8432904",
+    "address": "0xbfcb4187e0c708e0455668236c9b2b52214081a0"
+  },
+  {
+    "contractId": "0.0.8432967",
+    "address": "0x7a5e04c6881d3ba3d82a2ee1bd7b2c85b5032081"
   }
 ]
