@@ -10926,5 +10926,93 @@
     "symbol": "ZRET",
     "totalSupply": 0,
     "decimals": 18
+  },
+  {
+    "contractId": "0.0.10408143",
+    "address": "0xf3f24a278c1ef87c1d24087077155bda4bf80893",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.10412343",
+    "address": "0x04752e885dc8629a213469d0b3efb43d79c7d466",
+    "name": "VideoBond",
+    "symbol": "VB",
+    "totalSupply": 1e+23,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10415761",
+    "address": "0x4a530a63427128107641127bfb289f2786bde52c",
+    "name": "RFD Smart Contract",
+    "symbol": "RFDSC",
+    "totalSupply": 20000000,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10415765",
+    "address": "0x51c21611fe807e596e0fd6c693faa4ccd69ce84e",
+    "name": "RFD Smart Contract",
+    "symbol": "RFDSC",
+    "totalSupply": 20000000,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10416370",
+    "address": "0x802dd1e2e1d720b112ca033d69341fdf93d6ef02",
+    "name": "Test API",
+    "symbol": "TESTAPI",
+    "totalSupply": 100,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10416371",
+    "address": "0xf695f558fdba8db67705cc8a2eb5f03b1ded93cc",
+    "name": "Token CPC",
+    "symbol": "CPC",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10416375",
+    "address": "0x4fb3bcbaf062760aeaac1325a9dca47ef9cafdb7",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10416378",
+    "address": "0x464cca0eb640511459d53e22589417de8141dbc7",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.10416380",
+    "address": "0xe0b5fb1c86a0638d989603d786a08a2db796586d",
+    "name": "RFD Smart Contract",
+    "symbol": "RFDSC",
+    "totalSupply": 20000000,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.10417954",
+    "address": "0x45189b95e634458c76a4a9b47f9fed8c8f294949",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.10427411",
+    "address": "0xe767021ba25455aa571b4ca0b54f49945f47c974",
+    "name": "RFD Smart Contract",
+    "symbol": "RFDSC",
+    "totalSupply": 20000000,
+    "decimals": 6
   }
 ]
