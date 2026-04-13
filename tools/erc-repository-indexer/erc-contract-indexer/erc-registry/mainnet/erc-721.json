@@ -1816,5 +1816,143 @@
     "address": "0x044f36fb7e7ae2485d3fdabc15f6afe35483c83b",
     "name": "MCL / COLLECT / 2026 MIA GP",
     "symbol": "MCLMIA26"
+  },
+  {
+    "contractId": "0.0.10409318",
+    "address": "0x6ae0d238a586fb7d8d5a0417a6e99bab0db1c6d3",
+    "name": "Lando Norris Drop",
+    "symbol": "MCLN1"
+  },
+  {
+    "contractId": "0.0.10414086",
+    "address": "0x859ebef18e3cc690de220680667942ba8df37aea",
+    "name": "test collection 001",
+    "symbol": "tc001"
+  },
+  {
+    "contractId": "0.0.10415499",
+    "address": "0x13737b74ac8d2592bcee461c6e1c47ad06b43ddc",
+    "name": "new test collection",
+    "symbol": "heyhey"
+  },
+  {
+    "contractId": "0.0.10417242",
+    "address": "0x77ff90ffc708d4ca83e96f2664a33bb7d2a5befc",
+    "name": "MCL / COLLECT / 2026 LN1 & OP81",
+    "symbol": "MCLSN&OP"
+  },
+  {
+    "contractId": "0.0.10419364",
+    "address": "0x00000000000000000000000000000000009efca4",
+    "name": "Ecodots Soulbound Token",
+    "symbol": "ECOSBT"
+  },
+  {
+    "contractId": "0.0.10421841",
+    "address": "0x2f88e49ef14ab4d59317121ba68a36554d5528af",
+    "name": "MCL / COLLECT / 2026 CAN GP",
+    "symbol": "MCLCANGP"
+  },
+  {
+    "contractId": "0.0.10421843",
+    "address": "0x5d173fba12a7fa0cd1b8b9685b2ab98543bc42ba",
+    "name": "MCL / COLLECT / 2026 MON GP",
+    "symbol": "MCLMONGP"
+  },
+  {
+    "contractId": "0.0.10421845",
+    "address": "0xfa5d9ad55bf84f6adec5812d23afefc40c5aaf00",
+    "name": "MCL / COLLECT / 2026 ESP GP",
+    "symbol": "MCLESPGP"
+  },
+  {
+    "contractId": "0.0.10421847",
+    "address": "0x5db4e1f7de54b54fa49d997f5a467a92ba17f52c",
+    "name": "MCL / COLLECT / 2026 AUT GP",
+    "symbol": "MCLAUTGP"
+  },
+  {
+    "contractId": "0.0.10421850",
+    "address": "0x88b0abe09f0d178c1618a2cd780a44e5dfcba83e",
+    "name": "MCL / COLLECT / 2026 GBR GP",
+    "symbol": "MCLGBRGP"
+  },
+  {
+    "contractId": "0.0.10421853",
+    "address": "0x1330588f14d641ff9c7e99c4916e48f8b0f50a60",
+    "name": "MCL / COLLECT / 2026 BEL GP",
+    "symbol": "MCLBELGP"
+  },
+  {
+    "contractId": "0.0.10421854",
+    "address": "0x012b14706924271bc24086ad74ae6d54f00c70d4",
+    "name": "MCL / COLLECT / 2026 HUN GP",
+    "symbol": "MCLHUNGP"
+  },
+  {
+    "contractId": "0.0.10421856",
+    "address": "0x13072e07c6d84d391f3a2b707128538488195f0c",
+    "name": "MCL / COLLECT / 2026 NED GP",
+    "symbol": "MCLNEDGP"
+  },
+  {
+    "contractId": "0.0.10421857",
+    "address": "0x451bc458d45bfec53b4e402c2d7877b5a6b4619d",
+    "name": "MCL / COLLECT / 2026 ITA GP",
+    "symbol": "MCLITAGP"
+  },
+  {
+    "contractId": "0.0.10421859",
+    "address": "0x8d2be28dd5c1adef40517221e7809b808f92258c",
+    "name": "MCL / COLLECT / 2026 MAD GP",
+    "symbol": "MCLMADGP"
+  },
+  {
+    "contractId": "0.0.10421860",
+    "address": "0xe4e000c980ae5ae992177b73f5373630713cb096",
+    "name": "MCL / COLLECT / 2026 AZE GP",
+    "symbol": "MCLAZEGP"
+  },
+  {
+    "contractId": "0.0.10421862",
+    "address": "0x824da93f81ba287213bfe953812109e67bc19d03",
+    "name": "MCL / COLLECT / 2026 SIN GP",
+    "symbol": "MCLSINGP"
+  },
+  {
+    "contractId": "0.0.10421863",
+    "address": "0xd765f61155fda8c4374f7ad176e285adaf3c61ae",
+    "name": "MCL / COLLECT / 2026 USA GP",
+    "symbol": "MCLUSAGP"
+  },
+  {
+    "contractId": "0.0.10421865",
+    "address": "0x3d8a61b60408953a7de0d64c8b1a63fefcf41291",
+    "name": "MCL / COLLECT / 2026 MEX GP",
+    "symbol": "MCLMEXGP"
+  },
+  {
+    "contractId": "0.0.10421869",
+    "address": "0x0dcc6bf0858e75eefecfef7f90280801776a35ce",
+    "name": "MCL / COLLECT / 2026 BRA GP",
+    "symbol": "MCLBRAGP"
+  },
+  {
+    "contractId": "0.0.10421870",
+    "address": "0xe010afa5faf880ce2b40c923887d95bbbdea49be",
+    "name": "MCL / COLLECT / 2026 VEG GP",
+    "symbol": "MCLVEGGP"
+  },
+  {
+    "contractId": "0.0.10421872",
+    "address": "0x70802d0bdeeb78dbfddd2cc0fd532051274aa069",
+    "name": "MCL / COLLECT / 2026 QAT GP",
+    "symbol": "MCLQATGP"
+  },
+  {
+    "contractId": "0.0.10421873",
+    "address": "0xef43008b5cbf7a83bbcc8656f55d33694b1148d3",
+    "name": "MCL / COLLECT / 2026 ABD GP",
+    "symbol": "MCLABDGP"
   }
 ]
