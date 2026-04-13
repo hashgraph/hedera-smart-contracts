@@ -11014,5 +11014,93 @@
     "symbol": "RFDSC",
     "totalSupply": 20000000,
     "decimals": 6
+  },
+  {
+    "contractId": "0.0.10429006",
+    "address": "0x00000000000000000000000000000000009f224e",
+    "name": "SOLOMON",
+    "symbol": "SOLOMON",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10429842",
+    "address": "0x00000000000000000000000000000000009f2592",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10429848",
+    "address": "0x00000000000000000000000000000000009f2598",
+    "name": "Fission SY-SaucerSwap HBAR/USDC",
+    "symbol": "fSY-SS",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10429850",
+    "address": "0x00000000000000000000000000000000009f259a",
+    "name": "Fission SY-HBARX",
+    "symbol": "fSY-HBARX",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10429855",
+    "address": "0xd827b55ac242f80d93e42b1aaf890f32a1cf11ed",
+    "name": "Fission PT-0",
+    "symbol": "fPT-0",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10429856",
+    "address": "0xd7cf7ecae87f5cf0f3f6197c81a0a2e303e1d05a",
+    "name": "Fission YT-0",
+    "symbol": "fYT-0",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10431566",
+    "address": "0x861d383df92dd01cebf7c7562664497db752a683",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.10431580",
+    "address": "0x7a0351a846b60ec4915168b24cf1ca5846e6a281",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.10431605",
+    "address": "0x4e372e0bfdc7c86d13328fe07ace70a0248706ac",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.10431896",
+    "address": "0x00000000000000000000000000000000009f2d98",
+    "name": "Frontline Token",
+    "symbol": "FLT",
+    "totalSupply": 0,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.10431906",
+    "address": "0x00000000000000000000000000000000009f2da2",
+    "name": "Frontline Token",
+    "symbol": "FLT",
+    "totalSupply": 100000000000000000,
+    "decimals": 8
   }
 ]
