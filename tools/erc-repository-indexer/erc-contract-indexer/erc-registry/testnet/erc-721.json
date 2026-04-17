@@ -68596,5 +68596,11 @@
     "address": "0x7cb7d985848805ffdb50c097f7b283e648ae40c5",
     "name": "TestMintNFT",
     "symbol": "TMNFT"
+  },
+  {
+    "contractId": "0.0.8681859",
+    "address": "0x0000000000000000000000000000000000847983",
+    "name": "Verifiable Property Ledger",
+    "symbol": "VPL"
   }
 ]
