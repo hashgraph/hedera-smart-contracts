@@ -11102,5 +11102,197 @@
     "symbol": "FLT",
     "totalSupply": 100000000000000000,
     "decimals": 8
+  },
+  {
+    "contractId": "0.0.10438400",
+    "address": "0x00000000000000000000000000000000009f4700",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10438437",
+    "address": "0x00000000000000000000000000000000009f4725",
+    "name": "Fission SY-SaucerSwap HBAR/USDC",
+    "symbol": "fSY-SS",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10438458",
+    "address": "0x00000000000000000000000000000000009f473a",
+    "name": "Fission SY-HBARX",
+    "symbol": "fSY-HBARX",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10438460",
+    "address": "0xf67b0137125a583e4f182c40e6c7f24ba1f19beb",
+    "name": "Fission PT-0",
+    "symbol": "fPT-0",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10438461",
+    "address": "0x21790c3099feae2f8bd5caf0cfc89dfbaa11197a",
+    "name": "Fission YT-0",
+    "symbol": "fYT-0",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10438806",
+    "address": "0xed55f27aafc96c512470fe54f50b2920b8f61331",
+    "name": "Fission PT-1",
+    "symbol": "fPT-1",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10438807",
+    "address": "0x9d485e5259a7a1e46e924a801ff0b6c4fc3b81bf",
+    "name": "Fission YT-1",
+    "symbol": "fYT-1",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10438934",
+    "address": "0x00000000000000000000000000000000009f4916",
+    "name": "Fission Seed USDC",
+    "symbol": "fUSDC",
+    "totalSupply": 1e+21,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10438936",
+    "address": "0x00000000000000000000000000000000009f4918",
+    "name": "Fission SY-SaucerSwap HBAR/USDC",
+    "symbol": "fSY-SS",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10438938",
+    "address": "0xd8b9bbd1c00fd1b0a1aa0d8d5b7a52098534e07b",
+    "name": "Fission PT-2",
+    "symbol": "fPT-2",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10438939",
+    "address": "0x6533df922cff044aabef184bfd11a44650d363bf",
+    "name": "Fission YT-2",
+    "symbol": "fYT-2",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10438942",
+    "address": "0x00000000000000000000000000000000009f491e",
+    "name": "Fission Seed USDC",
+    "symbol": "fUSDC",
+    "totalSupply": 1e+21,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10438944",
+    "address": "0x00000000000000000000000000000000009f4920",
+    "name": "Fission SY-SaucerSwap HBAR/USDC",
+    "symbol": "fSY-SS",
+    "totalSupply": 400000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10438982",
+    "address": "0x5c3a8d09ff0f05f29513ced3b871c1f039be4f1e",
+    "name": "Fission PT-3",
+    "symbol": "fPT-3",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10438983",
+    "address": "0xd6340578f044fe97ac8ecff37174694cbf08b59b",
+    "name": "Fission YT-3",
+    "symbol": "fYT-3",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10439014",
+    "address": "0x00000000000000000000000000000000009f4966",
+    "name": "Fission Seed USDC",
+    "symbol": "fUSDC",
+    "totalSupply": 1e+21,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10439016",
+    "address": "0x00000000000000000000000000000000009f4968",
+    "name": "Fission SY-SaucerSwap HBAR/USDC",
+    "symbol": "fSY-SS",
+    "totalSupply": 400000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10439042",
+    "address": "0xe1f14fe5c16c2804b362c41f322b311dd9d41cfd",
+    "name": "Fission PT-4",
+    "symbol": "fPT-4",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10439043",
+    "address": "0x1e9435ed50e83c17096a9055a5d7230e25cd5eb9",
+    "name": "Fission YT-4",
+    "symbol": "fYT-4",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10439054",
+    "address": "0x00000000000000000000000000000000009f498e",
+    "name": "Fission Seed USDC",
+    "symbol": "fUSDC",
+    "totalSupply": 1e+21,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10439069",
+    "address": "0x00000000000000000000000000000000009f499d",
+    "name": "Fission Seed USDC",
+    "symbol": "fUSDC",
+    "totalSupply": 1e+21,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10439073",
+    "address": "0x00000000000000000000000000000000009f49a1",
+    "name": "Fission SY-SaucerSwap HBAR/USDC",
+    "symbol": "fSY-SS",
+    "totalSupply": 800000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10439096",
+    "address": "0xd381beec9099c081358e9624aca575b6b0c64183",
+    "name": "Fission PT-5",
+    "symbol": "fPT-5",
+    "totalSupply": 400000000000000000000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.10439097",
+    "address": "0x8c5843caed6192a32e374a54c25c6743bc5990df",
+    "name": "Fission YT-5",
+    "symbol": "fYT-5",
+    "totalSupply": 400000000000000000000,
+    "decimals": 18
   }
 ]
