@@ -68596,5 +68596,125 @@
     "address": "0x7cb7d985848805ffdb50c097f7b283e648ae40c5",
     "name": "TestMintNFT",
     "symbol": "TMNFT"
+  },
+  {
+    "contractId": "0.0.8681859",
+    "address": "0x0000000000000000000000000000000000847983",
+    "name": "Verifiable Property Ledger",
+    "symbol": "VPL"
+  },
+  {
+    "contractId": "0.0.8709891",
+    "address": "0x9137d7f0ff9ab7b5653bacfebd020a57c93a5c4f",
+    "name": "TenderLedger Gov Token",
+    "symbol": "TL-GOV"
+  },
+  {
+    "contractId": "0.0.8709893",
+    "address": "0x6a0416cba8711e3e57a7e8bd2c3797727e611fd4",
+    "name": "TenderLedger Admin Token",
+    "symbol": "TL-ADMIN"
+  },
+  {
+    "contractId": "0.0.8709897",
+    "address": "0x56ef4ab0a13bacd78f6e36b97ae666d67ddb1deb",
+    "name": "TenderLedger Auditor Token",
+    "symbol": "TL-AUD"
+  },
+  {
+    "contractId": "0.0.8709898",
+    "address": "0x7d51b7a0d29d4ec62ec6f8ff2d89801073daf0e6",
+    "name": "TenderLedger Bidder Token",
+    "symbol": "TL-BIDDER"
+  },
+  {
+    "contractId": "0.0.8709967",
+    "address": "0x699261888ae60935cb5b8c6ace180e845c509088",
+    "name": "TenderLedger Gov Token",
+    "symbol": "TL-GOV"
+  },
+  {
+    "contractId": "0.0.8709968",
+    "address": "0xd36bf651cd7deb789d025161c20a18a9961cc0de",
+    "name": "TenderLedger Admin Token",
+    "symbol": "TL-ADMIN"
+  },
+  {
+    "contractId": "0.0.8709969",
+    "address": "0x8a34bdc7e9e361e6284991f5d7df3465fdbebb9d",
+    "name": "TenderLedger Auditor Token",
+    "symbol": "TL-AUD"
+  },
+  {
+    "contractId": "0.0.8709970",
+    "address": "0x728e6e5538e65a3aedffd3f9d2d7cfc16e4622a8",
+    "name": "TenderLedger Bidder Token",
+    "symbol": "TL-BIDDER"
+  },
+  {
+    "contractId": "0.0.8709973",
+    "address": "0x7c4c919a1e3d7c0a09a47c70ab1dfc2450fed36c",
+    "name": "TenderLedger Winner",
+    "symbol": "TL-WIN"
+  },
+  {
+    "contractId": "0.0.8715157",
+    "address": "0x525a016de00d1077cc3a2d24a4733bc449252e63",
+    "name": "TenderLedger Gov Token",
+    "symbol": "TL-GOV"
+  },
+  {
+    "contractId": "0.0.8715158",
+    "address": "0xb5b5d6b51689d608be9b7b885d35b6ec411e783e",
+    "name": "TenderLedger Admin Token",
+    "symbol": "TL-ADMIN"
+  },
+  {
+    "contractId": "0.0.8715161",
+    "address": "0x6c28a5f7e6f404f2d6c746aaecd3c9675e650fe7",
+    "name": "TenderLedger Auditor Token",
+    "symbol": "TL-AUD"
+  },
+  {
+    "contractId": "0.0.8715162",
+    "address": "0xd4430520f20be9d31e6f771d5c66a5650602feb0",
+    "name": "TenderLedger Bidder Token",
+    "symbol": "TL-BIDDER"
+  },
+  {
+    "contractId": "0.0.8715168",
+    "address": "0x2583ea645e3fd0075758cd3091924298abee2ab2",
+    "name": "TenderLedger Winner",
+    "symbol": "TL-WIN"
+  },
+  {
+    "contractId": "0.0.8715193",
+    "address": "0x9f9cdae35fdb1a94c1adddbd70323758d9cae2f4",
+    "name": "TenderLedger Gov Token",
+    "symbol": "TL-GOV"
+  },
+  {
+    "contractId": "0.0.8715195",
+    "address": "0x6e73973e5af86fd1307b0fa4511243922cb00c87",
+    "name": "TenderLedger Admin Token",
+    "symbol": "TL-ADMIN"
+  },
+  {
+    "contractId": "0.0.8715197",
+    "address": "0xc22ddf6106a84b9e02584f102a457ffcb0d8db99",
+    "name": "TenderLedger Auditor Token",
+    "symbol": "TL-AUD"
+  },
+  {
+    "contractId": "0.0.8715198",
+    "address": "0x90f1acd68ac693274df61739a658cb4028ab0659",
+    "name": "TenderLedger Bidder Token",
+    "symbol": "TL-BIDDER"
+  },
+  {
+    "contractId": "0.0.8715205",
+    "address": "0x550e043eb8baae7e17502fae95780e16f4ec7bde",
+    "name": "TenderLedger Winner",
+    "symbol": "TL-WIN"
   }
 ]
