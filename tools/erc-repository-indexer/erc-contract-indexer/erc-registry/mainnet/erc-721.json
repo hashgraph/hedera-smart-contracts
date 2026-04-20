@@ -2092,5 +2092,11 @@
     "address": "0x00000000000000000000000000000000009f38cc",
     "name": "HederaNFT",
     "symbol": "HNFT"
+  },
+  {
+    "contractId": "0.0.10442562",
+    "address": "0x990f78b2d73ecd5c73dcda68b72d39f31b017fb7",
+    "name": "Hedera NFT Booth",
+    "symbol": "HBOOTH"
   }
 ]
