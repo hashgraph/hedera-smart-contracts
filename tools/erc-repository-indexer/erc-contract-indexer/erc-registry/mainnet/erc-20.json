@@ -11294,5 +11294,29 @@
     "symbol": "fYT-5",
     "totalSupply": 400000000000000000000,
     "decimals": 18
+  },
+  {
+    "contractId": "0.0.10447385",
+    "address": "0xaff5103350efbbffe5e02f8a6bcec7cef2445a95",
+    "name": "Token Energia 01",
+    "symbol": "ENER01",
+    "totalSupply": 30000000,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.10447450",
+    "address": "0xdaa80385e052884d45c35e275c634448444d64c8",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.10447461",
+    "address": "0x591aaccd2f3aa80938b75b7cb93c7a345cfaa59e",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
   }
 ]
