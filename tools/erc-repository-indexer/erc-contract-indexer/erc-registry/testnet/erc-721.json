@@ -68890,5 +68890,17 @@
     "address": "0xd89a44a27c6c672ea58f9acb4af7bd9f83da72ac",
     "name": "ScheduledERC721-1776867864836",
     "symbol": "STNFT"
+  },
+  {
+    "contractId": "0.0.8740740",
+    "address": "0x316e90938878f48a1cfba98b8942fa635a66a02c",
+    "name": "HBadge",
+    "symbol": "HBDG"
+  },
+  {
+    "contractId": "0.0.8743666",
+    "address": "0x1e5121b325becbaaf1605cb9ce7e48015df7d222",
+    "name": "",
+    "symbol": ""
   }
 ]
