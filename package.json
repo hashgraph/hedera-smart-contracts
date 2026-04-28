@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@hashgraph/hedera-local": "^2.35.0",
-    "@hashgraph/sdk": "^2.70.0",
+    "@hashgraph/sdk": "^2.81.0",
     "@hiero-ledger/hiero-contracts": "^0.1.0-rc.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.8",
     "@nomicfoundation/hardhat-foundry": "^1.2.0",
@@ -54,7 +54,7 @@
     "dotenv": "^17.2.1",
     "elliptic": "^6.6.1",
     "mcl-wasm": "^2.0.0",
-    "protobufjs": "^7.5.3",
+    "protobufjs": "^7.5.5",
     "solidity-coverage": "^0.8.16"
   }
 }
