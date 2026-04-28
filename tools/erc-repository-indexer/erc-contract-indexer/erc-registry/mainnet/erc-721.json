@@ -2098,5 +2098,11 @@
     "address": "0x990f78b2d73ecd5c73dcda68b72d39f31b017fb7",
     "name": "Hedera NFT Booth",
     "symbol": "HBOOTH"
+  },
+  {
+    "contractId": "0.0.10453714",
+    "address": "0x8b4c0e92d95b4bb191a13dd83d486c6a5c05b39d",
+    "name": "",
+    "symbol": ""
   }
 ]

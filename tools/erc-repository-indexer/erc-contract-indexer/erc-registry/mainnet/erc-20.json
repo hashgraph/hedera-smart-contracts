@@ -11318,5 +11318,21 @@
     "symbol": "",
     "totalSupply": 0,
     "decimals": 0
+  },
+  {
+    "contractId": "0.0.10449684",
+    "address": "0xa03a2d059863a0b29427c922497e94e788c65b82",
+    "name": "HUSD",
+    "symbol": "HUSD",
+    "totalSupply": 1000000,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.10449875",
+    "address": "0xfbbdf449c1b693e3430bb6d635d5a4f517ce7a9c",
+    "name": "HUSD",
+    "symbol": "HUSD",
+    "totalSupply": 0,
+    "decimals": 6
   }
 ]
