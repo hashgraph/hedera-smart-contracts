@@ -74,11 +74,11 @@ jobs:
         run: |
           cat > .github/falcon.yml <<EOF
           network:
-            --release-tag: "${{ inputs.networkTag }}"
+            --release-tag: "${{ inputs.networkTag  || 'v0.72.0' }}"
             --node-aliases: "node1"
           
           setup:
-            --release-tag: "${{ inputs.networkTag }}"
+            --release-tag: "${{ inputs.networkTag  || 'v0.72.0' }}"
             --node-aliases: "node1"
           
           consensusNode:
@@ -87,13 +87,13 @@ jobs:
           mirrorNode:
             --enable-ingress: true
             --pinger: true
-            --mirror-node-version: "${{ inputs.mirrorTag }}"
+            --mirror-node-version: "${{ inputs.mirrorTag || 'v0.151.0' }}"
             --force-port-forward: true
           explorerNode:
             --enable-ingress: true
           relayNode:
             --node-aliases: "node1"
-            --relay-version: "${{ inputs.relayTag }}"
+            --relay-version: "${{ inputs.relayTag || 'v0.75.0' }}"
             --values-file: ".github/relay-values.yml"
           EOF
 
