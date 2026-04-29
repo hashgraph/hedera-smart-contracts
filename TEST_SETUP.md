@@ -71,19 +71,17 @@ foundryup
 
 #### 6. Test smart contracts
 
-##### 6.1 Set up `Hedera Local Node`
+##### 6.1 Set up `Solo`
 
 - Use the default env variables provided in [local.env](./local.env) for your `.env` file.
 
 - Ensure that the `defaultNetwork` in [hardhat.config.js](./hardhat.config.js) is set to `NETWORKS.local.name`.
 
-- From the root of your project directory, execute the following command to start up a `Hedera local node`:
+- From the root of your project directory, execute the following command to start up a `solo`:
 
 ```
-   npx hedera start -d
+    npx @hashgraph/solo  one-shot falcon deploy --values-file .github/falcon.yml --dev
 ```
-
-**_Important_**: Before running the `hedera local node`, verify that there are no other instances of Hedera docker containers or json-rpc-relay running in the background, as they might interfere with the functionality of the `hedera local node`.
 
 ##### 6.2 Execute test suites
 
