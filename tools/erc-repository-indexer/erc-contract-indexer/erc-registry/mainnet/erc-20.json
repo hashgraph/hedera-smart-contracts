@@ -11334,5 +11334,13 @@
     "symbol": "HUSD",
     "totalSupply": 0,
     "decimals": 6
+  },
+  {
+    "contractId": "0.0.10454103",
+    "address": "0x0f99f2903135e61fdf56cc4fda410db9fb12fa3e",
+    "name": "HUSD",
+    "symbol": "HUSD",
+    "totalSupply": 0,
+    "decimals": 6
   }
 ]
