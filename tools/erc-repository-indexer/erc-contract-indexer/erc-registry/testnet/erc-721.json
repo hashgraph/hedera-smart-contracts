@@ -68986,5 +68986,77 @@
     "address": "0x00000000000000000000000000000000008624b9",
     "name": "OrganNFT",
     "symbol": "ONFT"
+  },
+  {
+    "contractId": "0.0.8810771",
+    "address": "0x13578136a167f8dbb2819e88018a023f58257267",
+    "name": "TestMintNFT",
+    "symbol": "TMNFT"
+  },
+  {
+    "contractId": "0.0.8810777",
+    "address": "0x623ee6fe410c128aae7197c8c224f7c1868ecc5f",
+    "name": "TestERC721",
+    "symbol": "TNFT"
+  },
+  {
+    "contractId": "0.0.8810788",
+    "address": "0xd4c5e0a98320342a8804396179e1724b108bc817",
+    "name": "TestNFT",
+    "symbol": "TNFT"
+  },
+  {
+    "contractId": "0.0.8810791",
+    "address": "0xa468633ba93957469f8441d40d4b7696571e16fa",
+    "name": "ArtNFT",
+    "symbol": "ART"
+  },
+  {
+    "contractId": "0.0.8810800",
+    "address": "0x12f1387a9134b0510d4e96e7154c576d2fc0e326",
+    "name": "EmptyURINFT",
+    "symbol": "EURI"
+  },
+  {
+    "contractId": "0.0.8810807",
+    "address": "0x6ad2e6312542ef00cc765aac5ae772c231e0d70d",
+    "name": "ScheduledERC721-1777413255360",
+    "symbol": "STNFT"
+  },
+  {
+    "contractId": "0.0.8811188",
+    "address": "0xce9e8eeb05abda1731b00a17c936847886a44757",
+    "name": "TestNFT",
+    "symbol": "TNFT"
+  },
+  {
+    "contractId": "0.0.8811204",
+    "address": "0xcd94e2a5687fb10741c2e7732f59ac18c3dbbd31",
+    "name": "MintTest",
+    "symbol": "MNT"
+  },
+  {
+    "contractId": "0.0.8811232",
+    "address": "0xf8a28b4e34fc67337b4c06f2d0e0d45037dac298",
+    "name": "MyERC721",
+    "symbol": "M721"
+  },
+  {
+    "contractId": "0.0.8811267",
+    "address": "0x7a2c1600441e6dea7141d39e224973a852b94ab4",
+    "name": "ArtCollection",
+    "symbol": "ART"
+  },
+  {
+    "contractId": "0.0.8811304",
+    "address": "0x3f274957dced17766314341fe652273efecda43a",
+    "name": "GameItems",
+    "symbol": "GAME"
+  },
+  {
+    "contractId": "0.0.8811350",
+    "address": "0x550e71524d7f489caf7a63bbfbfe6cd5fbea2068",
+    "name": "MyERC721-1777414658723",
+    "symbol": "M721"
   }
 ]
