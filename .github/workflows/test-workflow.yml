@@ -93,7 +93,7 @@ jobs:
             --enable-ingress: true
           relayNode:
             --node-aliases: "node1"
-            --relay-version: "${{ inputs.relayTag || 'v0.75.0' }}"
+            --relay-release: "${{ inputs.relayTag || 'v0.75.0' }}"
             --values-file: ".github/relay-values.yml"
           EOF
 

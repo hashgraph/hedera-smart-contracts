@@ -69,7 +69,7 @@ jobs:
             --enable-ingress: true
           relayNode:
             --node-aliases: "node1"
-            --relay-version: "v0.75.0"
+            --relay-release: "v0.75.0"
             --values-file: ".github/relay-values.yml"
           EOF
 

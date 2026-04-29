@@ -97,7 +97,7 @@ jobs:
             --enable-ingress: true
           relayNode:
             --node-aliases: "node1"
-            --relay-version: "${{ inputs.initialRelayTag }}"
+            --relay-release: "${{ inputs.initialRelayTag }}"
             --values-file: ".github/relay-values.yml"
           EOF
           cat > .github/target.yml <<EOF
@@ -121,7 +121,7 @@ jobs:
             --enable-ingress: true
           relayNode:
             --node-aliases: "node1"
-            --relay-version: "${{ inputs.targetRelayTag }}"
+            --relay-release: "${{ inputs.targetRelayTag }}"
             --values-file: ".github/relay-values.yml"
           EOF
 
