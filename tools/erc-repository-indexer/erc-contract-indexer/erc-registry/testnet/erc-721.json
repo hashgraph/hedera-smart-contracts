@@ -69058,5 +69058,65 @@
     "address": "0x550e71524d7f489caf7a63bbfbfe6cd5fbea2068",
     "name": "MyERC721-1777414658723",
     "symbol": "M721"
+  },
+  {
+    "contractId": "0.0.8824196",
+    "address": "0xf5bd19525e79c04d70a401bb6504777a1506fb79",
+    "name": "MyToken",
+    "symbol": "MTK"
+  },
+  {
+    "contractId": "0.0.8824430",
+    "address": "0xaef99b9a6699a3f74d4d7f88b45df75d5167cf1a",
+    "name": "MyToken",
+    "symbol": "MTK"
+  },
+  {
+    "contractId": "0.0.8824433",
+    "address": "0xeff9035beda316b4feda3659baa22d9fd536516b",
+    "name": "MyToken",
+    "symbol": "MTK"
+  },
+  {
+    "contractId": "0.0.8824436",
+    "address": "0xcc246b22e2389bfc03edaaf13cd2c9d37f648000",
+    "name": "MyToken",
+    "symbol": "MTK"
+  },
+  {
+    "contractId": "0.0.8824440",
+    "address": "0xea5c6eb697eaf3563bce5151f40459e1a97a7eb2",
+    "name": "MyToken",
+    "symbol": "MTK"
+  },
+  {
+    "contractId": "0.0.8824443",
+    "address": "0x86bed7227c922894ce514f51c573ec18a853a2e1",
+    "name": "MyToken",
+    "symbol": "MTK"
+  },
+  {
+    "contractId": "0.0.8824456",
+    "address": "0x5e2b82c62cd3d3a258d3ed3d12e531ff93c4fa71",
+    "name": "MyToken",
+    "symbol": "MTK"
+  },
+  {
+    "contractId": "0.0.8824457",
+    "address": "0xbe2124e619efdebcec901838240bd27e8b29ad6c",
+    "name": "MyToken",
+    "symbol": "MTK"
+  },
+  {
+    "contractId": "0.0.8824642",
+    "address": "0x9b619f17df546bd7b90cce1a927cfa33f42fce7f",
+    "name": "MyToken",
+    "symbol": "MTK"
+  },
+  {
+    "contractId": "0.0.8824653",
+    "address": "0xf4145edc8e7b9d5aa4bcd5fb4f3d8ae35e21977c",
+    "name": "MyToken",
+    "symbol": "MTK"
   }
 ]
