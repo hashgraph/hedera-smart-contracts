@@ -15,7 +15,7 @@ describe('@OZERC20 Test Suite', function () {
   let erc20Contract;
   let wallet1;
   let wallet2;
-  const DEFAULT_TIMEOUT = 30000;
+  const DEFAULT_TIMEOUT = 120000;
 
   before(async function () {
     this.timeout(DEFAULT_TIMEOUT);
