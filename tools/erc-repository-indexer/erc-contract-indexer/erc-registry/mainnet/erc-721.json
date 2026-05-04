@@ -2104,5 +2104,11 @@
     "address": "0x8b4c0e92d95b4bb191a13dd83d486c6a5c05b39d",
     "name": "",
     "symbol": ""
+  },
+  {
+    "contractId": "0.0.10461215",
+    "address": "0x076f9edf1ab331a0253af970c47380eb29657754",
+    "name": "HBadge",
+    "symbol": "HBDG"
   }
 ]
