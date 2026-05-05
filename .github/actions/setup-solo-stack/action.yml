@@ -93,36 +93,65 @@ runs:
         kubectl get pods -A -o wide 2>/dev/null | grep -E '^NAMESPACE|relay' || kubectl get pods -A -o wide 2>/dev/null || true
         echo "::endgroup::"
 
-        echo "::group::Describe relay-labeled pods"
+        RELAY_PODS="${RUNNER_TEMP:-/tmp}/relay-pods-$$.txt"
+        : > "$RELAY_PODS"
+        kubectl get pods -A -l app.kubernetes.io/instance=relay-1 --no-headers 2>/dev/null >>"$RELAY_PODS"
+        kubectl get pods -A -l app.kubernetes.io/name=relay --no-headers 2>/dev/null >>"$RELAY_PODS"
+        sort -u "$RELAY_PODS" -o "$RELAY_PODS"
+        if [[ ! -s "$RELAY_PODS" ]]; then
+          while read -r podpath; do
+            [[ -z "$podpath" ]] && continue
+            ns=${podpath#pod/}
+            ns=${ns%%/*}
+            pod=${podpath##*/}
+            kubectl get pod -n "$ns" "$pod" --no-headers 2>/dev/null >>"$RELAY_PODS"
+          done < <(kubectl get pods -A -o name 2>/dev/null | grep -i relay)
+          sort -u "$RELAY_PODS" -o "$RELAY_PODS"
+        fi
+
+        echo "::group::Describe relay pods (instance=relay-1 + name=relay, deduped)"
         while read -r line; do
           [[ -z "$line" ]] && continue
           ns=$(echo "$line" | awk '{print $1}')
           pod=$(echo "$line" | awk '{print $2}')
           echo "---- describe $ns/$pod ----"
           kubectl describe pod -n "$ns" "$pod" 2>/dev/null || true
-        done < <(kubectl get pods -A -l app.kubernetes.io/name=relay --no-headers 2>/dev/null)
+        done <"$RELAY_PODS"
         echo "::endgroup::"
 
-        echo "::group::Relay pod logs (all containers, tail 400)"
+        echo "::group::Relay pod logs (all containers, current + previous)"
         while read -r line; do
           [[ -z "$line" ]] && continue
           ns=$(echo "$line" | awk '{print $1}')
           pod=$(echo "$line" | awk '{print $2}')
-          echo "---- logs $ns/$pod ----"
-          kubectl logs -n "$ns" "$pod" --all-containers --tail=400 --timestamps 2>&1 || true
-        done < <(kubectl get pods -A -l app.kubernetes.io/name=relay --no-headers 2>/dev/null)
+          echo "---- logs (current, tail 2000) $ns/$pod ----"
+          kubectl logs -n "$ns" "$pod" --all-containers --tail=2000 --timestamps 2>&1 || true
+          echo "---- logs (previous instance, tail 200) $ns/$pod ----"
+          kubectl logs -n "$ns" "$pod" --all-containers --previous --tail=200 --timestamps 2>&1 || true
+        done <"$RELAY_PODS"
+        echo "::endgroup::"
 
-        # Fallback: any pod with "relay" in the name if labels differ from Solo's expectation
-        if ! kubectl get pods -A -l app.kubernetes.io/name=relay --no-headers 2>/dev/null | grep -q .; then
-          while read -r podpath; do
-            [[ -z "$podpath" ]] && continue
-            ns=${podpath#pod/}
-            ns=${ns%%/*}
-            pod=${podpath##*/}
-            echo "---- logs (name match) $ns/$pod ----"
-            kubectl logs -n "$ns" "$pod" --all-containers --tail=400 --timestamps 2>&1 || true
-          done < <(kubectl get pods -A -o name 2>/dev/null | grep -i relay)
-        fi
+        echo "::group::Relay pod logs (per-container + initContainers)"
+        while read -r line; do
+          [[ -z "$line" ]] && continue
+          ns=$(echo "$line" | awk '{print $1}')
+          pod=$(echo "$line" | awk '{print $2}')
+          for c in $(kubectl get pod -n "$ns" "$pod" -o jsonpath='{.spec.initContainers[*].name}' 2>/dev/null); do
+            echo "---- initContainer $c @ $ns/$pod ----"
+            kubectl logs -n "$ns" "$pod" -c "$c" --tail=500 --timestamps 2>&1 || true
+          done
+          for c in $(kubectl get pod -n "$ns" "$pod" -o jsonpath='{.spec.containers[*].name}' 2>/dev/null); do
+            echo "---- container $c @ $ns/$pod ----"
+            kubectl logs -n "$ns" "$pod" -c "$c" --tail=2000 --timestamps 2>&1 || true
+            kubectl logs -n "$ns" "$pod" -c "$c" --previous --tail=200 --timestamps 2>&1 || true
+          done
+        done <"$RELAY_PODS"
+        echo "::endgroup::"
+
+        rm -f "$RELAY_PODS"
+
+        echo "::group::Relay-related events (all namespaces, grep relay)"
+        kubectl get events -A --sort-by='.lastTimestamp' 2>/dev/null | grep -i relay | tail -80 || true
         echo "::endgroup::"
 
         echo "::group::Recent events (namespaces containing rss or solo)"
