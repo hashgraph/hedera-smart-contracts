@@ -64,8 +64,10 @@ runs:
           --deploy-explorer=false \
           --external-address 0.0.0.0
 
-    - name: Debug relay on Solo deploy failure
-      if: ${{ steps.solo-deploy.outcome == 'failure' }}
+    # Temporary: dump relay/kubectl state after every Solo deploy attempt (success or failure).
+    # Remove this step before merging once relay CI is stable.
+    - name: Debug relay after Solo deploy (temporary)
+      if: ${{ always() && steps.solo-deploy.outcome != 'skipped' }}
       shell: bash
       run: |
         set +e
