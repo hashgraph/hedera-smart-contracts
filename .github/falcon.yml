@@ -1,4 +1,3 @@
-# Default Falcon values for local `npm run solo:deploy` (CI workflows overwrite via heredoc).
 network:
   --release-tag: "v0.72.0"
   --node-aliases: "node1"
@@ -14,3 +13,4 @@ mirrorNode:
   --values-file: .github/mirror-node-values.yaml
 relayNode:
   --relay-release: "0.76.2"
+  --node-aliases: "node1"

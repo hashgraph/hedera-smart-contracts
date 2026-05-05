@@ -55,6 +55,7 @@ runs:
         wait: 120s
 
     - name: Start the Solo node
+      id: solo-deploy
       shell: bash
       run: |
         npx @hashgraph/solo@${{ inputs.solo-version }} one-shot falcon deploy \
@@ -62,3 +63,73 @@ runs:
           --dev \
           --deploy-explorer=false \
           --external-address 0.0.0.0
+
+    - name: Debug relay on Solo deploy failure
+      if: ${{ steps.solo-deploy.outcome == 'failure' }}
+      shell: bash
+      run: |
+        set +e
+        export PATH="${HOME}/.solo/bin:${PATH}"
+
+        echo "::group::kubectl context"
+        kubectl version --client 2>/dev/null || true
+        kubectl config get-contexts 2>/dev/null || true
+        if kubectl config get-contexts -o name 2>/dev/null | grep -qx 'kind-solo-cluster'; then
+          kubectl config use-context kind-solo-cluster
+        fi
+        echo "::endgroup::"
+
+        echo "::group::Pods matching relay labels (app.kubernetes.io/name=relay)"
+        kubectl get pods -A -l app.kubernetes.io/name=relay -o wide 2>/dev/null || true
+        echo "::endgroup::"
+
+        echo "::group::Pods matching relay instance (app.kubernetes.io/instance=relay-1)"
+        kubectl get pods -A -l app.kubernetes.io/instance=relay-1 -o wide 2>/dev/null || true
+        echo "::endgroup::"
+
+        echo "::group::All pods (grep relay)"
+        kubectl get pods -A -o wide 2>/dev/null | grep -E '^NAMESPACE|relay' || kubectl get pods -A -o wide 2>/dev/null || true
+        echo "::endgroup::"
+
+        echo "::group::Describe relay-labeled pods"
+        while read -r line; do
+          [[ -z "$line" ]] && continue
+          ns=$(echo "$line" | awk '{print $1}')
+          pod=$(echo "$line" | awk '{print $2}')
+          echo "---- describe $ns/$pod ----"
+          kubectl describe pod -n "$ns" "$pod" 2>/dev/null || true
+        done < <(kubectl get pods -A -l app.kubernetes.io/name=relay --no-headers 2>/dev/null)
+        echo "::endgroup::"
+
+        echo "::group::Relay pod logs (all containers, tail 400)"
+        while read -r line; do
+          [[ -z "$line" ]] && continue
+          ns=$(echo "$line" | awk '{print $1}')
+          pod=$(echo "$line" | awk '{print $2}')
+          echo "---- logs $ns/$pod ----"
+          kubectl logs -n "$ns" "$pod" --all-containers --tail=400 --timestamps 2>&1 || true
+        done < <(kubectl get pods -A -l app.kubernetes.io/name=relay --no-headers 2>/dev/null)
+
+        # Fallback: any pod with "relay" in the name if labels differ from Solo's expectation
+        if ! kubectl get pods -A -l app.kubernetes.io/name=relay --no-headers 2>/dev/null | grep -q .; then
+          while read -r podpath; do
+            [[ -z "$podpath" ]] && continue
+            ns=${podpath#pod/}
+            ns=${ns%%/*}
+            pod=${podpath##*/}
+            echo "---- logs (name match) $ns/$pod ----"
+            kubectl logs -n "$ns" "$pod" --all-containers --tail=400 --timestamps 2>&1 || true
+          done < <(kubectl get pods -A -o name 2>/dev/null | grep -i relay)
+        fi
+        echo "::endgroup::"
+
+        echo "::group::Recent events (namespaces containing rss or solo)"
+        for ns in $(kubectl get ns -o jsonpath='{.items[*].metadata.name}' 2>/dev/null | tr ' ' '\n' | grep -E 'rss-|solo'); do
+          echo "---- events in $ns ----"
+          kubectl get events -n "$ns" --sort-by='.lastTimestamp' 2>/dev/null | tail -60 || true
+        done
+        echo "::endgroup::"
+
+        echo "::group::Helm releases (if helm available)"
+        command -v helm >/dev/null && helm list -A 2>/dev/null || echo "helm not on PATH"
+        echo "::endgroup::"
