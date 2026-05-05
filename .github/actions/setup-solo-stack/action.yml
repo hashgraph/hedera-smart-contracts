@@ -41,6 +41,7 @@ runs:
           --values-file: .github/mirror-node-values.yaml
         relayNode:
           --relay-release: "${{ inputs.relay-tag }}"
+          --node-aliases: "node1"
         EOF
 
     - name: Setup Kind
