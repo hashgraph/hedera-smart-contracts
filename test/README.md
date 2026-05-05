@@ -60,9 +60,6 @@ Running "npx hardhat test" in the terminal will execute all the existing tests. 
 
 # Execute tests locally against mainnet, testnet and previewnet, localnet
 
-- Start the local node:
-  npx hedera start -d --network ${networkName}
+- Start a local network with [Solo](https://solo.hiero.org/): from the repository root, configure [`.github/falcon.yml`](../.github/falcon.yml) and run `npm run solo:deploy` (see [TEST_SETUP.md](../TEST_SETUP.md)). Use [local.env](../local.env) for operator settings that match the deployed network.
 
-Network specific configurations can be applied using the -n/--network option when starting/restarting the local node. Pre-configured options are mainnet, previewnet, testnet and local.
-
-[Local node documentation](https://github.com/hashgraph/hedera-local-node/#using-hedera-local)
+[Network and node identity (Solo)](https://solo.hiero.org/docs/advanced-solo-setup/using-environment-variables/#network-and-node-identity)

@@ -46,15 +46,14 @@ jobs:
           cd ${{env.INDEXER_PATH}}
           npm run test:unit
 
-      - name: Start the local node
-        run: npx hedera start -d --verbose=trace
-        timeout-minutes: 5
+      - name: Deploy local Hiero network (Solo / Kind)
+        uses: ./.github/actions/setup-solo-stack
+        with:
+          solo-version: "0.71.0"
+        timeout-minutes: 15
 
       - name: Run Acceptance Tests
         run: |
           cd ${{env.INDEXER_PATH}}
           npm run test:acceptance
 
-      - name: Stop the local node
-        if: ${{ !cancelled() }}
-        run: npx hedera stop

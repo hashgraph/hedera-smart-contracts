@@ -15,6 +15,9 @@ on:
       relayTag:
         required: false
         type: string
+      soloVersion:
+        required: false
+        type: string
 
 defaults:
   run:
@@ -44,11 +47,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - name: Install Docker Compose Plugin
-        run: |
-          sudo curl -fLo /usr/local/lib/docker/cli-plugins/docker-compose https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-linux-x86_64
-          sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
-
       - name: Use Node.js [20]
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
@@ -67,9 +65,14 @@ jobs:
         with:
           version: stable
 
-      - name: Start the local node
-        run: npx hedera start -d --network-tag=${{inputs.networkTag}} --mirror-tag=${{inputs.mirrorTag}} --relay-tag=${{inputs.relayTag}} --verbose=trace
-        timeout-minutes: 5
+      - name: Deploy local Hiero network (Solo / Kind)
+        uses: ./.github/actions/setup-solo-stack
+        with:
+          network-tag: ${{ inputs.networkTag || 'v0.72.0' }}
+          mirror-tag: ${{ inputs.mirrorTag || 'v0.151.0' }}
+          relay-tag: ${{ inputs.relayTag || '0.76.2' }}
+          solo-version: ${{ inputs.soloVersion || '0.71.0' }}
+        timeout-minutes: 15
 
       - name: Run the test in ${{ inputs.testfilter }}
         run: npx hardhat test --grep ${{ inputs.testfilter }}
@@ -90,6 +93,3 @@ jobs:
           json_thousands_separator: ','
           files: 'test-*.xml'
 
-      - name: Stop the local node
-        if: ${{ !cancelled() }}
-        run: npx hedera stop

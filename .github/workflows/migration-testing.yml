@@ -35,6 +35,10 @@ on:
         description: 'Specify post-migration test tags'
         required: false
         default: '@post-migration'
+      soloVersion:
+        description: 'npm version for @hashgraph/solo (Falcon one-shot on Kind)'
+        required: false
+        default: '0.71.0'
 
 jobs:
   check:
@@ -70,9 +74,15 @@ jobs:
         with:
           version: stable
 
-      - name: Start the local node with N:${{ inputs.initialNetworkNodeTag }}, M:${{ inputs.initialMirrorNodeTag }}, R:${{ inputs.initialRelayTag }}
-        run: npx hedera start -d --full --network-tag=${{inputs.initialNetworkNodeTag}} --mirror-tag=${{inputs.initialMirrorNodeTag}} --relay-tag=${{inputs.initialRelayTag}}
-        timeout-minutes: 5
+      # Initial stack (Solo / Kind). Image tags come from workflow_dispatch inputs.
+      - name: Deploy local Hiero network — initial tags (Solo / Kind)
+        uses: ./.github/actions/setup-solo-stack
+        with:
+          network-tag: ${{ inputs.initialNetworkNodeTag }}
+          mirror-tag: ${{ inputs.initialMirrorNodeTag }}
+          relay-tag: ${{ inputs.initialRelayTag }}
+          solo-version: ${{ inputs.soloVersion }}
+        timeout-minutes: 15
 
       - name: Run pre-migration tests
         run: npx hardhat test --grep ${{ inputs.preMigrationTestTags }}
@@ -84,21 +94,21 @@ jobs:
           sleep 30
         timeout-minutes: 5
 
-      - name: Stop docker containers (network node)
-        run: docker stop network-node json-rpc-relay json-rpc-relay-ws
-        timeout-minutes: 5
-
-      - name: Run the local node with N:${{ inputs.targetNetworkNodeTag }}, M:${{ inputs.targetMirrorNodeTag }}, R:${{ inputs.targetRelayTag }}
-        env:
-          NETWORK_NODE_IMAGE_TAG: ${{inputs.targetNetworkNodeTag}}
-          MIRROR_IMAGE_TAG: ${{inputs.targetMirrorNodeTag}}
-          RELAY_IMAGE_TAG: ${{inputs.targetRelayTag}}
-          NETWORK_NODE_LOGS_ROOT_PATH: ~/.local/share/hedera-local/network-logs/node
+      - name: Tear down Kind cluster before target-tag deploy
         run: |
-          docker compose -f docker-compose-state-migration.yml up -d
-          sleep 5
-        working-directory: node_modules/@hashgraph/hedera-local/
-        timeout-minutes: 5
+          set -euo pipefail
+          for c in $(kind get clusters 2>/dev/null || true); do
+            kind delete cluster --name "$c" || true
+          done
+
+      - name: Deploy local Hiero network — target tags (Solo / Kind)
+        uses: ./.github/actions/setup-solo-stack
+        with:
+          network-tag: ${{ inputs.targetNetworkNodeTag }}
+          mirror-tag: ${{ inputs.targetMirrorNodeTag }}
+          relay-tag: ${{ inputs.targetRelayTag }}
+          solo-version: ${{ inputs.soloVersion }}
+        timeout-minutes: 15
 
       - name: Run post-migration tests
         run: npx hardhat test --grep ${{ inputs.postMigrationTestTags }}

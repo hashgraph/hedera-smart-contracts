@@ -71,19 +71,21 @@ foundryup
 
 #### 6. Test smart contracts
 
-##### 6.1 Set up `Hedera Local Node`
+##### 6.1 Set up a local Hiero network (Solo)
 
-- Use the default env variables provided in [local.env](./local.env) for your `.env` file.
+- Use the default env variables provided in [local.env](./local.env) for your `.env` file. Operator account and keys must match the network you deploy; for Solo, see [Network and Node Identity](https://solo.hiero.org/docs/advanced-solo-setup/using-environment-variables/#network-and-node-identity).
 
-- Ensure that the `defaultNetwork` in [hardhat.config.js](./hardhat.config.js) is set to `NETWORKS.local.name`.
+- Install [Kind](https://kind.sigs.k8s.io/) and [kubectl](https://kubernetes.io/docs/tasks/tools/) and ensure Docker is running.
 
-- From the root of your project directory, execute the following command to start up a `Hedera local node`:
+- Ensure that the `defaultNetwork` in [hardhat.config.js](./hardhat.config.js) is set to `NETWORKS.local.name`. Local JSON-RPC uses Solo’s default relay forward (**37546** → pod **7546**); mirror REST ingress uses **38081** (see [utils/constants.js](./utils/constants.js) and Solo’s `@hashgraph/solo` port constants).
+
+- From the project root, adjust [`.github/falcon.yml`](.github/falcon.yml) if you need different network or mirror image tags, then run:
 
 ```
-   npx hedera start -d
+   npm run solo:deploy
 ```
 
-**_Important_**: Before running the `hedera local node`, verify that there are no other instances of Hedera docker containers or json-rpc-relay running in the background, as they might interfere with the functionality of the `hedera local node`.
+**_Important_**: Stop any other local Kind clusters or processes bound to the same ports (e.g. **30212**, **37546**, **38081** — Solo defaults) before deploying.
 
 ##### 6.2 Execute test suites
 

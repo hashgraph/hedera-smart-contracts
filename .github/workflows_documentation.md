@@ -20,6 +20,7 @@ Available workflow inputs are:
 - **targetRelayTag** - Specify the target Relay image tag
 - **preMigrationTestTags** - Specify the pre-migration test tags. Default: @pre-migration. It could be every tag we want (e.g. **@OZERC20**)
 - **postMigrationTestTags** - Specify the post-migration test tags. Default: @post-migration. It could be every tag we want (e.g. **@OZERC20**)
+- **soloVersion** - `@hashgraph/solo` npm version for Falcon one-shot (default `0.71.0`).
 
 Examples:
 
@@ -53,6 +54,8 @@ Examples:
 
 The testing matrix offers pretty big coverage as we can see. All options and combinations rely on us, and what's our end goal.
 
+**Solo / Kind:** This workflow now deploys a local network with `@hashgraph/solo` (Falcon one-shot on Kind) using the `initial*` and `target*` image tag inputs. The job tears down the Kind cluster between the two deploys, so the ledger is **not** carried over; suites that require persisted state across the upgrade may not pass until an in-place upgrade path is added.
+
 ### Opcode logger Testing
 
 In order to make opcode logger testing easier, we decided to use Besu's **debug_traceTransaction** responses as a source of truth for executed opcodes. The pipeline execution is as follows:
@@ -63,8 +66,8 @@ In order to make opcode logger testing easier, we decided to use Besu's **debug_
   - *8541* which is mapped to Besu's WS json-rpc relay
 
   All the overridden node properties as miner address, enabled and included apis including custom genesis file are defined in *utils/besu-configs/customConfigFile.toml*. A custom genesis file (defined in *utils/besu-configs/customGenesisFile.toml*) is needed because starting block number of all existing forks till now must be set to 0 when Besu's node is used as a local private testing network. Start-up accounts are included in *customGenesisFile.json* as well and they easily can be expanded with new user-defined ones.
-- executes specific tests - These tests have custom before and after methods that detect the target network, and if it is Besu, then execute **debug_traceTransaction** against Besu node and save the opcodes response into JSON file. That step doesn't gain us any coverage, it's needed to generate a source of truth when the same tests are executed against the Hedera local node.
-- starts Hedera local node
-- executes specific tests - These tests have custom before and after methods that detect the target network, and if it is Hedera, then execute **debug_traceTransaction** against Hedera local node and compare response opcodes with these generated against Besu and saved in JSON several steps above.
+- executes specific tests - These tests have custom before and after methods that detect the target network, and if it is Besu, then execute **debug_traceTransaction** against Besu node and save the opcodes response into JSON file. That step doesn't gain us any coverage, it's needed to generate a source of truth when the same tests are executed against the local Hedera network.
+- deploys a local Hiero network via Solo (`setup-solo-stack` composite action: Kind + Falcon one-shot)
+- executes specific tests - These tests have custom before and after methods that detect the target network, and if it is Hedera, then execute **debug_traceTransaction** against the local Hedera JSON-RPC endpoint (Solo’s default relay forward, **37546**) and compare response opcodes with these generated against Besu and saved in JSON several steps above.
 
 Entire Besu's prerequisites and responses generation are required because each time a solidity's compiler version in the **hardhat.config.js** is changed, the developer, who did the update, must locally run these tests against Besu to generate a new hardcoded JSON which will be used for further comparison. That would be needed because let's get for example changes from solidity *0.8.23* and *0.8.24*. Contracts compiled with the older version will not include EIP-5656 (for `MCOPY` opcode) and EIP-1153 (for `TSTORE` and `TLOAD` opcodes) and **debug_traceTransaction** will return opcodes based on the contract's bytecode. When a solidity version is updated to *0.8.24* in **hardhat.config.js**, contracts will be precompiled and the new opcodes (from EIP-5656 and EIP-1153) will be introduced in the contracts bytecodes, so when we run the tests and compare **debug_traceTransaction** responses with the hardcoded ones (generated with contracts compiled with solidity *0.8.23*) they will differ. After using a CI as above, the solidity version update is not binding to developers and they shouldn't take extra care for new "source of truth" JSON generation.
