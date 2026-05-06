@@ -67,7 +67,6 @@ runs:
           --values-file .github/falcon.yml \
           --dev \
           --deploy-explorer=false \
-          --external-address 0.0.0.0
           --namespace "$SOLO_NS"
 
     # Temporary: dump relay/kubectl state after every Solo deploy attempt (success or failure).
