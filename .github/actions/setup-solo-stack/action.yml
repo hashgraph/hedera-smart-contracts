@@ -34,11 +34,13 @@ runs:
           --node-aliases: "node1"
         consensusNode:
           --node-aliases: "node1"
+          --force-port-forward: true
         mirrorNode:
           --enable-ingress: true
           --pinger: true
           --mirror-node-version: "${{ inputs.mirror-tag }}"
           --values-file: .github/mirror-node-values.yaml
+          --force-port-forward: true
         relayNode:
           --relay-release: "${{ inputs.relay-tag }}"
           --node-aliases: "node1"
