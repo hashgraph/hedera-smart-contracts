@@ -13,7 +13,7 @@ inputs:
   solo-version:
     description: npm package version for @hashgraph/solo
     required: false
-    default: "0.71.0"
+    default: "0.72.0"
   relay-tag:
     description: JSON-RPC relay image/chart tag (--relay-release)
     required: false
