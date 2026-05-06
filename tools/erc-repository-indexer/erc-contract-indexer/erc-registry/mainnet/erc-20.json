@@ -11342,5 +11342,13 @@
     "symbol": "HUSD",
     "totalSupply": 0,
     "decimals": 6
+  },
+  {
+    "contractId": "0.0.10467162",
+    "address": "0x00000000000000000000000000000000009fb75a",
+    "name": "HCS20 Points",
+    "symbol": "HCS",
+    "totalSupply": 1000000,
+    "decimals": 0
   }
 ]
