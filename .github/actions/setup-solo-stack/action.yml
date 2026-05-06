@@ -58,11 +58,15 @@ runs:
       id: solo-deploy
       shell: bash
       run: |
+        NS_BASE="sc-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${GITHUB_JOB}"
+        SOLO_NS="$(echo "$NS_BASE" | tr '[:upper:]_' '[:lower:]-' | cut -c1-63)"
+
         npx @hashgraph/solo@${{ inputs.solo-version }} one-shot falcon deploy \
           --values-file .github/falcon.yml \
           --dev \
           --deploy-explorer=false \
           --external-address 0.0.0.0
+          --namespace "$SOLO_NS"
 
     # Temporary: dump relay/kubectl state after every Solo deploy attempt (success or failure).
     # Remove this step before merging once relay CI is stable.
