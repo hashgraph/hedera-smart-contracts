@@ -32,6 +32,7 @@ runs:
           --release-tag: "${{ inputs.network-tag }}"
         consensusNode:
           --force-port-forward: true
+          --node-aliases: "node1"
         mirrorNode:
           --enable-ingress: true
           --pinger: true
