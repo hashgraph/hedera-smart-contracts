@@ -9,7 +9,7 @@ inputs:
   mirror-tag:
     description: Mirror node chart/image version (--mirror-node-version)
     required: false
-    default: "v0.154.0"
+    default: "v0.153.0"
   solo-version:
     description: npm package version for @hashgraph/solo
     required: false
