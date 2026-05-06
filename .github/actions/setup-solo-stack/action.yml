@@ -44,6 +44,7 @@ runs:
         relayNode:
           --relay-release: "${{ inputs.relay-tag }}"
           --node-aliases: "node1"
+          --force-port-forward: true
         EOF
 
     - name: Setup Kind
