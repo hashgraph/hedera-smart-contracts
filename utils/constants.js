@@ -20,10 +20,9 @@ const PRIVATE_KEYS = process.env.PRIVATE_KEYS
 const NETWORKS = {
   local: {
     name: 'local',
-    // Solo @hashgraph/solo defaults: relay JSON_RPC_RELAY_LOCAL_PORT=37546, MIRROR_NODE_PORT=38081, LOCAL_NODE_START_PORT=30212.
     url: 'http://127.0.0.1:37546',
     chainId: 298,
-    networkNodeUrl: '127.0.0.1:30212',
+    networkNodeUrl: '127.0.0.1:35211',
     nodeId: '3',
     mirrorNode: 'http://127.0.0.1:38081',
   },
