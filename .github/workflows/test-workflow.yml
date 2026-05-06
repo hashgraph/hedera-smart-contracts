@@ -15,6 +15,9 @@ on:
       relayTag:
         required: false
         type: string
+      soloVersion:
+        required: false
+        type: string
 
 defaults:
   run:
@@ -44,15 +47,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - name: Install Docker Compose Plugin
-        run: |
-          sudo curl -fLo /usr/local/lib/docker/cli-plugins/docker-compose https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-linux-x86_64
-          sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
-
-      - name: Use Node.js [20]
+      - name: Use Node.js [22]
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: 20
+          node-version: 22
           #cache: npm Disabling this because it causes the workflow to hang and eventually timeout
 
       - name: Create .env file
@@ -67,12 +65,121 @@ jobs:
         with:
           version: stable
 
-      - name: Start the local node
-        run: npx hedera start -d --network-tag=${{inputs.networkTag}} --mirror-tag=${{inputs.mirrorTag}} --relay-tag=${{inputs.relayTag}} --verbose=trace
-        timeout-minutes: 5
+      - name: Deploy local Hiero network (Solo / Kind)
+        uses: ./.github/actions/setup-solo-stack
+        with:
+          network-tag: ${{ inputs.networkTag || 'v0.72.0' }}
+          mirror-tag: ${{ inputs.mirrorTag || 'v0.151.0' }}
+          relay-tag: ${{ inputs.relayTag || '0.76.2' }}
+          solo-version: ${{ inputs.soloVersion || '0.71.0' }}
+        timeout-minutes: 15
+
+      - name: Wait for Solo fee APIs
+        run: |
+          set -euo pipefail
+
+          RPC_URL="http://127.0.0.1:37546"
+          MIRROR_FEES_URL="http://127.0.0.1:38081/api/v1/network/fees"
+
+          rpc_request() {
+            local method="$1"
+            local params="${2:-[]}"
+
+            curl -fsS --max-time 5 \
+              -H 'Content-Type: application/json' \
+              --data "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"${method}\",\"params\":${params}}" \
+              "$RPC_URL"
+          }
+
+          has_rpc_result() {
+            node -e '
+              let input = "";
+              process.stdin.on("data", chunk => input += chunk);
+              process.stdin.on("end", () => {
+                try {
+                  const payload = JSON.parse(input);
+                  process.exit(payload && payload.error === undefined && payload.result !== undefined ? 0 : 1);
+                } catch {
+                  process.exit(1);
+                }
+              });
+            '
+          }
+
+          echo "Checking Solo relay and mirror fee readiness before Hardhat tests"
+          echo "Relay RPC: ${RPC_URL}"
+          echo "Mirror fees: ${MIRROR_FEES_URL}"
+
+          last_chain_id=""
+          last_block_number=""
+          last_latest_block=""
+          last_gas_price=""
+          last_fee_history=""
+          last_mirror_fees=""
+
+          for attempt in {1..60}; do
+            last_chain_id="$(rpc_request eth_chainId 2>&1 || true)"
+            last_block_number="$(rpc_request eth_blockNumber 2>&1 || true)"
+            last_latest_block="$(rpc_request eth_getBlockByNumber '["latest",false]' 2>&1 || true)"
+            last_gas_price="$(rpc_request eth_gasPrice 2>&1 || true)"
+            last_fee_history="$(rpc_request eth_feeHistory '["0x1","latest",[]]' 2>&1 || true)"
+            last_mirror_fees="$(curl -fsS --max-time 5 "$MIRROR_FEES_URL" 2>&1 || true)"
+
+            if printf '%s' "$last_latest_block" | has_rpc_result && printf '%s' "$last_gas_price" | has_rpc_result; then
+              echo "Solo fee APIs are ready after ${attempt} attempt(s)."
+              echo "eth_getBlockByNumber: ${last_latest_block}"
+              echo "eth_gasPrice: ${last_gas_price}"
+              echo "eth_feeHistory: ${last_fee_history}"
+              exit 0
+            fi
+
+            if (( attempt == 1 || attempt % 10 == 0 )); then
+              echo "Fee APIs are not ready yet (attempt ${attempt}/60)."
+              echo "eth_chainId: ${last_chain_id}"
+              echo "eth_blockNumber: ${last_block_number}"
+              echo "eth_getBlockByNumber: ${last_latest_block}"
+              echo "eth_gasPrice: ${last_gas_price}"
+              echo "eth_feeHistory: ${last_fee_history}"
+              echo "mirror network fees: ${last_mirror_fees}"
+            fi
+
+            sleep 2
+          done
+
+          echo "::error::Solo fee APIs did not become ready before tests."
+          echo "Last eth_chainId: ${last_chain_id}"
+          echo "Last eth_blockNumber: ${last_block_number}"
+          echo "Last eth_getBlockByNumber: ${last_latest_block}"
+          echo "Last eth_gasPrice: ${last_gas_price}"
+          echo "Last eth_feeHistory: ${last_fee_history}"
+          echo "Last mirror network fees: ${last_mirror_fees}"
+          exit 1
 
       - name: Run the test in ${{ inputs.testfilter }}
         run: npx hardhat test --grep ${{ inputs.testfilter }}
+
+      - name: Dump Solo diagnostics
+        if: failure()
+        run: |
+          set +e
+
+          NS_BASE="sc-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${GITHUB_JOB}"
+          SOLO_NS="$(echo "$NS_BASE" | tr '[:upper:]_' '[:lower:]-' | cut -c1-63)"
+
+          echo "Collecting diagnostics for namespace: ${SOLO_NS}"
+          kubectl get pods -n "$SOLO_NS" -o wide
+          kubectl get services -n "$SOLO_NS" -o wide
+          kubectl get events -n "$SOLO_NS" --sort-by='.lastTimestamp'
+
+          for pod in $(kubectl get pods -n "$SOLO_NS" -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'); do
+            case "$pod" in
+              *relay*|*mirror*|*rest*|*web3*|*importer*)
+                echo "::group::Logs for ${pod}"
+                kubectl logs -n "$SOLO_NS" "$pod" --all-containers=true --tail=300
+                echo "::endgroup::"
+                ;;
+            esac
+          done
 
       - name: Upload Test Results
         if: always()
@@ -90,6 +197,3 @@ jobs:
           json_thousands_separator: ','
           files: 'test-*.xml'
 
-      - name: Stop the local node
-        if: ${{ !cancelled() }}
-        run: npx hedera stop

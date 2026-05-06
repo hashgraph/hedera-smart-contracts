@@ -26,14 +26,13 @@
     "forge:coverage:html": "forge coverage --report lcov && genhtml lcov.info --branch-coverage --output-dir coverage",
     "hh:compile": "hardhat compile",
     "hh:test": "hardhat test",
-    "hedera:start": "npx @hashgraph/hedera-local start --limits=false --dev=true --balance=10000000",
-    "hedera:stop": "npx @hashgraph/hedera-local stop",
+    "solo:deploy": "npx @hashgraph/solo@0.71.0 one-shot falcon deploy --values-file .github/falcon.yml --dev --deploy-explorer=false --external-address 0.0.0.0",
+    "solo:destroy": "npx @hashgraph/solo@0.71.0 one-shot falcon destroy",
     "prepare": "husky install",
     "besu:start": "docker run -d -v ./utils/besu-configs:/var/lib/besu/ -p 8540:8545 -p 8541:8546 hyperledger/besu:24.6.0 --config-file=/var/lib/besu/customConfigFile.toml",
     "freeze-network-node": "hardhat run scripts/freeze-network-node.js"
   },
   "devDependencies": {
-    "@hashgraph/hedera-local": "^2.35.0",
     "@hashgraph/sdk": "^2.81.0",
     "@hiero-ledger/hiero-contracts": "^0.1.0-rc.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.8",

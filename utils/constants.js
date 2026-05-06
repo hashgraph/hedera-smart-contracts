@@ -20,11 +20,11 @@ const PRIVATE_KEYS = process.env.PRIVATE_KEYS
 const NETWORKS = {
   local: {
     name: 'local',
-    url: 'http://localhost:7546',
+    url: 'http://127.0.0.1:37546',
     chainId: 298,
-    networkNodeUrl: '127.0.0.1:50211',
+    networkNodeUrl: '127.0.0.1:35211',
     nodeId: '3',
-    mirrorNode: 'http://127.0.0.1:5600',
+    mirrorNode: 'http://127.0.0.1:38081',
   },
   testnet: {
     name: 'testnet',

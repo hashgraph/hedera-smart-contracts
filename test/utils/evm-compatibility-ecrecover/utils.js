@@ -182,7 +182,7 @@ class Utils {
       case 'previewnet':
         return 'https://previewnet.mirrornode.hedera.com/api/v1';
       case 'local':
-        return 'http://127.0.0.1:5551/api/v1';
+        return 'http://127.0.0.1:38081/api/v1';
       default:
         throw new Error('Unknown network');
     }

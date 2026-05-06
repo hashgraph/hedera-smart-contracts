@@ -27,10 +27,10 @@ jobs:
           sudo curl -fLo /usr/local/lib/docker/cli-plugins/docker-compose https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-linux-x86_64
           sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
-      - name: Use Node.js [20]
+      - name: Use Node.js [22]
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: 20
+          node-version: 22
           #cache: npm Disabling this because it causes the workflow to hang and eventually timeout
 
       - name: Create .env file
@@ -38,9 +38,6 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Upgrade @hashgraph/hedera-local to v2.27.1
-        run: npm install @hashgraph/hedera-local@2.27.1 --save
 
       - name: Install Foundry
         uses: step-security/foundry-toolchain@ced99da5c56c695ce707ab2715ca678d6e8a7038 # v1.4.0
@@ -53,8 +50,11 @@ jobs:
       - name: Run opcode tests against besu
         run: npx hardhat test --grep "besu comparison" --network besu_local
 
-      - name: Start the hedera local node
-        run: npx hedera start -d
+      - name: Deploy local Hiero network (Solo / Kind)
+        uses: ./.github/actions/setup-solo-stack
+        with:
+          solo-version: "0.71.0"
+        timeout-minutes: 15
 
-      - name: Run opcode tests against hedera local node
+      - name: Run opcode tests against Hedera (Solo local network)
         run: npx hardhat test --grep @OpcodeLogger
