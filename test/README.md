@@ -61,7 +61,7 @@ Running "npx hardhat test" in the terminal will execute all the existing tests. 
 # Execute tests locally against mainnet, testnet and previewnet, localnet
 
 - Start the local node:
-  npx hedera start -d --network ${networkName}
+  npx @hashgraph/solo one-shot falcon deploy --values-file .github/falcon.yml --dev
 
 Network specific configurations can be applied using the -n/--network option when starting/restarting the local node. Pre-configured options are mainnet, previewnet, testnet and local.
 
