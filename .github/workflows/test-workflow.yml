@@ -69,7 +69,7 @@ jobs:
         uses: ./.github/actions/setup-solo-stack
         with:
           network-tag: ${{ inputs.networkTag || 'v0.72.0' }}
-          mirror-tag: ${{ inputs.mirrorTag || 'v0.154.0' }}
+          mirror-tag: ${{ inputs.mirrorTag || 'v0.151.0' }}
           relay-tag: ${{ inputs.relayTag || '0.76.2' }}
           solo-version: ${{ inputs.soloVersion || '0.71.0' }}
         timeout-minutes: 15
