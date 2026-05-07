@@ -54,7 +54,7 @@ Examples:
 
 The testing matrix offers pretty big coverage as we can see. All options and combinations rely on us, and what's our end goal.
 
-**Solo / Kind:** This workflow now deploys a local network with `@hashgraph/solo` (Falcon one-shot on Kind) using the `initial*` and `target*` image tag inputs. The job tears down the Kind cluster between the two deploys, so the ledger is **not** carried over; suites that require persisted state across the upgrade may not pass until an in-place upgrade path is added.
+**Solo / Kind:** This workflow deploys the initial local network with `@hashgraph/solo` (Falcon one-shot on Kind), then applies the target network-node, mirror-node, and relay tags with Solo's in-place upgrade commands.
 
 ### Opcode logger Testing
 
