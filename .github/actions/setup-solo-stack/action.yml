@@ -19,6 +19,14 @@ inputs:
     required: false
     default: "0.76.2"
 
+outputs:
+  deployment_name:
+    description: Solo deployment name created by the action.
+    value: ${{ steps.solo_deploy.outputs.deployment_name }}
+  namespace:
+    description: Kubernetes namespace used by the Solo deployment.
+    value: ${{ steps.solo_deploy.outputs.namespace }}
+
 runs:
   using: composite
   steps:
@@ -56,14 +64,19 @@ runs:
         wait: 120s
 
     - name: Start the Solo node
-      id: solo-deploy
+      id: solo_deploy
       shell: bash
       run: |
         NS_BASE="sc-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${GITHUB_JOB}"
         SOLO_NS="$(echo "$NS_BASE" | tr '[:upper:]_' '[:lower:]-' | cut -c1-63)"
+        SOLO_DEPLOYMENT="$SOLO_NS"
+
+        echo "deployment_name=${SOLO_DEPLOYMENT}" >> "$GITHUB_OUTPUT"
+        echo "namespace=${SOLO_NS}" >> "$GITHUB_OUTPUT"
 
         npx @hashgraph/solo@${{ inputs.solo-version }} one-shot falcon deploy \
           --values-file .github/falcon.yml \
           --dev \
           --deploy-explorer=false \
+          --deployment "$SOLO_DEPLOYMENT" \
           --namespace "$SOLO_NS"
