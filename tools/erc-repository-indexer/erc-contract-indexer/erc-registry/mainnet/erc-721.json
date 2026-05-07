@@ -2110,5 +2110,17 @@
     "address": "0x076f9edf1ab331a0253af970c47380eb29657754",
     "name": "HBadge",
     "symbol": "HBDG"
+  },
+  {
+    "contractId": "0.0.10468775",
+    "address": "0xba058d13d0787cb444fabc3fed93bfefb53c1a11",
+    "name": "SentX Test Collection",
+    "symbol": "SXTEST"
+  },
+  {
+    "contractId": "0.0.10468776",
+    "address": "0xa12b6bdbf7cc9cd000e0555714ab3479ab48606c",
+    "name": "SentX Test Collection",
+    "symbol": "SXTEST"
   }
 ]
