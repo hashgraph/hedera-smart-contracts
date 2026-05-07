@@ -22,7 +22,7 @@ const NETWORKS = {
     name: 'local',
     url: 'http://127.0.0.1:37546',
     chainId: 298,
-    networkNodeUrl: '127.0.0.1:30212',
+    networkNodeUrl: '127.0.0.1:35211',
     nodeId: '3',
     mirrorNode: 'http://127.0.0.1:38081',
   },
