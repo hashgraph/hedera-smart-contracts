@@ -247,7 +247,6 @@ describe('Multicall Test Suite', function () {
 
     it('should NOT be able to aggregate 585 calls to processLongOutput', async function () {
       // @note: since mirror-node@v0.105.0, the maximum data size was increased to 128 KiB.
-      const maxDataSize = 128 * 1024 * 2; // 262144 characters - 128 KiB
       const n = 585; // 262218 characters ~ 128.03 KiB
 
       let hasError = false;
@@ -260,7 +259,7 @@ describe('Multicall Test Suite', function () {
 
         // Output is too large and the call is reverted.
         // The call exceeded the call size limit of 128 KiB
-        const EXPECTED_ERROR_MESSAGE = `exceeds ${maxDataSize} characters`;
+        const EXPECTED_ERROR_MESSAGE = `TRANSACTION_OVERSIZE`;
         expect(e.message).to.contain(EXPECTED_ERROR_MESSAGE);
       }
       expect(hasError).to.eq(true);
@@ -306,8 +305,8 @@ describe('Multicall Test Suite', function () {
       expect(receipt.status).to.eq(1);
     });
 
-    it('should NOT be able to aggregate 200 calls to processLongInputTx', async function () {
-      const n = 200;
+    it('should NOT be able to aggregate 500 calls to processLongInputTx', async function () {
+      const n = 500;
       const { callData, data } = prepareLongInputData(
         n,
         LONG_INPUT_TX_ABI,
@@ -315,7 +314,7 @@ describe('Multicall Test Suite', function () {
       );
 
       const dataSize = getInputLengthInBytes(data);
-      expect(dataSize).to.be.eq(n * INPUT_ELEMENT_LENGTH); // input data is 53 kb
+      expect(dataSize).to.be.eq(n * INPUT_ELEMENT_LENGTH); // input data is 133 kb
 
       // Call is reverted because the input data exceeds the maximum transaction size
       let hasError = false;
