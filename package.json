@@ -30,7 +30,6 @@
     "solo:destroy": "npx @hashgraph/solo@0.71.0 one-shot falcon destroy",
     "prepare": "husky install",
     "besu:start": "docker run -d -v ./utils/besu-configs:/var/lib/besu/ -p 8540:8545 -p 8541:8546 hyperledger/besu:24.6.0 --config-file=/var/lib/besu/customConfigFile.toml",
-    "freeze-network-node": "hardhat run scripts/freeze-network-node.js"
   },
   "devDependencies": {
     "@hashgraph/sdk": "^2.81.0",
