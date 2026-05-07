@@ -128,6 +128,7 @@ jobs:
               --deployment "$DEPLOYMENT" \
               --relay-release "$TARGET_RELAY_TAG" \
               --node-aliases "node1" \
+              --values-file .github/relay-values.yaml
               --force-port-forward
           fi
         timeout-minutes: 30
@@ -135,3 +136,20 @@ jobs:
       - name: Run post-migration tests
         run: npx hardhat test --grep ${{ inputs.postMigrationTestTags }}
         timeout-minutes: 15
+
+      - name: One-shot Falcon destroy
+        if: always()
+        run: |
+          npx @hashgraph/solo@${{ inputs.soloVersion }} one-shot falcon destroy \
+            --deployment "${{ steps.initial_solo.outputs.deployment_name }}" \
+            --dev \
+            --quiet-mode || true
+
+      - name: Upload Solo logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: solo-logs
+          path: ~/.solo/logs/*
+          overwrite: true
+          if-no-files-found: warn

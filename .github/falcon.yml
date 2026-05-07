@@ -13,4 +13,5 @@ mirrorNode:
 relayNode:
   --relay-release: "0.76.2"
   --node-aliases: "node1"
+  --values-file: .github/relay-values.yaml
   --force-port-forward: true

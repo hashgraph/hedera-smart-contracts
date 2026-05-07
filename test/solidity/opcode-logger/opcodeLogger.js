@@ -26,9 +26,11 @@ describe('@OpcodeLogger Test Suite', async function () {
 
   async function executeDebugTraceTransaction(txHash, options = {
     tracer: 'opcodeLogger',
-    disableStorage: true,
-    disableMemory: true,
-    disableStack: true
+    tracerConfig: {
+      disableStorage: true,
+      enableMemory: false,
+      disableStack: true
+    }
   }) {
     return await signers[0].provider.send(
         'debug_traceTransaction', [txHash, options]

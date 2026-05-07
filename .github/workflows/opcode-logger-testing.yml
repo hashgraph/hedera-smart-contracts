@@ -51,6 +51,7 @@ jobs:
         run: npx hardhat test --grep "besu comparison" --network besu_local
 
       - name: Deploy local Hiero network (Solo / Kind)
+        id: solo_stack
         uses: ./.github/actions/setup-solo-stack
         with:
           solo-version: "0.71.0"
@@ -58,3 +59,20 @@ jobs:
 
       - name: Run opcode tests against Hedera (Solo local network)
         run: npx hardhat test --grep @OpcodeLogger
+
+      - name: One-shot Falcon destroy
+        if: always()
+        run: |
+          npx @hashgraph/solo@0.71.0 one-shot falcon destroy \
+            --deployment "${{ steps.solo_stack.outputs.deployment_name }}" \
+            --dev \
+            --quiet-mode || true
+
+      - name: Upload Solo logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: solo-logs
+          path: ~/.solo/logs/*
+          overwrite: true
+          if-no-files-found: warn

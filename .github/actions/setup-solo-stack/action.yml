@@ -49,6 +49,7 @@ runs:
           --force-port-forward: true
         relayNode:
           --relay-release: "${{ inputs.relay-tag }}"
+          --values-file: .github/relay-values.yaml
           --node-aliases: "node1"
           --force-port-forward: true
         EOF

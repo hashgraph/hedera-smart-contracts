@@ -1,0 +1,6 @@
+relay:
+  config:
+    DEBUG_API_ENABLED: "true"
+ws:
+  config:
+    DEBUG_API_ENABLED: "true"
