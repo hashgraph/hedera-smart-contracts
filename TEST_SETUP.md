@@ -73,7 +73,7 @@ foundryup
 
 ##### 6.1 Set up a local Hiero network (Solo)
 
-- Use the default env variables provided in [local.env](./local.env) for your `.env` file. Operator account and keys must match the network you deploy; for Solo, see [Network and Node Identity](https://solo.hiero.org/docs/advanced-solo-setup/using-environment-variables/#network-and-node-identity).
+- Use the default env variables provided in [local.env](./local.env) for your `.env` file. Operator account and keys must match the network you deploy; for Solo, see [Where can I find the default account keys?](https://solo.hiero.org/docs/faqs/#2-where-can-i-find-the-default-account-keys).
 
 - Install [Kind](https://kind.sigs.k8s.io/) and [kubectl](https://kubernetes.io/docs/tasks/tools/) and ensure Docker is running.
 
@@ -85,7 +85,7 @@ foundryup
    npm run solo:deploy
 ```
 
-**_Important_**: Stop any other local Kind clusters or processes bound to the same ports (e.g. **30212**, **37546**, **38081** — Solo defaults) before deploying.
+**_Important_**: Stop any other local Kind clusters or processes bound to the same ports (e.g. **35211**, **37546**, **38081** — Solo defaults) before deploying.
 
 ##### 6.2 Execute test suites
 
