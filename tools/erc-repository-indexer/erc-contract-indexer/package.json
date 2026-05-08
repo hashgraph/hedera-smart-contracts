@@ -5,14 +5,15 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "test:unit": "jest --testPathPattern=tests/unit --detectOpenHandles",
-    "test:acceptance": "jest --testPathPattern=tests/acceptance --detectOpenHandles"
+    "test:acceptance": "jest --testPathPattern=tests/acceptance --detectOpenHandles",
+    "solo:port-forward": "bash scripts/solo-port-forward.sh"
   },
   "keywords": [],
   "author": "Hedera Smart Contracts Team",
   "license": "Apache-2.0",
   "description": "ERC Contracts Indexer",
   "devDependencies": {
-    "@hashgraph/sdk": "^2.59.0",
+    "@hashgraph/sdk": "^2.81.0",
     "@types/ahocorasick": "^1.0.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.1",

@@ -75,6 +75,11 @@ jobs:
           solo-version: ${{ inputs.soloVersion || '0.71.0' }}
         timeout-minutes: 15
 
+      - name: Solo kubectl port forwards (50211 / 8545)
+        uses: ./.github/actions/solo-kubectl-port-forward
+        with:
+          namespace: ${{ steps.solo_stack.outputs.namespace }}
+
       - name: Run the test in ${{ inputs.testfilter }}
         run: npx hardhat test --grep ${{ inputs.testfilter }}
 

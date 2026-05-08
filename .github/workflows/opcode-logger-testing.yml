@@ -57,6 +57,11 @@ jobs:
           solo-version: "0.71.0"
         timeout-minutes: 15
 
+      - name: Solo kubectl port forwards (50211 / 8545)
+        uses: ./.github/actions/solo-kubectl-port-forward
+        with:
+          namespace: ${{ steps.solo_stack.outputs.namespace }}
+
       - name: Run opcode tests against Hedera (Solo local network)
         run: npx hardhat test --grep @OpcodeLogger
 
