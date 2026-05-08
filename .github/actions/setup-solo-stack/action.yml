@@ -83,7 +83,6 @@ runs:
           --namespace "$SOLO_NS"
 
     - name: Verify Mirror REST API
-      timeout-minutes: 5
       shell: bash
       run: |
         echo "Waiting for mirror node REST API..."
