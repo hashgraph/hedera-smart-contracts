@@ -81,3 +81,20 @@ runs:
           --deploy-explorer=false \
           --deployment "$SOLO_DEPLOYMENT" \
           --namespace "$SOLO_NS"
+
+    - name: Verify Mirror REST API
+      timeout-minutes: 5
+      shell: bash
+      run: |
+        echo "Waiting for mirror node REST API..."
+        for i in $(seq 1 30); do
+          response=$(curl -sf http://localhost:38081/api/v1/accounts 2>/dev/null || true)
+          if echo "${response}" | grep -q '"accounts"'; then
+            echo "Mirror REST API is up."
+            exit 0
+          fi
+          echo "Attempt ${i}/30: not ready, retrying in 10s..."
+          sleep 10
+        done
+        echo "ERROR: Mirror REST API did not become available."
+        exit 1
