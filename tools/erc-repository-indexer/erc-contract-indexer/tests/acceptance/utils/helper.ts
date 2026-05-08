@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
+  AccountId,
   Client,
   ContractCreateFlow,
   ContractFunctionParameters,
@@ -14,6 +15,7 @@ import MinimalOZERC721Artifacts from '../contracts/erc-721/MinimalERC721.json';
 import OZERC1155Artifacts from '../contracts/erc-1155/ERC1155Mock.json';
 import BasicArtifacts from '../contracts/non-ercs/Basic.json';
 import NodeClient from '@hashgraph/sdk/lib/client/NodeClient';
+import hre from 'hardhat';
 
 export interface ContractDeploymentRequirements {
   contractType: string;
@@ -32,7 +34,18 @@ export default class Helper {
     const SDK_OPERATOR_ID = process.env.SDK_OPERATOR_ID || '';
     const SDK_OPERATOR_KEY = process.env.SDK_OPERATOR_KEY || '';
 
-    const sdkClient = Client.forName(HEDERA_NETWORK).setOperator(
+    const hederaNetwork: any = {};
+    // @ts-ignore
+    hederaNetwork[hre.config.networks[HEDERA_NETWORK].sdkClient.networkNodeUrl] =
+      // @ts-ignore
+      AccountId.fromString(hre.config.networks[HEDERA_NETWORK].sdkClient.nodeId);
+    // @ts-ignore
+    const { mirrorNode } = hre.config.networks[HEDERA_NETWORK].sdkClient;
+
+
+    const sdkClient = Client.forNetwork(hederaNetwork)
+      .setMirrorNetwork(mirrorNode)
+      .setOperator(
       SDK_OPERATOR_ID,
       SDK_OPERATOR_KEY
     );
