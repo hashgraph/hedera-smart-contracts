@@ -15,7 +15,6 @@ import MinimalOZERC721Artifacts from '../contracts/erc-721/MinimalERC721.json';
 import OZERC1155Artifacts from '../contracts/erc-1155/ERC1155Mock.json';
 import BasicArtifacts from '../contracts/non-ercs/Basic.json';
 import NodeClient from '@hashgraph/sdk/lib/client/NodeClient';
-import hre from 'hardhat';
 
 export interface ContractDeploymentRequirements {
   contractType: string;
@@ -34,17 +33,10 @@ export default class Helper {
     const SDK_OPERATOR_ID = process.env.SDK_OPERATOR_ID || '';
     const SDK_OPERATOR_KEY = process.env.SDK_OPERATOR_KEY || '';
 
-    const hederaNetwork: any = {};
-    // @ts-ignore
-    hederaNetwork[hre.config.networks[HEDERA_NETWORK].sdkClient.networkNodeUrl] =
-      // @ts-ignore
-      AccountId.fromString(hre.config.networks[HEDERA_NETWORK].sdkClient.nodeId);
-    // @ts-ignore
-    const { mirrorNode } = hre.config.networks[HEDERA_NETWORK].sdkClient;
-
-
-    const sdkClient = Client.forNetwork(hederaNetwork)
-      .setMirrorNetwork(mirrorNode)
+    const sdkClient = Client.forNetwork({
+      'http://127.0.0.1:37546': '0.0.3',
+    })
+      .setMirrorNetwork('http://127.0.0.1:38081')
       .setOperator(
       SDK_OPERATOR_ID,
       SDK_OPERATOR_KEY
