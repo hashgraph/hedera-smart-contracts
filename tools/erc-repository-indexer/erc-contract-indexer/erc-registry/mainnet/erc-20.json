@@ -11350,5 +11350,37 @@
     "symbol": "HCS",
     "totalSupply": 1000000,
     "decimals": 0
+  },
+  {
+    "contractId": "0.0.10473606",
+    "address": "0x90e1f6e9db0b76b13d8831a86499a3fdf21225ca",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10473607",
+    "address": "0x38ded30e840d748c84ca3f2de15ab83a7d4db7c1",
+    "name": "ATOKEN_IMPL",
+    "symbol": "ATOKEN_IMPL",
+    "totalSupply": 0,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.10473629",
+    "address": "0x934a9535b7b8053fc2d08827529b131abd460c6b",
+    "name": null,
+    "symbol": null,
+    "totalSupply": null,
+    "decimals": null
+  },
+  {
+    "contractId": "0.0.10473630",
+    "address": "0x4fc9e7561f8270ca940d6498b2184b7d1501c691",
+    "name": "ATOKEN_IMPL",
+    "symbol": "ATOKEN_IMPL",
+    "totalSupply": 0,
+    "decimals": 0
   }
 ]
