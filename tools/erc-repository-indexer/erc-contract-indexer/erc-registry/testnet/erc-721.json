@@ -70408,5 +70408,11 @@
     "address": "0x000000000000000000000000000000000087b403",
     "name": "DEmarco",
     "symbol": "dem"
+  },
+  {
+    "contractId": "0.0.8907127",
+    "address": "0x197d954f57c013419b10c743d6ce71cb7e906ad4",
+    "name": "Life Sim Character",
+    "symbol": "LIFE"
   }
 ]
