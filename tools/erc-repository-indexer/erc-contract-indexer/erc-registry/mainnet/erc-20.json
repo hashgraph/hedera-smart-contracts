@@ -11382,5 +11382,13 @@
     "symbol": "ATOKEN_IMPL",
     "totalSupply": 0,
     "decimals": 0
+  },
+  {
+    "contractId": "0.0.10475154",
+    "address": "0xf7a18d312cdf5382298e4da46fe94a39804b97e4",
+    "name": "ATOKEN_IMPL",
+    "symbol": "ATOKEN_IMPL",
+    "totalSupply": 0,
+    "decimals": 0
   }
 ]
