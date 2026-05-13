@@ -5762,5 +5762,29 @@
   {
     "contractId": "0.0.8937177",
     "address": "0x0000000000000000000000000000000000885ed9"
+  },
+  {
+    "contractId": "0.0.8942206",
+    "address": "0x4accbed6775c2b1204eb1ae7ca879428f09c0953"
+  },
+  {
+    "contractId": "0.0.8942241",
+    "address": "0x640a97f596cc752ae165c833ee1182e338af422f"
+  },
+  {
+    "contractId": "0.0.8942299",
+    "address": "0xc5b35cd27bc2c8c2ca6164b45834d5549c485c5a"
+  },
+  {
+    "contractId": "0.0.8942331",
+    "address": "0x34dd49f953157ade942dde3613e0a156051bf94f"
+  },
+  {
+    "contractId": "0.0.8942410",
+    "address": "0x8861b7f8108cb30d9f06a999e159d72784ad9575"
+  },
+  {
+    "contractId": "0.0.8942464",
+    "address": "0xabfacf9b75dbb75c5349c48222e221f0dd4172d2"
   }
 ]
