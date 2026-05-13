@@ -14,7 +14,7 @@ chai.use(chaiAsPromised);
  * - change the defaultNetwork in hardhat.config.js to hardhat - defaultNetwork: 'hardhat'
  * - change the ONE_HBAR constant to the proper one
  *     - for solidity-coverage use 1_000_000_000_000_000_000n
- *     - for tests again local node use 100_000_000n
+ *     - for tests again local Hiero Solo instance use 100_000_000n
  * - run `npx hardhat coverage --sources wrapped-tokens/WHBAR.sol --testfiles test/wrapped-tokens/WHBAR.js`
  */
 
@@ -520,7 +520,7 @@ describe('WHBAR', function () {
   it('WHBAR-023 should revert on value > MaxUint256 for deposit', async function () {
     await expect(
       contract.deposit({ value: OVERFLOW_VALUE })
-    ).to.be.rejectedWith('fields had validation errors');
+    ).to.be.rejectedWith('out of range of `long`');
   });
 
   it('WHBAR-024 should revert on value > MaxUint256 for withdraw', async function () {

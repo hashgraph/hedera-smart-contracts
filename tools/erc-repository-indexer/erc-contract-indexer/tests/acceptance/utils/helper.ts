@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
+  AccountId,
   Client,
   ContractCreateFlow,
   ContractFunctionParameters,
@@ -32,7 +33,11 @@ export default class Helper {
     const SDK_OPERATOR_ID = process.env.SDK_OPERATOR_ID || '';
     const SDK_OPERATOR_KEY = process.env.SDK_OPERATOR_KEY || '';
 
-    const sdkClient = Client.forName(HEDERA_NETWORK).setOperator(
+    const sdkClient = Client.forNetwork({
+      'http://127.0.0.1:37546': '0.0.3',
+    })
+      .setMirrorNetwork('http://127.0.0.1:38081')
+      .setOperator(
       SDK_OPERATOR_ID,
       SDK_OPERATOR_KEY
     );
@@ -57,7 +62,7 @@ export default class Helper {
     contractType: string
   ): Promise<string> {
     const contractCreateFlow = new ContractCreateFlow()
-      .setGas(1_000_000)
+      .setGas(10_000_000)
       .setBytecode(bytecode);
 
     if (params) {

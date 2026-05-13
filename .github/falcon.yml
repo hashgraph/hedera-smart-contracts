@@ -1,0 +1,17 @@
+network:
+  --release-tag: "v0.72.0"
+setup:
+  --release-tag: "v0.72.0"
+consensusNode:
+  --force-port-forward: true
+mirrorNode:
+  --enable-ingress: true
+  --pinger: true
+  --mirror-node-version: "v0.151.0"
+  --values-file: .github/mirror-node-values.yaml
+  --force-port-forward: true
+relayNode:
+  --relay-release: "0.76.2"
+  --node-aliases: "node1"
+  --values-file: .github/relay-values.yaml
+  --force-port-forward: true

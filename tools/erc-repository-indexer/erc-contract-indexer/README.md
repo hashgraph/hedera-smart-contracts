@@ -33,7 +33,15 @@ The ERC Contract Indexer is a tool designed to facilitate the indexing and manag
    npm install
    ```
 
-3. Create a `.env` file in the root directory and configure your environment variables:
+3. **Optional — Solo on Kubernetes (`HEDERA_NETWORK=local-node`):** Run `scripts/solo-port-forward.sh` to forward **50211** (consensus → matches `@hashgraph/sdk` `local-node`) and **8545** (mirror Web3), aligned with CI `.github/actions/solo-kubectl-port-forward`. Mirror REST / gRPC / relay may need separate forwards or Solo’s `--force-port-forward` ports — see the script header.
+
+   ```bash
+   export SOLO_NAMESPACE=your-solo-namespace
+   export KUBE_CONTEXT=kind-solo-cluster   # if needed
+   npm run solo:port-forward -- "$SOLO_NAMESPACE"
+   ```
+
+4. Create a `.env` file in the root directory and configure your environment variables:
 
 | Variable                | Description                                                                                                    | Accepted Values                                                                                                                                                                                                                 |
 | ----------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
