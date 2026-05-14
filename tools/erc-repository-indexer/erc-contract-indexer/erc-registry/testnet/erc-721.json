@@ -70414,5 +70414,17 @@
     "address": "0x197d954f57c013419b10c743d6ce71cb7e906ad4",
     "name": "Life Sim Character",
     "symbol": "LIFE"
+  },
+  {
+    "contractId": "0.0.8957593",
+    "address": "0xa3b387bbd163e6e6f5016e4f8dec2885e3ff7053",
+    "name": "Hedera NFT",
+    "symbol": "HNFT"
+  },
+  {
+    "contractId": "0.0.8958099",
+    "address": "0x000000000000000000000000000000000088b093",
+    "name": "NonFungibleToken",
+    "symbol": "NFTK"
   }
 ]
