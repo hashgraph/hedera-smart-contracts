@@ -9,15 +9,15 @@ set -euo pipefail
 
 NS="${SOLO_NAMESPACE:?SOLO_NAMESPACE is required}"
 
-kubectl get svc haproxy-node1-svc -n "$NS"
-kubectl port-forward -n "$NS" svc/haproxy-node1-svc 50211:50211 &
+kubectl get svc haproxy-node1-svc -n "${NS}"
+kubectl port-forward -n "${NS}" svc/haproxy-node1-svc 50211:50211 &
 echo "Forwarding svc/haproxy-node1-svc → localhost:50211 (consensus gRPC for local-node)"
 
-if kubectl get svc mirror-1-web3 -n "$NS" &>/dev/null; then
-  kubectl port-forward -n "$NS" svc/mirror-1-web3 8545:80 &
+if kubectl get svc mirror-1-web3 -n "${NS}" &>/dev/null; then
+  kubectl port-forward -n "${NS}" svc/mirror-1-web3 8545:80 &
   echo "Forwarding svc/mirror-1-web3 → localhost:8545 (mirror Web3)"
 else
-  echo "::warning::svc/mirror-1-web3 not found in $NS; skipping 8545 forward"
+  echo "::warning::svc/mirror-1-web3 not found in ${NS}; skipping 8545 forward"
 fi
 
 sleep 3

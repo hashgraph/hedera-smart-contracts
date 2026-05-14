@@ -58,7 +58,7 @@ jobs:
 
       - name: Deploy local Hiero network (Solo / Kind)
         id: solo_stack
-        run: bash .github/scripts/setup-solo-stack.sh
+        run: bash .github/workflows/support/scripts/setup-solo-stack.sh
         env:
           SOLO_VERSION: "0.72.0"
         timeout-minutes: 15

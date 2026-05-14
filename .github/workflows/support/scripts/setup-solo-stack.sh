@@ -33,22 +33,22 @@ relayNode:
 EOF
 
 NS_BASE="sc-${GITHUB_RUN_ID:-local}-${GITHUB_RUN_ATTEMPT:-1}-${GITHUB_JOB:-solo}"
-SOLO_NS="$(echo "$NS_BASE" | tr '[:upper:]_' '[:lower:]-' | cut -c1-63)"
-SOLO_DEPLOYMENT="$SOLO_NS"
+SOLO_NS="$(echo "${NS_BASE}" | tr '[:upper:]_' '[:lower:]-' | cut -c1-63)"
+SOLO_DEPLOYMENT="${SOLO_NS}"
 
 if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
   {
     echo "deployment_name=${SOLO_DEPLOYMENT}"
     echo "namespace=${SOLO_NS}"
-  } >>"$GITHUB_OUTPUT"
+  } >>"${GITHUB_OUTPUT}"
 fi
 
 npx @hashgraph/solo@${SOLO_VERSION} one-shot falcon deploy \
   --values-file .github/falcon.yml \
   --dev \
   --deploy-explorer=false \
-  --deployment "$SOLO_DEPLOYMENT" \
-  --namespace "$SOLO_NS"
+  --deployment "${SOLO_DEPLOYMENT}" \
+  --namespace "${SOLO_NS}"
 
 echo "Waiting for mirror node REST API..."
 for i in $(seq 1 30); do

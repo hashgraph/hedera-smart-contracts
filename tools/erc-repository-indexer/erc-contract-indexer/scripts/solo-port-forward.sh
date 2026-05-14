@@ -45,7 +45,7 @@ if pgrep -f "kubectl port-forward.*${NAMESPACE}" &>/dev/null; then
 fi
 
 forward() {
-  local description=$1
+  local description="${1}"
   shift
   echo "[solo-port-forward] ${description}"
   "${kubectl_bin[@]}" "$@" &

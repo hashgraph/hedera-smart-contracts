@@ -87,7 +87,7 @@ jobs:
 
       - name: Deploy local Hiero network — initial tags (Solo / Kind)
         id: initial_solo
-        run: bash .github/scripts/setup-solo-stack.sh
+        run: bash .github/workflows/support/scripts/setup-solo-stack.sh
         env:
           NETWORK_TAG: ${{ inputs.initialNetworkNodeTag }}
           MIRROR_TAG: ${{ inputs.initialMirrorNodeTag }}
