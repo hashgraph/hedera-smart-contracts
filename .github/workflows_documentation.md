@@ -20,7 +20,7 @@ Available workflow inputs are:
 - **targetRelayTag** - Specify the target Relay image tag
 - **preMigrationTestTags** - Specify the pre-migration test tags. Default: @pre-migration. It could be every tag we want (e.g. **@OZERC20**)
 - **postMigrationTestTags** - Specify the post-migration test tags. Default: @post-migration. It could be every tag we want (e.g. **@OZERC20**)
-- **soloVersion** - `@hashgraph/solo` npm version for Falcon one-shot (default `0.71.0`).
+- **soloVersion** - `@hashgraph/solo` npm version for Falcon one-shot (default `0.72.0`).
 
 Examples:
 

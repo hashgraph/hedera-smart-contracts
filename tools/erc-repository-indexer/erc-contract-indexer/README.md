@@ -33,7 +33,7 @@ The ERC Contract Indexer is a tool designed to facilitate the indexing and manag
    npm install
    ```
 
-3. **Optional — Solo on Kubernetes (`HEDERA_NETWORK=local-node`):** Run `scripts/solo-port-forward.sh` to forward **50211** (consensus → matches `@hashgraph/sdk` `local-node`) and **8545** (mirror Web3), aligned with CI `.github/actions/solo-kubectl-port-forward`. Mirror REST / gRPC / relay may need separate forwards or Solo’s `--force-port-forward` ports — see the script header.
+3. **Optional — Solo on Kubernetes (`HEDERA_NETWORK=local-node`):** Run `scripts/solo-port-forward.sh` to forward **50211** (consensus → matches `@hashgraph/sdk` `local-node`) and **8545** (mirror Web3), aligned with CI `.github/workflows/support/scripts/solo-kubectl-port-forward.sh`. Mirror REST / gRPC / relay may need separate forwards or Solo’s `--force-port-forward` ports — see the script header.
 
    ```bash
    export SOLO_NAMESPACE=your-solo-namespace

@@ -27,10 +27,10 @@ jobs:
           sudo curl -fLo /usr/local/lib/docker/cli-plugins/docker-compose https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-linux-x86_64
           sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
-      - name: Use Node.js [22]
+      - name: Use Node.js [24]
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: 22
+          node-version: 24
           #cache: npm Disabling this because it causes the workflow to hang and eventually timeout
 
       - name: Create .env file
@@ -50,17 +50,27 @@ jobs:
       - name: Run opcode tests against besu
         run: npx hardhat test --grep "besu comparison" --network besu_local
 
+      - name: Setup Kind
+        uses: helm/kind-action@ef37e7f390d99f746eb8b610417061a60e82a6cc # v1.14.0
+        with:
+          install_only: true
+          node_image: kindest/node:v1.32.5@sha256:e3b2327e3a5ab8c76f5ece68936e4cafaa82edf58486b769727ab0b3b97a5b0d
+          version: v0.29.0
+          kubectl_version: v1.32.5
+          verbosity: 3
+          wait: 120s
+
       - name: Deploy local Hiero network (Solo / Kind)
         id: solo_stack
-        uses: ./.github/actions/setup-solo-stack
-        with:
-          solo-version: "0.71.0"
+        run: bash .github/scripts/setup-solo-stack.sh
+        env:
+          SOLO_VERSION: "0.72.0"
         timeout-minutes: 15
 
       - name: Solo kubectl port forwards (50211 / 8545)
-        uses: ./.github/actions/solo-kubectl-port-forward
-        with:
-          namespace: ${{ steps.solo_stack.outputs.namespace }}
+        run: bash .github/workflows/support/scripts/solo-kubectl-port-forward.sh
+        env:
+          SOLO_NAMESPACE: ${{ steps.solo_stack.outputs.namespace }}
 
       - name: Run opcode tests against Hedera (Solo local network)
         run: npx hardhat test --grep @OpcodeLogger
@@ -68,7 +78,7 @@ jobs:
       - name: One-shot Falcon destroy
         if: always()
         run: |
-          npx @hashgraph/solo@0.71.0 one-shot falcon destroy \
+          npx @hashgraph/solo@0.72.0 one-shot falcon destroy \
             --deployment "${{ steps.solo_stack.outputs.deployment_name }}" \
             --dev \
             --quiet-mode || true

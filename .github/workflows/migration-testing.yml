@@ -38,7 +38,7 @@ on:
       soloVersion:
         description: 'npm version for @hashgraph/solo (Falcon one-shot on Kind)'
         required: false
-        default: '0.71.0'
+        default: '0.72.0'
 
 jobs:
   check:
@@ -57,10 +57,10 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Use Node.js [22]
+      - name: Use Node.js [24]
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: 22
+          node-version: 24
           #cache: npm Disabling this because it causes the workflow to hang and eventually timeout
 
       - name: Create .env file
@@ -75,67 +75,46 @@ jobs:
           version: stable
 
       # Initial stack (Solo / Kind). Image tags come from workflow_dispatch inputs.
+      - name: Setup Kind
+        uses: helm/kind-action@ef37e7f390d99f746eb8b610417061a60e82a6cc # v1.14.0
+        with:
+          install_only: true
+          node_image: kindest/node:v1.32.5@sha256:e3b2327e3a5ab8c76f5ece68936e4cafaa82edf58486b769727ab0b3b97a5b0d
+          version: v0.29.0
+          kubectl_version: v1.32.5
+          verbosity: 3
+          wait: 120s
+
       - name: Deploy local Hiero network — initial tags (Solo / Kind)
         id: initial_solo
-        uses: ./.github/actions/setup-solo-stack
-        with:
-          network-tag: ${{ inputs.initialNetworkNodeTag }}
-          mirror-tag: ${{ inputs.initialMirrorNodeTag }}
-          relay-tag: ${{ inputs.initialRelayTag }}
-          solo-version: ${{ inputs.soloVersion }}
+        run: bash .github/scripts/setup-solo-stack.sh
+        env:
+          NETWORK_TAG: ${{ inputs.initialNetworkNodeTag }}
+          MIRROR_TAG: ${{ inputs.initialMirrorNodeTag }}
+          RELAY_TAG: ${{ inputs.initialRelayTag }}
+          SOLO_VERSION: ${{ inputs.soloVersion }}
         timeout-minutes: 15
 
       - name: Solo kubectl port forwards (50211 / 8545)
-        uses: ./.github/actions/solo-kubectl-port-forward
-        with:
-          namespace: ${{ steps.initial_solo.outputs.namespace }}
+        run: bash .github/workflows/support/scripts/solo-kubectl-port-forward.sh
+        env:
+          SOLO_NAMESPACE: ${{ steps.initial_solo.outputs.namespace }}
 
       - name: Run pre-migration tests
         run: npx hardhat test --grep ${{ inputs.preMigrationTestTags }}
         timeout-minutes: 15
 
       - name: Upgrade local Hiero network in place — target tags (Solo / Kind)
-        run: |
-          set -euo pipefail
-
-          DEPLOYMENT="${{ steps.initial_solo.outputs.deployment_name }}"
-          INITIAL_NETWORK_TAG="${{ inputs.initialNetworkNodeTag }}"
-          TARGET_NETWORK_TAG="${{ inputs.targetNetworkNodeTag }}"
-          INITIAL_MIRROR_TAG="${{ inputs.initialMirrorNodeTag }}"
-          TARGET_MIRROR_TAG="${{ inputs.targetMirrorNodeTag }}"
-          INITIAL_RELAY_TAG="${{ inputs.initialRelayTag }}"
-          TARGET_RELAY_TAG="${{ inputs.targetRelayTag }}"
-
-          normalize_version() {
-            printf '%s' "$1" | sed 's/^v//'
-          }
-
-          if [[ "$(normalize_version "$INITIAL_NETWORK_TAG")" != "$(normalize_version "$TARGET_NETWORK_TAG")" ]]; then
-            npx @hashgraph/solo@${{ inputs.soloVersion }} consensus network upgrade \
-              --deployment "$DEPLOYMENT" \
-              --upgrade-version "$(normalize_version "$TARGET_NETWORK_TAG")" \
-              --dev \
-              --force
-          fi
-
-          if [[ "$(normalize_version "$INITIAL_MIRROR_TAG")" != "$(normalize_version "$TARGET_MIRROR_TAG")" ]]; then
-            npx @hashgraph/solo@${{ inputs.soloVersion }} mirror node upgrade \
-              --deployment "$DEPLOYMENT" \
-              --mirror-node-version "$TARGET_MIRROR_TAG" \
-              --values-file .github/mirror-node-values.yaml \
-              --enable-ingress \
-              --pinger \
-              --force-port-forward
-          fi
-
-          if [[ "$(normalize_version "$INITIAL_RELAY_TAG")" != "$(normalize_version "$TARGET_RELAY_TAG")" ]]; then
-            npx @hashgraph/solo@${{ inputs.soloVersion }} relay node upgrade \
-              --deployment "$DEPLOYMENT" \
-              --relay-release "$TARGET_RELAY_TAG" \
-              --node-aliases "node1" \
-              --values-file .github/relay-values.yaml
-              --force-port-forward
-          fi
+        run: bash .github/workflows/support/scripts/solo-migration-inplace-upgrade.sh
+        env:
+          SOLO_DEPLOYMENT: ${{ steps.initial_solo.outputs.deployment_name }}
+          INITIAL_NETWORK_TAG: ${{ inputs.initialNetworkNodeTag }}
+          TARGET_NETWORK_TAG: ${{ inputs.targetNetworkNodeTag }}
+          INITIAL_MIRROR_TAG: ${{ inputs.initialMirrorNodeTag }}
+          TARGET_MIRROR_TAG: ${{ inputs.targetMirrorNodeTag }}
+          INITIAL_RELAY_TAG: ${{ inputs.initialRelayTag }}
+          TARGET_RELAY_TAG: ${{ inputs.targetRelayTag }}
+          SOLO_VERSION: ${{ inputs.soloVersion }}
         timeout-minutes: 30
 
       - name: Run post-migration tests
