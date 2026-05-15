@@ -70426,5 +70426,17 @@
     "address": "0x000000000000000000000000000000000088b093",
     "name": "NonFungibleToken",
     "symbol": "NFTK"
+  },
+  {
+    "contractId": "0.0.8960348",
+    "address": "0x8f98987c6a3a3a00d3c168a7d4688cd50390a02f",
+    "name": "Hedera NFT",
+    "symbol": "HNFT"
+  },
+  {
+    "contractId": "0.0.8960583",
+    "address": "0x56ad482979fdafa012eaf999f2eb96b3867fd9e4",
+    "name": "Hedera NFT",
+    "symbol": "HNFT"
   }
 ]
