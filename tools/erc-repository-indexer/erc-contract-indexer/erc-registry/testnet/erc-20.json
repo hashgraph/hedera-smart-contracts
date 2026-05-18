@@ -89298,8 +89298,8 @@
   {
     "contractId": "0.0.5634788",
     "address": "0x89016a8ae4dd200a141f7644537cd3ff44013055",
-    "name": "💵",
-    "symbol": "💵",
+    "name": "\ud83d\udcb5",
+    "symbol": "\ud83d\udcb5",
     "totalSupply": 1e+24,
     "decimals": 18
   },
@@ -112642,7 +112642,7 @@
   {
     "contractId": "0.0.6092279",
     "address": "0x0d3d9fe96f450a714c4949a74f9323e24cc183f6",
-    "name": "Mock USDC",
+    "name": "Mock\u00a0USDC",
     "symbol": "mUSDC",
     "totalSupply": 1e+21,
     "decimals": 6
@@ -133498,7 +133498,7 @@
   {
     "contractId": "0.0.6573995",
     "address": "0x8c3cbc36c809a16acd99c2a94a238aaa3613343f",
-    "name": "One-Two© ",
+    "name": "One-Two\u00a9 ",
     "symbol": "ONT",
     "totalSupply": 200000000000000000000,
     "decimals": 18
@@ -170282,7 +170282,7 @@
   {
     "contractId": "0.0.7174363",
     "address": "0xb9c3f1fc763cd03b6023ca0730201aa9e78a9479",
-    "name": "Property Token Legacy Point Malicounda",
+    "name": "Property Token Legacy\u202fPoint\u202fMalicounda",
     "symbol": "PROP2",
     "totalSupply": 325000000000000000000,
     "decimals": 18
@@ -223924,7 +223924,7 @@
     "address": "0x000000000000000000000000000000000088c7ef",
     "name": "ST TOKEN TEST",
     "symbol": "STT",
-    "totalSupply": 0,
+    "totalSupply": 162500000,
     "decimals": 6
   },
   {
@@ -223940,7 +223940,7 @@
     "address": "0x000000000000000000000000000000000088c7fc",
     "name": "HT F TOKEN NUM 1",
     "symbol": "HFT1",
-    "totalSupply": 90909091,
+    "totalSupply": 1629370629,
     "decimals": 6
   },
   {
@@ -223948,7 +223948,7 @@
     "address": "0x000000000000000000000000000000000088c7fe",
     "name": "HT F TOKEN NUM 2",
     "symbol": "HFT2",
-    "totalSupply": 125000000,
+    "totalSupply": 1085000000,
     "decimals": 6
   },
   {
@@ -223956,7 +223956,7 @@
     "address": "0x000000000000000000000000000000000088c960",
     "name": "HT F TOKEN NUM 3",
     "symbol": "HFT3",
-    "totalSupply": 0,
+    "totalSupply": 1250000000,
     "decimals": 6
   },
   {
@@ -224013,6 +224013,134 @@
     "name": "Dfns Test Token",
     "symbol": "DTT",
     "totalSupply": 1.002e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8968400",
+    "address": "0x4022bb6f6af7b6cc6fbc5a7aef1564e45e9811a1",
+    "name": "Glacier Aluminum Can",
+    "symbol": "G_ALC",
+    "totalSupply": 30,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.8968402",
+    "address": "0x21ab529fe701d926f2a656582af61ccb41ba6d56",
+    "name": "Glacier PET Bottle Clear",
+    "symbol": "G_PET_BOTTLE_CLR",
+    "totalSupply": 50,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.8968404",
+    "address": "0x0ce04695fff97fe267dc750a41f8ef10422a7c2d",
+    "name": "Glacier HDPE Colored",
+    "symbol": "G_HDPE_COL",
+    "totalSupply": 70,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.8968405",
+    "address": "0x89cd87fdf81b096c570872b87fafbd7dc7b74ca9",
+    "name": "Glacier HDPE Natural",
+    "symbol": "G_HDPE_NAT",
+    "totalSupply": 70,
+    "decimals": 0
+  },
+  {
+    "contractId": "0.0.8970676",
+    "address": "0x000000000000000000000000000000000088e1b4",
+    "name": "Demo Token",
+    "symbol": "DTOK",
+    "totalSupply": 1e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8974657",
+    "address": "0x000000000000000000000000000000000088f141",
+    "name": "MyToken",
+    "symbol": "demar",
+    "totalSupply": 1e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8983929",
+    "address": "0x05983b2c0c79955b241d45a892a6a2671a7f8881",
+    "name": "Stake Receipt",
+    "symbol": "sRECEIPT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8985203",
+    "address": "0xf08e1c6c24b75d8f282d90c6caf1e67bf21d6af0",
+    "name": "Stake Receipt",
+    "symbol": "sRECEIPT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8987258",
+    "address": "0x04db7125dbdc7b292410af011e3e61b58fb910a3",
+    "name": "Stake Receipt",
+    "symbol": "sRECEIPT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8987307",
+    "address": "0xba05fa09e2771c25fb08240ce1110e52ec3359d1",
+    "name": "Stake Receipt",
+    "symbol": "sRECEIPT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8987476",
+    "address": "0x52586326c7d3014a8c899a7f6b582a3643bc7673",
+    "name": "Stake Receipt",
+    "symbol": "sRECEIPT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8991000",
+    "address": "0x51ae7d25c30fef2a114daa12a99bbf2b35081885",
+    "name": "Stake Receipt",
+    "symbol": "sRECEIPT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8991129",
+    "address": "0x0000000000000000000000000000000000893199",
+    "name": "vcvcxv",
+    "symbol": "v'x'c'v'x",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.8991137",
+    "address": "0x00000000000000000000000000000000008931a1",
+    "name": "s's",
+    "symbol": "s's",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.8991159",
+    "address": "0x00000000000000000000000000000000008931b7",
+    "name": "vxcv",
+    "symbol": "x'c'v'x'c",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.8992099",
+    "address": "0x0000000000000000000000000000000000893563",
+    "name": "MyToken",
+    "symbol": "MTK",
+    "totalSupply": 0,
     "decimals": 18
   }
 ]

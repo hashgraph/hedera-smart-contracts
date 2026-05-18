@@ -5790,5 +5790,13 @@
   {
     "contractId": "0.0.8952814",
     "address": "0x7d528bce00b0dafe4811221b669e40741a3ffcf1"
+  },
+  {
+    "contractId": "0.0.8974624",
+    "address": "0x0d28033028f1e5524325b46b36c971bc238c6d28"
+  },
+  {
+    "contractId": "0.0.8993968",
+    "address": "0x3146b9f3edf965d3a7c52128c986997a3e1eb20f"
   }
 ]
