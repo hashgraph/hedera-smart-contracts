@@ -26,9 +26,11 @@ describe('@OpcodeLogger Test Suite', async function () {
 
   async function executeDebugTraceTransaction(txHash, options = {
     tracer: 'opcodeLogger',
-    disableStorage: true,
-    disableMemory: true,
-    disableStack: true
+    tracerConfig: {
+      disableStorage: true,
+      enableMemory: false,
+      disableStack: true
+    }
   }) {
     return await signers[0].provider.send(
         'debug_traceTransaction', [txHash, options]
@@ -198,9 +200,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
-          disableStorage: false,
-          disableMemory: false,
-          disableStack: false
+          tracerConfig: {
+            disableStorage: false,
+            enableMemory: true,
+            disableStack: false
+          }
         });
 
         expect(res.failed).to.be.false;
@@ -220,9 +224,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
-          disableStorage: false,
-          disableMemory: false,
-          disableStack: false
+          tracerConfig: {
+            disableStorage: false,
+            enableMemory: true,
+            disableStack: false
+          }
         });
 
         expect(res.failed).to.be.true;
@@ -242,9 +248,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
-          disableStorage: true,
-          disableMemory: true,
-          disableStack: true
+          tracerConfig: {
+            disableStorage: true,
+            enableMemory: false,
+            disableStack: true
+          }
         });
 
         expect(res.failed).to.be.false;
@@ -264,9 +272,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
-          disableStorage: true,
-          disableMemory: true,
-          disableStack: true
+          tracerConfig: {
+            disableStorage: true,
+            enableMemory: false,
+            disableStack: true
+          }
         });
 
         expect(res.failed).to.be.true;
@@ -286,9 +296,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
-          disableStorage: true,
-          disableMemory: false,
-          disableStack: true
+          tracerConfig: {
+            disableStorage: true,
+            enableMemory: true,
+            disableStack: true
+          }
         });
 
         expect(res.failed).to.be.false;
@@ -308,9 +320,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
-          disableStorage: true,
-          disableMemory: false,
-          disableStack: true
+          tracerConfig: {
+            disableStorage: true,
+            enableMemory: true,
+            disableStack: true
+          }
         });
 
         expect(res.failed).to.be.true;
@@ -330,9 +344,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
-          disableStorage: true,
-          disableMemory: true,
-          disableStack: false
+          tracerConfig: {
+            disableStorage: true,
+            enableMemory: false,
+            disableStack: false
+          }
         });
 
         expect(res.failed).to.be.false;
@@ -352,9 +368,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
-          disableStorage: true,
-          disableMemory: true,
-          disableStack: false
+          tracerConfig: {
+            disableStorage: true,
+            enableMemory: false,
+            disableStack: false
+          }
         });
 
         expect(res.failed).to.be.true;
@@ -374,9 +392,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
-          disableStorage: false,
-          disableMemory: true,
-          disableStack: true
+          tracerConfig: {
+            disableStorage: false,
+            enableMemory: false,
+            disableStack: true
+          }
         });
 
         expect(res.failed).to.be.false;
@@ -396,9 +416,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         const {hash} = await contract.deploymentTransaction();
         const res = await executeDebugTraceTransaction(hash, {
           tracer: 'opcodeLogger',
-          disableStorage: false,
-          disableMemory: true,
-          disableStack: true
+          tracerConfig: {
+            disableStorage: false,
+            enableMemory: false,
+            disableStack: true
+          }
         });
 
         expect(res.failed).to.be.true;
@@ -415,9 +437,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         await tx.wait();
         const res = await executeDebugTraceTransaction(tx.hash, {
           tracer: 'opcodeLogger',
-          disableStorage: true,
-          disableMemory: true,
-          disableStack: true
+          tracerConfig: {
+            disableStorage: true,
+            enableMemory: false,
+            disableStack: true
+          }
         });
 
         expect(res.failed).to.be.false;
@@ -434,9 +458,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         await expect(tx.wait()).to.be.rejectedWith(Error);
         const res = await executeDebugTraceTransaction(tx.hash, {
           tracer: 'opcodeLogger',
-          disableStorage: true,
-          disableMemory: true,
-          disableStack: true
+          tracerConfig: {
+            disableStorage: true,
+            enableMemory: false,
+            disableStack: true
+          }
         });
 
         expect(res.failed).to.be.true;
@@ -453,9 +479,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         await tx.wait();
         const res = await executeDebugTraceTransaction(tx.hash, {
           tracer: 'opcodeLogger',
-          disableStorage: false,
-          disableMemory: false,
-          disableStack: false
+          tracerConfig: {
+            disableStorage: false,
+            enableMemory: true,
+            disableStack: false
+          }
         });
 
         expect(res.failed).to.be.false;
@@ -472,9 +500,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         await expect(tx.wait()).to.be.rejectedWith(Error);
         const res = await executeDebugTraceTransaction(tx.hash, {
           tracer: 'opcodeLogger',
-          disableStorage: false,
-          disableMemory: false,
-          disableStack: false
+          tracerConfig: {
+            disableStorage: false,
+            enableMemory: true,
+            disableStack: false
+          }
         });
 
         expect(res.failed).to.be.true;
@@ -490,9 +520,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         await tx.wait();
         const res = await executeDebugTraceTransaction(tx.hash, {
           tracer: 'opcodeLogger',
-          disableStorage: true,
-          disableMemory: false,
-          disableStack: true
+          tracerConfig: {
+            disableStorage: true,
+            enableMemory: true,
+            disableStack: true
+          }
         });
 
         expect(res.failed).to.be.false;
@@ -509,9 +541,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         await expect(tx.wait()).to.be.rejectedWith(Error);
         const res = await executeDebugTraceTransaction(tx.hash, {
           tracer: 'opcodeLogger',
-          disableStorage: true,
-          disableMemory: false,
-          disableStack: true
+          tracerConfig: {
+            disableStorage: true,
+            enableMemory: true,
+            disableStack: true
+          }
         });
 
         expect(res.failed).to.be.true;
@@ -528,9 +562,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         await tx.wait();
         const res = await executeDebugTraceTransaction(tx.hash, {
           tracer: 'opcodeLogger',
-          disableStorage: true,
-          disableMemory: true,
-          disableStack: false
+          tracerConfig: {
+            disableStorage: true,
+            enableMemory: false,
+            disableStack: false
+          }
         });
 
         expect(res.failed).to.be.false;
@@ -547,9 +583,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         await expect(tx.wait()).to.be.rejectedWith(Error);
         const res = await executeDebugTraceTransaction(tx.hash, {
           tracer: 'opcodeLogger',
-          disableStorage: true,
-          disableMemory: true,
-          disableStack: false
+          tracerConfig: {
+            disableStorage: true,
+            enableMemory: false,
+            disableStack: false
+          }
         });
 
         expect(res.failed).to.be.true;
@@ -566,9 +604,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         await tx.wait();
         const res = await executeDebugTraceTransaction(tx.hash, {
           tracer: 'opcodeLogger',
-          disableStorage: false,
-          disableMemory: true,
-          disableStack: true
+          tracerConfig: {
+            disableStorage: false,
+            enableMemory: false,
+            disableStack: true
+          }
         });
 
         expect(res.failed).to.be.false;
@@ -585,9 +625,11 @@ describe('@OpcodeLogger Test Suite', async function () {
         await expect(tx.wait()).to.be.rejectedWith(Error);
         const res = await executeDebugTraceTransaction(tx.hash, {
           tracer: 'opcodeLogger',
-          disableStorage: false,
-          disableMemory: true,
-          disableStack: true
+          tracerConfig: {
+            disableStorage: false,
+            enableMemory: false,
+            disableStack: true
+          }
         });
 
         expect(res.failed).to.be.true;
@@ -621,9 +663,11 @@ describe('@OpcodeLogger Test Suite', async function () {
       await tx.wait();
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
+        tracerConfig: {
         disableStorage: true,
-        disableMemory: true,
+        enableMemory: false,
         disableStack: true
+      }
       });
 
       expect(res.failed).to.be.false;
@@ -640,9 +684,11 @@ describe('@OpcodeLogger Test Suite', async function () {
       await tx.wait();
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: true,
-        disableStack: true
+        tracerConfig: {
+          disableStorage: true,
+          enableMemory: false,
+          disableStack: true
+        }
       });
 
       expect(res.failed).to.be.false
@@ -659,9 +705,11 @@ describe('@OpcodeLogger Test Suite', async function () {
       await tx.wait();
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: false,
-        disableMemory: false,
-        disableStack: false
+        tracerConfig: {
+          disableStorage: false,
+          enableMemory: true,
+          disableStack: false
+        }
       });
 
       expect(res.failed).to.be.false;
@@ -678,9 +726,11 @@ describe('@OpcodeLogger Test Suite', async function () {
       await tx.wait();
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: false,
-        disableMemory: false,
-        disableStack: false
+        tracerConfig: {
+          disableStorage: false,
+          enableMemory: true,
+          disableStack: false
+        }
       });
 
       expect(res.failed).to.be.false
@@ -697,9 +747,11 @@ describe('@OpcodeLogger Test Suite', async function () {
       await tx.wait();
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: false,
-        disableStack: true
+        tracerConfig: {
+          disableStorage: true,
+          enableMemory: true,
+          disableStack: true
+        }
       });
 
       expect(res.failed).to.be.false;
@@ -716,9 +768,11 @@ describe('@OpcodeLogger Test Suite', async function () {
       await tx.wait();
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: false,
-        disableStack: true
+        tracerConfig: {
+          disableStorage: true,
+          enableMemory: true,
+          disableStack: true
+        }
       });
 
       expect(res.failed).to.be.false;
@@ -735,9 +789,11 @@ describe('@OpcodeLogger Test Suite', async function () {
       await tx.wait();
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: true,
-        disableStack: false
+        tracerConfig: {
+          disableStorage: true,
+          enableMemory: false,
+          disableStack: false
+        }
       });
 
       expect(res.failed).to.be.false;
@@ -754,9 +810,11 @@ describe('@OpcodeLogger Test Suite', async function () {
       await tx.wait();
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: true,
-        disableStack: false
+        tracerConfig: {
+          disableStorage: true,
+          enableMemory: true,
+          disableStack: false
+        }
       });
 
       expect(res.failed).to.be.false;
@@ -773,9 +831,11 @@ describe('@OpcodeLogger Test Suite', async function () {
       await tx.wait();
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: false,
-        disableMemory: true,
-        disableStack: true
+        tracerConfig: {
+          disableStorage: false,
+          enableMemory: true,
+          disableStack: true
+        }
       });
 
       expect(res.failed).to.be.false;
@@ -792,9 +852,11 @@ describe('@OpcodeLogger Test Suite', async function () {
       await tx.wait();
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: false,
-        disableMemory: true,
-        disableStack: true
+        tracerConfig: {
+          disableStorage: false,
+          enableMemory: false,
+          disableStack: true
+        }
       });
 
       expect(res.failed).to.be.false;
@@ -806,12 +868,14 @@ describe('@OpcodeLogger Test Suite', async function () {
       });
     });
 
-    it('successful NESTED Create CALL Deploy a contract which successfully deploys another contract with disableMemory, DisableStack and disableStorage set to true', async function () {
+    it('successful NESTED Create CALL Deploy a contract which successfully deploys another contract with disabled memory, DisableStack and disableStorage set to true', async function () {
       const res = await executeDebugTraceTransaction(nestedContractCreateTx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: true,
-        disableStack: true
+        tracerConfig: {
+          disableStorage: true,
+          enableMemory: false,
+          disableStack: true
+        }
       });
 
       expect(res.failed).to.be.false;
@@ -823,12 +887,14 @@ describe('@OpcodeLogger Test Suite', async function () {
       });
     });
 
-    it('successful NESTED Create CALL Deploy a contract which successfully deploys another contract with disableMemory, DisableStack and disableStorage set to false', async function () {
+    it('successful NESTED Create CALL Deploy a contract which successfully deploys another contract with disabled memory, DisableStack and disableStorage set to false', async function () {
       const res = await executeDebugTraceTransaction(nestedContractCreateTx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: false,
-        disableMemory: false,
-        disableStack: false
+        tracerConfig: {
+          disableStorage: false,
+          enableMemory: true,
+          disableStack: false
+        }
       });
 
       expect(res.failed).to.be.false;
@@ -876,9 +942,11 @@ describe('@OpcodeLogger Test Suite', async function () {
 
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: true,
-        disableStack: true
+        tracerConfig: {
+          disableStorage: true,
+          enableMemory: false,
+          disableStack: true
+        }
       });
 
       expect(res.failed).to.be.false;
@@ -896,9 +964,11 @@ describe('@OpcodeLogger Test Suite', async function () {
 
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: true,
-        disableStack: true
+        tracerConfig: {
+          disableStorage: true,
+          enableMemory: false,
+          disableStack: true
+        }
       });
 
       expect(res.failed).to.be.true;
@@ -916,9 +986,11 @@ describe('@OpcodeLogger Test Suite', async function () {
 
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: false,
-        disableMemory: false,
-        disableStack: false
+        tracerConfig: {
+          disableStorage: false,
+          enableMemory: true,
+          disableStack: false
+        }
       });
 
       expect(res.failed).to.be.false;
@@ -936,9 +1008,11 @@ describe('@OpcodeLogger Test Suite', async function () {
 
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: false,
-        disableMemory: false,
-        disableStack: false
+        tracerConfig: {
+          disableStorage: false,
+          enableMemory: true,
+          disableStack: false
+        }
       });
 
       expect(res.failed).to.be.true;
@@ -956,9 +1030,11 @@ describe('@OpcodeLogger Test Suite', async function () {
 
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: false,
-        disableMemory: true,
-        disableStack: true
+        tracerConfig: {
+          disableStorage: false,
+          enableMemory: false,
+          disableStack: true
+        }
       });
 
       expect(res.failed).to.be.false;
@@ -976,9 +1052,11 @@ describe('@OpcodeLogger Test Suite', async function () {
 
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: false,
-        disableMemory: true,
-        disableStack: true
+        tracerConfig: {
+          disableStorage: false,
+          enableMemory: false,
+          disableStack: true
+        }
       });
 
       expect(res.failed).to.be.true;
@@ -996,9 +1074,11 @@ describe('@OpcodeLogger Test Suite', async function () {
 
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: false,
-        disableStack: true
+        tracerConfig: {
+          disableStorage: true,
+          enableMemory: true,
+          disableStack: true
+        }
       });
 
       expect(res.failed).to.be.false;
@@ -1016,9 +1096,11 @@ describe('@OpcodeLogger Test Suite', async function () {
 
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: false,
-        disableStack: true
+        tracerConfig: {
+          disableStorage: true,
+          enableMemory: true,
+          disableStack: true
+        }
       });
 
       expect(res.failed).to.be.true;
@@ -1036,9 +1118,11 @@ describe('@OpcodeLogger Test Suite', async function () {
 
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: true,
-        disableStack: false
+        tracerConfig: {
+          disableStorage: true,
+          enableMemory: false,
+          disableStack: false
+        }
       });
 
       expect(res.failed).to.be.false;
@@ -1056,9 +1140,11 @@ describe('@OpcodeLogger Test Suite', async function () {
 
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: true,
-        disableStack: false
+        tracerConfig: {
+          disableStorage: true,
+          enableMemory: false,
+          disableStack: false
+        }
       });
 
       expect(res.failed).to.be.true;
@@ -1073,9 +1159,11 @@ describe('@OpcodeLogger Test Suite', async function () {
     it('successful tokenCreate call with disabledStorage, disabledMemory, disabledStack  set to true', async function () {
       const res = await executeDebugTraceTransaction(tokenCreateTx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: true,
-        disableStack: true
+        tracerConfig: {
+          disableStorage: true,
+          enableMemory: false,
+          disableStack: true
+        }
       });
 
       expect(res.failed).to.be.false;
@@ -1090,9 +1178,11 @@ describe('@OpcodeLogger Test Suite', async function () {
     it('successful tokenCreate call with disabledStorage, disabledMemory, disabledStack  set to false', async function () {
       const res = await executeDebugTraceTransaction(tokenCreateTx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: false,
-        disableMemory: false,
-        disableStack: false
+        tracerConfig: {
+          disableStorage: false,
+          enableMemory: true,
+          disableStack: false
+        }
       });
 
       expect(res.failed).to.be.false;
@@ -1112,9 +1202,11 @@ describe('@OpcodeLogger Test Suite', async function () {
 
       const res = await executeDebugTraceTransaction(tx.hash, {
         tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: true,
-        disableStack: true
+        tracerConfig: {
+          disableStorage: true,
+          enableMemory: false,
+          disableStack: true
+        }
       });
 
       const revertOperations = res.structLogs.filter(function (opLog) {
@@ -1128,24 +1220,28 @@ describe('@OpcodeLogger Test Suite', async function () {
     it('should fail to debug a transaction with invalid hash', async function () {
       const res = await executeDebugTraceTransaction('0x0fdfb3da2d40cd9ac8776ca02c17cb4aae634d2726f5aad049ab4ce5056b1a5c', {
         tracer: 'opcodeLogger',
-        disableStorage: true,
-        disableMemory: true,
-        disableStack: true
+        tracerConfig: {
+          disableStorage: true,
+          enableMemory: false,
+          disableStack: true
+        }
       });
 
       expect(res.failed).to.be.true;
       expect(res.structLogs).to.be.empty;
     });
 
-    it('should fail with invalid parameter value type for disableMemory, disableStack or disableStorage', async function () {
+    it('should fail with invalid parameter value type for enableMemory, disableStack or disableStorage', async function () {
       const tx = await opcodeLogger.call(opcodeLogger.target, '0xdbdf7fce'); // calling resetCounter()
       await tx.wait();
       try {
         await executeDebugTraceTransaction(tx.hash, {
           tracer: 'opcodeLogger',
-          disableStorage: 'true',
-          disableMemory: 1,
-          disableStack: 0
+          tracerConfig: {
+            disableStorage: 'true',
+            enableMemory: 1,
+            disableStack: 0
+          }
         });
 
       } catch (error) {
@@ -1167,9 +1263,11 @@ describe('@OpcodeLogger Test Suite', async function () {
       try {
         await executeDebugTraceTransaction(tx.hash, {
           tracer: incorrectTracer,
-          disableStorage: true,
-          disableMemory: true,
-          disableStack: true
+          tracerConfig: {
+            disableStorage: true,
+            enableMemory: false,
+            disableStack: true
+          }
         });
       } catch (error) {
         expect(error.name).to.equal('ProviderError');

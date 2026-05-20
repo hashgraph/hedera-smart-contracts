@@ -442,7 +442,7 @@ describe('HIP583 Test Suite', function () {
           await erc20Contract.balanceOf(tokenAddress, hollowWalletAddress);
         } catch (e) {
           expect(e).to.exist;
-          expect(e.code).to.eq(Constants.CALL_EXCEPTION);
+          expect(e.code).to.eq(Constants.CONTRACT_REVERT_EXECUTED_CODE);
         }
       });
 

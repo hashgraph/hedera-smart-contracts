@@ -35,6 +35,10 @@ on:
         description: 'Specify post-migration test tags'
         required: false
         default: '@post-migration'
+      soloVersion:
+        description: 'npm version for @hashgraph/solo (Falcon one-shot on Kind)'
+        required: false
+        default: '0.72.0'
 
 jobs:
   check:
@@ -53,10 +57,10 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Use Node.js [20]
+      - name: Use Node.js [24]
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: 20
+          node-version: 24
           #cache: npm Disabling this because it causes the workflow to hang and eventually timeout
 
       - name: Create .env file
@@ -70,36 +74,66 @@ jobs:
         with:
           version: stable
 
-      - name: Start the local node with N:${{ inputs.initialNetworkNodeTag }}, M:${{ inputs.initialMirrorNodeTag }}, R:${{ inputs.initialRelayTag }}
-        run: npx hedera start -d --full --network-tag=${{inputs.initialNetworkNodeTag}} --mirror-tag=${{inputs.initialMirrorNodeTag}} --relay-tag=${{inputs.initialRelayTag}}
-        timeout-minutes: 5
+      # Initial stack (Solo / Kind). Image tags come from workflow_dispatch inputs.
+      - name: Setup Kind
+        uses: helm/kind-action@ef37e7f390d99f746eb8b610417061a60e82a6cc # v1.14.0
+        with:
+          install_only: true
+          node_image: kindest/node:v1.32.5@sha256:e3b2327e3a5ab8c76f5ece68936e4cafaa82edf58486b769727ab0b3b97a5b0d
+          version: v0.29.0
+          kubectl_version: v1.32.5
+          verbosity: 3
+          wait: 120s
+
+      - name: Deploy local Hiero network — initial tags (Solo / Kind)
+        id: initial_solo
+        run: bash .github/workflows/support/scripts/setup-solo-stack.sh
+        env:
+          NETWORK_TAG: ${{ inputs.initialNetworkNodeTag }}
+          MIRROR_TAG: ${{ inputs.initialMirrorNodeTag }}
+          RELAY_TAG: ${{ inputs.initialRelayTag }}
+          SOLO_VERSION: ${{ inputs.soloVersion }}
+        timeout-minutes: 15
+
+      - name: Solo kubectl port forwards (50211 / 8545)
+        run: bash .github/workflows/support/scripts/solo-kubectl-port-forward.sh
+        env:
+          SOLO_NAMESPACE: ${{ steps.initial_solo.outputs.namespace }}
 
       - name: Run pre-migration tests
         run: npx hardhat test --grep ${{ inputs.preMigrationTestTags }}
         timeout-minutes: 15
 
-      - name: Freeze the network
-        run: |
-          npx hardhat run scripts/freeze-network-node.js
-          sleep 30
-        timeout-minutes: 5
-
-      - name: Stop docker containers (network node)
-        run: docker stop network-node json-rpc-relay json-rpc-relay-ws
-        timeout-minutes: 5
-
-      - name: Run the local node with N:${{ inputs.targetNetworkNodeTag }}, M:${{ inputs.targetMirrorNodeTag }}, R:${{ inputs.targetRelayTag }}
+      - name: Upgrade local Hiero network in place — target tags (Solo / Kind)
+        run: bash .github/workflows/support/scripts/solo-migration-inplace-upgrade.sh
         env:
-          NETWORK_NODE_IMAGE_TAG: ${{inputs.targetNetworkNodeTag}}
-          MIRROR_IMAGE_TAG: ${{inputs.targetMirrorNodeTag}}
-          RELAY_IMAGE_TAG: ${{inputs.targetRelayTag}}
-          NETWORK_NODE_LOGS_ROOT_PATH: ~/.local/share/hedera-local/network-logs/node
-        run: |
-          docker compose -f docker-compose-state-migration.yml up -d
-          sleep 5
-        working-directory: node_modules/@hashgraph/hedera-local/
-        timeout-minutes: 5
+          SOLO_DEPLOYMENT: ${{ steps.initial_solo.outputs.deployment_name }}
+          INITIAL_NETWORK_TAG: ${{ inputs.initialNetworkNodeTag }}
+          TARGET_NETWORK_TAG: ${{ inputs.targetNetworkNodeTag }}
+          INITIAL_MIRROR_TAG: ${{ inputs.initialMirrorNodeTag }}
+          TARGET_MIRROR_TAG: ${{ inputs.targetMirrorNodeTag }}
+          INITIAL_RELAY_TAG: ${{ inputs.initialRelayTag }}
+          TARGET_RELAY_TAG: ${{ inputs.targetRelayTag }}
+          SOLO_VERSION: ${{ inputs.soloVersion }}
+        timeout-minutes: 30
 
       - name: Run post-migration tests
         run: npx hardhat test --grep ${{ inputs.postMigrationTestTags }}
         timeout-minutes: 15
+
+      - name: One-shot Falcon destroy
+        if: always()
+        run: |
+          npx @hashgraph/solo@${{ inputs.soloVersion }} one-shot falcon destroy \
+            --deployment "${{ steps.initial_solo.outputs.deployment_name }}" \
+            --dev \
+            --quiet-mode || true
+
+      - name: Upload Solo logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: solo-logs
+          path: ~/.solo/logs/*
+          overwrite: true
+          if-no-files-found: warn

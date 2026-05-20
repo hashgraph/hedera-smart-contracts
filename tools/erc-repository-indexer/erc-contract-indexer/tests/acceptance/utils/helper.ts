@@ -57,7 +57,7 @@ export default class Helper {
     contractType: string
   ): Promise<string> {
     const contractCreateFlow = new ContractCreateFlow()
-      .setGas(1_000_000)
+      .setGas(10_000_000)
       .setBytecode(bytecode);
 
     if (params) {

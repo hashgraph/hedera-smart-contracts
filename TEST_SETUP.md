@@ -30,7 +30,7 @@ At root, create a `.env` file using the `example.env` as the template and fill o
 | `OPERATOR_KEY_A` | This is the `DER Encoded Private Key` which can be found in your account portal.                                          |
 | `PRIVATE_KEYS`   | This is the `HEX Encoded Private Key` list which can be found in your account portal. It supports up to six private keys. |
 
-**_Notes_**: At least two accounts are required for the `HEX_PRIVATE_KEY` fields. See [Create Hedera Portal Profile](https://docs.hedera.com/hedera/getting-started/introduction#create-hedera-portal-profile-faucet) on how to create accounts on Hedera networks. Six accounts will be needed if you want to run the solidity voting example. The local.env file uses ECDSA accounts listed when starting the local node.
+**_Notes_**: At least two accounts are required for the `HEX_PRIVATE_KEY` fields. See [Create Hedera Portal Profile](https://docs.hedera.com/hedera/getting-started/introduction#create-hedera-portal-profile-faucet) on how to create accounts on Hedera networks. Six accounts will be needed if you want to run the solidity voting example. The local.env file uses ECDSA accounts listed when starting the local Hiero Solo instance.
 
 **_Important_**: While Hedera supports both ECDSA and ED25519 accounts, please use ECDSA since Ethereum only supports ECDSA.
 
@@ -71,19 +71,21 @@ foundryup
 
 #### 6. Test smart contracts
 
-##### 6.1 Set up `Hedera Local Node`
+##### 6.1 Set up a local Hiero network (Solo)
 
-- Use the default env variables provided in [local.env](./local.env) for your `.env` file.
+- Use the default env variables provided in [local.env](./local.env) for your `.env` file. Operator account and keys must match the network you deploy; for Solo, see [Where can I find the default account keys?](https://solo.hiero.org/docs/faqs/#2-where-can-i-find-the-default-account-keys).
 
-- Ensure that the `defaultNetwork` in [hardhat.config.js](./hardhat.config.js) is set to `NETWORKS.local.name`.
+- Install [Kind](https://kind.sigs.k8s.io/) and [kubectl](https://kubernetes.io/docs/tasks/tools/) and ensure Docker is running.
 
-- From the root of your project directory, execute the following command to start up a `Hedera local node`:
+- Ensure that the `defaultNetwork` in [hardhat.config.js](./hardhat.config.js) is set to `NETWORKS.local.name`. Local JSON-RPC uses Solo’s default relay forward (**37546** → pod **7546**); mirror REST ingress uses **38081** (see [utils/constants.js](./utils/constants.js) and Solo’s `@hashgraph/solo` port constants).
+
+- From the project root, adjust [`.github/falcon.yml`](.github/falcon.yml) if you need different network or mirror image tags, then run:
 
 ```
-   npx hedera start -d
+   npm run solo:deploy
 ```
 
-**_Important_**: Before running the `hedera local node`, verify that there are no other instances of Hedera docker containers or json-rpc-relay running in the background, as they might interfere with the functionality of the `hedera local node`.
+**_Important_**: Stop any other local Kind clusters or processes bound to the same ports (e.g. **35211**, **37546**, **38081** — Solo defaults) before deploying.
 
 ##### 6.2 Execute test suites
 

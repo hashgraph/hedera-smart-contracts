@@ -15,6 +15,9 @@ on:
       relayTag:
         required: false
         type: string
+      soloVersion:
+        required: false
+        type: string
 
 defaults:
   run:
@@ -44,15 +47,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - name: Install Docker Compose Plugin
-        run: |
-          sudo curl -fLo /usr/local/lib/docker/cli-plugins/docker-compose https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-linux-x86_64
-          sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
-
-      - name: Use Node.js [20]
+      - name: Use Node.js [24]
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: 20
+          node-version: 24
           #cache: npm Disabling this because it causes the workflow to hang and eventually timeout
 
       - name: Create .env file
@@ -67,9 +65,30 @@ jobs:
         with:
           version: stable
 
-      - name: Start the local node
-        run: npx hedera start -d --network-tag=${{inputs.networkTag}} --mirror-tag=${{inputs.mirrorTag}} --relay-tag=${{inputs.relayTag}} --verbose=trace
-        timeout-minutes: 5
+      - name: Setup Kind
+        uses: helm/kind-action@ef37e7f390d99f746eb8b610417061a60e82a6cc # v1.14.0
+        with:
+          install_only: true
+          node_image: kindest/node:v1.32.5@sha256:e3b2327e3a5ab8c76f5ece68936e4cafaa82edf58486b769727ab0b3b97a5b0d
+          version: v0.29.0
+          kubectl_version: v1.32.5
+          verbosity: 3
+          wait: 120s
+
+      - name: Deploy local Hiero network (Solo / Kind)
+        id: solo_stack
+        run: bash .github/workflows/support/scripts/setup-solo-stack.sh
+        env:
+          NETWORK_TAG: ${{ inputs.networkTag || 'v0.72.0' }}
+          MIRROR_TAG: ${{ inputs.mirrorTag || 'v0.151.0' }}
+          RELAY_TAG: ${{ inputs.relayTag || '0.76.2' }}
+          SOLO_VERSION: ${{ inputs.soloVersion || '0.72.0' }}
+        timeout-minutes: 15
+
+      - name: Solo kubectl port forwards (50211 / 8545)
+        run: bash .github/workflows/support/scripts/solo-kubectl-port-forward.sh
+        env:
+          SOLO_NAMESPACE: ${{ steps.solo_stack.outputs.namespace }}
 
       - name: Run the test in ${{ inputs.testfilter }}
         run: npx hardhat test --grep ${{ inputs.testfilter }}
@@ -90,6 +109,20 @@ jobs:
           json_thousands_separator: ','
           files: 'test-*.xml'
 
-      - name: Stop the local node
-        if: ${{ !cancelled() }}
-        run: npx hedera stop
+      - name: One-shot Falcon destroy
+        if: always()
+        run: |
+          npx @hashgraph/solo@${{ inputs.soloVersion || '0.72.0' }} one-shot falcon destroy \
+            --deployment "${{ steps.solo_stack.outputs.deployment_name }}" \
+            --dev \
+            --quiet-mode || true
+
+      - name: Upload Solo logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: solo-logs (${{ inputs.testfilter }})
+          path: ~/.solo/logs/*
+          overwrite: true
+          if-no-files-found: warn
+

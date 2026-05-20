@@ -43,7 +43,7 @@ describe('SafeHTS library Test Suite', function () {
     );
     const safeOperations = await safeOperationsFactory
       .connect(signers[1])
-      .deploy(Constants.GAS_LIMIT_1_000_000);
+      .deploy(Constants.GAS_LIMIT_10_000_000);
 
     return await ethers.getContractAt(
       Constants.Contract.SafeOperations,
@@ -284,7 +284,7 @@ describe('SafeHTS library Test Suite', function () {
 
     expect(
       cryptoTransferReceipt.logs.filter(
-        (e) => e.fragment.name === Constants.Events.ResponseCode
+        (e) => e.fragment?.name === Constants.Events.ResponseCode
       )[0].args[0]
     ).to.equal(22);
 
