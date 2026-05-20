@@ -70504,5 +70504,17 @@
     "address": "0xa0e96046a54c6727b92dc9b91d19213b349ee3c2",
     "name": "Vault Access NFT",
     "symbol": "VANT"
+  },
+  {
+    "contractId": "0.0.9005535",
+    "address": "0x7aad2e29a03a8824347bbbef50a71aeff6306396",
+    "name": "Vault Access NFT",
+    "symbol": "VANT"
+  },
+  {
+    "contractId": "0.0.9010775",
+    "address": "0x0000000000000000000000000000000000897e57",
+    "name": "HederaNft",
+    "symbol": "HNFT"
   }
 ]
