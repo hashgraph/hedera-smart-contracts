@@ -64,13 +64,8 @@ jobs:
         id: solo_stack
         run: bash .github/workflows/support/scripts/setup-solo-stack.sh
         env:
-          SOLO_VERSION: "0.72.0"
+          SOLO_VERSION: "0.74.0"
         timeout-minutes: 15
-
-      - name: Solo kubectl port forwards (50211 / 8545)
-        run: bash .github/workflows/support/scripts/solo-kubectl-port-forward.sh
-        env:
-          SOLO_NAMESPACE: ${{ steps.solo_stack.outputs.namespace }}
 
       - name: Run opcode tests against Hedera (Solo local network)
         run: npx hardhat test --grep @OpcodeLogger
@@ -78,7 +73,7 @@ jobs:
       - name: One-shot Falcon destroy
         if: always()
         run: |
-          npx @hashgraph/solo@0.72.0 one-shot falcon destroy \
+          npx @hashgraph/solo@0.74.0 one-shot falcon destroy \
             --deployment "${{ steps.solo_stack.outputs.deployment_name }}" \
             --dev \
             --quiet-mode || true

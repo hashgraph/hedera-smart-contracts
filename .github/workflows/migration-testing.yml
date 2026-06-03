@@ -38,7 +38,7 @@ on:
       soloVersion:
         description: 'npm version for @hashgraph/solo (Falcon one-shot on Kind)'
         required: false
-        default: '0.72.0'
+        default: '0.74.0'
 
 jobs:
   check:
@@ -94,11 +94,6 @@ jobs:
           RELAY_TAG: ${{ inputs.initialRelayTag }}
           SOLO_VERSION: ${{ inputs.soloVersion }}
         timeout-minutes: 15
-
-      - name: Solo kubectl port forwards (50211 / 8545)
-        run: bash .github/workflows/support/scripts/solo-kubectl-port-forward.sh
-        env:
-          SOLO_NAMESPACE: ${{ steps.initial_solo.outputs.namespace }}
 
       - name: Run pre-migration tests
         run: npx hardhat test --grep ${{ inputs.preMigrationTestTags }}

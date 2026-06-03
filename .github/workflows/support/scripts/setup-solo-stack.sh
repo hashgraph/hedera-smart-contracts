@@ -7,7 +7,7 @@ set -euo pipefail
 NETWORK_TAG="${NETWORK_TAG:-v0.72.0}"
 MIRROR_TAG="${MIRROR_TAG:-v0.151.0}"
 RELAY_TAG="${RELAY_TAG:-0.76.2}"
-SOLO_VERSION="${SOLO_VERSION:-0.72.0}"
+SOLO_VERSION="${SOLO_VERSION:-0.74.0}"
 
 mkdir -p .github
 
@@ -17,19 +17,16 @@ network:
 setup:
   --release-tag: "${NETWORK_TAG}"
 consensusNode:
-  --force-port-forward: true
   --node-aliases: "node1"
 mirrorNode:
   --enable-ingress: true
   --pinger: true
   --mirror-node-version: "${MIRROR_TAG}"
   --values-file: .github/mirror-node-values.yaml
-  --force-port-forward: true
 relayNode:
   --relay-release: "${RELAY_TAG}"
   --values-file: .github/relay-values.yaml
   --node-aliases: "node1"
-  --force-port-forward: true
 EOF
 
 NS_BASE="sc-${GITHUB_RUN_ID:-local}-${GITHUB_RUN_ATTEMPT:-1}-${GITHUB_JOB:-solo}"
