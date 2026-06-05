@@ -223878,5 +223878,141 @@
     "symbol": "HED1st",
     "totalSupply": 10,
     "decimals": 0
+  },
+  {
+    "contractId": "0.0.8960097",
+    "address": "0x000000000000000000000000000000000088b861",
+    "name": "BTCT",
+    "symbol": "BCOIN",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8960303",
+    "address": "0x000000000000000000000000000000000088b92f",
+    "name": "BTCT",
+    "symbol": "BCOIN",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8960346",
+    "address": "0x5dd619437d9803d992feb6a5ff9fdb554ec32edd",
+    "name": "Mock USDC",
+    "symbol": "USDC",
+    "totalSupply": 1000000000000,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.8960581",
+    "address": "0x17226cd0ed25f27c169bd593d9bf64b636dbcdfa",
+    "name": "Mock USDC",
+    "symbol": "USDC",
+    "totalSupply": 1000000000000,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.8963710",
+    "address": "0x000000000000000000000000000000000088c67e",
+    "name": "HT TEST TOKEN",
+    "symbol": "HTT",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.8964079",
+    "address": "0x000000000000000000000000000000000088c7ef",
+    "name": "ST TOKEN TEST",
+    "symbol": "STT",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.8964083",
+    "address": "0x000000000000000000000000000000000088c7f3",
+    "name": "ST TOKEN TEST NUM 1",
+    "symbol": "STN1",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.8964092",
+    "address": "0x000000000000000000000000000000000088c7fc",
+    "name": "HT F TOKEN NUM 1",
+    "symbol": "HFT1",
+    "totalSupply": 90909091,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.8964094",
+    "address": "0x000000000000000000000000000000000088c7fe",
+    "name": "HT F TOKEN NUM 2",
+    "symbol": "HFT2",
+    "totalSupply": 125000000,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.8964448",
+    "address": "0x000000000000000000000000000000000088c960",
+    "name": "HT F TOKEN NUM 3",
+    "symbol": "HFT3",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.8964510",
+    "address": "0x50acb3d424d0ddb6f83dffa5e8a521889fccce2d",
+    "name": "Stake Receipt",
+    "symbol": "sRECEIPT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8964566",
+    "address": "0xb09101148319e758bffbaa872ca50e55823523ae",
+    "name": "Stake Receipt",
+    "symbol": "sRECEIPT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8965344",
+    "address": "0x000000000000000000000000000000000088cce0",
+    "name": "FungibleToken",
+    "symbol": "FTK",
+    "totalSupply": 1e+24,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8966197",
+    "address": "0x14a83f5dc308a2041b97c8df609671bddca775e9",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8966274",
+    "address": "0xc5144d23610f1dbabd5abece51d50c8474f2f313",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8966293",
+    "address": "0x2d821d03b485a598b6bc81723ee5a610d1b1d246",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.8966792",
+    "address": "0x085a2b45a93a3789123a2e24c6971a7f066dfd7c",
+    "name": "Dfns Test Token",
+    "symbol": "DTT",
+    "totalSupply": 1.002e+24,
+    "decimals": 18
   }
 ]
