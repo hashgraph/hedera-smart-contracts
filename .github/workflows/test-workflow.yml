@@ -82,13 +82,8 @@ jobs:
           NETWORK_TAG: ${{ inputs.networkTag || 'v0.72.0' }}
           MIRROR_TAG: ${{ inputs.mirrorTag || 'v0.151.0' }}
           RELAY_TAG: ${{ inputs.relayTag || '0.76.2' }}
-          SOLO_VERSION: ${{ inputs.soloVersion || '0.72.0' }}
+          SOLO_VERSION: ${{ inputs.soloVersion || '0.74.0' }}
         timeout-minutes: 15
-
-      - name: Solo kubectl port forwards (50211 / 8545)
-        run: bash .github/workflows/support/scripts/solo-kubectl-port-forward.sh
-        env:
-          SOLO_NAMESPACE: ${{ steps.solo_stack.outputs.namespace }}
 
       - name: Run the test in ${{ inputs.testfilter }}
         run: npx hardhat test --grep ${{ inputs.testfilter }}
@@ -112,7 +107,7 @@ jobs:
       - name: One-shot Falcon destroy
         if: always()
         run: |
-          npx @hashgraph/solo@${{ inputs.soloVersion || '0.72.0' }} one-shot falcon destroy \
+          npx @hashgraph/solo@${{ inputs.soloVersion || '0.74.0' }} one-shot falcon destroy \
             --deployment "${{ steps.solo_stack.outputs.deployment_name }}" \
             --dev \
             --quiet-mode || true
