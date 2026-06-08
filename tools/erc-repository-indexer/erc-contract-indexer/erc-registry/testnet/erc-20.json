@@ -224182,5 +224182,133 @@
     "symbol": "SHARE",
     "totalSupply": 1000000000000000,
     "decimals": 18
+  },
+  {
+    "contractId": "0.0.9004990",
+    "address": "0x00000000000000000000000000000000008967be",
+    "name": "Yu May 11 Token",
+    "symbol": "YuMay11",
+    "totalSupply": 0,
+    "decimals": 8
+  },
+  {
+    "contractId": "0.0.9006687",
+    "address": "0x77e9262c9934569cac9586f34ca42978b935fd05",
+    "name": "DGbZSWmFUG",
+    "symbol": "UkMgQ",
+    "totalSupply": 10000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9006728",
+    "address": "0xcbb1a78f72a1b65afa5bff11c8b5dc5e12568095",
+    "name": "FjXaTRqkDx",
+    "symbol": "CCclH",
+    "totalSupply": 10000,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9008913",
+    "address": "0xc4e0536783ce62241588c6bba4b59a8c64f7979b",
+    "name": "Wrapped Native",
+    "symbol": "WNAT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9008915",
+    "address": "0x382c535f1d93cdef29c4801a4f81c26bc110b763",
+    "name": "USDT",
+    "symbol": "USDT",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.9008917",
+    "address": "0x326e7a5c5dfe21c014db279a1c69d4bad8248a37",
+    "name": "Nexus Token",
+    "symbol": "NEXU",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9009028",
+    "address": "0x6beb6406d172cdadbc2673d671b4893af145e9a6",
+    "name": "Wrapped Native",
+    "symbol": "WNAT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9009031",
+    "address": "0xf5404af094efc6a4516662aa434b3ad2f8ca7f99",
+    "name": "USDT",
+    "symbol": "USDT",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.9009032",
+    "address": "0x931244ee6bd9deef5f53a25d0223d1169ae7e503",
+    "name": "Nexus Token",
+    "symbol": "NEXU",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9009122",
+    "address": "0x9f44ffff57eaf0b7f3441c92c500fb1e6ffb2477",
+    "name": "Wrapped Native",
+    "symbol": "WNAT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9009123",
+    "address": "0xcfab701f585d206de1f815b18334bff3dba1cd41",
+    "name": "USDT",
+    "symbol": "USDT",
+    "totalSupply": 0,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.9009126",
+    "address": "0x18001f2ad9aeb87681580f1d831035b8ae33dc11",
+    "name": "Nexus Token",
+    "symbol": "NEXU",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9009190",
+    "address": "0xfa161c50d5159d11d410bb33c75e1eb505b2a1a4",
+    "name": "Wrapped Native",
+    "symbol": "WNAT",
+    "totalSupply": 0,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9009191",
+    "address": "0xc579e68df2351b24bc4b1d5f9438280f6d2f0d82",
+    "name": "USDT",
+    "symbol": "USDT",
+    "totalSupply": 30000000000000,
+    "decimals": 6
+  },
+  {
+    "contractId": "0.0.9009193",
+    "address": "0xa55ad55c83fcd62b2a3ba679a399d313d880d425",
+    "name": "Nexus Token",
+    "symbol": "NEXU",
+    "totalSupply": 1.6003e+25,
+    "decimals": 18
+  },
+  {
+    "contractId": "0.0.9013971",
+    "address": "0x0000000000000000000000000000000000898ad3",
+    "name": "",
+    "symbol": "",
+    "totalSupply": 0,
+    "decimals": 0
   }
 ]
