@@ -11,6 +11,7 @@ interface ITargetContract {
 
 contract ContractCreator {
     event NewContractCreated(address contractAddress);
+    event ContractCreationFailed(bytes reason);
 
     /// create(v, p, n) is used to create a new contract
     /// `v`: The value (in wei) to be transferred to the newly created contract.
@@ -35,6 +36,10 @@ contract ContractCreator {
 
             // check if the contract creation was sucessful
             if iszero(extcodesize(newContractAddress)) {
+                // Emit failure event with empty reason for revert
+                mstore(0x00, 0x20)
+                mstore(0x20, 0)
+                log1(0x00, 0x40, 0x2)
                 revert(0, 0)
             }
         }
@@ -66,7 +71,11 @@ contract ContractCreator {
 
             // check if the contract creation was sucessful
             if iszero(extcodesize(newContractAddress)) {
-                revert (0,0)
+                // Emit failure event with empty reason for revert
+                mstore(0x00, 0x20)
+                mstore(0x20, 0)
+                log1(0x00, 0x40, 0x2)
+                revert(0, 0)
             }
         }
         emit NewContractCreated(newContractAddress);
