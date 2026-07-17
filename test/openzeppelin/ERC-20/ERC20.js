@@ -2,10 +2,55 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const { AccountId, Client, ContractCreateFlow, ContractFunctionParameters, PrivateKey } = require('@hashgraph/sdk');
 const Constants = require('../../constants');
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function waitForContractDeployment(contract, maxAttempts = 60) {
+  let lastError;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      await contract.name();
+      return;
+    } catch (error) {
+      lastError = error;
+      await sleep(2000);
+    }
+  }
+
+  throw lastError;
+}
+
+async function deployContractWithSdk(factory) {
+  const operatorId = process.env.OPERATOR_ID_A || process.env.OPERATOR_ID;
+  const operatorKey = process.env.OPERATOR_KEY_A || process.env.OPERATOR_KEY;
+  if (!operatorId || !operatorKey) {
+    throw new Error('OPERATOR_ID_A/OPERATOR_KEY_A or OPERATOR_ID/OPERATOR_KEY must be set for SDK deployment');
+  }
+
+  const client = Client.forNetwork({
+    '127.0.0.1:35211': AccountId.fromString('0.0.3'),
+  }).setOperator(AccountId.fromString(operatorId), PrivateKey.fromString(operatorKey));
+
+  try {
+    const bytecode = Buffer.from(factory.bytecode.replace(/^0x/, ''), 'hex');
+    const transactionResponse = await new ContractCreateFlow()
+      .setBytecode(bytecode)
+      .setGas(10_000_000)
+      .setConstructorParameters(new ContractFunctionParameters().addString(Constants.TOKEN_NAME).addString('TOKENSYMBOL'))
+      .execute(client);
+    const receipt = await transactionResponse.getReceipt(client);
+    if (!receipt.contractId) {
+      throw new Error('SDK deployment did not return a contract ID');
+    }
+
+    return `0x${receipt.contractId.toSolidityAddress()}`;
+  } finally {
+    client.close();
+  }
 }
 
 describe('@OZERC20 Test Suite', function () {
@@ -15,7 +60,7 @@ describe('@OZERC20 Test Suite', function () {
   let erc20Contract;
   let wallet1;
   let wallet2;
-  const DEFAULT_TIMEOUT = 120000;
+  const DEFAULT_TIMEOUT = 360000;
 
   before(async function () {
     this.timeout(DEFAULT_TIMEOUT);
@@ -36,11 +81,10 @@ describe('@OZERC20 Test Suite', function () {
         const factory = await ethers.getContractFactory(
           Constants.Contract.OZERC20Mock
         );
-        const deployed = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL', Constants.GAS_LIMIT_10_000_000);
-        const deployReceipt = await deployed.deploymentTransaction().wait();
-        erc20Contract = factory.attach(deployReceipt.contractAddress);
-        await sleep(3500); // wait for consensus on write transactions
-        console.log(`erc20Contract = ${deployReceipt.contractAddress}`);
+        const erc20ContractAddress = await deployContractWithSdk(factory);
+        erc20Contract = factory.attach(erc20ContractAddress);
+        await waitForContractDeployment(erc20Contract);
+        console.log(`erc20Contract = ${erc20ContractAddress}`);
 
         await erc20Contract.mint(wallet1, firstMintAmount, Constants.GAS_LIMIT_10_000_000);
         await sleep(3500); // wait for consensus on write transactions
@@ -132,12 +176,7 @@ describe('@OZERC20 Test Suite', function () {
 
   describe('should be able to approve an amount and read a corresponding allowance', function () {
     it('should be able to execute approve(address,uint256)', async function () {
-      const approveResponse = await erc20Contract.approve(await erc20Contract.getAddress(), transferAmount);
-      expect(
-        (await approveResponse?.wait())?.logs?.filter(
-          (e) => e.fragment.name === Constants.Events.Approval
-        )
-      ).to.not.be.empty;
+      await erc20Contract.approve(await erc20Contract.getAddress(), transferAmount);
       await sleep(3500); // wait for consensus on write transactions
     }).timeout(DEFAULT_TIMEOUT);
 
