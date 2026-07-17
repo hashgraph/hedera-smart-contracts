@@ -2,7 +2,6 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const { AccountId, Client, ContractCreateFlow, Hbar, PrivateKey } = require('@hashgraph/sdk');
 const Constants = require('../../constants');
 
 function sleep(ms) {
@@ -24,46 +23,14 @@ async function waitForContractDeployment(contract, maxAttempts = 60) {
   throw lastError;
 }
 
-function getOperator() {
-  const operatorId = process.env.OPERATOR_ID_A || process.env.OPERATOR_ID;
-  const operatorKey = process.env.OPERATOR_KEY_A || process.env.OPERATOR_KEY;
-  if (!operatorId || !operatorKey) {
-    throw new Error('OPERATOR_ID_A/OPERATOR_KEY_A or OPERATOR_ID/OPERATOR_KEY must be set for SDK contract deployment');
-  }
-
-  return { operatorId, operatorKey };
-}
-
-async function deployContractWithSdk(factory) {
-  const { operatorId, operatorKey } = getOperator();
-  const client = Client.forNetwork({
-    '127.0.0.1:35211': AccountId.fromString('0.0.3'),
-  })
-    .setOperator(AccountId.fromString(operatorId), PrivateKey.fromString(operatorKey))
-    .setDefaultMaxTransactionFee(new Hbar(100));
-
-  try {
-    // CN v0.75+ requires bytecode and constructor parameters to be passed separately.
-    // Passing the full EVM initcode (bytecode + ABI-encoded args) to setBytecode() causes
-    // ERROR_DECODING_BYTESTRING because CN validates the bytecode strictly.
-    const bytecode = ethers.getBytes(factory.bytecode);
-    const encodedArgs = ethers.getBytes(
-      factory.interface.encodeDeploy([Constants.TOKEN_NAME, 'TOKENSYMBOL'])
-    );
-    const response = await new ContractCreateFlow()
-      .setBytecode(bytecode)
-      .setConstructorParameters(encodedArgs)
-      .setGas(Constants.GAS_LIMIT_10_000_000.gasLimit)
-      .execute(client);
-    const receipt = await response.getReceipt(client);
-    if (!receipt.contractId) {
-      throw new Error('ContractCreateFlow receipt did not include a contract ID');
-    }
-
-    return `0x${receipt.contractId.toSolidityAddress()}`;
-  } finally {
-    client.close();
-  }
+async function deployContract(factory) {
+  // Deploy via JSON-RPC relay (EthereumTransaction HAPI path) rather than the SDK's
+  // ContractCreate HAPI path, which returns ERROR_DECODING_BYTESTRING on CN v0.75.1.
+  const contract = await factory.deploy(Constants.TOKEN_NAME, 'TOKENSYMBOL', {
+    gasLimit: Constants.GAS_LIMIT_10_000_000.gasLimit,
+  });
+  await contract.waitForDeployment();
+  return await contract.getAddress();
 }
 
 describe('@OZERC20 Test Suite', function () {
@@ -94,7 +61,7 @@ describe('@OZERC20 Test Suite', function () {
         const factory = await ethers.getContractFactory(
           Constants.Contract.OZERC20Mock
         );
-        const erc20ContractAddress = await deployContractWithSdk(factory);
+        const erc20ContractAddress = await deployContract(factory);
         erc20Contract = factory.attach(erc20ContractAddress);
         console.log(`erc20Contract = ${erc20ContractAddress}`);
         await waitForContractDeployment(erc20Contract);
