@@ -2,7 +2,6 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const { AccountId, Client, ContractCreateFlow, ContractFunctionParameters, PrivateKey } = require('@hashgraph/sdk');
 const Constants = require('../../constants');
 
 function sleep(ms) {
@@ -22,35 +21,6 @@ async function waitForContractDeployment(contract, maxAttempts = 60) {
   }
 
   throw lastError;
-}
-
-async function deployContractWithSdk(factory) {
-  const operatorId = process.env.OPERATOR_ID_A || process.env.OPERATOR_ID;
-  const operatorKey = process.env.OPERATOR_KEY_A || process.env.OPERATOR_KEY;
-  if (!operatorId || !operatorKey) {
-    throw new Error('OPERATOR_ID_A/OPERATOR_KEY_A or OPERATOR_ID/OPERATOR_KEY must be set for SDK deployment');
-  }
-
-  const client = Client.forNetwork({
-    '127.0.0.1:35211': AccountId.fromString('0.0.3'),
-  }).setOperator(AccountId.fromString(operatorId), PrivateKey.fromString(operatorKey));
-
-  try {
-    const bytecode = Buffer.from(factory.bytecode.replace(/^0x/, ''), 'hex');
-    const transactionResponse = await new ContractCreateFlow()
-      .setBytecode(bytecode)
-      .setGas(10_000_000)
-      .setConstructorParameters(new ContractFunctionParameters().addString(Constants.TOKEN_NAME).addString('TOKENSYMBOL'))
-      .execute(client);
-    const receipt = await transactionResponse.getReceipt(client);
-    if (!receipt.contractId) {
-      throw new Error('SDK deployment did not return a contract ID');
-    }
-
-    return `0x${receipt.contractId.toSolidityAddress()}`;
-  } finally {
-    client.close();
-  }
 }
 
 describe('@OZERC20 Test Suite', function () {
@@ -81,7 +51,12 @@ describe('@OZERC20 Test Suite', function () {
         const factory = await ethers.getContractFactory(
           Constants.Contract.OZERC20Mock
         );
-        const erc20ContractAddress = await deployContractWithSdk(factory);
+        const deployedContract = await factory.deploy(
+          Constants.TOKEN_NAME,
+          'TOKENSYMBOL',
+          { gasLimit: Constants.GAS_LIMIT_10_000_000 }
+        );
+        const erc20ContractAddress = await deployedContract.getAddress();
         erc20Contract = factory.attach(erc20ContractAddress);
         await waitForContractDeployment(erc20Contract);
         console.log(`erc20Contract = ${erc20ContractAddress}`);
