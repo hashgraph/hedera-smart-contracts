@@ -2,6 +2,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const { AccountId, Client, ContractCreateFlow, Hbar, PrivateKey } = require('@hashgraph/sdk');
 const Constants = require('../../constants');
 
 function sleep(ms) {
@@ -21,6 +22,44 @@ async function waitForContractDeployment(contract, maxAttempts = 60) {
   }
 
   throw lastError;
+}
+
+function getOperator() {
+  const operatorId = process.env.OPERATOR_ID_A || process.env.OPERATOR_ID;
+  const operatorKey = process.env.OPERATOR_KEY_A || process.env.OPERATOR_KEY;
+  if (!operatorId || !operatorKey) {
+    throw new Error('OPERATOR_ID_A/OPERATOR_KEY_A or OPERATOR_ID/OPERATOR_KEY must be set for SDK contract deployment');
+  }
+
+  return { operatorId, operatorKey };
+}
+
+async function deployContractWithSdk(factory) {
+  const { operatorId, operatorKey } = getOperator();
+  const deployTransaction = await factory.getDeployTransaction(
+    Constants.TOKEN_NAME,
+    'TOKENSYMBOL'
+  );
+  const client = Client.forNetwork({
+    '127.0.0.1:35211': AccountId.fromString('0.0.3'),
+  })
+    .setOperator(AccountId.fromString(operatorId), PrivateKey.fromString(operatorKey))
+    .setDefaultMaxTransactionFee(new Hbar(100));
+
+  try {
+    const response = await new ContractCreateFlow()
+      .setBytecode(ethers.getBytes(deployTransaction.data))
+      .setGas(Constants.GAS_LIMIT_10_000_000.gasLimit)
+      .execute(client);
+    const receipt = await response.getReceipt(client);
+    if (!receipt.contractId) {
+      throw new Error('ContractCreateFlow receipt did not include a contract ID');
+    }
+
+    return `0x${receipt.contractId.toSolidityAddress()}`;
+  } finally {
+    client.close();
+  }
 }
 
 describe('@OZERC20 Test Suite', function () {
@@ -51,14 +90,10 @@ describe('@OZERC20 Test Suite', function () {
         const factory = await ethers.getContractFactory(
           Constants.Contract.OZERC20Mock
         );
-        erc20Contract = await factory.deploy(
-          Constants.TOKEN_NAME,
-          'TOKENSYMBOL',
-          Constants.GAS_LIMIT_10_000_000
-        );
-        await waitForContractDeployment(erc20Contract);
-        const erc20ContractAddress = await erc20Contract.getAddress();
+        const erc20ContractAddress = await deployContractWithSdk(factory);
+        erc20Contract = factory.attach(erc20ContractAddress);
         console.log(`erc20Contract = ${erc20ContractAddress}`);
+        await waitForContractDeployment(erc20Contract);
 
         await erc20Contract.mint(wallet1, firstMintAmount, Constants.GAS_LIMIT_10_000_000);
         await sleep(3500); // wait for consensus on write transactions
