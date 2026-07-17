@@ -36,10 +36,6 @@ function getOperator() {
 
 async function deployContractWithSdk(factory) {
   const { operatorId, operatorKey } = getOperator();
-  const deployTransaction = await factory.getDeployTransaction(
-    Constants.TOKEN_NAME,
-    'TOKENSYMBOL'
-  );
   const client = Client.forNetwork({
     '127.0.0.1:35211': AccountId.fromString('0.0.3'),
   })
@@ -47,8 +43,16 @@ async function deployContractWithSdk(factory) {
     .setDefaultMaxTransactionFee(new Hbar(100));
 
   try {
+    // CN v0.75+ requires bytecode and constructor parameters to be passed separately.
+    // Passing the full EVM initcode (bytecode + ABI-encoded args) to setBytecode() causes
+    // ERROR_DECODING_BYTESTRING because CN validates the bytecode strictly.
+    const bytecode = ethers.getBytes(factory.bytecode);
+    const encodedArgs = ethers.getBytes(
+      factory.interface.encodeDeploy([Constants.TOKEN_NAME, 'TOKENSYMBOL'])
+    );
     const response = await new ContractCreateFlow()
-      .setBytecode(ethers.getBytes(deployTransaction.data))
+      .setBytecode(bytecode)
+      .setConstructorParameters(encodedArgs)
       .setGas(Constants.GAS_LIMIT_10_000_000.gasLimit)
       .execute(client);
     const receipt = await response.getReceipt(client);
