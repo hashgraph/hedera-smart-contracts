@@ -54,7 +54,7 @@ describe('@OZERC20 Test Suite', function () {
         const deployedContract = await factory.deploy(
           Constants.TOKEN_NAME,
           'TOKENSYMBOL',
-          { gasLimit: Constants.GAS_LIMIT_10_000_000 }
+          Constants.GAS_LIMIT_10_000_000
         );
         const erc20ContractAddress = await deployedContract.getAddress();
         erc20Contract = factory.attach(erc20ContractAddress);
