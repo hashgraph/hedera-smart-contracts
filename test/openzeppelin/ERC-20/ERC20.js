@@ -2,6 +2,7 @@
 
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const { AccountId, Client, EthereumTransaction, Hbar, PrivateKey } = require('@hashgraph/sdk');
 const Constants = require('../../constants');
 
 function sleep(ms) {
@@ -21,6 +22,48 @@ async function waitForContractDeployment(contract, maxAttempts = 60) {
   }
 
   throw lastError;
+}
+
+async function deployContractWithHapiEthereumTransaction(factory, deployerKey) {
+  const operatorId = process.env.OPERATOR_ID_A || process.env.OPERATOR_ID;
+  const operatorKey = process.env.OPERATOR_KEY_A || process.env.OPERATOR_KEY;
+  if (!operatorId || !operatorKey) {
+    throw new Error('OPERATOR_ID_A/OPERATOR_KEY_A or OPERATOR_ID/OPERATOR_KEY must be set for HAPI deployment');
+  }
+
+  const wallet = new ethers.Wallet(deployerKey);
+  const deployTransaction = await factory.getDeployTransaction(
+    Constants.TOKEN_NAME,
+    'TOKENSYMBOL'
+  );
+  const signedTransaction = await wallet.signTransaction({
+    chainId: 298,
+    data: deployTransaction.data,
+    gasLimit: Constants.GAS_LIMIT_10_000_000.gasLimit,
+    gasPrice: 100_000_000_000,
+    nonce: 0,
+    type: 0,
+    value: 0,
+  });
+
+  const client = Client.forNetwork({
+    '127.0.0.1:35211': AccountId.fromString('0.0.3'),
+  }).setOperator(AccountId.fromString(operatorId), PrivateKey.fromString(operatorKey));
+
+  try {
+    const response = await new EthereumTransaction()
+      .setEthereumData(Buffer.from(signedTransaction.slice(2), 'hex'))
+      .setMaxGasAllowanceHbar(new Hbar(50))
+      .execute(client);
+    const receipt = await response.getReceipt(client);
+    if (receipt.contractId) {
+      return `0x${receipt.contractId.toSolidityAddress()}`;
+    }
+
+    return ethers.getCreateAddress({ from: wallet.address, nonce: 0 });
+  } finally {
+    client.close();
+  }
 }
 
 describe('@OZERC20 Test Suite', function () {
@@ -51,12 +94,10 @@ describe('@OZERC20 Test Suite', function () {
         const factory = await ethers.getContractFactory(
           Constants.Contract.OZERC20Mock
         );
-        const deployedContract = await factory.deploy(
-          Constants.TOKEN_NAME,
-          'TOKENSYMBOL',
-          Constants.GAS_LIMIT_10_000_000
+        const erc20ContractAddress = await deployContractWithHapiEthereumTransaction(
+          factory,
+          process.env.PRIVATE_KEYS.split(',')[0].trim()
         );
-        const erc20ContractAddress = await deployedContract.getAddress();
         erc20Contract = factory.attach(erc20ContractAddress);
         await waitForContractDeployment(erc20Contract);
         console.log(`erc20Contract = ${erc20ContractAddress}`);
