@@ -66,8 +66,12 @@ describe('@OZERC20 Test Suite', function () {
         console.log(`erc20Contract = ${erc20ContractAddress}`);
         await waitForContractDeployment(erc20Contract);
 
-        await erc20Contract.mint(wallet1, firstMintAmount, Constants.GAS_LIMIT_10_000_000);
-        await sleep(3500); // wait for consensus on write transactions
+        const mintTransaction = await erc20Contract.mint(
+          wallet1,
+          firstMintAmount,
+          Constants.GAS_LIMIT_10_000_000
+        );
+        await mintTransaction.wait();
 
         success = true; // If we reach here, everything succeeded
       } catch (error) {
@@ -125,8 +129,10 @@ describe('@OZERC20 Test Suite', function () {
   it('should be able to execute transfer(address,uint256)', async function () {
     const wallet2BalanceBefore = BigInt(await erc20Contract.balanceOf(wallet2));
     console.log(`wallet2BalanceBefore = *${wallet2BalanceBefore}*`);
-    await erc20Contract.connect(signers[0]).transfer(wallet2, transferAmount);
-    await sleep(3500); // wait for consensus on write transactions
+    const transferTransaction = await erc20Contract
+      .connect(signers[0])
+      .transfer(wallet2, transferAmount);
+    await transferTransaction.wait();
     const wallet2BalanceAfter = BigInt(await erc20Contract.balanceOf(wallet2));
     console.log(`wallet2BalanceAfter = *${wallet2BalanceAfter}*`);
     expect(wallet2BalanceBefore).to.not.eq(wallet2BalanceAfter);
@@ -134,18 +140,18 @@ describe('@OZERC20 Test Suite', function () {
   }).timeout(DEFAULT_TIMEOUT);
 
   it('should be able to execute transferFrom(address,address,uint256)', async function () {
-    await erc20Contract.connect(signers[0]).approve(wallet2, transferAmount);
-    await sleep(3500); // wait for consensus on write transactions
+    const approveTransaction = await erc20Contract
+      .connect(signers[0])
+      .approve(wallet2, transferAmount);
+    await approveTransaction.wait();
 
     const wallet1BalanceBefore = BigInt(await erc20Contract.balanceOf(wallet1));
     console.log(`wallet1BalanceBefore = *${wallet1BalanceBefore}*`);
 
-    await erc20Contract.connect(signers[1]).transferFrom(
-      wallet1,
-      wallet2,
-      transferAmount
-    );
-    await sleep(3500); // wait for consensus on write transactions
+    const transferFromTransaction = await erc20Contract
+      .connect(signers[1])
+      .transferFrom(wallet1, wallet2, transferAmount);
+    await transferFromTransaction.wait();
 
     const wallet1BalanceAfter = BigInt(await erc20Contract.balanceOf(wallet1));
     console.log(`wallet1BalanceAfter = *${wallet1BalanceAfter}*`);
@@ -156,8 +162,11 @@ describe('@OZERC20 Test Suite', function () {
 
   describe('should be able to approve an amount and read a corresponding allowance', function () {
     it('should be able to execute approve(address,uint256)', async function () {
-      await erc20Contract.approve(await erc20Contract.getAddress(), transferAmount);
-      await sleep(3500); // wait for consensus on write transactions
+      const approveTransaction = await erc20Contract.approve(
+        await erc20Contract.getAddress(),
+        transferAmount
+      );
+      await approveTransaction.wait();
     }).timeout(DEFAULT_TIMEOUT);
 
     it('should be able to execute allowance(address,address)', async function () {
