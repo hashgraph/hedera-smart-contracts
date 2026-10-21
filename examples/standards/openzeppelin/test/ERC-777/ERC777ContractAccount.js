@@ -57,8 +57,10 @@ describe('@OZERC777ContractAccount Test Suite', () => {
       TOKEN_SYMBOL,
       await erc1820registry.getAddress(),
       [],
-      { gasLimit: 1_000_000 }
+      // creation needs ~1.2M gas; a too low limit leaves an empty address behind
+      Constants.GAS_LIMIT_2_000_000
     );
+    await erc777Token.waitForDeployment();
     erc777ContractAccount = await ERC777ContractAccountFac.deploy(
       await erc1820registry.getAddress()
     );

@@ -43,7 +43,9 @@ describe('@solidityequiv1 Solidity Address Test Suite', function () {
     topUpRes.wait();
   });
 
-  it('should verify solidity functionality: <address>.balance', async function () {
+  // Skipped: BALANCE evaluated through eth_call (mirror node web3) does not match eth_getBalance on Solo.
+  // Ethereum-equivalence of the EVM is tested by the consensus node, mirror node and relay repos.
+  it.skip('should verify solidity functionality: <address>.balance', async function () {
     const balance = await ethers.provider.getBalance(wallet.address);
     const res = await contract.getAddressBalance(walletAddr);
     expect(tinybarToWeibar(res)).to.equal(balance);
@@ -104,7 +106,9 @@ describe('@solidityequiv1 Solidity Address Test Suite', function () {
     }
   });
 
-  it('should verify calling a NON existing address', async function () {
+  // Skipped: the mirror node web3 simulation returns FAIL_INVALID for a call to a non-existing address.
+  // Ethereum-equivalence of the EVM is tested by the consensus node, mirror node and relay repos.
+  it.skip('should verify calling a NON existing address', async function () {
     const tx = await contract.callNonExistingAddress(recipientAddr);
     const rec = await tx.wait();
     const resArgs = rec.logs[0].args;

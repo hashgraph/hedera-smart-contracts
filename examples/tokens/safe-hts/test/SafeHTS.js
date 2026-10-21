@@ -8,6 +8,13 @@ const {
   pollForNewBalance,
   pollForNewHBarBalance,
 } = require('hedera-examples-test-helpers/helpers');
+const {
+  KeyList,
+  PrivateKey,
+  TokenCreateTransaction,
+  TokenSupplyType,
+  TokenType,
+} = require('@hashgraph/sdk');
 
 describe('SafeHTS library Test Suite', function () {
   let safeOperationsContract;
@@ -21,21 +28,26 @@ describe('SafeHTS library Test Suite', function () {
     signers = await ethers.getSigners();
     safeOperationsContract = await deploySafeOperationsContract();
     safeViewOperationsContract = await deploySafeViewOperationsContract();
-    await utils.updateAccountKeysViaHapi([
-      await safeOperationsContract.getAddress(),
-      await safeViewOperationsContract.getAddress(),
-    ]);
+    // SafeOperations is the treasury of the fungible token and holds its supply.
     fungibleTokenAddress = await createFungibleToken();
-    await utils.updateTokenKeysViaHapi(fungibleTokenAddress, [
-      await safeOperationsContract.getAddress(),
-      await safeViewOperationsContract.getAddress(),
-    ]);
     nonFungibleTokenAddress = await createNonFungibleToken();
-    await utils.updateTokenKeysViaHapi(nonFungibleTokenAddress, [
-      await safeOperationsContract.getAddress(),
-      await safeViewOperationsContract.getAddress(),
-    ]);
   });
+
+  // Signer 0's account id and an SDK client operated by signer 0.
+  async function signer0Client() {
+    const key = PrivateKey.fromStringECDSA(
+      utils.getHardhatSignerPrivateKeyByIndex(0).replace('0x', '')
+    );
+    const accountId = await utils.getAccountId(
+      signers[0].address,
+      await utils.createSDKClient()
+    );
+    return {
+      accountId,
+      key,
+      client: await utils.createSDKClient(accountId, key),
+    };
+  }
 
   async function deploySafeOperationsContract() {
     const safeOperationsFactory = await ethers.getContractFactory(
@@ -79,18 +91,32 @@ describe('SafeHTS library Test Suite', function () {
     )[0].args[0];
   }
 
+  // NFT with signer 0 as treasury. The treasury has to sign the creation, and a contract call
+  // (safeCreateNonFungibleTokenPublic, treasury = msg.sender) cannot provide an EOA's signature,
+  // so signer 0 creates it with a HAPI transaction. SafeOperations gets the supply and KYC keys
+  // to mint and grant KYC from the tests.
   async function createNonFungibleToken() {
-    const tokenAddressTx =
-      await safeOperationsContract.safeCreateNonFungibleTokenPublic({
-        value: BigInt('50000000000000000000'),
-        gasLimit: 10_000_000,
-      });
+    const { accountId, key, client } = await signer0Client();
+    const contractKey = new KeyList(
+      [await utils.getContractId(await safeOperationsContract.getAddress())],
+      1
+    );
+    const receipt = await (
+      await new TokenCreateTransaction()
+        .setTokenName(Constants.TOKEN_NAME)
+        .setTokenSymbol(Constants.TOKEN_SYMBOL)
+        .setTokenMemo('memo')
+        .setTokenType(TokenType.NonFungibleUnique)
+        .setSupplyType(TokenSupplyType.Finite)
+        .setMaxSupply(1000)
+        .setTreasuryAccountId(accountId)
+        .setAdminKey(key.publicKey)
+        .setSupplyKey(contractKey)
+        .setKycKey(contractKey)
+        .execute(client)
+    ).getReceipt(client);
 
-    const tokenAddressReceipt = await tokenAddressTx.wait();
-    // token address
-    return tokenAddressReceipt.logs.filter(
-      (e) => e.fragment.name === Constants.Events.TokenCreated
-    )[0].args[0];
+    return '0x' + receipt.tokenId.toSolidityAddress();
   }
 
   it('should be able to get token info', async function () {
@@ -179,11 +205,9 @@ describe('SafeHTS library Test Suite', function () {
         (e) => e.fragment.name === Constants.Events.MintedNft
       )[0].args[0];
 
-    let signer0PrivateKey =
-      config.networks[utils.getCurrentNetwork()].accounts[0];
+    let signer0PrivateKey = utils.getHardhatSignerPrivateKeyByIndex(0);
     await utils.associateWithSigner(signer0PrivateKey, fungibleTokenAddress);
-    let signer1PrivateKey =
-      config.networks[utils.getCurrentNetwork()].accounts[1];
+    let signer1PrivateKey = utils.getHardhatSignerPrivateKeyByIndex(1);
     await utils.associateWithSigner(signer1PrivateKey, fungibleTokenAddress);
     await utils.associateWithSigner(signer1PrivateKey, nonFungibleTokenAddress);
 
@@ -203,6 +227,23 @@ describe('SafeHTS library Test Suite', function () {
       signer0AccountID,
       signer1initialAmount,
       Constants.GAS_LIMIT_1_000_000
+    );
+
+    // SafeOperations moves signer 0's HBAR, NFT and fungible tokens below, so signer 0 grants it
+    // allowances (debits use isApproval: true).
+    await utils.approveAllowancesViaHapi(
+      signer0PrivateKey,
+      await safeOperationsContract.getAddress(),
+      {
+        hbarTinybars: 10_000,
+        tokens: [{ token: fungibleTokenAddress, amount: Number(transferredAmount) }],
+        nfts: [
+          {
+            token: nonFungibleTokenAddress,
+            serial: Number(nonFungibleTokeMintedSerialNumbers[0]),
+          },
+        ],
+      }
     );
 
     const signers0BeforeHbarBalance =
@@ -231,7 +272,7 @@ describe('SafeHTS library Test Suite', function () {
         {
           accountID: signer0AccountID, //sender
           amount: -10_000,
-          isApproval: false,
+          isApproval: true,
         },
         {
           accountID: signer1AccountID, //receiver
@@ -251,7 +292,7 @@ describe('SafeHTS library Test Suite', function () {
             senderAccountID: signer0AccountID, //sender
             receiverAccountID: signer1AccountID, //receiver
             serialNumber: nonFungibleTokeMintedSerialNumbers[0],
-            isApproval: false,
+            isApproval: true,
           },
         ],
       },
@@ -266,7 +307,7 @@ describe('SafeHTS library Test Suite', function () {
           {
             accountID: signer0AccountID, //sender
             amount: -transferredAmount,
-            isApproval: false,
+            isApproval: true,
           },
         ],
         nftTransfers: [],

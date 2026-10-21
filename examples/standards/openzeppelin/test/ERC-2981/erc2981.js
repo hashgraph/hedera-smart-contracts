@@ -92,7 +92,8 @@ describe('@OZERC29821 Royalty Info Test Suite', function () {
   });
 
   it('should reset Royalty Info', async function () {
-    const trx = await contract.resetTokenRoyalty(TOKEN_ID);
+    // eth_estimateGas underestimates calls that clear storage
+    const trx = await contract.resetTokenRoyalty(TOKEN_ID, Constants.GAS_LIMIT_1_000_000);
     await trx.wait();
     const royaltyInfoDefault = await contract.royaltyInfo(
       TOKEN_ID,

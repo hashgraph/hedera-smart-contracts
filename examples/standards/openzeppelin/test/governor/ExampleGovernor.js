@@ -6,7 +6,6 @@ const Constants = require('hedera-examples-test-helpers/constants');
 
 describe('@OZGovernor Test Suite', function () {
   let actions, exampleToken, governor, projectTeam, deployer, proposalId;
-  const GAS_LIMIT = 1_000_000;
   const VOTE_WEIGHT = 1000;
   const VOTE_SUPPORT = 1; // 1 = For, 0 = Against, 2 = Abstain
   const GRANT_AMOUNT = 100;
@@ -21,7 +20,9 @@ describe('@OZGovernor Test Suite', function () {
     const ExampleToken = await ethers.getContractFactory(
       Constants.Contract.ExampleTokenVote
     );
-    exampleToken = await ExampleToken.deploy({ gasLimit: GAS_LIMIT });
+    // token and governor creation need ~1.8M and ~3.5M gas; a too low limit leaves an empty address behind
+    exampleToken = await ExampleToken.deploy(Constants.GAS_LIMIT_5_000_000);
+    await exampleToken.waitForDeployment();
 
     await exampleToken.mint(deployer.address, VOTE_WEIGHT);
 
@@ -29,9 +30,11 @@ describe('@OZGovernor Test Suite', function () {
     const ExampleGovernor = await ethers.getContractFactory(
       Constants.Contract.ExampleGovernor
     );
-    governor = await ExampleGovernor.deploy(await exampleToken.getAddress(), {
-      gasLimit: GAS_LIMIT,
-    });
+    governor = await ExampleGovernor.deploy(
+      await exampleToken.getAddress(),
+      Constants.GAS_LIMIT_5_000_000
+    );
+    await governor.waitForDeployment();
 
     const teamAddress = await projectTeam.getAddress();
     const transferCalldata = exampleToken.interface.encodeFunctionData(

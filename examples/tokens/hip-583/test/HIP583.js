@@ -12,6 +12,28 @@ const {
   pollForNewWalletBalance,
 } = require('hedera-examples-test-helpers/helpers');
 
+// Calls the owner makes on the token itself (HIP-376 / HIP-719 token facade). On current networks a
+// contract can move an EOA's tokens only through an allowance, and an EOA whose key includes a
+// contract can no longer send Ethereum transactions, so the owner approves the contract instead.
+const TOKEN_FACADE_ABI = [
+  'function approve(address spender, uint256 amountOrSerialNumber)',
+  'function associate() returns (uint256)',
+];
+const approveViaToken = async (owner, token, spender, amountOrSerialNumber) =>
+  (
+    await new ethers.Contract(token, TOKEN_FACADE_ABI, owner).approve(
+      spender,
+      amountOrSerialNumber,
+      Constants.GAS_LIMIT_1_000_000
+    )
+  ).wait();
+const associateViaToken = async (owner, token) =>
+  (
+    await new ethers.Contract(token, TOKEN_FACADE_ABI, owner).associate(
+      Constants.GAS_LIMIT_1_000_000
+    )
+  ).wait();
+
 describe('HIP583 Test Suite', function () {
   let signers;
   let hollowWallet;
@@ -28,10 +50,6 @@ describe('HIP583 Test Suite', function () {
     signers = await ethers.getSigners();
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
-    await utils.updateAccountKeysViaHapi([
-      await tokenCreateContract.getAddress(),
-      await tokenTransferContract.getAddress(),
-    ]);
     erc20Contract = await utils.deployERC20Contract();
     erc721Contract = await utils.deployERC721Contract();
     tokenAddress =
@@ -174,7 +192,13 @@ describe('HIP583 Test Suite', function () {
             await erc20Contract.balanceOf(tokenAddress, signers[0].address)
           );
 
-          await tokenTransferContract.transferTokenPublic(
+          await approveViaToken(
+            signers[0],
+            tokenAddress,
+            await tokenTransferContract.getAddress(),
+            amount
+          );
+          await tokenTransferContract.transferFromPublic(
             tokenAddress,
             signers[0].address,
             hollowWalletAddress,
@@ -208,7 +232,13 @@ describe('HIP583 Test Suite', function () {
             hollowWalletAddress
           );
 
-          await tokenTransferContract.transferTokenPublic(
+          await approveViaToken(
+            signers[0],
+            tokenAddress,
+            await tokenTransferContract.getAddress(),
+            amount
+          );
+          await tokenTransferContract.transferFromPublic(
             tokenAddress,
             signers[0].address,
             hollowWalletAddress,
@@ -249,17 +279,15 @@ describe('HIP583 Test Suite', function () {
             value: ethers.parseEther('14'),
           });
 
-          await utils.updateAccountKeysViaHapi(
-            [
-              await tokenCreateContract.getAddress(),
-              await tokenTransferContract.getAddress(),
-            ],
-            [hollowWallet.privateKey]
+          await approveViaToken(
+            hollowWallet,
+            tokenAddress,
+            await tokenTransferContract.getAddress(),
+            amount
           );
-
           await tokenTransferContract
             .connect(hollowWallet)
-            .transferTokenPublic(
+            .transferFromPublic(
               tokenAddress,
               hollowWalletAddress,
               signers[0].address,
@@ -293,12 +321,12 @@ describe('HIP583 Test Suite', function () {
 
           hollowWalletAddress = hollowWallet.address;
 
-          mintedTokenSerialNumber = await utils.mintNFTToAddress(
+          mintedTokenSerialNumber = await utils.mintNFT(
             tokenCreateContract,
             nftTokenAddress
           );
 
-          mintedTokenSerialNumber1 = await utils.mintNFTToAddress(
+          mintedTokenSerialNumber1 = await utils.mintNFT(
             tokenCreateContract,
             nftTokenAddress
           );
@@ -310,7 +338,13 @@ describe('HIP583 Test Suite', function () {
             signers[0].address
           );
 
-          await tokenTransferContract.transferNFTPublic(
+          await approveViaToken(
+            signers[0],
+            nftTokenAddress,
+            await tokenTransferContract.getAddress(),
+            mintedTokenSerialNumber
+          );
+          await tokenTransferContract.transferFromNFTPublic(
             nftTokenAddress,
             signers[0].address,
             hollowWalletAddress,
@@ -345,7 +379,13 @@ describe('HIP583 Test Suite', function () {
             hollowWalletAddress
           );
 
-          await tokenTransferContract.transferNFTPublic(
+          await approveViaToken(
+            signers[0],
+            nftTokenAddress,
+            await tokenTransferContract.getAddress(),
+            mintedTokenSerialNumber1
+          );
+          await tokenTransferContract.transferFromNFTPublic(
             nftTokenAddress,
             signers[0].address,
             hollowWalletAddress,
@@ -388,17 +428,15 @@ describe('HIP583 Test Suite', function () {
             value: ethers.parseEther('2'),
           });
 
-          await utils.updateAccountKeysViaHapi(
-            [
-              await tokenCreateContract.getAddress(),
-              await tokenTransferContract.getAddress(),
-            ],
-            [hollowWallet.privateKey]
+          await approveViaToken(
+            hollowWallet,
+            nftTokenAddress,
+            await tokenTransferContract.getAddress(),
+            mintedTokenSerialNumber1
           );
-
           await tokenTransferContract
             .connect(hollowWallet)
-            .transferNFTPublic(
+            .transferFromNFTPublic(
               nftTokenAddress,
               hollowWalletAddress,
               signers[0].address,
@@ -741,11 +779,6 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via system-contracts', functi
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenQueryContract = await utils.deployTokenQueryContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
-    await utils.updateAccountKeysViaHapi([
-      await tokenCreateContract.getAddress(),
-      await tokenQueryContract.getAddress(),
-      await tokenTransferContract.getAddress(),
-    ]);
     erc20Contract = await utils.deployERC20Contract();
     erc721Contract = await utils.deployERC721Contract();
   });
@@ -761,19 +794,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via system-contracts', functi
       value: ethers.parseEther('100'),
       gasLimit: 1_000_000,
     });
-    await utils.updateAccountKeysViaHapi(
-      [await tokenCreateContract.getAddress()],
-      [hollowWallet.privateKey]
-    );
-    const hollowWalletTokenCreateContract =
-      await tokenCreateContract.connect(hollowWallet);
-    await (
-      await hollowWalletTokenCreateContract.associateTokenPublic(
-        hollowWallet.address,
-        tokenAddress,
-        Constants.GAS_LIMIT_1_000_000
-      )
-    ).wait();
+    await associateViaToken(hollowWallet, tokenAddress);
     await (
       await tokenCreateContract.grantTokenKycPublic(
         tokenAddress,
@@ -818,10 +839,17 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via system-contracts', functi
         tokenAddress,
         hollowWallet.address
       );
-      await tokenTransferContract.transferTokensPublic(
+      await approveViaToken(
+        signers[0],
         tokenAddress,
-        [signers[0].address, hollowWallet.address],
-        [-amount, amount],
+        await tokenTransferContract.getAddress(),
+        amount
+      );
+      await tokenTransferContract.transferFromPublic(
+        tokenAddress,
+        signers[0].address,
+        hollowWallet.address,
+        amount,
         Constants.GAS_LIMIT_1_000_000
       );
 
@@ -841,10 +869,17 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via system-contracts', functi
         tokenAddress,
         hollowWallet.address
       );
-      await tokenTransferContract.transferTokensPublic(
+      await approveViaToken(
+        signers[0],
         tokenAddress,
-        [signers[0].address, hollowWallet.address],
-        [-amount, amount],
+        await tokenTransferContract.getAddress(),
+        amount
+      );
+      await tokenTransferContract.transferFromPublic(
+        tokenAddress,
+        signers[0].address,
+        hollowWallet.address,
+        amount,
         Constants.GAS_LIMIT_1_000_000
       );
 
@@ -868,11 +903,6 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via system-contracts', functi
         tokenAddress
       );
 
-      await utils.updateAccountKeysViaHapi(
-        [await tokenTransferContract.getAddress()],
-        [hollowWallet.privateKey]
-      );
-
       const secondHollowBalanceBefore = await erc20Contract.balanceOf(
         tokenAddress,
         secondHollowWallet.address
@@ -881,10 +911,17 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via system-contracts', functi
       const hollowTokenTransferContract =
         await tokenTransferContract.connect(hollowWallet);
 
-      await hollowTokenTransferContract.transferTokensPublic(
+      await approveViaToken(
+        hollowWallet,
         tokenAddress,
-        [hollowWallet.address, secondHollowWallet.address],
-        [-amount, amount],
+        await tokenTransferContract.getAddress(),
+        amount
+      );
+      await hollowTokenTransferContract.transferFromPublic(
+        tokenAddress,
+        hollowWallet.address,
+        secondHollowWallet.address,
+        amount,
         Constants.GAS_LIMIT_1_000_000
       );
 
@@ -933,7 +970,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via system-contracts', functi
         nftTokenAddress
       );
 
-      mintedTokenSerialNumber = await utils.mintNFTToAddress(
+      mintedTokenSerialNumber = await utils.mintNFT(
         tokenCreateContract,
         nftTokenAddress
       );
@@ -945,7 +982,13 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via system-contracts', functi
         mintedTokenSerialNumber
       );
 
-      await tokenTransferContract.transferNFTPublic(
+      await approveViaToken(
+        signers[0],
+        nftTokenAddress,
+        await tokenTransferContract.getAddress(),
+        mintedTokenSerialNumber
+      );
+      await tokenTransferContract.transferFromNFTPublic(
         nftTokenAddress,
         signers[0].address,
         hollowWallet.address,
@@ -963,7 +1006,7 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via system-contracts', functi
     });
 
     it('should test that second transfer non-fungible tokens via system-contracts to the hollow account is successful', async function () {
-      const newMintedTokenSerialNumber = await utils.mintNFTToAddress(
+      const newMintedTokenSerialNumber = await utils.mintNFT(
         tokenCreateContract,
         nftTokenAddress
       );
@@ -973,7 +1016,13 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via system-contracts', functi
         newMintedTokenSerialNumber
       );
 
-      await tokenTransferContract.transferNFTPublic(
+      await approveViaToken(
+        signers[0],
+        nftTokenAddress,
+        await tokenTransferContract.getAddress(),
+        newMintedTokenSerialNumber
+      );
+      await tokenTransferContract.transferFromNFTPublic(
         nftTokenAddress,
         signers[0].address,
         hollowWallet.address,
@@ -1001,12 +1050,18 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via system-contracts', functi
         nftTokenAddress
       );
 
-      const newMintedTokenSerialNumber = await utils.mintNFTToAddress(
+      const newMintedTokenSerialNumber = await utils.mintNFT(
         tokenCreateContract,
         nftTokenAddress
       );
 
-      await tokenTransferContract.transferNFTPublic(
+      await approveViaToken(
+        signers[0],
+        nftTokenAddress,
+        await tokenTransferContract.getAddress(),
+        newMintedTokenSerialNumber
+      );
+      await tokenTransferContract.transferFromNFTPublic(
         nftTokenAddress,
         signers[0].address,
         hollowWallet.address,
@@ -1018,15 +1073,17 @@ describe('HIP583 Test Suite - Ethereum Transfer TX via system-contracts', functi
         nftTokenAddress,
         newMintedTokenSerialNumber
       );
-      await utils.updateAccountKeysViaHapi(
-        [await tokenTransferContract.getAddress()],
-        [hollowWallet.privateKey]
-      );
 
       const hollowTokenTransferContract =
         await tokenTransferContract.connect(hollowWallet);
+      await approveViaToken(
+        hollowWallet,
+        nftTokenAddress,
+        await tokenTransferContract.getAddress(),
+        newMintedTokenSerialNumber
+      );
       await (
-        await hollowTokenTransferContract.transferNFTPublic(
+        await hollowTokenTransferContract.transferFromNFTPublic(
           nftTokenAddress,
           hollowWallet.address,
           secondHollowWallet.address,

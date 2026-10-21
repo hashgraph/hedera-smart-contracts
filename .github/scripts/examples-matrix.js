@@ -17,7 +17,6 @@ const SHARED_PATHS = [
   '.github/examples.json',
   '.github/actions/setup-example-toolchain/',
   '.github/examples-relay-values.yaml',
-  '.github/mirror-node-values.yaml',
   '.github/network-versions.env',
   '.github/scripts/examples-matrix.js',
   '.github/workflows/examples.yml',

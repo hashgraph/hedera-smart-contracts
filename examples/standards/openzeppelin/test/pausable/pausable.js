@@ -29,7 +29,7 @@ describe('@OZPausable Test Suite', function () {
   });
 
   it('should NOT be able to call function "setPausedMessage" with "whenNotPaused" modifier when paused', async function () {
-    const tx = await contract.pause();
+    const tx = await contract.pause(Constants.GAS_LIMIT_1_000_000);
     await tx.wait()
 
     expect(
@@ -42,7 +42,7 @@ describe('@OZPausable Test Suite', function () {
   });
 
   it('should NOT be able to call function "getPausedMessage" with "whenNotPaused" modifier when paused', async function () {
-    const tx = await contract.unpause();
+    const tx = await contract.unpause(Constants.GAS_LIMIT_1_000_000);
     await tx.wait();
 
     expect(
@@ -81,7 +81,7 @@ describe('@OZPausable Test Suite', function () {
   });
 
   it('should Not be able to Unpause when Unpaused', async function () {
-    const tx = await contract.unpause();
+    const tx = await contract.unpause(Constants.GAS_LIMIT_1_000_000);
     await tx.wait();
 
     expect(contract.unpause()).to.eventually.be.rejected.and.have.property(

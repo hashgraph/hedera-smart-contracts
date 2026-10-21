@@ -10,7 +10,8 @@ const contractStates = {
   Release: 2,
   Inactive: 3,
 };
-// 1 HBAR in wei (msg.value is sent in wei; the relay rejects non-zero values below 1 tinybar)
+// 1 HBAR in wei (msg.value is sent in wei; the relay rejects non-zero values below 1 tinybar).
+// The contract stores half of the deployment value and confirmPurchase() expects 2 * value, i.e. the same amount.
 const EVEN_NUMBER_PRICE = ethers.parseEther('1');
 async function setupContract() {
   const signers = await ethers.getSigners();
@@ -83,7 +84,7 @@ describe('@solidityequiv2 Safe remote purchase Test Suite', function () {
 
       const trxConfirm = await contract
         .connect(buyer)
-        .confirmPurchase({ value: 2n * EVEN_NUMBER_PRICE });
+        .confirmPurchase({ value: EVEN_NUMBER_PRICE });
       const receiptConfirm = await trxConfirm.wait();
 
       expect(receiptConfirm.logs[0].fragment.name).to.equal(
@@ -122,7 +123,7 @@ describe('@solidityequiv2 Safe remote purchase Test Suite', function () {
     it('should confirm onlyBuyer modifier', async function () {
       const trxConfirm = await contract
         .connect(buyer)
-        .confirmPurchase({ value: 2n * EVEN_NUMBER_PRICE });
+        .confirmPurchase({ value: EVEN_NUMBER_PRICE });
       await trxConfirm.wait();
 
       await expect(contract.connect(seller).confirmReceived.staticCall()).to
@@ -139,7 +140,7 @@ describe('@solidityequiv2 Safe remote purchase Test Suite', function () {
     it('should confirm inState modifier', async function () {
       const trxConfirm = await contract
         .connect(buyer)
-        .confirmPurchase({ value: 2n * EVEN_NUMBER_PRICE });
+        .confirmPurchase({ value: EVEN_NUMBER_PRICE });
       await trxConfirm.wait();
 
       await expect(contract.connect(seller).abort.staticCall()).to.eventually.be

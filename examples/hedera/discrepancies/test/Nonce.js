@@ -36,24 +36,20 @@ describe('@discrepancies - Nonce Test Suite', async () => {
 
     tokenCreateContract = await Utils.deployTokenCreateContract();
     tokenTransferContract = await Utils.deployTokenTransferContract();
-    await Utils.updateAccountKeysViaHapi([
-      await tokenCreateContract.getAddress(),
-      await tokenTransferContract.getAddress(),
-    ]);
     erc20Contract = await Utils.deployERC20Mock();
+    // The contract is the treasury: an EOA treasury would have to sign the token creation,
+    // which an EOA sending Ethereum transactions cannot do through a contract call. The token
+    // keys inherit the contract's key, so the contract can manage the token on its own.
     tokenAddress = await Utils.createFungibleToken(
         tokenCreateContract,
-        signers[0].address
+        await tokenCreateContract.getAddress()
     );
 
-    await Utils.updateTokenKeysViaHapi(tokenAddress, [
-      await tokenCreateContract.getAddress(),
-      await tokenTransferContract.getAddress(),
-    ]);
     await Utils.associateToken(
         tokenCreateContract,
         tokenAddress,
-        Constants.Contract.TokenCreateContract
+        Constants.Contract.TokenCreateContract,
+        false
     );
     await Utils.grantTokenKyc(tokenCreateContract, tokenAddress);
   });
@@ -341,10 +337,6 @@ describe('@discrepancies - Nonce Test Suite', async () => {
 
   it('should update nonce after successful ERC721 token call', async function () {
     erc721Contract = await Utils.deployERC721Mock();
-    await Utils.updateTokenKeysViaHapi(tokenAddress, [
-      await tokenCreateContract.getAddress(),
-      await tokenTransferContract.getAddress(),
-    ]);
 
     const snBefore = await getServicesNonce(signers[0].address);
     const mnBefore = await getMirrorNodeNonce(signers[0].address);

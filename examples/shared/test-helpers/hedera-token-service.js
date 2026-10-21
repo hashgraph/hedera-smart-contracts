@@ -4,8 +4,10 @@ const hre = require('hardhat');
 const { ethers } = hre;
 const { expect } = require('chai');
 const {
+  AccountAllowanceApproveTransaction,
   AccountId,
   Client,
+  NftId,
   AccountInfoQuery,
   AccountUpdateTransaction,
   ContractId,
@@ -480,45 +482,30 @@ class Utils {
   // Add Token association via hedera.js sdk
   // Client with signer - my private key example
 
-  static async associateToken(contract, tokenAddress, contractName) {
-    const signers = await ethers.getSigners();
-    const associateTx1 = await ethers.getContractAt(
-      contractName,
-      await contract.getAddress(),
-      signers[0]
-    );
-    const associateTx2 = await ethers.getContractAt(
-      contractName,
-      await contract.getAddress(),
-      signers[1]
-    );
+  static async associateToken(
+    contract,
+    tokenAddress,
+    contractName,
+    associateContract = true // false when the contract is the treasury (already associated)
+  ) {
+    // The contract associates itself through its own call. The first three signers associate
+    // through a HAPI transaction they sign themselves: a contract cannot act for an EOA unless
+    // the EOA's key includes the contract, and such an EOA can no longer send Ethereum
+    // transactions on current networks.
+    if (associateContract) {
+      await (
+        await contract.associateTokenPublic(
+          await contract.getAddress(),
+          tokenAddress,
+          Constants.GAS_LIMIT_1_000_000
+        )
+      ).wait();
+    }
 
-    const associateTx3 = await ethers.getContractAt(
-      contractName,
-      await contract.getAddress(),
-      signers[2]
-    );
-
-    await contract.associateTokenPublic(
-      await contract.getAddress(),
-      tokenAddress,
-      Constants.GAS_LIMIT_1_000_000
-    );
-    await associateTx1.associateTokenPublic(
-      signers[0].address,
-      tokenAddress,
-      Constants.GAS_LIMIT_1_000_000
-    );
-    await associateTx2.associateTokenPublic(
-      signers[1].address,
-      tokenAddress,
-      Constants.GAS_LIMIT_1_000_000
-    );
-    await associateTx3.associateTokenPublic(
-      signers[2].address,
-      tokenAddress,
-      Constants.GAS_LIMIT_1_000_000
-    );
+    const privateKeys = await this.getHardhatSignersPrivateKeys();
+    for (const privateKey of privateKeys.slice(0, 3)) {
+      await this.associateWithSigner(privateKey, tokenAddress);
+    }
   }
 
   static async grantTokenKyc(contract, tokenAddress) {
@@ -531,10 +518,30 @@ class Utils {
     await contract.grantTokenKycPublic(tokenAddress, signers[1].address);
   }
 
+  /**
+   * Waits for the receipt of a transaction and returns it if the transaction succeeded. Throws when
+   * it reverted, when no receipt arrived within ~30s, or when the consensus node rejected it: for
+   * such a transaction (e.g. INSUFFICIENT_TX_FEE) the relay answers eth_getTransactionReceipt with a
+   * JSON-RPC error, which ethers' wait() does not surface (it keeps waiting).
+   */
+  static async waitForSuccessfulReceipt(hash) {
+    for (let attempt = 0; attempt < 30; attempt++) {
+      const receipt = await ethers.provider.send('eth_getTransactionReceipt', [hash]);
+      if (receipt) {
+        if (receipt.status !== '0x1') {
+          throw new Error(`Transaction ${hash} reverted`);
+        }
+        return receipt;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+    throw new Error(`No receipt for transaction ${hash}`);
+  }
+
   static async expectToFail(transaction, code = null) {
     try {
       const result = await transaction;
-      await result.wait();
+      await this.waitForSuccessfulReceipt(result.hash);
       expect(true).to.eq(false);
     } catch (e) {
       expect(e).to.exist;
@@ -559,7 +566,10 @@ class Utils {
 
     const client = Client.forNetwork(hederaNetwork)
       .setMirrorNetwork(mirrorNode)
-      .setOperator(operatorId, operatorKey);
+      .setOperator(operatorId, operatorKey)
+      // The SDK default (2 HBAR) is below the fee of e.g. a token update with
+      // seven keys on current networks, which then fails with INSUFFICIENT_TX_FEE.
+      .setDefaultMaxTransactionFee(new Hbar(50));
 
     return client;
   }
@@ -596,7 +606,7 @@ class Utils {
       .freezeWith(signer)
       .sign(PrivateKey.fromStringECDSA(account.signingKey.privateKey));
 
-    await accountDeleteTransaction.execute(signer);
+    await (await accountDeleteTransaction.execute(signer)).getReceipt(signer);
   }
 
   static getSignerCompressedPublicKey(
@@ -653,12 +663,14 @@ class Utils {
       );
 
       await (
-        await new AccountUpdateTransaction()
-          .setAccountId(accountId)
-          .setKey(keyList)
-          .freezeWith(clientSigner)
-          .sign(pkSigner)
-      ).execute(clientSigner);
+        await (
+          await new AccountUpdateTransaction()
+            .setAccountId(accountId)
+            .setKey(keyList)
+            .freezeWith(clientSigner)
+            .sign(pkSigner)
+        ).execute(clientSigner)
+      ).getReceipt(clientSigner);
     }
   }
 
@@ -718,8 +730,10 @@ class Utils {
     if (setFeeSchedule) tx.setFeeScheduleKey(keyList);
 
     await (
-      await tx.freezeWith(clientSigner0).sign(pkSigners[0])
-    ).execute(clientSigner0);
+      await (
+        await tx.freezeWith(clientSigner0).sign(pkSigners[0])
+      ).execute(clientSigner0)
+    ).getReceipt(clientSigner0);
   }
 
   static getCurrentNetwork() {
@@ -730,6 +744,63 @@ class Utils {
     const address = AccountId.fromString(accountId).toSolidityAddress();
 
     return prepend0x ? '0x' + address : address;
+  }
+
+  /**
+   * Hedera id of a contract, looked up on the mirror node by its EVM address.
+   */
+  static async getContractId(contractAddress) {
+    const url = `${getMirrorNodeUrl(Utils.getCurrentNetwork())}/contracts/${contractAddress}`;
+    const { contract_id } = await (await fetch(url)).json();
+    return ContractId.fromString(contract_id);
+  }
+
+  /**
+   * Lets the contract at `spenderAddress` spend the owner's HBAR, fungible tokens and NFTs.
+   * A contract can move an EOA's assets only through an allowance the EOA granted, or through
+   * a contract key in the EOA's key; an EOA with such a key can no longer send Ethereum
+   * transactions on current networks.
+   *
+   * @param {string} ownerPrivateKey ECDSA hex private key of the owner
+   * @param {string} spenderAddress EVM address of the spender contract
+   * @param {{hbarTinybars?: number, tokens?: {token: string, amount: number}[], nfts?: {token: string, serial: number}[]}} allowances
+   */
+  static async approveAllowancesViaHapi(
+    ownerPrivateKey,
+    spenderAddress,
+    { hbarTinybars = 0, tokens = [], nfts = [] }
+  ) {
+    const wallet = new ethers.Wallet(ownerPrivateKey);
+    const ownerKey = PrivateKey.fromStringECDSA(wallet.signingKey.privateKey);
+    const ownerId = await this.getAccountId(
+      wallet.address,
+      await this.createSDKClient()
+    );
+    const ownerClient = await this.createSDKClient(ownerId, ownerKey);
+    const spender = AccountId.fromString(
+      (await this.getContractId(spenderAddress)).toString()
+    );
+
+    const tx = new AccountAllowanceApproveTransaction();
+    if (hbarTinybars) {
+      tx.approveHbarAllowance(ownerId, spender, Hbar.fromTinybars(hbarTinybars));
+    }
+    for (const { token, amount } of tokens) {
+      tx.approveTokenAllowance(
+        TokenId.fromSolidityAddress(token),
+        ownerId,
+        spender,
+        amount
+      );
+    }
+    for (const { token, serial } of nfts) {
+      tx.approveTokenNftAllowance(
+        new NftId(TokenId.fromSolidityAddress(token), serial),
+        ownerId,
+        spender
+      );
+    }
+    await (await tx.execute(ownerClient)).getReceipt(ownerClient);
   }
 
   static async associateWithSigner(privateKey, tokenAddress) {

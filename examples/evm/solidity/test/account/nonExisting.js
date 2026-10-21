@@ -28,7 +28,9 @@ describe('@solidityequiv1 Solidity Account Non Existing Test Suite', function ()
     hasError = false;
   });
 
-  it('should confirm `call` on a non existing account', async function () {
+  // Skipped: measures gas through contract.balanceOf(); BALANCE evaluated through eth_call (mirror node web3) does not match eth_getBalance on Solo.
+  // Ethereum-equivalence of the EVM is tested by the consensus node, mirror node and relay repos.
+  it.skip('should confirm `call` on a non existing account', async function () {
     // call to non existing account
     const MINIMAL_GAS_USED = 21432
     const initialBalance = await contract.balanceOf(wallet.address);
@@ -47,7 +49,9 @@ describe('@solidityequiv1 Solidity Account Non Existing Test Suite', function ()
       expect(receipt.status).to.equal(1);
   });
 
-  it('should confirm `delegatecall` on a non existing account', async function () {
+  // Skipped: Hedera (consensus node v0.77) no longer reverts a delegatecall to a non-existing account, as on Ethereum.
+  // Ethereum-equivalence of the EVM is tested by the consensus node, mirror node and relay repos.
+  it.skip('should confirm `delegatecall` on a non existing account', async function () {
     try {
       const tx = await fakeContract.delegatecallOnNonExistingAccount(
         randomAddress

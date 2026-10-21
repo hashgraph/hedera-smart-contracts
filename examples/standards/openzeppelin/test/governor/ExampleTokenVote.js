@@ -19,7 +19,9 @@ describe('ExampleToken Test Suite', function () {
     [owner, addr1, addr2] = await ethers.getSigners();
 
     // Deploy a new ExampleToken contract before each test.
-    token = await ExampleToken.deploy(Constants.GAS_LIMIT_1_000_000);
+    // creation needs ~1.8M gas; a too low limit leaves an empty address behind
+    token = await ExampleToken.deploy(Constants.GAS_LIMIT_5_000_000);
+    await token.waitForDeployment();
 
     await token.mint(owner.address, ethers.parseEther('1000'));
   });

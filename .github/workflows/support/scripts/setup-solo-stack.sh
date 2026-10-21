@@ -16,15 +16,14 @@ RELAY_VALUES_FILE="${RELAY_VALUES_FILE:-.github/examples-relay-values.yaml}"
 # Set EXTERNAL_ADDRESS=0.0.0.0 when docker containers must reach the forwarded ports.
 EXTERNAL_ADDRESS="${EXTERNAL_ADDRESS:-}"
 
-mkdir -p .github
-
-cat >.github/falcon.yml <<EOF
+# Generated per run, outside the repository so it never shows up as a change.
+FALCON_VALUES="$(mktemp "${RUNNER_TEMP:-${TMPDIR:-/tmp}}/solo-falcon-XXXXXX.yml")"
+cat >"${FALCON_VALUES}" <<EOF
 consensusNode:
   --node-aliases: "node1"
 mirrorNode:
   --enable-ingress: true
   --pinger: true
-  --values-file: .github/mirror-node-values.yaml
 relayNode:
   --values-file: ${RELAY_VALUES_FILE}
   --node-aliases: "node1"
@@ -47,7 +46,7 @@ if [[ -n "${EXTERNAL_ADDRESS}" ]]; then
 fi
 
 npx @hashgraph/solo@${SOLO_VERSION} one-shot falcon deploy \
-  --values-file .github/falcon.yml \
+  --values-file "${FALCON_VALUES}" \
   --consensus-node-version "${NETWORK_TAG}" \
   --mirror-node-version "${MIRROR_TAG}" \
   --relay-version "${RELAY_TAG}" \

@@ -46,8 +46,10 @@ const deployBlindAuctionContract = async (
 describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
   let beneficiary, wallet1;
 
-  const biddingTimeSeconds = 6;
-  const revealTimeSeconds = 3;
+  // Long enough for the deployment plus several bids/reveals (~2s each on Hedera) to land
+  // inside each window; the tests sleep until the contract's actual deadlines anyway.
+  const biddingTimeSeconds = 20;
+  const revealTimeSeconds = 10;
 
   const fiveHbars = 5 * tinybarToHbarCoef;
   const hundredHbars = 100 * tinybarToHbarCoef;
@@ -287,9 +289,14 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
 
     await sleepUntilTimestamp(biddingEndMs);
 
+    // TooLate is raised on-chain; the gas estimation at send time runs on the mirror node's
+    // latest block, which may not have passed biddingEnd yet. Check the transaction's outcome.
     await expect(
-      contract.connect(wallet1).bid(bidData, { value: hundredHbarsToWeibar })
-    ).to.eventually.be.rejected.and.have.property('code', Constants.CONTRACT_REVERT_EXECUTED_CODE);
+      contract
+        .connect(wallet1)
+        .bid(bidData, { value: hundredHbarsToWeibar })
+        .then((tx) => tx.wait())
+    ).to.eventually.be.rejected;
   });
 
   it('should confirm a user cannot reveal after reveal end', async function () {
