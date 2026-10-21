@@ -71,7 +71,8 @@ describe('@OZERC2771 Context Test Suite', function () {
 
   it('should return an event for [changeMessageTestRequest]', async function () {
     const signedTrx = await contract.changeMessageTestRequest('test', {
-      value: 100,
+      // 1 tinybar: Hedera's smallest unit, the relay rejects non-zero values below it
+      value: 10_000_000_000n,
     });
     const rec = await signedTrx.wait();
     const eventName = rec.logs[0].fragment.name;

@@ -164,7 +164,7 @@ describe('@migration States Tests', () => {
           const resp = await contract.balanceOf(randomAddress);
           expect(resp).equal(randomValue);
 
-          const deleteTx = await contract.deleteBalance(randomAddress);
+          const deleteTx = await contract.deleteBalance(randomAddress, Constants.GAS_LIMIT_1_000_000);
           await deleteTx.wait();
           const deletedBalance = await contract.balanceOf(randomAddress);
           expect(deletedBalance).equal(0n);
@@ -185,7 +185,7 @@ describe('@migration States Tests', () => {
               getRandomInt(1, 1000),
             ];
 
-            const tx = await contract.setVarIntArrDataAlloc(randomArr);
+            const tx = await contract.setVarIntArrDataAlloc(randomArr, Constants.GAS_LIMIT_1_000_000);
             await tx.wait();
 
             const resp = (await contract.getVarIntArrDataAlloc()).toArray();
@@ -217,7 +217,7 @@ describe('@migration States Tests', () => {
             ).toArray();
             expect(resp).to.deep.eq(randomArr);
 
-            const deleteTx = await contract.deleteVarIntArrDataAllocDeleted();
+            const deleteTx = await contract.deleteVarIntArrDataAllocDeleted(Constants.GAS_LIMIT_1_000_000);
             await deleteTx.wait();
 
             const deletedResp = (
@@ -273,7 +273,7 @@ describe('@migration States Tests', () => {
               fetchedInit + randomString1 + randomString2
             );
 
-            const txDelete = await contract.deleteVarStringConcatDeleted();
+            const txDelete = await contract.deleteVarStringConcatDeleted(Constants.GAS_LIMIT_1_000_000);
             await txDelete.wait();
 
             const deletedString = await contract.getVarStringConcatDeleted();
@@ -387,7 +387,7 @@ describe('@migration States Tests', () => {
             ).equal(JSON.stringify(struct.varUint256Arr));
             expect(resp1[6]).equal(struct.varStringConcat);
 
-            const deleteTx = await contract.deleteVarContractStructDeleted();
+            const deleteTx = await contract.deleteVarContractStructDeleted(Constants.GAS_LIMIT_1_000_000);
             await deleteTx.wait();
 
             const deletedResp = await contract.getVarContractStructDeleted();
@@ -646,7 +646,7 @@ describe('@migration States Tests', () => {
                 getRandomInt(1, 1000),
               ];
 
-              const tx = await contract.setVarIntArrDataAlloc(randomArr);
+              const tx = await contract.setVarIntArrDataAlloc(randomArr, Constants.GAS_LIMIT_1_000_000);
               await tx.wait();
 
               const resp = (await contract.getVarIntArrDataAlloc()).toArray();
@@ -678,7 +678,7 @@ describe('@migration States Tests', () => {
               ).toArray();
               expect(resp).to.deep.eq(randomArr);
 
-              const deleteTx = await contract.deleteVarIntArrDataAllocDeleted();
+              const deleteTx = await contract.deleteVarIntArrDataAllocDeleted(Constants.GAS_LIMIT_1_000_000);
               await deleteTx.wait();
 
               const deletedResp = (
@@ -738,7 +738,7 @@ describe('@migration States Tests', () => {
                 fetchedInit + randomString1 + randomString2
               );
 
-              const txDelete = await contract.deleteVarStringConcatDeleted();
+              const txDelete = await contract.deleteVarStringConcatDeleted(Constants.GAS_LIMIT_1_000_000);
               await txDelete.wait();
 
               const deletedString = await contract.getVarStringConcatDeleted();
@@ -852,7 +852,7 @@ describe('@migration States Tests', () => {
               ).equal(JSON.stringify(struct.varUint256Arr));
               expect(resp1[6]).equal(struct.varStringConcat);
 
-              const deleteTx = await contract.deleteVarContractStructDeleted();
+              const deleteTx = await contract.deleteVarContractStructDeleted(Constants.GAS_LIMIT_1_000_000);
               await deleteTx.wait();
 
               const deletedResp = await contract.getVarContractStructDeleted();

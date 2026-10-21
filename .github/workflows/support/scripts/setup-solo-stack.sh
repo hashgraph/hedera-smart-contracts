@@ -19,19 +19,13 @@ EXTERNAL_ADDRESS="${EXTERNAL_ADDRESS:-}"
 mkdir -p .github
 
 cat >.github/falcon.yml <<EOF
-network:
-  --consensus-node-version: "${NETWORK_TAG}"
-setup:
-  --consensus-node-version: "${NETWORK_TAG}"
 consensusNode:
   --node-aliases: "node1"
 mirrorNode:
   --enable-ingress: true
   --pinger: true
-  --mirror-node-version: "${MIRROR_TAG}"
   --values-file: .github/mirror-node-values.yaml
 relayNode:
-  --relay-release: "${RELAY_TAG}"
   --values-file: ${RELAY_VALUES_FILE}
   --node-aliases: "node1"
 EOF
@@ -54,7 +48,10 @@ fi
 
 npx @hashgraph/solo@${SOLO_VERSION} one-shot falcon deploy \
   --values-file .github/falcon.yml \
-  --dev \
+  --consensus-node-version "${NETWORK_TAG}" \
+  --mirror-node-version "${MIRROR_TAG}" \
+  --relay-version "${RELAY_TAG}" \
+  --debug \
   --deploy-explorer=false \
   --deployment "${SOLO_DEPLOYMENT}" \
   --namespace "${SOLO_NS}" \

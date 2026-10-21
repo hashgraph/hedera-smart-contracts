@@ -9,11 +9,13 @@ module.exports = async (address, msg) => {
   //Assign the greeter contract object in a variable, this is used for already deployed contract, which we have the address for. ethers.getContractAt accepts:
   //name of contract as first parameter
   //address of our contract
-  const { client } = await getClients();
+  const { client, publicClient } = await getClients();
   const greeter = await hre.viem.getContractAt('Greeter', address, { client });
 
   //using the greeter object(which is our contract) we can call functions from the contract. In this case we call setGreeting with our new msg
   const updateTx = await greeter.write.setGreeting([msg]);
+  // write() returns once the transaction is submitted; wait until it is executed
+  await publicClient.waitForTransactionReceipt({ hash: updateTx });
 
   console.log(`Updated call result: ${msg}`);
 

@@ -59,7 +59,7 @@ describe('@solidityequiv2 Solidity Functions Test Suite', function () {
     try {
       await contract.notPayable({ value: ethers.parseEther('1.0') });
     } catch (error) {
-      expect(error.code).to.eq(-32008);
+      expect(error.code).to.eq(Constants.CONTRACT_REVERT_EXECUTED_CODE);
     }
   });
 

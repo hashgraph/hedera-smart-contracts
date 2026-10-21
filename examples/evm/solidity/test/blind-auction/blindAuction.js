@@ -32,8 +32,13 @@ const deployBlindAuctionContract = async (
     revealTime,
     beneficiaryAddress
   );
-  const biddingEndMs = Date.now() + biddingTime * 1000 + 250;
-  const revealEndMs = biddingEndMs + revealTime * 1000 + 250;
+  await contract.waitForDeployment();
+
+  // Use the deadlines the contract computed from its deployment block.timestamp, plus one
+  // Hedera block period: a transaction's block.timestamp is the start of its (~2s) block.
+  const BLOCK_PERIOD_MS = 2500;
+  const biddingEndMs = Number(await contract.biddingEnd()) * 1000 + BLOCK_PERIOD_MS;
+  const revealEndMs = Number(await contract.revealEnd()) * 1000 + BLOCK_PERIOD_MS;
 
   return { contract, biddingEndMs, revealEndMs };
 };
@@ -195,7 +200,7 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
 
     const balanceBeforeWithdraw = await contract.getBalance();
 
-    const withdraw = await contract.connect(wallet1).withdraw();
+    const withdraw = await contract.connect(wallet1).withdraw(Constants.GAS_LIMIT_1_000_000);
     await withdraw.wait();
 
     const balanceAfterWithdraw = await contract.getBalance();
@@ -284,7 +289,7 @@ describe('@solidityequiv1 Solidity Blind Auction Test Suite', function () {
 
     await expect(
       contract.connect(wallet1).bid(bidData, { value: hundredHbarsToWeibar })
-    ).to.eventually.be.rejected.and.have.property('code', -32008);
+    ).to.eventually.be.rejected.and.have.property('code', Constants.CONTRACT_REVERT_EXECUTED_CODE);
   });
 
   it('should confirm a user cannot reveal after reveal end', async function () {

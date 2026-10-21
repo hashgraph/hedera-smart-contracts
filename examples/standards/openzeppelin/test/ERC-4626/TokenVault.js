@@ -23,12 +23,14 @@ describe('@OZTokenVault Test Suite', function () {
     );
 
     TokenVault = await ethers.getContractFactory(Constants.Contract.TokenVault);
+    // creation needs ~1.2M gas; a too low limit leaves an empty address behind
     tokenVault = await TokenVault.deploy(
       await asset.getAddress(),
       'MockToken',
       'MTK',
-      Constants.GAS_LIMIT_1_000_000
+      Constants.GAS_LIMIT_2_000_000
     );
+    await tokenVault.waitForDeployment();
 
     [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
 

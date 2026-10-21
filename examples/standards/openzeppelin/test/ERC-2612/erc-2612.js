@@ -70,7 +70,7 @@ describe('@OZERC2612 Test Suite', function () {
         r,
         s
       )
-    ).to.eventually.be.rejected.and.have.property('code', -32008);
+    ).to.be.revertedWithCustomError(contract, 'ERC2612ExpiredSignature');
   });
 
   it('should revert permit call with "Mismatched signature"', async function () {
@@ -86,7 +86,7 @@ describe('@OZERC2612 Test Suite', function () {
         r,
         s
       )
-    ).to.eventually.be.rejected.and.have.property('code', -32008);
+    ).to.be.revertedWithCustomError(contract, 'ERC2612InvalidSigner');
   });
 
   it('should permit', async function () {

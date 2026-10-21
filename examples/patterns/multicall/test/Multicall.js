@@ -134,7 +134,7 @@ describe('Multicall Test Suite', function () {
   before(async () => {
     multicaller = await deployContract('Multicall3');
     receiver = await deployContract(
-      'contracts/multicaller/Receiver.sol:Receiver'
+      'contracts/Receiver.sol:Receiver'
     );
     reverter = await deployContract('Reverter');
     receiverAddress = await receiver.getAddress();

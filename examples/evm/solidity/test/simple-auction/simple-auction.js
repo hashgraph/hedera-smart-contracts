@@ -106,7 +106,7 @@ describe('@solidityequiv3 Simple Auction Test Suite', function () {
     ).to.equal(combined);
 
     // Call the withdraw function with the previous highest bidder's address
-    const withdrawTx = await contract.connect(wallet).withdraw();
+    const withdrawTx = await contract.connect(wallet).withdraw(Constants.GAS_LIMIT_1_000_000);
     await withdrawTx.wait(2);
 
     // Check that the amount of Ether returned to the previous highest bidder is correct

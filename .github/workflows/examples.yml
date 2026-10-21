@@ -163,7 +163,7 @@ jobs:
           SOLO_VERSION="$(sed -n 's/^SOLO_VERSION=//p' .github/network-versions.env)"
           npx "@hashgraph/solo@${SOLO_VERSION}" one-shot falcon destroy \
             --deployment "${{ steps.solo_stack.outputs.deployment_name }}" \
-            --dev \
+            --debug \
             --quiet-mode || true
 
       - name: Upload Solo logs

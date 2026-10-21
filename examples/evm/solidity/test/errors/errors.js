@@ -69,7 +69,7 @@ describe('@solidityequiv2 Solidity Errors Test Suite', function () {
       await contract.revertWithCustomError();
     } catch (err) {
       hasError = true;
-      expect(err.code).to.equal(-32008);
+      expect(err.code).to.equal(Constants.CONTRACT_REVERT_EXECUTED_CODE);
 
       const customError = contract.interface.parseError(err.data);
       expect(customError).to.not.equal(null);
