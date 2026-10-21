@@ -1,0 +1,22 @@
+{
+  "name": "hedera-example-hardhat--viem-project",
+  "version": "1.0.0",
+  "description": "This is a example hardhat viem project",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx hardhat test"
+  },
+  "dependencies": {
+    "@nomicfoundation/hardhat-toolbox-viem": "4.1.2",
+    "dotenv": "17.2.3"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "2.1.2",
+    "hardhat": "2.29.1"
+  },
+  "overrides": {
+    "elliptic": "6.6.1",
+    "ws": "8.18.1",
+    "cookie": "0.7.2"
+  }
+}

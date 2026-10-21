@@ -1,0 +1,22 @@
+{
+  "name": "hardhat-example",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "6.1.2",
+    "dotenv": "17.2.3",
+    "hardhat": "2.29.1"
+  },
+  "dependencies": {
+    "@hiero-ledger/hiero-contracts": "0.2.0",
+    "@openzeppelin/contracts": "4.9.6"
+  },
+  "overrides": {
+    "elliptic": "6.6.1",
+    "ws": "8.21.3",
+    "serialize-javascript": "6.0.2",
+    "cookie": "0.7.2"
+  }
+}

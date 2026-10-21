@@ -1,0 +1,19 @@
+{
+  "name": "cryptography-bls-signatures-example",
+  "version": "0.0.1",
+  "private": true,
+  "license": "Apache-2.0",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "2.1.2",
+    "@nomicfoundation/hardhat-ethers": "3.1.3",
+    "chai": "4.5.0",
+    "ethers": "6.17.0",
+    "hardhat": "2.29.1",
+    "hedera-examples-test-helpers": "file:../../shared/test-helpers",
+    "mcl-wasm": "2.0.0"
+  }
+}

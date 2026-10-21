@@ -1,0 +1,209 @@
+name: Examples
+
+# Builds every example under examples/ and runs its tests. The example list and the
+# per-example commands live in .github/examples.json. Pull requests only run the
+# examples they touch; pushes and manual runs cover all of them.
+
+on:
+  pull_request:
+    branches: [main, release/**]
+  push:
+    branches: [main, release/**]
+  workflow_dispatch:
+
+concurrency:
+  group: examples-${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  changes:
+    name: Select examples
+    runs-on: smart-contracts-linux-medium
+    outputs:
+      build: ${{ steps.matrix.outputs.build }}
+      solo: ${{ steps.matrix.outputs.solo }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js [24]
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+
+      - name: List changed files
+        if: github.event_name == 'pull_request'
+        run: git diff --name-only "${{ github.event.pull_request.base.sha }}" HEAD > "${RUNNER_TEMP}/changed-files.txt"
+
+      - name: Build matrices
+        id: matrix
+        run: |
+          if [[ -f "${RUNNER_TEMP}/changed-files.txt" ]]; then
+            node .github/scripts/examples-matrix.js "${RUNNER_TEMP}/changed-files.txt"
+          else
+            node .github/scripts/examples-matrix.js
+          fi
+
+  build:
+    name: Build (${{ matrix.name }})
+    needs: changes
+    if: needs.changes.outputs.build != '[]'
+    runs-on: smart-contracts-linux-medium
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.changes.outputs.build) }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.path }}
+    env:
+      # Throwaway key that only satisfies Hardhat config validation for public-network examples.
+      DUMMY_PRIVATE_KEY: '0x1111111111111111111111111111111111111111111111111111111111111111'
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Setup toolchain
+        uses: ./.github/actions/setup-example-toolchain
+        with:
+          toolchain: ${{ matrix.toolchain }}
+          path: ${{ matrix.path }}
+
+      - name: Build
+        run: ${{ matrix.build }}
+
+      - name: Test
+        if: matrix.test
+        run: ${{ matrix.test }}
+
+  solo:
+    name: Test on Solo (${{ matrix.name }})
+    needs: changes
+    if: needs.changes.outputs.solo != '[]'
+    runs-on: smart-contracts-linux-large
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.changes.outputs.solo) }}
+    env:
+      # Ports forwarded by Solo one-shot falcon (see setup-solo-stack.sh).
+      RELAY_ENDPOINT: http://127.0.0.1:37546
+      LOCAL_NODE_ENDPOINT: http://127.0.0.1:37546
+      MIRROR_NODE_URL: http://127.0.0.1:38081
+      HEDERA_NETWORK: '{"127.0.0.1:35211":"0.0.3"}'
+      GRAPH_ETHEREUM_RPC: http://host.docker.internal:37546
+      # Well-known accounts pre-funded by Solo (same keys as the examples' .env.example).
+      ECDSA_PRIVATE_KEY: '0x2e1d968b041d84dd120a5860cee60cd83f9374ef527ca86996317ada3d0d03e7'
+      ECDSA_ALIAS_PRIVATE_KEY: '0x105d050185ccb907fba04dd92d8de9e32c18305e097ab41dadda21489a211524'
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Setup toolchain
+        uses: ./.github/actions/setup-example-toolchain
+        with:
+          toolchain: ${{ matrix.toolchain }}
+          path: ${{ matrix.path }}
+
+      - name: Setup Kind
+        uses: helm/kind-action@ef37e7f390d99f746eb8b610417061a60e82a6cc # v1.14.0
+        with:
+          install_only: true
+          node_image: kindest/node:v1.32.5@sha256:e3b2327e3a5ab8c76f5ece68936e4cafaa82edf58486b769727ab0b3b97a5b0d
+          version: v0.29.0
+          kubectl_version: v1.32.5
+          verbosity: 3
+          wait: 120s
+
+      - name: Deploy local Hiero network (Solo / Kind)
+        id: solo_stack
+        run: bash .github/workflows/support/scripts/setup-solo-stack.sh
+        env:
+          # Examples that run in docker (graph-node, synpress) reach the forwarded ports via host.docker.internal.
+          EXTERNAL_ADDRESS: 0.0.0.0
+          RELAY_VALUES_FILE: .github/examples-relay-values.yaml
+        timeout-minutes: 15
+
+      - name: Test
+        working-directory: ${{ matrix.path }}
+        env:
+          # For examples that port-forward extra Solo services themselves (e.g. erc-indexer).
+          SOLO_NAMESPACE: ${{ steps.solo_stack.outputs.namespace }}
+        run: ${{ matrix.solo_test }}
+
+      - name: One-shot Falcon destroy
+        if: always()
+        run: |
+          npx @hashgraph/solo@0.74.0 one-shot falcon destroy \
+            --deployment "${{ steps.solo_stack.outputs.deployment_name }}" \
+            --dev \
+            --quiet-mode || true
+
+      - name: Upload Solo logs
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: solo-logs (${{ strategy.job-index }})
+          path: ~/.solo/logs/*
+          if-no-files-found: warn
+
+  # Single, stable status check for branch protection: matrix job names change with
+  # the selected examples, this one does not. Skipped jobs (nothing selected) pass.
+  result:
+    name: Examples
+    if: always()
+    needs: [changes, build, solo]
+    runs-on: smart-contracts-linux-medium
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - name: Check results
+        env:
+          CHANGES: ${{ needs.changes.result }}
+          BUILD: ${{ needs.build.result }}
+          SOLO: ${{ needs.solo.result }}
+        run: |
+          {
+            echo "### Examples result"
+            echo ""
+            echo "| Stage | Result |"
+            echo "| --- | --- |"
+            echo "| Select examples | ${CHANGES} |"
+            echo "| Build (+ offline tests) | ${BUILD} |"
+            echo "| Tests on Solo | ${SOLO} |"
+          } >> "${GITHUB_STEP_SUMMARY}"
+          for result in "${CHANGES}" "${BUILD}" "${SOLO}"; do
+            if [[ "${result}" != "success" && "${result}" != "skipped" ]]; then
+              echo "::error::At least one examples job did not succeed (${result})."
+              exit 1
+            fi
+          done

@@ -1,0 +1,198 @@
+[
+  {
+    "name": "frameworks/hardhat",
+    "toolchain": "node",
+    "build": "npm ci && cp .env.example .env && npx hardhat compile",
+    "solo_test": "npm ci && cp .env.example .env && npx hardhat test"
+  },
+  {
+    "name": "frameworks/hardhat-viem",
+    "toolchain": "node",
+    "build": "npm ci && LOCAL_NODE_ENDPOINT=http://127.0.0.1:7546 LOCAL_NODE_OPERATOR_PRIVATE_KEY= npx hardhat compile",
+    "solo_test": "npm ci && LOCAL_NODE_OPERATOR_PRIVATE_KEY=$ECDSA_ALIAS_PRIVATE_KEY npx hardhat test"
+  },
+  {
+    "name": "frameworks/foundry",
+    "toolchain": "foundry",
+    "build": "npm ci && forge build --sizes",
+    "test": "forge test -vvv"
+  },
+  {
+    "name": "frameworks/brownie",
+    "toolchain": "python",
+    "build": "pip install -r requirements.txt && brownie compile",
+    "ci_note": "tests need accounts loaded from an interactive brownie keystore"
+  },
+  {
+    "name": "frameworks/solidity-coverage",
+    "toolchain": "node",
+    "build": "npm ci && npx hardhat compile",
+    "test": "npx hardhat coverage --testfiles test/Lock.ts"
+  },
+  {
+    "name": "clients/go",
+    "toolchain": "go",
+    "build": "go vet ./... && go build ./...",
+    "solo_test": "cp .env.sample .env && OPERATOR_PRIVATE_KEY=$ECDSA_PRIVATE_KEY go test -v ./..."
+  },
+  {
+    "name": "clients/rust-alloy",
+    "toolchain": "rust",
+    "build": "cargo build --locked"
+  },
+  {
+    "name": "clients/wagmi",
+    "toolchain": "node",
+    "build": "npm ci && npm run build"
+  },
+  {
+    "name": "apps/metamask-dapp",
+    "toolchain": "node",
+    "build": "npm ci && echo '{}' > src/contracts/.bootstrapInfo.json && CI=false npm run build",
+    "solo_test": "cp localDappCI.env .env && docker compose up --exit-code-from synpress"
+  },
+  {
+    "name": "indexing/subgraph",
+    "toolchain": "node",
+    "build": "npm ci && cp .env.example .env && npx hardhat compile && npm run graph-codegen && npm run graph-build",
+    "solo_test": "npm ci && cp .env.example .env && npx hardhat compile && npx hardhat prepare && npm run graph-codegen && IPFS_PROFILE=test npm run graph-local -- --detach && sleep 20 && npm run create-local && npm run deploy-local -- --network local --version-label 0.0.1 && sleep 10 && npx hardhat test"
+  },
+  {
+    "name": "indexing/erc-indexer",
+    "toolchain": "node",
+    "build": "npm ci && npx tsc --noEmit -p .",
+    "test": "npm run test:unit",
+    "solo_test": "npm ci && cp local.env .env && bash scripts/solo-port-forward.sh && HEDERA_NETWORK=local-node MIRROR_NODE_URL_WEB3=http://127.0.0.1:8545 npm run test:acceptance"
+  },
+  {
+    "name": "interoperability/layer-zero",
+    "toolchain": "node",
+    "build": "npm ci && HEDERA_PK=$DUMMY_PRIVATE_KEY BSC_PK=$DUMMY_PRIVATE_KEY npx hardhat compile",
+    "ci_note": "tests need funded Hedera testnet + BSC testnet accounts"
+  },
+  {
+    "name": "interoperability/crosschain-bridge",
+    "toolchain": "node",
+    "build": "npm ci && HEDERA_PK=$DUMMY_PRIVATE_KEY SEPOLIA_PK=$DUMMY_PRIVATE_KEY HEDERA_RPC_URL=http://127.0.0.1:7546 SEPOLIA_RPC_URL=http://127.0.0.1:8545 npx hardhat compile",
+    "ci_note": "tests need funded Hedera testnet + Sepolia accounts"
+  },
+  {
+    "name": "tokens/whbar",
+    "toolchain": "node",
+    "build": "npm ci && ECDSA_HEX_PRIVATE_KEY=$DUMMY_PRIVATE_KEY npx hardhat compile",
+    "solo_test": "npm ci && cp .env.example .env && ECDSA_HEX_PRIVATE_KEY=$ECDSA_PRIVATE_KEY NETWORK=local npx hardhat test test/solo/WHBAR.js"
+  },
+  {
+    "name": "tokens/safe-hts",
+    "toolchain": "node",
+    "build": "npm ci && npx hardhat compile",
+    "solo_test": "npm ci && cp .env.example .env && npx hardhat test"
+  },
+  {
+    "name": "tokens/hip-583",
+    "toolchain": "node",
+    "build": "npm ci && npx hardhat compile",
+    "solo_test": "npm ci && cp .env.example .env && npx hardhat test"
+  },
+  {
+    "name": "tokens/hip-719-proxy",
+    "toolchain": "node",
+    "build": "npm ci && npx hardhat compile"
+  },
+  {
+    "name": "patterns/diamond",
+    "toolchain": "node",
+    "build": "npm ci && npx hardhat compile",
+    "solo_test": "npm ci && cp .env.example .env && npx hardhat test"
+  },
+  {
+    "name": "patterns/multicall",
+    "toolchain": "node",
+    "build": "npm ci && npx hardhat compile",
+    "solo_test": "npm ci && cp .env.example .env && npx hardhat test"
+  },
+  {
+    "name": "patterns/upgradeable-proxies",
+    "toolchain": "node",
+    "build": "npm ci && npx hardhat compile",
+    "solo_test": "npm ci && cp .env.example .env && npx hardhat test --grep Proxy"
+  },
+  {
+    "name": "standards/openzeppelin",
+    "toolchain": "node",
+    "build": "npm ci && npx hardhat compile",
+    "solo_test": {
+      "erc": "npm ci && cp .env.example .env && npx hardhat test --grep @OZERC",
+      "other": "npm ci && cp .env.example .env && npx hardhat test --grep '^(?!@OZERC)'"
+    }
+  },
+  {
+    "name": "evm/solidity",
+    "toolchain": "node",
+    "build": "npm ci && npx hardhat compile",
+    "solo_test": {
+      "equiv1": "npm ci && cp .env.example .env && npx hardhat test --grep @solidityequiv1",
+      "equiv2": "npm ci && cp .env.example .env && npx hardhat test --grep @solidityequiv2",
+      "equiv3": "npm ci && cp .env.example .env && npx hardhat test --grep @solidityequiv3"
+    }
+  },
+  {
+    "name": "evm/yul",
+    "toolchain": "node",
+    "build": "npm ci && npx hardhat compile",
+    "solo_test": "npm ci && cp .env.example .env && npx hardhat test"
+  },
+  {
+    "name": "evm/opcodes",
+    "toolchain": "node",
+    "build": "npm ci && npx hardhat compile",
+    "solo_test": "npm ci && cp .env.example .env && npx hardhat test"
+  },
+  {
+    "name": "evm/precompiles",
+    "toolchain": "node",
+    "build": "npm ci && npx hardhat compile",
+    "solo_test": "npm ci && cp .env.example .env && npx hardhat test"
+  },
+  {
+    "name": "cryptography/bls-signatures",
+    "toolchain": "node",
+    "build": "npm ci && npx hardhat compile",
+    "solo_test": "npm ci && cp .env.example .env && npx hardhat test --grep BLSSignature"
+  },
+  {
+    "name": "hedera/discrepancies",
+    "toolchain": "node",
+    "build": "npm ci && npx hardhat compile",
+    "solo_test": "npm ci && cp .env.example .env && npx hardhat test"
+  },
+  {
+    "name": "hedera/state-registry",
+    "toolchain": "node",
+    "build": "npm ci && npx hardhat compile",
+    "solo_test": "npm ci && cp .env.example .env && npx hardhat test --grep @pre-migration && npx hardhat test --grep @post-migration"
+  },
+  {
+    "name": "hedera/key-rotation",
+    "toolchain": "node",
+    "build": "npm ci && npx hardhat compile",
+    "solo_test": "npm ci && cp .env.example .env && npx hardhat test"
+  },
+  {
+    "name": "hedera/contract-admin-id",
+    "toolchain": "node",
+    "build": "npm ci && npx hardhat compile",
+    "solo_test": "npm ci && cp .env.example .env && npx hardhat test"
+  },
+  {
+    "name": "accounts/offchain-signing",
+    "toolchain": "node",
+    "build": "npm ci && node --check scripts/signAccountDeleteTransaction.js && node --check scripts/executeSignedTransactionCron.js"
+  },
+  {
+    "name": "testing/system-contract-mocks",
+    "toolchain": "foundry",
+    "build": "npm ci && forge build",
+    "test": "forge test -vvv"
+  }
+]

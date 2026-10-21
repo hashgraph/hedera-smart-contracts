@@ -8,6 +8,9 @@ NETWORK_TAG="${NETWORK_TAG:-v0.72.0}"
 MIRROR_TAG="${MIRROR_TAG:-v0.151.0}"
 RELAY_TAG="${RELAY_TAG:-0.76.2}"
 SOLO_VERSION="${SOLO_VERSION:-0.74.0}"
+RELAY_VALUES_FILE="${RELAY_VALUES_FILE:-.github/examples-relay-values.yaml}"
+# Set EXTERNAL_ADDRESS=0.0.0.0 when docker containers must reach the forwarded ports.
+EXTERNAL_ADDRESS="${EXTERNAL_ADDRESS:-}"
 
 mkdir -p .github
 
@@ -25,7 +28,7 @@ mirrorNode:
   --values-file: .github/mirror-node-values.yaml
 relayNode:
   --relay-release: "${RELAY_TAG}"
-  --values-file: .github/relay-values.yaml
+  --values-file: ${RELAY_VALUES_FILE}
   --node-aliases: "node1"
 EOF
 
@@ -40,12 +43,18 @@ if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
   } >>"${GITHUB_OUTPUT}"
 fi
 
+EXTRA_ARGS=()
+if [[ -n "${EXTERNAL_ADDRESS}" ]]; then
+  EXTRA_ARGS+=(--external-address "${EXTERNAL_ADDRESS}")
+fi
+
 npx @hashgraph/solo@${SOLO_VERSION} one-shot falcon deploy \
   --values-file .github/falcon.yml \
   --dev \
   --deploy-explorer=false \
   --deployment "${SOLO_DEPLOYMENT}" \
-  --namespace "${SOLO_NS}"
+  --namespace "${SOLO_NS}" \
+  ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}
 
 echo "Waiting for mirror node REST API..."
 for i in $(seq 1 30); do

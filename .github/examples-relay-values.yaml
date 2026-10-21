@@ -1,0 +1,11 @@
+# Relay config for examples.yml: indexers (graph-node) and UI e2e tests need
+# wide eth_getLogs ranges and no rate limiting.
+relay:
+  config:
+    DEBUG_API_ENABLED: "true"
+    ETH_GET_LOGS_BLOCK_RANGE_LIMIT: "2000"
+    RATE_LIMIT_DISABLED: "true"
+ws:
+  config:
+    DEBUG_API_ENABLED: "true"
+    RATE_LIMIT_DISABLED: "true"
