@@ -515,12 +515,15 @@ class Utils {
 
   static async grantTokenKyc(contract, tokenAddress) {
     const signers = await ethers.getSigners();
-    await contract.grantTokenKycPublic(
-      tokenAddress,
-      await contract.getAddress()
-    );
-    await contract.grantTokenKycPublic(tokenAddress, signers[0].address);
-    await contract.grantTokenKycPublic(tokenAddress, signers[1].address);
+    // Wait for each transaction: back-to-back unconfirmed sends from one account can get the
+    // later ones dropped, and hardhat-ethers then waits forever for them to show up.
+    for (const account of [
+      await contract.getAddress(),
+      signers[0].address,
+      signers[1].address,
+    ]) {
+      await (await contract.grantTokenKycPublic(tokenAddress, account)).wait();
+    }
   }
 
   /**
@@ -583,7 +586,12 @@ class Utils {
       .setOperator(operatorId, operatorKey)
       // The SDK default (2 HBAR) is below the fee of e.g. a token update with
       // seven keys on current networks, which then fails with INSUFFICIENT_TX_FEE.
-      .setDefaultMaxTransactionFee(new Hbar(50));
+      .setDefaultMaxTransactionFee(new Hbar(50))
+      // After a transient gRPC error the SDK puts the node into backoff and, with a single node
+      // whose address is not 127.0.0.1:50211 (e.g. Solo's 127.0.0.1:35211 in CI), fails right away
+      // with "All nodes are unhealthy". Keep the node usable so the request retries apply.
+      .setNodeMinBackoff(0)
+      .setNodeMaxBackoff(0);
 
     return client;
   }

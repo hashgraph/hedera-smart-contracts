@@ -84,10 +84,12 @@ describe('WHBAR', function () {
     // build a client that pays with the signer's own key
     const signerId = await getEntityId('accounts', signers[0].address);
     const contractId = await getEntityId('contracts', contract.target);
-    const client = Client.forNetwork(HEDERA_NETWORK).setOperator(
-      signerId,
-      PrivateKey.fromStringECDSA(process.env.ECDSA_HEX_PRIVATE_KEY)
-    );
+    const client = Client.forNetwork(HEDERA_NETWORK)
+      .setOperator(signerId, PrivateKey.fromStringECDSA(process.env.ECDSA_HEX_PRIVATE_KEY))
+      // single node not at 127.0.0.1:50211: keep it usable after a transient gRPC error
+      // instead of failing with "All nodes are unhealthy"
+      .setNodeMinBackoff(0)
+      .setNodeMaxBackoff(0);
 
     // send 1 hbar to the contract via CryptoTransfer
     const tx = new TransferTransaction()

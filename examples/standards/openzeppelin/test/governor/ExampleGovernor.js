@@ -92,7 +92,7 @@ describe('@OZGovernor Test Suite', function () {
     const proposalDeadline = await governor.proposalDeadline(proposalId);
 
     while (blockNum <= proposalDeadline) {
-      new Promise((r) => setTimeout(r, 500));
+      await new Promise((r) => setTimeout(r, 500));
       blockNum = await ethers.provider.getBlockNumber();
     }
 

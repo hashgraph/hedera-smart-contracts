@@ -221,8 +221,11 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     const snBefore = await getServicesNonce(signers[0].address);
     const mnBefore = await getMirrorNodeNonce(signers[0].address);
 
+    // Just above the intrinsic gas so the transaction enters the EVM and runs out of gas there.
+    // Since Pectra (EIP-7623) the intrinsic minimum includes a calldata floor:
+    // 21000 + 10 * 16 tokens for the 4-byte selector = 21160 (the old 21064 is now rejected up front).
     await Utils.expectToFail(
-        internalCalleeContract.externalFunction({gasLimit: 21_064})
+        internalCalleeContract.externalFunction({gasLimit: 21_200})
     );
 
     const snAfter = await getServicesNonce(signers[0].address);
@@ -325,8 +328,11 @@ describe('@discrepancies - Nonce Test Suite', async () => {
     const snBefore = await getServicesNonce(signers[0].address);
     const mnBefore = await getMirrorNodeNonce(signers[0].address);
 
+    // ERC20 call on the HTS token through its ERC20 facade. Signer 0 holds none of the token
+    // (the contract is the treasury), so the call reverts in the EVM and still bumps the nonce.
+    const token = await ethers.getContractAt('ERC20Mock', tokenAddress);
     await Utils.expectToFail(
-        erc20Contract.transfer(tokenAddress, signers[1].address, amount, Constants.GAS_LIMIT_1_000_000)
+        token.transfer(signers[1].address, amount, Constants.GAS_LIMIT_1_000_000)
     );
 
     const snAfter = await getServicesNonce(signers[0].address);
