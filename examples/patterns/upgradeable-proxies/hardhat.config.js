@@ -20,6 +20,7 @@ module.exports = {
   defaultNetwork: 'local',
   networks: hardhatNetworks,
   mocha: {
-    timeout: 3600000,
+    // Fail a hanging test (e.g. a transaction that never gets a receipt) instead of the CI job.
+    timeout: 600000,
   },
 };

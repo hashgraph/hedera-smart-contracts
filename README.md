@@ -70,7 +70,7 @@ defaults.
 per example live in [`.github/examples.json`](.github/examples.json): `build` and `test` run offline, `solo_test`
 runs against a fresh Solo network (a `{ "label": "command" }` map splits a long suite into parallel jobs). The Solo,
 consensus node, mirror node and relay versions are pinned in [`.github/network-versions.env`](.github/network-versions.env)
-(same as hiero-json-rpc-relay's CI).
+(Solo and consensus node as in hiero-json-rpc-relay's CI; see the file for why the mirror node is newer).
 Examples without runnable tests are build only and say why in `ci_note`. Pull requests only run the examples
 they change, plus the examples that depend on a changed `examples/shared/` package (all of them when the CI setup
 changes); pushes to `main` run everything.

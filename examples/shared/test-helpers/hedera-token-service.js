@@ -504,7 +504,12 @@ class Utils {
 
     const privateKeys = await this.getHardhatSignersPrivateKeys();
     for (const privateKey of privateKeys.slice(0, 3)) {
-      await this.associateWithSigner(privateKey, tokenAddress);
+      try {
+        await this.associateWithSigner(privateKey, tokenAddress);
+      } catch (e) {
+        // The token's treasury is associated automatically.
+        if (e.status?.toString() !== 'TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT') throw e;
+      }
     }
   }
 
@@ -539,8 +544,15 @@ class Utils {
   }
 
   static async expectToFail(transaction, code = null) {
+    // hardhat-ethers resolves a sent transaction only once eth_getTransactionByHash returns it;
+    // for a transaction the consensus node rejected the relay answers that with an error, so the
+    // promise never settles. A send that does not settle within 30s counts as a failure too.
+    let timer;
+    const notSent = new Promise((_, reject) => {
+      timer = setTimeout(() => reject(new Error('Transaction was not accepted')), 30_000);
+    });
     try {
-      const result = await transaction;
+      const result = await Promise.race([transaction, notSent]);
       await this.waitForSuccessfulReceipt(result.hash);
       expect(true).to.eq(false);
     } catch (e) {
@@ -548,6 +560,8 @@ class Utils {
       if (code) {
         expect(e.code).to.eq(code);
       }
+    } finally {
+      clearTimeout(timer);
     }
   }
 

@@ -37,7 +37,8 @@ if (!mnemonic) {
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   mocha: {
-    timeout: 3600000,
+    // Fail a hanging test (e.g. a transaction that never gets a receipt) instead of the CI job.
+    timeout: 600000,
   },
   solidity: {
     version: '0.8.9',
