@@ -4,10 +4,14 @@
 # to GITHUB_OUTPUT when set (GitHub Actions).
 set -euo pipefail
 
-NETWORK_TAG="${NETWORK_TAG:-v0.72.0}"
-MIRROR_TAG="${MIRROR_TAG:-v0.151.0}"
-RELAY_TAG="${RELAY_TAG:-0.76.2}"
-SOLO_VERSION="${SOLO_VERSION:-0.74.0}"
+# Pinned versions live in .github/network-versions.env; env vars of the same name override them.
+VERSIONS_FILE=".github/network-versions.env"
+pinned() { sed -n "s/^$1=//p" "${VERSIONS_FILE}"; }
+
+NETWORK_TAG="${NETWORK_TAG:-$(pinned NETWORK_TAG)}"
+MIRROR_TAG="${MIRROR_TAG:-$(pinned MIRROR_TAG)}"
+RELAY_TAG="${RELAY_TAG:-$(pinned RELAY_TAG)}"
+SOLO_VERSION="${SOLO_VERSION:-$(pinned SOLO_VERSION)}"
 RELAY_VALUES_FILE="${RELAY_VALUES_FILE:-.github/examples-relay-values.yaml}"
 # Set EXTERNAL_ADDRESS=0.0.0.0 when docker containers must reach the forwarded ports.
 EXTERNAL_ADDRESS="${EXTERNAL_ADDRESS:-}"
@@ -16,9 +20,9 @@ mkdir -p .github
 
 cat >.github/falcon.yml <<EOF
 network:
-  --release-tag: "${NETWORK_TAG}"
+  --consensus-node-version: "${NETWORK_TAG}"
 setup:
-  --release-tag: "${NETWORK_TAG}"
+  --consensus-node-version: "${NETWORK_TAG}"
 consensusNode:
   --node-aliases: "node1"
 mirrorNode:

@@ -160,7 +160,8 @@ jobs:
       - name: One-shot Falcon destroy
         if: always()
         run: |
-          npx @hashgraph/solo@0.74.0 one-shot falcon destroy \
+          SOLO_VERSION="$(sed -n 's/^SOLO_VERSION=//p' .github/network-versions.env)"
+          npx "@hashgraph/solo@${SOLO_VERSION}" one-shot falcon destroy \
             --deployment "${{ steps.solo_stack.outputs.deployment_name }}" \
             --dev \
             --quiet-mode || true
