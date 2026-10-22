@@ -116,7 +116,7 @@ describe('@OZERC-2771 Fоrward Test Suite', function () {
   });
 
   it('should execute forward request with [ERC2771ForwarderMismatchedValue] error', async function () {
-    expect(
+    await expect(
       contractForwarder.execute.staticCall(trx)
     ).to.eventually.be.rejected.and.have.property(
       'errorName',

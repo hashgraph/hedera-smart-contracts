@@ -194,7 +194,7 @@ describe('@OZERC1155Token Test Suite', () => {
     const currentOwner = await erc1155Token.owner();
     expect(currentOwner).to.not.eq(wallet2.address);
 
-    expect(
+    await expect(
       erc1155Token.connect(wallet2).transferOwnership(wallet2.address)
     ).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION);
   });
@@ -234,7 +234,7 @@ describe('@OZERC1155Token Test Suite', () => {
   });
 
   it('Should NOT burn insufficient amount of token', async () => {
-    expect(
+    await expect(
       erc1155Token
         .connect(wallet2)
         .burn(wallet2.address, TOKEN_ID, BURNT_AMOUNT)
@@ -363,7 +363,7 @@ describe('@OZERC1155Token Test Suite', () => {
     );
     await mintTx.wait();
 
-    expect(
+    await expect(
       erc1155Token.safeTransferFrom(
         wallet2.address,
         wallet1.address,

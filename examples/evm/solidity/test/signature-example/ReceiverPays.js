@@ -60,7 +60,7 @@ describe('@solidityequiv3 Signature Example ReceiverPays Test Suite', function (
   // try to shutdown contract as receiver
   it('receiver should not be able to shutdown contract', async function () {
     const contract = receiverPaysContract.connect(receiver);
-    expect(contract.shutdown()).to.eventually.be.rejected;
+    await expect(contract.shutdown()).to.eventually.be.rejected;
     // verify the contract still has balance
     const contractBalance = await signers[0].provider.getBalance(
       await receiverPaysContract.getAddress()

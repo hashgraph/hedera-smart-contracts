@@ -78,7 +78,7 @@ describe('@OZERC20Votes Test Suite', function () {
 
   it('should produce an error when looking up votes in the future (getPastVotes) ', async function () {
     const timeTick = await contract.clock();
-    expect(
+    await expect(
       contract.getPastVotes(wallet.address, timeTick + TIME_INCREMENT)
     ).to.eventually.be.rejected.and.have.property(
       'errorName',

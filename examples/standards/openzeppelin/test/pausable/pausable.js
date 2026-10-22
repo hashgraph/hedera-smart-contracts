@@ -32,7 +32,7 @@ describe('@OZPausable Test Suite', function () {
     const tx = await contract.pause(Constants.GAS_LIMIT_1_000_000);
     await tx.wait()
 
-    expect(
+    await expect(
       contract.setPausedMessage('some other message')
     ).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION);
   });
@@ -45,7 +45,7 @@ describe('@OZPausable Test Suite', function () {
     const tx = await contract.unpause(Constants.GAS_LIMIT_1_000_000);
     await tx.wait();
 
-    expect(
+    await expect(
       contract.getPausedMessage()
     ).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION);
   });
@@ -74,7 +74,7 @@ describe('@OZPausable Test Suite', function () {
     const tx = await contract.pause(Constants.GAS_LIMIT_1_000_000);
     await tx.wait();
 
-    expect(contract.pause()).to.eventually.be.rejected.and.have.property(
+    await expect(contract.pause()).to.eventually.be.rejected.and.have.property(
       'code',
       CALL_EXCEPTION
     );
@@ -84,7 +84,7 @@ describe('@OZPausable Test Suite', function () {
     const tx = await contract.unpause(Constants.GAS_LIMIT_1_000_000);
     await tx.wait();
 
-    expect(contract.unpause()).to.eventually.be.rejected.and.have.property(
+    await expect(contract.unpause()).to.eventually.be.rejected.and.have.property(
       'code',
       CALL_EXCEPTION
     );

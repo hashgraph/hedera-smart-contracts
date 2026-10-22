@@ -118,7 +118,7 @@ describe('@OZERC1967Upgrade Upgradable Vote Test Suite', () => {
         .connect(voter2)
         .changeAdmin(await voter1.getAddress());
 
-      expect(txPromise).to.eventually.be.rejected.and.have.property(
+      await expect(txPromise).to.eventually.be.rejected.and.have.property(
         'code',
         CALL_EXCEPTION
       );
@@ -172,7 +172,7 @@ describe('@OZERC1967Upgrade Upgradable Vote Test Suite', () => {
         .connect(voter1)
         .vote(GAS_LIMIT_1_000_000);
 
-      expect(invalidVoteTx.wait()).to.eventually.be.rejected.and.have.property(
+      await expect(invalidVoteTx.wait()).to.eventually.be.rejected.and.have.property(
         'code',
         CALL_EXCEPTION
       );

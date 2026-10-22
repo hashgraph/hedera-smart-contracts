@@ -40,7 +40,7 @@ describe('@OZERC1820 Test Suite', () => {
   });
 
   it('Should NOT allow a non-manager to set a new manager', async () => {
-    expect(
+    await expect(
       erc1820registry
         .connect(wallet1)
         .setManager(wallet2.address, wallet1.address)

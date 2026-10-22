@@ -139,7 +139,7 @@ describe('@OZERC777 Test Suite', () => {
       EMPTY_DATA
     );
 
-    expect(
+    await expect(
       erc777Token
         .connect(wallet1)
         .send(wallet2.address, TOTAL_TOKEN_AMOUNT + 1, EMPTY_DATA)
@@ -157,7 +157,7 @@ describe('@OZERC777 Test Suite', () => {
       EMPTY_DATA
     );
 
-    expect(
+    await expect(
       erc777Token
         .connect(wallet1)
         .send(ADDRESS_ZERO, TOTAL_TOKEN_AMOUNT + 1, EMPTY_DATA)
@@ -202,7 +202,7 @@ describe('@OZERC777 Test Suite', () => {
   });
 
   it('Should NOT authorize self as operator', async () => {
-    expect(
+    await expect(
       erc777Token.connect(wallet2).authorizeOperator(wallet2.address)
     ).to.eventually.be.rejected.and.have.property(
       'code',
@@ -241,7 +241,7 @@ describe('@OZERC777 Test Suite', () => {
   });
 
   it('Should NOT revoke self as operator', async () => {
-    expect(
+    await expect(
       erc777Token.connect(wallet2).revokeOperator(wallet2.address)
     ).to.eventually.be.rejected.and.have.property(
       'code',
@@ -289,7 +289,7 @@ describe('@OZERC777 Test Suite', () => {
       .connect(wallet2)
       .mint(wallet2.address, TOTAL_TOKEN_AMOUNT, EMPTY_DATA, EMPTY_DATA);
 
-    expect(
+    await expect(
       erc777Token
         .connect(wallet1)
         .operatorSend(
@@ -334,7 +334,7 @@ describe('@OZERC777 Test Suite', () => {
       .connect(wallet2)
       .mint(wallet2.address, TOTAL_TOKEN_AMOUNT, EMPTY_DATA, EMPTY_DATA);
 
-    expect(
+    await expect(
       erc777Token.operatorBurn(
         wallet2.address, //token holder
         BURNT_TOKEN_AMOUNT, //amount
@@ -352,7 +352,7 @@ describe('@OZERC777 Test Suite', () => {
       .connect(wallet1)
       .mint(wallet1.address, TOTAL_TOKEN_AMOUNT, EMPTY_DATA, EMPTY_DATA);
 
-    expect(
+    await expect(
       erc777Token
         .connect(wallet1)
         .send(
@@ -409,7 +409,7 @@ describe('@OZERC777 Test Suite', () => {
         EMPTY_DATA
       );
 
-    expect(
+    await expect(
       erc777ContractAccount.send(
         await erc777Token.getAddress(),
         wallet2.address,

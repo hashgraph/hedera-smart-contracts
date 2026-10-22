@@ -157,6 +157,17 @@ jobs:
           SOLO_NAMESPACE: ${{ steps.solo_stack.outputs.namespace }}
         run: ${{ matrix.solo_test }}
 
+      - name: Collect network logs
+        if: (failure() || cancelled()) && steps.solo_stack.outputs.namespace != ''
+        run: |
+          ns="${{ steps.solo_stack.outputs.namespace }}"
+          mkdir -p ~/.solo/logs/pods
+          kubectl get pods -n "${ns}" -o wide > ~/.solo/logs/pods/pods.txt 2>&1 || true
+          for pod in $(kubectl get pods -n "${ns}" -o name); do
+            kubectl logs -n "${ns}" "${pod}" --all-containers --prefix --tail=-1 \
+              > ~/.solo/logs/pods/"${pod#pod/}".log 2>&1 || true
+          done
+
       - name: One-shot Falcon destroy
         if: always()
         run: |
@@ -167,7 +178,7 @@ jobs:
             --quiet-mode || true
 
       - name: Upload Solo logs
-        if: failure()
+        if: failure() || cancelled()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: solo-logs (${{ strategy.job-index }})

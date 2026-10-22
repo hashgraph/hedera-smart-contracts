@@ -59,7 +59,7 @@ describe('@solidityequiv2 Solidity Errors Test Suite', function () {
 
   it('should confirm revert with message works', async function () {
     const message = 'We unfortunalty need to revert this transaction';
-    expect(contract.revertWithMessageCheck(message)).to.be.revertedWith(
+    await expect(contract.revertWithMessageCheck(message)).to.be.revertedWith(
       message
     );
   });

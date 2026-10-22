@@ -106,7 +106,7 @@ describe('@OZOwnable Crowd Fund Test Suite', () => {
     // prepare transaction to withdraw an amount by owner
     const WITHDRAWN_AMOUNT = 40000000000; // > FUND_AMOUNT
 
-    expect(
+    await expect(
       crowdFund.connect(owner).withdraw(WITHDRAWN_AMOUNT / TINY_BAR_TO_WEI_COEF)
     ).to.be.reverted;
 
