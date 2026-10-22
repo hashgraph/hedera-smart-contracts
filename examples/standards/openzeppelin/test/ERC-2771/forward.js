@@ -116,8 +116,9 @@ describe('@OZERC-2771 Fоrward Test Suite', function () {
   });
 
   it('should execute forward request with [ERC2771ForwarderMismatchedValue] error', async function () {
+    // msg.value (1 tinybar, the smallest non-zero value Hedera accepts) differs from request.value (0)
     await expect(
-      contractForwarder.execute.staticCall(trx)
+      contractForwarder.execute.staticCall(trx, { value: 10_000_000_000n })
     ).to.be.revertedWithCustomError(
       contractForwarder,
       ERC2771_FORWARDER_MISMATCHED_VALUE
