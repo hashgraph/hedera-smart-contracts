@@ -7,7 +7,6 @@ const Constants = require('hedera-examples-test-helpers/constants');
 describe('@OZPausable Test Suite', function () {
   let signers, wallet;
   let contract;
-  const CALL_EXCEPTION = 'CALL_EXCEPTION';
 
   before(async function () {
     signers = await ethers.getSigners();
@@ -34,7 +33,7 @@ describe('@OZPausable Test Suite', function () {
 
     await expect(
       contract.setPausedMessage('some other message')
-    ).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION);
+    ).to.be.reverted;
   });
 
   it('should BE able to call function "getPausedMessage" with "whenNotPaused" modifier when unpaused', async function () {
@@ -47,7 +46,7 @@ describe('@OZPausable Test Suite', function () {
 
     await expect(
       contract.getPausedMessage()
-    ).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION);
+    ).to.be.reverted;
   });
 
   it('should fire event when Paused', async function () {
@@ -74,19 +73,13 @@ describe('@OZPausable Test Suite', function () {
     const tx = await contract.pause(Constants.GAS_LIMIT_1_000_000);
     await tx.wait();
 
-    await expect(contract.pause()).to.eventually.be.rejected.and.have.property(
-      'code',
-      CALL_EXCEPTION
-    );
+    await expect(contract.pause()).to.be.reverted;
   });
 
   it('should Not be able to Unpause when Unpaused', async function () {
     const tx = await contract.unpause(Constants.GAS_LIMIT_1_000_000);
     await tx.wait();
 
-    await expect(contract.unpause()).to.eventually.be.rejected.and.have.property(
-      'code',
-      CALL_EXCEPTION
-    );
+    await expect(contract.unpause()).to.be.reverted;
   });
 });

@@ -118,10 +118,7 @@ describe('@OZERC1967Upgrade Upgradable Vote Test Suite', () => {
         .connect(voter2)
         .changeAdmin(await voter1.getAddress());
 
-      await expect(txPromise).to.eventually.be.rejected.and.have.property(
-        'code',
-        CALL_EXCEPTION
-      );
+      await expect(txPromise).to.be.reverted;
     });
   });
 

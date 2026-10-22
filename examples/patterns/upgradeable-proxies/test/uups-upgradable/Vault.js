@@ -7,7 +7,6 @@ const { ethers, upgrades } = require('hardhat');
 describe('@OZUUPSUpgradable Upgradable Vaults Test Suite', () => {
   const DEPOSIT_AMOUNT = ethers.parseEther('3.0');
   const TINY_BAR_TO_WEI_COEF = 10_000_000_000n;
-  const CALL_EXCEPTION = 'CALL_EXCEPTION';
   let vaultV1, vaultV2, owner, beneficiary;
 
   beforeEach(async () => {
@@ -58,7 +57,7 @@ describe('@OZUUPSUpgradable Upgradable Vaults Test Suite', () => {
 
     await expect(
       vaultV1.withdraw(WITHDRAW_AMOUNT)
-    ).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION);
+    ).to.be.reverted;
   });
 
   it('V1: Should NOT allow non-owner account to withdraw an amount of Hbar', async () => {
@@ -66,7 +65,7 @@ describe('@OZUUPSUpgradable Upgradable Vaults Test Suite', () => {
 
     await expect(
       vaultV1.connect(beneficiary).withdraw(WITHDRAW_AMOUNT)
-    ).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION);
+    ).to.be.reverted;
   });
 
   describe('Vault V2 upgrade', () => {
@@ -126,7 +125,7 @@ describe('@OZUUPSUpgradable Upgradable Vaults Test Suite', () => {
 
       await expect(
         vaultV2.connect(beneficiary).withdraw(WITHDRAW_AMOUNT)
-      ).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION);
+      ).to.be.reverted;
     });
 
     it('V2: Should NOT allow non-beneficial account to withdraw an amount of Hbar', async () => {
@@ -134,7 +133,7 @@ describe('@OZUUPSUpgradable Upgradable Vaults Test Suite', () => {
 
       await expect(
         vaultV1.connect(owner).withdraw(WITHDRAW_AMOUNT)
-      ).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION);
+      ).to.be.reverted;
     });
   });
 });

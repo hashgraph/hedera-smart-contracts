@@ -44,10 +44,7 @@ describe('@OZERC1820 Test Suite', () => {
       erc1820registry
         .connect(wallet1)
         .setManager(wallet2.address, wallet1.address)
-    ).to.eventually.be.rejected.and.have.property(
-      'code',
-      Constants.CALL_EXCEPTION
-    );
+    ).to.be.reverted;
   });
 
   it('Should get the implementer of an interface', async () => {

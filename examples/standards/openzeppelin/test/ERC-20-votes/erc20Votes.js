@@ -80,8 +80,8 @@ describe('@OZERC20Votes Test Suite', function () {
     const timeTick = await contract.clock();
     await expect(
       contract.getPastVotes(wallet.address, timeTick + TIME_INCREMENT)
-    ).to.eventually.be.rejected.and.have.property(
-      'errorName',
+    ).to.be.revertedWithCustomError(
+      contract,
       FUTURE_LOOKUP_ERROR
     );
   });

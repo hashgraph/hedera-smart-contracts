@@ -143,10 +143,7 @@ describe('@OZERC777 Test Suite', () => {
       erc777Token
         .connect(wallet1)
         .send(wallet2.address, TOTAL_TOKEN_AMOUNT + 1, EMPTY_DATA)
-    ).to.eventually.be.rejected.and.have.property(
-      'code',
-      Constants.CALL_EXCEPTION
-    );
+    ).to.be.reverted;
   });
 
   it('Should NOT allow an EOA to send tokens to address zero', async () => {
@@ -161,10 +158,7 @@ describe('@OZERC777 Test Suite', () => {
       erc777Token
         .connect(wallet1)
         .send(ADDRESS_ZERO, TOTAL_TOKEN_AMOUNT + 1, EMPTY_DATA)
-    ).to.eventually.be.rejected.and.have.property(
-      'code',
-      Constants.CALL_EXCEPTION
-    );
+    ).to.be.reverted;
   });
 
   it('Should burn tokens', async () => {
@@ -204,10 +198,7 @@ describe('@OZERC777 Test Suite', () => {
   it('Should NOT authorize self as operator', async () => {
     await expect(
       erc777Token.connect(wallet2).authorizeOperator(wallet2.address)
-    ).to.eventually.be.rejected.and.have.property(
-      'code',
-      Constants.CALL_EXCEPTION
-    );
+    ).to.be.reverted;
   });
 
   it('Should check if an address is the operator for another address', async () => {
@@ -243,10 +234,7 @@ describe('@OZERC777 Test Suite', () => {
   it('Should NOT revoke self as operator', async () => {
     await expect(
       erc777Token.connect(wallet2).revokeOperator(wallet2.address)
-    ).to.eventually.be.rejected.and.have.property(
-      'code',
-      Constants.CALL_EXCEPTION
-    );
+    ).to.be.reverted;
   });
 
   it('Should get default operators', async () => {
@@ -299,10 +287,7 @@ describe('@OZERC777 Test Suite', () => {
           EMPTY_DATA,
           EMPTY_DATA
         )
-    ).to.eventually.be.rejected.and.have.property(
-      'code',
-      Constants.CALL_EXCEPTION
-    );
+    ).to.be.reverted;
   });
 
   it('Should allow an operator to burn token on token holder behalf', async () => {
@@ -341,10 +326,7 @@ describe('@OZERC777 Test Suite', () => {
         EMPTY_DATA, // data
         EMPTY_DATA // operator Data
       )
-    ).to.eventually.be.rejected.and.have.property(
-      'code',
-      Constants.CALL_EXCEPTION
-    );
+    ).to.be.reverted;
   });
 
   it('Should NOT be able to send ERC777 token to a contract that DOES NOT register ERC777TokensRecipient interafce', async () => {
@@ -360,10 +342,7 @@ describe('@OZERC777 Test Suite', () => {
           SENT_TOKEN_AMOUNT,
           EMPTY_DATA
         )
-    ).to.eventually.be.rejected.and.have.property(
-      'code',
-      Constants.CALL_EXCEPTION
-    );
+    ).to.be.reverted;
   });
 
   it('Should be able to send ERC777 token to a contract that DOES register ERC777TokensRecipient interafce', async () => {
@@ -416,10 +395,7 @@ describe('@OZERC777 Test Suite', () => {
         SENT_TOKEN_AMOUNT,
         EMPTY_DATA
       )
-    ).to.eventually.be.rejected.and.have.property(
-      'code',
-      Constants.CALL_EXCEPTION
-    );
+    ).to.be.reverted;
   });
 
   it('Should be able to send ERC777 token from a contract that DOES register ERC777TokensSender interface', async () => {

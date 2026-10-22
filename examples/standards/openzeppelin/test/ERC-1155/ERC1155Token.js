@@ -3,7 +3,6 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('hedera-examples-test-helpers/constants');
-const { CALL_EXCEPTION } = require('hedera-examples-test-helpers/constants');
 
 describe('@OZERC1155Token Test Suite', () => {
   let erc1155Token, wallet1, wallet2;
@@ -196,7 +195,7 @@ describe('@OZERC1155Token Test Suite', () => {
 
     await expect(
       erc1155Token.connect(wallet2).transferOwnership(wallet2.address)
-    ).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION);
+    ).to.be.reverted;
   });
 
   it('Should retrieve the token uri of a tokenID', async () => {
@@ -238,7 +237,7 @@ describe('@OZERC1155Token Test Suite', () => {
       erc1155Token
         .connect(wallet2)
         .burn(wallet2.address, TOKEN_ID, BURNT_AMOUNT)
-    ).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION);
+    ).to.be.reverted;
   });
 
   it('Should burn token in batch', async () => {
@@ -371,6 +370,6 @@ describe('@OZERC1155Token Test Suite', () => {
         TRANSFER_AMOUNT,
         EMPTY_DATA
       )
-    ).to.eventually.be.rejected.and.have.property('code', CALL_EXCEPTION);
+    ).to.be.reverted;
   });
 });
