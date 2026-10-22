@@ -1,0 +1,14 @@
+{
+  "name": "system-contract-mocks-example",
+  "private": true,
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "forge build",
+    "test": "forge test -vvv"
+  },
+  "devDependencies": {
+    "@hiero-ledger/hiero-contracts": "0.2.0",
+    "@openzeppelin/contracts": "5.4.0",
+    "forge-std": "github:foundry-rs/forge-std#v1.11.0"
+  }
+}

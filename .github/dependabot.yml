@@ -1,17 +1,47 @@
 version: 2
 updates:
   - package-ecosystem: "github-actions"
-    directory: "/"
+    directories:
+      - "/"
+      - "/.github/actions/*"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 10
 
   - package-ecosystem: docker
-    directory: /
+    directory: /examples/tokens/whbar
     schedule:
-      interval: daily
+      interval: weekly
 
   - package-ecosystem: npm
-    directory: /
+    directories:
+      - /examples/*/*
     schedule:
-      interval: daily
+      interval: weekly
+    groups:
+      examples-npm:
+        patterns: ["*"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: gomod
+    directory: /examples/clients/go
+    schedule:
+      interval: weekly
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: cargo
+    directory: /examples/clients/rust-alloy
+    schedule:
+      interval: weekly
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: pip
+    directory: /examples/frameworks/brownie
+    schedule:
+      interval: weekly

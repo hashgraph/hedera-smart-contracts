@@ -1,0 +1,25 @@
+{
+  "name": "hedera-examples-test-helpers",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Test helpers shared by the Hardhat examples in this repository (Hedera SDK client, HTS token setup, mirror node polling, network config).",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "files": [
+    "*.js"
+  ],
+  "dependencies": {
+    "dotenv": "17.4.2"
+  },
+  "peerDependencies": {
+    "@hashgraph/sdk": "^2.81.0",
+    "chai": "^4.5.0",
+    "ethers": "^6.15.0",
+    "hardhat": "^2.26.0"
+  },
+  "peerDependenciesMeta": {
+    "@hashgraph/sdk": {
+      "optional": true
+    }
+  }
+}

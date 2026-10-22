@@ -1,0 +1,17 @@
+{
+  "name": "whbar-hardhat-example",
+  "version": "0.0.1",
+  "scripts": {},
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "6.1.2",
+    "chai-as-promised": "7.1.1",
+    "hardhat": "2.29.1"
+  },
+  "dependencies": {
+    "@hashgraph/sdk": "2.81.0",
+    "dotenv": "17.4.2"
+  },
+  "overrides": {
+    "cookie": "0.7.2"
+  }
+}

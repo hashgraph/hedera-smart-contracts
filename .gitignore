@@ -1,51 +1,27 @@
-node_modules
-cache
-.idea
+# Repo-wide safety net. Each example keeps its own .gitignore for tool-specific output.
 
-# ignore non repo contract related aritifacts
-.openzeppelin/unknown-298.json
+# Dependencies
+node_modules/
+
+# Secrets / local config
 .env
-test-results.*
-contracts-abi/*
-!contracts-abi/contracts
+.env.*
+!.env.example
+!.env.sample
 
-# Ignore all default artifacts
-artifacts/contracts/*
-artifacts/build-info
-artifacts/@openzeppelin
-artifacts/@hiero-ledger
-artifacts/contracts/**/**/*.dbg.json
-
-!artifacts/contracts/exchange-rate-precompile
-artifacts/contracts/exchange-rate-precompile/*
-!artifacts/contracts/exchange-rate-precompile/ExchangeRateMock.sol
-
-!artifacts/contracts/util-precompile
-
-!artifacts/contracts/openzeppelin
-artifacts/contracts/openzeppelin/*
-!artifacts/contracts/openzeppelin/ERC-20
-!artifacts/contracts/openzeppelin/ERC-721
-
-## --- Foundry Gitignore ---
-# Compiler files
-forge-cache/
-out/
-
-# Ignores development broadcast logs
-!/broadcast
-/broadcast/*/31337/
-/broadcast/**/dry-run/
-
-
-# Coverage
-lcov.info
+# Build and test output
+artifacts/
+cache/
 coverage/
-
-## --- Hardhat Gitignore for Foundry artifacts ---
-artifacts/forge-std
-artifacts/ds-test
-test/state-registry/states.json
-test/state-registry/ercStates.json
-
 coverage.json
+typechain-types/
+*.tsbuildinfo
+test-results.*
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Claude Code local state
+.claude/

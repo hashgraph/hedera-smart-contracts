@@ -4,28 +4,28 @@
 # to GITHUB_OUTPUT when set (GitHub Actions).
 set -euo pipefail
 
-NETWORK_TAG="${NETWORK_TAG:-v0.72.0}"
-MIRROR_TAG="${MIRROR_TAG:-v0.151.0}"
-RELAY_TAG="${RELAY_TAG:-0.76.2}"
-SOLO_VERSION="${SOLO_VERSION:-0.74.0}"
+# Pinned versions live in .github/network-versions.env; env vars of the same name override them.
+VERSIONS_FILE=".github/network-versions.env"
+pinned() { sed -n "s/^$1=//p" "${VERSIONS_FILE}"; }
 
-mkdir -p .github
+NETWORK_TAG="${NETWORK_TAG:-$(pinned NETWORK_TAG)}"
+MIRROR_TAG="${MIRROR_TAG:-$(pinned MIRROR_TAG)}"
+RELAY_TAG="${RELAY_TAG:-$(pinned RELAY_TAG)}"
+SOLO_VERSION="${SOLO_VERSION:-$(pinned SOLO_VERSION)}"
+RELAY_VALUES_FILE="${RELAY_VALUES_FILE:-.github/examples-relay-values.yaml}"
+# Set EXTERNAL_ADDRESS=0.0.0.0 when docker containers must reach the forwarded ports.
+EXTERNAL_ADDRESS="${EXTERNAL_ADDRESS:-}"
 
-cat >.github/falcon.yml <<EOF
-network:
-  --release-tag: "${NETWORK_TAG}"
-setup:
-  --release-tag: "${NETWORK_TAG}"
+# Generated per run, outside the repository so it never shows up as a change.
+FALCON_VALUES="$(mktemp "${RUNNER_TEMP:-${TMPDIR:-/tmp}}/solo-falcon-XXXXXX.yml")"
+cat >"${FALCON_VALUES}" <<EOF
 consensusNode:
   --node-aliases: "node1"
 mirrorNode:
   --enable-ingress: true
   --pinger: true
-  --mirror-node-version: "${MIRROR_TAG}"
-  --values-file: .github/mirror-node-values.yaml
 relayNode:
-  --relay-release: "${RELAY_TAG}"
-  --values-file: .github/relay-values.yaml
+  --values-file: ${RELAY_VALUES_FILE}
   --node-aliases: "node1"
 EOF
 
@@ -40,12 +40,21 @@ if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
   } >>"${GITHUB_OUTPUT}"
 fi
 
+EXTRA_ARGS=()
+if [[ -n "${EXTERNAL_ADDRESS}" ]]; then
+  EXTRA_ARGS+=(--external-address "${EXTERNAL_ADDRESS}")
+fi
+
 npx @hashgraph/solo@${SOLO_VERSION} one-shot falcon deploy \
-  --values-file .github/falcon.yml \
-  --dev \
+  --values-file "${FALCON_VALUES}" \
+  --consensus-node-version "${NETWORK_TAG}" \
+  --mirror-node-version "${MIRROR_TAG}" \
+  --relay-version "${RELAY_TAG}" \
+  --debug \
   --deploy-explorer=false \
   --deployment "${SOLO_DEPLOYMENT}" \
-  --namespace "${SOLO_NS}"
+  --namespace "${SOLO_NS}" \
+  ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}
 
 echo "Waiting for mirror node REST API..."
 for i in $(seq 1 30); do
