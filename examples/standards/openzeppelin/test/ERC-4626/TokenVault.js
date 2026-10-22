@@ -34,9 +34,18 @@ describe('@OZTokenVault Test Suite', function () {
 
     [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
 
-    await asset.mint(addr1.address, ethers.parseUnits('1000', 18));
-    await asset.mint(addr2.address, ethers.parseUnits('10', 18));
+    // Wait for every transaction: the relay takes the "pending" nonce from the mirror node, so a
+    // transaction sent before the previous one is mined reuses its nonce and is never executed.
+    await (await asset.mint(addr1.address, ethers.parseUnits('1000', 18))).wait();
+    await (await asset.mint(addr2.address, ethers.parseUnits('10', 18))).wait();
   });
+
+  async function deposit(signer, amount) {
+    await (
+      await asset.connect(signer).approve(await tokenVault.getAddress(), amount)
+    ).wait();
+    await (await tokenVault.connect(signer)._deposit(amount)).wait();
+  }
 
   describe('Deployment', function () {
     it('Should assign the total supply of tokens to the owner', async function () {
@@ -48,9 +57,11 @@ describe('@OZTokenVault Test Suite', function () {
   describe('Transactions', function () {
     it('Should deposit tokens and update shareHolders mapping', async function () {
       const depositAmount = ethers.parseEther('10');
-      await asset
-        .connect(addr1)
-        .approve(await tokenVault.getAddress(), depositAmount);
+      await (
+        await asset
+          .connect(addr1)
+          .approve(await tokenVault.getAddress(), depositAmount)
+      ).wait();
       await expect(tokenVault.connect(addr1)._deposit(depositAmount))
         .to.emit(tokenVault, 'Deposit')
         .withArgs(addr1.address, addr1.address, depositAmount, depositAmount);
@@ -65,10 +76,7 @@ describe('@OZTokenVault Test Suite', function () {
       const withdrawAmount = ethers.parseEther('5');
       const redemedAmount = ethers.parseEther('5.5');
 
-      await asset
-        .connect(addr2)
-        .approve(await tokenVault.getAddress(), depositAmount);
-      await tokenVault.connect(addr2)._deposit(depositAmount);
+      await deposit(addr2, depositAmount);
 
       const tx = await tokenVault
         .connect(addr2)
@@ -93,25 +101,23 @@ describe('@OZTokenVault Test Suite', function () {
     });
 
     it('Should fail if withdraw is to zero address', async function () {
-      expect(
+      await expect(
         tokenVault.connect(addr1)._withdraw(1, ethers.ZeroAddress)
       ).to.be.revertedWith('Zero Address');
     });
 
     it('Should fail if not a shareholder', async function () {
-      expect(
-        tokenVault.connect(addr2)._withdraw(1, addr2.address)
+      // owner never deposited (addr2 still holds shares from the withdraw test)
+      await expect(
+        tokenVault.connect(owner)._withdraw(1, owner.address)
       ).to.be.revertedWith('Not a shareHolder');
     });
 
     it('Should fail if not enough shares', async function () {
-      const depositAmount = ethers.parseEther('10');
-      await asset
-        .connect(addr1)
-        .approve(await tokenVault.getAddress(), depositAmount);
-      await tokenVault.connect(addr1)._deposit(depositAmount);
-      expect(
-        tokenVault.connect(addr1)._withdraw(depositAmount + 1n, addr1.address)
+      await deposit(addr1, ethers.parseEther('10'));
+      const shares = await tokenVault.shareHolders(addr1.address);
+      await expect(
+        tokenVault.connect(addr1)._withdraw(shares + 1n, addr1.address)
       ).to.be.revertedWith('Not enough shares');
     });
   });
@@ -119,13 +125,11 @@ describe('@OZTokenVault Test Suite', function () {
   describe('Views', function () {
     it('Should return the total assets of a user', async function () {
       const depositAmount = ethers.parseEther('10');
-      await asset
-        .connect(addr1)
-        .approve(await tokenVault.getAddress(), depositAmount);
-      await tokenVault.connect(addr1)._deposit(depositAmount);
+      const before = await tokenVault.totalAssetsOfUser(addr1.address);
+      await deposit(addr1, depositAmount);
 
       expect(await tokenVault.totalAssetsOfUser(addr1.address)).to.equal(
-        depositAmount
+        before + depositAmount
       );
     });
   });

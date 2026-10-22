@@ -10,7 +10,8 @@ import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFractio
 contract ExampleGovernor is Governor, GovernorSettings, GovernorCountingSimple, GovernorVotes, GovernorVotesQuorumFraction {
     constructor(IVotes _token)
         Governor("ExampleGovernor")
-        GovernorSettings(0 /* 1 second */, 2 /* 2 blocks */, 0)
+        // Hedera produces a block every ~2s; 15 blocks (~30s) leaves room for the propose receipt and the vote to land.
+        GovernorSettings(0 /* 1 second */, 15 /* 15 blocks */, 0)
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(1)
     {}
