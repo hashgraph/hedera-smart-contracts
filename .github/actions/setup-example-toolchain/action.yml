@@ -20,7 +20,7 @@ runs:
 
     - name: Install Foundry
       if: inputs.toolchain == 'foundry'
-      uses: step-security/foundry-toolchain@ced99da5c56c695ce707ab2715ca678d6e8a7038 # v1.4.0
+      uses: step-security/foundry-toolchain@dd5624465228cd300f5431ab9f181efc4cec0a95 # v1.9.1
       with:
         version: stable
 
