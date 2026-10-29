@@ -1,0 +1,48 @@
+name: Setup example toolchain
+description: Installs Node.js plus the toolchain an example in examples/ needs.
+
+inputs:
+  toolchain:
+    description: One of node, foundry, go, rust, python
+    required: true
+  path:
+    description: Example directory, relative to the repository root
+    required: true
+
+runs:
+  using: composite
+  steps:
+    # Node.js is always needed: npm-based examples and the Solo CLI (npx @hashgraph/solo).
+    - name: Use Node.js [24]
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      with:
+        node-version: 24
+
+    - name: Install Foundry
+      if: inputs.toolchain == 'foundry'
+      uses: step-security/foundry-toolchain@ced99da5c56c695ce707ab2715ca678d6e8a7038 # v1.4.0
+      with:
+        version: stable
+
+    - name: Install Go
+      if: inputs.toolchain == 'go'
+      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      with:
+        go-version-file: ${{ inputs.path }}/go.mod
+        cache-dependency-path: ${{ inputs.path }}/go.sum
+
+    - name: Install Python
+      if: inputs.toolchain == 'python'
+      uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      with:
+        # eth-brownie does not support newer Python releases
+        python-version: '3.10'
+
+    - name: Install Rust
+      if: inputs.toolchain == 'rust'
+      shell: bash
+      run: |
+        if ! command -v cargo >/dev/null; then
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
+          echo "${HOME}/.cargo/bin" >> "${GITHUB_PATH}"
+        fi

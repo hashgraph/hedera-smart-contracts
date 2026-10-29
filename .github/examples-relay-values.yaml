@@ -1,0 +1,17 @@
+# Relay config for examples.yml: indexers (graph-node) and UI e2e tests need
+# wide eth_getLogs ranges and no rate limiting.
+#
+# ENABLE_TX_POOL=false: with the pool, a transaction the consensus node rejects stays "pending"
+# until its TTL, so eth_getTransactionCount(..., "pending") runs one ahead and the account's next
+# transaction is signed with a nonce that can never execute (the test then waits forever).
+relay:
+  config:
+    DEBUG_API_ENABLED: "true"
+    ETH_GET_LOGS_BLOCK_RANGE_LIMIT: "2000"
+    RATE_LIMIT_DISABLED: "true"
+    ENABLE_TX_POOL: "false"
+ws:
+  config:
+    DEBUG_API_ENABLED: "true"
+    RATE_LIMIT_DISABLED: "true"
+    ENABLE_TX_POOL: "false"

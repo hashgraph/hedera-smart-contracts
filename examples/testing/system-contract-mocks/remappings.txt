@@ -1,0 +1,3 @@
+@hiero-ledger/hiero-contracts/=node_modules/@hiero-ledger/hiero-contracts/
+@openzeppelin/contracts/=node_modules/@openzeppelin/contracts/
+forge-std/=node_modules/forge-std/src/

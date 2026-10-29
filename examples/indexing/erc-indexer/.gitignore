@@ -1,0 +1,4 @@
+node_modules/
+.env
+# Output of `npm start` (registry JSON files)
+erc-registry/

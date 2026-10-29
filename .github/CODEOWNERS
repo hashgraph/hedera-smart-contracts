@@ -5,10 +5,9 @@
 *                                      @hashgraph/hedera-smart-contracts-product
 
 ############################
-##### Smart contracts ######
+######### Examples #########
 ############################
-/contracts                             @hashgraph/hedera-smart-contracts-product
-/test                                  @hashgraph/hedera-smart-contracts-product
+/examples                              @hashgraph/hedera-smart-contracts-product
 
 #########################
 #####  Core Files  ######
