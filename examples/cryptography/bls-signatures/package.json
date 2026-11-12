@@ -14,6 +14,6 @@
     "ethers": "6.17.0",
     "hardhat": "2.29.1",
     "hedera-examples-test-helpers": "file:../../shared/test-helpers",
-    "mcl-wasm": "2.0.0"
+    "mcl-wasm": "2.5.0"
   }
 }
