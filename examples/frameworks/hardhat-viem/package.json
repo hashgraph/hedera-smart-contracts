@@ -7,12 +7,12 @@
     "test": "npx hardhat test"
   },
   "dependencies": {
-    "@nomicfoundation/hardhat-toolbox-viem": "4.1.2",
+    "@nomicfoundation/hardhat-toolbox-viem": "5.0.7",
     "dotenv": "17.2.3"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "2.1.2",
-    "hardhat": "2.29.1"
+    "hardhat": "3.21.2"
   },
   "overrides": {
     "elliptic": "6.6.1",

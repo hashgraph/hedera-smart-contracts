@@ -15,7 +15,7 @@
     "chai": "4.5.0",
     "chai-as-promised": "7.1.1",
     "ethers": "6.17.0",
-    "hardhat": "2.29.1",
+    "hardhat": "3.21.2",
     "hedera-examples-test-helpers": "file:../../shared/test-helpers"
   }
 }
