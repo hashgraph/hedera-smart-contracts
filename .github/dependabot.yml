@@ -1,25 +1,57 @@
+# Dependabot policy: at most one PR per ecosystem per week.
+#
+# - Every ecosystem runs on the same weekly slot (Monday 06:00 UTC).
+# - All version updates of an ecosystem are grouped into a single PR,
+#   across all of its directories.
+# - Security updates of an ecosystem are grouped as well, so an advisory that
+#   hits several packages opens one PR instead of one PR per package.
+#   (Security updates are not bound to the weekly schedule: GitHub opens them
+#   as soon as an advisory is published.)
+# - `cooldown` skips releases younger than 7 days, which cuts churn from
+#   quick follow-up patch releases and protects against freshly published
+#   compromised versions.
+# - `open-pull-requests-limit: 1` means a new weekly PR is not opened while the
+#   previous week's PR for that ecosystem is still open; Dependabot rebases
+#   the existing one instead.
 version: 2
+
 updates:
-  - package-ecosystem: "github-actions"
+  - package-ecosystem: github-actions
     directories:
       - "/"
       - "/.github/actions/*"
     schedule:
-      interval: "daily"
-    open-pull-requests-limit: 10
-
-  - package-ecosystem: docker
-    directory: /examples/tokens/whbar
-    schedule:
       interval: weekly
+      day: monday
+      time: "06:00"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 1
+    groups:
+      github-actions:
+        applies-to: version-updates
+        patterns: ["*"]
+      github-actions-security:
+        applies-to: security-updates
+        patterns: ["*"]
 
   - package-ecosystem: npm
     directories:
-      - /examples/*/*
+      - "/examples/*/*"
+      - "/examples/interoperability/layer-zero/test/fuzzy-testing"
     schedule:
       interval: weekly
+      day: monday
+      time: "06:00"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 1
     groups:
       examples-npm:
+        applies-to: version-updates
+        patterns: ["*"]
+      examples-npm-security:
+        applies-to: security-updates
         patterns: ["*"]
     ignore:
       - dependency-name: "*"
@@ -29,6 +61,18 @@ updates:
     directory: /examples/clients/go
     schedule:
       interval: weekly
+      day: monday
+      time: "06:00"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 1
+    groups:
+      examples-go:
+        applies-to: version-updates
+        patterns: ["*"]
+      examples-go-security:
+        applies-to: security-updates
+        patterns: ["*"]
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
@@ -37,6 +81,18 @@ updates:
     directory: /examples/clients/rust-alloy
     schedule:
       interval: weekly
+      day: monday
+      time: "06:00"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 1
+    groups:
+      examples-cargo:
+        applies-to: version-updates
+        patterns: ["*"]
+      examples-cargo-security:
+        applies-to: security-updates
+        patterns: ["*"]
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
@@ -45,3 +101,29 @@ updates:
     directory: /examples/frameworks/brownie
     schedule:
       interval: weekly
+      day: monday
+      time: "06:00"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 1
+    groups:
+      examples-pip:
+        applies-to: version-updates
+        patterns: ["*"]
+      examples-pip-security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  - package-ecosystem: docker
+    directory: /examples/tokens/whbar
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 1
+    groups:
+      examples-docker:
+        applies-to: version-updates
+        patterns: ["*"]

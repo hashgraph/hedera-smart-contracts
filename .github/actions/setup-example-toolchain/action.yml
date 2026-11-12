@@ -14,13 +14,13 @@ runs:
   steps:
     # Node.js is always needed: npm-based examples and the Solo CLI (npx @hashgraph/solo).
     - name: Use Node.js [24]
-      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
       with:
         node-version: 24
 
     - name: Install Foundry
       if: inputs.toolchain == 'foundry'
-      uses: step-security/foundry-toolchain@ced99da5c56c695ce707ab2715ca678d6e8a7038 # v1.4.0
+      uses: step-security/foundry-toolchain@dd5624465228cd300f5431ab9f181efc4cec0a95 # v1.9.1
       with:
         version: stable
 
@@ -33,7 +33,7 @@ runs:
 
     - name: Install Python
       if: inputs.toolchain == 'python'
-      uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
       with:
         # eth-brownie does not support newer Python releases
         python-version: '3.10'
