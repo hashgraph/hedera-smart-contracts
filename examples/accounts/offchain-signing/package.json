@@ -12,6 +12,6 @@
   "dependencies": {
     "@hashgraph/sdk": "2.81.0",
     "dotenv": "17.4.2",
-    "node-cron": "4.2.1"
+    "node-cron": "4.6.0"
   }
 }

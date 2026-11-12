@@ -15,7 +15,7 @@
     "axios": "1.18.1"
   },
   "devDependencies": {
-    "@hashgraph/sdk": "2.78.0",
+    "@hashgraph/sdk": "2.81.0",
     "@layerzerolabs/lz-evm-messagelib-v2": "3.0.168",
     "@layerzerolabs/lz-evm-oapp-v2": "3.0.168",
     "@layerzerolabs/lz-evm-protocol-v2": "3.0.168",
@@ -39,7 +39,7 @@
     "@types/mocha": "10.0.10",
     "@types/node": "22.20.5",
     "chai": "4.5.0",
-    "dotenv": "17.2.3",
+    "dotenv": "17.4.2",
     "ethers": "6.17.0",
     "hardhat": "2.29.1",
     "hardhat-gas-reporter": "2.3.0",
