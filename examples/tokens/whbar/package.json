@@ -4,8 +4,8 @@
   "scripts": {},
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "6.1.2",
-    "chai-as-promised": "7.1.1",
-    "hardhat": "2.29.1"
+    "chai-as-promised": "7.1.2",
+    "hardhat": "2.29.2"
   },
   "dependencies": {
     "@hashgraph/sdk": "2.81.0",
