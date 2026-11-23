@@ -8,11 +8,11 @@
   },
   "dependencies": {
     "@nomicfoundation/hardhat-toolbox-viem": "4.1.2",
-    "dotenv": "17.2.3"
+    "dotenv": "17.4.2"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "2.1.2",
-    "hardhat": "2.29.1"
+    "hardhat": "2.29.2"
   },
   "overrides": {
     "elliptic": "6.6.1",
